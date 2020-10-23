@@ -279,7 +279,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
+        /// Unlocks the last screen object the mouse was locked to. Allows another console to become locked to the mouse.
         /// </summary>
         public void ClearLastMouseScreenObject()
         {

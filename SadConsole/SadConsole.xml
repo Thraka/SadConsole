@@ -2124,100 +2124,6 @@
             </summary>
             <param name="host">The host that removed the component.</param>
         </member>
-        <member name="T:SadConsole.Components.UpdateComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <summary>
-            Called by a host on the update frame.
-            </summary>
-            <param name="host">The host calling the component.</param>
-            <param name="delta">The time that has elapsed since this method was last called.</param>
-        </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.RenderComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.RenderComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.RenderComponent.Render(SadConsole.IScreenObject,System.TimeSpan)">
-            <summary>
-            Called by a host on the draw frame.
-            </summary>
-            <param name="host">The host calling the component.</param>
-            <param name="delta">The time that has elapsed from the last call to this component.</param>
-        </member>
-        <member name="M:SadConsole.Components.RenderComponent.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.RenderComponent.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.MouseConsoleComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.MouseConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
-            <summary>
-            Called by a host when the mouse is being processed.
-            </summary>
-            <param name="host">The host calling the component.</param>
-            <param name="state">The state of the mouse in relation to the console.</param>
-            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.MouseConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.KeyboardConsoleComponent">
-            <summary>
-            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.KeyboardConsoleComponent.SortOrder">
-            <summary>
-            Indicates priority to other components.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
-            <summary>
-            Called by a host when the keyboard is being processed.
-            </summary>
-            <param name="host">The host calling the component.</param>
-            <param name="keyboard">The state of the keyboard.</param>
-            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
-        </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
         <member name="T:SadConsole.Components.InputConsoleComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> and <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -2250,6 +2156,30 @@
         <member name="M:SadConsole.Components.InputConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.KeyboardConsoleComponent">
+            <summary>
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.KeyboardConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <summary>
+            Called by a host when the keyboard is being processed.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="keyboard">The state of the keyboard.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -2280,42 +2210,51 @@
         <member name="M:SadConsole.Components.LogicComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Components.ComponentBase">
+        <member name="T:SadConsole.Components.MouseConsoleComponent">
             <summary>
-            A base class that implements all of <see cref="T:SadConsole.Components.IComponent"/>.
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.ComponentBase.SortOrder">
+        <member name="P:SadConsole.Components.MouseConsoleComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MouseConsoleComponent.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+            <summary>
+            Called by a host when the mouse is being processed.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="state">The state of the mouse in relation to the console.</param>
+            <param name="handled">When set to <see langword="true"/> informs the host caller that we handled the mouse and to stop others from handling.</param>
+        </member>
+        <member name="M:SadConsole.Components.MouseConsoleComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Components.ComponentBase.IsUpdate">
+        <member name="M:SadConsole.Components.MouseConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Components.ComponentBase.IsRender">
+        <member name="T:SadConsole.Components.RenderComponent">
+            <summary>
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.RenderComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.RenderComponent.Render(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the draw frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed from the last call to this component.</param>
+        </member>
+        <member name="M:SadConsole.Components.RenderComponent.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Components.ComponentBase.IsMouse">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Components.ComponentBase.IsKeyboard">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.Render(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.ComponentBase.OnAdded(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Components.RenderComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.SurfaceComponentEntityOffsets">
@@ -2351,6 +2290,29 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.UpdateComponent">
+            <summary>
+            A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.UpdateComponent.SortOrder">
+            <summary>
+            Indicates priority to other components.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Called by a host on the update frame.
+            </summary>
+            <param name="host">The host calling the component.</param>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Console">
@@ -5224,7 +5186,7 @@
         </member>
         <member name="M:SadConsole.Input.Mouse.ClearLastMouseScreenObject">
             <summary>
-            Unlocks the last screen object the mouse was locked to. Allows another conosle to become locked to the mouse.
+            Unlocks the last screen object the mouse was locked to. Allows another console to become locked to the mouse.
             </summary>
         </member>
         <member name="M:SadConsole.Input.Mouse.IsMouseOverScreenObjectSurface(SadConsole.IScreenSurface)">
