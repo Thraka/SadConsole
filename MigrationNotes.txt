@@ -13,8 +13,8 @@
 - Print for surface can be optimized. Use SetEffect(IEnumerable) to mass update effects instead of individual cells.
 - Check ListBox.ScrollToSelectedItem is working.
 - Do all of the Theme.RefreshTheme methods get sent control.FindColors? If so, we can get rid of the base logic that finds them...
-- Textbox doesn't show first character if you write off the end and use backspace to erase back to the start.
-- Shadow button theme needs adjustment as you can't see it anymore as the button back is the same as the host.
+- SFML is *still* throwing in phantom keys when you type fast or use multiple keys are once.
+- Character viewer in sample isn't working.
 
 ====== New Features
 
@@ -72,4 +72,25 @@ UI
 - (MOVE) SadConsole.Controls -> SadConsole.UI.Controls
 - (MOVE) SadConsole.Themes -> SadConsole.UI.Themes
 - (RENAME) ContainerConsole -> ScreenObject
+
+### Common namespace replacements
+
+| Old | New |
+| --- | --- |
+| `SadConsole.Controls`     | `SadConsole.UI.Controls`  |
+| `SadConsole.Themes`       | `SadConsole.UI.Themes`    |
+| `Microsoft.Xna.Framework` | `SadRogue.Primitives`     |
+
+### Common type replacements
+
+| Old | New |
+| --- | --- |
+| `Cell` | `ColoredGlyph` |
+| `ColorAnsi.Yellow` | `Color.AnsiYellow` |
+| `` | `` |
+| `` | `` |
+| `` | `` |
+| `` | `` |
+
+
 

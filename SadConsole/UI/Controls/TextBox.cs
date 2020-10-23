@@ -279,6 +279,8 @@ namespace SadConsole.UI.Controls
             // Test to see if caret is off edge of box
             if (_caretPos >= Width)
                 LeftDrawOffset = EditingText.Length - Width + 1;
+            else
+                LeftDrawOffset = 0;
 
             if (LeftDrawOffset < 0)
                 LeftDrawOffset = 0;
