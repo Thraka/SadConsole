@@ -20,12 +20,12 @@ namespace SadConsole
         /// <summary>
         /// Raised when the <see cref="Parent"/> property changes.
         /// </summary>
-        event EventHandler<NewOldValueEventArgs<IScreenObject>> ParentChanged;
+        event EventHandler<ValueChangedEventArgs<IScreenObject>> ParentChanged;
 
         /// <summary>
         /// Raised when the <see cref="Position"/> property changes.
         /// </summary>
-        event EventHandler<NewOldValueEventArgs<Point>> PositionChanged;
+        event EventHandler<ValueChangedEventArgs<Point>> PositionChanged;
 
         /// <summary>
         /// Raised when the <see cref="IsVisible"/> property changes.

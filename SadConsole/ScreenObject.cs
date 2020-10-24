@@ -32,10 +32,10 @@ namespace SadConsole
 
 
         /// <inheritdoc/>
-        public event EventHandler<NewOldValueEventArgs<IScreenObject>> ParentChanged;
+        public event EventHandler<ValueChangedEventArgs<IScreenObject>> ParentChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<NewOldValueEventArgs<Point>> PositionChanged;
+        public event EventHandler<ValueChangedEventArgs<Point>> PositionChanged;
 
         /// <inheritdoc/>
         public event EventHandler VisibleChanged;
@@ -483,7 +483,7 @@ namespace SadConsole
         protected virtual void OnParentChanged(IScreenObject oldParent, IScreenObject newParent)
         {
             UpdateAbsolutePosition();
-            ParentChanged?.Invoke(this, new NewOldValueEventArgs<IScreenObject>(oldParent, newParent));
+            ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject>(oldParent, newParent));
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace SadConsole
         protected virtual void OnPositionChanged(Point oldPosition, Point newPosition)
         {
             UpdateAbsolutePosition();
-            PositionChanged?.Invoke(this, new NewOldValueEventArgs<Point>(oldPosition, newPosition));
+            PositionChanged?.Invoke(this, new ValueChangedEventArgs<Point>(oldPosition, newPosition));
         }
 
         /// <summary>
