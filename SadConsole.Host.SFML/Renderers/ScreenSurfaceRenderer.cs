@@ -194,7 +194,7 @@ namespace SadConsole.Renderers
 
                     if (!cell.IsVisible) continue;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != surface.DefaultBackground, font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != surface.DefaultBackground, font);
 
                     i++;
                     rectIndex++;

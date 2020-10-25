@@ -148,7 +148,7 @@ namespace SadConsole.Renderers
 
                 IntRect renderRect = _baseRenderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
-                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, !cell.Background.Equals(Color.Transparent) && cell.Background != control.Surface.DefaultBackground, font);
+                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != control.Surface.DefaultBackground, font);
             }
         }
     }
