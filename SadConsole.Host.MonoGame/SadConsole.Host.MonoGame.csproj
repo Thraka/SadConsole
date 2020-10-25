@@ -46,11 +46,6 @@
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
 
-  <Target Name="MyPostCompileTarget" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
-    <Exec Command="dotnet tool restore" />
-    <Exec Command="dotnet inheritdoc -o -b $(OutDir)" />
-  </Target>
-
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
