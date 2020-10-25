@@ -3493,7 +3493,12 @@
         </member>
         <member name="F:SadConsole.GameHost._renderers">
             <summary>
-            Holds all of the renderer types.
+            Holds all of the <see cref="T:SadConsole.Renderers.IRenderer"/> types.
+            </summary>
+        </member>
+        <member name="F:SadConsole.GameHost._rendererSteps">
+            <summary>
+            Holds all of the <see cref="T:SadConsole.Renderers.IRenderStep"/> types.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost._splashScreens">
@@ -3587,7 +3592,7 @@
         </member>
         <member name="M:SadConsole.GameHost.GetRenderer(System.String)">
             <summary>
-            Creates and returns a renderer by name.
+            Creates and returns an <see cref="T:SadConsole.Renderers.IRenderer"/> by name.
             </summary>
             <param name="name">The name of the renderer.</param>
             <returns>A new renderer.</returns>
@@ -3598,6 +3603,20 @@
             </summary>
             <param name="name">The name to register the renderer as.</param>
             <param name="rendererType">The renderer type.</param>
+        </member>
+        <member name="M:SadConsole.GameHost.SetRendererStep(System.String,System.Type)">
+            <summary>
+            Sets the default <see cref="T:SadConsole.Renderers.IRenderStep"/> for a type.
+            </summary>
+            <param name="name">The name to register the render step as.</param>
+            <param name="rendererStepType">The render step type.</param>
+        </member>
+        <member name="M:SadConsole.GameHost.GetRendererStep(System.String)">
+            <summary>
+            Creates and returns a <see cref="T:SadConsole.Renderers.IRenderStep"/> by name.
+            </summary>
+            <param name="name">The name of the renderer.</param>
+            <returns>A new renderer.</returns>
         </member>
         <member name="M:SadConsole.GameHost.GetKeyboardState">
             <summary>
@@ -6104,28 +6123,6 @@
         <member name="M:SadConsole.LayeredScreenSurface.Layer.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.NewOldValueEventArgs`1">
-            <summary>
-            Provides reference to the old and new objects.
-            </summary>
-        </member>
-        <member name="F:SadConsole.NewOldValueEventArgs`1.OldObject">
-            <summary>
-            The previous object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.NewOldValueEventArgs`1.NewObject">
-            <summary>
-            The new object.
-            </summary>
-        </member>
-        <member name="M:SadConsole.NewOldValueEventArgs`1.#ctor(`0,`0)">
-            <summary>
-            Creates a new instance of this object with the specified old and new parent.
-            </summary>
-            <param name="oldObject">The old parent.</param>
-            <param name="newObject">The new parent.</param>
-        </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>
             A RexPaint image.
@@ -6319,6 +6316,11 @@
             A 0 to 255 value represening how transparent the surface is when drawn to the screen. 255 represents full visibility.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.IRenderer.IsForced">
+            <summary>
+            Indicates that this renderer is being forced to be redrawn this frame.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
             <summary>
             Called when the renderer is added to a surface.
@@ -6343,6 +6345,92 @@
             Creates a drawcall in the drawing pipeline.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.AddRenderStep(SadConsole.Renderers.IRenderStep)">
+            <summary>
+            Adds a render step to the renderer.
+            </summary>
+            <param name="step">The render step to add.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.RemoveRenderStep(SadConsole.Renderers.IRenderStep)">
+            <summary>
+            Removes a render step from the renderer.
+            </summary>
+            <param name="step">The render step to remove.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderer.GetRenderSteps">
+            <summary>
+            Returns <see langword="true"/> when the renderer has an instance of the specified type; otherwise <see langword="true"/>.
+            </summary>
+            <typeparam name="T">The type to check. Must be a <see cref="T:SadConsole.Renderers.IRenderStep"/> type.</typeparam>
+            <returns>A boolean value.</returns>
+        </member>
+        <member name="T:SadConsole.Renderers.IRenderStep">
+            <summary>
+            A rendering step processed by an <see cref="T:SadConsole.Renderers.IRenderer"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRenderStep.SortOrder">
+            <summary>
+            Indicates priority related to other steps. Lowest runs first.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.OnAdded(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Called when the step is added to the renderer.
+            </summary>
+            <param name="renderer">The renderer the render step was added to.</param>
+            <param name="surface">The surface associated with the renderer. This may be null.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.OnRemoved(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Called when the step is removed from the renderer.
+            </summary>
+            <param name="renderer">The renderer the render step was removed from.</param>
+            <param name="surface">The surface associated with the renderer. This may be null.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RefreshPreStart">
+            <summary>
+            Called when the renderer starts to refresh the textures.
+            </summary>
+            <param name="renderer">The renderer.</param>
+            <param name="screen">The current screen being renderered.</param>
+            <returns><see langword="true"/> when the step wants to force a render pass. <see langword="false"/> to let the renderer decide if a render pass will happen.</returns>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RefreshEnding">
+            <summary>
+            Called before the refresh ends and the renderer is going to clean up its resources.
+            </summary>
+            <param name="renderer">The renderer.</param>
+            <param name="screen">The current screen being renderered.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RefreshEnd">
+            <summary>
+            Called after the renderer has completed redrawing to the surface and closed the redraw objects.
+            </summary>
+            <param name="renderer">The renderer.</param>
+            <param name="screen">The current screen being renderered.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RenderStart">
+            <summary>
+            Called before the render pipeline creates draw calls.
+            </summary>
+            <param name="renderer"></param>
+            <param name="screen"></param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RenderBeforeTint">
+            <summary>
+            Called after the draw calls have been created but before any tint is applied to finished texture.
+            </summary>
+            <param name="renderer"></param>
+            <param name="screen"></param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.RenderEnd">
+            <summary>
+            Called after the draw calls have been created and the tint has ended. Rendering is considered complete.
+            </summary>
+            <param name="renderer"></param>
+            <param name="screen"></param>
         </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
@@ -9680,6 +9768,28 @@
             <param name="closedCallback">A callback indicating the message was dismissed.</param>
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
+        </member>
+        <member name="T:SadConsole.ValueChangedEventArgs`1">
+            <summary>
+            The old value and the value it changed to.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ValueChangedEventArgs`1.OldValue">
+            <summary>
+            The previous object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ValueChangedEventArgs`1.NewValue">
+            <summary>
+            The new object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ValueChangedEventArgs`1.#ctor(`0,`0)">
+            <summary>
+            Creates a new instance of this object with the specified old and new value.
+            </summary>
+            <param name="oldValue">The old value.</param>
+            <param name="newValue">The new value.</param>
         </member>
         <member name="T:SadRogue.Primitives.ColorGradient">
             <summary>

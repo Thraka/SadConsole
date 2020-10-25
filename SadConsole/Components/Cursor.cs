@@ -17,6 +17,7 @@ namespace SadConsole.Components
         private ColoredGlyph _cursorRenderCell;
         private bool _applyCursorEffect = true;
         private ICellEffect _cursorEffect;
+        private Renderers.IRenderStep _cursorRenderStep;
 
         /// <summary>
         /// The default glyph used for a new cursor. Value 219.
@@ -873,11 +874,34 @@ namespace SadConsole.Components
                 _editor = surface.Surface;
             else
                 throw new ArgumentException($"This component can only bedded to a type that implements {nameof(IScreenSurface)}.");
+
+            _cursorRenderStep?.Dispose();
+            _cursorRenderStep = GameHost.Instance.GetRendererStep("cursor");
+
+            var existingSteps = surface.Renderer.GetRenderSteps();
+            Type renderType = _cursorRenderStep.GetType();
+            bool containsRenderStep = false;
+            foreach (var item in existingSteps)
+            {
+                if (item.GetType() == renderType)
+                    containsRenderStep = true;
+            }
+
+            if (!containsRenderStep)
+                surface.Renderer.AddRenderStep(_cursorRenderStep);
+            else
+                _cursorRenderStep = null;
         }
 
         void IComponent.OnRemoved(IScreenObject host)
         {
             _editor = null;
+
+            if (_cursorRenderStep != null)
+            {
+                ((IScreenSurface)host).Renderer.RemoveRenderStep(_cursorRenderStep);
+                _cursorRenderStep = null;
+            }
         }
     }
 }

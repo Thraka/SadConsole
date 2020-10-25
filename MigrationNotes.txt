@@ -28,6 +28,7 @@
 - Controls are hosted by a ControlHost component, allowing a GUI added to any console.
 - ControlsConsole and Window each derive from Console and have a Controls property of type ControlHost.
 - SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
+- Renderer can now have RenderSteps added to them to inject custom rendering processing without creating a new renderer.
 
 ====== Migration notes
 

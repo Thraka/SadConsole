@@ -42,6 +42,7 @@ namespace SadConsole.UI
         private bool _exclusiveBeforeCapture;
         private Colors _themeColors;
         private ControlBase _controlWithMouse;
+        private Renderers.IRenderStep _controlsRenderStep;
 
         #region Properties
 
@@ -161,7 +162,9 @@ namespace SadConsole.UI
         {
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
-            surface.Renderer = SadConsole.GameHost.Instance.GetRenderer("controls");
+            _controlsRenderStep?.Dispose();
+            _controlsRenderStep = SadConsole.GameHost.Instance.GetRendererStep("controlhost");
+            surface.Renderer.AddRenderStep(_controlsRenderStep);
             surface.UseKeyboard = true;
             surface.UseMouse = true;
             surface.FocusOnMouseClick = true;
@@ -197,7 +200,9 @@ namespace SadConsole.UI
                         
             ParentConsole = null;
 
-            ((IScreenSurface)host).Renderer = GameHost.Instance.GetRenderer(((IScreenSurface)host).DefaultRendererName);
+            ((IScreenSurface)host).Renderer.RemoveRenderStep(_controlsRenderStep);
+            _controlsRenderStep.Dispose();
+            _controlsRenderStep = null;
         }
 
         void Components.IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled)

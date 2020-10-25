@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace SadConsole.Renderers
 {
@@ -13,10 +14,17 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ScreenSurfaceRenderer : IRenderer
     {
+        protected IScreenSurface _screen;
+
         /// <summary>
         /// Color used with drawing the texture to the screen. Let's a surface become transparent.
         /// </summary>
-        protected Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
+        public Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
+
+        /// <summary>
+        /// Render steps to process.
+        /// </summary>
+        protected List<IRenderStep> RenderSteps = new List<IRenderStep>();
 
         /// <summary>
         /// The blend state used by this renderer.
@@ -37,6 +45,9 @@ namespace SadConsole.Renderers
             set => _finalDrawColor = new Color(_finalDrawColor.R, _finalDrawColor.G, _finalDrawColor.B, value);
         }
 
+        /// <inheritdoc/>
+        public bool IsForced { get; set; }
+
         /// <summary>
         /// The texture the surface is drawn to.
         /// </summary>
@@ -45,11 +56,15 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Cached set of rectangles used in rendering each cell.
         /// </summary>
-        protected IntRect[] _renderRects;
+        public IntRect[] CachedRenderRects;
 
         ///  <inheritdoc/>
         public virtual void Attach(IScreenSurface screen)
         {
+            _screen = screen;
+
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].OnAdded(this, screen);
         }
 
         ///  <inheritdoc/>
@@ -57,62 +72,65 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].OnRemoved(this, screen);
+
+            _screen = null;
         }
 
         ///  <inheritdoc/>
         public virtual void Render(IScreenSurface screen)
         {
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].RenderStart();
+
             // If the tint isn't covering everything
             if (screen.Tint.A != 255)
-            {
                 // Draw call for surface
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y), _finalDrawColor));
 
-                // Draw any cursors
-                foreach (var cursor in screen.GetSadComponents<Components.Cursor>())
-                {
-                    if (cursor.IsVisible && screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screen.Surface.View.Contains(cursor.Position))
-                    {
-                        var cursorPosition = screen.AbsoluteArea.Position + screen.Font.GetRenderRect(cursor.Position.X - screen.Surface.ViewPosition.X, cursor.Position.Y - screen.Surface.ViewPosition.Y, screen.FontSize).Position;
-
-                        GameHost.Instance.DrawCalls.Enqueue(
-                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                        new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, screen.FontSize.X, screen.FontSize.Y).ToIntRect(),
-                                                        screen.Font,
-                                                        true
-                                                        )
-                            );
-                    }
-                }
-            }
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].RenderBeforeTint();
 
             if (screen.Tint.A != 0)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToIntRect(), screen.Font.SolidGlyphRectangle.ToIntRect()));
+
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].RenderEnd();
         }
 
         ///  <inheritdoc/>
         public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
-            if (!force && !screen.IsDirty && BackingTexture != null) return;
+            IsForced = force;
 
             // Update texture if something is out of size.
             if (BackingTexture == null || screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
                 BackingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+                IsForced = true;
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
+            if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new IntRect[screen.Surface.View.Width * screen.Surface.View.Height];
+                CachedRenderRects = new IntRect[screen.Surface.View.Width * screen.Surface.View.Height];
 
-                for (int i = 0; i < _renderRects.Length; i++)
+                for (int i = 0; i < CachedRenderRects.Length; i++)
                 {
                     var position = Point.FromIndex(i, screen.Surface.View.Width);
-                    _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
+                    CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
+
+                IsForced = true;
             }
+
+            for (int i = 0; i < RenderSteps.Count; i++)
+                IsForced |= RenderSteps[i].RefreshPreStart();
+
+            if (!IsForced && !screen.IsDirty) return;
 
             // Render parts of the surface
             RefreshBegin(screen);
@@ -120,7 +138,13 @@ namespace SadConsole.Renderers
             if (screen.Tint.A != 255)
                 RefreshCells(screen.Surface, screen.Font);
 
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].RefreshEnding();
+
             RefreshEnd(screen);
+
+            for (int i = 0; i < RenderSteps.Count; i++)
+                RenderSteps[i].RefreshEnd();
 
             screen.IsDirty = false;
         }
@@ -170,13 +194,45 @@ namespace SadConsole.Renderers
 
                     if (!cell.IsVisible) continue;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, _renderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != surface.DefaultBackground, font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], !cell.Background.Equals(Color.Transparent) && cell.Background != surface.DefaultBackground, font);
 
                     i++;
                     rectIndex++;
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public void AddRenderStep(IRenderStep step)
+        {
+            RenderSteps.Add(step);
+            RenderSteps.Sort(CompareStep);
+
+            step.OnAdded(this, _screen);
+        }
+
+        /// <inheritdoc/>
+        public void RemoveRenderStep(IRenderStep step)
+        {
+            RenderSteps.Remove(step);
+            step.OnRemoved(this, _screen);
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<IRenderStep> GetRenderSteps() =>
+            RenderSteps.AsReadOnly();
+
+        private static int CompareStep(IRenderStep left, IRenderStep right)
+        {
+            if (left.SortOrder > right.SortOrder)
+                return 1;
+
+            if (left.SortOrder < right.SortOrder)
+                return -1;
+
+            return 0;
+        }
+
 
         #region IDisposable Support
         protected bool disposedValue = false; // To detect redundant calls
@@ -187,7 +243,7 @@ namespace SadConsole.Renderers
             {
                 if (disposing)
                 {
-                    _renderRects = null;
+                    CachedRenderRects = null;
                 }
 
                 BackingTexture?.Dispose();

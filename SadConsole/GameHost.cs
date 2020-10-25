@@ -27,9 +27,14 @@ namespace SadConsole
         private DateTime _gameStartedAt = DateTime.Now;
 
         /// <summary>
-        /// Holds all of the renderer types.
+        /// Holds all of the <see cref="IRenderer"/> types.
         /// </summary>
         protected Dictionary<string, System.Type> _renderers = new Dictionary<string, Type>(5);
+
+        /// <summary>
+        /// Holds all of the <see cref="IRenderStep"/> types.
+        /// </summary>
+        protected Dictionary<string, System.Type> _rendererSteps = new Dictionary<string, Type>(5);
 
         /// <summary>
         /// The splashs screens to show on game startup.
@@ -126,7 +131,7 @@ namespace SadConsole
         public abstract ITexture GetTexture(Stream textureStream);
 
         /// <summary>
-        /// Creates and returns a renderer by name.
+        /// Creates and returns an <see cref="IRenderer"/> by name.
         /// </summary>
         /// <param name="name">The name of the renderer.</param>
         /// <returns>A new renderer.</returns>
@@ -145,6 +150,27 @@ namespace SadConsole
         /// <param name="rendererType">The renderer type.</param>
         public void SetRenderer(string name, System.Type rendererType) =>
             _renderers[name] = rendererType;
+
+        /// <summary>
+        /// Sets the default <see cref="IRenderStep"/> for a type.
+        /// </summary>
+        /// <param name="name">The name to register the render step as.</param>
+        /// <param name="rendererStepType">The render step type.</param>
+        public void SetRendererStep(string name, System.Type rendererStepType) =>
+            _rendererSteps[name] = rendererStepType;
+
+        /// <summary>
+        /// Creates and returns a <see cref="IRenderStep"/> by name.
+        /// </summary>
+        /// <param name="name">The name of the renderer.</param>
+        /// <returns>A new renderer.</returns>
+        public virtual IRenderStep GetRendererStep(string name)
+        {
+            if (_rendererSteps.TryGetValue(name, out Type objType))
+                return (IRenderStep)Activator.CreateInstance(objType);
+
+            throw new KeyNotFoundException("RenderStep not found.");
+        }
 
         /// <summary>
         /// Gets the state of the keyboard from the implemented host.

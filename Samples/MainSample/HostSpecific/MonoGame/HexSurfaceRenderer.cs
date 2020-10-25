@@ -21,17 +21,17 @@ namespace FeatureDemo.HostSpecific.MonoGame
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (_renderRects == null || _renderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || _renderRects[0].Width != screen.FontSize.X || _renderRects[0].Height != screen.FontSize.Y)
+            if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
             {
-                _renderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
+                CachedRenderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
 
-                for (int i = 0; i < _renderRects.Length; i++)
+                for (int i = 0; i < CachedRenderRects.Length; i++)
                 {
                     var position = Point.FromIndex(i, screen.Surface.View.Width);
-                    _renderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
+                    CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
 
                     if (position.Y % 2 == 1)
-                        _renderRects[i].Offset(screen.FontSize.X / 2, 0);
+                        CachedRenderRects[i].Offset(screen.FontSize.X / 2, 0);
                 }
             }
 

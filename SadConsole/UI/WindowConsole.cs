@@ -207,7 +207,8 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer = GameHost.Instance.GetRenderer("window");
+            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep("windowmodal"));
+            //Renderer = GameHost.Instance.GetRenderer("window");
 
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.

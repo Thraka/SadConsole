@@ -16,6 +16,11 @@ namespace SadConsole.Renderers
         byte Opacity { get; set; }
 
         /// <summary>
+        /// Indicates that this renderer is being forced to be redrawn this frame.
+        /// </summary>
+        bool IsForced { get; set; }
+
+        /// <summary>
         /// Called when the renderer is added to a surface.
         /// </summary>
         /// <param name="surfaceObject">The surface.</param>
@@ -39,5 +44,24 @@ namespace SadConsole.Renderers
         /// </summary>
         /// <param name="surfaceObject">The surface this renderer is attached to.</param>
         void Render(IScreenSurface surfaceObject);
+
+        /// <summary>
+        /// Adds a render step to the renderer.
+        /// </summary>
+        /// <param name="step">The render step to add.</param>
+        void AddRenderStep(IRenderStep step);
+
+        /// <summary>
+        /// Removes a render step from the renderer.
+        /// </summary>
+        /// <param name="step">The render step to remove.</param>
+        void RemoveRenderStep(IRenderStep step);
+
+        /// <summary>
+        /// Returns <see langword="true"/> when the renderer has an instance of the specified type; otherwise <see langword="true"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to check. Must be a <see cref="IRenderStep"/> type.</typeparam>
+        /// <returns>A boolean value.</returns>
+        IReadOnlyCollection<IRenderStep> GetRenderSteps();
     }
 }

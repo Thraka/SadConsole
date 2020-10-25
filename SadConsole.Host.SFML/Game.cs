@@ -102,10 +102,12 @@ namespace SadConsole
             Host.Global.UpdateTimer = new SFML.System.Clock();
             Host.Global.DrawTimer = new SFML.System.Clock();
 
-            SetRenderer("window", typeof(Renderers.Window));
-            SetRenderer("controls", typeof(Renderers.ControlsConsole));
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
+
+            SetRendererStep("controlhost", typeof(Renderers.ControlHostRenderStep));
+            SetRendererStep("windowmodal", typeof(Renderers.WindowRenderStep));
+            SetRendererStep("cursor", typeof(Renderers.CursorRenderStep));
 
             LoadMappedColors();
 

@@ -6,6 +6,8 @@
 - Adjusted all themes to use a different base class.
 - `Checkbox` and `RadioButton` now use `ToggleButtonBase` and use the same theme but configured for each control.
 - `Settings.WindowTitle` works in SFML now.
+- `IRenderStep` added which allows hooking custom rendering steps into the `Renderer` without writing a whole new renderer.
+- `Window`, `Cursor`, and `ControlHost` converted to use a `IRenderStep` and the normal object renderer.
 
 ## v9.0 Beta 2
 

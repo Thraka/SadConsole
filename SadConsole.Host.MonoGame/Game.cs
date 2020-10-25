@@ -61,10 +61,12 @@ namespace SadConsole
 
             MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
             
-            SetRenderer("window", typeof(Renderers.Window));
-            SetRenderer("controls", typeof(Renderers.ControlsConsole));
             SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
+
+            SetRendererStep("controlhost", typeof(Renderers.ControlHostRenderStep));
+            SetRendererStep("windowmodal", typeof(Renderers.WindowRenderStep));
+            SetRendererStep("cursor", typeof(Renderers.CursorRenderStep));
 
             LoadMappedColors();
 

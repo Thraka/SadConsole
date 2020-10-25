@@ -273,36 +273,44 @@
             <param name="image">The image to render.</param>
             <returns>The surface.</returns>
         </member>
-        <member name="T:SadConsole.Renderers.ControlsConsole">
-             <summary>
-             Draws a <see cref="T:SadConsole.Renderers.ControlsConsole"/>.
-             </summary>
-             <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
-            
-             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenSurfaceRenderer"/>.
-             </remarks>
+        <member name="T:SadConsole.Renderers.ControlHostRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
         </member>
-        <member name="F:SadConsole.Renderers.ControlsConsole.BackingTextureControls">
+        <member name="F:SadConsole.Renderers.ControlHostRenderStep.BackingTextureControls">
             <summary>
             The cached texture of the drawn controls layer.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.ControlsConsole.Name">
-            <summary>
-            Name of this renderer type.
-            </summary>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.SortOrder">
+            <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Detatch(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.OnAdded(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.OnRemoved(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlsConsole.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RefreshPreStart">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RefreshEnding">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RefreshEnd">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderStart">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderBeforeTint">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderEnd">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.LayeredScreenSurface">
@@ -335,14 +343,19 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.MonoGameBlendState">
-            <summary>
-            The blend state used by this renderer.
-            </summary>
-        </member>
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
             <summary>
             Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
+            <summary>
+            Render steps to process.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.MonoGameBlendState">
+            <summary>
+            The blend state used by this renderer.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
@@ -360,7 +373,10 @@
             The texture the surface is drawn to.
             </summary>
         </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._renderRects">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
             <summary>
             Cached set of rectangles used in rendering each cell.
             </summary>
@@ -396,26 +412,14 @@
             <param name="surface">The surface being drawn.</param>
             <param name="font">The font used with drawing.</param>
         </member>
-        <member name="T:SadConsole.Renderers.Window">
-             <summary>
-             Draws a <see cref="T:SadConsole.Renderers.Window"/>.
-             </summary>
-             <remarks>
-             This renderer only caches drawing of the surface's cells. When the <see cref="M:SadConsole.Renderers.Window.Render(SadConsole.IScreenSurface)"/> method is called, the cached surface is drawn, then the cursor (if required), and then a tint. This allows the cursor to move and animate on the surface without the entire surface being redrawn each frame.
-            
-             If the cursor is not visible, and there is not tint set, this renderer behaves exactly like <see cref="T:SadConsole.Renderers.ScreenSurfaceRenderer"/>.
-             </remarks>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddRenderStep(SadConsole.Renderers.IRenderStep)">
+            <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Renderers.Window.Name">
-            <summary>
-            Name of this renderer type.
-            </summary>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.RemoveRenderStep(SadConsole.Renderers.IRenderStep)">
+            <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.Window.Attach(SadConsole.IScreenSurface)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.Window.Render(SadConsole.IScreenSurface)">
-             <inheritdoc/>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.GetRenderSteps">
+            <inheritdoc/>
         </member>
     </members>
 </doc>
