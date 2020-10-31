@@ -55,17 +55,15 @@ namespace SadConsole.Controls
         /// <param name="info">The keyboard state.</param>
         public override bool ProcessKeyboard(Input.Keyboard info)
         {
-            if (info.IsKeyReleased(Keys.Up) && PreviousSelection != null)
+            if (info.IsKeyReleased(Keys.Up))
             {
-                PreviousSelection.IsFocused = true;
-
+                SelectPrevious();
                 return true;
             }
 
-            else if (info.IsKeyReleased(Keys.Down) && NextSelection != null)
+            else if (info.IsKeyReleased(Keys.Down))
             {
-                NextSelection.IsFocused = true;
-
+                SelectNext();
                 return true;
             }
 
@@ -78,11 +76,17 @@ namespace SadConsole.Controls
         /// <returns>Returns the previous selection button.</returns>
         public SelectionButton SelectPrevious()
         {
-            if (PreviousSelection != null)
+            if (PreviousSelection == null)
             {
-                PreviousSelection.IsFocused = true;
+                return null;
             }
 
+            if (!PreviousSelection.IsEnabled)
+            {
+                return PreviousSelection.SelectPrevious();
+            }
+
+            PreviousSelection.IsFocused = true;
             return PreviousSelection;
         }
 
@@ -92,11 +96,17 @@ namespace SadConsole.Controls
         /// <returns>Returns the next selection button.</returns>
         public SelectionButton SelectNext()
         {
-            if (NextSelection != null)
+            if (NextSelection == null)
             {
-                NextSelection.IsFocused = true;
+                return null;
             }
 
+            if (!NextSelection.IsEnabled)
+            {
+                return NextSelection.SelectNext();
+            }
+
+            NextSelection.IsFocused = true;
             return NextSelection;
         }
     }
