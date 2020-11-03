@@ -16,9 +16,14 @@ namespace SadConsole.Renderers
         byte Opacity { get; set; }
 
         /// <summary>
-        /// Indicates that this renderer is being forced to be redrawn this frame.
+        /// <see langword="true"/> when the renderer is being forced to be redrawn this frame; otherwise <see langword="false"/>.
         /// </summary>
         bool IsForced { get; set; }
+
+        ///// <summary>
+        ///// <see langword="true"/> when the renderer should provide the output texture to the render steps; otherwise <see langword="false"/>.
+        ///// </summary>
+        //bool UseSharedTexture { get; set; }
 
         /// <summary>
         /// Called when the renderer is added to a surface.

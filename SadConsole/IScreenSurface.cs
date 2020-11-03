@@ -53,7 +53,7 @@ namespace SadConsole
         /// <summary>
         /// The renderer used to draw this surface.
         /// </summary>
-        IRenderer Renderer { get; set; }
+        IRenderer Renderer { get; }
 
         /// <summary>
         /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.

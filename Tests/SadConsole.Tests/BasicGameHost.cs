@@ -39,6 +39,8 @@ namespace SadConsole.Tests
             throw new NotImplementedException();
         }
 
+        public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
+
         public override void Run()
         {
             throw new NotImplementedException();

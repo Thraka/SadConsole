@@ -43,8 +43,7 @@ namespace ThemeEditor
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.HueBar), new Controls.HueBar.ThemeType());
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.FileDirectoryListbox), new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme()));
 
-            GameHost.Instance.Screen.Renderer = null;
-            GameHost.Instance.Screen.Children.Add(new Container());
+            GameHost.Instance.Screen = new Container();
 
             //GameHost.Instance.Screen = con;
 

@@ -194,12 +194,9 @@ namespace FeatureDemo.CustomConsoles
             //    y = 25 -20;
             //    x += colorLength;
             //}
-
+            
             OnInvalidated();
         }
-
-
-        public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState state) => base.ProcessMouse(state);
 
         protected void OnInvalidated()
         {

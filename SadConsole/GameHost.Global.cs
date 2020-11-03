@@ -12,6 +12,8 @@ namespace SadConsole
     /// </summary>
     public abstract partial class GameHost : IDisposable
     {
+        private GlobalState _state;
+
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
         /// </summary>
@@ -63,9 +65,14 @@ namespace SadConsole
         public TimeSpan GameRunningTotalTime { get; set; }
 
         /// <summary>
+        /// The console created by the game and automatically assigned to <see cref="Screen"/>.
+        /// </summary>
+        public Console StartingConsole { get; protected set; }
+
+        /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public Console Screen { get; set; }
+        public ScreenObject Screen { get; set; }
 
         /// <summary>
         /// The stack of focused consoles used by the mouse and keyboard.
@@ -77,7 +84,21 @@ namespace SadConsole
         /// </summary>
         public Random Random { get; set; } = new Random();
 
-        private GlobalState _state;
+        /// <summary>
+        /// Resizes the window to the specified dimensions.
+        /// </summary>
+        /// <param name="width">The width of the window in pixels.</param>
+        /// <param name="height">The height of the window in pixels.</param>
+        public abstract void ResizeWindow(int width, int height);
+
+        /// <summary>
+        /// Resizes the window to the specified cell count along the X-axis and Y-axis.
+        /// </summary>
+        /// <param name="cellsX">The number of cells to fit horizontally.</param>
+        /// <param name="cellsY">The number of cells to fit vertically.</param>
+        /// <param name="cellSize">The size of the cells in pixels.</param>
+        public void ResizeWindow(int cellsX, int cellsY, Point cellSize) =>
+            ResizeWindow(cellsX * cellSize.X, cellsY * cellSize.Y);
 
         /// <summary>
         /// Saves the global state, mainly the <see cref="FocusedScreenObjects"/> and <see cref="Screen"/> objects.
@@ -109,7 +130,7 @@ namespace SadConsole
         private class GlobalState
         {
             public FocusedScreenObjectStack FocusedScreenObjects;
-            public Console Screen;
+            public ScreenObject Screen;
             public Font DefaultFont;
             public Font.Sizes DefaultFontSize;
         }

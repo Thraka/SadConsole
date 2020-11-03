@@ -18,7 +18,7 @@ namespace SadConsole.SplashScreens
             {
                 GameHost.Instance.SaveGlobalState();
                 GameHost.Instance.FocusedScreenObjects = new FocusedScreenObjectStack();
-                GameHost.Instance.Screen = new Console(1, 1) { Renderer = null };
+                GameHost.Instance.Screen = new ScreenObject();
                 GameHost.Instance.Screen.Children.Add(new SplashScreenManager());
             }
         }

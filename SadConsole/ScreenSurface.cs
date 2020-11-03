@@ -39,7 +39,7 @@ namespace SadConsole
         public Renderers.IRenderer Renderer
         {
             get => _renderer;
-            set
+            protected set
             {
                 if (_renderer == value) return;
 
@@ -47,6 +47,7 @@ namespace SadConsole
                 _renderer = value;
                 _renderer?.Attach(this);
 
+                OnRendererChanged();
                 IsDirty = true;
             }
         }
@@ -59,15 +60,17 @@ namespace SadConsole
             get => _surface;
             protected set
             {
-                if (value == null) throw new NullReferenceException("Surface cannot be set to null.");
                 ICellSurface old = _surface;
 
-                _surface = value;
+                _surface = value ?? throw new NullReferenceException("Surface cannot be set to null.");
 
                 if (old != null)
                     old.IsDirtyChanged -= _isDirtyChangedEventHadler;
 
                 _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+
+                _renderer?.Detatch(this);
+                _renderer?.Attach(this);
 
                 OnSurfaceChanged(old);
             }
@@ -193,7 +196,7 @@ namespace SadConsole
             // already configured, ready to accept the new renderer, they should call
             //      Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
             //
-            Renderer = GameHost.Instance.GetRenderer("default");
+            Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
         }
 
         /// <summary>
@@ -211,7 +214,7 @@ namespace SadConsole
             FontSize = Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
 
             // See note in other ctor.
-            Renderer = GameHost.Instance.GetRenderer("default");
+            Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
         }
 
         /// <inheritdoc />
@@ -288,6 +291,11 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldSurface">The previous surface.</param>
         protected void OnSurfaceChanged(ICellSurface oldSurface) { }
+
+        /// <summary>
+        /// Called when the <see cref="Renderer"/> property is changed.
+        /// </summary>
+        protected void OnRendererChanged() { }
 
         /// <inheritdoc/>
         [OnDeserialized]

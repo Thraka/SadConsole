@@ -61,16 +61,18 @@ namespace SadConsole
 
             MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
             
-            SetRenderer("layered", typeof(Renderers.LayeredScreenSurface));
             SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
 
             SetRendererStep("controlhost", typeof(Renderers.ControlHostRenderStep));
             SetRendererStep("windowmodal", typeof(Renderers.WindowRenderStep));
             SetRendererStep("cursor", typeof(Renderers.CursorRenderStep));
+            SetRendererStep("entitylite", typeof(Renderers.EntityLiteRenderStep));
+            SetRendererStep("surface", typeof(Renderers.SurfaceRenderStep));
 
             LoadMappedColors();
 
-            Screen = new Console(ScreenCellsX, ScreenCellsY);
+            StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+            Screen = StartingConsole;
 
             OnStart?.Invoke();
             SplashScreens.SplashScreenManager.CheckRun();
@@ -158,19 +160,15 @@ namespace SadConsole
                 }
             }
         }
-
-        /// <summary>
-        /// Resizes the game window.
-        /// </summary>
-        /// <param name="width">The width of the window in pixels.</param>
-        /// <param name="height">The height of the window in pixels.</param>
-        public void ResizeWindow(int width, int height)
+        
+        /// <inheritdoc/>
+        public override void ResizeWindow(int width, int height)
         {
             Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
             Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
             Host.Global.GraphicsDeviceManager.ApplyChanges();
 
-            ((Game)SadConsole.Game.Instance).MonoGameInstance.ResetRendering();
+            Instance.MonoGameInstance.ResetRendering();
         }
 
         internal void InvokeFrameDraw() =>
@@ -178,5 +176,21 @@ namespace SadConsole
 
         internal void InvokeFrameUpdate() =>
             OnFrameUpdate();
+
+        /// <summary>
+        /// Destroys the <see cref="GameHost.StartingConsole"/> instance.
+        /// </summary>
+        /// <remarks>
+        /// Prior to calling this method, you must set <see cref="GameHost.Screen"/> to an object other than <see cref="GameHost.StartingConsole"/>.
+        /// </remarks>
+        public void RemoveStartingConsole()
+        {
+            if (StartingConsole == null) return;
+            if (Screen == StartingConsole)
+                throw new Exception($"{nameof(StartingConsole)} cannot be assigned to {nameof(Screen)} when removing the console.");
+
+            StartingConsole.Dispose();
+            StartingConsole = null;
+        }
     }
 }

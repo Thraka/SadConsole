@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GameHost>sfml</GameHost>
+    <GameHost>monogame</GameHost>
     <UseProjectReferences>true</UseProjectReferences>
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>

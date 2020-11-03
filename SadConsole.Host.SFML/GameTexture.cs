@@ -14,7 +14,6 @@ namespace SadConsole.Host
     /// </summary>
     public class GameTexture : ITexture
     {
-        private bool _skipDispose;
         private Texture _texture;
         private string _resourcePath;
 
@@ -29,6 +28,11 @@ namespace SadConsole.Host
 
         /// <inheritdoc />
         public int Width => (int)_texture.Size.X;
+
+        /// <summary>
+        /// Skips disposing of the texture.
+        /// </summary>
+        public bool SkipDispose { get; set; }
 
         internal GameTexture(string path)
         {
@@ -48,7 +52,7 @@ namespace SadConsole.Host
         /// <remarks>The only time the backing texture resource is disposed is when the <see cref="GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
         public GameTexture(Texture texture)
         {
-            _skipDispose = true;
+            SkipDispose = true;
             _texture = texture;
         }
 
@@ -57,7 +61,7 @@ namespace SadConsole.Host
         /// </summary>
         public void Dispose()
         {
-            if (!_skipDispose)
+            if (!SkipDispose)
                 _texture?.Dispose();
 
             _texture = null;

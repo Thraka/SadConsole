@@ -5,36 +5,51 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
 {
+    /// <summary>
+    /// Renders a cursor.
+    /// </summary>
     public class CursorRenderStep : IRenderStep
     {
         private ScreenSurfaceRenderer _baseRenderer;
         private IScreenSurface _screen;
 
+        ///  <inheritdoc/>
         public int SortOrder { get; set; } = 8;
 
-        public void Dispose() { }
+        ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
             if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
             _screen = surface;
         }
+
+        ///  <inheritdoc/>
         public void OnRemoved(IRenderer renderer, IScreenSurface surface)
         {
             _screen = null;
             _baseRenderer = null;
         }
-        public void RefreshEnd() { }
-        public void RefreshEnding() { }
+
+        ///  <inheritdoc/>
+        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface) =>
+            _screen = surface;
+
+        ///  <inheritdoc/>
         public bool RefreshPreStart() =>
             false;
-        public void RenderBeforeTint()
+
+        ///  <inheritdoc/>
+        public void Refresh() { }
+
+        ///  <inheritdoc/>
+        public void RenderStart()
         {
             // If the tint isn't covering everything
             if (_screen.Tint.A != 255)
             {
                 // Draw any cursors
-                foreach (var cursor in _screen.GetSadComponents<Components.Cursor>())
+                foreach (Components.Cursor cursor in _screen.GetSadComponents<Components.Cursor>())
                 {
                     if (cursor.IsVisible && _screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && _screen.Surface.View.Contains(cursor.Position))
                     {
@@ -42,7 +57,7 @@ namespace SadConsole.Renderers
 
                         GameHost.Instance.DrawCalls.Enqueue(
                             new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                        new SadRogue.Primitives.Rectangle(cursorPosition.X, cursorPosition.Y, _screen.FontSize.X, _screen.FontSize.Y).ToIntRect(),
+                                                        new Rectangle(cursorPosition.X, cursorPosition.Y, _screen.FontSize.X, _screen.FontSize.Y).ToIntRect(),
                                                         _screen.Font,
                                                         true
                                                         )
@@ -51,7 +66,11 @@ namespace SadConsole.Renderers
                 }
             }
         }
+
+        ///  <inheritdoc/>
         public void RenderEnd() { }
-        public void RenderStart() { }
+
+        ///  <inheritdoc/>
+        public void Dispose() { }
     }
 }

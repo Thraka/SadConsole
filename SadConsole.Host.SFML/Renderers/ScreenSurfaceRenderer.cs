@@ -14,7 +14,12 @@ namespace SadConsole.Renderers
     /// </remarks>
     public class ScreenSurfaceRenderer : IRenderer
     {
-        protected IScreenSurface _screen;
+        private IRenderStep _defaultRenderStep;
+
+        /// <summary>
+        /// The screen this renderer is attached to.
+        /// </summary>
+        protected IScreenSurface _screen { get; set; }
 
         /// <summary>
         /// Color used with drawing the texture to the screen. Let's a surface become transparent.
@@ -32,12 +37,7 @@ namespace SadConsole.Renderers
         public BlendMode SFMLBlendState { get; set; } = SadConsole.Host.Settings.SFMLSurfaceBlendMode;
 
         /// <summary>
-        /// Name of this renderer type.
-        /// </summary>
-        public static string Name => "screenobject";
-
-        /// <summary>
-        /// A 0 to 255 value represening how transparent the <see cref="BackingTexture"/> is when drawn to the screen. 255 represents full visibility.
+        /// A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
         /// </summary>
         public byte Opacity
         {
@@ -49,14 +49,36 @@ namespace SadConsole.Renderers
         public bool IsForced { get; set; }
 
         /// <summary>
-        /// The texture the surface is drawn to.
-        /// </summary>
-        public RenderTexture BackingTexture;
-
-        /// <summary>
         /// Cached set of rectangles used in rendering each cell.
         /// </summary>
         public IntRect[] CachedRenderRects;
+
+        /// <summary>
+        /// Default render step for drawing the surface.
+        /// </summary>
+        public IRenderStep DefaultRenderStep
+        {
+            get => _defaultRenderStep;
+            set
+            {
+                if (_defaultRenderStep == value) return;
+
+                if (_defaultRenderStep != null)
+                    RemoveRenderStep(_defaultRenderStep);
+
+                if (value == null) return;
+
+                _defaultRenderStep = value;
+
+                AddRenderStep(value);
+            }
+        }
+
+        /// <summary>
+        /// Creates the renderer with the <see cref="SurfaceRenderStep"/> step.
+        /// </summary>
+        public ScreenSurfaceRenderer() =>
+            DefaultRenderStep = new SurfaceRenderStep();
 
         ///  <inheritdoc/>
         public virtual void Attach(IScreenSurface screen)
@@ -64,17 +86,14 @@ namespace SadConsole.Renderers
             _screen = screen;
 
             for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].OnAdded(this, screen);
+                RenderSteps[i].OnSurfaceChanged(this, screen);
         }
 
         ///  <inheritdoc/>
         public virtual void Detatch(IScreenSurface screen)
         {
-            BackingTexture?.Dispose();
-            BackingTexture = null;
-
             for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].OnRemoved(this, screen);
+                RenderSteps[i].OnSurfaceChanged(this, null);
 
             _screen = null;
         }
@@ -85,14 +104,7 @@ namespace SadConsole.Renderers
             for (int i = 0; i < RenderSteps.Count; i++)
                 RenderSteps[i].RenderStart();
 
-            // If the tint isn't covering everything
-            if (screen.Tint.A != 255)
-                // Draw call for surface
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y), _finalDrawColor));
-
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].RenderBeforeTint();
-
+            // If tint is visible, draw it
             if (screen.Tint.A != 0)
                 GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToIntRect(), screen.Font.SolidGlyphRectangle.ToIntRect()));
 
@@ -104,14 +116,6 @@ namespace SadConsole.Renderers
         public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             IsForced = force;
-
-            // Update texture if something is out of size.
-            if (BackingTexture == null || screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
-            {
-                BackingTexture?.Dispose();
-                BackingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
-                IsForced = true;
-            }
 
             // Update cached drawing rectangles if something is out of size.
             if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
@@ -130,76 +134,10 @@ namespace SadConsole.Renderers
             for (int i = 0; i < RenderSteps.Count; i++)
                 IsForced |= RenderSteps[i].RefreshPreStart();
 
-            if (!IsForced && !screen.IsDirty) return;
-
-            // Render parts of the surface
-            RefreshBegin(screen);
-
-            if (screen.Tint.A != 255)
-                RefreshCells(screen.Surface, screen.Font);
-
             for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].RefreshEnding();
-
-            RefreshEnd(screen);
-
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].RefreshEnd();
+                RenderSteps[i].Refresh();
 
             screen.IsDirty = false;
-        }
-
-
-        /// <summary>
-        /// Starts the sprite batch with the <see cref="BackingTexture"/>.
-        /// </summary>
-        /// <param name="surface">Object being used with the sprite batch.</param>
-        protected virtual void RefreshBegin(IScreenSurface surface)
-        {
-            BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, SFMLBlendState, Transform.Identity);
-        }
-
-        /// <summary>
-        /// Ends the sprite batch.
-        /// </summary>
-        /// <param name="surface">Object being used with the sprite batch.</param>
-        protected virtual void RefreshEnd(IScreenSurface surface)
-        {
-            Host.Global.SharedSpriteBatch.End();
-            BackingTexture.Display();
-        }
-
-        /// <summary>
-        /// Draws each cell with the sprite batch.
-        /// </summary>
-        /// <param name="surface">The surface being drawn.</param>
-        /// <param name="font">The font used with drawing.</param>
-        protected virtual void RefreshCells(ICellSurface surface, Font font)
-        {
-            if (surface.DefaultBackground.A != 0)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
-
-            int rectIndex = 0;
-
-            for (int y = 0; y < surface.View.Height; y++)
-            {
-                int i = ((y + surface.ViewPosition.Y) * surface.BufferWidth) + surface.ViewPosition.X;
-
-                for (int x = 0; x < surface.View.Width; x++)
-                {
-                    ColoredGlyph cell = surface.Cells[i];
-
-                    cell.IsDirty = false;
-
-                    if (!cell.IsVisible) continue;
-
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != surface.DefaultBackground, font);
-
-                    i++;
-                    rectIndex++;
-                }
-            }
         }
 
         /// <inheritdoc/>
@@ -241,23 +179,15 @@ namespace SadConsole.Renderers
         {
             if (!disposedValue)
             {
-                if (disposing)
-                {
-                    CachedRenderRects = null;
-                }
-
-                BackingTexture?.Dispose();
-                BackingTexture = null;
+                foreach (var item in RenderSteps)
+                    item.Dispose();
 
                 disposedValue = true;
             }
         }
 
-         ~ScreenSurfaceRenderer()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        ~ScreenSurfaceRenderer() =>
             Dispose(false);
-        }
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()

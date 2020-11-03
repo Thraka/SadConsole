@@ -73,8 +73,9 @@ namespace FeatureDemo
             MainConsole = new Container();
 
             // We'll instead use our demo consoles that show various features of SadConsole.
-            GameHost.Instance.Screen.Renderer = null;
-            GameHost.Instance.Screen.Children.Add(MainConsole);
+
+            Game.Instance.Screen = MainConsole;
+            Game.Instance.RemoveStartingConsole();
 
             //var font = Font.LoadBMFont("Res/Fonts/font.fnt", 9, 12);
 

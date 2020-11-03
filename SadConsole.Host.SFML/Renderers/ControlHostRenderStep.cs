@@ -9,7 +9,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Draws a <see cref="SadConsole.UI.ControlHost"/>.
     /// </summary>
-    public class ControlHostRenderStep : IRenderStep
+    public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     {
         private SadConsole.UI.ControlHost _controlsHost;
         private ScreenSurfaceRenderer _baseRenderer;
@@ -18,98 +18,100 @@ namespace SadConsole.Renderers
         /// <summary>
         /// The cached texture of the drawn controls layer.
         /// </summary>
-        public RenderTexture BackingTextureControls;
+        public RenderTexture BackingTexture { get; private set; }
 
         /// <inheritdoc/>
         public int SortOrder { get; set; } = 5;
 
         ///  <inheritdoc/>
-        public void Dispose()
+        public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            if (!(renderer is ScreenSurfaceRenderer))
+                throw new Exception($"Renderer used with {nameof(ControlHostRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface screen)
-        {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(ControlHostRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            _screen = screen;
+            OnSurfaceChanged(renderer, surface);
         }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface screen)
+        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
         {
-            BackingTextureControls?.Dispose();
-            BackingTextureControls = null;
+            BackingTexture?.Dispose();
+            BackingTexture = null;
             _screen = null;
             _baseRenderer = null;
+            _controlsHost = null;
+        }
+
+        ///  <inheritdoc/>
+        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface)
+        {
+            if (surface == null)
+            {
+                BackingTexture?.Dispose();
+                BackingTexture = null;
+                _screen = null;
+                _controlsHost = null;
+            }
+            else
+            {
+                if (!surface.HasSadComponent(out UI.ControlHost host))
+                    throw new Exception($"{nameof(ControlHostRenderStep)} is being run on object without a {nameof(UI.ControlHost)} component.");
+
+                _screen = surface;
+                _controlsHost = host;
+                // BackingTexture is handled by prestart.
+            }
+        }
+
+        ///  <inheritdoc/>
+        public void RenderStart()
+        {
+            // Draw call for controls
+            if (_screen.Tint.A != 255)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(_screen.AbsoluteArea.Position.X, _screen.AbsoluteArea.Position.Y), _baseRenderer._finalDrawColor));
+        }
+
+        ///  <inheritdoc/>
+        public void RenderEnd()
+        {
         }
 
         ///  <inheritdoc/>
         public bool RefreshPreStart()
         {
-            if (!_screen.HasSadComponent<UI.ControlHost>(out UI.ControlHost host))
-                throw new Exception("ControlHostRenderStep is being run on object without a control host component.");
-
-            _controlsHost = host;
-
             // Update texture if something is out of size.
-            if (BackingTextureControls == null || _screen.AbsoluteArea.Width != (int)BackingTextureControls.Size.X || _screen.AbsoluteArea.Height != (int)BackingTextureControls.Size.Y)
+            if (BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
-                BackingTextureControls?.Dispose();
-                BackingTextureControls = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
+                BackingTexture?.Dispose();
+                BackingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
                 return true;
             }
 
-            return _controlsHost.IsDirty;
+            return false;
         }
 
         ///  <inheritdoc/>
-        public void RefreshEnding() { }
-
-        ///  <inheritdoc/>
-        public void RefreshEnd()
+        public void Refresh()
         {
             if (_baseRenderer.IsForced || _controlsHost.IsDirty)
             {
-                BackingTextureControls.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Reset(BackingTextureControls, _baseRenderer.SFMLBlendState, Transform.Identity);
+                BackingTexture.Clear(Color.Transparent);
+                Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
 
-                if (_screen.Tint.A != 255)
-                    ProcessContainer(_controlsHost);
+                ProcessContainer(_controlsHost);
 
                 Host.Global.SharedSpriteBatch.End();
-                BackingTextureControls.Display();
+                BackingTexture.Display();
             }
 
-            _screen.IsDirty = false;
             _controlsHost.IsDirty = false;
         }
 
-        ///  <inheritdoc/>
-        public void RenderStart() { }
-
-        ///  <inheritdoc/>
-        public void RenderBeforeTint()
-        {
-            if (_screen.Tint.A != 255)
-                // Draw call for control surface
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTextureControls.Texture, new SFML.System.Vector2i(_screen.AbsoluteArea.Position.X, _screen.AbsoluteArea.Position.Y), _baseRenderer._finalDrawColor));
-        }
-
-        ///  <inheritdoc/>
-        public void RenderEnd() { }
-
-        protected void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                BackingTextureControls?.Dispose();
-                BackingTextureControls = null;
-            }
-        }
+        /// <summary>
+        /// Processes a container from the control host.
+        /// </summary>
+        /// <param name="controlContainer">The container.</param>
         protected void ProcessContainer(UI.Controls.IContainer controlContainer)
         {
             foreach (UI.Controls.ControlBase control in controlContainer)
@@ -122,6 +124,14 @@ namespace SadConsole.Renderers
             }
         }
 
+        /// <summary>
+        /// Renders the cells of a control.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="font">The font to render the cells with.</param>
+        /// <param name="fontSize">The size of a cell in pixels.</param>
+        /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
+        /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
         protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, Font font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
         {
             font = control.AlternateFont ?? font;
@@ -148,8 +158,31 @@ namespace SadConsole.Renderers
 
                 IntRect renderRect = _baseRenderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
-                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != control.Surface.DefaultBackground, font);
+                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
             }
         }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
+        protected void Dispose(bool disposing)
+        {
+            BackingTexture?.Dispose();
+            BackingTexture = null;
+        }
+
+        ///  <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes the object for collection.
+        /// </summary>
+        ~ControlHostRenderStep() =>
+            Dispose(false);
     }
 }

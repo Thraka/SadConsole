@@ -19,7 +19,7 @@ namespace SadConsole
     /// Represents a graphical font used by SadConsole.
     /// </summary>
     [DataContract]
-    public sealed class Font
+    public class Font
     {
         private int _solidGlyphIndex;
         private int _unsupportedGlyphIndex;
@@ -83,19 +83,19 @@ namespace SadConsole
         /// How many columns are in the this font.
         /// </summary>
         [DataMember]
-        public int Columns { get; private set; }
+        public int Columns { get; protected set; }
 
         /// <summary>
         /// How many rows are in this font.
         /// </summary>
         [DataMember]
-        public int Rows { get; private set; }
+        public int Rows { get; protected set; }
 
         /// <summary>
         /// The name of the font used when it is registered with the <see cref="GameHost.Fonts"/> collection.
         /// </summary>
         [DataMember]
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         /// <summary>
         /// The name of the image file as defined in the .font file.
@@ -107,19 +107,19 @@ namespace SadConsole
         /// The height of each glyph in pixels.
         /// </summary>
         [DataMember]
-        public int GlyphHeight { get; set; }
+        public int GlyphHeight { get; protected set; }
 
         /// <summary>
         /// The width of each glyph in pixels.
         /// </summary>
         [DataMember]
-        public int GlyphWidth { get; set; }
+        public int GlyphWidth { get; protected set; }
 
         /// <summary>
         /// The amount of pixels between glyphs.
         /// </summary>
         [DataMember]
-        public int GlyphPadding { get; set; }
+        public int GlyphPadding { get; protected set; }
 
         /// <summary>
         /// The glyph index to use when a glyph used during rendering is not available.
