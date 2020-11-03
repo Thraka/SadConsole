@@ -19,12 +19,10 @@ namespace FeatureDemo.CustomConsoles
         // Controls
         private readonly RadioButton optionButtonSurface;
         private readonly RadioButton optionButtonView;
-        private readonly RadioButton optionButtonLayered;
         private readonly RadioButton optionButtonAnimated;
         private readonly Console basicSurface;
         private readonly AnimatedScreenSurface animatedSurface;
         private readonly Console viewSurface;
-        private LayeredScreenSurface layeredSurface;
         private readonly Console emptySurface;
 
         public SerializationTests() : base(80, 23)
@@ -71,14 +69,6 @@ namespace FeatureDemo.CustomConsoles
             optionButtonView.IsSelectedChanged += OptionButton_IsSelectedChanged;
             _controlsConsole.Controls.Add(optionButtonView);
 
-            optionButtonLayered = new SadConsole.UI.Controls.RadioButton(21, 1)
-            {
-                Text = "Layered Surface",
-                Position = new Point(optionButtonSurface.Bounds.MaxExtentX + 1, 1)
-            };
-            optionButtonLayered.IsSelectedChanged += OptionButton_IsSelectedChanged;
-            _controlsConsole.Controls.Add(optionButtonLayered);
-
             optionButtonAnimated = new SadConsole.UI.Controls.RadioButton(21, 1)
             {
                 Text = "Animated Surface",
@@ -103,7 +93,6 @@ namespace FeatureDemo.CustomConsoles
             //emptySurface = (SadConsole.Surfaces.BasicSurface)loadedView.TextSurface;
 
             MakeBasicSurface();
-            MakeLayeredSurface();
 
             optionButtonSurface.IsSelected = true;
         }
@@ -129,12 +118,6 @@ namespace FeatureDemo.CustomConsoles
                 loaded.Print(2, 2, "Loaded view");
                 //loadedView.Children.Add(SadConsole.Surfaces.Basic.Load("viewsurface.view", basicSurface);
             }
-            else if (optionButtonLayered.IsSelected)
-            {
-                SadConsole.Serializer.Save(layeredSurface, "layeredObject.layered", false);
-                var layers = SadConsole.Serializer.Load<LayeredScreenSurface>("layeredObject.layered", false);
-                loadedView.Children.Add(layers);
-            }
             else if (optionButtonAnimated.IsSelected)
             {
                 SadConsole.Serializer.Save(animatedSurface, "animatedsurface.animation", false);
@@ -156,10 +139,6 @@ namespace FeatureDemo.CustomConsoles
             else if (optionButtonView.IsSelected)
             {
                 masterView.Children.Add(viewSurface);
-            }
-            else if (optionButtonLayered.IsSelected)
-            {
-                masterView.Children.Add(layeredSurface);
             }
             else if (optionButtonAnimated.IsSelected)
             {
@@ -225,40 +204,6 @@ namespace FeatureDemo.CustomConsoles
                 basicSurface.Cells[startSet3 + i].Mirror = Mirror.Horizontal | Mirror.Vertical;
                 basicSurface.Cells[startSet3 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.GreenDark;
             }
-        }
-
-        private void MakeLayeredSurface()
-        {
-            int width = 34;
-            int height = 15;
-
-            var layers = new List<LayeredScreenSurface.Layer>();
-
-            var layer = new LayeredScreenSurface.Layer("1", width, height);
-            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Gray, SadConsole.UI.Themes.Library.Default.Colors.GrayDark, 0);
-            layer.Surface.Print(14, 4, "Layer 0");
-            layers.Add(layer);
-
-            layer = new LayeredScreenSurface.Layer("2", width, height);
-            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Green, SadConsole.UI.Themes.Library.Default.Colors.GreenDark, 0);
-            layer.Surface.Fill(new Rectangle(10, 4, 34 - 20, 15 - 8), Color.White, Color.Transparent, 0);
-            layer.Surface.Print(14, 2, "Layer 1");
-            layers.Add(layer);
-
-            layer = new LayeredScreenSurface.Layer("3", width, height);
-            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Brown, SadConsole.UI.Themes.Library.Default.Colors.BrownDark, 0);
-            layer.Surface.Fill(new Rectangle(5, 2, 34 - 10, 15 - 4), Color.White, Color.Transparent, 0);
-            layer.Surface.Print(14, 0, "Layer 2");
-            layers.Add(layer);
-
-            layer = new LayeredScreenSurface.Layer("oob", width + 20, height + 20);
-            layer.Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Purple, SadConsole.UI.Themes.Library.Default.Colors.PurpleDark, 0);
-            layer.Surface.Fill(new Rectangle(1, 1, width, height), Color.White, Color.Transparent, 0);
-            layer.Surface.Print(14, 0, "Layer OOB");
-            layer.Position = (-1, -1);
-            layers.Add(layer);
-
-            layeredSurface = new LayeredScreenSurface(layers, true);
         }
     }
 

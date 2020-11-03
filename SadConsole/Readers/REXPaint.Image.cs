@@ -96,12 +96,12 @@ namespace SadConsole.Readers
         /// Converts this REXPaint image to a <see cref="LayeredScreenSurface"/>.
         /// </summary>
         /// <returns></returns>
-        public LayeredScreenSurface ToLayersComponent()
+        public IEnumerable<CellSurface> ToLayersComponent()
         {
-            List<LayeredScreenSurface.Layer> layers = new List<LayeredScreenSurface.Layer>();
+            var layers = new CellSurface[LayerCount];
             for (int i = 0; i < LayerCount; i++)
             {
-                LayeredScreenSurface.Layer layer = new LayeredScreenSurface.Layer(i.ToString(), Width, Height);
+                layers[i] = new CellSurface(Width, Height);
 
                 for (int y = 0; y < Height; y++)
                 {
@@ -111,19 +111,18 @@ namespace SadConsole.Readers
                         if (rexCell.IsTransparent())
                             continue;
 
-                        SadConsole.ColoredGlyph newCell = layer.Surface[x, y];
+                        SadConsole.ColoredGlyph newCell = layers[i][x, y];
                         newCell.Foreground = new SadRogueColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
                         newCell.Background = new SadRogueColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
                         newCell.Glyph = rexCell.Character;
                     }
                 }
 
-                layer.Surface.IsDirty = true;
-                layers.Add(layer);
+                layers[i].IsDirty = true;
             }
 
 
-            return new LayeredScreenSurface(layers, true);
+            return layers;
         }
 
         /// <summary>

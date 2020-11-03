@@ -42,9 +42,6 @@ namespace SadConsole
                 else if (objectType == typeof(ColoredGlyph))
                     contract.Converter = new SerializedTypes.ColoredGlyphJsonConverter();
 
-                else if (objectType == typeof(LayeredScreenSurface))
-                    contract.Converter = new SerializedTypes.LayeredJsonConverter();
-
                 return contract;
             }
         }

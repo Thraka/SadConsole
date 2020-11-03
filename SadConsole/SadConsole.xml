@@ -6165,98 +6165,6 @@
             Calculates the cell color based on the surrounding colors of the image.
             </summary>
         </member>
-        <member name="T:SadConsole.LayeredScreenSurface">
-            <summary>
-            Represents a layered surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.RenderClippedWidth">
-            <summary>
-            When <see cref="P:SadConsole.LayeredScreenSurface.RenderClipped"/> is <see langword="true"/>, the renderer will create a texture of this width to draw all layers.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.RenderClippedHeight">
-            <summary>
-            When <see cref="P:SadConsole.LayeredScreenSurface.RenderClipped"/> is <see langword="true"/>, the renderer will create a texture of this height to draw all layers.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.RenderClipped">
-            <summary>
-            When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.Layers">
-            <summary>
-            The layers of this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.DefaultRendererName">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(SadConsole.LayeredScreenSurface.Layer,System.Boolean)">
-            <summary>
-            Creates a new layered screen surface with an initial layer.
-            </summary>
-            <param name="layer">The initial layer.</param>
-            <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean)">
-            <summary>
-            Creates a new layered screen surface with the specified layers.
-            </summary>
-            <param name="layers">A collection of layers.</param>
-            <param name="renderClipped">When <see langword="true"/>, each layer is rendered within the limits of first layer. When <see langword="false"/>, each layer is rendered individually to its own bounds.</param>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Collections.Generic.IEnumerable{SadConsole.LayeredScreenSurface.Layer},System.Boolean,System.Int32,System.Int32)">
-            <summary>
-            Internal use only; for serialization.
-            </summary>
-            <param name="layers"></param>
-            <param name="renderClipped"></param>
-            <param name="renderClipWidth"></param>
-            <param name="renderClipHeight"></param>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(System.Int32)">
-            <summary>
-            Sets a layer as the <see cref="P:SadConsole.ScreenSurface.Surface"/> used by this object.
-            </summary>
-            <param name="index">The index of the layer in the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/> collection.</param>
-            <remarks>This object always points to a specific layer through the <see cref="P:SadConsole.ScreenSurface.Surface"/> property. This object doesn't have it's own surface.</remarks>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.SetActiveLayer(SadConsole.LayeredScreenSurface.Layer)">
-            <summary>
-            Sets a layer as the <see cref="P:SadConsole.ScreenSurface.Surface"/> used by this object.
-            </summary>
-            <param name="layer">The layer in the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/> collection.</param>
-            <remarks>This object always points to a specific layer through the <see cref="P:SadConsole.ScreenSurface.Surface"/> property. This object doesn't have it's own surface.</remarks>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.Render(System.TimeSpan)">
-            <summary>
-            Draws the <see cref="P:SadConsole.LayeredScreenSurface.Layers"/>.
-            </summary>
-            <param name="delta"></param>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.UpdateAbsolutePosition">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.LayeredScreenSurface.Layer">
-            <summary>
-            Represents a <see cref="T:SadConsole.ICellSurface"/> with position, visibility, and a friendly-name.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.Layer.Name">
-            <summary>
-            A friendly-name for the layer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.LayeredScreenSurface.Layer.HasPositionChanged">
-            <summary>
-            Internal use only. A flag used by renderers.
-            </summary>
-        </member>
-        <member name="M:SadConsole.LayeredScreenSurface.Layer.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>
             A RexPaint image.
@@ -6387,7 +6295,7 @@
         </member>
         <member name="M:SadConsole.Readers.REXPaintImage.ToLayersComponent">
             <summary>
-            Converts this REXPaint image to a <see cref="T:SadConsole.LayeredScreenSurface"/>.
+            Converts this REXPaint image to a <see cref="!:LayeredScreenSurface"/>.
             </summary>
             <returns></returns>
         </member>
