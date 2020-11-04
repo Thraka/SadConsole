@@ -10,6 +10,7 @@ namespace SadConsole
     /// A surface that has a cursor.
     /// </summary>
     [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public partial class Console: ScreenSurface
     {
         /// <summary>
@@ -60,19 +61,6 @@ namespace SadConsole
         public Console(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null) { }
 
         /// <summary>
-        /// Creates a new console using the existing surface.
-        /// </summary>
-        /// <param name="surface">The surface.</param>
-        /// <param name="font">The font to use with the surface.</param>
-        /// <param name="fontSize">The font size.</param>
-        public Console(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
-        {
-            Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
-            SadComponents.Add(Cursor);
-            UseKeyboard = Settings.DefaultConsoleUseKeyboard;
-        }
-
-        /// <summary>
         /// Creates a console with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the console in cells.</param>
@@ -81,6 +69,19 @@ namespace SadConsole
         /// <param name="bufferHeight">The total height of the console in cells.</param>
         /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
         public Console(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
+        {
+            Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
+            SadComponents.Add(Cursor);
+            UseKeyboard = Settings.DefaultConsoleUseKeyboard;
+        }
+
+        /// <summary>
+        /// Creates a new console using the existing surface.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
+        /// <param name="font">The font to use with the surface.</param>
+        /// <param name="fontSize">The font size.</param>
+        public Console(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
         {
             Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
             SadComponents.Add(Cursor);

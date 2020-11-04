@@ -144,9 +144,9 @@ namespace SadConsole.Renderers
             //    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
             //}
 
-            for (int i = 0; i < control.Surface.Cells.Length; i++)
+            for (int i = 0; i < control.Surface.Count; i++)
             {
-                ColoredGlyph cell = control.Surface.Cells[i];
+                ColoredGlyph cell = control.Surface[i];
 
                 cell.IsDirty = false;
 

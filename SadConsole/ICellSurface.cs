@@ -7,7 +7,7 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
-    public partial interface ICellSurface
+    public partial interface ICellSurface: IEnumerable<ColoredGlyph>, IReadOnlyCollection<ColoredGlyph>
     {
         /// <summary>
         /// An event that is raised when <see cref="IsDirty"/> changes.
@@ -62,7 +62,7 @@ namespace SadConsole
         public bool UsePrintProcessor { get; set; }
 
         /// <summary>
-        /// Processes the effects added to cells with <see cref="o:SetEffect"/>.
+        /// Processes the effects added to cells with <see cref="M:CellSurfaceEditor.SetEffect*"/>.
         /// </summary>
         public Effects.EffectsManager Effects { get; }
 
@@ -80,11 +80,6 @@ namespace SadConsole
         /// Maximum width of the surface buffer.
         /// </summary>
         int BufferWidth { get; }
-
-        /// <summary>
-        /// All cells of the surface.
-        /// </summary>
-        ColoredGlyph[] Cells { get; }
 
         /// <summary>
         /// The default background for glyphs on this surface.
@@ -164,8 +159,5 @@ namespace SadConsole
         /// <param name="bufferWidth">The maximum width of the surface.</param>
         /// <param name="bufferHeight">The maximum height of the surface.</param>
         void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight);
-
-
-        IEnumerator<ColoredGlyph> GetEnumerator();
     }
 }

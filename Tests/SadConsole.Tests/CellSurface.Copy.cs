@@ -7,6 +7,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Copy_SameSizeRegion_Exact()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
             var surface2 = new SadConsole.CellSurface(20, 20);
 
@@ -15,13 +16,14 @@ namespace SadConsole.Tests
 
             for (int i = 0; i < surface1.Cells.Length; i++)
             {
-                Assert.IsTrue(surface1[i].Equals(surface2[i]));
+                Assert.IsTrue(surface1[i].Matches(surface2[i]));
             }
         }
 
         [TestMethod]
         public void Copy_SameSizeRegion_IntoBigger()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
             var surface2 = new SadConsole.CellSurface(22, 22);
 
@@ -36,9 +38,9 @@ namespace SadConsole.Tests
                 for (int x = 0; x < surface2.BufferWidth; x++)
                 {
                     if (x > surface1.BufferWidth - 1 || y > surface1.BufferHeight - 1)
-                        Assert.IsTrue(surface2[x, y].Equals(defaultCell));
+                        Assert.IsTrue(surface2[x, y].Matches(defaultCell));
                     else
-                        Assert.IsTrue(surface1[x, y].Equals(surface2[x, y]));
+                        Assert.IsTrue(surface1[x, y].Matches(surface2[x, y]));
                 }
             }
         }

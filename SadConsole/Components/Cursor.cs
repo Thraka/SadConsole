@@ -293,7 +293,7 @@ namespace SadConsole.Components
 
         private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
-            ColoredGlyph cell = _editor.Cells[_position.Y * _editor.BufferWidth + _position.X];
+            ColoredGlyph cell = _editor[_position.Y * _editor.BufferWidth + _position.X];
 
             if (!PrintOnlyCharacterData)
             {
@@ -717,9 +717,9 @@ namespace SadConsole.Components
         {
             int index = Point.ToIndex(_position.X, _position.Y, _editor.BufferWidth) + amount;
 
-            if (index > _editor.Cells.Length)
+            if (index > _editor.Count)
             {
-                index = _editor.Cells.Length - 1;
+                index = _editor.Count - 1;
             }
 
             _position = Point.FromIndex(index, _editor.BufferWidth);

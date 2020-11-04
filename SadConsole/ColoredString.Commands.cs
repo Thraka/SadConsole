@@ -112,7 +112,7 @@
                 if (surfaceIndex == -1 || surface == null)
                     fixedSurfaceIndex = -1;
                 else
-                    fixedSurfaceIndex = i + surfaceIndex < surface.Cells.Length ? i + surfaceIndex : -1;
+                    fixedSurfaceIndex = i + surfaceIndex < surface.Count ? i + surfaceIndex : -1;
 
                 ColoredGlyphEffect newGlyph;
 

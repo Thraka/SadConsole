@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using SadConsole.Effects;
@@ -41,9 +42,6 @@ namespace SadConsole
         public int BufferWidth => Surface.BufferWidth;
 
         /// <inheritdoc/>
-        public ColoredGlyph[] Cells => Surface.Cells;
-
-        /// <inheritdoc/>
         public Color DefaultBackground { get => Surface.DefaultBackground; set => Surface.DefaultBackground = value; }
         /// <inheritdoc/>
         public Color DefaultForeground { get => Surface.DefaultForeground; set => Surface.DefaultForeground = value; }
@@ -61,6 +59,8 @@ namespace SadConsole
         public Point ViewPosition { get => Surface.ViewPosition; set => Surface.ViewPosition = value; }
         /// <inheritdoc/>
         public int ViewWidth { get => Surface.ViewWidth; set => Surface.ViewWidth = value; }
+        /// <inheritdoc/>
+        public int Count => Surface.Count;
 
         /// <inheritdoc/>
         public event EventHandler IsDirtyChanged
@@ -89,5 +89,6 @@ namespace SadConsole
         public void SetSurface(in ICellSurface surface, Rectangle view = default) => Surface.SetSurface(surface, view);
 
         public void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight) => Surface.SetSurface(cells, width, height, bufferWidth, bufferHeight);
+        IEnumerator IEnumerable.GetEnumerator() => Surface.GetEnumerator();
     }
 }

@@ -8,6 +8,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Glyph_SetForeground()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
 
             surface1.FillWithRandomGarbage(255);
@@ -25,6 +26,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Glyph_SetBackground()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
 
             surface1.FillWithRandomGarbage(255);
@@ -41,6 +43,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Glyph_SetGlyph()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
 
             surface1.FillWithRandomGarbage(255);
@@ -57,6 +60,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Glyph_SetMirror()
         {
+            new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(20, 20);
 
             surface1.FillWithRandomGarbage(255);

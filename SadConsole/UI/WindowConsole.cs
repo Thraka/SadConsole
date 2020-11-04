@@ -83,22 +83,26 @@ namespace SadConsole.UI
         /// <summary>
         /// The position of the cell that the window drag started at.
         /// </summary>
-        protected Point CellAtDragPosition;
+        [IgnoreDataMember]
+        protected Point CellAtDragPosition { get; set; }
 
         /// <summary>
         /// Temporary value to hold the state of <see cref="IScreenObject.IsExclusiveMouse"/> prior to dragging.
         /// </summary>
-        protected bool PreviousMouseExclusiveDrag;
+        [IgnoreDataMember]
+        protected bool PreviousMouseExclusiveDrag { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that the window has been added to a parent; otherwise <see langword="false"/>.
         /// </summary>
-        protected bool AddedToParent;
+        [IgnoreDataMember]
+        protected bool AddedToParent { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
         /// </summary>
-        protected bool IsDragging;
+        [IgnoreDataMember]
+        protected bool IsDragging { get; set; }
 
 
         /// <inheritdoc/>
@@ -121,6 +125,7 @@ namespace SadConsole.UI
         /// <summary>
         /// Gets the whether or not the window is being shown as modal. 
         /// </summary>
+        [IgnoreDataMember]
         public bool IsModal { get; private set; }
 
         /// <summary>
@@ -185,12 +190,6 @@ namespace SadConsole.UI
         public Window(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null) { }
 
         /// <summary>
-        /// Creates a new window using the specified surface's cells.
-        /// </summary>
-        /// <param name="surface">The surface.</param>
-        public Window(ICellSurface surface) : this(surface.View.Width, surface.View.Height, surface.BufferWidth, surface.BufferHeight, surface.Cells) { }
-
-        /// <summary>
         /// Creates a window with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
         /// <param name="width">The width of the window in cells.</param>
@@ -213,6 +212,25 @@ namespace SadConsole.UI
             // todo: Perhaps a new design with windows.
             // A border surface so that the surface of the window contains just the controls and print code.
             //DrawingArea = Surface.GetSubSurface(Surface.Buffer.WithPosition((1, 1)).Expand(-1, -1));
+            DrawBorder();
+        }
+
+        /// <summary>
+        /// Creates a new window using the existing surface.
+        /// </summary>
+        /// <param name="surface">The surface.</param>
+        /// <param name="font">The font to use with the surface.</param>
+        /// <param name="fontSize">The font size.</param>
+        public Window(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
+        {
+            _isVisibleProcessing = true;
+            IsVisible = false;
+            _isVisibleProcessing = false;
+            CanDrag = true;
+            MoveToFrontOnMouseClick = true;
+            Controls = new ControlHost();
+            SadComponents.Add(Controls);
+            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep("windowmodal"));
             DrawBorder();
         }
 

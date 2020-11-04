@@ -195,14 +195,14 @@ namespace FeatureDemo.CustomConsoles
 
             for (int i = 0; i < 34 * 3; i++)
             {
-                basicSurface.Cells[startSet1 + i].Mirror = Mirror.Vertical;
-                basicSurface.Cells[startSet1 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.PurpleDark;
+                basicSurface[startSet1 + i].Mirror = Mirror.Vertical;
+                basicSurface[startSet1 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.PurpleDark;
 
-                basicSurface.Cells[startSet2 + i].Mirror = Mirror.Horizontal;
-                basicSurface.Cells[startSet2 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.OrangeDark;
+                basicSurface[startSet2 + i].Mirror = Mirror.Horizontal;
+                basicSurface[startSet2 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.OrangeDark;
 
-                basicSurface.Cells[startSet3 + i].Mirror = Mirror.Horizontal | Mirror.Vertical;
-                basicSurface.Cells[startSet3 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.GreenDark;
+                basicSurface[startSet3 + i].Mirror = Mirror.Horizontal | Mirror.Vertical;
+                basicSurface[startSet3 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.GreenDark;
             }
         }
     }

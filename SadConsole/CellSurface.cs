@@ -11,7 +11,7 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public class CellSurface : IEnumerable<ColoredGlyph>, ICellSurface
+    public class CellSurface : ICellSurface
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
@@ -131,6 +131,11 @@ namespace SadConsole
         /// <inheritdoc />
         [DataMember]
         public ColoredGlyph[] Cells { get; protected set; }
+
+        /// <summary>
+        /// The count of glyphs this surface contains.
+        /// </summary>
+        public int Count => Cells.Length;
 
         /// <inheritdoc />
         public ColoredGlyph this[int x, int y]
@@ -320,7 +325,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < rect.Width; x++)
                 {
-                    Cells[index] = surface.Cells[(y + rect.Y) * surface.BufferWidth + (x + rect.X)];
+                    Cells[index] = surface[(y + rect.Y) * surface.BufferWidth + (x + rect.X)];
                     index++;
                 }
             }

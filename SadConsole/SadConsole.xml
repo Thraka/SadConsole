@@ -209,7 +209,7 @@
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences">
             <summary>
-            Updates the base <see cref="P:SadConsole.ICellSurface.Cells"/> references to the current frame.
+            Updates the base <see cref="!:ICellSurface.Cells"/> references to the current frame.
             </summary>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.CreateFrame">
@@ -646,6 +646,11 @@
         <member name="P:SadConsole.CellSurface.Cells">
             <inheritdoc />
         </member>
+        <member name="P:SadConsole.CellSurface.Count">
+            <summary>
+            The count of glyphs this surface contains.
+            </summary>
+        </member>
         <member name="P:SadConsole.CellSurface.Item(System.Int32,System.Int32)">
             <inheritdoc />
         </member>
@@ -727,687 +732,6 @@
             Gets an enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.
             </summary>
             <returns>An enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetPixels(SadConsole.ICellSurface,SadRogue.Primitives.Color[])">
-            <summary>
-            Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="pixels">The colors to place.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetPixels(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Color[])">
-            <summary>
-            Sets each background of a cell to the array of colors.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">An area to fill with pixels.</param>
-            <param name="pixels">Colors for each cell of the surface.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.IsValidCell(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Tests if a cell is valid based on its x,y position.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the cell to test.</param>
-            <param name="y">The y coordinate of the cell to test.</param>
-            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.IsValidCell(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32@)">
-            <summary>
-            Tests if a cell is valid based on its x,y position.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the cell to test.</param>
-            <param name="y">The y coordinate of the cell to test.</param>
-            <param name="index">If the cell is valid, the index of the cell when found.</param>
-            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.IsValidCell(SadConsole.ICellSurface,System.Int32)">
-            <summary>
-            Tests if a cell is valid based on its index.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">The index to test.</param>
-            <returns>A true value indicating the cell index is in this cell surface.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Changes the glyph of a specified cell to a new value.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph of the cell.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
-            <summary>
-            Changes the glyph and foreground of a cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Changes the glyph, foreground, and background of a cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
-            <summary>
-            Changes the glyph, foreground, background, and mirror of a cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-            <param name="mirror">Sets how the glyph will be mirrored.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
-            <summary>
-            Changes the glyph, foreground, background, and mirror of a cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="glyph">The desired glyph.</param>
-            <param name="foreground">The desired foreground.</param>
-            <param name="background">The desired background.</param>
-            <param name="mirror">Sets how the glyph will be mirrored.</param>
-            <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the glyph of a specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The glyph index.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetForeground(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color)">
-            <summary>
-            Changes the foreground of a specified cell to a new color.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="color">The desired color of the cell.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetForeground(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the foreground of a specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetBackground(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color)">
-            <summary>
-            Changes the background of a cell to the specified color.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="color">The desired color of the cell.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetBackground(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the background of a specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetEffect(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetEffect(SadConsole.ICellSurface,System.Int32,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">Index of the cell.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a list of cells to the specified effect.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="cells">The cells for the effect.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a list of cells to the specified effect.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="cells">The cells for the effect.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetEffect(SadConsole.ICellSurface,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Changes the effect of a cell to the specified effect.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="cell">The cells for the effect.</param>
-            <param name="effect">The desired effect.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetEffect(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the effect of the specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The effect.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetCellAppearance(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
-            <summary>
-            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetCellAppearance(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the appearance of a cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The appearance.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetCells(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
-            <summary>
-            Gets an enumerable of cells over a specific area.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area to get cells from.</param>
-            <returns>A new array with references to each cell in the area.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetMirror(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Gets the mirror of a specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetMirror(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Mirror)">
-            <summary>
-            Sets the mirror of a specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-            <param name="mirror">The mirror of the cell.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Sets the decorator of one or more surface.Cells.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the cell.</param>
-            <param name="y">The y coordinate of the cell.</param>
-            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.SetDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Sets the decorator of one or more surface.Cells.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">The index of the cell to start applying.</param>
-            <param name="count">The count of cells to use from the index (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.AddDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Appends the decorators to one or more cells
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the cell.</param>
-            <param name="y">The y coordinate of the cell.</param>
-            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.AddDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
-            <summary>
-            Appends the decorators to one or more cells
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">The index of the cell to start applying.</param>
-            <param name="count">The count of cells to use from the index (inclusive).</param>
-            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ClearDecorators(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Clears the decorators of the specified surface.Cells.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the cell.</param>
-            <param name="y">The y coordinate of the cell.</param>
-            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ClearDecorators(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Clears the decorators of the specified surface.Cells.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">The index of the cell to start applying.</param>
-            <param name="count">The count of cells to use from the index (inclusive).</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color)">
-            <summary>
-            Draws the string on the console at the specified location and color, wrapping if needed.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-            <param name="background">Sets the background of all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
-            <summary>
-            Draws the string on the console at the specified location with the specified settings. 
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="foreground">Sets the foreground of all characters in the text.</param>
-            <param name="background">Sets the background of all characters in the text.</param>
-            <param name="mirror">The mirror to set on all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Mirror)">
-            <summary>
-            Draws the string on the console at the specified location with the specified settings. 
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="mirror">The mirror to set on all characters in the text.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-            <param name="appearance">The appearance of the cell</param>
-            <param name="effect">An optional effect to apply to the printed surface.Cells.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
-            <summary>
-            Draws a single glyph on the console at the specified location.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="glyph">The glyph to display.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredString)">
-            <summary>
-            Draws the string on the console at the specified location, wrapping if needed.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="text">The string to display.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetString(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface from the specified coordinates.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position of the surface to start at.</param>
-            <param name="y">The y position of the surface to start at.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetString(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">Where to start getting characters from.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetStringColored(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface from the specified coordinates.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position of the surface to start at.</param>
-            <param name="y">The y position of the surface to start at.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.GetStringColored(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Builds a string from the text surface.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="index">Where to start getting characters from.</param>
-            <param name="length">How many characters to fill the string with.</param>
-            <returns>A string built from the text surface data.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ClearShiftValues(SadConsole.ICellSurface)">
-            <summary>
-            Resets the shifted amounts to 0, as if the surface has never shifted.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftUp(SadConsole.ICellSurface)">
-            <summary>
-            Scrolls all the console data up by one.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftUp(SadConsole.ICellSurface,System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data up by the specified amount of rows.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="amount">How many rows to shift.</param>
-            <param name="wrap">When false, a blank line appears at the bottom. When true, the top line appears at the bottom.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftDown(SadConsole.ICellSurface)">
-            <summary>
-            Scrolls all the console data down by one.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftDown(SadConsole.ICellSurface,System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data down by the specified amount of rows.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="amount">How many rows to shift.</param>
-            <param name="wrap">When false, a blank line appears at the top. When true, the bottom line appears at the top.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftRight(SadConsole.ICellSurface)">
-            <summary>
-            Scrolls all the console data right by one.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftRight(SadConsole.ICellSurface,System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data right by the specified amount.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="amount">How much to scroll.</param>
-            <param name="wrap">When false, a blank line appears at the left. When true, the right line appears at the left.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftLeft(SadConsole.ICellSurface)">
-            <summary>
-            Scrolls all the console data left by one.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ShiftLeft(SadConsole.ICellSurface,System.Int32,System.Boolean)">
-            <summary>
-            Scrolls all the console data left by the specified amount.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="amount">How much to scroll.</param>
-            <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Erase(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface.Cells.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position.</param>
-            <param name="y">The y position.</param>
-            <param name="count">The count of glyphs to erase.</param>
-            <returns>The cells processed by this method.</returns>
-            <remarks>
-            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
-            </remarks>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Erase(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Clears the glyph, mirror, and decorators, for the specified cell.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position.</param>
-            <param name="y">The y position.</param>
-            <remarks>
-            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
-            </remarks>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Erase(SadConsole.ICellSurface)">
-            <summary>
-            Erases all cells which clears the glyph, mirror, and decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <remarks>
-            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
-            </remarks>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Clear(SadConsole.ICellSurface)">
-            <summary>
-            Clears the console data. Characters are reset to 0, the foreground and background are set to default, and mirror set to none. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Clear(SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x location of the cell.</param>
-            <param name="y">The y location of the cell.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Clear(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position of the left end of the segment.</param>
-            <param name="y">The y position of the segment.</param>
-            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
-            <remarks>This works similarly to printing a string of whitespace</remarks>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Clear(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
-            <summary>
-            Clears an area of surface.Cells. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area to clear.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Fill(SadConsole.ICellSurface,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
-            <summary>
-            Fills the console. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="foreground">Foreground to apply. If null, skips.</param>
-            <param name="background">Foreground to apply. If null, skips.</param>
-            <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Mirror to apply. If null, skips.</param>
-            <returns>The array of all cells in this console, starting from the top left corner.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Fill(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
-            <summary>
-            Fills a segment of cells, starting from the left, extending to the right, and wrapping if needed. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x position of the left end of the segment. </param>
-            <param name="y">The y position of the segment.</param>
-            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
-            <param name="foreground">Foreground to apply. If null, skips.</param>
-            <param name="background">Background to apply. If null, skips.</param>
-            <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Mirror to apply. If null, skips.</param>
-            <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Fill(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
-            <summary>
-            Fills the specified area. Clears cell decorators.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area to fill.</param>
-            <param name="foreground">Foreground to apply. If null, skips.</param>
-            <param name="background">Background to apply. If null, skips.</param>
-            <param name="glyph">Glyph to apply. If null, skips.</param>
-            <param name="mirror">Mirror to apply. If null, skips.</param>
-            <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.DrawLine(SadConsole.ICellSurface,SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
-            <summary>
-            Draws a line from <paramref name="start"/> to <paramref name="end"/>.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="start">Starting point of the line.</param>
-            <param name="end">Ending point of the line.</param>
-            <param name="foreground">Foreground to set. If null, skipped.</param>
-            <param name="background">Background to set. If null, skipped.</param>
-            <param name="glyph">Glyph to set. If null, skipped.</param>
-            <param name="mirror">Mirror to set. If null, skipped.</param>
-            <returns>A list of cells the line touched; ordered from first to last.</returns>
-            <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.DrawBox(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph,System.Int32[])">
-            <summary>
-            Draws a box.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area of the box.</param>
-            <param name="border">The border style.</param>
-            <param name="fill">The fill style. If null, the box is not filled.</param>
-            <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.DrawCircle(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph)">
-            <summary>
-            Draws an ellipse.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area the ellipse </param>
-            <param name="outer">The appearance of the outer line of the ellipse.</param>
-            <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface)">
-            <summary>
-            Connects all lines in a surface for both <see cref="P:SadConsole.ICellSurface.ConnectedLineThin"/> and <see cref="P:SadConsole.ICellSurface.ConnectedLineThick"/> styles.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface,System.Int32[])">
-            <summary>
-            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.ConnectLines(SadConsole.ICellSurface,System.Int32[],SadRogue.Primitives.Rectangle)">
-            <summary>
-            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
-            <param name="area">The area to process.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface)">
-            <summary>
-            Copies the contents of the cell surface to the destination.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
-            <param name="destination">The destination surface.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Copies the contents of the cell surface to the destination at the specified x,y.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate of the destination.</param>
-            <param name="y">The y coordinate of the destination.</param>
-            <param name="destination">The destination surface.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Copies an area of this cell surface to the destination surface.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="area">The area to copy.</param>
-            <param name="destination">The destination surface.</param>
-            <param name="destinationX">The x coordinate to copy to.</param>
-            <param name="destinationY">The y coordinate to copy to.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.Copy(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ICellSurface,System.Int32,System.Int32)">
-            <summary>
-            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified surface.BufferWidth and surface.BufferHeight, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">The x coordinate to start from.</param>
-            <param name="y">The y coordinate to start from.</param>
-            <param name="width">The BufferWidth to copy from.</param>
-            <param name="height">The BufferHeight to copy from.</param>
-            <param name="destination">The destination surface.</param>
-            <param name="destinationX">The x coordinate to copy to.</param>
-            <param name="destinationY">The y coordinate to copy to.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,SadConsole.Font)">
-            <summary>
-            Fills a console with random colors and glyphs.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="associatedFont">The font used in assigning glyphs randomly.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceExtensions.FillWithRandomGarbage(SadConsole.ICellSurface,System.Int32)">
-            <summary>
-            Fills a console with random colors and glyphs.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
         </member>
         <member name="T:SadConsole.ColoredGlyph">
             <summary>
@@ -2364,14 +1688,6 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.Console.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
-            <summary>
-            Creates a new console using the existing surface.
-            </summary>
-            <param name="surface">The surface.</param>
-            <param name="font">The font to use with the surface.</param>
-            <param name="fontSize">The font size.</param>
-        </member>
         <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -2381,6 +1697,14 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
             <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.Console.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new console using the existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="M:SadConsole.Console.OnVisibleChanged">
             <inheritdoc/>
@@ -2431,9 +1755,6 @@
         <member name="P:SadConsole.Console.BufferWidth">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Console.Cells">
-            <inheritdoc/>
-        </member>
         <member name="P:SadConsole.Console.DefaultBackground">
             <inheritdoc/>
         </member>
@@ -2456,6 +1777,9 @@
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.Console.ViewWidth">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Console.Count">
             <inheritdoc/>
         </member>
         <member name="E:SadConsole.Console.IsDirtyChanged">
@@ -4033,7 +3357,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.Effects">
             <summary>
-            Processes the effects added to cells with <see cref="o:SetEffect"/>.
+            Processes the effects added to cells with <see cref="M:CellSurfaceExtensions.SetEffect*"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.Buffer">
@@ -4049,11 +3373,6 @@
         <member name="P:SadConsole.ICellSurface.BufferWidth">
             <summary>
             Maximum width of the surface buffer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ICellSurface.Cells">
-            <summary>
-            All cells of the surface.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.DefaultBackground">
@@ -4173,6 +3492,687 @@
             <summary>
             Array index enum for line glyphs.
             </summary>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetPixels(SadConsole.ICellSurface,SadRogue.Primitives.Color[])">
+            <summary>
+            Sets each background of a cell to the array of colors. Must be the same length as this cell surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="pixels">The colors to place.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetPixels(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Color[])">
+            <summary>
+            Sets each background of a cell to the array of colors.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">An area to fill with pixels.</param>
+            <param name="pixels">Colors for each cell of the surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell to test.</param>
+            <param name="y">The y coordinate of the cell to test.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell to test.</param>
+            <param name="y">The y coordinate of the cell to test.</param>
+            <param name="index">If the cell is valid, the index of the cell when found.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ICellSurface,System.Int32)">
+            <summary>
+            Tests if a cell is valid based on its index.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">The index to test.</param>
+            <returns>A true value indicating the cell index is in this cell surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Changes the glyph of a specified cell to a new value.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Changes the glyph and foreground of a cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Changes the glyph, foreground, and background of a cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
+            <summary>
+            Changes the glyph, foreground, background, and mirror of a cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+            <param name="mirror">Sets how the glyph will be mirrored.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
+            <summary>
+            Changes the glyph, foreground, background, and mirror of a cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="glyph">The desired glyph.</param>
+            <param name="foreground">The desired foreground.</param>
+            <param name="background">The desired background.</param>
+            <param name="mirror">Sets how the glyph will be mirrored.</param>
+            <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the glyph of a specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The glyph index.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetForeground(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Changes the foreground of a specified cell to a new color.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="color">The desired color of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetForeground(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the foreground of a specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetBackground(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Changes the background of a cell to the specified color.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="color">The desired color of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetBackground(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the background of a specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Int32,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">Index of the cell.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a list of cells to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="cells">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a list of cells to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="cells">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="cell">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetEffect(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the effect of the specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The effect.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+            <summary>
+            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetCellAppearance(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the appearance of a cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The appearance.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetCells(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Gets an enumerable of cells over a specific area.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area to get cells from.</param>
+            <returns>A new array with references to each cell in the area.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetMirror(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Gets the mirror of a specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <returns>The color.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetMirror(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Mirror)">
+            <summary>
+            Sets the mirror of a specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="mirror">The mirror of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorator of one or more surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorator of one or more surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ClearDecorators(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clears the decorators of the specified surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ClearDecorators(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Clears the decorators of the specified surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color)">
+            <summary>
+            Draws the string on the console at the specified location and color, wrapping if needed.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Draws the string on the console at the specified location with the specified foreground and background color, wrapping if needed.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+            <param name="background">Sets the background of all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
+            <summary>
+            Draws the string on the console at the specified location with the specified settings. 
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+            <param name="background">Sets the background of all characters in the text.</param>
+            <param name="mirror">The mirror to set on all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Mirror)">
+            <summary>
+            Draws the string on the console at the specified location with the specified settings. 
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="mirror">The mirror to set on all characters in the text.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="appearance">The appearance of the cell</param>
+            <param name="effect">An optional effect to apply to the printed surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+            <summary>
+            Draws a single glyph on the console at the specified location.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="glyph">The glyph to display.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredString)">
+            <summary>
+            Draws the string on the console at the specified location, wrapping if needed.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetString(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface from the specified coordinates.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position of the surface to start at.</param>
+            <param name="y">The y position of the surface to start at.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetString(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">Where to start getting characters from.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetStringColored(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface from the specified coordinates.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position of the surface to start at.</param>
+            <param name="y">The y position of the surface to start at.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetStringColored(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Builds a string from the text surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">Where to start getting characters from.</param>
+            <param name="length">How many characters to fill the string with.</param>
+            <returns>A string built from the text surface data.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ClearShiftValues(SadConsole.ICellSurface)">
+            <summary>
+            Resets the shifted amounts to 0, as if the surface has never shifted.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftUp(SadConsole.ICellSurface)">
+            <summary>
+            Scrolls all the console data up by one.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftUp(SadConsole.ICellSurface,System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data up by the specified amount of rows.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="amount">How many rows to shift.</param>
+            <param name="wrap">When false, a blank line appears at the bottom. When true, the top line appears at the bottom.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftDown(SadConsole.ICellSurface)">
+            <summary>
+            Scrolls all the console data down by one.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftDown(SadConsole.ICellSurface,System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data down by the specified amount of rows.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="amount">How many rows to shift.</param>
+            <param name="wrap">When false, a blank line appears at the top. When true, the bottom line appears at the top.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRight(SadConsole.ICellSurface)">
+            <summary>
+            Scrolls all the console data right by one.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRight(SadConsole.ICellSurface,System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data right by the specified amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="amount">How much to scroll.</param>
+            <param name="wrap">When false, a blank line appears at the left. When true, the right line appears at the left.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftLeft(SadConsole.ICellSurface)">
+            <summary>
+            Scrolls all the console data left by one.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftLeft(SadConsole.ICellSurface,System.Int32,System.Boolean)">
+            <summary>
+            Scrolls all the console data left by the specified amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="amount">How much to scroll.</param>
+            <param name="wrap">When false, a blank line appears at the right. When true, the left line appears at the right.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position.</param>
+            <param name="y">The y position.</param>
+            <param name="count">The count of glyphs to erase.</param>
+            <returns>The cells processed by this method.</returns>
+            <remarks>
+            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Clears the glyph, mirror, and decorators, for the specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position.</param>
+            <param name="y">The y position.</param>
+            <remarks>
+            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface)">
+            <summary>
+            Erases all cells which clears the glyph, mirror, and decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <remarks>
+            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ICellSurface)">
+            <summary>
+            Clears the console data. Characters are reset to 0, the foreground and background are set to default, and mirror set to none. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clears a segment of cells, starting from the left, extending to the right, and wrapping if needed. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position of the left end of the segment.</param>
+            <param name="y">The y position of the segment.</param>
+            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+            <remarks>This works similarly to printing a string of whitespace</remarks>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Clears an area of surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ICellSurface,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Fills the console. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="foreground">Foreground to apply. If null, skips.</param>
+            <param name="background">Foreground to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
+            <returns>The array of all cells in this console, starting from the top left corner.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Fills a segment of cells, starting from the left, extending to the right, and wrapping if needed. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x position of the left end of the segment. </param>
+            <param name="y">The y position of the segment.</param>
+            <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
+            <param name="foreground">Foreground to apply. If null, skips.</param>
+            <param name="background">Background to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
+            <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Fills the specified area. Clears cell decorators.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area to fill.</param>
+            <param name="foreground">Foreground to apply. If null, skips.</param>
+            <param name="background">Background to apply. If null, skips.</param>
+            <param name="glyph">Glyph to apply. If null, skips.</param>
+            <param name="mirror">Mirror to apply. If null, skips.</param>
+            <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.DrawLine(SadConsole.ICellSurface,SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
+            <summary>
+            Draws a line from <paramref name="start"/> to <paramref name="end"/>.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="start">Starting point of the line.</param>
+            <param name="end">Ending point of the line.</param>
+            <param name="foreground">Foreground to set. If null, skipped.</param>
+            <param name="background">Background to set. If null, skipped.</param>
+            <param name="glyph">Glyph to set. If null, skipped.</param>
+            <param name="mirror">Mirror to set. If null, skipped.</param>
+            <returns>A list of cells the line touched; ordered from first to last.</returns>
+            <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.DrawBox(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph,System.Int32[])">
+            <summary>
+            Draws a box.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area of the box.</param>
+            <param name="border">The border style.</param>
+            <param name="fill">The fill style. If null, the box is not filled.</param>
+            <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.DrawCircle(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph)">
+            <summary>
+            Draws an ellipse.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area the ellipse </param>
+            <param name="outer">The appearance of the outer line of the ellipse.</param>
+            <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ConnectLines(SadConsole.ICellSurface)">
+            <summary>
+            Connects all lines in a surface for both <see cref="P:SadConsole.ICellSurface.ConnectedLineThin"/> and <see cref="P:SadConsole.ICellSurface.ConnectedLineThick"/> styles.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ConnectLines(SadConsole.ICellSurface,System.Int32[])">
+            <summary>
+            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ConnectLines(SadConsole.ICellSurface,System.Int32[],SadRogue.Primitives.Rectangle)">
+            <summary>
+            Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="lineStyle">The array of line styles indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>.</param>
+            <param name="area">The area to process.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface)">
+            <summary>
+            Copies the contents of the cell surface to the destination.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <remarks>If the sizes to not match, it will always start at 0,0 and work with what it can and move on to the next row when either surface runs out of columns being processed</remarks>
+            <param name="destination">The destination surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Copy(SadConsole.ICellSurface,SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Copies the contents of the cell surface to the destination at the specified x,y.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate of the destination.</param>
+            <param name="y">The y coordinate of the destination.</param>
+            <param name="destination">The destination surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Copy(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Copies an area of this cell surface to the destination surface.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area to copy.</param>
+            <param name="destination">The destination surface.</param>
+            <param name="destinationX">The x coordinate to copy to.</param>
+            <param name="destinationY">The y coordinate to copy to.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Copy(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ICellSurface,System.Int32,System.Int32)">
+            <summary>
+            Copies the contents of this cell surface at the specified x,y coordinates to the destination, only with the specified surface.BufferWidth and surface.BufferHeight, and copies it to the specified <paramref name="destinationX"/> and <paramref name="destinationY"/> position.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">The x coordinate to start from.</param>
+            <param name="y">The y coordinate to start from.</param>
+            <param name="width">The BufferWidth to copy from.</param>
+            <param name="height">The BufferHeight to copy from.</param>
+            <param name="destination">The destination surface.</param>
+            <param name="destinationX">The x coordinate to copy to.</param>
+            <param name="destinationY">The y coordinate to copy to.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.FillWithRandomGarbage(SadConsole.ICellSurface,SadConsole.Font)">
+            <summary>
+            Fills a console with random colors and glyphs.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="associatedFont">The font used in assigning glyphs randomly.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.FillWithRandomGarbage(SadConsole.ICellSurface,System.Int32)">
+            <summary>
+            Fills a console with random colors and glyphs.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
         </member>
         <member name="T:SadConsole.Input.AsciiKey">
             <summary>
@@ -7901,12 +7901,6 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.UI.ControlsConsole.#ctor(SadConsole.ICellSurface)">
-            <summary>
-            Creates a new console using the specified surface's cells.
-            </summary>
-            <param name="surface">The surface.</param>
-        </member>
         <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -7916,6 +7910,14 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
             <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new console using the existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.Button">
             <summary>
@@ -9613,22 +9615,22 @@
             The mouse state of the previous update frame.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Window.CellAtDragPosition">
+        <member name="P:SadConsole.UI.Window.CellAtDragPosition">
             <summary>
             The position of the cell that the window drag started at.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Window.PreviousMouseExclusiveDrag">
+        <member name="P:SadConsole.UI.Window.PreviousMouseExclusiveDrag">
             <summary>
             Temporary value to hold the state of <see cref="P:SadConsole.IScreenObject.IsExclusiveMouse"/> prior to dragging.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Window.AddedToParent">
+        <member name="P:SadConsole.UI.Window.AddedToParent">
             <summary>
             When <see langword="true"/>, indicates that the window has been added to a parent; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Window.IsDragging">
+        <member name="P:SadConsole.UI.Window.IsDragging">
             <summary>
             When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
             </summary>
@@ -9695,12 +9697,6 @@
             <param name="bufferWidth">The total width of the window in cells.</param>
             <param name="bufferHeight">The total height of the window in cells.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.#ctor(SadConsole.ICellSurface)">
-            <summary>
-            Creates a new window using the specified surface's cells.
-            </summary>
-            <param name="surface">The surface.</param>
-        </member>
         <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a window with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -9710,6 +9706,14 @@
             <param name="bufferWidth">The total width of the window in cells.</param>
             <param name="bufferHeight">The total height of the window in cells.</param>
             <param name="initialCells">The cells to seed the window with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new window using the existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="M:SadConsole.UI.Window.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc />

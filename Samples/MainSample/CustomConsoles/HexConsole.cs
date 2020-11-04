@@ -98,7 +98,7 @@ namespace FeatureDemo.CustomConsoles
             SetGlyph(GetHexCellIndex(HexDirection.BottomLeft, index, isHexRow), glyphIndex);
             SetGlyph(GetHexCellIndex(HexDirection.BottomRight, index, isHexRow), glyphIndex);
 
-            if (index >= 0 && index < Surface.Cells.Length)
+            if (index >= 0 && index < Surface.Count)
                 SetGlyph(index, glyphIndex);
         }
 
@@ -136,7 +136,7 @@ namespace FeatureDemo.CustomConsoles
                     break;
             }
 
-            if (returnHex < 0 || returnHex > Surface.Cells.Length - 1)
+            if (returnHex < 0 || returnHex > Surface.Count - 1)
                 returnHex = -1;
 
             return returnHex;

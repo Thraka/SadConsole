@@ -146,9 +146,9 @@ namespace SadConsole.Renderers
 
             ColoredGlyph cell;
 
-            for (int i = 0; i < control.Surface.Cells.Length; i++)
+            for (int i = 0; i < control.Surface.Count; i++)
             {
-                cell = control.Surface.Cells[i];
+                cell = control.Surface[i];
                 cell.IsDirty = false;
                 if (!cell.IsVisible) continue;
 

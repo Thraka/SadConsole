@@ -103,7 +103,7 @@ namespace SadConsole.Renderers
 
                     for (int x = 0; x < _screen.Surface.View.Width; x++)
                     {
-                        cell = _screen.Surface.Cells[i];
+                        cell = _screen.Surface[i];
 
                         cell.IsDirty = false;
 

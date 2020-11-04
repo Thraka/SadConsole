@@ -88,11 +88,11 @@ namespace SadConsole.Tests
 
             for (int i = 0; i < 10; i++)
             {
-                int index1 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Cells.Length);
-                int index2 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Cells.Length);
+                int index1 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Count);
+                int index2 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Count);
 
-                Assert.IsTrue(obj.Surface[index1].Equals(newObj.Surface[index1]));
-                Assert.IsTrue(obj2.Surface[index2].Equals(((ScreenSurface)newObj.Children[0]).Surface[index2]));
+                Assert.IsTrue(obj.Surface[index1].Matches(newObj.Surface[index1]));
+                Assert.IsTrue(obj2.Surface[index2].Matches(((ScreenSurface)newObj.Children[0]).Surface[index2]));
             }
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenSurface));

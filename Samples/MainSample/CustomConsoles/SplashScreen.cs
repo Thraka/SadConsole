@@ -169,7 +169,7 @@ namespace FeatureDemo.CustomConsoles
             for (int index = 0; index < 10; index++)
             {
                 int point = new Point(26, Height - 1).ToIndex(Width) + 14 + index;
-                cells.Add(Cells[point]);
+                cells.Add(this[point]);
             }
 
             this.SetEffect(cells, fadeEffect);
