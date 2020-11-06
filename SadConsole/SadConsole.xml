@@ -3357,7 +3357,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.Effects">
             <summary>
-            Processes the effects added to cells with <see cref="M:CellSurfaceExtensions.SetEffect*"/>.
+            Processes the effects added to cells with <see cref="M:CellSurfaceEditor.SetEffect*"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.Buffer">
@@ -3491,6 +3491,11 @@
         <member name="T:SadConsole.ICellSurface.ConnectedLineIndex">
             <summary>
             Array index enum for line glyphs.
+            </summary>
+        </member>
+        <member name="T:SadConsole.CellSurfaceEditor">
+            <summary>
+            Methods to interact with a <see cref="T:SadConsole.ICellSurface"/>.
             </summary>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetPixels(SadConsole.ICellSurface,SadRogue.Primitives.Color[])">

@@ -120,6 +120,16 @@ namespace SadConsole.UI.Themes
         }
 
         /// <inheritdoc />
+        public override void RefreshTheme(Colors colors, ControlBase control)
+        {
+            base.RefreshTheme(colors, control);
+
+            var tempBackground = ControlThemeState.Disabled.Background;
+            ControlThemeState.SetBackground(ControlThemeState.Normal.Background);
+            ControlThemeState.Disabled.Background = tempBackground;
+        }
+
+        /// <inheritdoc />
         public override ThemeBase Clone() => new ButtonLinesTheme()
         {
             ControlThemeState = ControlThemeState.Clone(),
