@@ -25,14 +25,14 @@ namespace FeatureDemo.CustomConsoles
             Surface.Clear();
             
             playerPreviousPosition = player.Position;
-            SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
+            //SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
 
             var entityManager = new EntityLiteManager();
-            entityManager.Entities.Add(player);
             //SadComponents.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
             SadComponents.Add(entityManager);
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
-            
+            entityManager.Add(player);
+
             //Children.Add(player);
 
             // Setup this console to accept keyboard input.
