@@ -96,34 +96,19 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
 
                 ColoredGlyph cell;
-                Rectangle offsetArea = _screen.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize);
-                Point cellRenderPosition;
                 IntRect renderRect;
 
-                foreach (Entities.EntityLite item in _entityManager.Entities)
+                foreach (Entities.EntityLite item in _entityManager.EntitiesVisible)
                 {
                     if (!item.IsVisible) continue;
 
-
-                    if (item.UsePixelPositioning)
-                    {
-                        if (!offsetArea.Expand(item.FontSize.X, item.FontSize.Y).Contains(item.Position)) continue;
-
-                        cellRenderPosition = item.Position - offsetArea.Position;
-                        renderRect = new Rectangle(cellRenderPosition.X, cellRenderPosition.Y, item.FontSize.X, item.FontSize.Y).ToIntRect();
-                    }
-                    else
-                    {
-                        if (!_screen.Surface.View.Contains(item.Position)) continue;
-
-                        renderRect = _baseRenderer.CachedRenderRects[(item.Position - _screen.Surface.View.Position).ToIndex(_screen.Surface.ViewWidth)];
-                    }
+                    renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToIntRect();
 
                     cell = item.Appearance;
 
                     cell.IsDirty = false;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, item.Font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, _screen.Font);
                 }
 
                 Host.Global.SharedSpriteBatch.End();

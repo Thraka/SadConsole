@@ -146,6 +146,8 @@ namespace SadConsole.Renderers
         /// <inheritdoc/>
         public void AddRenderStep(IRenderStep step)
         {
+            if (RenderSteps.Contains(step)) throw new Exception("Render step has already been added to renderer");
+
             RenderSteps.Add(step);
             RenderSteps.Sort(CompareStep);
 

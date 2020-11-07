@@ -2299,6 +2299,11 @@
             A positionable and animated game object.
             </summary>
         </member>
+        <member name="E:SadConsole.Entities.EntityLite.IsDirtyChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.Entities.EntityLite.IsDirty"/> property changes value.
+            </summary>
+        </member>
         <member name="P:SadConsole.Entities.EntityLite.Name">
             <summary>
             A friendly name of the game object.
@@ -2314,14 +2319,9 @@
             Represents what the entity looks like.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.Font">
+        <member name="P:SadConsole.Entities.EntityLite.IsDirty">
             <summary>
-            Font used with rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.EntityLite.FontSize">
-            <summary>
-            The size of the <see cref="P:SadConsole.Entities.EntityLite.Font"/> cells applied to the object when rendering.
+            Indidcates this entity's visual appearance has changed.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.EntityLite.UsePixelPositioning">
@@ -2354,6 +2354,11 @@
         </member>
         <member name="M:SadConsole.Entities.EntityLite.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.EntityLite.OnIsDirtyChanged">
+            <summary>
+            Raises the <see cref="E:SadConsole.Entities.EntityLite.IsDirtyChanged"/> event.
+            </summary>
         </member>
         <member name="M:SadConsole.Entities.EntityLite.UpdateAbsolutePosition">
             <inheritdoc />
@@ -2398,15 +2403,54 @@
             The entities associated with this manager.
             </summary>
         </member>
+        <member name="P:SadConsole.Entities.EntityLiteManager.EntitiesVisible">
+            <summary>
+            The entities within the visible portion of the parent surface.
+            </summary>
+        </member>
         <member name="P:SadConsole.Entities.EntityLiteManager.IsDirty">
             <summary>
-            Indicates that this object needs to be redrawn.
+            When <see langword="true"/>, indicates that this object needs to be redrawn; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.EntityLiteManager.DoEntityUpdate">
+            <summary>
+            When <see langword="true"/>, indicates this manager should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each entity; otherwise <see langword="false"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.EntityLiteManager.RenderStep">
             <summary>
             Internal use only
             </summary>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.Add(SadConsole.Entities.EntityLite)">
+            <summary>
+            Adds an entity to this manager.
+            </summary>
+            <param name="entity">The entity to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.Remove(SadConsole.Entities.EntityLite)">
+            <summary>
+            Removes an entity to this manager.
+            </summary>
+            <param name="entity">The entity to remove.</param>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityLiteManager.GetRenderRectangle(SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Gets a render rectangle for a position.
+            </summary>
+            <param name="position">The position of the entity.</param>
+            <param name="isPixel">Indicates the entity is pixel positioned.</param>
+            <returns></returns>
         </member>
         <member name="T:SadConsole.Entities.Hotspot">
             <summary>
@@ -8992,6 +9036,9 @@
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ButtonLinesTheme.Clone">

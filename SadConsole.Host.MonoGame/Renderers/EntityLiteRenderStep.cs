@@ -101,36 +101,16 @@ namespace SadConsole.Renderers
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, _baseRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-                Font font;
-                SadRogue.Primitives.Point fontSize;
-                Texture2D fontImage;
+                Texture2D fontImage = ((Host.GameTexture)_screen.Font.Image).Texture;
+                Font font = _screen.Font;
                 ColoredGlyph cell;
-                SadRectangle offsetArea = _screen.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize);
-                SadRogue.Primitives.Point cellRenderPosition;
                 XnaRectangle renderRect;
 
-                foreach (Entities.EntityLite item in _entityManager.Entities)
+                foreach (Entities.EntityLite item in _entityManager.EntitiesVisible)
                 {
                     if (!item.IsVisible) continue;
 
-
-                    if (item.UsePixelPositioning)
-                    {
-                        if (!offsetArea.Expand(item.FontSize.X, item.FontSize.Y).Contains(item.Position)) continue;
-
-                        cellRenderPosition = item.Position - offsetArea.Position;
-                        renderRect = new XnaRectangle(cellRenderPosition.X, cellRenderPosition.Y, item.FontSize.X, item.FontSize.Y);
-                    }
-                    else
-                    {
-                        if (!_screen.Surface.View.Contains(item.Position)) continue;
-
-                        renderRect = _baseRenderer.CachedRenderRects[(item.Position - _screen.Surface.View.Position).ToIndex(_screen.Surface.ViewWidth)];
-                    }
-
-                    font = item.Font;
-                    fontSize = item.FontSize;
-                    fontImage = ((Host.GameTexture)font.Image).Texture;
+                    renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToMonoRectangle();
 
                     cell = item.Appearance;
 

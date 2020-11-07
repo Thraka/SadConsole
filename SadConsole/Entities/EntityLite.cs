@@ -16,10 +16,11 @@ namespace SadConsole.Entities
     [DataContract]
     public class EntityLite : ScreenObject
     {
-        [DataMember(Name = "Font")]
-        private Font _font;
-        [DataMember(Name = "FontSize")]
-        private Point _fontSize;
+        /// <summary>
+        /// Raised when the <see cref="IsDirty"/> property changes value.
+        /// </summary>
+        public event EventHandler IsDirtyChanged;
+
         [DataMember(Name = "Appearance")]
         private ColoredGlyph _glyph;
 
@@ -45,38 +46,20 @@ namespace SadConsole.Entities
             {
                 if (value == null) throw new System.NullReferenceException();
                 _glyph = value;
-                _glyph.IsDirty = true;
+                IsDirty = true;
             }
         }
 
         /// <summary>
-        /// Font used with rendering.
+        /// Indidcates this entity's visual appearance has changed.
         /// </summary>
-        public Font Font
+        public bool IsDirty
         {
-            get => _font;
+            get => _glyph.IsDirty;
             set
             {
-                if (_font == value) return;
-
-                _font = value;
-                FontSize = _font.GetFontSize(Font.Sizes.One);
-                _glyph.IsDirty = true;
-            }
-        }
-
-        /// <summary>
-        /// The size of the <see cref="Font"/> cells applied to the object when rendering.
-        /// </summary>
-        public Point FontSize
-        {
-            get => _fontSize;
-            set
-            {
-                if (_fontSize == value) return;
-
-                _fontSize = value;
-                _glyph.IsDirty = true;
+                _glyph.IsDirty = value;
+                OnIsDirtyChanged();
             }
         }
 
@@ -97,8 +80,6 @@ namespace SadConsole.Entities
             Appearance = new ColoredGlyph(foreground, background, glyph);
             Children.IsLocked = true;
             ZIndex = layer;
-            Font = SadConsole.GameHost.Instance.DefaultFont;
-            FontSize = Font.GetFontSize(SadConsole.GameHost.Instance.DefaultFontSize);
         }
 
         /// <summary>
@@ -111,8 +92,6 @@ namespace SadConsole.Entities
             Appearance = appearance;
             Children.IsLocked = true;
             ZIndex = layer;
-            Font = SadConsole.GameHost.Instance.DefaultFont;
-            FontSize = Font.GetFontSize(SadConsole.GameHost.Instance.DefaultFontSize);
         }
 
         /// <summary>
@@ -130,13 +109,16 @@ namespace SadConsole.Entities
             Appearance.IsDirty = true;
         }
 
+        /// <summary>
+        /// Raises the <see cref="IsDirtyChanged"/> event.
+        /// </summary>
+        protected virtual void OnIsDirtyChanged() =>
+            IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+
         /// <inheritdoc />
         public override void UpdateAbsolutePosition()
         {
-            if (UsePixelPositioning)
-                AbsolutePosition = Position;
-            else
-                AbsolutePosition = FontSize * Position;
+            AbsolutePosition = Position;
         }
 
         /// <summary>
