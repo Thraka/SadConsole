@@ -160,6 +160,7 @@ namespace SadConsole.UI
 
         void Components.IComponent.OnAdded(IScreenObject host)
         {
+            if (ParentConsole != null) throw new Exception("Component has already been added to a host.");
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
             _controlsRenderStep?.Dispose();

@@ -143,7 +143,7 @@
                 if (commandStacks.Glyph.Count != 0)
                     commandStacks.Glyph.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
-                // SpriteEffect
+                // Mirror
                 if (commandStacks.Mirror.Count != 0)
                     commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 

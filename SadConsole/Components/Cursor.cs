@@ -727,13 +727,6 @@ namespace SadConsole.Components
             return this;
         }
 
-        //public virtual void Render(SpriteBatch batch, Font font, Rectangle renderArea)
-        //{
-        //    batch.Draw(font.FontImage, renderArea, font.GlyphRects[font.SolidGlyphIndex], CursorRenderCell.Background, 0f, Vector2.Zero, SpriteEffects.None, 0.6f);
-        //    batch.Draw(font.FontImage, renderArea, font.GlyphRects[CursorRenderCell.Glyph], CursorRenderCell.Foreground, 0f, Vector2.Zero, SpriteEffects.None, 0.7f);
-        //}
-
-
         void IComponent.Update(IScreenObject host, TimeSpan delta)
         {
             if (IsVisible && _applyCursorEffect && CursorEffect != null)
