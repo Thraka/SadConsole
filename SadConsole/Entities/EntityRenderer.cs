@@ -11,27 +11,28 @@ namespace SadConsole.Entities
     /// Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="IScreenSurface"/> visible area.
     /// </summary>
     [DataContract]
-    public class EntityLiteManager : Components.UpdateComponent
+    public class Renderer : Components.UpdateComponent
     {
         [DataMember(Name = "Entities")]
-        private List<EntityLite> _entities = new List<EntityLite>();
-        private List<EntityLite> _entitiesVisible = new List<EntityLite>();
-        private IScreenSurface _screen;
-        private Rectangle _offsetAreaPixels;
+        protected List<Entity> _entities = new List<Entity>();
+        protected List<Entity> _entitiesVisible = new List<Entity>();
 
-        private Rectangle _screenCachedView;
-        private Font _screenCachedFont;
-        private Point _screenCachedFontSize;
+        protected IScreenSurface _screen;
+        protected Rectangle _offsetAreaPixels;
+
+        protected Rectangle _screenCachedView;
+        protected Font _screenCachedFont;
+        protected Point _screenCachedFontSize;
 
         /// <summary>
         /// The entities associated with this manager.
         /// </summary>
-        public IReadOnlyList<EntityLite> Entities => _entities;
+        public IReadOnlyList<Entity> Entities => _entities;
 
         /// <summary>
         /// The entities within the visible portion of the parent surface.
         /// </summary>
-        public IReadOnlyList<EntityLite> EntitiesVisible => _entities;
+        public IReadOnlyList<Entity> EntitiesVisible => _entitiesVisible;
 
         /// <summary>
         /// When <see langword="true"/>, indicates that this object needs to be redrawn; otherwise <see langword="false"/>.
@@ -52,24 +53,52 @@ namespace SadConsole.Entities
         /// Adds an entity to this manager.
         /// </summary>
         /// <param name="entity">The entity to add.</param>
-        public void Add(EntityLite entity)
+        public void Add(Entity entity)
         {
             if (_entities.Contains(entity)) return;
 
             _entities.Add(entity);
 
-            if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
-                _entitiesVisible.Add(entity);
+            SetEntityVisibility(entity);
+            OnEntityAdded(entity);
+            OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
 
             entity.PositionChanged += Entity_PositionChanged;
             entity.IsDirtyChanged += Entity_IsDirtyChanged;
         }
 
         /// <summary>
-        /// Removes an entity to this manager.
+        /// Adds a collection of entities to this manager.
+        /// </summary>
+        /// <param name="entities">The entities to add.</param>
+        public void AddRange(IEnumerable<Entity> entities)
+        {
+            foreach (Entity entity in entities)
+            {
+                if (!_entities.Contains(entity))
+                {
+                    _entities.Add(entity);
+
+                    if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+                        _entitiesVisible.Add(entity);
+
+                    OnEntityAdded(entity);
+                    OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
+
+                    entity.PositionChanged += Entity_PositionChanged;
+                    entity.IsDirtyChanged += Entity_IsDirtyChanged;
+                }
+            }
+
+            _entitiesVisible.Sort(CompareEntity);
+            IsDirty = true;
+        }
+
+        /// <summary>
+        /// Removes an entity from this manager.
         /// </summary>
         /// <param name="entity">The entity to remove.</param>
-        public void Remove(EntityLite entity)
+        public void Remove(Entity entity)
         {
             if (!_entities.Contains(entity)) return;
 
@@ -78,6 +107,8 @@ namespace SadConsole.Entities
 
             _entities.Remove(entity);
             _entitiesVisible.Remove(entity);
+
+            OnEntityRemoved(entity);
         }
 
         /// <inheritdoc/>
@@ -87,7 +118,7 @@ namespace SadConsole.Entities
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
             RenderStep?.Dispose();
-            RenderStep = GameHost.Instance.GetRendererStep("entitylite");
+            RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
             
             surface.Renderer.AddRenderStep(RenderStep);
             _screen = surface;
@@ -162,13 +193,32 @@ namespace SadConsole.Entities
         private void Entity_PositionChanged(object sender, ValueChangedEventArgs<SadRogue.Primitives.Point> e)
         {
             IsDirty = true;
-            SetEntityVisibility((EntityLite)sender);
+            SetEntityVisibility((Entity)sender);
         }
 
-        private void Entity_IsDirtyChanged(object sender, EventArgs e) =>
-            IsDirty |= ((EntityLite)sender).IsDirty;
+        /// <summary>
+        /// Called when an entity changes position.
+        /// </summary>
+        /// <param name="entity">The entity that moved.</param>
+        /// <param name="e">The previous and new values of the position.</param>
+        protected virtual void OnEntityChangedPosition(Entity entity, ValueChangedEventArgs<SadRogue.Primitives.Point> e) { }
 
-        private void SetEntityVisibility(EntityLite entity)
+        /// <summary>
+        /// Called when an entity is added.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        protected virtual void OnEntityAdded(Entity entity) { }
+
+        /// <summary>
+        /// Called when an entity is removed.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        protected virtual void OnEntityRemoved(Entity entity) { }
+
+        private void Entity_IsDirtyChanged(object sender, EventArgs e) =>
+            IsDirty |= ((Entity)sender).IsDirty;
+
+        private void SetEntityVisibility(Entity entity)
         {
             bool isVisible = IsEntityVisible(entity.Position, entity.UsePixelPositioning);
             bool contains = _entitiesVisible.Contains(entity);
@@ -179,7 +229,10 @@ namespace SadConsole.Entities
 
             // became visible
             if (isVisible)
+            {
                 _entitiesVisible.Add(entity);
+                _entitiesVisible.Sort(CompareEntity);
+            }
             else
                 _entitiesVisible.Remove(entity);
         }
@@ -189,5 +242,27 @@ namespace SadConsole.Entities
 
         private bool IsEntityVisible(Point position, bool isPixel) =>
             isPixel ? _offsetAreaPixels.Contains(position) : _screen.Surface.View.Contains(position);
+
+        private static int CompareEntity(Entity left, Entity right)
+        {
+            if (left.ZIndex > right.ZIndex)
+                return 1;
+
+            if (left.ZIndex < right.ZIndex)
+                return -1;
+
+            return 0;
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            List<Entity> entitiesBackup = _entities;
+            _entities = new List<Entity>(entitiesBackup.Count);
+
+            AddRange(entitiesBackup);
+
+            IsDirty = true;
+        }
     }
 }

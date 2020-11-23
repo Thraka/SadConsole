@@ -12,29 +12,17 @@ namespace SadConsole.Entities
     [System.Diagnostics.DebuggerDisplay("Hotspot")]
     public class Hotspot : ScreenObject
     {
-        private readonly ICellSurface _debugSurface;
-        private readonly ICellSurface _parentSurface;
-        private ColoredGlyph _debugAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
-
         /// <summary>
         /// The hotspot position on the map.
         /// </summary>
         [DataMember]
         public HashSet<Point> Positions { get; } = new HashSet<Point>();
-
+        
         /// <summary>
         /// A visual for the area to help debug.
         /// </summary>
         [DataMember]
-        public ColoredGlyph DebugAppearance
-        {
-            get => _debugAppearance;
-            set
-            {
-                _debugAppearance = value;
-                Rebuild();
-            }
-        }
+        public ColoredGlyph DebugAppearance { get; set; }
 
         /// <summary>
         /// Key-value pairs for the hotspot.
@@ -57,48 +45,7 @@ namespace SadConsole.Entities
         /// </summary>
         /// <param name="point">The position to check for.</param>
         /// <returns>True or false based on if the position is associated with the Hotspot.</returns>
-        public bool Contains(Point point) => Positions.Contains(point);
-
-        /// <inheritdoc />
-        protected override void OnParentChanged(IScreenObject oldParent, IScreenObject newParent)
-        {
-            //_parentSurface = newParent as SurfaceBase;
-        }
-
-        /// <inheritdoc />
-        protected override void OnVisibleChanged() => Rebuild();
-
-        /// <inheritdoc />
-        public override void Render(TimeSpan delta)
-        {
-            //if (IsVisible && _parentSurface != null)
-            //{
-            //    foreach (var spot in Positions)
-            //    {
-            //        if (!_parentSurface.ViewPort.Contains(spot)) continue;
-
-            //        Global.DrawCalls.Add(new DrawCalls.DrawCallScreenObject(_debugSurface,
-            //            spot - _parentSurface.ViewPort.Location + _parentSurface.CalculatedPosition,
-            //            _parentSurface.UsePixelPositioning));
-            //    }
-            //}
-
-            base.Render(delta);
-        }
-
-
-        private void Rebuild()
-        {
-            //if (IsVisible)
-            //{
-            //    _debugSurface = new Basic(1, 1);
-            //    _debugSurface.DefaultBackground = _debugAppearance.Background;
-            //    _debugSurface.DefaultForeground = _debugAppearance.Foreground;
-            //    _debugSurface.SetCellAppearance(0, 0, _debugAppearance);
-            //    _debugSurface.Draw(TimeSpan.Zero);
-            //}
-            //else
-            //    _debugSurface = null;
-        }
+        public bool Contains(Point point) =>
+            Positions.Contains(point);
     }
 }

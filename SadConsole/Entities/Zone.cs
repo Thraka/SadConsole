@@ -15,10 +15,7 @@ namespace SadConsole.Entities
     {
         private const string DefaultDebugTitle = "Zone";
 
-        private string _title = "Zone";
-        private ColoredGlyph _debugAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
-        //private DrawCallScreenObject _drawCallScreenObject;
-        //private DrawCallColoredRect _drawCallZone;
+        private string _title = DefaultDebugTitle;
 
         /// <summary>
         /// The area the zone covers.
@@ -37,11 +34,7 @@ namespace SadConsole.Entities
                 _title = value;
 
                 if (string.IsNullOrWhiteSpace(_title))
-                {
                     _title = DefaultDebugTitle;
-                }
-
-                Rebuild();
             }
         }
 
@@ -49,15 +42,7 @@ namespace SadConsole.Entities
         /// A visual for the area to help debug.
         /// </summary>
         [DataMember]
-        public ColoredGlyph DebugAppearance
-        {
-            get => _debugAppearance;
-            set
-            {
-                _debugAppearance = value;
-                Rebuild();
-            }
-        }
+        public ColoredGlyph DebugAppearance { get; set; }
 
         /// <summary>
         /// Key-value pairs for the zone.
@@ -76,63 +61,5 @@ namespace SadConsole.Entities
 
             Area = area;
         }
-
-        /// <inheritdoc />
-        protected override void OnVisibleChanged() => Rebuild();
-
-        /// <inheritdoc />
-        public override void Render(TimeSpan delta)
-        {
-            // TODO verify zone works.
-            if (IsVisible && Parent != null)
-            {
-                //if (Parent is IConsoleViewPort parent)
-                //{
-                //    var (x, y) = Font.GetWorldPosition(Area.Location);
-                //    var (width, height) = new Point(Area.Width, Area.Height) * Font.Size;
-
-                //    _drawCallScreenObject.Position = (Area.Location - parent.ViewPort.Location + Parent.CalculatedPosition).ToVector2();
-                //    _drawCallZone.Rectangle = new Rectangle(x, y, width, height);
-
-                //    if (parent.ViewPort.Intersects(Area))
-                //    {
-                //        Global.DrawCalls.Add(_drawCallZone);
-                //        Global.DrawCalls.Add(_drawCallScreenObject);
-                //    }
-                //}
-                //else
-                //{
-                //    var (x, y) = Font.GetWorldPosition(Area.Location);
-                //    var (width, height) = new Point(Area.Width, Area.Height) * Font.Size;
-
-                //    _drawCallScreenObject.Position = (Area.Location + Parent.CalculatedPosition).ToVector2();
-                //    _drawCallZone.Rectangle = new Rectangle(x, y, width, height);
-
-                //    Global.DrawCalls.Add(_drawCallZone);
-                //    Global.DrawCalls.Add(_drawCallScreenObject);
-                //}
-
-            }
-
-            base.Render(delta);
-        }
-
-        private void Rebuild()
-        {
-            //if (IsVisible)
-            //{
-            //    Font = Parent?.Font ?? SadConsole.Global.FontDefault;
-            //    DefaultBackground = DebugAppearance.Background;
-            //    DefaultForeground = DebugAppearance.Foreground;
-            //    Resize(_title.Length, 1, true);
-            //    Print(0, 0, _title);
-
-            //    _drawCallScreenObject = new DrawCallScreenObject(this, Point.Zero, UsePixelPositioning);
-            //    _drawCallZone = new DrawCallColoredRect(Area, DebugAppearance.Background);
-            //}
-        }
-
-        /// <inheritdoc />
-        //protected override void OnParentChanged(Console oldParent, Console newParent) => Font = newParent?.Font ?? SadConsole.Global.FontDefault;
     }
 }

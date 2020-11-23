@@ -15,14 +15,14 @@ namespace FeatureDemo.CustomConsoles
         public EntityConsole()
             : base(80, 23, 160, 46)
         {
-            player = new Entity(Color.Yellow, Color.Black, 1)
+            player = new Entity(Color.Yellow, Color.Black, 1, 10)
             {
-                Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
+                Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2),
+                
             };
             
             playerPreviousPosition = player.Position;
             SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
-            SadComponents.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
 
             Children.Add(player);
@@ -46,12 +46,12 @@ namespace FeatureDemo.CustomConsoles
 
             if (info.IsKeyPressed(Keys.W))
             {
-                player.Animation.Surface.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
+                //player.Appearance.Decorators(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
                 keyHit = true;
             }
             if (info.IsKeyPressed(Keys.Q))
             {
-                player.Animation.Surface.ClearDecorators(0, 1);
+                //player.Animation.Surface.ClearDecorators(0, 1);
                 keyHit = true;
             }
 

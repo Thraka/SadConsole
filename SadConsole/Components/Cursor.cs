@@ -866,10 +866,10 @@ namespace SadConsole.Components
             if (host is IScreenSurface surface)
                 _editor = surface.Surface;
             else
-                throw new ArgumentException($"This component can only bedded to a type that implements {nameof(IScreenSurface)}.");
+                throw new ArgumentException($"This component can only be added to a type that implements {nameof(IScreenSurface)}.");
 
             _cursorRenderStep?.Dispose();
-            _cursorRenderStep = GameHost.Instance.GetRendererStep("cursor");
+            _cursorRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Cursor);
 
             var existingSteps = surface.Renderer.GetRenderSteps();
             Type renderType = _cursorRenderStep.GetType();

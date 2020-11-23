@@ -12,11 +12,11 @@ using SadConsole.Host.MonoGame;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws the entities of a <see cref="Entities.EntityLiteManager"/>.
+    /// Draws the entities of a <see cref="Entities.Renderer"/>.
     /// </summary>
     public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     {
-        private Entities.EntityLiteManager _entityManager;
+        private Entities.Renderer _entityManager;
         private ScreenSurfaceRenderer _baseRenderer;
         private IScreenSurface _screen;
 
@@ -60,7 +60,7 @@ namespace SadConsole.Renderers
             }
             else
             {
-                if (!_screen.HasSadComponent(out Entities.EntityLiteManager host))
+                if (!_screen.HasSadComponent(out Entities.Renderer host))
                     throw new Exception("EntityLiteManager is being run on object without a control host component.");
                 _screen = surface;
                 _entityManager = host;
@@ -106,7 +106,7 @@ namespace SadConsole.Renderers
                 ColoredGlyph cell;
                 XnaRectangle renderRect;
 
-                foreach (Entities.EntityLite item in _entityManager.EntitiesVisible)
+                foreach (Entities.Entity item in _entityManager.EntitiesVisible)
                 {
                     if (!item.IsVisible) continue;
 

@@ -1,4 +1,6 @@
-﻿using SadConsole;
+﻿using System;
+using System.Collections.Generic;
+using SadConsole;
 using SadConsole.Entities;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -9,31 +11,45 @@ namespace FeatureDemo.CustomConsoles
     {
         // The console here acts like a playing field for our entities. You could draw some sort of area for the
         // entity to walk around on. The console also gets focused with the keyboard and accepts keyboard events.
-        private EntityLite player;
+        private Entity player;
+        private List<Entity> others;
         private Point playerPreviousPosition;
+        private Renderer entityManager;
+        private bool moveEntities;
 
         public EntityLiteConsole()
             : base(80, 23, 160, 46)
         {
-            player = new EntityLite(Color.Yellow, Color.Black, 1, 0)
+            player = new Entity(Color.Yellow, Color.Black, 1, 100)
             {
                 //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
                 Position = new Point(0, 0)
             };
 
-            Surface.DefaultBackground = Color.LightGray;
+            Surface.DefaultBackground = Color.DarkGray;
             Surface.Clear();
             
             playerPreviousPosition = player.Position;
-            //SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
+            SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
 
-            var entityManager = new EntityLiteManager();
+            entityManager = new Renderer();
             //SadComponents.Add(new SadConsole.Components.SurfaceComponentEntityOffsets());
             SadComponents.Add(entityManager);
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
             entityManager.Add(player);
 
             //Children.Add(player);
+            others = new List<Entity>();
+            for (int i = 0; i < 5000; i++)
+            {
+                var item = new Entity(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60), 0)
+                {
+                    //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
+                    Position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46))
+                };
+                entityManager.Add(item);
+                others.Add(item);
+            }
 
             // Setup this console to accept keyboard input.
             UseKeyboard = true;
@@ -59,7 +75,7 @@ namespace FeatureDemo.CustomConsoles
             }
             if (info.IsKeyPressed(Keys.Q))
             {
-                //player.Animation.Surface.ClearDecorators(0, 1);
+                moveEntities = !moveEntities;
                 keyHit = true;
             }
 
@@ -106,6 +122,20 @@ namespace FeatureDemo.CustomConsoles
             // You could have multiple entities in the game for example, and change
             // which entity gets keyboard commands.
             return false;
+        }
+
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+
+            if (moveEntities)
+            foreach (var item in others)
+            {
+                var newPosition = item.Position + new Point(Game.Instance.Random.Next(-1, 2), Game.Instance.Random.Next(-1, 2));
+
+                if (Surface.Buffer.Contains(newPosition))
+                    item.Position = newPosition;
+            }
         }
     }
 }

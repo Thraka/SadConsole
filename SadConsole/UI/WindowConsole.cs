@@ -104,10 +104,6 @@ namespace SadConsole.UI
         [IgnoreDataMember]
         protected bool IsDragging { get; set; }
 
-
-        /// <inheritdoc/>
-        public override string DefaultRendererName => "window";
-
         /// <summary>
         /// Gets or sets the alignment of the window title.
         /// </summary>
@@ -206,7 +202,7 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep("windowmodal"));
+            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
             //Renderer = GameHost.Instance.GetRenderer("window");
 
             // todo: Perhaps a new design with windows.
@@ -230,7 +226,7 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep("windowmodal"));
+            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
             DrawBorder();
         }
 

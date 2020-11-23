@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml.Linq;
+using Newtonsoft.Json;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -13,6 +15,7 @@ namespace FeatureDemo
 
         private static void Main(string[] args)
         {
+            //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
             //SadConsole.Host.Settings.UseHardwareFullScreen = true;

@@ -33,7 +33,7 @@ namespace SadConsole
         public bool ForceRendererRefresh { get; set; }
 
         /// <inheritdoc/>
-        public virtual string DefaultRendererName { get; } = "default";
+        public virtual string DefaultRendererName { get; } = Renderers.Constants.RendererNames.Default;
 
         /// <inheritdoc/>
         public Renderers.IRenderer Renderer

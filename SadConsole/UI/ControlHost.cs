@@ -164,7 +164,7 @@ namespace SadConsole.UI
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
             _controlsRenderStep?.Dispose();
-            _controlsRenderStep = SadConsole.GameHost.Instance.GetRendererStep("controlhost");
+            _controlsRenderStep = SadConsole.GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
             surface.Renderer.AddRenderStep(_controlsRenderStep);
             surface.UseKeyboard = true;
             surface.UseMouse = true;

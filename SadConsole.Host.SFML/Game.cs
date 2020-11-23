@@ -102,13 +102,13 @@ namespace SadConsole
             Host.Global.UpdateTimer = new SFML.System.Clock();
             Host.Global.DrawTimer = new SFML.System.Clock();
 
-            SetRenderer("default", typeof(Renderers.ScreenSurfaceRenderer));
+            SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
 
-            SetRendererStep("controlhost", typeof(Renderers.ControlHostRenderStep));
-            SetRendererStep("windowmodal", typeof(Renderers.WindowRenderStep));
-            SetRendererStep("cursor", typeof(Renderers.CursorRenderStep));
-            SetRendererStep("entitylite", typeof(Renderers.EntityLiteRenderStep));
-            SetRendererStep("surface", typeof(Renderers.SurfaceRenderStep));
+            SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
+            SetRendererStep(Renderers.Constants.RenderStepNames.Window, typeof(Renderers.WindowRenderStep));
+            SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));
+            SetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer, typeof(Renderers.EntityLiteRenderStep));
+            SetRendererStep(Renderers.Constants.RenderStepNames.Surface, typeof(Renderers.SurfaceRenderStep));
 
             LoadMappedColors();
 

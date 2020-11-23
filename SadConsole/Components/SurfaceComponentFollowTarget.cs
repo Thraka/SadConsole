@@ -18,7 +18,7 @@ namespace SadConsole.Components
         public override void OnAdded(IScreenObject host)
         {
             if (!(host is IScreenSurface))
-                throw new ArgumentException($"{nameof(SurfaceComponentEntityOffsets)} can only be added to an {nameof(IScreenSurface)}.");
+                throw new ArgumentException($"{nameof(SurfaceComponentFollowTarget)} can only be added to an {nameof(IScreenSurface)}.");
         }
 
         /// <inheritdoc />

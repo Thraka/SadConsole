@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
@@ -11,138 +13,112 @@ namespace SadConsole.Entities
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Entity")]
     //[JsonConverter(typeof(EntityJsonConverter))]
+    [DataContract]
     public class Entity : ScreenObject
     {
         /// <summary>
-        /// Automatically forwards the <see cref="AnimatedScreenSurface.AnimationStateChanged"/> event.
+        /// Raised when the <see cref="IsDirty"/> property changes value.
         /// </summary>
-        public event System.EventHandler<AnimatedScreenSurface.AnimationStateChangedEventArgs> AnimationStateChanged;
+        public event EventHandler IsDirtyChanged;
 
-        /// <summary>
-        /// Animation for the game object.
-        /// </summary>
-        protected AnimatedScreenSurface _animation;
-
-        /// <summary>
-        /// The offset to render this object at.
-        /// </summary>
-        protected Point _positionOffset;
+        [DataMember(Name = "Appearance")]
+        private ColoredGlyph _glyph;
 
         /// <summary>
         /// A friendly name of the game object.
         /// </summary>
+        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
-        /// The width of the <see cref="Animation"/>.
+        /// The drawing layer this entity is drawn at
         /// </summary>
-        public int Width => _animation.Width;
+        public int ZIndex { get; }
 
         /// <summary>
-        /// The height of the <see cref="Animation"/>.
+        /// Represents what the entity looks like.
         /// </summary>
-        public int Height => _animation.Height;
-
-        /// <summary>
-        /// The current animation.
-        /// </summary>
-        public AnimatedScreenSurface Animation
+        [DataMember]
+        public ColoredGlyph Appearance
         {
-            get => _animation;
+            get => _glyph;
             set
             {
-                if (_animation != null)
-                {
-                    _animation.State = AnimatedScreenSurface.AnimationState.Deactivated;
-                    _animation.AnimationStateChanged -= OnAnimationStateChanged;
-                    Children.Remove(_animation);
-                }
-                _animation = value;
-                _animation.AnimationStateChanged += OnAnimationStateChanged;
-                _animation.State = AnimatedScreenSurface.AnimationState.Activated;
-                Children.Add(_animation);
-                UpdateAbsolutePosition();
+                if (value == null) throw new System.NullReferenceException();
+                _glyph = value;
+                IsDirty = true;
             }
         }
 
         /// <summary>
-        /// Collection of animations associated with this game object.
+        /// Indidcates this entity's visual appearance has changed.
         /// </summary>
-        public Dictionary<string, AnimatedScreenSurface> Animations { get; protected set; } = new Dictionary<string, AnimatedScreenSurface>();
-
-        /// <summary>
-        /// Offsets the position by this amount.
-        /// </summary>
-        public Point PositionOffset
+        public bool IsDirty
         {
-            get => _positionOffset;
+            get => _glyph.IsDirty;
             set
             {
-                if (_positionOffset == value)
-                {
-                    return;
-                }
-
-                _positionOffset = value;
-                UpdateAbsolutePosition();
+                _glyph.IsDirty = value;
+                OnIsDirtyChanged();
             }
         }
 
         /// <summary>
-        /// Creates a new Entity with the default font.
+        /// Treats the <see cref="IScreenObject.Position"/> of the entity as if it is pixels and not cells.
         /// </summary>
-        public Entity(int width, int height) : this(width, height, GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize)) { }
+        public bool UsePixelPositioning { get; set; }
 
         /// <summary>
-        /// Creates a new Entity.
-        /// </summary>
-        public Entity(int width, int height, Font font, Point fontSize)
-        {
-            Animation = new AnimatedScreenSurface("default", width, height, font, fontSize);
-            _animation.CreateFrame();
-            Animations.Add(_animation.Name, _animation);
-        }
-
-        /// <summary>
-        /// Creates a new 1x1 entity with the specified foreground, background, and glyph.
+        /// Creates a new entity with the specified foreground, background, and glyph.
         /// </summary>
         /// <param name="foreground">The foreground color of the entity.</param>
         /// <param name="background">The background color of the entity.</param>
         /// <param name="glyph">The glyph color of the entity.</param>
-        public Entity(Color foreground, Color background, int glyph) : this(1, 1, GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize))
+        /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+        public Entity(Color foreground, Color background, int glyph, int zIndex)
         {
-            _animation.CurrentFrame.SetGlyph(0, 0, glyph, foreground, background);
-            _animation.IsDirty = true;
+            Appearance = new ColoredGlyph(foreground, background, glyph);
+            Children.IsLocked = true;
+            ZIndex = zIndex;
         }
 
         /// <summary>
-        /// Creates a new Entity with a default animation/
+        /// Creates a new entity, references the provided glyph as the appearance.
         /// </summary>
-        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedScreenSurface.Name"/> property changesd to "default".</param>
-        public Entity(AnimatedScreenSurface animation)
+        /// <param name="appearance">The appearance of the entity.</param>
+        /// <param name="layer">The rendering order. Lower values are under higher values.</param>
+        public Entity(ref ColoredGlyph appearance, int layer)
         {
-            animation.Name = "default";
-            Animation = animation;
-            Animations.Add("default", animation);
+            Appearance = appearance;
+            Children.IsLocked = true;
+            ZIndex = layer;
         }
 
         /// <summary>
-        /// Called when the current <see cref="Animation"/> raises the <see cref="AnimatedScreenSurface.AnimationStateChanged"/> event and then raises the <see cref="AnimationStateChanged"/> event for the entity.
+        /// Creates a new entity, copying the provided appearance to this entity.
         /// </summary>
-        /// <param name="sender">The animation calling this method.</param>
-        /// <param name="e">The state of the animation.</param>
-        protected void OnAnimationStateChanged(object sender, AnimatedScreenSurface.AnimationStateChangedEventArgs e) => AnimationStateChanged?.Invoke(this, e);
+        /// <param name="appearance">The appearance of the entity.</param>
+        /// <param name="layer">The rendering order. Lower values are under higher values.</param>
+        public Entity(ColoredGlyph appearance, int layer): this(appearance.Foreground, appearance.Background, appearance.Glyph, layer) { }
+
+
+        /// <inheritdoc />
+        protected override void OnPositionChanged(Point oldPosition, Point newPosition)
+        {
+            base.OnPositionChanged(oldPosition, newPosition);
+            Appearance.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="IsDirtyChanged"/> event.
+        /// </summary>
+        protected virtual void OnIsDirtyChanged() =>
+            IsDirtyChanged?.Invoke(this, EventArgs.Empty);
 
         /// <inheritdoc />
         public override void UpdateAbsolutePosition()
         {
-            if (Animation.UsePixelPositioning)
-                AbsolutePosition = Position + _positionOffset + (Parent?.AbsolutePosition ?? new Point(0, 0));
-            else
-                AbsolutePosition = (Animation.FontSize * Position) + (Animation.FontSize * _positionOffset) + (Parent?.AbsolutePosition ?? new Point(0, 0));
-
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            AbsolutePosition = Position;
         }
 
         /// <summary>
@@ -161,7 +137,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// Arguments for the entity moved event.
         /// </summary>
-        public class EntityMovedEventArgs
+        public class EntityMovedEventArgs: EventArgs
         {
             /// <summary>
             /// The entity associated with the event.

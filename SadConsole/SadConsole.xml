@@ -1357,25 +1357,6 @@
             </summary>
             <param name="surface">The target surface</param>
         </member>
-        <member name="T:SadConsole.Components.EntityComponentParentViewSync">
-            <summary>
-            Add to an <see cref="T:SadConsole.Entities.Entity"/> to sync the visibility and position offset with a parent <see cref="T:SadConsole.Console"/>. 
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.EntityComponentParentViewSync.HandleIsVisible">
-            <summary>
-            If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Components.EntityComponentParentViewSync.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.EntityComponentParentViewSync.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.IScreenObject"/>.
@@ -1579,25 +1560,6 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Components.RenderComponent.OnRemoved(SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Components.SurfaceComponentEntityOffsets">
-            <summary>
-            Add to a <see cref="T:SadConsole.IScreenSurface"/> to sync all child <see cref="T:SadConsole.Entities.Entity"/> object's visibility and position offsets.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Components.SurfaceComponentEntityOffsets.HandleIsVisible">
-            <summary>
-            If set to true, controls the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property of the attached object.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Components.SurfaceComponentEntityOffsets.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.SurfaceComponentFollowTarget">
@@ -2180,19 +2142,9 @@
             A positionable and animated game object.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.Entity.AnimationStateChanged">
+        <member name="E:SadConsole.Entities.Entity.IsDirtyChanged">
             <summary>
-            Automatically forwards the <see cref="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged"/> event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Entity._animation">
-            <summary>
-            Animation for the game object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Entity._positionOffset">
-            <summary>
-            The offset to render this object at.
+            Raised when the <see cref="P:SadConsole.Entities.Entity.IsDirty"/> property changes value.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.Entity.Name">
@@ -2200,61 +2152,56 @@
             A friendly name of the game object.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.Width">
+        <member name="P:SadConsole.Entities.Entity.ZIndex">
             <summary>
-            The width of the <see cref="P:SadConsole.Entities.Entity.Animation"/>.
+            The drawing layer this entity is drawn at
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.Height">
+        <member name="P:SadConsole.Entities.Entity.Appearance">
             <summary>
-            The height of the <see cref="P:SadConsole.Entities.Entity.Animation"/>.
+            Represents what the entity looks like.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.Animation">
+        <member name="P:SadConsole.Entities.Entity.IsDirty">
             <summary>
-            The current animation.
+            Indidcates this entity's visual appearance has changed.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.Animations">
+        <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
             <summary>
-            Collection of animations associated with this game object.
+            Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the entity as if it is pixels and not cells.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.PositionOffset">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,System.Int32)">
             <summary>
-            Offsets the position by this amount.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Creates a new Entity with the default font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(System.Int32,System.Int32,SadConsole.Font,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new Entity.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
-            <summary>
-            Creates a new 1x1 entity with the specified foreground, background, and glyph.
+            Creates a new entity with the specified foreground, background, and glyph.
             </summary>
             <param name="foreground">The foreground color of the entity.</param>
             <param name="background">The background color of the entity.</param>
             <param name="glyph">The glyph color of the entity.</param>
+            <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenSurface)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph@,System.Int32)">
             <summary>
-            Creates a new Entity with a default animation/
+            Creates a new entity, references the provided glyph as the appearance.
             </summary>
-            <param name="animation">The default animation. The animation will have its <see cref="P:SadConsole.AnimatedScreenSurface.Name"/> property changesd to "default".</param>
+            <param name="appearance">The appearance of the entity.</param>
+            <param name="layer">The rendering order. Lower values are under higher values.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.OnAnimationStateChanged(System.Object,SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph,System.Int32)">
             <summary>
-            Called when the current <see cref="P:SadConsole.Entities.Entity.Animation"/> raises the <see cref="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged"/> event and then raises the <see cref="E:SadConsole.Entities.Entity.AnimationStateChanged"/> event for the entity.
+            Creates a new entity, copying the provided appearance to this entity.
             </summary>
-            <param name="sender">The animation calling this method.</param>
-            <param name="e">The state of the animation.</param>
+            <param name="appearance">The appearance of the entity.</param>
+            <param name="layer">The rendering order. Lower values are under higher values.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.OnIsDirtyChanged">
+            <summary>
+            Raises the <see cref="E:SadConsole.Entities.Entity.IsDirtyChanged"/> event.
+            </summary>
         </member>
         <member name="M:SadConsole.Entities.Entity.UpdateAbsolutePosition">
             <inheritdoc />
@@ -2294,163 +2241,229 @@
             <param name="entity">The entity associated with the event.</param>
             <param name="oldPosition">The position the entity moved from.</param>
         </member>
-        <member name="T:SadConsole.Entities.EntityLite">
+        <member name="T:SadConsole.Entities.Manager">
             <summary>
-            A positionable and animated game object.
+            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.EntityLite.IsDirtyChanged">
+        <member name="P:SadConsole.Entities.Manager.Hotspots">
             <summary>
-            Raised when the <see cref="P:SadConsole.Entities.EntityLite.IsDirty"/> property changes value.
+            The hotspots associated with this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.Name">
+        <member name="P:SadConsole.Entities.Manager.Zones">
             <summary>
-            A friendly name of the game object.
+            The zones associated with this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.ZIndex">
+        <member name="P:SadConsole.Entities.Manager.DrawHotspots">
             <summary>
-            The drawing layer this entity is drawn at
+            When <see langword="true"/>, indicates to any renderer associated with this manager that hotpsots should be drawn; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.Appearance">
+        <member name="P:SadConsole.Entities.Manager.DrawZones">
             <summary>
-            Represents what the entity looks like.
+            When <see langword="true"/>, indicates to any renderer associated with this manager that zones should be drawn; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.IsDirty">
+        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Hotspot)">
             <summary>
-            Indidcates this entity's visual appearance has changed.
+            Adds a hotspot to this manager.
+            </summary>
+            <param name="hotspot">The hotspot to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
+            <summary>
+            Adds a zone to this manager.
+            </summary>
+            <param name="zone">The zone to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Hotspot)">
+            <summary>
+            Removes a hotspot from this manager.
+            </summary>
+            <param name="hotspot">The hotspot to remove.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
+            <summary>
+            Removes a zone from this manager.
+            </summary>
+            <param name="zone">The hotspot to remove.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.HotspotEventArgs">
+            <summary>
+            Contains event data for a <see cref="F:SadConsole.Entities.Manager.HotspotEventArgs.Hotspot"/> and <see cref="F:SadConsole.Entities.Manager.HotspotEventArgs.Entity"/> interaction.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLite.UsePixelPositioning">
+        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Hotspot">
             <summary>
-            Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the entity as if it is pixels and not cells.
+            The hotspot associated with the event.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.EntityLite.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,System.Int32)">
-            <summary>
-            Creates a new entity with the specified foreground, background, and glyph.
-            </summary>
-            <param name="foreground">The foreground color of the entity.</param>
-            <param name="background">The background color of the entity.</param>
-            <param name="glyph">The glyph color of the entity.</param>
-            <param name="layer">The rendering order. Lower values are under higher values.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.#ctor(SadConsole.ColoredGlyph@,System.Int32)">
-            <summary>
-            Creates a new entity, references the provided glyph as the appearance.
-            </summary>
-            <param name="appearance">The appearance of the entity.</param>
-            <param name="layer">The rendering order. Lower values are under higher values.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.#ctor(SadConsole.ColoredGlyph,System.Int32)">
-            <summary>
-            Creates a new entity, copying the provided appearance to this entity.
-            </summary>
-            <param name="appearance">The appearance of the entity.</param>
-            <param name="layer">The rendering order. Lower values are under higher values.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.OnIsDirtyChanged">
-            <summary>
-            Raises the <see cref="E:SadConsole.Entities.EntityLite.IsDirtyChanged"/> event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.UpdateAbsolutePosition">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.Save(System.String)">
-            <summary>
-            Saves the <see cref="T:SadConsole.Entities.Entity"/> to a file.
-            </summary>
-            <param name="file">The destination file.</param>
-        </member>
-        <member name="M:SadConsole.Entities.EntityLite.Load(System.String)">
-            <summary>
-            Loads a <see cref="T:SadConsole.Entities.Entity"/> from a file.
-            </summary>
-            <param name="file">The source file.</param>
-            <returns>The entity.</returns>
-        </member>
-        <member name="T:SadConsole.Entities.EntityLite.EntityMovedEventArgs">
-            <summary>
-            Arguments for the entity moved event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.EntityLite.EntityMovedEventArgs.Entity">
+        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Entity">
             <summary>
             The entity associated with the event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.EntityLite.EntityMovedEventArgs.FromPosition">
+        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Host">
             <summary>
-            The positiont the <see cref="F:SadConsole.Entities.EntityLite.EntityMovedEventArgs.Entity"/> moved from.
+            The host console that the hotspot and entity share.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.EntityLite.EntityMovedEventArgs.#ctor(SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.TriggeredPosition">
             <summary>
-            Creates a new event args for the entity movement.
+            The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.
             </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.HotspotEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Hotspot,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a hotspot interaction.
+            </summary>
+            <param name="host">The host console that the hotspot and entity share.</param>
+            <param name="hotspot">The hotspot associated with the event.</param>
             <param name="entity">The entity associated with the event.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
+            <param name="triggeredPosition">The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.</param>
         </member>
-        <member name="P:SadConsole.Entities.EntityLiteManager.Entities">
+        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
+            <summary>
+            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
+            <summary>
+            The zone associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
+            <summary>
+            The entity associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
+            <summary>
+            The host console that the zone and entity share.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
+            <summary>
+            The position within the zone associated with the event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone interaction.
+            </summary>
+            <param name="host">The host console that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
+            <summary>
+            Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="!:BasicEntity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
+            <summary>
+            The position within the zone that the entity moved from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone movement event.
+            </summary>
+            <param name="host">The host console that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+            <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Renderer">
+            <summary>
+            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Renderer.Entities">
             <summary>
             The entities associated with this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLiteManager.EntitiesVisible">
+        <member name="P:SadConsole.Entities.Renderer.EntitiesVisible">
             <summary>
             The entities within the visible portion of the parent surface.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLiteManager.IsDirty">
+        <member name="P:SadConsole.Entities.Renderer.IsDirty">
             <summary>
             When <see langword="true"/>, indicates that this object needs to be redrawn; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.EntityLiteManager.DoEntityUpdate">
+        <member name="P:SadConsole.Entities.Renderer.DoEntityUpdate">
             <summary>
             When <see langword="true"/>, indicates this manager should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each entity; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.EntityLiteManager.RenderStep">
+        <member name="F:SadConsole.Entities.Renderer.RenderStep">
             <summary>
             Internal use only
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.Add(SadConsole.Entities.EntityLite)">
+        <member name="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)">
             <summary>
             Adds an entity to this manager.
             </summary>
             <param name="entity">The entity to add.</param>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.Remove(SadConsole.Entities.EntityLite)">
+        <member name="M:SadConsole.Entities.Renderer.AddRange(System.Collections.Generic.IEnumerable{SadConsole.Entities.Entity})">
             <summary>
-            Removes an entity to this manager.
+            Adds a collection of entities to this manager.
+            </summary>
+            <param name="entities">The entities to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)">
+            <summary>
+            Removes an entity from this manager.
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.OnAdded(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Entities.Renderer.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.OnRemoved(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Entities.Renderer.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.Update(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Entities.Renderer.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.EntityLiteManager.GetRenderRectangle(SadRogue.Primitives.Point,System.Boolean)">
+        <member name="M:SadConsole.Entities.Renderer.GetRenderRectangle(SadRogue.Primitives.Point,System.Boolean)">
             <summary>
             Gets a render rectangle for a position.
             </summary>
             <param name="position">The position of the entity.</param>
             <param name="isPixel">Indicates the entity is pixel positioned.</param>
             <returns></returns>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+            <summary>
+            Called when an entity changes position.
+            </summary>
+            <param name="entity">The entity that moved.</param>
+            <param name="e">The previous and new values of the position.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)">
+            <summary>
+            Called when an entity is added.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.OnEntityRemoved(SadConsole.Entities.Entity)">
+            <summary>
+            Called when an entity is removed.
+            </summary>
+            <param name="entity">The entity.</param>
         </member>
         <member name="T:SadConsole.Entities.Hotspot">
             <summary>
@@ -2484,15 +2497,6 @@
             <param name="point">The position to check for.</param>
             <returns>True or false based on if the position is associated with the Hotspot.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Hotspot.OnParentChanged(SadConsole.IScreenObject,SadConsole.IScreenObject)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.Hotspot.OnVisibleChanged">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.Hotspot.Render(System.TimeSpan)">
-            <inheritdoc />
-        </member>
         <member name="T:SadConsole.Entities.Zone">
             <summary>
             Defines an area for a scene.
@@ -2523,12 +2527,6 @@
             Creates a new zone object with the specified area.
             </summary>
             <param name="area">The area of the zone.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Zone.OnVisibleChanged">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Entities.Zone.Render(System.TimeSpan)">
-            <inheritdoc />
         </member>
         <member name="M:SadConsole.PointExtensions.SurfaceLocationToPixel(SadRogue.Primitives.Point,System.Int32,System.Int32)">
             <summary>
@@ -6397,6 +6395,51 @@
             <param name="width">The width of the layer.</param>
             <param name="height">The height of the layer.</param>
         </member>
+        <member name="T:SadConsole.Renderers.Constants.RendererNames">
+            <summary>
+            Renderer names used by hosts and types.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.Default">
+            <summary>
+            The default renderer for a screen surface.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.Constants.RenderStepNames">
+            <summary>
+            Renderer names used by hosts and types.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Surface">
+            <summary>
+            The render step for a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.ControlHost">
+            <summary>
+            The render step for a <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Window">
+            <summary>
+            The render step for a <see cref="T:SadConsole.UI.Window"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Cursor">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Components.Cursor"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityRenderer">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Entities.Renderer"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityManager">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Entities.Manager"/>.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.IRenderer">
             <summary>
             Draws a surface.
@@ -9686,9 +9729,6 @@
             <summary>
             When <see langword="true"/>, indicates that the window is being dragged; otherwise <see langword="false"/>.
             </summary>
-        </member>
-        <member name="P:SadConsole.UI.Window.DefaultRendererName">
-            <inheritdoc/>
         </member>
         <member name="P:SadConsole.UI.Window.TitleAlignment">
             <summary>
