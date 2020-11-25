@@ -7,34 +7,12 @@ namespace SadConsole
     /// <summary>
     /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
     /// </summary>
-    public partial interface ICellSurface: IEnumerable<ColoredGlyph>, IReadOnlyCollection<ColoredGlyph>
+    public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<ColoredGlyph>, IEnumerable<ColoredGlyph>
     {
         /// <summary>
         /// An event that is raised when <see cref="IsDirty"/> changes.
         /// </summary>
         event EventHandler IsDirtyChanged;
-
-        /// <summary>
-        /// Gets a cell by index.
-        /// </summary>
-        /// <param name="index">The index of the cell.</param>
-        /// <returns>The indicated cell.</returns>
-        ColoredGlyph this[int index] { get; }
-
-        /// <summary>
-        /// Gets a cell based on its coordinates on the surface.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate.</param>
-        /// <returns>The indicated cell.</returns>
-        ColoredGlyph this[int x, int y] { get; }
-
-        /// <summary>
-        /// Gets a cell based on its position on the surface.
-        /// </summary>
-        /// <param name="position">Position of the cell.</param>
-        /// <returns>The indicated cell.</returns>
-        ColoredGlyph this[Point position] { get; }
 
         /// <summary>
         /// A variable that tracks how many times this editor shifted the surface down.
@@ -69,17 +47,7 @@ namespace SadConsole
         /// <summary>
         /// Returns a rectangle that represents the maximum size of the surface.
         /// </summary>
-        Rectangle Buffer { get; }
-
-        /// <summary>
-        /// Maximum height of the surface buffer.
-        /// </summary>
-        int BufferHeight { get; }
-
-        /// <summary>
-        /// Maximum width of the surface buffer.
-        /// </summary>
-        int BufferWidth { get; }
+        Rectangle Area { get; }
 
         /// <summary>
         /// The default background for glyphs on this surface.
@@ -102,7 +70,7 @@ namespace SadConsole
         bool IsDirty { get; set; }
 
         /// <summary>
-        /// Returns <see langword="true"/> when the <see cref="ICellSurface.View"/> width or height is different from <see cref="BufferHeight"/> or <see cref="BufferWidth"/>.
+        /// Returns <see langword="true"/> when the <see cref="ICellSurface.View"/> width or height is different from <see cref="Height"/> or <see cref="Width"/>.
         /// </summary>
         bool IsScrollable { get; }
 

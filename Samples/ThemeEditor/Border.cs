@@ -9,7 +9,7 @@ namespace ThemeEditor
 {
     class Border: ScreenSurface
     {
-        private Border(IScreenSurface contents, string title): base(contents.Surface.BufferWidth + 3, contents.Surface.BufferHeight + 3)
+        private Border(IScreenSurface contents, string title): base(contents.Surface.Width + 3, contents.Surface.Height + 3)
         {
             Position = (-1, -1);
             Font = contents.Font;
@@ -18,13 +18,13 @@ namespace ThemeEditor
             Surface.DefaultForeground = Color.AnsiWhite;
             Surface.Clear();
 
-            Surface.DrawBox((0, 0, Surface.BufferWidth - 1, Surface.BufferHeight - 1), new ColoredGlyph(Color.AnsiWhite, contents.Surface.DefaultBackground), new ColoredGlyph(Color.White, Color.Transparent), ICellSurface.ConnectedLineThin);
-            Surface.DrawLine((Surface.BufferWidth - 1, 2), (Surface.BufferWidth - 1, Surface.BufferHeight - 2), 219, Color.AnsiWhite);
-            Surface.DrawLine((1, Surface.BufferHeight - 1), (Surface.BufferWidth - 1, Surface.BufferHeight - 1), 223, Color.AnsiWhite);
-            Surface.SetGlyph(Surface.BufferWidth - 1, 1, 220);
+            Surface.DrawBox((0, 0, Surface.Width - 1, Surface.Height - 1), new ColoredGlyph(Color.AnsiWhite, contents.Surface.DefaultBackground), new ColoredGlyph(Color.White, Color.Transparent), ICellSurface.ConnectedLineThin);
+            Surface.DrawLine((Surface.Width - 1, 2), (Surface.Width - 1, Surface.Height - 2), 219, Color.AnsiWhite);
+            Surface.DrawLine((1, Surface.Height - 1), (Surface.Width - 1, Surface.Height - 1), 223, Color.AnsiWhite);
+            Surface.SetGlyph(Surface.Width - 1, 1, 220);
 
             if (!string.IsNullOrEmpty(title))
-                Surface.Print(((Surface.BufferWidth - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(HorizontalAlignment.Center, title.Length + 2, ' '), contents.Surface.DefaultBackground, Color.AnsiWhite);
+                Surface.Print(((Surface.Width - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(HorizontalAlignment.Center, title.Length + 2, ' '), contents.Surface.DefaultBackground, Color.AnsiWhite);
 
             IsEnabled = false;
             UseMouse = false;
@@ -33,7 +33,7 @@ namespace ThemeEditor
             contents.Children.Add(this);
         }
 
-        private Border(Window contents): base(contents.Surface.BufferWidth, contents.Surface.BufferHeight)
+        private Border(Window contents): base(contents.Surface.Width, contents.Surface.Height)
         {
             Position = (1, 1);
             Font = contents.Font;
@@ -42,9 +42,9 @@ namespace ThemeEditor
             Surface.DefaultForeground = Color.AnsiWhite;
             Surface.Clear();
 
-            Surface.DrawLine((Surface.BufferWidth - 1, 1), (Surface.BufferWidth - 1, Surface.BufferHeight - 2), 219, Color.AnsiWhite); //█
-            Surface.DrawLine((0, Surface.BufferHeight - 1), (Surface.BufferWidth - 1, Surface.BufferHeight - 1), 223, Color.AnsiWhite); //▀
-            Surface.SetGlyph(Surface.BufferWidth - 1, 0, 220); //▄
+            Surface.DrawLine((Surface.Width - 1, 1), (Surface.Width - 1, Surface.Height - 2), 219, Color.AnsiWhite); //█
+            Surface.DrawLine((0, Surface.Height - 1), (Surface.Width - 1, Surface.Height - 1), 223, Color.AnsiWhite); //▀
+            Surface.SetGlyph(Surface.Width - 1, 0, 220); //▄
 
             IsEnabled = false;
             UseMouse = false;

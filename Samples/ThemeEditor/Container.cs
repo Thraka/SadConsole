@@ -39,7 +39,7 @@ namespace ThemeEditor
             
             TestingPanel = new ControlsTest();
             Border.AddToSurface(TestingPanel, "Preview");
-            TestingPanel.Position = SettingsPanel.Position + (SettingsPanel.Surface.Buffer.Width, 0) + (4, 0);
+            TestingPanel.Position = SettingsPanel.Position + (SettingsPanel.Surface.Area.Width, 0) + (4, 0);
             TestingPanel.Controls.ThemeColors = EditingColors;
 
             Children.Add(SettingsPanel);
@@ -102,7 +102,7 @@ namespace ThemeEditor
                                                 + new ColoredString(new ColoredGlyph(themeColors.Cyan, Color.Transparent, 254))
                                                 );
 
-            var targetPosition = Point.FromIndex(position.ToIndex(target.BufferWidth) + text.Length + 3, target.BufferWidth);
+            var targetPosition = Point.FromIndex(position.ToIndex(target.Width) + text.Length + 3, target.Width);
             target.Print(targetPosition.X, targetPosition.Y, lineText);
         }
     }

@@ -37,11 +37,11 @@ namespace SadConsole.Readers
 
             // build the indexes
             int currentIndex = 0;
-            for (int h = 0; h < surface.BufferHeight; h++)
+            for (int h = 0; h < surface.Height; h++)
             {
                 int startY = (h * surface.FontSize.Y);
                 //System.Threading.Tasks.Parallel.For(0, image.Width / surface.Font.Size.X, (w) =>
-                for (int w = 0; w < surface.BufferWidth; w++)
+                for (int w = 0; w < surface.Width; w++)
                 {
                     int startX = (w * surface.FontSize.X);
 
@@ -100,7 +100,7 @@ namespace SadConsole.Readers
                 float sbri = newColor.GetBrightness() * 255;
 
 
-                SadRogue.Primitives.Point surfacePoint = SadRogue.Primitives.Point.FromIndex(i, surface.BufferWidth);
+                SadRogue.Primitives.Point surfacePoint = SadRogue.Primitives.Point.FromIndex(i, surface.Width);
                 if (UseBlockMode)
                 {
                     if (sbri > 204)

@@ -17,7 +17,7 @@ namespace FeatureDemo.CustomConsoles
         {
             player = new Entity(Color.Yellow, Color.Black, 1, 10)
             {
-                Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2),
+                Position = new Point(Surface.Width / 2, Surface.Height / 2),
                 
             };
             
@@ -81,7 +81,7 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (Surface.Buffer.Contains(player.Position))
+                if (Surface.Area.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     Surface.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);

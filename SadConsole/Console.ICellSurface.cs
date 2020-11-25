@@ -16,7 +16,7 @@ namespace SadConsole
         public ColoredGlyph this[int x, int y] => Surface[x, y];
 
         /// <inheritdoc />
-        public ColoredGlyph this[Point position] => Surface[position.ToIndex(BufferWidth)];
+        public ColoredGlyph this[Point position] => Surface[position.ToIndex(Width)];
 
         /// <inheritdoc/>
         public int TimesShiftedDown { get => Surface.TimesShiftedDown; set => Surface.TimesShiftedDown = value; }
@@ -33,13 +33,13 @@ namespace SadConsole
         public EffectsManager Effects => Surface.Effects;
 
         /// <inheritdoc/>
-        public Rectangle Buffer => Surface.Buffer;
+        public Rectangle Area => Surface.Area;
 
         /// <inheritdoc/>
-        public int BufferHeight => Surface.BufferHeight;
+        public int Height => Surface.Height;
 
         /// <inheritdoc/>
-        public int BufferWidth => Surface.BufferWidth;
+        public int Width => Surface.Width;
 
         /// <inheritdoc/>
         public Color DefaultBackground { get => Surface.DefaultBackground; set => Surface.DefaultBackground = value; }

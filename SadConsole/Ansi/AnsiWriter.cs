@@ -217,7 +217,7 @@ namespace SadConsole.Ansi
                     case 'j':
                         if (data == "" || data == "0")
                         {
-                            for (int i = Cursor.Position.X; i < _editor.BufferWidth; i++)
+                            for (int i = Cursor.Position.X; i < _editor.Width; i++)
                             {
                                 _editor.Clear(i, Cursor.Position.Y);
                             }
@@ -240,7 +240,7 @@ namespace SadConsole.Ansi
                     case 'k':
                         if (data == "" || data == "0")
                         {
-                            for (int i = Cursor.Position.X; i < _editor.BufferWidth; i++)
+                            for (int i = Cursor.Position.X; i < _editor.Width; i++)
                             {
                                 _editor.Clear(i, Cursor.Position.Y);
                             }
@@ -254,7 +254,7 @@ namespace SadConsole.Ansi
                         }
                         else if (data == "2")
                         {
-                            for (int i = 0; i < _editor.BufferWidth; i++)
+                            for (int i = 0; i < _editor.Width; i++)
                             {
                                 _editor.Clear(i, Cursor.Position.Y);
                             }
@@ -350,7 +350,7 @@ namespace SadConsole.Ansi
                 return true;
             }
 
-            bool onLastLine = Cursor.Position.Y == _editor.BufferHeight - 1;
+            bool onLastLine = Cursor.Position.Y == _editor.Height - 1;
 
             foreach (char item in line)
             {

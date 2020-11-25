@@ -117,7 +117,7 @@ namespace SadConsole.Renderers
             foreach (UI.Controls.ControlBase control in controlContainer)
             {
                 if (!control.IsVisible) continue;
-                RenderControlCells(control, _screen.Font, _screen.FontSize, _screen.Surface.View, _screen.Surface.BufferWidth);
+                RenderControlCells(control, _screen.Font, _screen.FontSize, _screen.Surface.View, _screen.Surface.Width);
 
                 if (control is UI.Controls.IContainer container)
                     ProcessContainer(container);

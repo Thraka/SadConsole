@@ -523,8 +523,8 @@ namespace ThemeEditor
 
             public bool ContainsPoint(Point position)
             {
-                int start = Position.ToIndex(_surface.BufferWidth);
-                int index = position.ToIndex(_surface.BufferWidth);
+                int start = Position.ToIndex(_surface.Width);
+                int index = position.ToIndex(_surface.Width);
                 return index >= start && index < start + Width;
             }
         }

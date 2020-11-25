@@ -37,8 +37,6 @@ Core
 - (RENAME) SadConsole.Global -> SadConsole.GameHost
 
 CellSurface/Console
-- (RENAME) Width -> BufferWidth (Console specifically has Width which just forwards BufferWidth)
-- (RENAME) Height -> BufferHeight (Console specifically has Height which just forwards BufferHeight)
 - (RENAME) Components -> SadComponents
 - (CHANGE) Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
 

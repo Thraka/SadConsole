@@ -331,7 +331,7 @@
         </member>
         <member name="T:SadConsole.Renderers.EntityLiteRenderStep">
             <summary>
-            Draws the entities of a <see cref="T:SadConsole.Entities.EntityLiteManager"/>.
+            Draws the entities of a <see cref="T:SadConsole.Entities.Renderer"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.BackingTexture">

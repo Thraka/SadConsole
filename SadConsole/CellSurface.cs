@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace SadConsole
 {
@@ -19,6 +20,8 @@ namespace SadConsole
 
         [DataMember(Name = "AreaBounds")]
         private BoundedRectangle _viewArea;
+
+        private Viewport<ColoredGlyph> _viewPortTest;
 
         /// <inheritdoc />
         public event EventHandler IsDirtyChanged;
@@ -106,16 +109,20 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public Rectangle Buffer => _viewArea.BoundingBox;
+        public Rectangle Area => _viewArea.BoundingBox;
+
+        /// <summary>
+        /// The total width of the surface.
+        /// </summary>
+        public int Width => _viewArea.BoundingBox.Width;
+
+        /// <summary>
+        /// The total height of the surface.
+        /// </summary>
+        public int Height => _viewArea.BoundingBox.Height;
 
         /// <inheritdoc />
-        public int BufferWidth => _viewArea.BoundingBox.Width;
-
-        /// <inheritdoc />
-        public int BufferHeight => _viewArea.BoundingBox.Height;
-
-        /// <inheritdoc />
-        public bool IsScrollable => BufferHeight != _viewArea.Area.Height || BufferWidth != _viewArea.Area.Width;
+        public bool IsScrollable => Height != _viewArea.Area.Height || Width != _viewArea.Area.Width;
 
         /// <inheritdoc />
         public Point ViewPosition
@@ -140,8 +147,8 @@ namespace SadConsole
         /// <inheritdoc />
         public ColoredGlyph this[int x, int y]
         {
-            get => Cells[Point.ToIndex(x, y, BufferWidth)];
-            protected set { Cells[Point.ToIndex(x, y, BufferWidth)] = value; IsDirty = true; }
+            get => Cells[Point.ToIndex(x, y, Width)];
+            protected set { Cells[Point.ToIndex(x, y, Width)] = value; IsDirty = true; }
         }
 
         /// <inheritdoc />
@@ -154,8 +161,8 @@ namespace SadConsole
         /// <inheritdoc />
         public ColoredGlyph this[Point position]
         {
-            get => Cells[position.ToIndex(BufferWidth)];
-            protected set => Cells[position.ToIndex(BufferWidth)] = value;
+            get => Cells[position.ToIndex(Width)];
+            protected set => Cells[position.ToIndex(Width)] = value;
         }
 
 
@@ -285,7 +292,7 @@ namespace SadConsole
         /// <inheritdoc />
         public ICellSurface GetSubSurface(Rectangle view)
         {
-            if (!new Rectangle(0, 0, BufferWidth, BufferHeight).Contains(view))
+            if (!new Rectangle(0, 0, Width, Height).Contains(view))
             {
                 throw new Exception("View is outside of surface bounds.");
             }
@@ -309,9 +316,9 @@ namespace SadConsole
         /// <inheritdoc />
         public void SetSurface(in ICellSurface surface, Rectangle view = default)
         {
-            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight) : view;
+            Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
 
-            if (!new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight).Contains(rect))
+            if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(rect))
             {
                 throw new ArgumentOutOfRangeException(nameof(view), "The view is outside the bounds of the surface.");
             }
@@ -325,7 +332,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < rect.Width; x++)
                 {
-                    Cells[index] = surface[(y + rect.Y) * surface.BufferWidth + (x + rect.X)];
+                    Cells[index] = surface[(y + rect.Y) * surface.Width + (x + rect.X)];
                     index++;
                 }
             }

@@ -44,7 +44,7 @@ namespace SadConsole.UI.Themes
                 appearance = ControlThemeState.Normal;
 
             label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
-            label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.BufferWidth));
+            label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.Width));
 
             Font font = label.AlternateFont ?? label.Parent?.Host.ParentConsole?.Font;
             Color color = label.TextColor ?? appearance.Foreground;
@@ -52,11 +52,11 @@ namespace SadConsole.UI.Themes
             if (font != null)
             {
                 if (label.ShowUnderline && label.ShowStrikethrough)
-                    label.Surface.SetDecorator(0, label.Surface.BufferWidth, GetStrikethrough(font, color), GetUnderline(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetStrikethrough(font, color), GetUnderline(font, color));
                 else if (label.ShowUnderline)
-                    label.Surface.SetDecorator(0, label.Surface.BufferWidth, GetUnderline(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetUnderline(font, color));
                 else if (label.ShowStrikethrough)
-                    label.Surface.SetDecorator(0, label.Surface.BufferWidth, GetStrikethrough(font, color));
+                    label.Surface.SetDecorator(0, label.Surface.Width, GetStrikethrough(font, color));
             }
 
             label.IsDirty = false;

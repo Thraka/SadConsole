@@ -33,11 +33,11 @@ namespace SadConsole.Tests
             surface1.FillWithRandomGarbage(255);
             surface1.Copy(surface2);
 
-            for (int y = 0; y < surface2.BufferHeight; y++)
+            for (int y = 0; y < surface2.Height; y++)
             {
-                for (int x = 0; x < surface2.BufferWidth; x++)
+                for (int x = 0; x < surface2.Width; x++)
                 {
-                    if (x > surface1.BufferWidth - 1 || y > surface1.BufferHeight - 1)
+                    if (x > surface1.Width - 1 || y > surface1.Height - 1)
                         Assert.IsTrue(surface2[x, y].Matches(defaultCell));
                     else
                         Assert.IsTrue(surface1[x, y].Matches(surface2[x, y]));

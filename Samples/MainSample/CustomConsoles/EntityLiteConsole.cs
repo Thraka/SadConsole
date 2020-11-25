@@ -105,7 +105,7 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (Surface.Buffer.Contains(player.Position))
+                if (Surface.Area.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     Surface.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
@@ -133,7 +133,7 @@ namespace FeatureDemo.CustomConsoles
             {
                 var newPosition = item.Position + new Point(Game.Instance.Random.Next(-1, 2), Game.Instance.Random.Next(-1, 2));
 
-                if (Surface.Buffer.Contains(newPosition))
+                if (Surface.Area.Contains(newPosition))
                     item.Position = newPosition;
             }
         }

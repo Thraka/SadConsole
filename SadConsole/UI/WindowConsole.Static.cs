@@ -40,7 +40,7 @@ namespace SadConsole.UI
                 noButton.Theme = buttonTheme;
             }
 
-            var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.BufferHeight);
+            var window = new Window(message.ToString().Length + 4, 5 + yesButton.Surface.Height);
 
             if (colors != null) window.Controls.ThemeColors = colors;
 
@@ -56,8 +56,8 @@ namespace SadConsole.UI
                 }
             };
 
-            yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.BufferHeight);
-            noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.BufferHeight);
+            yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
+            noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.Height);
 
             yesButton.Text = yesPrompt;
             noButton.Text = noPrompt;
@@ -121,7 +121,7 @@ namespace SadConsole.UI
             if (buttonTheme != null)
                 closeButton.Theme = buttonTheme;
 
-            var window = new Window(width, 5 + closeButton.Surface.BufferHeight);
+            var window = new Window(width, 5 + closeButton.Surface.Height);
 
             if (colors != null) window.Controls.ThemeColors = colors;
 
@@ -140,7 +140,7 @@ namespace SadConsole.UI
             };
             window.Controls.Add(printArea);
 
-            closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.BufferHeight);
+            closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.Height);
             closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
             closeButton.Theme = null;
 

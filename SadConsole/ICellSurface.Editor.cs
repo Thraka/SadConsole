@@ -52,11 +52,11 @@ namespace SadConsole
             {
                 for (int y = area.Y; y < area.Y + area.Height; y++)
                 {
-                    int index = y * surface.BufferWidth + x;
+                    int index = y * surface.Width + x;
 
                     if (surface.IsValidCell(index))
                     {
-                        surface[y * surface.BufferWidth + x].Background = pixels[(y - area.Y) * area.Width + (x - area.X)];
+                        surface[y * surface.Width + x].Background = pixels[(y - area.Y) * area.Width + (x - area.X)];
                     }
                 }
             }
@@ -73,7 +73,7 @@ namespace SadConsole
         /// <returns>A true value indicating the cell by x,y does exist in this cell surface.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidCell(this ICellSurface surface, int x, int y) =>
-            x >= 0 && x < surface.BufferWidth && y >= 0 && y < surface.BufferHeight;
+            x >= 0 && x < surface.Width && y >= 0 && y < surface.Height;
 
         /// <summary>
         /// Tests if a cell is valid based on its x,y position.
@@ -86,9 +86,9 @@ namespace SadConsole
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidCell(this ICellSurface surface, int x, int y, out int index)
         {
-            if (x >= 0 && x < surface.BufferWidth && y >= 0 && y < surface.BufferHeight)
+            if (x >= 0 && x < surface.Width && y >= 0 && y < surface.Height)
             {
-                index = y * surface.BufferWidth + x;
+                index = y * surface.Width + x;
                 return true;
             }
 
@@ -227,7 +227,7 @@ namespace SadConsole
         /// <returns>The glyph index.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetGlyph(this ICellSurface surface, int x, int y) =>
-            surface[y * surface.BufferWidth + x].Glyph;
+            surface[y * surface.Width + x].Glyph;
 
         /// <summary>
         /// Changes the foreground of a specified cell to a new color.
@@ -256,7 +256,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetForeground(this ICellSurface surface, int x, int y) =>
-            surface[y * surface.BufferWidth + x].Foreground;
+            surface[y * surface.Width + x].Foreground;
 
         /// <summary>
         /// Changes the background of a cell to the specified color.
@@ -285,7 +285,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color GetBackground(this ICellSurface surface, int x, int y) =>
-            surface[y * surface.BufferWidth + x].Background;
+            surface[y * surface.Width + x].Background;
 
         /// <summary>
         /// Changes the effect of a cell to the specified effect.
@@ -364,7 +364,7 @@ namespace SadConsole
         /// <returns>The effect.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICellEffect GetEffect(this ICellSurface surface, int x, int y) =>
-            surface.Effects.GetEffect(Point.ToIndex(x, y, surface.BufferWidth));
+            surface.Effects.GetEffect(Point.ToIndex(x, y, surface.Width));
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -395,7 +395,7 @@ namespace SadConsole
         public static ColoredGlyph GetCellAppearance(this ICellSurface surface, int x, int y)
         {
             var appearance = new ColoredGlyph();
-            surface[y * surface.BufferWidth + x].CopyAppearanceTo(appearance);
+            surface[y * surface.Width + x].CopyAppearanceTo(appearance);
             return appearance;
         }
 
@@ -407,14 +407,14 @@ namespace SadConsole
         /// <returns>A new array with references to each cell in the area.</returns>
         public static IEnumerable<ColoredGlyph> GetCells(this ICellSurface surface, Rectangle area)
         {
-            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight));
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
 
             if (area == Rectangle.Empty)
                 yield break;
 
             for (int y = 0; y < area.Height; y++)
                 for (int x = 0; x < area.Width; x++)
-                    yield return surface[(y + area.Y) * surface.BufferWidth + (x + area.X)];
+                    yield return surface[(y + area.Y) * surface.Width + (x + area.X)];
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace SadConsole
         /// <returns>The color.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Mirror GetMirror(this ICellSurface surface, int x, int y) =>
-            surface[y * surface.BufferWidth + x].Mirror;
+            surface[y * surface.Width + x].Mirror;
 
         /// <summary>
         /// Sets the mirror of a specified cell.
@@ -453,7 +453,7 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetDecorator(this ICellSurface surface, int x, int y, int count, params CellDecorator[] decorators) =>
-            SetDecorator(surface, Point.ToIndex(x, y, surface.BufferWidth), count, decorators);
+            SetDecorator(surface, Point.ToIndex(x, y, surface.Width), count, decorators);
 
         /// <summary>
         /// Sets the decorator of one or more surface.
@@ -494,7 +494,7 @@ namespace SadConsole
         /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddDecorator(this ICellSurface surface, int x, int y, int count, params CellDecorator[] decorators) =>
-            AddDecorator(surface, Point.ToIndex(x, y, surface.BufferWidth), count, decorators);
+            AddDecorator(surface, Point.ToIndex(x, y, surface.Width), count, decorators);
 
         /// <summary>
         /// Appends the decorators to one or more cells
@@ -815,7 +815,7 @@ namespace SadConsole
         /// <returns>A string built from the text surface data.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetString(this ICellSurface surface, int x, int y, int length) =>
-            GetString(surface, y * surface.BufferWidth + x, length);
+            GetString(surface, y * surface.Width + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -855,7 +855,7 @@ namespace SadConsole
         /// <returns>A string built from the text surface data.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ColoredString GetStringColored(this ICellSurface surface, int x, int y, int length) =>
-            GetStringColored(surface, y * surface.BufferWidth + x, length);
+            GetStringColored(surface, y * surface.Width + x, length);
 
         /// <summary>
         /// Builds a string from the text surface.
@@ -933,26 +933,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
 
                 for (int y = 0; y < amount; y++)
                 {
-                    for (int x = 0; x < surface.BufferWidth; x++)
+                    for (int x = 0; x < surface.Width; x++)
                     {
                         var tempCell = new ColoredGlyph();
-                        surface[y * surface.BufferWidth + x].CopyAppearanceTo(tempCell);
+                        surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (surface.BufferHeight - amount + y) * surface.BufferWidth + x));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (surface.Height - amount + y) * surface.Width + x));
                     }
                 }
             }
 
-            for (int y = amount; y < surface.BufferHeight; y++)
+            for (int y = amount; y < surface.Height; y++)
             {
-                for (int x = 0; x < surface.BufferWidth; x++)
+                for (int x = 0; x < surface.Width; x++)
                 {
-                    ColoredGlyph destination = surface[(y - amount) * surface.BufferWidth + x];
-                    ColoredGlyph source = surface[y * surface.BufferWidth + x];
+                    ColoredGlyph destination = surface[(y - amount) * surface.Width + x];
+                    ColoredGlyph source = surface[y * surface.Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -964,9 +964,9 @@ namespace SadConsole
 
             if (!wrap)
             {
-                for (int y = surface.BufferHeight - amount; y < surface.BufferHeight; y++)
+                for (int y = surface.Height - amount; y < surface.Height; y++)
                 {
-                    for (int x = 0; x < surface.BufferWidth; x++)
+                    for (int x = 0; x < surface.Width; x++)
                     {
                         Clear(surface, x, y);
                     }
@@ -1022,26 +1022,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
 
-                for (int y = surface.BufferHeight - amount; y < surface.BufferHeight; y++)
+                for (int y = surface.Height - amount; y < surface.Height; y++)
                 {
-                    for (int x = 0; x < surface.BufferWidth; x++)
+                    for (int x = 0; x < surface.Width; x++)
                     {
                         var tempCell = new ColoredGlyph();
-                        surface[y * surface.BufferWidth + x].CopyAppearanceTo(tempCell);
+                        surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (amount - (surface.BufferHeight - y)) * surface.BufferWidth + x));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (amount - (surface.Height - y)) * surface.Width + x));
                     }
                 }
             }
 
-            for (int y = (surface.BufferHeight - 1) - amount; y >= 0; y--)
+            for (int y = (surface.Height - 1) - amount; y >= 0; y--)
             {
-                for (int x = 0; x < surface.BufferWidth; x++)
+                for (int x = 0; x < surface.Width; x++)
                 {
-                    ColoredGlyph destination = surface[(y + amount) * surface.BufferWidth + x];
-                    ColoredGlyph source = surface[y * surface.BufferWidth + x];
+                    ColoredGlyph destination = surface[(y + amount) * surface.Width + x];
+                    ColoredGlyph source = surface[y * surface.Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1054,9 +1054,9 @@ namespace SadConsole
             {
                 for (int y = 0; y < amount; y++)
                 {
-                    for (int x = 0; x < surface.BufferWidth; x++)
+                    for (int x = 0; x < surface.Width; x++)
                     {
-                        ColoredGlyph source = surface[y * surface.BufferWidth + x];
+                        ColoredGlyph source = surface[y * surface.Width + x];
                         source.Clear();
                     }
                 }
@@ -1111,27 +1111,27 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
 
-                for (int x = surface.BufferWidth - amount; x < surface.BufferWidth; x++)
+                for (int x = surface.Width - amount; x < surface.Width; x++)
                 {
-                    for (int y = 0; y < surface.BufferHeight; y++)
+                    for (int y = 0; y < surface.Height; y++)
                     {
                         var tempCell = new ColoredGlyph();
-                        surface[y * surface.BufferWidth + x].CopyAppearanceTo(tempCell);
+                        surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.BufferWidth + amount - (surface.BufferWidth - x)));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.Width + amount - (surface.Width - x)));
                     }
                 }
             }
 
 
-            for (int x = surface.BufferWidth - 1 - amount; x >= 0; x--)
+            for (int x = surface.Width - 1 - amount; x >= 0; x--)
             {
-                for (int y = 0; y < surface.BufferHeight; y++)
+                for (int y = 0; y < surface.Height; y++)
                 {
-                    ColoredGlyph destination = surface[y * surface.BufferWidth + (x + amount)];
-                    ColoredGlyph source = surface[y * surface.BufferWidth + x];
+                    ColoredGlyph destination = surface[y * surface.Width + (x + amount)];
+                    ColoredGlyph source = surface[y * surface.Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1144,7 +1144,7 @@ namespace SadConsole
             {
                 for (int x = 0; x < amount; x++)
                 {
-                    for (int y = 0; y < surface.BufferHeight; y++)
+                    for (int y = 0; y < surface.Height; y++)
                     {
                         Clear(surface, x, y);
 
@@ -1201,26 +1201,26 @@ namespace SadConsole
             // Handle all the wrapped ones first
             if (wrap)
             {
-                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.BufferHeight * amount);
+                wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
 
                 for (int x = 0; x < amount; x++)
                 {
-                    for (int y = 0; y < surface.BufferHeight; y++)
+                    for (int y = 0; y < surface.Height; y++)
                     {
                         var tempCell = new ColoredGlyph();
-                        surface[y * surface.BufferWidth + x].CopyAppearanceTo(tempCell);
+                        surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
 
-                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.BufferWidth + (surface.BufferWidth - amount + x)));
+                        wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.Width + (surface.Width - amount + x)));
                     }
                 }
             }
 
-            for (int x = amount; x < surface.BufferWidth; x++)
+            for (int x = amount; x < surface.Width; x++)
             {
-                for (int y = 0; y < surface.BufferHeight; y++)
+                for (int y = 0; y < surface.Height; y++)
                 {
-                    ColoredGlyph destination = surface[y * surface.BufferWidth + (x - amount)];
-                    ColoredGlyph source = surface[y * surface.BufferWidth + x];
+                    ColoredGlyph destination = surface[y * surface.Width + (x - amount)];
+                    ColoredGlyph source = surface[y * surface.Width + x];
 
                     destination.Background = source.Background;
                     destination.Foreground = source.Foreground;
@@ -1231,9 +1231,9 @@ namespace SadConsole
 
             if (!wrap)
             {
-                for (int x = surface.BufferWidth - amount; x < surface.BufferWidth; x++)
+                for (int x = surface.Width - amount; x < surface.Width; x++)
                 {
-                    for (int y = 0; y < surface.BufferHeight; y++)
+                    for (int y = 0; y < surface.Height; y++)
                     {
                         Clear(surface, x, y);
                     }
@@ -1495,7 +1495,7 @@ namespace SadConsole
         /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
         public static ColoredGlyph[] Fill(this ICellSurface surface, Rectangle area, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
         {
-            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.BufferWidth, surface.BufferHeight));
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
 
             if (area == Rectangle.Empty)
             {
@@ -1509,7 +1509,7 @@ namespace SadConsole
             {
                 for (int y = area.Y; y < area.Y + area.Height; y++)
                 {
-                    ColoredGlyph cell = surface[y * surface.BufferWidth + x];
+                    ColoredGlyph cell = surface[y * surface.Width + x];
 
                     if (background.HasValue)
                     {
@@ -1674,7 +1674,7 @@ namespace SadConsole
                 if (surface.IsValidCell(x, y))
                 {
                     SetCellAppearance(surface, x, y, outer);
-                    cells.Add(Point.ToIndex(x, y, surface.BufferWidth));
+                    cells.Add(Point.ToIndex(x, y, surface.Width));
                 }
             });
 
@@ -1690,33 +1690,33 @@ namespace SadConsole
                 {
                     var connections = new Algorithms.NodeConnections<int>();
 
-                    (int x, int y) = Point.FromIndex(c, surface.BufferWidth);
+                    (int x, int y) = Point.FromIndex(c, surface.Width);
 
                     if (IsValidCell(surface, x - 1, y))
                     {
-                        connections.West = Point.ToIndex(x - 1, y, surface.BufferWidth);
+                        connections.West = Point.ToIndex(x - 1, y, surface.Width);
                         connections.HasWest = true;
                     }
                     if (IsValidCell(surface, x + 1, y))
                     {
-                        connections.East = Point.ToIndex(x + 1, y, surface.BufferWidth);
+                        connections.East = Point.ToIndex(x + 1, y, surface.Width);
                         connections.HasEast = true;
                     }
                     if (IsValidCell(surface, x, y - 1))
                     {
-                        connections.North = Point.ToIndex(x, y - 1, surface.BufferWidth);
+                        connections.North = Point.ToIndex(x, y - 1, surface.Width);
                         connections.HasNorth = true;
                     }
                     if (IsValidCell(surface, x, y + 1))
                     {
-                        connections.South = Point.ToIndex(x, y + 1, surface.BufferWidth);
+                        connections.South = Point.ToIndex(x, y + 1, surface.Width);
                         connections.HasSouth = true;
                     }
 
                     return connections;
                 };
 
-                Algorithms.FloodFill(area.Center.ToIndex(surface.BufferWidth), isTargetCell, fillCell, getConnectedCells);
+                Algorithms.FloodFill(area.Center.ToIndex(surface.Width), isTargetCell, fillCell, getConnectedCells);
             }
         }
 
@@ -1737,7 +1737,7 @@ namespace SadConsole
         /// <param name="surface">The surface being edited.</param>
         /// <param name="lineStyle">The array of line styles indexed by <see cref="ICellSurface.ConnectedLineIndex"/>.</param>
         public static void ConnectLines(this ICellSurface surface, int[] lineStyle) =>
-            ConnectLines(surface, lineStyle, surface.Buffer);
+            ConnectLines(surface, lineStyle, surface.Area);
 
         /// <summary>
         /// Connects all lines in this based on the <paramref name="lineStyle"/> style provided.
@@ -1752,7 +1752,7 @@ namespace SadConsole
                 for (int y = area.Y; y <= area.MaxExtentY; y++)
                 {
                     var pos = new Point(x, y);
-                    int index = pos.ToIndex(surface.BufferWidth);
+                    int index = pos.ToIndex(surface.Width);
 
                     // Check if this pos is a road
                     if (!lineStyle.Contains(surface[index].Glyph))
@@ -1760,7 +1760,7 @@ namespace SadConsole
 
                     // Get all valid positions and indexes around this point
                     bool[] valids = pos.GetValidDirections(area);
-                    int[] posIndexes = pos.GetDirectionIndexes(area, surface.BufferWidth);
+                    int[] posIndexes = pos.GetDirectionIndexes(area, surface.Width);
                     bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
                     for (int i = 1; i < 9; i++)
@@ -1881,7 +1881,7 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public static void Copy(this ICellSurface surface, ICellSurface destination)
         {
-            if (surface.BufferWidth == destination.BufferWidth && surface.BufferHeight == destination.BufferHeight)
+            if (surface.Width == destination.Width && surface.Height == destination.Height)
             {
                 for (int i = 0; i < surface.Count; i++)
                     surface[i].CopyAppearanceTo(destination[i]);
@@ -1889,8 +1889,8 @@ namespace SadConsole
                 return;
             }
 
-            int maxX = surface.BufferWidth >= destination.BufferWidth ? destination.BufferWidth : surface.BufferWidth;
-            int maxY = surface.BufferHeight >= destination.BufferHeight ? destination.BufferHeight : surface.BufferHeight;
+            int maxX = surface.Width >= destination.Width ? destination.Width : surface.Width;
+            int maxY = surface.Height >= destination.Height ? destination.Height : surface.Height;
 
             for (int x = 0; x < maxX; x++)
             {
@@ -1913,9 +1913,9 @@ namespace SadConsole
         /// <param name="destination">The destination surface.</param>
         public static void Copy(this ICellSurface surface, ICellSurface destination, int x, int y)
         {
-            for (int curX = 0; curX < surface.BufferWidth; curX++)
+            for (int curX = 0; curX < surface.Width; curX++)
             {
-                for (int curY = 0; curY < surface.BufferHeight; curY++)
+                for (int curY = 0; curY < surface.Height; curY++)
                 {
                     if (IsValidCell(surface, curX, curY, out int sourceIndex) && destination.IsValidCell(x + curX, y + curY, out int destIndex))
                         surface[sourceIndex].CopyAppearanceTo(destination[destIndex]);
@@ -1986,9 +1986,9 @@ namespace SadConsole
         {
             //pulse.Reset();
             int charCounter = 0;
-            for (int y = 0; y < surface.BufferHeight; y++)
+            for (int y = 0; y < surface.Height; y++)
             {
-                for (int x = 0; x < surface.BufferWidth; x++)
+                for (int x = 0; x < surface.Width; x++)
                 {
                     SetGlyph(surface, x, y, charCounter);
                     SetForeground(surface, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));

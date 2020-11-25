@@ -68,8 +68,8 @@ namespace FeatureDemo.InputHandling
 
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
                     string prompt = ((CustomConsoles.DOSConsole)console).Prompt;
-                    int startingIndex =  new Point(prompt.Length, CursorLastY).ToIndex(console.BufferWidth);
-                    string data = console.GetString(startingIndex, console.Cursor.Position.ToIndex(console.BufferWidth) - startingIndex);
+                    int startingIndex =  new Point(prompt.Length, CursorLastY).ToIndex(console.Width);
+                    string data = console.GetString(startingIndex, console.Cursor.Position.ToIndex(console.Width) - startingIndex);
                     // Move the cursor to the next line before we send the string data to the processor
                     console.Cursor.CarriageReturn().LineFeed();
 

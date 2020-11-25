@@ -12,8 +12,8 @@ namespace SadConsole.Tests
         public void Create_WithSize(int width, int height)
         {
             var surface = new SadConsole.CellSurface(width, height);
-            Assert.IsTrue(surface.BufferWidth == width, $"BufferWidth does not match width");
-            Assert.IsTrue(surface.BufferWidth == height, $"BufferHeight does not match height");
+            Assert.IsTrue(surface.Width == width, $"BufferWidth does not match width");
+            Assert.IsTrue(surface.Width == height, $"BufferHeight does not match height");
             Assert.IsTrue(surface.ViewPosition == new SadRogue.Primitives.Point(0, 0));
         }
 
@@ -24,8 +24,8 @@ namespace SadConsole.Tests
         public void Create_WithViewSize(int width, int height, int bufferWidth, int bufferHeight)
         {
             var surface = new SadConsole.CellSurface(width, height, bufferWidth, bufferHeight);
-            Assert.IsTrue(surface.BufferWidth == bufferWidth, $"BufferWidth does not match value");
-            Assert.IsTrue(surface.BufferWidth == bufferHeight, $"BufferHeight does not match value");
+            Assert.IsTrue(surface.Width == bufferWidth, $"BufferWidth does not match value");
+            Assert.IsTrue(surface.Width == bufferHeight, $"BufferHeight does not match value");
             Assert.IsTrue(surface.View.Width == width, $"View.Width does not match value");
             Assert.IsTrue(surface.View.Height == height, $"View.Height does not match value");
             Assert.IsTrue(surface.ViewPosition == new SadRogue.Primitives.Point(0, 0));

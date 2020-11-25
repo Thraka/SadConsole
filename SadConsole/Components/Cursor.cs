@@ -121,10 +121,10 @@ namespace SadConsole.Components
             {
                 if (_editor != null)
                 {
-                    if (!(value.X < 0 || value.X >= _editor.BufferWidth))
+                    if (!(value.X < 0 || value.X >= _editor.Width))
                         _position = new Point(value.X, _position.Y);
 
-                    if (!(value.Y < 0 || value.Y >= _editor.BufferHeight))
+                    if (!(value.Y < 0 || value.Y >= _editor.Height))
                         _position = new Point(_position.X, value.Y);
                 }
             }
@@ -293,7 +293,7 @@ namespace SadConsole.Components
 
         private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
-            ColoredGlyph cell = _editor[_position.Y * _editor.BufferWidth + _position.X];
+            ColoredGlyph cell = _editor[_position.Y * _editor.Width + _position.X];
 
             if (!PrintOnlyCharacterData)
             {
@@ -310,7 +310,7 @@ namespace SadConsole.Components
                     cell.Mirror = glyph.Mirror;
 
                 if (!settings.IgnoreEffect)
-                    _editor.SetEffect(_position.Y * _editor.BufferWidth + _position.X, glyph.Effect);
+                    _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);
             }
             else if (!settings.IgnoreGlyph)
                 cell.Glyph = glyph.GlyphCharacter;
@@ -318,12 +318,12 @@ namespace SadConsole.Components
             (int x, int y) = _position;
             x += 1;
 
-            if (x >= _editor.BufferWidth)
+            if (x >= _editor.Width)
             {
                 x = 0;
                 y += 1;
 
-                if (y >= _editor.BufferHeight)
+                if (y >= _editor.Height)
                 {
                     y -= 1;
 
@@ -361,7 +361,7 @@ namespace SadConsole.Components
 
             if (UseStringParser)
             {
-                coloredString = ColoredString.Parse(text, _position.Y * _editor.BufferWidth + _position.X, _editor, new StringParser.ParseCommandStacks());
+                coloredString = ColoredString.Parse(text, _position.Y * _editor.Width + _position.X, _editor, new StringParser.ParseCommandStacks());
             }
             else
             {
@@ -441,9 +441,9 @@ namespace SadConsole.Components
                                 for (int indexR = 0; indexR < returnParts.Length; indexR++)
                                 {
                                     // If the text we'll print will move off the edge, fill with spaces to get a fresh line
-                                    if (returnParts[indexR].Length > _editor.BufferWidth - _position.X && _position.X != 0)
+                                    if (returnParts[indexR].Length > _editor.Width - _position.X && _position.X != 0)
                                     {
-                                        int spaces = _editor.BufferWidth - _position.X;
+                                        int spaces = _editor.Width - _position.X;
 
                                         // Fill rest of line with spaces
                                         for (int i = 0; i < spaces; i++)
@@ -573,7 +573,7 @@ namespace SadConsole.Components
         /// <returns>The current cursor object.</returns>
         public Cursor LineFeed()
         {
-            if (_position.Y == _editor.BufferHeight - 1)
+            if (_position.Y == _editor.Height - 1)
             {
                 _editor.ShiftUp();
                 //if (((CustomConsole)_console.Target).Data.ResizeOnShift)
@@ -644,9 +644,9 @@ namespace SadConsole.Components
         {
             int newY = _position.Y + amount;
 
-            if (newY >= _editor.BufferHeight)
+            if (newY >= _editor.Height)
             {
-                newY = _editor.BufferHeight - 1;
+                newY = _editor.Height - 1;
             }
 
             Position = new Point(_position.X, newY);
@@ -678,14 +678,14 @@ namespace SadConsole.Components
         /// <returns>This cursor object.</returns>
         public Cursor LeftWrap(int amount)
         {
-            int index = Point.ToIndex(_position.X, _position.Y, _editor.BufferWidth) - amount;
+            int index = Point.ToIndex(_position.X, _position.Y, _editor.Width) - amount;
 
             if (index < 0)
             {
                 index = 0;
             }
 
-            _position = Point.FromIndex(index, _editor.BufferWidth);
+            _position = Point.FromIndex(index, _editor.Width);
 
             return this;
         }
@@ -699,9 +699,9 @@ namespace SadConsole.Components
         {
             int newX = _position.X + amount;
 
-            if (newX >= _editor.BufferWidth)
+            if (newX >= _editor.Width)
             {
-                newX = _editor.BufferWidth - 1;
+                newX = _editor.Width - 1;
             }
 
             Position = new Point(newX, _position.Y);
@@ -715,14 +715,14 @@ namespace SadConsole.Components
         /// <returns>This cursor object.</returns>
         public Cursor RightWrap(int amount)
         {
-            int index = Point.ToIndex(_position.X, _position.Y, _editor.BufferWidth) + amount;
+            int index = Point.ToIndex(_position.X, _position.Y, _editor.Width) + amount;
 
             if (index > _editor.Count)
             {
                 index = _editor.Count - 1;
             }
 
-            _position = Point.FromIndex(index, _editor.BufferWidth);
+            _position = Point.FromIndex(index, _editor.Width);
 
             return this;
         }

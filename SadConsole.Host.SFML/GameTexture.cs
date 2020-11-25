@@ -121,7 +121,7 @@ namespace SadConsole.Host
             // Background mode with simple resizing.
             if (mode == TextureConvertMode.Background && backgroundStyle == TextureConvertBackgroundStyle.Pixel)
             {
-                using var resizer = GetResizedTexture(surface.BufferWidth, surface.BufferHeight);
+                using var resizer = GetResizedTexture(surface.Width, surface.Height);
 
                 var colors = new Color[(int)resizer.Size.X * (int)resizer.Size.Y];
                 using Image image = resizer.Texture.CopyToImage();

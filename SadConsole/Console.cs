@@ -14,18 +14,6 @@ namespace SadConsole
     public partial class Console: ScreenSurface
     {
         /// <summary>
-        /// The entire width of the console. Forwards <see cref="ICellSurface.BufferWidth"/>.
-        /// </summary>
-        public int Width =>
-            BufferWidth;
-
-        /// <summary>
-        /// The entire height of the console. Forwards <see cref="ICellSurface.BufferHeight"/>.
-        /// </summary>
-        public int Height =>
-            BufferHeight;
-
-        /// <summary>
         /// The virtual cursor reference.
         /// </summary>
         public Cursor Cursor { get; protected set; }

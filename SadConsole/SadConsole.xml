@@ -631,11 +631,15 @@
         <member name="P:SadConsole.CellSurface.Buffer">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.CellSurface.BufferWidth">
-            <inheritdoc />
+        <member name="P:SadConsole.CellSurface.Width">
+            <summary>
+            The total width of the surface.
+            </summary>
         </member>
-        <member name="P:SadConsole.CellSurface.BufferHeight">
-            <inheritdoc />
+        <member name="P:SadConsole.CellSurface.Height">
+            <summary>
+            The total height of the surface.
+            </summary>
         </member>
         <member name="P:SadConsole.CellSurface.IsScrollable">
             <inheritdoc />
@@ -1606,16 +1610,6 @@
             A surface that has a cursor.
             </summary>
         </member>
-        <member name="P:SadConsole.Console.Width">
-            <summary>
-            The entire width of the console. Forwards <see cref="P:SadConsole.ICellSurface.BufferWidth"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Console.Height">
-            <summary>
-            The entire height of the console. Forwards <see cref="P:SadConsole.ICellSurface.BufferHeight"/>.
-            </summary>
-        </member>
         <member name="P:SadConsole.Console.Cursor">
             <summary>
             The virtual cursor reference.
@@ -1711,10 +1705,10 @@
         <member name="P:SadConsole.Console.Buffer">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Console.BufferHeight">
+        <member name="P:SadConsole.Console.Height">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Console.BufferWidth">
+        <member name="P:SadConsole.Console.Width">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.Console.DefaultBackground">
@@ -3350,28 +3344,6 @@
             An event that is raised when <see cref="P:SadConsole.ICellSurface.IsDirty"/> changes.
             </summary>
         </member>
-        <member name="P:SadConsole.ICellSurface.Item(System.Int32)">
-            <summary>
-            Gets a cell by index.
-            </summary>
-            <param name="index">The index of the cell.</param>
-            <returns>The indicated cell.</returns>
-        </member>
-        <member name="P:SadConsole.ICellSurface.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets a cell based on its coordinates on the surface.
-            </summary>
-            <param name="x">The X coordinate.</param>
-            <param name="y">The Y coordinate.</param>
-            <returns>The indicated cell.</returns>
-        </member>
-        <member name="P:SadConsole.ICellSurface.Item(SadRogue.Primitives.Point)">
-            <summary>
-            Gets a cell based on its position on the surface.
-            </summary>
-            <param name="position">Position of the cell.</param>
-            <returns>The indicated cell.</returns>
-        </member>
         <member name="P:SadConsole.ICellSurface.TimesShiftedDown">
             <summary>
             A variable that tracks how many times this editor shifted the surface down.
@@ -3407,16 +3379,6 @@
             Returns a rectangle that represents the maximum size of the surface.
             </summary>
         </member>
-        <member name="P:SadConsole.ICellSurface.BufferHeight">
-            <summary>
-            Maximum height of the surface buffer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ICellSurface.BufferWidth">
-            <summary>
-            Maximum width of the surface buffer.
-            </summary>
-        </member>
         <member name="P:SadConsole.ICellSurface.DefaultBackground">
             <summary>
             The default background for glyphs on this surface.
@@ -3439,7 +3401,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.IsScrollable">
             <summary>
-            Returns <see langword="true"/> when the <see cref="P:SadConsole.ICellSurface.View"/> width or height is different from <see cref="P:SadConsole.ICellSurface.BufferHeight"/> or <see cref="P:SadConsole.ICellSurface.BufferWidth"/>.
+            Returns <see langword="true"/> when the <see cref="P:SadConsole.ICellSurface.View"/> width or height is different from <see cref="!:Height"/> or <see cref="!:Width"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.View">

@@ -69,7 +69,7 @@ namespace FeatureDemo.CustomConsoles
                 if (info.ScreenObject == this)
                 {
                     FillHexes(lastCell, 176, lastCellHexRow);
-                    lastCell = info.SurfaceCellPosition.ToIndex(Surface.BufferWidth);
+                    lastCell = info.SurfaceCellPosition.ToIndex(Surface.Width);
                     lastCellHexRow = isHexRow;
                     FillHexes(lastCell, 45, isHexRow);
                     IsDirty = true;
@@ -115,10 +115,10 @@ namespace FeatureDemo.CustomConsoles
             switch (direction)
             {
                 case HexDirection.TopLeft:
-                    returnHex = isHexRow ? sourceHex - Surface.BufferWidth : sourceHex - Surface.BufferWidth - 1;
+                    returnHex = isHexRow ? sourceHex - Surface.Width : sourceHex - Surface.Width - 1;
                     break;
                 case HexDirection.TopRight:
-                    returnHex = isHexRow ? sourceHex - Surface.BufferWidth + 1 : sourceHex - Surface.BufferWidth ;
+                    returnHex = isHexRow ? sourceHex - Surface.Width + 1 : sourceHex - Surface.Width ;
                     break;
                 case HexDirection.Left:
                     returnHex = sourceHex - 1;
@@ -127,10 +127,10 @@ namespace FeatureDemo.CustomConsoles
                     returnHex = sourceHex + 1;
                     break;
                 case HexDirection.BottomLeft:
-                    returnHex = isHexRow ? sourceHex + Surface.BufferWidth : sourceHex + Surface.BufferWidth - 1;
+                    returnHex = isHexRow ? sourceHex + Surface.Width : sourceHex + Surface.Width - 1;
                     break;
                 case HexDirection.BottomRight:
-                    returnHex = isHexRow ? sourceHex + Surface.BufferWidth + 1 : sourceHex + Surface.BufferWidth;
+                    returnHex = isHexRow ? sourceHex + Surface.Width + 1 : sourceHex + Surface.Width;
                     break;
                 default:
                     break;

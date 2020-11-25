@@ -43,11 +43,11 @@ namespace FeatureDemo.CustomConsoles
             ICellSurface logo;// = sadImage.ToSurface(TextureConvertMode.Background, sadImage.Width / (int)(defaultFontSize.X * defaultFontSizeRatio.Y), sadImage.Height / (int)(defaultFontSize.Y * defaultFontSizeRatio.X));
 
             if (defaultFontSizeRatio.X == 0 && defaultFontSizeRatio.Y == 0)
-                logo = sadImage.ToSurface(TextureConvertMode.Foreground, BufferWidth, BufferHeight - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, Width, Height - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
             else if (defaultFontSizeRatio.Y > defaultFontSizeRatio.X)
-                logo = sadImage.ToSurface(TextureConvertMode.Foreground, (int)((BufferHeight - 1)* defaultFontSizeRatio.Y), BufferHeight - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, (int)((Height - 1)* defaultFontSizeRatio.Y), Height - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
             else
-                logo = sadImage.ToSurface(TextureConvertMode.Foreground, BufferWidth, (int)(BufferWidth * defaultFontSize.X), foregroundStyle: TextureConvertForegroundStyle.Block);
+                logo = sadImage.ToSurface(TextureConvertMode.Foreground, Width, (int)(Width * defaultFontSize.X), foregroundStyle: TextureConvertForegroundStyle.Block);
 
             _consoleImage = new Console(logo);
             _consoleImage.Position =

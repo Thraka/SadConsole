@@ -108,7 +108,7 @@ namespace SadConsole.Renderers
 
                 for (int y = 0; y < _screen.Surface.View.Height; y++)
                 {
-                    int i = ((y + _screen.Surface.ViewPosition.Y) * _screen.Surface.BufferWidth) + _screen.Surface.ViewPosition.X;
+                    int i = ((y + _screen.Surface.ViewPosition.Y) * _screen.Surface.Width) + _screen.Surface.ViewPosition.X;
 
                     for (int x = 0; x < _screen.Surface.View.Width; x++)
                     {
