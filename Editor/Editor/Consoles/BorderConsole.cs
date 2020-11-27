@@ -38,7 +38,7 @@ namespace SadConsoleEditor.Consoles
         public void PrepBox()
         {
             Surface.Clear();
-            Surface.DrawBox(new Rectangle(0, 0, Surface.BufferWidth, Surface.BufferHeight), new ColoredGlyph(Surface.DefaultForeground, Color.Black, 177));
+            Surface.DrawBox(new Rectangle(0, 0, Surface.Width, Surface.Height), new ColoredGlyph(Surface.DefaultForeground, Color.Black, 177));
         }
 
         public override bool ProcessMouse(MouseScreenObjectState state)
@@ -55,9 +55,9 @@ namespace SadConsoleEditor.Consoles
             return true;
         }
 
-        public override void Draw(TimeSpan delta)
+        public override void Render(TimeSpan delta)
         {
-            base.Draw(delta);
+            base.Render(delta);
 
             MainConsole.Instance.ActiveEditor?.Draw();
         }

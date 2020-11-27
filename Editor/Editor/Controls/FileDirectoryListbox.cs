@@ -5,6 +5,7 @@ using SadRogue.Primitives;
 using SadConsole.UI.Controls;
 using SadConsole;
 using SadConsole.UI.Themes;
+using SadConsole.UI;
 
 namespace SadConsoleEditor.Controls
 {
@@ -150,34 +151,33 @@ namespace SadConsoleEditor.Controls
         private ColoredGlyph _fileAppMouseOver = new ColoredGlyph(Color.Gray, Color.Black);
         private ColoredGlyph _fileAppSelected = new ColoredGlyph(Color.White, Color.Black);
         private ColoredGlyph _fileAppSelectedOver = new ColoredGlyph(Color.White, Color.Black);
-        private ColoredGlyph _highExtAppNormal = new ColoredGlyph(ColorAnsi.Yellow, Color.Black);
-        private ColoredGlyph _highExtAppMouseOver = new ColoredGlyph(ColorAnsi.Yellow, Color.Black);
+        private ColoredGlyph _highExtAppNormal = new ColoredGlyph(Color.AnsiYellow, Color.Black);
+        private ColoredGlyph _highExtAppMouseOver = new ColoredGlyph(Color.AnsiYellow, Color.Black);
         private ColoredGlyph _highExtAppSelected = new ColoredGlyph(Color.Yellow, Color.Black);
         private ColoredGlyph _highExtAppSelectedOver = new ColoredGlyph(Color.Yellow, Color.Black);
 
-        public override void RefreshTheme(Colors themeColors, ControlBase control)
+        public override void RefreshTheme(Colors themeColors)
         {
-            if (themeColors == null) themeColors = Library.Default.Colors;
+            base.RefreshTheme(themeColors);
 
-            base.RefreshTheme(themeColors, control);
+            _directoryAppNormal.Background = themeColors.ControlBackgroundNormal;
+            _directoryAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            _directoryAppSelected.Background = themeColors.ControlBackgroundSelected;
+            _directoryAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
 
-            _directoryAppNormal.Background = themeColors.ControlBack;
-            _directoryAppMouseOver.Background = themeColors.ControlBackLight;
-            _directoryAppSelected.Background = themeColors.ControlBack;
-            _directoryAppSelectedOver.Background = themeColors.ControlBackLight;
+            _fileAppNormal.Background = themeColors.ControlBackgroundNormal;
+            _fileAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            _fileAppSelected.Background = themeColors.ControlBackgroundSelected;
+            _fileAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
 
-            _fileAppNormal.Background = themeColors.ControlBack;
-            _fileAppMouseOver.Background = themeColors.ControlBackLight;
-            _fileAppSelected.Background = themeColors.ControlBack;
-            _fileAppSelectedOver.Background = themeColors.ControlBackLight;
-
-            _highExtAppNormal.Background = themeColors.ControlBack;
-            _highExtAppMouseOver.Background = themeColors.ControlBackLight;
-            _highExtAppSelected.Background = themeColors.ControlBack;
-            _highExtAppSelectedOver.Background = themeColors.ControlBackLight;
+            _highExtAppNormal.Background = themeColors.ControlBackgroundNormal;
+            _highExtAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            _highExtAppSelected.Background = themeColors.ControlBackgroundSelected;
+            _highExtAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
         }
 
-        public override void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
+
+        public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             ColoredGlyph appearance;
             string displayString;
@@ -230,9 +230,10 @@ namespace SadConsoleEditor.Controls
                 displayString = item.ToString();
             }
 
-            surface.Print(area.X, area.Y, displayString.Align(SadConsole.HorizontalAlignment.Left, area.Width), appearance);
+            control.Surface.Print(area.X, area.Y, displayString.Align(SadConsole.HorizontalAlignment.Left, area.Width), appearance);
         }
 
     }
+
     #endregion
 }

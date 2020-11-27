@@ -68,23 +68,23 @@ namespace SadConsoleEditor.Windows
 
                         if (result != null)
                         {
-                            if (x + result.BufferWidth > previewPane.Width)
+                            if (x + result.Width > previewPane.Width)
                             {
                                 y += highestHeight;
                                 highestHeight = 0;
                                 x = 0;
                             }
 
-                            if (y + result.BufferHeight > previewPane.Height)
+                            if (y + result.Height > previewPane.Height)
                             {
                                 continue;
                             }
 
                             result.Copy(d.Surface, x, y);
-                            x += result.BufferWidth + (useSpacing ? selectedFont.LetterSpacing : 0);
+                            x += result.Width + (useSpacing ? selectedFont.LetterSpacing : 0);
 
-                            if (result.BufferHeight > highestHeight)
-                                highestHeight = result.BufferHeight;
+                            if (result.Height > highestHeight)
+                                highestHeight = result.Height;
                         }
                     }
                 }
@@ -108,12 +108,12 @@ namespace SadConsoleEditor.Windows
             useSpacingCheckbox.IsSelectedChanged += (o, e) => DrawText();
 
 
-            Add(useSpacingCheckbox);
-            Add(textInput);
-            Add(previewPane);
-            Add(fontsListbox);
-            Add(okButton);
-            Add(cancelButton);
+            Controls.Add(useSpacingCheckbox);
+            Controls.Add(textInput);
+            Controls.Add(previewPane);
+            Controls.Add(fontsListbox);
+            Controls.Add(okButton);
+            Controls.Add(cancelButton);
 
             fonts = new List<TheDraw.Font>();
 
@@ -185,19 +185,20 @@ namespace SadConsoleEditor.Windows
         {
             
         }
-
-        protected override void OnInvalidated()
+        
+        protected override void DrawBorder()
         {
-            if (!_isCreated) return;
-            base.OnInvalidated();
-            var colors = GetThemeColors();
+            base.DrawBorder();
 
-            this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 2, "Fonts", colors.TitleText);
+            if (!_isCreated) return;
+            var colors = Controls.GetThemeColors();
+
+            this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 2, "Fonts", colors.Title);
             this.Print(fontsListbox.Bounds.X, fontsListbox.Bounds.Y - 1, new string((char)196, fontsListbox.Width));
-            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y - 2, "Selected font: ", colors.TitleText);
-            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y - 1, "Available characters: ", colors.TitleText);
-            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y + 1, "Text: ", colors.TitleText);
-            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y + 3, "Preview", colors.TitleText);
+            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y - 2, "Selected font: ", colors.Title);
+            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y - 1, "Available characters: ", colors.Title);
+            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y + 1, "Text: ", colors.Title);
+            this.Print(fontsListbox.Bounds.MaxExtentX + 1, fontsListbox.Bounds.Y + 3, "Preview", colors.Title);
 
             if (selectedFont != null)
             {
@@ -206,9 +207,9 @@ namespace SadConsoleEditor.Windows
                     for (int i = 0; i < 47; i++)
                     {
                         this.SetGlyph(availableCharsPosition.X + i, availableCharsPosition.Y, 33 + i);
-                        this.SetForeground(availableCharsPosition.X + i, availableCharsPosition.Y, selectedFont.CharactersSupported[i] ? colors.Green : colors.Text);
+                        this.SetForeground(availableCharsPosition.X + i, availableCharsPosition.Y, selectedFont.CharactersSupported[i] ? colors.Green : colors.Title);
                         this.SetGlyph(availableCharsPosition.X + i, availableCharsPosition.Y + 1, 33 + 47 + i);
-                        this.SetForeground(availableCharsPosition.X + i, availableCharsPosition.Y + 1, selectedFont.CharactersSupported[i + 47] ? colors.Green : colors.Text);
+                        this.SetForeground(availableCharsPosition.X + i, availableCharsPosition.Y + 1, selectedFont.CharactersSupported[i + 47] ? colors.Green : colors.Title);
                     }
                 }
             }
@@ -219,7 +220,7 @@ namespace SadConsoleEditor.Windows
 
     class FontListBoxItemTheme : SadConsole.UI.Themes.ListBoxItemTheme
     {
-        public override void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
+        public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             string value = ((TheDraw.Font)item).Title;
             if (value.Length < area.Width)
@@ -227,7 +228,7 @@ namespace SadConsoleEditor.Windows
             else if (value.Length > area.Width)
                 value = value.Substring(0, area.Width);
             
-            surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
+            control.Surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
         }
     }
 

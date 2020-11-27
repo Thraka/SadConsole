@@ -161,14 +161,14 @@
                         if (firstPoint.Value.Y > secondPoint.Y)
                             p1 = (0, 0);
                         else
-                            p1 = (0, frame.BufferHeight - 1);
+                            p1 = (0, frame.Height - 1);
                     }
                     else
                     {
                         if (firstPoint.Value.Y > secondPoint.Y)
-                            p1 = new Point(frame.BufferWidth - 1, 0);
+                            p1 = new Point(frame.Width - 1, 0);
                         else
-                            p1 = new Point(frame.BufferWidth - 1, frame.BufferHeight - 1);
+                            p1 = new Point(frame.Width - 1, frame.Height - 1);
                     }
 
 
@@ -176,7 +176,7 @@
                     
                     var fillCell = _settingsPanel.UseFill ? new ColoredGlyph(_settingsPanel.FillForeColor, _settingsPanel.FillBackColor, _settingsPanel.FillGlyph) : null;
                     var borderCell = new ColoredGlyph(_settingsPanel.LineForeColor, _settingsPanel.LineBackColor, _settingsPanel.LineGlyph);
-                    frame.DrawBox(new Rectangle(0, 0, frame.BufferWidth, frame.BufferHeight), borderCell, fillCell, null);
+                    frame.DrawBox(new Rectangle(0, 0, frame.Width, frame.Height), borderCell, fillCell, null);
 
                     Brush.Animation = animation;
                 }

@@ -1,13 +1,11 @@
-﻿namespace SadConsoleEditor.Controls
-{
-    using SadRogue.Primitives;
-    using SadConsole;
-    using SadConsole.UI.Controls;
-    using SadConsole.UI.Themes;
-    using System;
-    using System.Linq;
-    using Console = SadConsole.Console;
+﻿using SadRogue.Primitives;
+using SadConsole;
+using SadConsole.UI.Controls;
+using SadConsole.UI.Themes;
+using System;
 
+namespace SadConsoleEditor.Controls
+{
     public class ColorPicker : SadConsole.UI.Controls.ControlBase
     {
         public class ThemeType : ThemeBase
@@ -19,7 +17,6 @@
 
                 control.Surface = new CellSurface(control.Width, control.Height);
                 control.Surface.Clear();
-                base.Attached(control);
             }
 
             /// <inheritdoc />
@@ -34,7 +31,7 @@
                 RefreshTheme(control.FindThemeColors(), control);
 
                 if (Helpers.HasFlag((int)control.State, (int)ControlStates.Disabled))
-                    appearance = Disabled;
+                    appearance = ControlThemeState.Disabled;
 
                 //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(presenter.State, ControlStates.MouseRightButtonDown))
                 //    appearance = MouseDown;
@@ -43,10 +40,10 @@
                 //    appearance = MouseOver;
 
                 else if (Helpers.HasFlag((int)control.State, (int)ControlStates.Focused))
-                    appearance = Focused;
+                    appearance = ControlThemeState.Focused;
 
                 else
-                    appearance = Normal;
+                    appearance = ControlThemeState.Normal;
 
                 Color[] colors = Color.White.LerpSteps(Color.Black, control.Height);
                 Color[] colorsEnd = picker._masterColor.LerpSteps(Color.Black, control.Height);
@@ -78,12 +75,7 @@
             {
                 return new ThemeType()
                 {
-                    Normal = Normal.Clone(),
-                    Disabled = Disabled.Clone(),
-                    MouseOver = MouseOver.Clone(),
-                    MouseDown = MouseDown.Clone(),
-                    Selected = Selected.Clone(),
-                    Focused = Focused.Clone(),
+                    ControlThemeState = ControlThemeState.Clone()
                 };
             }
         }
@@ -138,11 +130,11 @@
         }
 
 
-        public ColorPicker(int width, int height, Color color): base(width, height)
+        public ColorPicker(int width, int height, Color color) : base(width, height)
         {
-            Theme = new ThemeType();
-            Theme.UpdateAndDraw(this, TimeSpan.Zero);
-
+            //Theme = new ThemeType();
+            //Theme.UpdateAndDraw(this, TimeSpan.Zero);
+            CanFocus = false;
             //SelectedHue = hue;
 
             SelectedColor = color;
@@ -157,36 +149,37 @@
 
             this.IsDirty = true;
         }
-        
-        protected override void OnMouseIn(SadConsole.Input.MouseScreenObjectState info)
+
+        protected override void OnMouseIn(ControlMouseState info)
         {
             base.OnMouseIn(info);
 
-            if (Parent.CapturedControl == null)
+            if (Parent.Host.CapturedControl == null)
             {
-                if (info.Mouse.LeftButtonDown)
+                if (info.OriginalMouseState.Mouse.LeftButtonDown)
                 {
-                    var location = this.TransformConsolePositionByControlPosition(info.CellPosition);
+                    var location = info.MousePosition;
                     Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Glyph = 0;
                     _selectedColorPosition = location;
                     SelectedColorSafe = Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Background;
                     Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Glyph = 4;
                     IsDirty = true;
 
-                    Parent.CaptureControl(this);
+                    Parent.Host.CaptureControl(this);
                 }
             }
         }
 
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
         {
-            if (Parent.CapturedControl == this)
+            if (Parent.Host.CapturedControl == this)
             {
                 if (info.Mouse.LeftButtonDown == false)
-                    Parent.ReleaseControl();
+                    Parent.Host.ReleaseControl();
                 else
                 {
-                    var location = this.TransformConsolePositionByControlPosition(info.CellPosition);
+                    var newState = new ControlMouseState(this, info);
+                    var location = newState.MousePosition;
 
                     //if (info.ConsolePosition.X >= Position.X && info.ConsolePosition.X < Position.X + Width)
                     if (location.X >= -6 && location.X <= Width + 5 && location.Y > -4 && location.Y < Height + 3)
@@ -203,6 +196,6 @@
 
             return base.ProcessMouse(info);
         }
-        
+
     }
 }

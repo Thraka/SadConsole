@@ -61,7 +61,7 @@ namespace SadConsoleEditor.Panels
             _charPreview = new ColorPresenter("Character", SadConsole.UI.Themes.Library.Default.Colors.Green, SadConsoleEditor.Consoles.ToolPane.PanelWidthControls);
             _mirrorLR = new CheckBox(SadConsoleEditor.Consoles.ToolPane.PanelWidthControls, 1);
             _mirrorTB = new CheckBox(SadConsoleEditor.Consoles.ToolPane.PanelWidthControls, 1);
-            _characterPicker = new CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBack, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
+            _characterPicker = new CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBackgroundNormal, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
 
             _mirrorLR.Text = "Mirror Horiz.";
             _mirrorTB.Text = "Mirror Vert.";

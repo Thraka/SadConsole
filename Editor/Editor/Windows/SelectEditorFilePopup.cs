@@ -105,12 +105,12 @@ namespace SadConsoleEditor.Windows
             };
             cancelButton.Click += new EventHandler(_cancelButton_Action);
 
-            Add(directoryListBox);
-            Add(fileName);
-            Add(selectButton);
-            Add(cancelButton);
-            Add(editorsListBox);
-            Add(fileLoadersList);
+            Controls.Add(directoryListBox);
+            Controls.Add(fileName);
+            Controls.Add(selectButton);
+            Controls.Add(cancelButton);
+            Controls.Add(editorsListBox);
+            Controls.Add(fileLoadersList);
 
             editorsListBox.SelectedItem = editorsListBox.Items[0];
             Title = "Select File";
@@ -199,26 +199,26 @@ namespace SadConsoleEditor.Windows
             selectButton.IsEnabled = fileName.Text != "" && (SkipFileExistCheck || System.IO.File.Exists(System.IO.Path.Combine(directoryListBox.CurrentFolder, fileName.Text)));
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
+            base.DrawBorder();
+
             if (!_initialized) return;
 
-            base.OnInvalidated();
-
-            var colors = GetThemeColors();
+            var colors = Controls.GetThemeColors();
 
             //    this.Print(2, Height - 2, fileFilterString.Replace(';', ' ').Replace("*", ""));
 
-            this.Print(editorsListBox.Bounds.X, editorsListBox.Bounds.Y - 2, "Editor", colors.TitleText);
+            this.Print(editorsListBox.Bounds.X, editorsListBox.Bounds.Y - 2, "Editor", colors.Title);
             this.Print(editorsListBox.Bounds.X, editorsListBox.Bounds.Y - 1, new string((char)196, fileLoadersList.Width));
 
-            this.Print(fileLoadersList.Bounds.X, fileLoadersList.Bounds.Y - 2, "Type of file", colors.TitleText);
+            this.Print(fileLoadersList.Bounds.X, fileLoadersList.Bounds.Y - 2, "Type of file", colors.Title);
             this.Print(fileLoadersList.Bounds.X, fileLoadersList.Bounds.Y - 1, new string((char)196, fileLoadersList.Width));
 
-            this.Print(directoryListBox.Bounds.X, directoryListBox.Bounds.Y - 2, "Files", colors.TitleText);
+            this.Print(directoryListBox.Bounds.X, directoryListBox.Bounds.Y - 2, "Files", colors.Title);
             this.Print(directoryListBox.Bounds.X, directoryListBox.Bounds.Y - 1, new string((char)196, directoryListBox.Width));
 
-            this.Print(fileName.Bounds.X, fileName.Bounds.Y - 1, "Selected file", colors.TitleText);
+            this.Print(fileName.Bounds.X, fileName.Bounds.Y - 1, "Selected file", colors.Title);
 
             if (fileLoadersList.SelectedItem is FileLoaders.IFileLoader loader)
             {

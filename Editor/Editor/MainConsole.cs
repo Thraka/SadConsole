@@ -95,7 +95,7 @@ namespace SadConsoleEditor
             QuickSelectPane.IsVisible = false;
 
             topBarPane = new SadConsole.Console(Config.Program.WindowWidth, 1);
-            topBarPane.DefaultBackground = SadConsole.UI.Themes.Library.Default.Colors.ControlHostBack;
+            topBarPane.DefaultBackground = SadConsole.UI.Themes.Library.Default.Colors.ControlHostBackground;
             topBarPane.Clear();
             topBarPane.FocusOnMouseClick = false;
             topBarPane.IsVisible = false;
@@ -418,10 +418,10 @@ namespace SadConsoleEditor
         {
             topBarPane.Clear();
 
-            var text = new SadConsole.ColoredString("   X: ", SadConsole.UI.Themes.Library.Default.Colors.Text, Color.Transparent)     + new SadConsole.ColoredString(topBarMousePosition.X.ToString(), SadConsole.UI.Themes.Library.Default.Colors.TextBright, Color.Transparent) +
-                       new SadConsole.ColoredString(" Y: ", SadConsole.UI.Themes.Library.Default.Colors.Text, Color.Transparent)       + new SadConsole.ColoredString(topBarMousePosition.Y.ToString(), SadConsole.UI.Themes.Library.Default.Colors.TextBright, Color.Transparent) +
-                       new SadConsole.ColoredString("   Layer: ", SadConsole.UI.Themes.Library.Default.Colors.Text, Color.Transparent) + new SadConsole.ColoredString(topBarLayerName, SadConsole.UI.Themes.Library.Default.Colors.TextBright, Color.Transparent) +
-                       new SadConsole.ColoredString("   Tool: ", SadConsole.UI.Themes.Library.Default.Colors.Text, Color.Transparent)  + new SadConsole.ColoredString(topBarToolName, SadConsole.UI.Themes.Library.Default.Colors.TextBright, Color.Transparent);
+            var text = new SadConsole.ColoredString("   X: ", SadConsole.UI.Themes.Library.Default.Colors.Title, Color.Transparent)     + new SadConsole.ColoredString(topBarMousePosition.X.ToString(), SadConsole.UI.Themes.Library.Default.Colors.ControlHostForeground, Color.Transparent) +
+                       new SadConsole.ColoredString(" Y: ", SadConsole.UI.Themes.Library.Default.Colors.Title, Color.Transparent)       + new SadConsole.ColoredString(topBarMousePosition.Y.ToString(), SadConsole.UI.Themes.Library.Default.Colors.ControlHostForeground, Color.Transparent) +
+                       new SadConsole.ColoredString("   Layer: ", SadConsole.UI.Themes.Library.Default.Colors.Title, Color.Transparent) + new SadConsole.ColoredString(topBarLayerName, SadConsole.UI.Themes.Library.Default.Colors.ControlHostForeground, Color.Transparent) +
+                       new SadConsole.ColoredString("   Tool: ", SadConsole.UI.Themes.Library.Default.Colors.Title, Color.Transparent)  + new SadConsole.ColoredString(topBarToolName, SadConsole.UI.Themes.Library.Default.Colors.ControlHostForeground, Color.Transparent);
             text.IgnoreBackground = true;
             topBarPane.Print(0, 0, text);
         }

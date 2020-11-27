@@ -18,7 +18,6 @@
 
                 control.Surface = new CellSurface(control.Width, control.Height);
                 control.Surface.Clear();
-                base.Attached(control);
             }
 
             /// <inheritdoc />
@@ -33,7 +32,7 @@
                 ColoredGlyph appearance;
 
                 if (Helpers.HasFlag((int)control.State, (int)ControlStates.Disabled))
-                    appearance = Disabled;
+                    appearance = ControlThemeState.Disabled;
 
                 //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(presenter.State, ControlStates.MouseRightButtonDown))
                 //    appearance = MouseDown;
@@ -42,10 +41,10 @@
                 //    appearance = MouseOver;
 
                 else if (Helpers.HasFlag((int)control.State, (int)ControlStates.Focused))
-                    appearance = Focused;
+                    appearance = ControlThemeState.Focused;
 
                 else
-                    appearance = Normal;
+                    appearance = ControlThemeState.Normal;
 
                 if (picker._newCharacterLocation != new Point(-1, -1))
                 {
@@ -77,12 +76,7 @@
             {
                 return new ThemeType()
                 {
-                    Normal = Normal.Clone(),
-                    Disabled = Disabled.Clone(),
-                    MouseOver = MouseOver.Clone(),
-                    MouseDown = MouseDown.Clone(),
-                    Selected = Selected.Clone(),
-                    Focused = Focused.Clone(),
+                    ControlThemeState = ControlThemeState.Clone()
                 };
             }
         }
@@ -165,27 +159,22 @@
 
             SelectedCharacter = 1;
         }
-        
-        protected override void OnMouseIn(SadConsole.Input.MouseScreenObjectState info)
+        protected override void OnMouseIn(ControlMouseState info)
         {
-            var mousePosition = TransformConsolePositionByControlPosition(info.CellPosition);
-
-            if (new Rectangle(0, 0, 16, Config.Program.ScreenFont.Rows).Contains(mousePosition) && info.Mouse.LeftButtonDown)
+            if (new Rectangle(0, 0, 16, Config.Program.ScreenFont.Rows).Contains(info.MousePosition) && info.OriginalMouseState.Mouse.LeftButtonDown)
             {
                 if (!UseFullClick)
-                    SelectedCharacter = Surface[mousePosition.ToIndex(16)].Glyph;
+                    SelectedCharacter = Surface[info.MousePosition.ToIndex(16)].Glyph;
             }
 
             base.OnMouseIn(info);
         }
 
-        protected override void OnLeftMouseClicked(SadConsole.Input.MouseScreenObjectState info)
+        protected override void OnLeftMouseClicked(ControlMouseState info)
         {
-            var mousePosition = TransformConsolePositionByControlPosition(info.CellPosition);
-
-            if (new Rectangle(0, 0, 16, Config.Program.ScreenFont.Rows).Contains(mousePosition))
+            if (new Rectangle(0, 0, 16, Config.Program.ScreenFont.Rows).Contains(info.MousePosition))
             {
-                SelectedCharacter = Surface[mousePosition.ToIndex(16)].Glyph;
+                SelectedCharacter = Surface[info.MousePosition.ToIndex(16)].Glyph;
             }
             
             base.OnLeftMouseClicked(info);

@@ -58,16 +58,16 @@ namespace SadConsoleEditor.Windows
             //    Position = new SadRogue.Primitives.Point(9, 3)
             //};
 
-            Add(widthBox);
-            Add(heightBox);
-            Add(cancelButton);
-            Add(okButton);
+            Controls.Add(widthBox);
+            Controls.Add(heightBox);
+            Controls.Add(cancelButton);
+            Controls.Add(okButton);
             //Add(_name);
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
-            base.OnInvalidated();
+            base.DrawBorder();
             //this.Print(2, 3, "Name");
             this.Print(2, 2, "Width");
             this.Print(2, 3, "Height");

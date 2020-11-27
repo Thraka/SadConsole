@@ -68,8 +68,8 @@ namespace SadConsoleEditor.Panels
             documentsTitle.OnDraw = (control, ts) =>
             {
                 var colors = control.FindThemeColors();
-                control.Surface.Fill(colors.Green, colors.ControlHostBack, 0, null);
-                control.Surface.Print(0, 0, new ColoredString("Opened Files", colors.Green, colors.ControlHostBack));
+                control.Surface.Fill(colors.Green, colors.ControlHostBackground, 0, null);
+                control.Surface.Print(0, 0, new ColoredString("Opened Files", colors.Green, colors.ControlHostBackground));
             };
             Controls = new ControlBase[] { NewButton, SaveButton, ResizeButton, LoadButton, SaveAsButton, CloseButton, documentsTitle, DocumentsListbox };
             
@@ -131,7 +131,7 @@ namespace SadConsoleEditor.Panels
 
         public class EditorListBoxItem : ListBoxItemTheme
         {
-            public override void Draw(ICellSurface surface, Rectangle area, object item, ControlStates itemState)
+            public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
             {
                 var look = GetStateAppearance(itemState);
                 string value = ((Editors.IEditor)item).Metadata.Title??((Editors.IEditor)item).Metadata.Id;
@@ -139,7 +139,7 @@ namespace SadConsoleEditor.Panels
                     value += new string(' ', area.Width - value.Length);
                 else if (value.Length > area.Width)
                     value = value.Substring(0, area.Width);
-                surface.Print(area.X, area.Y, value, look);
+                control.Surface.Print(area.X, area.Y, value, look);
             }
         }
     }

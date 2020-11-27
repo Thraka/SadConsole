@@ -34,8 +34,8 @@ namespace SadConsoleEditor.Consoles
 		{
             Font = Config.Program.ScreenFont;
             FontSize = Config.Program.ScreenFontSize;
-            DefaultBackground = SadConsole.UI.Themes.Library.Default.Colors.ControlHostBack;
-            DefaultForeground = SadConsole.UI.Themes.Library.Default.Colors.TitleText;
+            DefaultBackground = SadConsole.UI.Themes.Library.Default.Colors.ControlHostBackground;
+            DefaultForeground = SadConsole.UI.Themes.Library.Default.Colors.Title;
 
             currentCharSet = 0;
 			

@@ -54,8 +54,13 @@ namespace SadConsoleEditor.Windows
             get { return _previousColors.Items.Cast<Color>().ToArray(); }
         }
         
-        public ColorPickerPopup(): base(Config.Program.ColorPickerSettings.WindowWidth, Config.Program.ColorPickerSettings.WindowHeight)
+        public ColorPickerPopup(): base(60, 35)
         {
+            //Border.AddToWindow(this);
+            Title = "Select color";
+            CloseOnEscKey = true;
+            CanDrag = false;
+
             UsePixelPositioning = true;
             Center();
             otherColorPopup = new OtherColorsPopup();
@@ -72,7 +77,7 @@ namespace SadConsoleEditor.Windows
 
             _picker = new Controls.ColorPicker(Width - RideSideX - 1, Height - 11, Color.YellowGreen) { Position = new Point(1, 1) };
             _picker.SelectedColorChanged += _picker_SelectedColorChanged;
-            Add(_picker);
+            Controls.Add(_picker);
 
             #region TextBoxes
             _redInput = new TextBox(5);
@@ -80,28 +85,28 @@ namespace SadConsoleEditor.Windows
             _redInput.MaxLength = 3;
             _redInput.Position = new Point(Width - 7, Height - 14);
             _redInput.TextChanged += (sender, e) => { _barR.SelectedColor = new Color(int.Parse(_redInput.Text), 0, 0); };
-            Add(_redInput);
+            Controls.Add(_redInput);
 
             _greenInput = new TextBox(5);
             _greenInput.IsNumeric = true;
             _greenInput.MaxLength = 3;
             _greenInput.Position = new Point(Width - 7, Height - 13);
             _greenInput.TextChanged += (sender, e) => { _barG.SelectedColor = new Color(0, int.Parse(_greenInput.Text), 0); };
-            Add(_greenInput);
+            Controls.Add(_greenInput);
 
             _blueInput = new TextBox(5);
             _blueInput.IsNumeric = true;
             _blueInput.MaxLength = 3;
             _blueInput.Position = new Point(Width - 7, Height - 12);
             _blueInput.TextChanged += (sender, e) => { _barB.SelectedColor = new Color(0, 0, int.Parse(_blueInput.Text)); };
-            Add(_blueInput);
+            Controls.Add(_blueInput);
 
             _alphaInput = new TextBox(5);
             _alphaInput.IsNumeric = true;
             _alphaInput.MaxLength = 3;
             _alphaInput.Position = new Point(Width - 7, Height - 11);
             _alphaInput.Text = "255";
-            Add(_alphaInput);
+            Controls.Add(_alphaInput);
             #endregion
 
             #region Bars
@@ -109,7 +114,7 @@ namespace SadConsoleEditor.Windows
 
             _barH.Position = new Point(1, Height - 9);
             _barH.ColorChanged += _barH_ColorChanged;
-            Add(_barH);
+            Controls.Add(_barH);
 
             _barR = new ColorBar(Width - 2);
 
@@ -117,7 +122,7 @@ namespace SadConsoleEditor.Windows
             _barR.EndingColor = Color.Red;
             _barR.Position = new Point(1, Height - 7);
             _barR.ColorChanged += bar_ColorChanged;
-            Add(_barR);
+            Controls.Add(_barR);
 
             _barG = new ColorBar(Width - 2);
 
@@ -125,7 +130,7 @@ namespace SadConsoleEditor.Windows
             _barG.EndingColor = new Color(0, 255, 0);
             _barG.Position = new Point(1, Height - 5);
             _barG.ColorChanged += bar_ColorChanged;
-            Add(_barG);
+            Controls.Add(_barG);
 
             _barB = new ColorBar(Width - 2);
 
@@ -133,7 +138,7 @@ namespace SadConsoleEditor.Windows
             _barB.EndingColor = Color.Blue;
             _barB.Position = new Point(1, Height - 3);
             _barB.ColorChanged += bar_ColorChanged;
-            Add(_barB);
+            Controls.Add(_barB);
 
 
             _selectedColor = _picker.SelectedColor;
@@ -151,33 +156,60 @@ namespace SadConsoleEditor.Windows
                 AddPreviousColor(SelectedColor);
                 Hide();
             };
-            Add(_okButton);
+            Controls.Add(_okButton);
 
             _cancelButton = new Button(RideSideX - 4);
             _cancelButton.Text = "Cancel";
-            _cancelButton.Position = new Point(Width - RideSideX + 2, Height - 16);
+            _cancelButton.Position = new Point(Width - RideSideX + 2, Height - 17);
             _cancelButton.Click += (sender, r) => { this.DialogResult = false; Hide(); };
-            Add(_cancelButton);
+            Controls.Add(_cancelButton);
 
             _otherColorsButton = new Button(RideSideX - 4);
             _otherColorsButton.Text = "Other Colors";
             _otherColorsButton.Position = new Point(Width - RideSideX + 2, Height - 20);
             _otherColorsButton.Click += (sender, e) => { otherColorPopup.Show(true); };
-            Add(_otherColorsButton);
+            Controls.Add(_otherColorsButton);
             #endregion
 
             _previousColors = new ListBox(RideSideX - 4, Height - 20 - 9 + 1, new SadConsole.UI.Themes.ListBoxItemColorTheme());
             _previousColors.Position = new Point(Width - RideSideX + 2, 8);
             _previousColors.SelectedItemChanged += (sender, e) => { if (_previousColors.SelectedItem != null) SelectedColor = (Color)_previousColors.SelectedItem; };
-            Add(_previousColors);
-            
-            this.CloseOnEscKey = true;
-            this.Title = "Select Color";
+            Controls.Add(_previousColors);
+
+            var colors = Controls.GetThemeColors();
+
+            this.Print(Width - RideSideX + 2, _redInput.Position.Y, "Red", colors.Red);
+            this.Print(Width - RideSideX + 2, _greenInput.Position.Y, "Green", colors.Green);
+            this.Print(Width - RideSideX + 2, _blueInput.Position.Y, "Blue", colors.Blue);
+            this.Print(Width - RideSideX + 2, _alphaInput.Position.Y, "Alpha", colors.Gray);
+
+            // Preview area
+            this.Print(Width - RideSideX + 2, 1, "Selected Color");
+
+            this.Fill(new Rectangle(Width - RideSideX + 2, 2, 14, 3), colors.ControlHostForeground, colors.ControlHostBackground, 219);
+
+            // Current selected gradient colors
+            this.Print(Width - RideSideX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
+            this.Print(Width - RideSideX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
+            this.Print(Width - RideSideX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
+
+            // Previous Colors
+            this.Print(Width - RideSideX + 2, _previousColors.Position.Y - 1, "Prior Colors");
         }
 
         void _picker_SelectedColorChanged(object sender, EventArgs e)
         {
             _selectedColor = _picker.SelectedColor;
+
+            // Current selected gradient colors
+            int lineX = Width - RideSideX;
+            var colors = Controls.GetThemeColors();
+            this.Print(lineX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
+            this.Print(lineX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
+            this.Print(lineX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
+
+            this.Fill(new Rectangle(lineX + 2, 2, 14, 3), SelectedColor, colors.ControlHostBackground, 219);
+
             IsDirty = true;
         }
 
@@ -203,59 +235,47 @@ namespace SadConsoleEditor.Windows
             _blueInput.Text = _barB.SelectedColor.B.ToString();
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
-            base.OnInvalidated();
-            var colors = GetThemeColors();
-            var fillStyle = new ColoredGlyph(colors.ControlHostFore, colors.ControlHostBack);
+            base.DrawBorder();
+            var colors = Controls.GetThemeColors();
+            var fillStyle = new ColoredGlyph(colors.Lines, colors.ControlHostBackground);
+
 
             int lineY = Height - 10;
             int lineX = Width - RideSideX;
 
+
             // Bar above color bars
-            for (int x = 1; x < lineX; x++)
-            {
-                this[x, lineY].Glyph = 196;
-            }
-            this[0, lineY].Glyph = 199;
-            this[lineX, lineY].Glyph = 217;
+            this.DrawLine(new Point(1, lineY), new Point(lineX, lineY), BorderLineStyle[0], colors.Lines);
+            //for (int x = 1; x < lineX; x++)
+            //{
+            //    this[x, lineY].Glyph = 196;
+            //}
+            //this[0, lineY].Glyph = 199;
+            //this[lineX, lineY].Glyph = 217;
 
             // Long bar right of color picker
-            for (int y = 1; y < lineY; y++)
-            {
-                this[lineX, y].Glyph = 179;
-            }
-            this[lineX, lineY].Glyph = 217;
-            this[lineX, 0].Glyph = 209;
+            this.DrawLine(new Point(lineX, 1), new Point(lineX, lineY), BorderLineStyle[0], colors.Lines);
+            //for (int y = 1; y < lineY; y++)
+            //{
+            //    this[lineX, y].Glyph = 179;
+            //}
+            //this[lineX, lineY].Glyph = 217;
+            //this[lineX, 0].Glyph = 209;
 
 
             // Bar above red input
-            for (int x = lineX + 1; x < Width - 1; x++)
-            {
-                this[x, lineY - 5].Glyph = 205;// 196;
-            }
-            //SadConsole.Surfaces.Basic[lineX, lineY - 5].Glyph = 195;
-            //SadConsole.Surfaces.Basic[Width - 1, lineY - 5].Glyph = 182;
-            this[lineX, lineY - 5].Glyph = 198;
-            this[Width - 1, lineY - 5].Glyph = 185;
+            this.DrawLine(new Point(lineX + 1, lineY - 5), new Point(Width - 2, lineY - 5), BorderLineStyle[0], colors.Lines);
+            //for (int x = lineX + 1; x < Width - 1; x++)
+            //{
+            //    this[x, lineY - 5].Glyph = 205;// 196;
+            //}
+            //this[lineX, lineY - 5].Glyph = 198;
+            //this[Width - 1, lineY - 5].Glyph = 185;
 
-            this.Print(lineX + 2, lineY - 4, "Red", colors.Red);
-            this.Print(lineX + 2, lineY - 3, "Green", colors.Green);
-            this.Print(lineX + 2, lineY - 2, "Blue", colors.Blue);
-            this.Print(lineX + 2, lineY - 1, "Alpha", colors.Gray);
+            this.ConnectLines(BorderLineStyle);
 
-            // Preview area
-            this.Print(lineX + 2, 1, "Selected Color");
-
-            this.DrawBox(new Rectangle(lineX + 2, 2, 14, 3), fillStyle, new SadConsole.ColoredGlyph(fillStyle.Foreground, SelectedColor));
-
-            // Current selected gradient colors
-            this.Print(lineX + 2, 5, SelectedColor.R.ToString().PadLeft(3, '0'), colors.Red);
-            this.Print(lineX + 2, 6, SelectedColor.G.ToString().PadLeft(3, '0'), colors.Green);
-            this.Print(lineX + 13, 5, SelectedColor.B.ToString().PadLeft(3, '0'), colors.Blue);
-
-            // Previous Colors
-            this.Print(lineX + 2, 8, "Prior Colors");
         }
         
         public void AddPreviousColor(Color color)

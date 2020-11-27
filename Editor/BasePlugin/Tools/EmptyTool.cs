@@ -86,7 +86,7 @@ namespace SadConsoleEditor.Tools
 
                 for (int index = 0; index < _console.Cells.Length; index++)
                 {
-                    var renderCell = MainConsole.Instance.ActiveEditor.Object.Surface.Cells[(Point.FromIndex(index, _console.BufferWidth) + MainConsole.Instance.ActiveEditor.Object.Surface.ViewPosition).ToIndex(MainConsole.Instance.ActiveEditor.Object.Surface.BufferWidth)];
+                    var renderCell = MainConsole.Instance.ActiveEditor.Object.Surface.Cells[(Point.FromIndex(index, _console.Width) + MainConsole.Instance.ActiveEditor.Object.Surface.ViewPosition).ToIndex(MainConsole.Instance.ActiveEditor.Object.Surface.Width)];
 
                     if (renderCell.Foreground == clearCell.Foreground &&
                         renderCell.Background == clearCell.Background &&

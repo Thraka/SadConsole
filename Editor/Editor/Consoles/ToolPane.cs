@@ -39,7 +39,7 @@ namespace SadConsoleEditor.Consoles
             };
 
             ScrollerConsole = new ControlsConsole(1, Config.Program.WindowHeight - 1);
-            ScrollerConsole.Add(ToolsPaneScroller);
+            ScrollerConsole.Controls.Add(ToolsPaneScroller);
             ScrollerConsole.Position = new Point(Width, 0);
             ScrollerConsole.IsVisible = true;
             ScrollerConsole.FocusOnMouseClick = false;
@@ -84,21 +84,11 @@ namespace SadConsoleEditor.Consoles
             }
         }
         
-        protected override void OnInvalidated()
-        {
-            if (!_isInitialized) return;
-
-            base.OnInvalidated();
-
-            foreach (var item in _redrawCommands)
-                this.Print(item.Item1, item.Item2, item.Item3);
-        }
-
         public void RedrawPanels()
         {
             int activeRow = 0;
             _redrawCommands.Clear();
-            RemoveAll();
+            Controls.Clear();
             _hotSpots.Clear();
 
             char open = (char)31;
@@ -135,7 +125,7 @@ namespace SadConsoleEditor.Consoles
                                 {
                                     if (control.IsVisible)
                                     {
-                                        Add(control);
+                                        Controls.Add(control);
                                         control.Position = new Point(1, activeRow);
                                         activeRow += pane.Redraw(control) + control.Height;
                                     }

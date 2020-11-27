@@ -89,13 +89,13 @@ namespace SadConsoleEditor.Windows
             _backgroundPicker.Position = new Point(2, 10);
             _backgroundPicker.SelectedColor = Color.Black;
 
-            Add(_editorsListBox);
-            Add(_widthBox);
-            Add(_heightBox);
-            Add(_cancelButton);
-            Add(_okButton);
-            Add(_foregroundPicker);
-            Add(_backgroundPicker);
+            Controls.Add(_editorsListBox);
+            Controls.Add(_widthBox);
+            Controls.Add(_heightBox);
+            Controls.Add(_cancelButton);
+            Controls.Add(_okButton);
+            Controls.Add(_foregroundPicker);
+            Controls.Add(_backgroundPicker);
             //Add(_name);
             
 
@@ -105,12 +105,12 @@ namespace SadConsoleEditor.Windows
             _editorsListBox.SelectedItem = _editorsListBox.Items[0];
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
-            base.OnInvalidated();
+            base.DrawBorder();
 
-            var colors = GetThemeColors();
-            var fillStyle = new ColoredGlyph(colors.ControlHostFore, colors.ControlHostBack);
+            var colors = Controls.GetThemeColors();
+            var fillStyle = new ColoredGlyph(colors.ControlHostForeground, colors.ControlHostBackground);
 
 
             //_foregroundPicker.SelectedColor = fillStyle.Foreground;

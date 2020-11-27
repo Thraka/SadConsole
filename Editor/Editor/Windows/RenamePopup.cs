@@ -35,11 +35,11 @@ namespace SadConsoleEditor.Windows
             okButton.Text = "Ok";
             cancelButton.Text = "Cancel";
 
-            Add(okButton);
-            Add(cancelButton);
-            Add(textBox);
+            Controls.Add(okButton);
+            Controls.Add(cancelButton);
+            Controls.Add(textBox);
 
-            FocusedControl = textBox;
+            Controls.FocusedControl = textBox;
         }
     }
 }

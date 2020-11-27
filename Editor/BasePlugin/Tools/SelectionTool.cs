@@ -182,8 +182,8 @@
 
         private CellSurface SaveBrush()
         {
-            CellSurface newSurface = new CellSurface(Brush.SelectedSurface.Animation.CurrentFrame.BufferWidth,
-                                                     Brush.SelectedSurface.Animation.CurrentFrame.BufferHeight);
+            CellSurface newSurface = new CellSurface(Brush.SelectedSurface.Animation.CurrentFrame.Width,
+                                                     Brush.SelectedSurface.Animation.CurrentFrame.Height);
 
             Brush.SelectedSurface.Animation.CurrentFrame.Copy(newSurface);
 
@@ -195,7 +195,7 @@
             _panel.State = SelectionToolPanel.CloneState.Stamp;
 
             // Copy data to new animation
-            var cloneAnimation = new AnimatedScreenSurface("clone", surface.BufferWidth, surface.BufferHeight, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
+            var cloneAnimation = new AnimatedScreenSurface("clone", surface.Width, surface.Height, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
             var frame = cloneAnimation.CreateFrame();
             surface.Copy(frame);
 
@@ -206,7 +206,7 @@
 
             Brush.IsVisible = true;
 
-            MakeBoxAnimation(surface.BufferWidth, surface.BufferHeight, cloneAnimation.Center);
+            MakeBoxAnimation(surface.Width, surface.Height, cloneAnimation.Center);
         }
 
         private void MakeBoxAnimation(int width, int height, Point center)

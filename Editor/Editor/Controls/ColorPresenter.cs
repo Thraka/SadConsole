@@ -21,7 +21,6 @@ namespace SadConsoleEditor.Controls
                 control.Surface.DefaultForeground = presenter._selectedColor;
                 control.Surface.DefaultBackground = Color.Transparent;
                 control.Surface.Clear();
-                base.Attached(control);
             }
 
             /// <inheritdoc />
@@ -36,7 +35,7 @@ namespace SadConsoleEditor.Controls
                 RefreshTheme(control.FindThemeColors(), control);
 
                 if (Helpers.HasFlag((int)presenter.State, (int)ControlStates.Disabled))
-                    appearance = Disabled;
+                    appearance = ControlThemeState.Disabled;
 
                 //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(presenter.State, ControlStates.MouseRightButtonDown))
                 //    appearance = MouseDown;
@@ -45,10 +44,10 @@ namespace SadConsoleEditor.Controls
                 //    appearance = MouseOver;
 
                 else if (Helpers.HasFlag((int)presenter.State, (int)ControlStates.Focused))
-                    appearance = Focused;
+                    appearance = ControlThemeState.Focused;
 
                 else
-                    appearance = Normal;
+                    appearance = ControlThemeState.Normal;
 
                 var middle = (presenter.Height != 1 ? presenter.Height / 2 : 0);
 
@@ -60,11 +59,11 @@ namespace SadConsoleEditor.Controls
 
                 presenter.Surface.Print(0, 0, presenter._title);
 
-                presenter.Surface.Print(presenter.Surface.BufferWidth - 3, 0, "   ", Color.Black, presenter._selectedColor);
+                presenter.Surface.Print(presenter.Surface.Width - 3, 0, "   ", Color.Black, presenter._selectedColor);
                 if (presenter._selectedGlyph != 0)
                 {
-                    presenter.Surface.SetGlyph(presenter.Surface.BufferWidth - 2, 0, presenter._selectedGlyph);
-                    presenter.Surface.SetForeground(presenter.Surface.BufferWidth - 2, 0, presenter._selectedGlyphColor);
+                    presenter.Surface.SetGlyph(presenter.Surface.Width - 2, 0, presenter._selectedGlyph);
+                    presenter.Surface.SetForeground(presenter.Surface.Width - 2, 0, presenter._selectedGlyphColor);
                 }
                 
                 presenter.IsDirty = false;
@@ -75,12 +74,7 @@ namespace SadConsoleEditor.Controls
             {
                 return new ThemeType()
                 {
-                    Normal = Normal.Clone(),
-                    Disabled = Disabled.Clone(),
-                    MouseOver = MouseOver.Clone(),
-                    MouseDown = MouseDown.Clone(),
-                    Selected = Selected.Clone(),
-                    Focused = Focused.Clone(),
+                    ControlThemeState = ControlThemeState.Clone()
                 };
             }
         }
@@ -176,12 +170,11 @@ namespace SadConsoleEditor.Controls
             _popupGlyphPicker.Closed += (o, e) => { SelectedGlyph = _popupGlyphPicker.SelectedCharacter; };
         }
         
-        protected override void OnLeftMouseClicked(MouseScreenObjectState info)
+        protected override void OnLeftMouseClicked(ControlMouseState info)
         {
             if (!DisableColorPicker)
             {
-                var location = this.TransformConsolePositionByControlPosition(info.CellPosition);
-                if (location.X >= Width - 3)
+                if (info.MousePosition.X >= Width - 3)
                 {
                     base.OnLeftMouseClicked(info);
                     _popupColorPicker.SelectedColor = _selectedColor;
@@ -190,8 +183,7 @@ namespace SadConsoleEditor.Controls
             }
             else if (EnableCharacterPicker)
             {
-                var location = this.TransformConsolePositionByControlPosition(info.CellPosition);
-                if (location.X >= Width - 3)
+                if (info.MousePosition.X >= Width - 3)
                 {
                     base.OnLeftMouseClicked(info);
                     _popupGlyphPicker.SelectedCharacter = _selectedGlyph;
@@ -202,10 +194,9 @@ namespace SadConsoleEditor.Controls
             }
         }
 
-        protected override void OnRightMouseClicked(MouseScreenObjectState info)
+        protected override void OnRightMouseClicked(ControlMouseState info)
         {
-            var location = this.TransformConsolePositionByControlPosition(info.CellPosition);
-            if (location.X >= Width - 3)
+            if (info.MousePosition.X >= Width - 3)
             {
                 base.OnRightMouseClicked(info);
                 RightClickedColor?.Invoke(this, EventArgs.Empty);

@@ -300,37 +300,37 @@ namespace SadConsoleEditor.TheDraw
             switch (color)
             {
                 case 0:
-                    return ColorAnsi.Black;
+                    return Color.AnsiBlack;
                 case 1:
-                    return ColorAnsi.Blue;
+                    return Color.AnsiBlue;
                 case 2:
-                    return ColorAnsi.Green;
+                    return Color.AnsiGreen;
                 case 3:
-                    return ColorAnsi.Cyan;
+                    return Color.AnsiCyan;
                 case 4:
-                    return ColorAnsi.Red;
+                    return Color.AnsiRed;
                 case 5:
-                    return ColorAnsi.Magenta;
+                    return Color.AnsiMagenta;
                 case 6:
-                    return ColorAnsi.Yellow;
+                    return Color.AnsiYellow;
                 case 7:
-                    return ColorAnsi.White;
+                    return Color.AnsiWhite;
                 case 8:
-                    return ColorAnsi.BlackBright;
+                    return Color.AnsiBlackBright;
                 case 9:
-                    return ColorAnsi.BlueBright;
+                    return Color.AnsiBlueBright;
                 case 10:
-                    return ColorAnsi.GreenBright;
+                    return Color.AnsiGreenBright;
                 case 11:
-                    return ColorAnsi.CyanBright;
+                    return Color.AnsiCyanBright;
                 case 12:
-                    return ColorAnsi.RedBright;
+                    return Color.AnsiRedBright;
                 case 13:
-                    return ColorAnsi.MagentaBright;
+                    return Color.AnsiMagentaBright;
                 case 14:
-                    return ColorAnsi.YellowBright;
+                    return Color.AnsiYellowBright;
                 case 15:
-                    return ColorAnsi.WhiteBright;
+                    return Color.AnsiWhiteBright;
                 default:
                     return Color.Transparent;
             }

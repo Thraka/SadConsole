@@ -161,24 +161,24 @@
                         if (firstPoint.Value.Y > secondPoint.Y)
                         {
                             p1 = (0, 0);
-                            p2 = new Point(frame.BufferWidth - 1, frame.BufferHeight - 1);
+                            p2 = new Point(frame.Width - 1, frame.Height - 1);
                         }
                         else
                         {
-                            p1 = new Point(0, frame.BufferHeight - 1);
-                            p2 = new Point(frame.BufferWidth - 1, 0);
+                            p1 = new Point(0, frame.Height - 1);
+                            p2 = new Point(frame.Width - 1, 0);
                         }
                     }
                     else
                     {
                         if (firstPoint.Value.Y > secondPoint.Y)
                         {
-                            p1 = new Point(frame.BufferWidth - 1, 0);
-                            p2 = new Point(0, frame.BufferHeight - 1);
+                            p1 = new Point(frame.Width - 1, 0);
+                            p2 = new Point(0, frame.Height - 1);
                         }
                         else
                         {
-                            p1 = new Point(frame.BufferWidth - 1, frame.BufferHeight - 1);
+                            p1 = new Point(frame.Width - 1, frame.Height - 1);
                             p2 = (0, 0);
                         }
                     }

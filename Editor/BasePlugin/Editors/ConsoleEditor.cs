@@ -82,9 +82,9 @@ namespace SadConsoleEditor.Editors
                 var settings = Config.Program.GetSettings(Metadata.Id);
 
                 var cellSurface = (SadConsole.CellSurface)loader.Load(file);
-                _surface = new Console(Math.Min(MainConsole.Instance.InnerEmptyBounds.Width, cellSurface.BufferWidth),
-                                       Math.Min(MainConsole.Instance.InnerEmptyBounds.Height, cellSurface.BufferHeight),
-                                       cellSurface.BufferWidth, cellSurface.BufferHeight, cellSurface.Cells);
+                _surface = new Console(Math.Min(MainConsole.Instance.InnerEmptyBounds.Width, cellSurface.Width),
+                                       Math.Min(MainConsole.Instance.InnerEmptyBounds.Height, cellSurface.Height),
+                                       cellSurface.Width, cellSurface.Height, cellSurface.Cells);
 
                 _settingsPanel.Foreground = _surface.DefaultForeground;
                 _settingsPanel.Background = _surface.DefaultBackground;

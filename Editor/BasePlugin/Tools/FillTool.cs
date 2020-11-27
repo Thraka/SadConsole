@@ -116,7 +116,7 @@
                 {
                     Algorithms.NodeConnections<ColoredGlyph> connections = new Algorithms.NodeConnections<ColoredGlyph>();
 
-                    Point position = Point.FromIndex(cells.IndexOf(c), screenObject.Surface.BufferWidth);
+                    Point position = Point.FromIndex(cells.IndexOf(c), screenObject.Surface.Width);
 
                     connections.West = screenObject.Surface.IsValidCell(position.X - 1, position.Y, out int index) ? screenObject.Surface[index] : null;
                     connections.East = screenObject.Surface.IsValidCell(position.X + 1, position.Y, out index) ? screenObject.Surface[index] : null;

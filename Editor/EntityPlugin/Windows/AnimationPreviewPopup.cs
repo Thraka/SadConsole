@@ -34,16 +34,16 @@ namespace EntityPlugin.Windows
             restartAnimation.Position = new Point(1, Height - 2);
             restartAnimation.Click += (s, e) => this.animation.Restart();
 
-            Add(restartAnimation);
+            Controls.Add(restartAnimation);
         }
 
-        protected override void OnInvalidated()
+        protected override void DrawBorder()
         {
-            base.OnInvalidated();
+            base.DrawBorder();
 
-            var themeColors = GetThemeColors();
+            var themeColors = Controls.GetThemeColors();
 
-            var fillStyle = new ColoredGlyph(themeColors.ControlHostFore, themeColors.ControlHostBack);
+            var fillStyle = new ColoredGlyph(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
             var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
 
             // Draw bar

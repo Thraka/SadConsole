@@ -40,7 +40,7 @@ namespace SadConsoleEditor.FileLoaders
             {
                 var surfaceCast = (SadConsole.CellSurface)surface;
 
-                var cellSurface = new SadConsole.CellSurface(surfaceCast.ViewWidth, surfaceCast.ViewHeight, surfaceCast.BufferWidth, surfaceCast.BufferHeight, surfaceCast.Cells);
+                var cellSurface = new SadConsole.CellSurface(surfaceCast.ViewWidth, surfaceCast.ViewHeight, surfaceCast.Width, surfaceCast.Height, surfaceCast.Cells);
 
                 SadConsole.Serializer.Save<SadConsole.CellSurface>(cellSurface, file, file.EndsWith('z'));
 

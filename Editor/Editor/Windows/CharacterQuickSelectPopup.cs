@@ -26,12 +26,12 @@ namespace SadConsoleEditor.Windows
             : base(18, 18)
         {
             Center();
-            _picker = new Controls.CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBack, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
+            _picker = new Controls.CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBackgroundNormal, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
             _picker.Position = new Point(1, 1);
             _picker.SelectedCharacter = character;
             _picker.UseFullClick = true;
             _picker.SelectedCharacterChanged += SelectedCharacterChangedOnControl;
-            Add(_picker);
+            Controls.Add(_picker);
 
             this.CloseOnEscKey = true;
             this.Title = "Pick a character";

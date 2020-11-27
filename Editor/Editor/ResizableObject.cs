@@ -10,165 +10,165 @@ namespace SadConsoleEditor
 {
     public class ResizableObject<TData>: ResizableObject
     {
-        public TData Data;
+        //public TData Data;
 
-        public ResizableObject(ObjectType objectType, Entity Entity, TData data): base(objectType, Entity)
-        {
-            Data = data;
-        }
+        //public ResizableObject(ObjectType objectType, Entity Entity, TData data): base(objectType, Entity)
+        //{
+        //    Data = data;
+        //}
     }
 
     public class ResizableObject
     {
-        private Entity overlay;
-        private Entity _entity;
-        private ObjectType objectType;
-        private Point renderOffset;
+        //private Entity overlay;
+        //private Entity _entity;
+        //private ObjectType objectType;
+        //private Point renderOffset;
 
-        private bool isSelected;
+        //private bool isSelected;
 
-        public ResizeRules Rules;
+        //public ResizeRules Rules;
 
-        //private static SadConsole.Renderers.SadConsole.Renderers.Basic tempRenderer = new SadConsole.Renderers.SadConsole.Renderers.Basic();
+        ////private static SadConsole.Renderers.SadConsole.Renderers.Basic tempRenderer = new SadConsole.Renderers.SadConsole.Renderers.Basic();
 
-        public Entity Entity => _entity;
+        //public Entity Entity => _entity;
 
-        public Entity Overlay => overlay;
+        //public Entity Overlay => overlay;
 
-        public ObjectType Type => objectType;
+        //public ObjectType Type => objectType;
 
-        public bool IsSelected
-        {
-            get => isSelected;
-            set { isSelected = value; ProcessOverlay(); }
-        }
+        //public bool IsSelected
+        //{
+        //    get => isSelected;
+        //    set { isSelected = value; ProcessOverlay(); }
+        //}
 
-        public ResizableObject(ObjectType objectType, Entity Entity)
-        {
-            this.objectType = objectType;
-            _entity = Entity;
+        //public ResizableObject(ObjectType objectType, Entity Entity)
+        //{
+        //    this.objectType = objectType;
+        //    _entity = Entity;
             
-            renderOffset = Entity.PositionOffset;
+        //    renderOffset = Entity.PositionOffset;
 
-            Rules = ResizeRules.Get(objectType);
-            ProcessOverlay();
-        }
+        //    Rules = ResizeRules.Get(objectType);
+        //    ProcessOverlay();
+        //}
 
-        public Point RenderOffset
-        {
-            get => renderOffset;
-            set { renderOffset = value; ProcessOverlay(); }
-        }
+        //public Point RenderOffset
+        //{
+        //    get => renderOffset;
+        //    set { renderOffset = value; ProcessOverlay(); }
+        //}
 
-        public string Name
-        {
-            get => Entity.Name;
-            set { Entity.Name = value; if (objectType == ObjectType.Zone) DrawZone(); }
-        }
+        //public string Name
+        //{
+        //    get => Entity.Name;
+        //    set { Entity.Name = value; if (objectType == ObjectType.Zone) DrawZone(); }
+        //}
         
 
-        public void ResizeObject(int width, int height, int? positionX = null, int? positionY = null)
-        {
-            if (objectType == ObjectType.Zone)
-            {
-                if (Entity.Animation.Width != width || Entity.Animation.Height != height)
-                {
-                    var animation = Entity.Animation;
-                    var backColor = animation.CurrentFrame[0].Background;
+        //public void ResizeObject(int width, int height, int? positionX = null, int? positionY = null)
+        //{
+        //    if (objectType == ObjectType.Zone)
+        //    {
+        //        if (Entity.Animation.Width != width || Entity.Animation.Height != height)
+        //        {
+        //            var animation = Entity.Animation;
+        //            var backColor = animation.CurrentFrame[0].Background;
 
-                    var newAnimation = new AnimatedScreenSurface(Entity.Animation.Name, width, height);
-                    var frame = newAnimation.CreateFrame();
-                    frame.Fill(Color.White, backColor, 0);
-                    frame.Print(0, 0, Name, Color.DarkGray);
+        //            var newAnimation = new AnimatedScreenSurface(Entity.Animation.Name, width, height);
+        //            var frame = newAnimation.CreateFrame();
+        //            frame.Fill(Color.White, backColor, 0);
+        //            frame.Print(0, 0, Name, Color.DarkGray);
 
-                    Entity.Animation = newAnimation;
-                    Entity.Update(TimeSpan.Zero);
+        //            Entity.Animation = newAnimation;
+        //            Entity.Update(TimeSpan.Zero);
 
-                    Entity.Position = new Point(positionX ?? Entity.Position.X, positionY ?? Entity.Position.Y);
+        //            Entity.Position = new Point(positionX ?? Entity.Position.X, positionY ?? Entity.Position.Y);
 
-                    ProcessOverlay();
-                }
-            }
-        }
+        //            ProcessOverlay();
+        //        }
+        //    }
+        //}
 
-        public virtual void Recolor(Color color)
-        {
-            Entity.Animation.CurrentFrame.Fill(Color.White, color, 0);
-            Entity.Animation.CurrentFrame.Print(0, 0, Name, Color.DarkGray);
-        }
+        //public virtual void Recolor(Color color)
+        //{
+        //    Entity.Animation.CurrentFrame.Fill(Color.White, color, 0);
+        //    Entity.Animation.CurrentFrame.Print(0, 0, Name, Color.DarkGray);
+        //}
 
-        public void DrawZone()
-        {
-            Entity.Animation.CurrentFrame.Fill(Color.White, Entity.Animation.CurrentFrame[0].Background, 0);
-            Entity.Animation.CurrentFrame.Print(0, 0, Name, Color.DarkGray);
-        }
+        //public void DrawZone()
+        //{
+        //    Entity.Animation.CurrentFrame.Fill(Color.White, Entity.Animation.CurrentFrame[0].Background, 0);
+        //    Entity.Animation.CurrentFrame.Print(0, 0, Name, Color.DarkGray);
+        //}
 
-        public void Draw(TimeSpan delta)
-        {
-            // This steals the code from the renderer. This DRAW method is called in the middle of
-            // an existing draw call chain, so the existing state of the SadConsole.GameHost.Instance.SpriteBatch is reused.
-            Entity.PositionOffset = RenderOffset;
-            Entity.Draw(delta);
-            //tempRenderer.RenderCells(Entity.Animation, true);
+        //public void Draw(TimeSpan delta)
+        //{
+        //    // This steals the code from the renderer. This DRAW method is called in the middle of
+        //    // an existing draw call chain, so the existing state of the SadConsole.GameHost.Instance.SpriteBatch is reused.
+        //    Entity.PositionOffset = RenderOffset;
+        //    Entity.Draw(delta);
+        //    //tempRenderer.RenderCells(Entity.Animation, true);
 
-            if (isSelected)
-            {
-                overlay.PositionOffset = Entity.PositionOffset = renderOffset;
-                overlay.Position = Entity.Position - Entity.Animation.Center - new Point(1, 1);
-                //tempRenderer.RenderCells(overlay.Animation, true);
-                overlay.Draw(delta);
-            }
+        //    if (isSelected)
+        //    {
+        //        overlay.PositionOffset = Entity.PositionOffset = renderOffset;
+        //        overlay.Position = Entity.Position - Entity.Animation.Center - new Point(1, 1);
+        //        //tempRenderer.RenderCells(overlay.Animation, true);
+        //        overlay.Draw(delta);
+        //    }
 
-        }
+        //}
 
-        public void ProcessOverlay()
-        {
-            if (overlay == null)
-                overlay = new Entity(1, 1, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
+        //public void ProcessOverlay()
+        //{
+        //    if (overlay == null)
+        //        overlay = new Entity(1, 1, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
 
-            overlay.PositionOffset = Entity.PositionOffset = renderOffset;
-            overlay.Position = Entity.Position - Entity.Animation.Center - new Point(1, 1);
+        //    overlay.PositionOffset = Entity.PositionOffset = renderOffset;
+        //    overlay.Position = Entity.Position - Entity.Animation.Center - new Point(1, 1);
 
-            if (overlay.Animation.Width != Entity.Animation.Width + 2 || overlay.Animation.Height != Entity.Animation.Height + 2)
-            {
-                overlay.Animation = new AnimatedScreenSurface("default", Entity.Animation.Width + 2, Entity.Animation.Height + 2, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
-                overlay.Animation.CreateFrame();
-            }
+        //    if (overlay.Animation.Width != Entity.Animation.Width + 2 || overlay.Animation.Height != Entity.Animation.Height + 2)
+        //    {
+        //        overlay.Animation = new AnimatedScreenSurface("default", Entity.Animation.Width + 2, Entity.Animation.Height + 2, SadConsoleEditor.Config.Program.ScreenFont, Config.Program.ScreenFontSize);
+        //        overlay.Animation.CreateFrame();
+        //    }
 
-            overlay.Animation.CurrentFrame.DrawBox(new Rectangle(0, 0, overlay.Animation.Width, overlay.Animation.Height), new ColoredGlyph(overlay.Animation.CurrentFrame.DefaultForeground, overlay.Animation.CurrentFrame.DefaultBackground, 177));
+        //    overlay.Animation.CurrentFrame.DrawBox(new Rectangle(0, 0, overlay.Animation.Width, overlay.Animation.Height), new ColoredGlyph(overlay.Animation.CurrentFrame.DefaultForeground, overlay.Animation.CurrentFrame.DefaultBackground, 177));
 
-            var centers = new Point(overlay.Animation.Width / 2, overlay.Animation.Height / 2);
+        //    var centers = new Point(overlay.Animation.Width / 2, overlay.Animation.Height / 2);
 
-            if (Rules.AllowLeftRight && Rules.AllowTopBottom)
-            {
-                overlay.Animation.CurrentFrame.SetGlyph(0, 0, 254);
-                overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, 0, 254);
-                overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, overlay.Animation.Height - 1, 254);
-                overlay.Animation.CurrentFrame.SetGlyph(0, overlay.Animation.Height - 1, 254);
-            }
+        //    if (Rules.AllowLeftRight && Rules.AllowTopBottom)
+        //    {
+        //        overlay.Animation.CurrentFrame.SetGlyph(0, 0, 254);
+        //        overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, 0, 254);
+        //        overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, overlay.Animation.Height - 1, 254);
+        //        overlay.Animation.CurrentFrame.SetGlyph(0, overlay.Animation.Height - 1, 254);
+        //    }
 
-            if (Rules.AllowLeftRight)
-            {
-                overlay.Animation.CurrentFrame.SetGlyph(0, centers.Y, 254);
-                overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, centers.Y, 254);
-            }
+        //    if (Rules.AllowLeftRight)
+        //    {
+        //        overlay.Animation.CurrentFrame.SetGlyph(0, centers.Y, 254);
+        //        overlay.Animation.CurrentFrame.SetGlyph(overlay.Animation.Width - 1, centers.Y, 254);
+        //    }
 
-            if (Rules.AllowTopBottom)
-            {
-                overlay.Animation.CurrentFrame.SetGlyph(centers.X, 0, 254);
-                overlay.Animation.CurrentFrame.SetGlyph(centers.X, overlay.Animation.Height - 1, 254);
-            }
+        //    if (Rules.AllowTopBottom)
+        //    {
+        //        overlay.Animation.CurrentFrame.SetGlyph(centers.X, 0, 254);
+        //        overlay.Animation.CurrentFrame.SetGlyph(centers.X, overlay.Animation.Height - 1, 254);
+        //    }
 
-            if (objectType == ObjectType.Entity)
-            {
-                overlay.Animation.CurrentFrame.SetGlyph(Entity.Animation.Center.X + 1, Entity.Animation.Center.Y + 1, '*');
-                overlay.Animation.CurrentFrame.SetBackground(Entity.Animation.Center.X + 1, Entity.Animation.Center.Y + 1, Color.Black);
-                overlay.Animation.Tint = Color.Black * 0.3f;
+        //    if (objectType == ObjectType.Entity)
+        //    {
+        //        overlay.Animation.CurrentFrame.SetGlyph(Entity.Animation.Center.X + 1, Entity.Animation.Center.Y + 1, '*');
+        //        overlay.Animation.CurrentFrame.SetBackground(Entity.Animation.Center.X + 1, Entity.Animation.Center.Y + 1, Color.Black);
+        //        overlay.Animation.Tint = Color.Black * 0.3f;
 
-                //MainScreen.Instance.Brush = overlay;
-                //MainScreen.Instance.UpdateBrush();
-            }
-        }
+        //        //MainScreen.Instance.Brush = overlay;
+        //        //MainScreen.Instance.UpdateBrush();
+        //    }
+        //}
 
 
 
