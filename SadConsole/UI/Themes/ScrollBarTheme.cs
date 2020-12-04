@@ -99,14 +99,14 @@ namespace SadConsole.UI.Themes
                 scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, 0, appearance);
                 scrollbar.Surface.SetGlyph(scrollbar.Width - 1, 0, EndButtonVerticalGlyph);
 
-                for (int i = 1; i <= scrollbar.SliderBarSize; i++)
+                if (scrollbar.SliderBarSize != 0)
                 {
-                    scrollbar.Surface.SetCellAppearance(i, 0, appearance);
-                    scrollbar.Surface.SetGlyph(i, 0, BarGlyph);
-                }
+                    for (int i = 1; i <= scrollbar.SliderBarSize; i++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(i, 0, appearance);
+                        scrollbar.Surface.SetGlyph(i, 0, BarGlyph);
+                    }
 
-                if (scrollbar.Value >= scrollbar.Minimum && scrollbar.Value <= scrollbar.Maximum && scrollbar.Minimum != scrollbar.Maximum)
-                {
                     if (scrollbar.IsEnabled)
                     {
                         scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, 0, appearance);
@@ -122,14 +122,14 @@ namespace SadConsole.UI.Themes
                 scrollbar.Surface.SetCellAppearance(0, scrollbar.Height - 1, appearance);
                 scrollbar.Surface.SetGlyph(0, scrollbar.Height - 1, EndButtonHorizontalGlyph);
 
-                for (int i = 0; i < scrollbar.SliderBarSize; i++)
+                if (scrollbar.SliderBarSize != 0)
                 {
-                    scrollbar.Surface.SetCellAppearance(0, i + 1, appearance);
-                    scrollbar.Surface.SetGlyph(0, i + 1, BarGlyph);
-                }
+                    for (int i = 0; i < scrollbar.SliderBarSize; i++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(0, i + 1, appearance);
+                        scrollbar.Surface.SetGlyph(0, i + 1, BarGlyph);
+                    }
 
-                if (scrollbar.Value >= scrollbar.Minimum && scrollbar.Value <= scrollbar.Maximum && scrollbar.Minimum != scrollbar.Maximum)
-                {
                     if (scrollbar.IsEnabled)
                     {
                         scrollbar.Surface.SetCellAppearance(0, 1 + scrollbar.CurrentSliderPosition, appearance);

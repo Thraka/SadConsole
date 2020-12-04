@@ -628,7 +628,7 @@
         <member name="P:SadConsole.CellSurface.ViewHeight">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.CellSurface.Buffer">
+        <member name="P:SadConsole.CellSurface.Area">
             <inheritdoc />
         </member>
         <member name="P:SadConsole.CellSurface.Width">
@@ -1702,7 +1702,7 @@
         <member name="P:SadConsole.Console.Effects">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Console.Buffer">
+        <member name="P:SadConsole.Console.Area">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.Console.Height">
@@ -3374,7 +3374,7 @@
             Processes the effects added to cells with <see cref="M:CellSurfaceEditor.SetEffect*"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ICellSurface.Buffer">
+        <member name="P:SadConsole.ICellSurface.Area">
             <summary>
             Returns a rectangle that represents the maximum size of the surface.
             </summary>
