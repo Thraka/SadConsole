@@ -625,7 +625,7 @@ namespace SadConsole.UI.Controls
             /// </summary>
             /// <param name="control">The control.</param>
             /// <param name="originalMouseState">The original mouse state sent to the control.</param>
-            public ControlMouseState(ControlBase control, MouseScreenObjectState originalMouseState): this(control, originalMouseState.SurfaceCellPosition - control.AbsolutePosition, originalMouseState)
+            public ControlMouseState(ControlBase control, MouseScreenObjectState originalMouseState): this(control, originalMouseState.CellPosition - control.AbsolutePosition, originalMouseState)
             {
 
             }
