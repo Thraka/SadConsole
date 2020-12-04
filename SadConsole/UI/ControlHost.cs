@@ -43,6 +43,7 @@ namespace SadConsole.UI
         private Colors _themeColors;
         private ControlBase _controlWithMouse;
         private Renderers.IRenderStep _controlsRenderStep;
+        private Rectangle _parentView;
 
         #region Properties
 
@@ -179,6 +180,7 @@ namespace SadConsole.UI
             }
 
             ParentConsole = surface;
+            _parentView = ParentConsole.Surface.View;
 
             if (host is Console con && DisableCursorOnAdded)
             {
@@ -271,6 +273,12 @@ namespace SadConsole.UI
 
         void Components.IComponent.Update(IScreenObject host, TimeSpan delta)
         {
+            if (_parentView != ParentConsole.Surface.View)
+            {
+                _parentView = ParentConsole.Surface.View;
+                IsDirty = true;
+            }    
+
             foreach (ControlBase control in ControlsList.ToArray())
             {
                 if (control.IsDirty)
