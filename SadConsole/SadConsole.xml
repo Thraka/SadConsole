@@ -2235,146 +2235,6 @@
             <param name="entity">The entity associated with the event.</param>
             <param name="oldPosition">The position the entity moved from.</param>
         </member>
-        <member name="T:SadConsole.Entities.Manager">
-            <summary>
-            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Manager.Hotspots">
-            <summary>
-            The hotspots associated with this manager.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Manager.Zones">
-            <summary>
-            The zones associated with this manager.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Manager.DrawHotspots">
-            <summary>
-            When <see langword="true"/>, indicates to any renderer associated with this manager that hotpsots should be drawn; otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Manager.DrawZones">
-            <summary>
-            When <see langword="true"/>, indicates to any renderer associated with this manager that zones should be drawn; otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Hotspot)">
-            <summary>
-            Adds a hotspot to this manager.
-            </summary>
-            <param name="hotspot">The hotspot to add.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
-            <summary>
-            Adds a zone to this manager.
-            </summary>
-            <param name="zone">The zone to add.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Hotspot)">
-            <summary>
-            Removes a hotspot from this manager.
-            </summary>
-            <param name="hotspot">The hotspot to remove.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
-            <summary>
-            Removes a zone from this manager.
-            </summary>
-            <param name="zone">The hotspot to remove.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.Entities.Manager.HotspotEventArgs">
-            <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.Manager.HotspotEventArgs.Hotspot"/> and <see cref="F:SadConsole.Entities.Manager.HotspotEventArgs.Entity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Hotspot">
-            <summary>
-            The hotspot associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Entity">
-            <summary>
-            The entity associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.Host">
-            <summary>
-            The host console that the hotspot and entity share.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.HotspotEventArgs.TriggeredPosition">
-            <summary>
-            The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.HotspotEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Hotspot,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new event args for a hotspot interaction.
-            </summary>
-            <param name="host">The host console that the hotspot and entity share.</param>
-            <param name="hotspot">The hotspot associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The position within the <see cref="P:SadConsole.Entities.Hotspot.Positions"/> associated with the event.</param>
-        </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
-            <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
-            <summary>
-            The zone associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
-            <summary>
-            The entity associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
-            <summary>
-            The host console that the zone and entity share.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
-            <summary>
-            The position within the zone associated with the event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new event args for a zone interaction.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
-        </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
-            <summary>
-            Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="!:BasicEntity"/> interaction.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
-            <summary>
-            The position within the zone that the entity moved from.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.Console,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new event args for a zone movement event.
-            </summary>
-            <param name="host">The host console that the zone and entity share.</param>
-            <param name="zone">The zone associated with the event.</param>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
-            <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
-        </member>
         <member name="T:SadConsole.Entities.Renderer">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
@@ -2459,38 +2319,6 @@
             </summary>
             <param name="entity">The entity.</param>
         </member>
-        <member name="T:SadConsole.Entities.Hotspot">
-            <summary>
-            A group of positions with a set of settings.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Hotspot.Positions">
-            <summary>
-            The hotspot position on the map.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Hotspot.DebugAppearance">
-            <summary>
-            A visual for the area to help debug.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Hotspot.Settings">
-            <summary>
-            Key-value pairs for the hotspot.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Hotspot.#ctor">
-            <summary>
-            Creates a new hotspot object.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Hotspot.Contains(SadRogue.Primitives.Point)">
-            <summary>
-            Return true when the specified point is in the list of <see cref="P:SadConsole.Entities.Hotspot.Positions"/>.
-            </summary>
-            <param name="point">The position to check for.</param>
-            <returns>True or false based on if the position is associated with the Hotspot.</returns>
-        </member>
         <member name="T:SadConsole.Entities.Zone">
             <summary>
             Defines an area for a scene.
@@ -2501,12 +2329,7 @@
             The area the zone covers.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Zone.DebugTitle">
-            <summary>
-            A title for the area.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Zone.DebugAppearance">
+        <member name="P:SadConsole.Entities.Zone.Appearance">
             <summary>
             A visual for the area to help debug.
             </summary>
@@ -2516,7 +2339,7 @@
             Key-value pairs for the zone.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Rectangle)">
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
             <summary>
             Creates a new zone object with the specified area.
             </summary>
@@ -4243,6 +4066,12 @@
             </summary>
             <param name="left">First item to compare.</param>
             <param name="right">Second item to compare.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.Input.AsciiKey.GetHashCode">
+            <summary>
+            Gets a hashcode based on the key and character.
+            </summary>
             <returns></returns>
         </member>
         <member name="M:SadConsole.Input.AsciiKey.op_Inequality(SadConsole.Input.AsciiKey,SadConsole.Input.AsciiKey)">
@@ -6399,7 +6228,7 @@
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityManager">
             <summary>
-            The render step for a <see cref="T:SadConsole.Entities.Manager"/>.
+            The render step for a <see cref="!:Entities.Manager"/>.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.IRenderer">
@@ -8744,6 +8573,9 @@
             <param name="orientation">Sets the control to either horizontal or vertical.</param>
             <param name="size">The height or width of the control.</param>
             <returns>The new control instance.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
