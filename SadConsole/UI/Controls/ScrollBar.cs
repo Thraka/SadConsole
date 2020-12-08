@@ -101,9 +101,7 @@ namespace SadConsole.UI.Controls
             SetSliderPositionFromValue();
         }
 
-        // Locking the mouse to this control is actually locking the parent console to the engine, and then
-        // letting the controls console know that this control wants exclusive focus until mouse is unclicked.
-
+        /// <inheritdoc/>
         public override bool ProcessMouse(Input.MouseScreenObjectState state)
         {
             if (IsEnabled)
@@ -137,6 +135,15 @@ namespace SadConsole.UI.Controls
 
                                 else if (mouseControlPosition.X == Width - 1)
                                     Value += Step;
+
+                                else if (mouseControlPosition.X > 0 && mouseControlPosition.X < Width - 1)
+                                {
+                                    CurrentSliderPosition = mouseControlPosition.X - 1;
+
+                                    SetValueFromSliderPosition();
+
+                                    IsDirty = true;
+                                }
                             }
                             else
                             {
@@ -145,6 +152,15 @@ namespace SadConsole.UI.Controls
 
                                 else if (mouseControlPosition.Y == Height - 1)
                                     Value += Step;
+
+                                else if (mouseControlPosition.Y > 0 && mouseControlPosition.Y < Height - 1)
+                                {
+                                    CurrentSliderPosition = mouseControlPosition.Y - 1;
+
+                                    SetValueFromSliderPosition();
+
+                                    IsDirty = true;
+                                }
                             }
 
                             Parent.Host.FocusedControl = this;
