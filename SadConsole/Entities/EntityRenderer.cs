@@ -60,11 +60,12 @@ namespace SadConsole.Entities
             _entities.Add(entity);
 
             SetEntityVisibility(entity);
-            OnEntityAdded(entity);
-            OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
 
             entity.PositionChanged += Entity_PositionChanged;
             entity.IsDirtyChanged += Entity_IsDirtyChanged;
+
+            OnEntityAdded(entity);
+            OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
         }
 
         /// <summary>
@@ -194,6 +195,7 @@ namespace SadConsole.Entities
         {
             IsDirty = true;
             SetEntityVisibility((Entity)sender);
+            OnEntityChangedPosition((Entity)sender, e);
         }
 
         /// <summary>

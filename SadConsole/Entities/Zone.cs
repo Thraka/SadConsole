@@ -13,36 +13,16 @@ namespace SadConsole.Entities
     [System.Diagnostics.DebuggerDisplay("Zone")]
     public class Zone : ScreenObject
     {
-        private const string DefaultDebugTitle = "Zone";
-
-        private string _title = DefaultDebugTitle;
-
         /// <summary>
         /// The area the zone covers.
         /// </summary>
-        [DataMember] public readonly Rectangle Area;
-
-        /// <summary>
-        /// A title for the area.
-        /// </summary>
-        [DataMember]
-        public string DebugTitle
-        {
-            get => _title;
-            set
-            {
-                _title = value;
-
-                if (string.IsNullOrWhiteSpace(_title))
-                    _title = DefaultDebugTitle;
-            }
-        }
-
+        [DataMember] public readonly Area Area;
+        
         /// <summary>
         /// A visual for the area to help debug.
         /// </summary>
         [DataMember]
-        public ColoredGlyph DebugAppearance { get; set; }
+        public ColoredGlyph Appearance { get; set; }
 
         /// <summary>
         /// Key-value pairs for the zone.
@@ -53,7 +33,7 @@ namespace SadConsole.Entities
         /// Creates a new zone object with the specified area.
         /// </summary>
         /// <param name="area">The area of the zone.</param>
-        public Zone(Rectangle area)
+        public Zone(Area area)
         {
             IsVisible = false;
             UseMouse = false;
