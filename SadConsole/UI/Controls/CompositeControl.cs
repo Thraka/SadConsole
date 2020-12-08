@@ -24,7 +24,7 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Create each control and add it to <see cref="Controls"/>.
         /// </summary>
-        protected abstract void CreateChildControls();
+        protected virtual void CreateChildControls() { }
 
         protected void IsDirtyEventHandler(bool value) =>
             IsDirty = value;
@@ -54,9 +54,12 @@ namespace SadConsole.UI.Controls
         /// <param name="control">The control to add.</param>
         protected void AddControl(ControlBase control)
         {
-            Controls.Add(control);
-            if (control.Parent != this)
-                control.Parent = this;
+            if (!Controls.Contains(control))
+            {
+                Controls.Add(control);
+                if (control.Parent != this)
+                    control.Parent = this;
+            }
         }
 
         /// <summary>
@@ -65,9 +68,12 @@ namespace SadConsole.UI.Controls
         /// <param name="control">The control to remove.</param>
         protected void RemoveControl(ControlBase control)
         {
-            Controls.Remove(control);
-            if (control.Parent == this)
-                control.Parent = null;
+            if (Controls.Contains(control))
+            {
+                Controls.Remove(control);
+                if (control.Parent == this)
+                    control.Parent = null;
+            }
         }
 
         public override void Update(TimeSpan time)
@@ -84,9 +90,8 @@ namespace SadConsole.UI.Controls
 
         ControlHost IContainer.Host => this.Parent?.Host;
 
-        void IContainer.Add(ControlBase control)
-        {
-        }
+        void IContainer.Add(ControlBase control) =>
+            AddControl(control);
 
         bool IContainer.Contains(ControlBase control) =>
             Controls.Contains(control);
