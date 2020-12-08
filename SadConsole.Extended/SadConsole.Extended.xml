@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Extended</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.Entities.Manager">
+            <summary>
+            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Entities.Manager.EnterZone">
+            <summary>
+            An event to indicate that an entity entered a zone.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Entities.Manager.ExitZone">
+            <summary>
+            An event to indicate that an entity exited a zone.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager._zones">
+            <summary>
+            The zones in this manager.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Manager.Zones">
+            <summary>
+            The zones associated with this manager.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.#ctor">
+            <summary>
+            Creates a new manager to handle entity movement within zones.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
+            <summary>
+            Adds a zone to this manager.
+            </summary>
+            <param name="zone">The zone to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
+            <summary>
+            Removes a zone from this manager.
+            </summary>
+            <param name="zone">The hotspot to remove.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityAdded(SadConsole.Entities.Entity)">
+            <summary>
+            Adds entity state information to an entity when it's added.
+            </summary>
+            <param name="entity">The entity that was added.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityRemoved(SadConsole.Entities.Entity)">
+            <summary>
+            Removes the entity state information of an entity being removed.
+            </summary>
+            <param name="entity">The entity that was removed.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity enters a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity entered.</param>
+            <param name="entity">The entity that entered the zone.</param>
+            <param name="triggeredPosition">The position the entity entered.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity enters a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity exited.</param>
+            <param name="entity">The entity that exited the zone.</param>
+            <param name="triggeredPosition">The new position the entity left.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity moves within a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity moved in.</param>
+            <param name="entity">The entity that moved in the zone.</param>
+            <param name="newPosition">The position the entity moved to.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityMoved(SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for the entity movement.
+            </summary>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="newPosition">The position the entity moved to.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)">
+            <summary>
+            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            </summary>
+            <param name="entity">The entity to disable.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.EnableEntity(SadConsole.Entities.Entity)">
+            <summary>
+            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            </summary>
+            <param name="entity">The entity to disable.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.IsEntityDisabled(SadConsole.Entities.Entity)">
+            <summary>
+            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
+            </summary>
+            <param name="entity">The entity to check.</param>
+            <returns><see langword="true"/> when the entity is disabled.</returns>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
+            <summary>
+            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
+            <summary>
+            The zone associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
+            <summary>
+            The entity associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
+            <summary>
+            The host that the zone and entity share.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
+            <summary>
+            The position within the zone associated with the event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone interaction.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
+            <summary>
+            Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="T:SadConsole.Entities.Entity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
+            <summary>
+            The position within the zone that the entity moved from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone movement event.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+            <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ColorBar._positions">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ColorBar._colorSteps">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.SelectedPosition">
+            <summary>
+            The position on the bar currently selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.HueBar.SelectedPosition">
+            <summary>
+            The position on the bar currently selected.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.HueBar._positions">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.RegistrarExtended">
+            <summary>
+            Registers the controls in SadConsole.Extended with a library.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.RegistrarExtended.Register">
+            <summary>
+            Registers the controls with the <see cref="P:SadConsole.UI.Themes.Library.Default"/> library.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.RegistrarExtended.Register(SadConsole.UI.Themes.Library)">
+            <summary>
+            Registers the controls with the provided library.
+            </summary>
+            <param name="library"></param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.Clone">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
