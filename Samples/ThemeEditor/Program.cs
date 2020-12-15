@@ -38,10 +38,8 @@ namespace ThemeEditor
             // Splash screens show up at the start of the game.
             //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.PCBoot());
 
-            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorBar), new Controls.ColorBar.ThemeType());
-            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.ColorPicker), new Controls.ColorPicker.ThemeType());
-            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.HueBar), new Controls.HueBar.ThemeType());
-            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(Controls.FileDirectoryListbox), new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme()));
+            // Register the extended library controls with the default library
+            SadConsole.UI.RegistrarExtended.Register();
 
             GameHost.Instance.Screen = new Container();
 

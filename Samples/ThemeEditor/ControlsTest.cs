@@ -20,7 +20,7 @@ namespace ThemeEditor
             Controls.ThemeColors = Container.EditingColors;
             Position = new Point(10, 10);
 
-            Border.AddToSurface(this, "Example");
+            SadConsole.UI.Border.AddToSurface(this, "Example");
 
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
             {

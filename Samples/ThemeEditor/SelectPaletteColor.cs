@@ -13,7 +13,7 @@ namespace ThemeEditor
 
         public SelectPaletteColor(Colors.ColorNames color): base(19, 20)
         {
-            Border.AddToWindow(this);
+            //Border.AddToWindow(this);
             Title = "Select color";
             CloseOnEscKey = true;
             CanDrag = false;

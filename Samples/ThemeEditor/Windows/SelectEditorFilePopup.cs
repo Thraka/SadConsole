@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 using SadConsole.UI;
-using ThemeEditor.Controls;
 
 namespace ThemeEditor.Windows
 {
@@ -46,7 +41,7 @@ namespace ThemeEditor.Windows
         public SelectEditorFilePopup()
             : base(55, 28)
         {
-            Border.AddToWindow(this);
+            //Border.AddToWindow(this);
             Center();
             var colors = Controls.GetThemeColors();
 
@@ -145,8 +140,8 @@ namespace ThemeEditor.Windows
         {
             if (e.Item is System.IO.FileInfo)
                 fileName.Text = ((System.IO.FileInfo)e.Item).Name;
-            else if (e.Item is HighlightedExtFile)
-                fileName.Text = ((HighlightedExtFile)e.Item).Name;
+            else if (e.Item is FileDirectoryListbox.HighlightedExtFile)
+                fileName.Text = ((FileDirectoryListbox.HighlightedExtFile)e.Item).Name;
             else
                 fileName.Text = "";
         }
