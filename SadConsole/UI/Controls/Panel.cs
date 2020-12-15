@@ -72,6 +72,7 @@ namespace SadConsole.UI.Controls
         public bool Contains(ControlBase control) =>
             Controls.Contains(control);
 
+        /// <inheritdoc/>
         public override void Update(TimeSpan time)
         {
             base.Update(time);
@@ -88,6 +89,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
             if (IsEnabled && UseMouse)
@@ -114,6 +116,7 @@ namespace SadConsole.UI.Controls
             return false;
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseExit(ControlMouseState state)
         {
             base.OnMouseExit(state);
@@ -124,6 +127,7 @@ namespace SadConsole.UI.Controls
                 control.LostMouse(state.OriginalMouseState);
         }
 
+        /// <inheritdoc/>
         public override bool ProcessKeyboard(Keyboard state)
         {
             if (IsEnabled && UseKeyboard)

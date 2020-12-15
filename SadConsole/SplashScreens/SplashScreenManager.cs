@@ -23,6 +23,9 @@ namespace SadConsole.SplashScreens
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of this type.
+        /// </summary>
         public SplashScreenManager()
         {
             _activeScreen = GameHost.Instance._splashScreens.Dequeue();
@@ -32,6 +35,7 @@ namespace SadConsole.SplashScreens
 
         private ScreenSurface _activeScreen;
 
+        /// <inheritdoc/>
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);

@@ -3,6 +3,7 @@
 // I do not claim any rights with this .cs file.
 using System;
 using System.Runtime.Serialization;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace SadConsole.EasingFunctions
 {
@@ -46,3 +47,4 @@ namespace SadConsole.EasingFunctions
         private double CircleEaseIn(double time, double startingValue, double currentValue, double duration) => -currentValue * (Math.Sqrt(1 - (time /= duration) * time) - 1) + startingValue;
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

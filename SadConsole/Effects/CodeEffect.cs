@@ -5,12 +5,26 @@ namespace SadConsole.Effects
     // Not sure if I should make this serailizable... 
     internal class CodeEffect : CellEffectBase
     {
-        public string Id;
-        public object Tag;
-        public bool UseDuration;
-        public double Duration;
+        /// <summary>
+        /// A user defined identifier of the effect.
+        /// </summary>
+        public string Id { get; set; }
 
-        private double timeElapsed;
+        /// <summary>
+        /// An object associated with this effect.
+        /// </summary>
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// When <see langword="true" />, uses the <see cref="Duration"/> timer to stop this effect; otherwise <see langword="false" />.
+        /// </summary>
+        public bool UseDuration { get; set; }
+
+        /// <summary>
+        /// The amount of time this effect runs for in seconds.
+        /// </summary>
+        public double Duration { get; set; }
+
         private readonly Func<CodeEffect, ColoredGlyph, EffectsManager.ColoredGlyphState, bool> _applyAction;
         private readonly Action<CodeEffect, double> _updateAction;
         private readonly Action<CodeEffect> _restartAction;
@@ -25,9 +39,9 @@ namespace SadConsole.Effects
 
         public override void Update(double timeElapsed)
         {
-            this.timeElapsed += timeElapsed;
+            _timeElapsed += timeElapsed;
 
-            if (this.timeElapsed >= Duration)
+            if (_timeElapsed >= Duration)
             {
                 IsFinished = true;
             }

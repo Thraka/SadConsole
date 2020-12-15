@@ -155,6 +155,10 @@ namespace SadConsole.Instructions
             base.Repeat();
         }
 
+        /// <summary>
+        /// Creates an invisible cursor that prints on the target surface.
+        /// </summary>
+        /// <param name="host">The host this instruction is added to.</param>
         public override void OnAdded(IScreenObject host)
         {
             if (host is IScreenSurface surface)

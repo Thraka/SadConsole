@@ -2,6 +2,7 @@
 // Thanks to Ivan Kuckir  ( ivan@kuckir.com ) for his Java code.
 // I do not claim any rights with this .cs file.
 using System.Runtime.Serialization;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace SadConsole.EasingFunctions
 {
@@ -45,3 +46,4 @@ namespace SadConsole.EasingFunctions
         private double QuadEaseIn(double time, double startingValue, double currentValue, double duration) => currentValue * (time /= duration) * time + startingValue;
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

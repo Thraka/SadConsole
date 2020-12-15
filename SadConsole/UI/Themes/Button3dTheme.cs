@@ -11,6 +11,9 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class Button3dTheme : ButtonTheme
     {
+        /// <summary>
+        /// The shaded area appearance.
+        /// </summary>
         protected ColoredGlyph _shade = new ColoredGlyph();
 
         /// <inheritdoc />

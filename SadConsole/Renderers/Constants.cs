@@ -44,10 +44,5 @@ namespace SadConsole.Renderers.Constants
         /// The render step for a <see cref="Entities.Renderer"/>.
         /// </summary>
         public const string EntityRenderer = "entityrenderer";
-
-        /// <summary>
-        /// The render step for a <see cref="Entities.Manager"/>.
-        /// </summary>
-        public const string EntityManager = "entitymanager";
     }
 }

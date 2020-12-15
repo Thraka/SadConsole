@@ -46,7 +46,7 @@ namespace SadConsole.UI.Themes
             label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
             label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.Width));
 
-            Font font = label.AlternateFont ?? label.Parent?.Host.ParentConsole?.Font;
+            Font font = label.AlternateFont ?? label.Parent?.Host?.ParentConsole?.Font;
             Color color = label.TextColor ?? appearance.Foreground;
 
             if (font != null)

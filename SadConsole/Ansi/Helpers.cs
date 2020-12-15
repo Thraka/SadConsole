@@ -57,6 +57,7 @@ namespace SadConsole.Ansi
         /// Adjusts the provided color based on the <paramref name="bold"/> value.
         /// </summary>
         /// <param name="input">The ansi color to adjust.</param>
+        /// <param name="bold">When <see langword="true"/>, adjusts the color to the bright version. When <see langword="false"/>, adjusts the color to the normal version.</param>
         /// <returns>The adjusted color.</returns>
         /// <remarks>If the color provided is not an ansi color, dark or light, the passed in color will be returned.</remarks>
         public static Color AnsiAdjustColor(Color input, bool bold)

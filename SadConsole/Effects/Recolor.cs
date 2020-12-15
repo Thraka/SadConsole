@@ -33,6 +33,9 @@ namespace SadConsole.Effects
         [DataMember]
         public bool DoBackground { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of the effect.
+        /// </summary>
         public Recolor()
         {
             Foreground = Color.White;
@@ -60,6 +63,7 @@ namespace SadConsole.Effects
             return oldForeground != cell.Foreground || oldBackground != cell.Background;
         }
 
+        /// <inheritdoc />
         public override ICellEffect Clone() => new Recolor()
         {
             Foreground = Foreground,
@@ -96,6 +100,7 @@ namespace SadConsole.Effects
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString() =>
             string.Format("RECOLOR-{0}-{1}-{2}-{3}", Foreground.PackedValue, Background.PackedValue, StartDelay, RemoveOnFinished);
     }

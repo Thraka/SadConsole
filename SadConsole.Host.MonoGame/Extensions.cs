@@ -26,8 +26,19 @@ namespace SadConsole.Host.MonoGame
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+    /// <summary>
+    /// Extensions for the <see cref="Texture2D"/> type.
+    /// </summary>
     public static class TextureExtensions
     {
+        /// <summary>
+        /// Converts a texture's pixels to a <see cref="ICellSurface"/>.
+        /// </summary>
+        /// <param name="image">The texture to process.</param>
+        /// <param name="font">The font used with the cell surface.</param>
+        /// <param name="fontSize">The size of the font.</param>
+        /// <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+        /// <returns></returns>
         public static ICellSurface ToSurface(this Texture2D image, SadConsole.Font font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
         {
             int imageWidth = image.Width;
@@ -142,6 +153,15 @@ namespace Microsoft.Xna.Framework.Graphics
             return surface;
         }
 
+        /// <summary>
+        /// Converts a texture's pixels to the specified <see cref="ICellSurface"/>.
+        /// </summary>
+        /// <param name="image">The texture to process.</param>
+        /// <param name="surface">The surface to draw on.</param>
+        /// <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
+        /// <param name="font">The font used with the cell surface.</param>
+        /// <param name="fontSize">The size of the font.</param>
+        /// <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
         public static void ToSurface(this Texture2D image, ICellSurface surface, Color[] cachedColorArray, Font font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
         {
             int imageWidth = image.Width;
@@ -252,6 +272,11 @@ namespace Microsoft.Xna.Framework.Graphics
             );
         }
 
+        /// <summary>
+        /// Saves a texture to a png file.
+        /// </summary>
+        /// <param name="target">The texture.</param>
+        /// <param name="path">The path to a png file.</param>
         public static void Save(this Texture2D target, string path)
         {
             using (System.IO.FileStream stream = System.IO.File.OpenWrite(path))

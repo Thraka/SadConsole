@@ -45,7 +45,7 @@ namespace SadConsole.Input
             {Keys.D9, new scases('9', '(')},
         };
 
-        private static readonly Dictionary<Keys, ncases> numKeyMappings = new Dictionary<Keys, ncases>
+        private static readonly Dictionary<Keys, ncases> s_numKeyMappings = new Dictionary<Keys, ncases>
         {
             {Keys.Decimal, new ncases('.', Keys.Delete)},
             {Keys.NumPad0, new ncases('0', Keys.Insert)},
@@ -84,6 +84,7 @@ namespace SadConsole.Input
         ///  Does any necessary remapping for virtual keys.
         /// </summary>
         /// <param name="key"> The key to be remapped. </param>
+        /// <param name="state">Keyboar state to read numlock.</param>
         /// <returns> The remapped key. </returns>
         public static Keys RemapVirtualKeys(Keys key, IKeyboardState state)
         {
@@ -93,9 +94,9 @@ namespace SadConsole.Input
                 return key;
             }
 
-            if (numKeyMappings.ContainsKey(key))
+            if (s_numKeyMappings.ContainsKey(key))
             {
-                return numKeyMappings[key].Item2;
+                return s_numKeyMappings[key].Item2;
             }
 
             return key;
@@ -106,6 +107,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="shiftPressed">Helps identify which <see cref="Character"/> to use while the key is pressed. For example, if <see cref="Keys.A"/> is used the <see cref="Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
+        /// <param name="state">Keyboar state to read from.</param>
         public void Fill(Keys key, bool shiftPressed, IKeyboardState state)
         {
             Key = key;
@@ -125,9 +127,9 @@ namespace SadConsole.Input
                 return;
             }
 
-            if (numKeyMappings.ContainsKey(Key))
+            if (s_numKeyMappings.ContainsKey(Key))
             {
-                ncases casesCur = numKeyMappings[Key];
+                ncases casesCur = s_numKeyMappings[Key];
                 Character = numLock ? casesCur.Item1 : (char)0;
                 Key = RemapVirtualKeys(Key, state);
                 return;
@@ -140,6 +142,7 @@ namespace SadConsole.Input
         /// Shortcut to get the <see cref="AsciiKey"/> for a specific MonoGame/XNA <see cref="Keys"/> type. Shift is considered not pressed.
         /// </summary>
         /// <param name="key">The key.</param>
+        /// <param name="state">Keyboar state to read from.</param>
         /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
         public static AsciiKey Get(Keys key, IKeyboardState state)
         {
@@ -153,6 +156,7 @@ namespace SadConsole.Input
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="shiftPressed">If shift should be considered pressed or not.</param>
+        /// <param name="state">Keyboar state to read from.</param>
         /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
         public static AsciiKey Get(Keys key, bool shiftPressed, IKeyboardState state)
         {
@@ -175,6 +179,23 @@ namespace SadConsole.Input
             }
 
             return left.Character == right.Character;
+        }
+
+        /// <summary>
+        /// Gets a hashcode based on the key and character.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + Key.GetHashCode();
+                hash = hash * 23 + Character.GetHashCode();
+                hash = hash * 23 + TimeHeld.GetHashCode();
+                hash = hash * 23 + PostInitialDelay.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>

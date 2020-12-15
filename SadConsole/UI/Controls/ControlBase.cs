@@ -12,43 +12,61 @@ namespace SadConsole.UI.Controls
     [DataContract]
     public abstract class ControlBase
     {
-        protected Point _position;
-        protected bool _isMouseOver = false;
-        protected bool _mouseEnteredWithButtonDown = false;
-        protected bool _isEnabled = true;
-        protected IContainer _parent;
-        protected ControlStates _state;
-
-        protected Themes.ThemeBase ActiveTheme;
-        protected bool IsCustomTheme;
-        protected Colors _themeColors;
-
-        /// <summary>
-        /// <see langword="true"/> when the left mouse button is down.
-        /// </summary>
-        protected bool _isMouseLeftDown;
-
-        /// <summary>
-        /// <see langword="true"/> when the right mouse button is down.
-        /// </summary>
-        protected bool _isMouseRightDown;
-
+        private Point _position;
+        private bool _isEnabled = true;
+        private IContainer _parent;
+        [DataMember(Name = "CustomTheme")]
+        private Themes.ThemeBase _activeTheme;
+        [DataMember(Name = "ThemeColors")]
+        private Colors _themeColors;
         private bool _isDirty;
 
+        /// <summary>
+        /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
+        /// </summary>
+        protected bool MouseState_IsMouseOver = false;
+
+        /// <summary>
+        /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse entered the control's bounds with the mouse button down.
+        /// </summary>
+        protected bool MouseState_EnteredWithButtonDown = false;
+
+        /// <summary>
+        /// A cached value determined by <see cref="OnMouseIn(ControlMouseState)"/>. <see langword="true"/> when the left mouse button is down.
+        /// </summary>
+        protected bool MouseState_IsMouseLeftDown;
+
+        /// <summary>
+        /// A cached value determined by <see cref="OnMouseIn(ControlMouseState)"/>. <see langword="true"/> when the right mouse button is down.
+        /// </summary>
+        protected bool MouseState_IsMouseRightDown;
+
+        /// <summary>
+        /// Raised when the <see cref="IsDirty"/> property changes.
+        /// </summary>
         public event EventHandler<EventArgs> IsDirtyChanged;
 
+        /// <summary>
+        /// <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
+        /// </summary>
         [DataMember]
         public bool UseKeyboard { get; set; }
 
+        /// <summary>
+        /// <see langword="true"/> to allow this control to respond to mouse interactions.
+        /// </summary>
         [DataMember]
         public bool UseMouse { get; set; }
 
+        /// <summary>
+        /// <see langword="true"/> to indicate this control can be focused, generally by clicking on the control or tabbing with the keyboard. Otherwise <see langword="false"/>.
+        /// </summary>
         [DataMember]
         public bool CanFocus { get; set; }
 
-        [DataMember]
-        public bool ExclusiveFocus { get; set; }
-
+        /// <summary>
+        /// An alternate font used to render this control.
+        /// </summary>
         [DataMember]
         public Font AlternateFont { get; set; }
 
@@ -70,7 +88,7 @@ namespace SadConsole.UI.Controls
         /// <remarks>
         /// This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
         /// </remarks>
-        public bool IsMouseButtonStateClean => !_mouseEnteredWithButtonDown;
+        public bool IsMouseButtonStateClean => !MouseState_EnteredWithButtonDown;
 
         /// <summary>
         /// The relative position of this control.
@@ -226,38 +244,29 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Gets or sets the colors to use with the <see cref="Theme"/>.
-        /// </summary>
-        public Colors ThemeColors
-        {
-            //get => _themeColors;
-            set => _themeColors = value;
-        }
-
-        /// <summary>
         /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Parent"/>.
         /// </summary>
         public ThemeBase Theme
         {
-            get => ActiveTheme;
+            get => _activeTheme;
             set
             {
-                if (value != ActiveTheme)
+                if (value != _activeTheme)
                 {
                     if (value == null)
                     {
                         IsCustomTheme = false;
-                        ActiveTheme = Library.Default.GetControlTheme(GetType());
-                        if (ActiveTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+                        _activeTheme = Library.Default.GetControlTheme(GetType());
+                        if (_activeTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
                     }
                     else
                     {
-                        ActiveTheme = value;
+                        _activeTheme = value;
                         IsCustomTheme = true;
                     }
 
                     OnThemeChanged();
-                    ActiveTheme.Attached(this);
+                    _activeTheme.Attached(this);
                     DetermineState();
                     IsDirty = true;
                 }
@@ -265,9 +274,14 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
+        /// When <see langword="true"/>, indicates the control has a custom theme assigned to it; othwerise <see langword="false"/>.
+        /// </summary>
+        public bool IsCustomTheme { get; protected set; }
+
+        /// <summary>
         /// The state of the control.
         /// </summary>
-        public ControlStates State => _state;
+        public ControlStates State { get; protected set; }
 
         /// <summary>
         /// Raised when the mouse enters this control.
@@ -348,13 +362,13 @@ namespace SadConsole.UI.Controls
                 
                 if (newState.IsMouseOver)
                 {
-                    if (_isMouseOver != true)
+                    if (MouseState_IsMouseOver != true)
                     {
-                        _isMouseOver = true;
+                        MouseState_IsMouseOver = true;
                         OnMouseEnter(newState);
                     }
 
-                    bool preventClick = _mouseEnteredWithButtonDown;
+                    bool preventClick = MouseState_EnteredWithButtonDown;
                     OnMouseIn(newState);
 
                     if (!preventClick && state.Mouse.LeftClicked)
@@ -367,9 +381,9 @@ namespace SadConsole.UI.Controls
                 }
                 else
                 {
-                    if (_isMouseOver)
+                    if (MouseState_IsMouseOver)
                     {
-                        _isMouseOver = false;
+                        MouseState_IsMouseOver = false;
                         OnMouseExit(newState);
                     }
                 }
@@ -384,7 +398,7 @@ namespace SadConsole.UI.Controls
         /// <param name="state">The mouse state.</param>
         public void LostMouse(MouseScreenObjectState state)
         {
-            if (_isMouseOver)
+            if (MouseState_IsMouseOver)
                 OnMouseExit(new ControlMouseState(this, state));
         }
         #endregion
@@ -452,31 +466,31 @@ namespace SadConsole.UI.Controls
         /// <remarks>Called by the control as the mouse state changes, like when the mouse is clicked on top of the control or leaves the area of the control. This method is implemented by each derived control.</remarks>
         public virtual void DetermineState()
         {
-            ControlStates oldState = _state;
+            ControlStates oldState = State;
 
-            _state = !_isEnabled
-                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Disabled)
-                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Disabled);
+            State = !_isEnabled
+                ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.Disabled)
+                : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.Disabled);
 
-            _state = _isMouseOver
-                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseOver)
-                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseOver);
+            State = MouseState_IsMouseOver
+                ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.MouseOver)
+                : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.MouseOver);
 
-            _state = IsFocused && Parent.Host.ParentConsole != null && Parent.Host.ParentConsole.IsFocused
-                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.Focused)
-                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.Focused);
+            State = IsFocused && Parent.Host.ParentConsole != null && Parent.Host.ParentConsole.IsFocused
+                ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.Focused)
+                : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.Focused);
 
-            _state = _isMouseLeftDown && IsMouseButtonStateClean
-                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown)
-                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseLeftButtonDown);
+            State = MouseState_IsMouseLeftDown && IsMouseButtonStateClean
+                ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.MouseLeftButtonDown)
+                : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.MouseLeftButtonDown);
 
-            _state = _isMouseRightDown && IsMouseButtonStateClean
-                ? (ControlStates)Helpers.SetFlag((int)_state, (int)ControlStates.MouseRightButtonDown)
-                : (ControlStates)Helpers.UnsetFlag((int)_state, (int)ControlStates.MouseRightButtonDown);
+            State = MouseState_IsMouseRightDown && IsMouseButtonStateClean
+                ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.MouseRightButtonDown)
+                : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.MouseRightButtonDown);
 
-            if (oldState != _state)
+            if (oldState != State)
             {
-                OnStateChanged(oldState, _state);
+                OnStateChanged(oldState, State);
                 IsDirty = true;
             }
         }
@@ -496,15 +510,29 @@ namespace SadConsole.UI.Controls
             _themeColors ?? _parent?.Host.ThemeColors ?? Library.Default.Colors;
 
         /// <summary>
+        /// Sets the theme colors used by this control. When <see langword="null"/>, indicates this control should read the theme colors from the parent.
+        /// </summary>
+        /// <param name="value">The colors to use with this control.</param>
+        public void SetThemeColors(Colors value) =>
+            _themeColors = value;
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates the control has custom theme colors assigned to it; othwerise <see langword="false"/>.
+        /// </summary>
+        /// <returns></returns>
+        public bool HasThemeColors() =>
+            _themeColors != null;
+
+        /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.
         /// </summary>
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseEnter(ControlMouseState state)
         {
-            _isMouseOver = true;
+            MouseState_IsMouseOver = true;
 
             if (state.OriginalMouseState.Mouse.LeftButtonDown || state.OriginalMouseState.Mouse.RightButtonDown)
-                _mouseEnteredWithButtonDown = true;
+                MouseState_EnteredWithButtonDown = true;
 
             MouseEnter?.Invoke(this, state);
 
@@ -517,10 +545,10 @@ namespace SadConsole.UI.Controls
         /// <param name="state">The current mouse data</param>
         protected virtual void OnMouseExit(ControlMouseState state)
         {
-            _isMouseLeftDown = false;
-            _isMouseRightDown = false;
-            _isMouseOver = false;
-            _mouseEnteredWithButtonDown = false;
+            MouseState_IsMouseLeftDown = false;
+            MouseState_IsMouseRightDown = false;
+            MouseState_IsMouseOver = false;
+            MouseState_EnteredWithButtonDown = false;
             MouseExit?.Invoke(this, state);
 
             DetermineState();
@@ -534,11 +562,11 @@ namespace SadConsole.UI.Controls
         {
             MouseMove?.Invoke(this, state);
 
-            _isMouseLeftDown = state.OriginalMouseState.Mouse.LeftButtonDown;
-            _isMouseRightDown = state.OriginalMouseState.Mouse.RightButtonDown;
+            MouseState_IsMouseLeftDown = state.OriginalMouseState.Mouse.LeftButtonDown;
+            MouseState_IsMouseRightDown = state.OriginalMouseState.Mouse.RightButtonDown;
 
-            if (_mouseEnteredWithButtonDown && !_isMouseLeftDown && !_isMouseRightDown)
-                _mouseEnteredWithButtonDown = false;
+            if (MouseState_EnteredWithButtonDown && !MouseState_IsMouseLeftDown && !MouseState_IsMouseRightDown)
+                MouseState_EnteredWithButtonDown = false;
 
             DetermineState();
         }

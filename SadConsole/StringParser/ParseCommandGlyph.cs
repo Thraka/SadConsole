@@ -8,12 +8,32 @@ namespace SadConsole.StringParser
     /// </summary>
     internal class ParseCommandSetGlyph : ParseCommandBase
     {
-        public int Counter;
+        private int _counter;
+
+        /// <summary>
+        /// The glyph to set.
+        /// </summary>
         public char Glyph;
+
+        /// <summary>
+        /// Uses a random glyph.
+        /// </summary>
         public bool RandomGlyph;
+
+        /// <summary>
+        /// The minimum glyph to use with the random glyph.
+        /// </summary>
         public int RandomGlyphMin;
+
+        /// <summary>
+        /// The maximumglyph to use with the random glyph.
+        /// </summary>
         public int RandomGlyphMax;
 
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
         public ParseCommandSetGlyph(string parameters)
         {
             string[] parts = parameters.Split(new char[] { ':' }, 3);
@@ -23,13 +43,9 @@ namespace SadConsole.StringParser
             {
                 RandomGlyph = true;
                 if (parts[0] == "*")
-                {
-                    Counter = -1;
-                }
+                    _counter = -1;
                 else
-                {
-                    Counter = int.Parse(parts[0], CultureInfo.InvariantCulture);
-                }
+                    _counter = int.Parse(parts[0], CultureInfo.InvariantCulture);
 
                 RandomGlyphMin = int.Parse(parts[1], CultureInfo.InvariantCulture);
                 RandomGlyphMax = int.Parse(parts[2], CultureInfo.InvariantCulture);
@@ -38,19 +54,15 @@ namespace SadConsole.StringParser
             else if (parts.Length == 2)
             {
                 if (parts[1] == "*")
-                {
-                    Counter = -1;
-                }
+                    _counter = -1;
                 else
-                {
-                    Counter = int.Parse(parts[1], CultureInfo.InvariantCulture);
-                }
+                    _counter = int.Parse(parts[1], CultureInfo.InvariantCulture);
 
                 Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
             else
             {
-                Counter = 1;
+                _counter = 1;
                 Glyph = (char)int.Parse(parts[0], CultureInfo.InvariantCulture);
             }
 
@@ -58,27 +70,20 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Glyph;
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (RandomGlyph)
-            {
                 glyphState.GlyphCharacter = (char)SadConsole.GameHost.Instance.Random.Next(RandomGlyphMin, RandomGlyphMax);
-            }
             else
-            {
                 glyphState.GlyphCharacter = Glyph;
-            }
 
-            if (Counter != -1)
-            {
-                Counter--;
-            }
+            if (_counter != -1)
+                _counter--;
 
-            if (Counter == 0)
-            {
+            if (_counter == 0)
                 commandStack.RemoveSafe(this);
-            }
         }
     }
 }

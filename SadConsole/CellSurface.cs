@@ -21,8 +21,6 @@ namespace SadConsole
         [DataMember(Name = "AreaBounds")]
         private BoundedRectangle _viewArea;
 
-        private Viewport<ColoredGlyph> _viewPortTest;
-
         /// <inheritdoc />
         public event EventHandler IsDirtyChanged;
 

@@ -24,6 +24,9 @@ namespace SadConsole.Effects
         [DataMember]
         public int GlyphIndex { get; set; }
 
+        /// <summary>
+        /// Creates an instance of the blink glyph effect.
+        /// </summary>
         public BlinkGlyph()
         {
             BlinkSpeed = 1d;
@@ -31,6 +34,7 @@ namespace SadConsole.Effects
             _isOn = true;
         }
 
+        /// <inheritdoc />
         public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
         {
             int oldGlyph = cell.Glyph;
@@ -47,6 +51,7 @@ namespace SadConsole.Effects
             return cell.Glyph != oldGlyph;
         }
 
+        /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
         {
             base.Update(gameTimeSeconds);
@@ -72,6 +77,7 @@ namespace SadConsole.Effects
             base.Restart();
         }
 
+        /// <inheritdoc />
         public override ICellEffect Clone() => new BlinkGlyph()
         {
             _isOn = _isOn,

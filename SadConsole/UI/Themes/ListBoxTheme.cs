@@ -330,10 +330,10 @@ namespace SadConsole.UI.Themes
                 {
                     bool useExtended = false;
 
-                    if (control.AlternateFont != null)
-                        useExtended = control.AlternateFont.IsSadExtended;
-                    else if (control.Parent?.Host?.ParentConsole?.Font != null)
-                        useExtended = control.Parent.Host.ParentConsole.Font.IsSadExtended;
+                    Font font = control.AlternateFont ?? control.Parent?.Host?.ParentConsole?.Font;
+
+                    if (font != null)
+                        useExtended = font.IsSadExtended;
 
                     string colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
 

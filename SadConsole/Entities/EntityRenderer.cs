@@ -13,15 +13,40 @@ namespace SadConsole.Entities
     [DataContract]
     public class Renderer : Components.UpdateComponent
     {
+        /// <summary>
+        /// The entities to process.
+        /// </summary>
         [DataMember(Name = "Entities")]
         protected List<Entity> _entities = new List<Entity>();
+
+        /// <summary>
+        /// The entities currently visible.
+        /// </summary>
         protected List<Entity> _entitiesVisible = new List<Entity>();
 
+        /// <summary>
+        /// The parent screen hosting this component.
+        /// </summary>
         protected IScreenSurface _screen;
+
+        /// <summary>
+        /// Cached rectangle for rendering.
+        /// </summary>
         protected Rectangle _offsetAreaPixels;
 
+        /// <summary>
+        /// A cached copy of the <see cref="ICellSurface.View"/> of the hosting screen surface.
+        /// </summary>
         protected Rectangle _screenCachedView;
+
+        /// <summary>
+        /// A cached copy of the <see cref="IScreenSurface.Font"/> of the hosting screen surface.
+        /// </summary>
         protected Font _screenCachedFont;
+
+        /// <summary>
+        /// A cached copy of the <see cref="IScreenSurface.FontSize"/> of the hosting screen surface.
+        /// </summary>
         protected Point _screenCachedFontSize;
 
         /// <summary>

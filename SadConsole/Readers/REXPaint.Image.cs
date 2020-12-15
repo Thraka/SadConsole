@@ -93,7 +93,7 @@ namespace SadConsole.Readers
         public void Remove(Layer layer) => _layers.Remove(layer);
 
         /// <summary>
-        /// Converts this REXPaint image to a <see cref="LayeredScreenSurface"/>.
+        /// Converts this REXPaint image to a collection of <see cref="CellSurface"/>.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<CellSurface> ToLayersComponent()

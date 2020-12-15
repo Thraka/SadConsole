@@ -2,6 +2,7 @@
 // Thanks to 2013 Ivan Kuckir  ( ivan@kuckir.com ) for his Java code.
 // I do not claim any rights with this .cs file.
 using System.Runtime.Serialization;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace SadConsole.EasingFunctions
 {
@@ -24,3 +25,4 @@ namespace SadConsole.EasingFunctions
         }
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

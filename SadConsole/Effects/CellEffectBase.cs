@@ -46,6 +46,9 @@ namespace SadConsole.Effects
         [DataMember]
         public bool RestoreCellOnFinished { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of the effect.
+        /// </summary>
         protected CellEffectBase()
         {
             RemoveOnFinished = false;

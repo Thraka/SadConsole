@@ -2,12 +2,12 @@
 {
     public partial class REXPaintImage
     {
-#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0660,CS0661 // Type defines operator == or operator != but does not override Object.Equals(object o)
         /// <summary>
         /// A RexPaint color.
         /// </summary>
         public struct Color
-#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning restore CS0660,CS0661 // Type defines operator == or operator != but does not override Object.Equals(object o)
         {
             /// <summary>
             /// The red channel of the color.
@@ -37,8 +37,10 @@
                 B = b;
             }
 
+            /// <inheritdoc/>
             public static bool operator ==(Color left, Color right) => left.R == right.R && left.G == right.G && left.B == right.B;
 
+            /// <inheritdoc/>
             public static bool operator !=(Color left, Color right) => left.R != right.R || left.G != right.G || left.B != right.B;
 
             /// <summary>

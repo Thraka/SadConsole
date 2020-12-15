@@ -1394,29 +1394,21 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Mirror to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-        public static void Fill(this ICellSurface surface, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public static void Fill(this ICellSurface surface, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
             for (int i = 0; i < surface.Count; i++)
             {
                 if (background.HasValue)
-                {
                     surface[i].Background = background.Value;
-                }
 
                 if (foreground.HasValue)
-                {
                     surface[i].Foreground = foreground.Value;
-                }
 
                 if (glyph.HasValue)
-                {
                     surface[i].Glyph = glyph.Value;
-                }
 
                 if (mirror.HasValue)
-                {
                     surface[i].Mirror = mirror.Value;
-                }
 
                 surface[i].Decorators = Array.Empty<CellDecorator>();
             }
@@ -1436,7 +1428,7 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Mirror to apply. If null, skips.</param>
         /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
-        public static ColoredGlyph[] Fill(this ICellSurface surface, int x, int y, int length, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public static ColoredGlyph[] Fill(this ICellSurface surface, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
 
 
@@ -1453,24 +1445,16 @@ namespace SadConsole
             {
                 ColoredGlyph c = surface[index];
                 if (background.HasValue)
-                {
                     c.Background = background.Value;
-                }
 
                 if (foreground.HasValue)
-                {
                     c.Foreground = foreground.Value;
-                }
 
                 if (glyph.HasValue)
-                {
                     c.Glyph = glyph.Value;
-                }
 
                 if (mirror.HasValue)
-                {
                     c.Mirror = mirror.Value;
-                }
 
                 c.Decorators = Array.Empty<CellDecorator>();
 
@@ -1493,14 +1477,12 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Mirror to apply. If null, skips.</param>
         /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
-        public static ColoredGlyph[] Fill(this ICellSurface surface, Rectangle area, Color? foreground, Color? background, int? glyph, Mirror? mirror = null)
+        public static ColoredGlyph[] Fill(this ICellSurface surface, Rectangle area, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
 
             if (area == Rectangle.Empty)
-            {
                 return new ColoredGlyph[0];
-            }
 
             var result = new ColoredGlyph[area.Width * area.Height];
             int resultIndex = 0;
@@ -1512,24 +1494,16 @@ namespace SadConsole
                     ColoredGlyph cell = surface[y * surface.Width + x];
 
                     if (background.HasValue)
-                    {
                         cell.Background = background.Value;
-                    }
 
                     if (foreground.HasValue)
-                    {
                         cell.Foreground = foreground.Value;
-                    }
 
                     if (glyph.HasValue)
-                    {
                         cell.Glyph = glyph.Value;
-                    }
 
                     if (mirror.HasValue)
-                    {
                         cell.Mirror = mirror.Value;
-                    }
 
                     cell.Decorators = Array.Empty<CellDecorator>();
 

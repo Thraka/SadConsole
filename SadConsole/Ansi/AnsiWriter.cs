@@ -335,7 +335,7 @@ namespace SadConsole.Ansi
         /// Reads a line of ANSI.SYS code.
         /// </summary>
         /// <param name="line">The line to read.</param>
-        /// <param name="moreLines">When <see langword="true"/>, calls <see cref="SadConsole.Cursor.LineFeed"/>; otherwise does nothing.</param>
+        /// <param name="moreLines">When <see langword="true"/>, calls <see cref="Components.Cursor.LineFeed"/>; otherwise does nothing.</param>
         /// <returns>Returns false when character 26 is encountered; otherwise true.</returns>
         public bool AnsiReadLine(string line, bool moreLines = false)
         {

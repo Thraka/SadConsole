@@ -70,12 +70,21 @@ namespace SadConsole.Effects
         [DataMember]
         public bool UseCellDestinationReverse { get; set; }
 
+        /// <summary>
+        /// A value used in lerping the fade.
+        /// </summary>
         [DataMember]
         protected double _calculatedValue;
 
+        /// <summary>
+        /// Indicates the fade is currently in reverse.
+        /// </summary>
         [DataMember]
         protected bool _goingDown;
 
+        /// <summary>
+        /// Creates a new instance of the effect.
+        /// </summary>
         public Fade()
         {
             DestinationBackground = Color.Transparent;

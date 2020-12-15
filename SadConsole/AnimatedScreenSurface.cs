@@ -18,9 +18,9 @@ namespace SadConsole
         private float _animatedTime;
         private AnimationState _state;
         [DataMember(Name = "Width")]
-        protected int _width;
+        private int _width;
         [DataMember(Name = "Height")]
-        protected int _height;
+        private int _height;
 
         /// <summary>
         /// Raised when the <see cref="AnimationState"/> changes.
@@ -186,7 +186,7 @@ namespace SadConsole
 
 
         /// <summary>
-        /// Updates the base <see cref="ICellSurface.Cells"/> references to the current frame.
+        /// Updates the visible surface according to <see cref="CurrentFrameIndex"/>.
         /// </summary>
         protected void UpdateFrameReferences()
         {
@@ -320,18 +320,30 @@ namespace SadConsole
                 child.UpdateAbsolutePosition();
         }
 
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
+        /// <param name="context">Nothing.</param>
         [OnSerializing]
-        protected new void OnSerializingMethod(StreamingContext context)
+        protected void OnSerializingMethod2(StreamingContext context)
         {
         }
 
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
+        /// <param name="context">Nothing.</param>
         [OnSerialized]
-        protected new void OnSerializedMethod(StreamingContext context)
+        protected void OnSerializedMethod(StreamingContext context)
         {
         }
 
+        /// <summary>
+        /// Calls <see cref="UpdateFrameReferences"/>.
+        /// </summary>
+        /// <param name="context">Nothing.</param>
         [OnDeserialized]
-        protected new void OnDeserializedMethod(StreamingContext context)
+        protected void OnDeserializedMethod(StreamingContext context)
         {
             UpdateFrameReferences();
         }
@@ -386,14 +398,14 @@ namespace SadConsole
         /// Saves the <see cref="AnimatedScreenSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>
-        public new void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
 
         /// <summary>
         /// Loads a <see cref="AnimatedScreenSurface"/> from a file.
         /// </summary>
         /// <param name="file">The source file.</param>
-        /// <returns></returns>
-        public static new AnimatedScreenSurface Load(string file) => Serializer.Load<AnimatedScreenSurface>(file, Settings.SerializationIsCompressed);
+        /// <returns>The animated surface.</returns>
+        public static AnimatedScreenSurface Load(string file) => Serializer.Load<AnimatedScreenSurface>(file, Settings.SerializationIsCompressed);
 
         /// <summary>
         /// Event args for when the animation state changes

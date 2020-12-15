@@ -116,9 +116,5 @@ namespace SadConsole
             if (_screenObjects.Count != 0)
                 Pop(_screenObjects.Last());
         }
-
-        public static bool operator !=(FocusedScreenObjectStack left, IScreenObject right) => left._activeScreenObject != right;
-
-        public static bool operator ==(FocusedScreenObjectStack left, IScreenObject right) => left._activeScreenObject == right;
     }
 }

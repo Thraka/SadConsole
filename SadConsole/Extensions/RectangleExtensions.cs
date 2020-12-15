@@ -3,6 +3,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Extensions for the <see cref="Rectangle"/> type.
+    /// </summary>
     public static class RectangleExtensions
     {
         /// <summary>

@@ -63,10 +63,9 @@ namespace SadConsole.Renderers
         void RemoveRenderStep(IRenderStep step);
 
         /// <summary>
-        /// Returns <see langword="true"/> when the renderer has an instance of the specified type; otherwise <see langword="true"/>.
+        /// Returns collection of rendersteps associated with the renderer.
         /// </summary>
-        /// <typeparam name="T">The type to check. Must be a <see cref="IRenderStep"/> type.</typeparam>
-        /// <returns>A boolean value.</returns>
+        /// <returns>The steps.</returns>
         IReadOnlyCollection<IRenderStep> GetRenderSteps();
     }
 }

@@ -9,6 +9,9 @@ using System.Collections;
 
 namespace SadConsole.UI.Controls
 {
+    /// <summary>
+    /// Base class for controls that host and render other controls.
+    /// </summary>
     public abstract class CompositeControl : ControlBase, IContainer
     {
         /// <summary>
@@ -16,6 +19,11 @@ namespace SadConsole.UI.Controls
         /// </summary>
         protected List<ControlBase> Controls { get; set; } = new List<ControlBase>();
 
+        /// <summary>
+        /// Creates a new control with the specified width and height.
+        /// </summary>
+        /// <param name="width">Width of the control in cells.</param>
+        /// <param name="height">Height of the control in cells.</param>
         public CompositeControl(int width, int height) : base(width, height)
         {
             CreateChildControls();
@@ -26,9 +34,18 @@ namespace SadConsole.UI.Controls
         /// </summary>
         protected virtual void CreateChildControls() { }
 
+        /// <summary>
+        /// A handler to forward state to <see cref="ControlBase.IsDirty"/>.
+        /// </summary>
+        /// <param name="value"></param>
         protected void IsDirtyEventHandler(bool value) =>
             IsDirty = value;
 
+        /// <summary>
+        /// Processes the mouse on each control hosted by this control.
+        /// </summary>
+        /// <param name="state">The mouse state based on the parent screen object.</param>
+        /// <returns><see langword="true"/> when a control processes the mouse; otherwise <see langword="false"/>.</returns>
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
             if (IsEnabled && UseMouse)
@@ -76,6 +93,10 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <summary>
+        /// Updates each control hosted by this control.
+        /// </summary>
+        /// <param name="time">The game frame time delta.</param>
         public override void Update(TimeSpan time)
         {
             base.Update(time);

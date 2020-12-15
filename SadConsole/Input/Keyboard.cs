@@ -46,6 +46,9 @@ namespace SadConsole.Input
         /// </summary>
         public float InitialRepeatDelay = 0.8f;
 
+        /// <summary>
+        /// Creates a new instance of the keyboard manager.
+        /// </summary>
         public Keyboard()
         {
             KeysPressedInternal = new List<AsciiKey>();

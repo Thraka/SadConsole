@@ -6,10 +6,12 @@ using System.Runtime.Serialization;
 
 namespace SadConsole.EasingFunctions
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [DataContract]
     public class Sine : EasingBase
     {
         public override double Ease(double time, double startingValue, double currentValue, double duration)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             switch (Mode)
             {

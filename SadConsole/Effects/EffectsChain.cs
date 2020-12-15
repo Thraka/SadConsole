@@ -9,9 +9,15 @@ namespace SadConsole.Effects
     [DataContract]
     public class EffectsChain : CellEffectBase
     {
+        /// <summary>
+        /// The list of effects to process.
+        /// </summary>
         [DataMember]
         public List<ICellEffect> Effects = new List<ICellEffect>();
 
+        /// <summary>
+        /// When <see langword="true"/>, instead of ending when finished, it will repeat. Otherwise, <see langword="false"/>.
+        /// </summary>
         [DataMember]
         public bool Repeat;
 
@@ -25,9 +31,15 @@ namespace SadConsole.Effects
         [DataMember]
         private bool _inChainDelay = false;
 
+        /// <summary>
+        /// An artificial delay between each effect.
+        /// </summary>
         [DataMember]
-        public double DelayBetweenEffects = 0d;
+        public double DelayBetweenEffects { get; set; } = 0d;
 
+        /// <summary>
+        /// Enables the effect and starts processing the first effect.
+        /// </summary>
         public void Start()
         {
             if (Effects.Count > 0)
@@ -42,8 +54,12 @@ namespace SadConsole.Effects
             }
         }
 
+        /// <summary>
+        /// Disables the effect.
+        /// </summary>
         public void End() => _enabled = false;
 
+        /// <inheritdoc />
         public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
         {
             if (_activeEffect != null)
@@ -56,6 +72,7 @@ namespace SadConsole.Effects
             }
         }
 
+        /// <inheritdoc />
         public override void Update(double gameTimeSeconds)
         {
             if (_enabled)
@@ -147,6 +164,7 @@ namespace SadConsole.Effects
             base.Restart();
         }
 
+        /// <inheritdoc />
         public override ICellEffect Clone()
         {
             EffectsChain chain = new EffectsChain()
@@ -191,6 +209,7 @@ namespace SadConsole.Effects
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString() =>
             string.Format("EFFECTSCHAIN-{0}-{1}-{2}-{3}", StartDelay, RemoveOnFinished, DelayBetweenEffects, Repeat);
 

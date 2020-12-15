@@ -79,20 +79,22 @@ namespace SadConsole.UI.Controls
             return false;
         }
 
+        /// <inheritdoc />
         protected override void OnMouseIn(ControlMouseState state)
         {
             base.OnMouseIn(state);
 
-            if (_isEnabled && _mouseDownForClick && !state.OriginalMouseState.Mouse.LeftButtonDown && !state.OriginalMouseState.Mouse.LeftClicked)
+            if (IsEnabled && _mouseDownForClick && !state.OriginalMouseState.Mouse.LeftButtonDown && !state.OriginalMouseState.Mouse.LeftClicked)
             {
                 OnLeftMouseClicked(state);
                 _mouseDownForClick = false;
             }
-            else if (!_mouseEnteredWithButtonDown && state.OriginalMouseState.Mouse.LeftButtonDown)
+            else if (!MouseState_EnteredWithButtonDown && state.OriginalMouseState.Mouse.LeftButtonDown)
                 _mouseDownForClick = true;
 
         }
 
+        /// <inheritdoc />
         protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             _mouseDownForClick = false;
@@ -100,6 +102,7 @@ namespace SadConsole.UI.Controls
             OnClick();
         }
 
+        /// <inheritdoc />
         protected override void OnMouseExit(ControlMouseState state)
         {
             base.OnMouseExit(state);

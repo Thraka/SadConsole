@@ -278,14 +278,44 @@ namespace SadConsole
         /// <typeparam name="TNode">The type of object the node and its connections are.</typeparam>
         public class NodeConnections<TNode>
         {
+            /// <summary>
+            /// The west or left node.
+            /// </summary>
             public TNode West;
+
+            /// <summary>
+            /// The east or right node.
+            /// </summary>
             public TNode East;
+
+            /// <summary>
+            /// The north or up node.
+            /// </summary>
             public TNode North;
+
+            /// <summary>
+            /// The south or down node.
+            /// </summary>
             public TNode South;
 
+            /// <summary>
+            /// When <see langword="true"/> indicates the <see cref="West"/> connection is valid; otherwise <see langword="false"/>.
+            /// </summary>
             public bool HasWest;
+
+            /// <summary>
+            /// When <see langword="true"/> indicates the <see cref="East"/> connection is valid; otherwise <see langword="false"/>.
+            /// </summary>
             public bool HasEast;
+
+            /// <summary>
+            /// When <see langword="true"/> indicates the <see cref="North"/> connection is valid; otherwise <see langword="false"/>.
+            /// </summary>
             public bool HasNorth;
+
+            /// <summary>
+            /// When <see langword="true"/> indicates the <see cref="South"/> connection is valid; otherwise <see langword="false"/>.
+            /// </summary>
             public bool HasSouth;
 
             /// <summary>
@@ -295,6 +325,10 @@ namespace SadConsole
             /// <param name="east">The east connection.</param>
             /// <param name="north">The north connection.</param>
             /// <param name="south">The south connection.</param>
+            /// <param name="isWest">When <see langword="true"/> indicates the <see cref="West"/> connection is valid; otherwise <see langword="false"/>.</param>
+            /// <param name="isEast">When <see langword="true"/> indicates the <see cref="East"/> connection is valid; otherwise <see langword="false"/>.</param>
+            /// <param name="isNorth">When <see langword="true"/> indicates the <see cref="North"/> connection is valid; otherwise <see langword="false"/>.</param>
+            /// <param name="isSouth">When <see langword="true"/> indicates the <see cref="South"/> connection is valid; otherwise <see langword="false"/>.</param>
             public NodeConnections(TNode west, TNode east, TNode north, TNode south, bool isWest, bool isEast, bool isNorth, bool isSouth)
             {
                 West = west;

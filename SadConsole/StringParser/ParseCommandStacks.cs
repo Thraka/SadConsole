@@ -7,15 +7,44 @@
     /// </summary>
     public class ParseCommandStacks
     {
-        public bool TurnOnEffects;
+        /// <summary>
+        /// Indicates there is a command that uses effets.
+        /// </summary>
+        public bool TurnOnEffects { get; set; }
 
-        public Stack<ParseCommandBase> Foreground;
-        public Stack<ParseCommandBase> Background;
-        public Stack<ParseCommandBase> Glyph;
-        public Stack<ParseCommandBase> Mirror;
-        public Stack<ParseCommandBase> Effect;
-        public Stack<ParseCommandBase> All;
+        /// <summary>
+        /// The commands that affect the foreground.
+        /// </summary>
+        public Stack<ParseCommandBase> Foreground { get; set; }
 
+        /// <summary>
+        /// The commands that affect the background.
+        /// </summary>
+        public Stack<ParseCommandBase> Background { get; set; }
+
+        /// <summary>
+        /// The commands that affect the glyph.
+        /// </summary>
+        public Stack<ParseCommandBase> Glyph { get; set; }
+
+        /// <summary>
+        /// The commands that affect the mirror setting.
+        /// </summary>
+        public Stack<ParseCommandBase> Mirror { get; set; }
+
+        /// <summary>
+        /// The commands that affect the glyph effect.
+        /// </summary>
+        public Stack<ParseCommandBase> Effect { get; set; }
+
+        /// <summary>
+        /// All commands.
+        /// </summary>
+        public Stack<ParseCommandBase> All { get; set; }
+
+        /// <summary>
+        /// Creates new stacks of commands.
+        /// </summary>
         public ParseCommandStacks()
         {
             Foreground = new Stack<ParseCommandBase>(4);

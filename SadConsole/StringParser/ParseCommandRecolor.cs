@@ -9,19 +9,57 @@ namespace SadConsole.StringParser
     /// </summary>
     public sealed class ParseCommandRecolor : ParseCommandBase
     {
+        /// <summary>
+        /// Use the default foreground and background based on the <see cref="ParseCommandBase.CommandType"/>.
+        /// </summary>
         public bool Default;
+
+        /// <summary>
+        /// Keeps the red channel of the existing color of the glyphs this command is applied to.
+        /// </summary>
         public bool KeepRed;
+
+        /// <summary>
+        /// Keeps the green channel of the existing color of the glyphs this command is applied to.
+        /// </summary>
         public bool KeepGreen;
+
+        /// <summary>
+        /// Keeps the blue channel of the existing color of the glyphs this command is applied to.
+        /// </summary>
         public bool KeepBlue;
+
+        /// <summary>
+        /// Keeps the alpha channel of the existing color of the glyphs this command is applied to.
+        /// </summary>
         public bool KeepAlpha;
 
-        public byte R;
-        public byte G;
-        public byte B;
-        public byte A;
+        /// <summary>
+        /// The current red value
+        /// </summary>
+        public byte R { get; set; }
 
-        public int Counter;
+        /// <summary>
+        /// The current green value
+        /// </summary>
+        public byte G { get; set; }
 
+        /// <summary>
+        /// The current blue value
+        /// </summary>
+        public byte B { get; set; }
+
+        /// <summary>
+        /// The current alpha value
+        /// </summary>
+        public byte A { get; set; }
+
+        private int _counter;
+
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
         public ParseCommandRecolor(string parameters)
         {
             var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
@@ -30,11 +68,11 @@ namespace SadConsole.StringParser
 
             if (parametersArray.Length == 3)
             {
-                Counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
+                _counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
             }
             else
             {
-                Counter = -1;
+                _counter = -1;
             }
 
             if (parametersArray.Length >= 2)
@@ -53,11 +91,15 @@ namespace SadConsole.StringParser
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
         public ParseCommandRecolor()
         {
 
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
@@ -118,11 +160,11 @@ namespace SadConsole.StringParser
                 glyphState.Foreground = new Color(r, g, b, a);
             }
 
-            if (Counter != -1)
+            if (_counter != -1)
             {
-                Counter--;
+                _counter--;
 
-                if (Counter == 0)
+                if (_counter == 0)
                 {
                     commandStack.RemoveSafe(this);
                 }

@@ -9,10 +9,6 @@ namespace SadConsole
     {
         internal static bool IsExitingFullscreen = false;
 
-        private static int _preFullScreenWidth;
-        private static int _preFullScreenHeight;
-        private static bool _handleResizeNone;
-
         /// <summary>
         /// Gets and sets the default value for <see cref="IScreenObject.UseKeyboard"/> when the console is created.
         /// </summary>
@@ -89,7 +85,7 @@ namespace SadConsole
         public static string DebuggerPipeId { get; } = "AE38CE3C-53B8-4FB9-AD7F-11D748590733";
 
         /// <summary>
-        /// Automatically adds all of the static color declarations of <see cref="Color"/> to <see cref="ColorExtensions.ColorMappings"/>.
+        /// Automatically adds all of the static color declarations of <see cref="Color"/> to <see cref="ColorExtensions2.ColorMappings"/>.
         /// </summary>
         public static bool AutomaticAddColorsToMappings { get; set; } = true;
 

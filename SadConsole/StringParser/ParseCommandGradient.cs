@@ -10,10 +10,22 @@ namespace SadConsole.StringParser
     /// </summary>
     public sealed class ParseCommandGradient : ParseCommandBase
     {
-        public ColoredString GradientString;
-        public int Length;
-        public int Counter;
+        private int _counter;
 
+        /// <summary>
+        /// The string to apply to the characters.
+        /// </summary>
+        public ColoredString GradientString;
+
+        /// <summary>
+        /// The length to apply.
+        /// </summary>
+        public int Length;
+
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
         public ParseCommandGradient(string parameters)
         {
 
@@ -24,48 +36,42 @@ namespace SadConsole.StringParser
             if (parametersArray.Length > 3)
             {
                 CommandType = parametersArray[0] == "b" ? CommandTypes.Background : CommandTypes.Foreground;
-                Counter = Length = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
+                _counter = Length = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
 
 
                 List<Color> steps = new List<Color>();
 
                 for (int i = 1; i < parametersArray.Length - 1; i++)
-                {
                     steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
-                }
 
                 GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
             }
 
             else
-            {
                 throw badCommandException;
-            }
         }
 
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
         public ParseCommandGradient()
         {
 
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             if (CommandType == CommandTypes.Background)
-            {
-                glyphState.Background = GradientString[Length - Counter].Foreground;
-            }
+                glyphState.Background = GradientString[Length - _counter].Foreground;
             else
-            {
-                glyphState.Foreground = GradientString[Length - Counter].Foreground;
-            }
+                glyphState.Foreground = GradientString[Length - _counter].Foreground;
 
-            Counter--;
+            _counter--;
 
-            if (Counter == 0)
-            {
+            if (_counter == 0)
                 commandStack.RemoveSafe(this);
-            }
         }
     }
 }

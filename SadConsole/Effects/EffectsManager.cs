@@ -12,9 +12,19 @@ namespace SadConsole.Effects
     /// </summary>
     public class EffectsManager
     {
+        /// <summary>
+        /// A dictionary of effect data keyed by the effect.
+        /// </summary>
         protected Dictionary<ICellEffect, ColoredGlyphEffectData> _effects;
+
+        /// <summary>
+        /// A dictionary of effect data keyed by the cell index.
+        /// </summary>
         protected Dictionary<int, ColoredGlyphEffectData> _effectCells;
 
+        /// <summary>
+        /// The surface hosting this effects manager.
+        /// </summary>
         protected ICellSurface _backingSurface;
 
         /// <summary>
@@ -36,7 +46,7 @@ namespace SadConsole.Effects
         /// <summary>
         /// Changes the effect of a specific cell.
         /// </summary>
-        /// <param name="cell">Cells to change the effect on.</param>
+        /// <param name="cellIndex">Cell index to set the effect for.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
         public void SetEffect(int cellIndex, ICellEffect effect)
         {
@@ -83,9 +93,9 @@ namespace SadConsole.Effects
         }
 
         /// <summary>
-        /// Changes the effect of the <paramref name="cells"/> provided.
+        /// Changes the effect of the <paramref name="cellIndicies"/> provided.
         /// </summary>
-        /// <param name="cells">Cells to change the effect on.</param>
+        /// <param name="cellIndicies">A list of cell indicies to change the effect on.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
         public void SetEffect(IEnumerable<int> cellIndicies, ICellEffect effect)
         {
@@ -138,12 +148,14 @@ namespace SadConsole.Effects
         /// <returns>The effect.</returns>
         public Effects.ICellEffect GetEffect(int cellIndex) => _effectCells.ContainsKey(cellIndex) ? _effectCells[cellIndex].Effect : null;
 
+        /// <summary>
+        /// Gets a collection of effects associated with the manager.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<ICellEffect> GetEffects()
         {
             if (_effects.Keys.Count == 0)
-            {
                 return null;
-            }
 
             return _effects.Keys;
         }
@@ -180,6 +192,12 @@ namespace SadConsole.Effects
         }
 
         #region Effect Helpers
+        /// <summary>
+        /// Gets effect data from the dicronary if it exists.
+        /// </summary>
+        /// <param name="effect">The effect to get.</param>
+        /// <param name="effectData">The effect data ssociated with the effect.</param>
+        /// <returns><see langword="true"/> when the effect exists; otherwise <see langword="false"/>.</returns>
         protected bool GetKnownEffect(ICellEffect effect, out ColoredGlyphEffectData effectData)
         {
             if (_effects.ContainsKey(effect))
@@ -194,6 +212,10 @@ namespace SadConsole.Effects
             }
         }
 
+        /// <summary>
+        /// Clears the effect for the cell specified by index.
+        /// </summary>
+        /// <param name="cellIndex">The cell index.</param>
         protected void ClearCellEffect(int cellIndex)
         {
             if (_effectCells.TryGetValue(cellIndex, out ColoredGlyphEffectData oldEffectData))
@@ -273,15 +295,31 @@ namespace SadConsole.Effects
         /// </summary>
         protected class ColoredGlyphEffectData
         {
+            /// <summary>
+            /// The effect.
+            /// </summary>
             public ICellEffect Effect;
+
+            /// <summary>
+            /// The cells affected by the effect.
+            /// </summary>
             public List<ColoredGlyphWithState> CellsStates;
 
+            /// <summary>
+            /// Creates a new instance of the cell-effect mapping.
+            /// </summary>
+            /// <param name="effect">The effect.</param>
             public ColoredGlyphEffectData(ICellEffect effect)
             {
                 Effect = effect;
                 CellsStates = new List<ColoredGlyphWithState>();
             }
 
+            /// <summary>
+            /// Removes a cell by index from the effect data.
+            /// </summary>
+            /// <param name="cellIndex">The cell index.</param>
+            /// <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
             public void RemoveCell(int cellIndex, bool restoreState)
             {
                 for (int i = 0; i < CellsStates.Count; i++)
@@ -300,6 +338,11 @@ namespace SadConsole.Effects
                 }
             }
 
+            /// <summary>
+            /// Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
+            /// </summary>
+            /// <param name="cellIndex">The cell to check.</param>
+            /// <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
             public bool ContainsCell(int cellIndex)
             {
                 foreach (var state in CellsStates)
@@ -313,12 +356,31 @@ namespace SadConsole.Effects
 	                
         }
 
+        /// <summary>
+        /// A glyph with its original state.
+        /// </summary>
         protected class ColoredGlyphWithState
         {
+            /// <summary>
+            /// The cell.
+            /// </summary>
             public ColoredGlyph Cell;
+
+            /// <summary>
+            /// The original state of the cell.
+            /// </summary>
             public ColoredGlyphState State;
+
+            /// <summary>
+            /// The cells index.
+            /// </summary>
             public int CellIndex;
 
+            /// <summary>
+            /// Creates a new instance of this class with the specified cell and index.
+            /// </summary>
+            /// <param name="cell">The cell to generate a state from.</param>
+            /// <param name="cellIndex">The index of the cell in the parent surface.</param>
             public ColoredGlyphWithState(ColoredGlyph cell, int cellIndex) =>
                 (Cell, State, CellIndex) = (cell, new ColoredGlyphState(cell), cellIndex);
         }
@@ -373,7 +435,7 @@ namespace SadConsole.Effects
             }
 
             /// <summary>
-            /// Restores the state of this cell from the <see cref="State"/> property.
+            /// Restores this state to the specified cell.
             /// </summary>
             public void RestoreState(ref ColoredGlyph cell)
             {

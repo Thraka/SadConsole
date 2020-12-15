@@ -70,6 +70,7 @@ namespace SadConsole.UI.Themes
             progressbar.IsDirty = false;
         }
 
+        /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors, ControlBase control)
         {
             if (themeColors == null) themeColors = Library.Default.Colors;

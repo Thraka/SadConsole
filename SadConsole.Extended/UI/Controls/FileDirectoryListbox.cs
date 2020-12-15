@@ -9,19 +9,25 @@ using SadConsole.UI;
 
 namespace SadConsole.UI.Controls
 {
+    /// <summary>
+    /// A listbox control that displays the file system.
+    /// </summary>
     public class FileDirectoryListbox : ListBox
     {
         private string _currentFolder = null;
         private string _extFilter = "*.*";
-        private string originalRootFolder;
+        private string _originalRootFolder;
 
+        /// <summary>
+        /// The current folder displayed by the listbox.
+        /// </summary>
         public string CurrentFolder
         {
             get { return _currentFolder; }
             set
             {
                 if (_currentFolder == null)
-                    originalRootFolder = value;
+                    _originalRootFolder = value;
 
                 if (DisplayFolder(value))
                 {
@@ -30,6 +36,9 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <summary>
+        /// A *.* wildcard filesystem filter. Use <code>;</code> to split multiple filters.
+        /// </summary>
         public string FileFilter
         {
             get { return _extFilter; }
@@ -44,16 +53,36 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <summary>
+        /// When <see langword="true"/>, only allows navigation from the root folder of the original value provided to <see cref="CurrentFolder"/> and below; otherwise <see langword="false"/>.
+        /// </summary>
         public bool OnlyRootAndSubDirs { get; set; }
 
+        /// <summary>
+        /// When <see langword="true"/>, only displays files that match <see cref="FileFilter"/>; otherwise <see langword="false"/> to display all files.
+        /// </summary>
         public bool HideNonFilterFiles { get; set; }
 
+        /// <summary>
+        /// When <see langword="true"/>, only displays files that match <see cref="FileFilter"/>; otherwise <see langword="false"/> to display all files.
+        /// </summary>
         public string HighlightedExtentions { get; set; }
 
-        public FileDirectoryListbox(int width, int height) : base(width, height, new FileDirectoryListboxItem())
-        {
-            HighlightedExtentions = "";
-        }
+        /// <summary>
+        /// Creates a new instance of the control and uses <see cref="FileDirectoryListboxItem"/> as the item theme.
+        /// </summary>
+        /// <param name="width">The width of the control.</param>
+        /// <param name="height">The height of the control.</param>
+        public FileDirectoryListbox(int width, int height) : this(width, height, new FileDirectoryListboxItem()) { }
+
+        /// <summary>
+        /// Creates a new instance of the control with the specified item theme.
+        /// </summary>
+        /// <param name="width">The width of the control.</param>
+        /// <param name="height">The height of the control.</param>
+        /// <param name="itemTheme">The theme to use for the items.</param>
+        public FileDirectoryListbox(int width, int height, ListBoxItemTheme itemTheme) : base(width, height, itemTheme) { }
+
 
         private bool DisplayFolder(string folder)
         {
@@ -64,7 +93,7 @@ namespace SadConsole.UI.Controls
                     List<object> newItems = new List<object>(20);
                     var dir = new System.IO.DirectoryInfo(folder);
 
-                    if (dir.Parent != null && (!OnlyRootAndSubDirs || (OnlyRootAndSubDirs && System.IO.Path.GetFullPath(folder).ToLower() != System.IO.Path.GetFullPath(originalRootFolder).ToLower())))
+                    if (dir.Parent != null && (!OnlyRootAndSubDirs || (OnlyRootAndSubDirs && System.IO.Path.GetFullPath(folder).ToLower() != System.IO.Path.GetFullPath(_originalRootFolder).ToLower())))
                         newItems.Add(new FauxDirectory { Name = ".." });
 
                     foreach (var item in System.IO.Directory.GetDirectories(folder))
@@ -94,7 +123,7 @@ namespace SadConsole.UI.Controls
 
                     return true;
                 }
-                catch (Exception e1)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -103,39 +132,54 @@ namespace SadConsole.UI.Controls
                 return false;
         }
 
+        /// <summary>
+        /// Navigates a directory if a directory is selected. Raises the <see cref="ListBox.SelectedItemExecuted"/> event.
+        /// </summary>
         protected override void OnItemAction()
         {
             base.OnItemAction();
 
-            if (selectedItem is System.IO.DirectoryInfo)
+            if (SelectedItem is System.IO.DirectoryInfo)
             {
-                CurrentFolder = ((System.IO.DirectoryInfo)selectedItem).FullName;
+                CurrentFolder = ((System.IO.DirectoryInfo)SelectedItem).FullName;
                 if (Items.Count > 0)
                     SelectedItem = Items[0];
             }
-            else if (selectedItem is FauxDirectory)
+            else if (SelectedItem is FauxDirectory)
             {
-                if (((FauxDirectory)selectedItem).Name == "..")
+                if (((FauxDirectory)SelectedItem).Name == "..")
                 {
                     CurrentFolder = System.IO.Directory.GetParent(_currentFolder).FullName;
                     if (Items.Count > 0)
                         SelectedItem = Items[0];
                 }
             }
-            else if (selectedItem is System.IO.FileInfo)
+            else if (SelectedItem is System.IO.FileInfo)
             {
 
             }
         }
 
+        /// <summary>
+        /// A listbox item container that represents a fake directory, such as <code>..</code>.
+        /// </summary>
         public class FauxDirectory
         {
-            public string Name;
+            /// <summary>
+            /// The name of the directory.
+            /// </summary>
+            public string Name { get; set; }
         }
 
+        /// <summary>
+        /// A listbox item container that represents a highlighted file.
+        /// </summary>
         public class HighlightedExtFile
         {
-            public string Name;
+            /// <summary>
+            /// The name of the file.
+            /// </summary>
+            public string Name { get; set; }
         }
     }
 }

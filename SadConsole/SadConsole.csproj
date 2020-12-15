@@ -28,6 +28,13 @@
     <PackageReleaseNotes>Fixed critical bug related to fonts and UnsupportedGlyphIndex. Updated Window types with DrawBorder and Controls property. Many enhancements to Colors.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!--
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+  -->
+
   <ItemGroup>
     <Compile Remove="Input\ConsoleViewInputHandler.cs" />
     <Compile Remove="Input\MouseEventArgs.cs" />

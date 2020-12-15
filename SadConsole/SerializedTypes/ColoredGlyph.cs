@@ -2,6 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace SadConsole.SerializedTypes
 {
@@ -45,3 +46,4 @@ namespace SadConsole.SerializedTypes
         }
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

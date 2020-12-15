@@ -1,49 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SadConsole.UI.Controls;
-using SadConsole;
+﻿using SadConsole.UI.Controls;
 using SadRogue.Primitives;
-using SadConsole.UI.Controls;
 
 namespace SadConsole.UI.Themes
 {
+    /// <summary>
+    /// Displays files and directories in various colors.
+    /// </summary>
     public class FileDirectoryListboxItem : ListBoxItemTheme
     {
-        private ColoredGlyph _directoryAppNormal = new ColoredGlyph(Color.Purple, Color.Black);
-        private ColoredGlyph _directoryAppMouseOver = new ColoredGlyph(Color.Purple, Color.Black);
-        private ColoredGlyph _directoryAppSelected = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
-        private ColoredGlyph _directoryAppSelectedOver = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
-        private ColoredGlyph _fileAppNormal = new ColoredGlyph(Color.Gray, Color.Black);
-        private ColoredGlyph _fileAppMouseOver = new ColoredGlyph(Color.Gray, Color.Black);
-        private ColoredGlyph _fileAppSelected = new ColoredGlyph(Color.White, Color.Black);
-        private ColoredGlyph _fileAppSelectedOver = new ColoredGlyph(Color.White, Color.Black);
-        private ColoredGlyph _highExtAppNormal = new ColoredGlyph(Color.AnsiYellow, Color.Black);
-        private ColoredGlyph _highExtAppMouseOver = new ColoredGlyph(Color.AnsiYellow, Color.Black);
-        private ColoredGlyph _highExtAppSelected = new ColoredGlyph(Color.Yellow, Color.Black);
-        private ColoredGlyph _highExtAppSelectedOver = new ColoredGlyph(Color.Yellow, Color.Black);
+        /// <summary>
+        /// The appearance of a directory in normal state.
+        /// </summary>
+        public ColoredGlyph DirectoryAppNormal { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
 
+        /// <summary>
+        /// The appearance of a directory when the mouse is over it.
+        /// </summary>
+        public ColoredGlyph DirectoryAppMouseOver { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
+
+        /// <summary>
+        /// The appearance of a directory when selected.
+        /// </summary>
+        public ColoredGlyph DirectoryAppSelected { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
+
+        /// <summary>
+        /// The appearance of a directory when selected and the mouse is over it.
+        /// </summary>
+        public ColoredGlyph DirectoryAppSelectedOver { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
+
+        /// <summary>
+        /// The appearance of a file in normal state.
+        /// </summary>
+        public ColoredGlyph FileAppNormal { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
+
+        /// <summary>
+        /// The appearance of a file when the mouse is over it.
+        /// </summary>
+        public ColoredGlyph FileAppMouseOver { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
+
+        /// <summary>
+        /// The appearance of a file when selected.
+        /// </summary>
+        public ColoredGlyph FileAppSelected { get; set; } = new ColoredGlyph(Color.White, Color.Black);
+
+        /// <summary>
+        /// The appearance of a file when selected and the mouse is over it.
+        /// </summary>
+        public ColoredGlyph FileAppSelectedOver { get; set; } = new ColoredGlyph(Color.White, Color.Black);
+
+        /// <summary>
+        /// The appearance of a highlighted file in normal state.
+        /// </summary>
+        public ColoredGlyph HighExtAppNormal { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
+
+        /// <summary>
+        /// The appearance of a highlighted file when the mouse is over it.
+        /// </summary>
+        public ColoredGlyph HighExtAppMouseOver { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
+
+        /// <summary>
+        /// The appearance of a highlighted file when selected.
+        /// </summary>
+        public ColoredGlyph HighExtAppSelected { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
+
+        /// <summary>
+        /// The appearance of a highlighted file when selected and the mouse is over it.
+        /// </summary>
+        public ColoredGlyph HighExtAppSelectedOver { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
+
+        /// <inheritdoc/>
         public override void RefreshTheme(Colors themeColors)
         {
             base.RefreshTheme(themeColors);
 
-            _directoryAppNormal.Background = themeColors.ControlBackgroundNormal;
-            _directoryAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
-            _directoryAppSelected.Background = themeColors.ControlBackgroundSelected;
-            _directoryAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
+            DirectoryAppNormal.Background = themeColors.ControlBackgroundNormal;
+            DirectoryAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            DirectoryAppSelected.Background = themeColors.ControlBackgroundSelected;
+            DirectoryAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
 
-            _fileAppNormal.Background = themeColors.ControlBackgroundNormal;
-            _fileAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
-            _fileAppSelected.Background = themeColors.ControlBackgroundSelected;
-            _fileAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
+            FileAppNormal.Background = themeColors.ControlBackgroundNormal;
+            FileAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            FileAppSelected.Background = themeColors.ControlBackgroundSelected;
+            FileAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
 
-            _highExtAppNormal.Background = themeColors.ControlBackgroundNormal;
-            _highExtAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
-            _highExtAppSelected.Background = themeColors.ControlBackgroundSelected;
-            _highExtAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
+            HighExtAppNormal.Background = themeColors.ControlBackgroundNormal;
+            HighExtAppMouseOver.Background = themeColors.ControlBackgroundMouseOver;
+            HighExtAppSelected.Background = themeColors.ControlBackgroundSelected;
+            HighExtAppSelectedOver.Background = themeColors.ControlBackgroundMouseOver;
         }
 
 
+        /// <inheritdoc/>
         public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
             ColoredGlyph appearance;
@@ -57,39 +104,39 @@ namespace SadConsole.UI.Themes
                     displayString = "<" + ((FileDirectoryListbox.FauxDirectory)item).Name + ">";
 
                 if (itemState.HasFlag(ControlStates.MouseOver) && itemState.HasFlag(ControlStates.Selected))
-                    appearance = _directoryAppSelectedOver;
+                    appearance = DirectoryAppSelectedOver;
                 else if (itemState.HasFlag(ControlStates.MouseOver))
-                    appearance = _directoryAppMouseOver;
+                    appearance = DirectoryAppMouseOver;
                 else if (itemState.HasFlag(ControlStates.Selected))
-                    appearance = _directoryAppSelected;
+                    appearance = DirectoryAppSelected;
                 else
-                    appearance = _directoryAppNormal;
+                    appearance = DirectoryAppNormal;
             }
             else if (item is System.IO.FileInfo info)
             {
                 displayString = info.Name;
 
                 if (itemState.HasFlag(ControlStates.MouseOver) && itemState.HasFlag(ControlStates.Selected))
-                    appearance = _fileAppSelectedOver;
+                    appearance = DirectoryAppSelectedOver;
                 else if (itemState.HasFlag(ControlStates.MouseOver))
-                    appearance = _fileAppMouseOver;
+                    appearance = DirectoryAppMouseOver;
                 else if (itemState.HasFlag(ControlStates.Selected))
-                    appearance = _fileAppSelected;
+                    appearance = DirectoryAppSelected;
                 else
-                    appearance = _fileAppNormal;
+                    appearance = FileAppNormal;
             }
             else if (item is FileDirectoryListbox.HighlightedExtFile extInfo)
             {
                 displayString = extInfo.Name;
 
                 if (itemState.HasFlag(ControlStates.MouseOver) && itemState.HasFlag(ControlStates.Selected))
-                    appearance = _highExtAppSelectedOver;
+                    appearance = HighExtAppSelectedOver;
                 else if (itemState.HasFlag(ControlStates.MouseOver))
-                    appearance = _highExtAppMouseOver;
+                    appearance = HighExtAppMouseOver;
                 else if (itemState.HasFlag(ControlStates.Selected))
-                    appearance = _highExtAppSelected;
+                    appearance = HighExtAppSelected;
                 else
-                    appearance = _highExtAppNormal;
+                    appearance = HighExtAppNormal;
             }
             else
             {

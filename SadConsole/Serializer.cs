@@ -13,7 +13,6 @@ namespace SadConsole
     {
         private static JsonSerializerSettings _settings;
 
-
         static Serializer()
         {
             _settings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All };
@@ -95,7 +94,6 @@ namespace SadConsole
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
-                        //var bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
                         byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, _settings));
                         sw.Write(bytes, 0, bytes.Length);
                     }
@@ -103,10 +101,7 @@ namespace SadConsole
                 else
                 {
                     using (var sw = new System.IO.StreamWriter(stream))
-                    {
-                        //sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All }));
                         sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, _settings));
-                    }
                 }
             }
         }
@@ -148,22 +143,33 @@ namespace SadConsole
             }
         }
 
-        public static ITraceWriter LogWriter = new MemoryTraceWriter();
-
-        internal class LogTraceWriter : ITraceWriter
+        /// <summary>
+        /// A simple log writer that helps debug the JSON serialization.
+        /// </summary>
+        public class LogTraceWriter : ITraceWriter
         {
-            internal static readonly StringBuilder Log = new StringBuilder();
+            /// <summary>
+            /// THe string containing the log.
+            /// </summary>
+            public readonly StringBuilder Log = new StringBuilder();
 
             private TraceLevel _levelFilter;
 
+            /// <summary>
+            /// Captures a JSON log event.
+            /// </summary>
+            /// <param name="level">The log level.</param>
+            /// <param name="message">The message.</param>
+            /// <param name="ex">The exception associated with the log event.</param>
             public void Trace(TraceLevel level, string message, Exception ex)
             {
-#if DEBUG
                 _levelFilter = level;
-                LogTraceWriter.Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");
-#endif
+                Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");
             }
 
+            /// <summary>
+            /// THe level filter for the log.
+            /// </summary>
             public TraceLevel LevelFilter => _levelFilter;
         }
     }

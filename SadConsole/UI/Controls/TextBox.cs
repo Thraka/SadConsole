@@ -495,6 +495,10 @@ namespace SadConsole.UI.Controls
             IsDirty = true;
         }
 
+        /// <summary>
+        /// Focuses the control and enters typing mode.
+        /// </summary>
+        /// <param name="state">The mouse state.</param>
         protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             if (!DisableMouse)

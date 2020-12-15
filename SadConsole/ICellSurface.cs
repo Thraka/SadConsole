@@ -70,7 +70,7 @@ namespace SadConsole
         bool IsDirty { get; set; }
 
         /// <summary>
-        /// Returns <see langword="true"/> when the <see cref="ICellSurface.View"/> width or height is different from <see cref="Height"/> or <see cref="Width"/>.
+        /// Returns <see langword="true"/> when the <see cref="ICellSurface.View"/> width or height is different from <see cref="Area"/>; otherwise <see langword="false"/>.
         /// </summary>
         bool IsScrollable { get; }
 

@@ -85,11 +85,6 @@ namespace SadConsole.Input
         /// </summary>
         public bool IsOnScreen => Settings.Rendering.RenderRect.Contains(ScreenPosition + Settings.Rendering.RenderRect.Position);
 
-        public Mouse()
-        {
-
-        }
-
         /// <summary>
         /// Reads the mouse state from <see cref="GameHost.GetMouseState"/>.
         /// </summary>
@@ -199,7 +194,7 @@ namespace SadConsole.Input
         }
 
         /// <summary>
-        /// Builds information about the mouse state based on the <see cref="GameHost.Instance.FocusedScreenObjects"/> or <see cref="GameHost.Instance.Screen"/>. Should be called each frame.
+        /// Builds information about the mouse state based on the <see cref="GameHost.FocusedScreenObjects"/> or <see cref="GameHost.Screen"/>. Should be called each frame.
         /// </summary>
         public virtual void Process()
         {

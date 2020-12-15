@@ -8,7 +8,6 @@ namespace SadConsole.Host
     class Keyboard : SadConsole.Input.IKeyboardState
     {
         Microsoft.Xna.Framework.Input.KeyboardState _keyboard;
-        SadConsole.Input.Keys[] _keys;
 
         public Keyboard()
         {

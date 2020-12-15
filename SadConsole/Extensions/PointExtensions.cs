@@ -3,6 +3,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// Extensions for the <see cref="Point"/> type.
+    /// </summary>
     public static class PointExtensions
     {
         /// <summary>
@@ -48,7 +51,7 @@ namespace SadConsole
             new Point(point.X / fontSize.X, point.Y / fontSize.Y);
 
         /// <summary>
-        /// Gets the cell coordinates of the <paramref name="targetFont"/> based on a cell in the <paramref name="sourceFontSize"/>.
+        /// Translates the coordinates of a cell from the source font size to a target font size.
         /// </summary>
         /// <param name="point">The position of the cell in the <paramref name="sourceFontSize"/>.</param>
         /// <param name="sourceFontSize">The source font translating from.</param>
@@ -82,8 +85,9 @@ namespace SadConsole
         /// Gets an indexed array of direction positions based on the <paramref name="position"/>.
         /// </summary>
         /// <param name="position">The source position.</param>
-        /// <returns>An array of positions indexed by a <see cref="Direction.Types"/> enumeration. Index 0 in the array represents the <paramref name="position"/>.
-        public static Point[] GetDirectionPoints(this Point position) => new Point[]
+        /// <returns>An array of positions indexed by a <see cref="Direction.Types"/> enumeration. Index 0 in the array represents the <paramref name="position"/>.</returns>
+        public static Point[] GetDirectionPoints(this Point position) =>
+            new Point[]
             {
                 position,
                 position + Direction.Up,

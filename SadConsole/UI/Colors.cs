@@ -153,29 +153,114 @@ namespace SadConsole.UI
         /// </summary>
         public Color ModalBackground { get; set; } = new Color(20, 20, 20, 200);
 
+        /// <summary>
+        /// Color used for titles.
+        /// </summary>
         public AdjustableColor Title { get; set; }
+
+        /// <summary>
+        /// Color used in drawing lines.
+        /// </summary>
         public AdjustableColor Lines { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in normal state.
+        /// </summary>
         public AdjustableColor ControlForegroundNormal { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in disabled state.
+        /// </summary>
         public AdjustableColor ControlForegroundDisabled { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in mouse-over state.
+        /// </summary>
         public AdjustableColor ControlForegroundMouseOver { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in mouse-button-down state.
+        /// </summary>
         public AdjustableColor ControlForegroundMouseDown { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in selected state.
+        /// </summary>
         public AdjustableColor ControlForegroundSelected { get; set; }
+
+        /// <summary>
+        /// Color of a control's foreground in focused state.
+        /// </summary>
         public AdjustableColor ControlForegroundFocused { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in normal state.
+        /// </summary>
         public AdjustableColor ControlBackgroundNormal { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in disabled state.
+        /// </summary>
         public AdjustableColor ControlBackgroundDisabled { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in normal state.
+        /// </summary>
         public AdjustableColor ControlBackgroundMouseOver { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in mouse-button-down state.
+        /// </summary>
         public AdjustableColor ControlBackgroundMouseDown { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in selected state.
+        /// </summary>
         public AdjustableColor ControlBackgroundSelected { get; set; }
+
+        /// <summary>
+        /// Color of a control's background in focused state.
+        /// </summary>
         public AdjustableColor ControlBackgroundFocused { get; set; }
+
+        /// <summary>
+        /// Color of the control host's foreground.
+        /// </summary>
         public AdjustableColor ControlHostForeground { get; set; }
+
+        /// <summary>
+        /// Color of the control host's background.
+        /// </summary>
         public AdjustableColor ControlHostBackground { get; set; }
 
-
+        /// <summary>
+        /// The appearance of a control when in the normal state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlNormal { get; set; } = new ColoredGlyph();
+
+        /// <summary>
+        /// The appearance of a control when in the disabled state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlDisabled { get; set; } = new ColoredGlyph();
+
+        /// <summary>
+        /// The appearance of a control when in the mouse-over state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlOver { get; set; } = new ColoredGlyph();
+
+        /// <summary>
+        /// The appearance of a control when in the selected state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlSelected { get; set; } = new ColoredGlyph();
+
+        /// <summary>
+        /// The appearance of a control when in the mouse-down state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlMouseDown { get; set; } = new ColoredGlyph();
+
+        /// <summary>
+        /// The appearance of a control when in the focused state.
+        /// </summary>
         public ColoredGlyph Appearance_ControlFocused { get; set; } = new ColoredGlyph();
 
         /// <summary>
@@ -421,59 +506,59 @@ namespace SadConsole.UI
         }
 
         /// <summary>
-        /// Adds each color here to the <see cref="ColorExtensions.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
+        /// Adds each color here to the <see cref="ColorExtensions2.ColorMappings"/> dictionary. Uses the format of "theme.property-name".
         /// </summary>
         public void AddToColorMappings()
         {
-            ColorExtensions.ColorMappings["theme.white"] = White;
-            ColorExtensions.ColorMappings["theme.black"] = Black;
-            ColorExtensions.ColorMappings["theme.gray"] = Gray;
-            ColorExtensions.ColorMappings["theme.graydark"] = GrayDark;
+            ColorExtensions2.ColorMappings["theme.white"] = White;
+            ColorExtensions2.ColorMappings["theme.black"] = Black;
+            ColorExtensions2.ColorMappings["theme.gray"] = Gray;
+            ColorExtensions2.ColorMappings["theme.graydark"] = GrayDark;
 
-            ColorExtensions.ColorMappings["theme.red"] = Red;
-            ColorExtensions.ColorMappings["theme.green"] = Green;
-            ColorExtensions.ColorMappings["theme.blue"] = Blue;
-            ColorExtensions.ColorMappings["theme.purple"] = Purple;
-            ColorExtensions.ColorMappings["theme.yellow"] = Yellow;
-            ColorExtensions.ColorMappings["theme.orange"] = Orange;
-            ColorExtensions.ColorMappings["theme.cyan"] = Cyan;
-            ColorExtensions.ColorMappings["theme.brown"] = Brown;
+            ColorExtensions2.ColorMappings["theme.red"] = Red;
+            ColorExtensions2.ColorMappings["theme.green"] = Green;
+            ColorExtensions2.ColorMappings["theme.blue"] = Blue;
+            ColorExtensions2.ColorMappings["theme.purple"] = Purple;
+            ColorExtensions2.ColorMappings["theme.yellow"] = Yellow;
+            ColorExtensions2.ColorMappings["theme.orange"] = Orange;
+            ColorExtensions2.ColorMappings["theme.cyan"] = Cyan;
+            ColorExtensions2.ColorMappings["theme.brown"] = Brown;
 
-            ColorExtensions.ColorMappings["theme.reddark"] = RedDark;
-            ColorExtensions.ColorMappings["theme.greendark"] = GreenDark;
-            ColorExtensions.ColorMappings["theme.bluedark"] = BlueDark;
-            ColorExtensions.ColorMappings["theme.purpledark"] = PurpleDark;
-            ColorExtensions.ColorMappings["theme.yellowdark"] = YellowDark;
-            ColorExtensions.ColorMappings["theme.orangedark"] = OrangeDark;
-            ColorExtensions.ColorMappings["theme.cyandark"] = CyanDark;
-            ColorExtensions.ColorMappings["theme.browndark"] = BrownDark;
+            ColorExtensions2.ColorMappings["theme.reddark"] = RedDark;
+            ColorExtensions2.ColorMappings["theme.greendark"] = GreenDark;
+            ColorExtensions2.ColorMappings["theme.bluedark"] = BlueDark;
+            ColorExtensions2.ColorMappings["theme.purpledark"] = PurpleDark;
+            ColorExtensions2.ColorMappings["theme.yellowdark"] = YellowDark;
+            ColorExtensions2.ColorMappings["theme.orangedark"] = OrangeDark;
+            ColorExtensions2.ColorMappings["theme.cyandark"] = CyanDark;
+            ColorExtensions2.ColorMappings["theme.browndark"] = BrownDark;
 
-            ColorExtensions.ColorMappings["theme.gold"] = Gold;
-            ColorExtensions.ColorMappings["theme.golddark"] = GoldDark;
-            ColorExtensions.ColorMappings["theme.silver"] = Silver;
-            ColorExtensions.ColorMappings["theme.silverdark"] = SilverDark;
-            ColorExtensions.ColorMappings["theme.bronze"] = Bronze;
-            ColorExtensions.ColorMappings["theme.bronzedark"] = BronzeDark;
+            ColorExtensions2.ColorMappings["theme.gold"] = Gold;
+            ColorExtensions2.ColorMappings["theme.golddark"] = GoldDark;
+            ColorExtensions2.ColorMappings["theme.silver"] = Silver;
+            ColorExtensions2.ColorMappings["theme.silverdark"] = SilverDark;
+            ColorExtensions2.ColorMappings["theme.bronze"] = Bronze;
+            ColorExtensions2.ColorMappings["theme.bronzedark"] = BronzeDark;
 
-            ColorExtensions.ColorMappings["theme.modalbackground"] = ModalBackground;
+            ColorExtensions2.ColorMappings["theme.modalbackground"] = ModalBackground;
 
-            ColorExtensions.ColorMappings["theme.title"] = Title;
-            ColorExtensions.ColorMappings["theme.lines"] = Lines;
+            ColorExtensions2.ColorMappings["theme.title"] = Title;
+            ColorExtensions2.ColorMappings["theme.lines"] = Lines;
 
-            ColorExtensions.ColorMappings["theme.controlforegroundnormal"] = ControlForegroundNormal;
-            ColorExtensions.ColorMappings["theme.controlforegrounddisabled"] = ControlForegroundDisabled;
-            ColorExtensions.ColorMappings["theme.controlforegroundmouseover"] = ControlForegroundMouseOver;
-            ColorExtensions.ColorMappings["theme.controlforegroundmousedown"] = ControlForegroundMouseDown;
-            ColorExtensions.ColorMappings["theme.controlforegroundselected"] = ControlForegroundSelected;
-            ColorExtensions.ColorMappings["theme.controlforegroundfocused"] = ControlForegroundFocused;
-            ColorExtensions.ColorMappings["theme.controlbackgroundnormal"] = ControlBackgroundNormal;
-            ColorExtensions.ColorMappings["theme.controlbackgrounddisabled"] = ControlBackgroundDisabled;
-            ColorExtensions.ColorMappings["theme.controlbackgroundmouseover"] = ControlBackgroundMouseOver;
-            ColorExtensions.ColorMappings["theme.controlbackgroundmousedown"] = ControlBackgroundMouseDown;
-            ColorExtensions.ColorMappings["theme.controlbackgroundselected"] = ControlBackgroundSelected;
-            ColorExtensions.ColorMappings["theme.controlbackgroundfocused"] = ControlBackgroundFocused;
-            ColorExtensions.ColorMappings["theme.controlhostforeground"] = ControlHostForeground;
-            ColorExtensions.ColorMappings["theme.controlhostbackground"] = ControlHostBackground;
+            ColorExtensions2.ColorMappings["theme.controlforegroundnormal"] = ControlForegroundNormal;
+            ColorExtensions2.ColorMappings["theme.controlforegrounddisabled"] = ControlForegroundDisabled;
+            ColorExtensions2.ColorMappings["theme.controlforegroundmouseover"] = ControlForegroundMouseOver;
+            ColorExtensions2.ColorMappings["theme.controlforegroundmousedown"] = ControlForegroundMouseDown;
+            ColorExtensions2.ColorMappings["theme.controlforegroundselected"] = ControlForegroundSelected;
+            ColorExtensions2.ColorMappings["theme.controlforegroundfocused"] = ControlForegroundFocused;
+            ColorExtensions2.ColorMappings["theme.controlbackgroundnormal"] = ControlBackgroundNormal;
+            ColorExtensions2.ColorMappings["theme.controlbackgrounddisabled"] = ControlBackgroundDisabled;
+            ColorExtensions2.ColorMappings["theme.controlbackgroundmouseover"] = ControlBackgroundMouseOver;
+            ColorExtensions2.ColorMappings["theme.controlbackgroundmousedown"] = ControlBackgroundMouseDown;
+            ColorExtensions2.ColorMappings["theme.controlbackgroundselected"] = ControlBackgroundSelected;
+            ColorExtensions2.ColorMappings["theme.controlbackgroundfocused"] = ControlBackgroundFocused;
+            ColorExtensions2.ColorMappings["theme.controlhostforeground"] = ControlHostForeground;
+            ColorExtensions2.ColorMappings["theme.controlhostbackground"] = ControlHostBackground;
         }
 
         /// <summary>

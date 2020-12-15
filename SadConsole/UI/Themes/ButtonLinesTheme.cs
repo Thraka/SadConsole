@@ -11,9 +11,15 @@ namespace SadConsole.UI.Themes
     [DataContract]
     public class ButtonLinesTheme : ButtonTheme
     {
+        /// <summary>
+        /// When <see langword="true"/>, indicates that the lines of the theme should use the extended SadConsole font characters if available.
+        /// </summary>
         [DataMember]
         public bool UseExtended { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of the object.
+        /// </summary>
         public ButtonLinesTheme() =>
             UseExtended = true;
 

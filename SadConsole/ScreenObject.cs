@@ -540,6 +540,10 @@ namespace SadConsole
             return 0;
         }
 
+        /// <summary>
+        /// Nothing.
+        /// </summary>
+        /// <param name="context">Nothing.</param>
         [OnSerializing]
         protected void OnSerializingMethod(StreamingContext context)
         {
@@ -557,10 +561,10 @@ namespace SadConsole
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
-            foreach (var item in _childrenSerialized)
+            foreach (IScreenObject item in _childrenSerialized)
                 Children.Add(item);
 
-            foreach (var item in _componentsSerialized)
+            foreach (IComponent item in _componentsSerialized)
                 SadComponents.Add(item);
 
             _componentsSerialized = null;

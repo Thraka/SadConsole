@@ -222,8 +222,16 @@ namespace SadRogue.Primitives
             return Color.Lerp(Stops[counter].Color, Stops[counter + 1].Color, newLerp);
         }
 
+        /// <summary>
+        /// Converts a color into a gradient. The color becomes the first and last stops.
+        /// </summary>
+        /// <param name="color">The color to convert.</param>
         public static implicit operator ColorGradient(Color color) => new ColorGradient(color, color);
 
+        /// <summary>
+        /// Converts a gradient into a color using the first color stop.
+        /// </summary>
+        /// <param name="gradient">The gradient to convert.</param>
         public static implicit operator Color(ColorGradient gradient) => gradient.Stops[0].Color;
     }
 

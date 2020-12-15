@@ -38,6 +38,9 @@ namespace SadConsole.Effects
         [DataMember]
         public int BlinkCount { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of the blink effect.
+        /// </summary>
         public Blink()
         {
             BlinkCount = -1;
@@ -48,6 +51,7 @@ namespace SadConsole.Effects
             _blinkCounter = 0;
         }
 
+        /// <inheritdoc />
         public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
         {
             Color oldColor = cell.Foreground;
@@ -66,6 +70,7 @@ namespace SadConsole.Effects
         }
 
 
+        /// <inheritdoc />
         public override void Update(double timeElapsed)
         {
             base.Update(timeElapsed);
@@ -98,6 +103,7 @@ namespace SadConsole.Effects
         }
 
 
+        /// <inheritdoc />
         public override ICellEffect Clone() => new Blink()
         {
             BlinkOutColor = BlinkOutColor,
@@ -134,6 +140,7 @@ namespace SadConsole.Effects
         //    return false;
         //}
 
+        /// <inheritdoc />
         public override string ToString() => string.Format("BLINK-{0}-{1}-{2}-{3}-{4}", BlinkOutColor.PackedValue, BlinkSpeed, UseCellBackgroundColor, StartDelay, BlinkCount);
     }
 }

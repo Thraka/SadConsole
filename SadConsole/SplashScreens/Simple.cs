@@ -3,12 +3,18 @@ using SadRogue.Primitives;
 
 namespace SadConsole.SplashScreens
 {
+    /// <summary>
+    /// A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
+    /// </summary>
     public class Simple : ScreenSurface
     {
         private static string _title = " Powered by SadConsole ";
         private Instructions.InstructionSet _endAnimation;
         private bool _isEnding = false;
 
+        /// <summary>
+        /// A new instance of this class.
+        /// </summary>
         public Simple() : base(_title.Length, 1)
         {
             UsePixelPositioning = true;
@@ -32,6 +38,11 @@ namespace SadConsole.SplashScreens
             SadComponents.Add(endTimeout);
         }
 
+        /// <summary>
+        /// Ends the animation when a key is pressed.
+        /// </summary>
+        /// <param name="keyboard">The keyboard state.</param>
+        /// <returns>The base implementation of the keyboard.</returns>
         public override bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!_isEnding && keyboard.KeysReleased.Count != 0)

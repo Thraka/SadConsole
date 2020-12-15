@@ -8,33 +8,38 @@
     /// </summary>
     public sealed class ParseCommandBlink : ParseCommandBase
     {
-        public int Counter;
+        private int _counter;
+
+        /// <summary>
+        /// The speed of the blink.
+        /// </summary>
         public double Speed = 0.35d;
 
-        private readonly CustomBlinkEffect BlinkEffect;
+        private readonly CustomBlinkEffect _blinkEffect;
 
-        public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, ICellSurface surfaceEditor)
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
+        /// <param name="glyphString">The string that has been processed so far.</param>
+        /// <param name="commandStack">The current commands for the string.</param>
+        /// <param name="surface">The surface hosting the string.</param>
+        public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, ICellSurface surface)
         {
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 2)
-            {
                 Speed = double.Parse(parametersArray[1], CultureInfo.InvariantCulture);
-            }
 
             if (parametersArray.Length >= 1 && parametersArray[0] != "")
-            {
-                Counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
-            }
+                _counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
             else
-            {
-                Counter = -1;
-            }
+                _counter = -1;
 
             // Try sync with surface editor
-            if (surfaceEditor != null)
+            if (surface != null)
             {
-                IEnumerable<Effects.ICellEffect> effects = surfaceEditor.Effects.GetEffects();
+                IEnumerable<Effects.ICellEffect> effects = surface.Effects.GetEffects();
                 if (effects != null)
                 {
                     var existingBlinks = new List<Effects.ICellEffect>(effects);
@@ -44,9 +49,7 @@
                         if (item is CustomBlinkEffect)
                         {
                             if (Speed == ((CustomBlinkEffect)item).BlinkSpeed)
-                            {
-                                BlinkEffect = (CustomBlinkEffect)item;
-                            }
+                                _blinkEffect = (CustomBlinkEffect)item;
 
                             break;
                         }
@@ -55,25 +58,21 @@
             }
 
             // Failed, look within this parse for existing
-            if (BlinkEffect == null)
+            if (_blinkEffect == null)
             {
                 foreach (ColoredString.ColoredGlyphEffect item in glyphString)
                 {
                     if (item.Effect != null && item.Effect is CustomBlinkEffect)
                     {
                         if (Speed == ((CustomBlinkEffect)item.Effect).BlinkSpeed)
-                        {
-                            BlinkEffect = (CustomBlinkEffect)item.Effect;
-                        }
+                            _blinkEffect = (CustomBlinkEffect)item.Effect;
                     }
                 }
             }
 
 
-            if (BlinkEffect == null)
-            {
-                BlinkEffect = new CustomBlinkEffect() { BlinkSpeed = Speed };
-            }
+            if (_blinkEffect == null)
+                _blinkEffect = new CustomBlinkEffect() { BlinkSpeed = Speed };
 
             commandStack.TurnOnEffects = true;
 
@@ -81,19 +80,18 @@
             CommandType = CommandTypes.Effect;
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
-            glyphState.Effect = BlinkEffect;
+            glyphState.Effect = _blinkEffect;
 
-            if (Counter != -1)
+            if (_counter != -1)
             {
-                Counter--;
+                _counter--;
 
-                if (Counter == 0)
-                {
+                if (_counter == 0)
                     commandStack.RemoveSafe(this);
-                }
             }
         }
 

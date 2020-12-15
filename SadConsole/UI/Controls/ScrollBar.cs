@@ -10,20 +10,28 @@ namespace SadConsole.UI.Controls
     [DataContract]
     public class ScrollBar : ControlBase
     {
+        /// <summary>
+        /// Raised when the <see cref="Value"/> property changes.
+        /// </summary>
         public event EventHandler ValueChanged;
 
-        private bool _initialized;
+        private int _maxValue = 1;
+        private int _value = 0;
+        private int _valueStep = 1;
 
-        [DataMember(Name = "Minimum")]
-        protected int _minValue = 0;
-        protected int _maxValue = 1;
-        protected int _value = 0;
-        protected int _valueStep = 1;
-
+        /// <summary>
+        /// Indicates if the scroll bar is horizontal or veritcal.
+        /// </summary>
         public Orientation Orientation { get; private set; }
 
+        /// <summary>
+        /// Used by the theme. The size of the slider bar portion.
+        /// </summary>
         public int SliderBarSize { get; private set; }
 
+        /// <summary>
+        /// Used by the theme. The position of the slider glyph in the bar.
+        /// </summary>
         public int CurrentSliderPosition { get; private set; }
 
         /// <summary>
@@ -55,6 +63,7 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Gets or sets the maximum value for the scrollbar.
         /// </summary>
+        [DataMember]
         public int Maximum
         {
             get => _maxValue;
@@ -70,6 +79,9 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <summary>
+        /// Reserved for future use. This is always 0.
+        /// </summary>
         public int Minimum => 0;
 
         /// <summary>
@@ -91,7 +103,6 @@ namespace SadConsole.UI.Controls
         public ScrollBar(Orientation orientation, int size) : base(orientation == Orientation.Horizontal ? size : 1,
                                                                   orientation == Orientation.Vertical ? size : 1)
         {
-            _initialized = true;
             Orientation = orientation;
 
             if (size < 2) throw new Exception("Slider bar size must be 2 or more");
@@ -109,7 +120,7 @@ namespace SadConsole.UI.Controls
                 base.ProcessMouse(state);
 
                 var newState = new ControlMouseState(this, state);
-                var mouseControlPosition = newState.MousePosition;
+                Point mouseControlPosition = newState.MousePosition;
 
                 // This becomes the active mouse subject when the bar is being dragged.
                 if (Parent.Host.CapturedControl == null)
@@ -300,8 +311,6 @@ namespace SadConsole.UI.Controls
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
         {
-            _initialized = true;
-
             int temp = _value;
             _value = -22;
             Value = temp;

@@ -8,9 +8,17 @@ namespace SadConsole.StringParser
     /// </summary>
     public sealed class ParseCommandMirror : ParseCommandBase
     {
-        public Mirror Mirror;
-        public int Counter;
+        private int _counter;
 
+        /// <summary>
+        /// The mirror mode.
+        /// </summary>
+        public Mirror Mirror;
+
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
         public ParseCommandMirror(string parameters)
         {
             var badCommandException = new ArgumentException("command is invalid for mirror: " + parameters);
@@ -18,42 +26,36 @@ namespace SadConsole.StringParser
             string[] paramArray = parameters.Split(':');
 
             if (paramArray.Length == 2)
-            {
-                Counter = int.Parse(paramArray[1], CultureInfo.InvariantCulture);
-            }
+                _counter = int.Parse(paramArray[1], CultureInfo.InvariantCulture);
             else
-            {
-                Counter = -1;
-            }
+                _counter = -1;
 
             if (Enum.TryParse(paramArray[0], out Mirror))
-            {
                 CommandType = CommandTypes.Mirror;
-            }
             else
-            {
                 throw badCommandException;
-            }
         }
 
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
         public ParseCommandMirror()
         {
 
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Mirror = Mirror;
 
-            if (Counter != -1)
+            if (_counter != -1)
             {
-                Counter--;
+                _counter--;
 
-                if (Counter == 0)
-                {
+                if (_counter == 0)
                     commandStack.RemoveSafe(this);
-                }
             }
         }
     }

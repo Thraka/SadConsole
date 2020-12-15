@@ -310,7 +310,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Uses reflection to examine the <see cref="Color"/> type and add any predefined colors into <see cref="ColorExtensions.ColorMappings"/>.
+        /// Uses reflection to examine the <see cref="Color"/> type and add any predefined colors into <see cref="ColorExtensions2.ColorMappings"/>.
         /// </summary>
         protected void LoadMappedColors()
         {
@@ -319,7 +319,7 @@ namespace SadConsole
                 //ColorExtensions.ColorMappings.Add
                 var colorType = typeof(Color);
                 foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
-                    ColorExtensions.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null));
+                    ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null));
             }
         }
 

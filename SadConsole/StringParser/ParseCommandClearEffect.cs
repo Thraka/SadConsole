@@ -7,16 +7,21 @@ namespace SadConsole.StringParser
     /// </summary>
     public sealed class ParseCommandClearEffect : ParseCommandBase
     {
-        public int Counter;
+        private int _counter;
 
+        /// <summary>
+        /// Creates a new instance of this command.
+        /// </summary>
+        /// <param name="parameters">The string to parse for parameters.</param>
+        /// <param name="commandStack">The current commands for the string.</param>
         public ParseCommandClearEffect(string parameters, ParseCommandStacks commandStack)
         {
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 1 && parametersArray[0] != "")
-                Counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
+                _counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
             else
-                Counter = -1;
+                _counter = -1;
 
             commandStack.TurnOnEffects = true;
 
@@ -24,16 +29,17 @@ namespace SadConsole.StringParser
             CommandType = CommandTypes.Effect;
         }
 
+        /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
             ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
         {
             glyphState.Effect = null;
 
-            if (Counter != -1)
+            if (_counter != -1)
             {
-                Counter--;
+                _counter--;
 
-                if (Counter == 0)
+                if (_counter == 0)
                     commandStack.RemoveSafe(this);
             }
         }

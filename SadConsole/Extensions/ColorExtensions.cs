@@ -8,7 +8,7 @@ namespace SadRogue.Primitives
     /// <summary>
     /// Various extension methods to <see cref="Color"/> class.
     /// </summary>
-    public static class ColorExtensions
+    public static class ColorExtensions2
     {
         /// <summary>
         /// Custom color mappings for the <see cref="FromName(string)"/> and <see cref="FromParser(Color, string, out bool, out bool, out bool, out bool, out bool)"/> methods. Key names should be lowercase.

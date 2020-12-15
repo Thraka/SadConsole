@@ -11,7 +11,7 @@ using Point = SadRogue.Primitives.Point;
 namespace SadConsole.Host
 {
     /// <summary>
-    /// Create's a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="GameHost.GetTexture"/> method.
+    /// Creates a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="GameHost.GetTexture(string)"/> method.
     /// </summary>
     public class GameTexture : ITexture
     {
@@ -125,7 +125,7 @@ namespace SadConsole.Host
             // Background mode with simple resizing.
             if (mode == TextureConvertMode.Background && backgroundStyle == TextureConvertBackgroundStyle.Pixel)
             {
-                using var resizer = GetResizedTexture(surface.Width, surface.Height);
+                using Microsoft.Xna.Framework.Graphics.RenderTarget2D resizer = GetResizedTexture(surface.Width, surface.Height);
 
                 var colors = new MonoColor[resizer.Width * resizer.Height];
                 resizer.GetData(colors);

@@ -116,7 +116,7 @@ namespace SadConsole
         /// <param name="value">The backing string.</param>
         /// <param name="foreground">The foreground color for each character.</param>
         /// <param name="background">The background color for each character.</param>
-        /// <param name="mirror">The mirror for each character.</param>`
+        /// <param name="mirror">The mirror for each character.</param>
         public ColoredString(string value, Color foreground, Color background, Mirror mirror = Mirror.None)
         {
             var stacks = new ParseCommandStacks();

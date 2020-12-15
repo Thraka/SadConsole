@@ -3,9 +3,11 @@ using SadRogue.Primitives;
 
 namespace SadConsole.SplashScreens
 {
+    /// <summary>
+    /// A spashscreen that simulates an old computer boot up process.
+    /// </summary>
     public class PCBoot : ScreenSurface
     {
-        private static string _title = " Powered by SadConsole ";
         private Instructions.InstructionSet _endAnimation;
         private Instructions.InstructionSet _startAnimation;
         private bool _isEnding = false;
@@ -13,6 +15,9 @@ namespace SadConsole.SplashScreens
         private Point memoryCursorPosition = (0, 0);
         private Components.Cursor cursor;
 
+        /// <summary>
+        /// Creates a new instance of this spashscreen.
+        /// </summary>
         public PCBoot() : base(new CellSurface((Settings.Rendering.RenderWidth / GameHost.Instance.EmbeddedFont.GlyphWidth) + GameHost.Instance.EmbeddedFont.GlyphWidth,
                                                (Settings.Rendering.RenderHeight / GameHost.Instance.EmbeddedFont.GlyphHeight) + GameHost.Instance.EmbeddedFont.GlyphHeight),
                                                GameHost.Instance.EmbeddedFont, GameHost.Instance.EmbeddedFont.GetFontSize(Font.Sizes.One))
@@ -104,6 +109,11 @@ namespace SadConsole.SplashScreens
             return memoryCounter.IsFinished;
         }
 
+        /// <summary>
+        /// Ends the animation when a key is pressed.
+        /// </summary>
+        /// <param name="keyboard">The keyboard state.</param>
+        /// <returns>The base implementation of the keyboard.</returns>
         public override bool ProcessKeyboard(Keyboard keyboard)
         {
             if (!_isEnding && keyboard.KeysReleased.Count != 0)

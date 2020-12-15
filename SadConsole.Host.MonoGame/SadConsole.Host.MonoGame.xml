@@ -68,7 +68,7 @@
         </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
-            Create's a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
             </summary>
         </member>
         <member name="P:SadConsole.Host.GameTexture.Texture">
@@ -582,6 +582,39 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
              <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
+            <summary>
+            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.Font,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.Font,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="surface">The surface to draw on.</param>
+            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
+            <summary>
+            Saves a texture to a png file.
+            </summary>
+            <param name="target">The texture.</param>
+            <param name="path">The path to a png file.</param>
         </member>
     </members>
 </doc>
