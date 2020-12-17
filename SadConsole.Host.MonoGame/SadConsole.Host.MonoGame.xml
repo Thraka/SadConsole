@@ -66,6 +66,49 @@
             Positions by the font of the host in cells.
             </summary>
         </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallGlyph">
+            <summary>
+            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Texture">
+            <summary>
+            The texture containing the cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.FontGlyphRect">
+            <summary>
+            The rectangle from the <see cref="F:SadConsole.DrawCalls.DrawCallGlyph.Texture"/> of the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="F:SadConsole.DrawCalls.DrawCallGlyph.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyph,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="cell">The glyph to be drawn.</param>
+            <param name="texture">The texture containing the cell.</param>
+            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
+            <param name="fontGlyphRect">The rectangle from the <see cref="F:SadConsole.DrawCalls.DrawCallGlyph.Texture"/> of the glyph.</param>
+            <param name="fontSolidRect">The solid white glyph rectangle from <see cref="F:SadConsole.DrawCalls.DrawCallGlyph.Texture"/> used for shading.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.

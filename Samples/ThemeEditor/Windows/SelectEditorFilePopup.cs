@@ -8,7 +8,6 @@ namespace ThemeEditor.Windows
 {
     public class SelectEditorFilePopup : Window
     {
-        private string currentFolder;
         private string fileFilterString;
         private FileDirectoryListbox directoryListBox;
         private TextBox fileName;

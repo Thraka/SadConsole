@@ -66,6 +66,40 @@
             Positions by the font of the host in cells.
             </summary>
         </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallCell">
+            <summary>
+            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.Font">
+            <summary>
+            The font to use when drawing the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.DrawBackground">
+            <summary>
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.Font,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="cell">The glyph to be drawn.</param>
+            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
+            <param name="font">The font to use when drawing the glyph.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Wraps a <see cref="T:SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.

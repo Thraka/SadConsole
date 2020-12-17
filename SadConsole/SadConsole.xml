@@ -6445,7 +6445,7 @@
         </member>
         <member name="P:SadConsole.IScreenSurface.ForceRendererRefresh">
             <summary>
-            When <see langword="true"/>, the <see cref="!:Draw"/> method forces the <see cref="P:SadConsole.IScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the object.
+            When <see langword="true"/>, forces the <see cref="P:SadConsole.IScreenSurface.Renderer"/> to refresh the backing texture with the latest state of the object.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.IsDirty">
@@ -6599,6 +6599,14 @@
             <summary>
             The background color of the cell.
             </summary>
+        </member>
+        <member name="M:SadConsole.Readers.REXPaintImage.Cell.#ctor(System.Int32,SadConsole.Readers.REXPaintImage.Color,SadConsole.Readers.REXPaintImage.Color)">
+            <summary>
+            Creates a new REXPaint cell.
+            </summary>
+            <param name="character">The glyph.</param>
+            <param name="foreground">The foreground color.</param>
+            <param name="background">The background color.</param>
         </member>
         <member name="M:SadConsole.Readers.REXPaintImage.Cell.IsTransparent">
             <summary>

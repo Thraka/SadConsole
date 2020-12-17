@@ -57,7 +57,7 @@ namespace SadConsole.Renderers
                     if (cursor.IsVisible && _screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && _screen.Surface.View.Contains(cursor.Position))
                     {
                         GameHost.Instance.DrawCalls.Enqueue(
-                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                            new DrawCalls.DrawCallGlyph(cursor.CursorRenderCell,
                                                         ((SadConsole.Host.GameTexture)_screen.Font.Image).Texture,
                                                         new XnaRectangle(_screen.Font.GetRenderRect(cursor.Position.X - _screen.Surface.ViewPosition.X,
                                                                                                     cursor.Position.Y - _screen.Surface.ViewPosition.Y,

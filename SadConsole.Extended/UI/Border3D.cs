@@ -7,8 +7,16 @@ using SadRogue.Primitives;
 
 namespace SadConsole.UI
 {
+    /// <summary>
+    /// Creates a 3D border around a surface.
+    /// </summary>
     public class Border: ScreenSurface
     {
+        /// <summary>
+        /// Creates a border and adds it as a child object to <paramref name="contents"/>.
+        /// </summary>
+        /// <param name="contents">The object the border will be around.</param>
+        /// <param name="title">Optional title to display on the border.</param>
         public Border(IScreenSurface contents, string title): base(contents.Surface.Width + 3, contents.Surface.Height + 3)
         {
             Position = (-1, -1);
@@ -33,6 +41,10 @@ namespace SadConsole.UI
             contents.Children.Add(this);
         }
 
+        /// <summary>
+        /// Creates a border and adds it as a child object to the window.
+        /// </summary>
+        /// <param name="contents">The window the border will be around.</param>
         public Border(Window contents): base(contents.Surface.Width, contents.Surface.Height)
         {
             Position = (1, 1);
@@ -53,9 +65,18 @@ namespace SadConsole.UI
             contents.Children.Add(this);
         }
 
+        /// <summary>
+        /// Helper method to add a border to a surface.
+        /// </summary>
+        /// <param name="contents">The object the border will be around.</param>
+        /// <param name="title">Optional title to display on the border.</param>
         public static void AddToSurface(IScreenSurface contents, string title) =>
             new Border(contents, title);
 
+        /// <summary>
+        /// Helper method to add a border to a window.
+        /// </summary>
+        /// <param name="contents">The window the border will be around.</param>
         public static void AddToWindow(Window contents) =>
             new Border(contents);
 

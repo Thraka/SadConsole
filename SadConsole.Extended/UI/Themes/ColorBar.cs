@@ -6,6 +6,9 @@ using ColorBarControl = SadConsole.UI.Controls.ColorBar;
 
 namespace SadConsole.UI.Themes
 {
+    /// <summary>
+    /// The theme for the <see cref="Controls.ColorBar"/> control.
+    /// </summary>
     public class ColorBar : ThemeBase
     {
         /// <inheritdoc />
@@ -60,12 +63,10 @@ namespace SadConsole.UI.Themes
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone()
-        {
-            return new ColorBar()
+        public override ThemeBase Clone() =>
+            new ColorBar()
             {
                 ControlThemeState = ControlThemeState.Clone()
             };
-        }
     }
 }

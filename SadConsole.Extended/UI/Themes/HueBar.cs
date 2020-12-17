@@ -8,6 +8,9 @@ using HueBarControl = SadConsole.UI.Controls.HueBar;
 
 namespace SadConsole.UI.Themes
 {
+    /// <summary>
+    /// The theme for the <see cref="Controls.HueBar"/> control.
+    /// </summary>
     public class HueBar : ThemeBase
     {
         /// <inheritdoc />

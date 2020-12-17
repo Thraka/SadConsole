@@ -1,17 +1,22 @@
 ﻿using SadRogue.Primitives;
-using SadConsole;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using SadConsole.UI.Themes;
-using SadConsole.UI.Controls;
 
 namespace SadConsole.UI.Controls
 {
-    public class HueBar : SadConsole.UI.Controls.ControlBase
+    /// <summary>
+    /// Displays the color hues on a bar.
+    /// </summary>
+    public class HueBar : ControlBase
     {
+        /// <summary>
+        /// Raised when the <see cref="SelectedColor"/> value changes.
+        /// </summary>
         public event EventHandler ColorChanged;
 
+        /// <summary>
+        /// The selected color.
+        /// </summary>
         public Color SelectedColor
         {
             get { return _selectedColor; }
@@ -44,17 +49,18 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// The position on the bar currently selected.
         /// </summary>
-        public int SelectedPosition { get => _selectedPosition; }
+        public int SelectedPosition { get; private set; }
 
         /// <summary>
         /// Internal use by theme.
         /// </summary>
         public int _positions;
-
-        private int _selectedPosition;
-
         private Color _selectedColor;
 
+        /// <summary>
+        /// Creates a new hue bar control.
+        /// </summary>
+        /// <param name="width">The width of the bar.</param>
         public HueBar(int width): base(width, 2)
         {
             CanFocus = false;
@@ -75,11 +81,12 @@ namespace SadConsole.UI.Controls
 
             }
 
-            var foundColor = colorWeights.OrderBy(t => t.Item2).First();
-            _selectedPosition = foundColor.Item3;
-            this.IsDirty = true;
+            Tuple<Color, double, int> foundColor = colorWeights.OrderBy(t => t.Item2).First();
+            SelectedPosition = foundColor.Item3;
+            IsDirty = true;
         }
         
+        /// <inheritdoc/>
         protected override void OnMouseIn(ControlMouseState info)
         {
             base.OnMouseIn(info);
@@ -88,9 +95,9 @@ namespace SadConsole.UI.Controls
             {
                 if (info.OriginalMouseState.Mouse.LeftButtonDown)
                 {
-                    var location = info.MousePosition;
-                    _selectedPosition = location.X;
-                    SelectedColorSafe = Surface[_selectedPosition, 0].Foreground;
+                    Point location = info.MousePosition;
+                    SelectedPosition = location.X;
+                    SelectedColorSafe = Surface[SelectedPosition, 0].Foreground;
                     IsDirty = true;
 
                     Parent.Host.CaptureControl(this);
@@ -98,6 +105,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
         {
             if (Parent.Host.CapturedControl == this)
@@ -107,13 +115,13 @@ namespace SadConsole.UI.Controls
                 else
                 {
                     var newState = new ControlMouseState(this, info);
-                    var location = newState.MousePosition;
+                    Point location = newState.MousePosition;
 
                     //if (info.ConsolePosition.X >= Position.X && info.ConsolePosition.X < Position.X + Width)
                     if (location.X >= 0 && location.X <= Width - 1 && location.Y > -4 && location.Y < Height + 3 )
                     {
-                        _selectedPosition = location.X;
-                        SelectedColorSafe = Surface[_selectedPosition, 0].Foreground;
+                        SelectedPosition = location.X;
+                        SelectedColorSafe = Surface[SelectedPosition, 0].Foreground;
                     }
 
                     IsDirty = true;

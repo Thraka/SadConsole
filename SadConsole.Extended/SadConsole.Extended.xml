@@ -170,6 +170,47 @@
             <param name="triggeredPosition">The new position within the zone associated with the event.</param>
             <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
         </member>
+        <member name="T:SadConsole.UI.Border">
+            <summary>
+            Creates a 3D border around a surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String)">
+            <summary>
+            Creates a border and adds it as a child object to <paramref name="contents"/>.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.UI.Window)">
+            <summary>
+            Creates a border and adds it as a child object to the window.
+            </summary>
+            <param name="contents">The window the border will be around.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.AddToSurface(SadConsole.IScreenSurface,System.String)">
+            <summary>
+            Helper method to add a border to a surface.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.AddToWindow(SadConsole.UI.Window)">
+            <summary>
+            Helper method to add a border to a window.
+            </summary>
+            <param name="contents">The window the border will be around.</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ColorBar">
+            <summary>
+            A color bar control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ColorBar.ColorChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.ColorBar.SelectedColor"/> value changes.
+            </summary>
+        </member>
         <member name="F:SadConsole.UI.Controls.ColorBar._positions">
             <summary>
             Internal use by theme.
@@ -180,10 +221,71 @@
             Internal use by theme.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.StartingColor">
+            <summary>
+            Gets or sets the color on the left-side of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.EndingColor">
+            <summary>
+            Gets or sets the color on the right-side of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.ColorBar.SelectedPosition">
             <summary>
             The position on the bar currently selected.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.#ctor(System.Int32)">
+            <summary>
+            Creates a new color bar with the specified width.
+            </summary>
+            <param name="width">The width of the bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ColorPicker">
+            <summary>
+            Displays a rectangle gradient area between <see cref="F:SadRogue.Primitives.Color.Black"/> and a target color, and <see cref="F:SadRogue.Primitives.Color.White"/> and a target color.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ColorPicker.SelectedColorChanged">
+            <summary>
+            Raised when <see cref="P:SadConsole.UI.Controls.ColorPicker.SelectedColor"/> changes value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorPicker.SelectedColor">
+            <summary>
+            The color selected by the user. A shade of <see cref="P:SadConsole.UI.Controls.ColorPicker.MasterColor"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorPicker.MasterColor">
+            <summary>
+            The main color being shown that all gradients are generated from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.#ctor(System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new panel with the specified width, height, and master color.
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox">
             <summary>
@@ -255,6 +357,21 @@
             The name of the file.
             </summary>
         </member>
+        <member name="T:SadConsole.UI.Controls.HueBar">
+            <summary>
+            Displays the color hues on a bar.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.HueBar.ColorChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.HueBar.SelectedColor"/> value changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.HueBar.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.HueBar.SelectedPosition">
             <summary>
             The position on the bar currently selected.
@@ -264,6 +381,18 @@
             <summary>
             Internal use by theme.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.#ctor(System.Int32)">
+            <summary>
+            Creates a new hue bar control.
+            </summary>
+            <param name="width">The width of the bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.RegistrarExtended">
             <summary>
@@ -281,6 +410,11 @@
             </summary>
             <param name="library"></param>
         </member>
+        <member name="T:SadConsole.UI.Themes.ColorBar">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.ColorBar"/> control.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Themes.ColorBar.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
@@ -289,6 +423,11 @@
         </member>
         <member name="M:SadConsole.UI.Themes.ColorBar.Clone">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ColorPicker">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.ColorPicker"/> control.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ColorPicker.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
@@ -370,6 +509,11 @@
         <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.UI.Themes.HueBar">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.HueBar"/> control.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Themes.HueBar.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc />
         </member>
@@ -378,6 +522,60 @@
         </member>
         <member name="M:SadConsole.UI.Themes.HueBar.Clone">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Windows.ColorPickerPopup">
+            <summary>
+            A window that allows a user to select a color in various ways.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.ColorPickerPopup.SelectedColor">
+            <summary>
+            The color selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.ColorPickerPopup.PreviousColors">
+            <summary>
+            An array of colors previously selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.#ctor">
+            <summary>
+            Creates a new instance of the window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.DrawBorder">
+            <summary>
+            Draws the border lines around the controls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.AddPreviousColor(SadRogue.Primitives.Color)">
+            <summary>
+            Adds a color to the array of previous colors.
+            </summary>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.Show(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Windows.OtherColorsPopup">
+            <summary>
+            A window that displays all known colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.OtherColorsPopup.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.OtherColorsPopup.#ctor">
+            <summary>
+            Creates a new instance of this window with size 40, 20.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.OtherColorsPopup.DrawBorder">
+            <summary>
+            Draws the border around the controls.
+            </summary>
         </member>
     </members>
 </doc>

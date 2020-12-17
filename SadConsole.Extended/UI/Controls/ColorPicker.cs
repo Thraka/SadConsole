@@ -6,14 +6,23 @@ using System;
 
 namespace SadConsole.UI.Controls
 {
+    /// <summary>
+    /// Displays a rectangle gradient area between <see cref="Color.Black"/> and a target color, and <see cref="Color.White"/> and a target color.
+    /// </summary>
     public class ColorPicker : SadConsole.UI.Controls.ControlBase
     {
         private Color _selectedColor;
         private Color _masterColor;
         private Point _selectedColorPosition;
 
+        /// <summary>
+        /// Raised when <see cref="SelectedColor"/> changes value.
+        /// </summary>
         public event EventHandler SelectedColorChanged;
 
+        /// <summary>
+        /// The color selected by the user. A shade of <see cref="MasterColor"/>.
+        /// </summary>
         public Color SelectedColor
         {
             get { return _selectedColor; }
@@ -41,6 +50,9 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <summary>
+        /// The main color being shown that all gradients are generated from.
+        /// </summary>
         public Color MasterColor
         {
             get { return _masterColor; }
@@ -56,7 +68,12 @@ namespace SadConsole.UI.Controls
             }
         }
 
-
+        /// <summary>
+        /// Creates a new panel with the specified width, height, and master color.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="color"></param>
         public ColorPicker(int width, int height, Color color): base(width, height)
         {
             CanFocus = false;
@@ -73,7 +90,8 @@ namespace SadConsole.UI.Controls
 
             this.IsDirty = true;
         }
-        
+
+        /// <inheritdoc/>
         protected override void OnMouseIn(ControlMouseState info)
         {
             base.OnMouseIn(info);
@@ -94,6 +112,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
         {
             if (Parent.Host.CapturedControl == this)

@@ -6,6 +6,9 @@ using System;
 
 namespace SadConsole.UI.Themes
 {
+    /// <summary>
+    /// The theme for the <see cref="Controls.ColorPicker"/> control.
+    /// </summary>
     public class ColorPicker : ThemeBase
         {
             /// <inheritdoc />

@@ -3,10 +3,12 @@ using SadConsole.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SadConsole;
 
 namespace SadConsole.UI.Windows
 {
+    /// <summary>
+    /// A window that allows a user to select a color in various ways.
+    /// </summary>
     public class ColorPickerPopup: SadConsole.UI.Window
     {
         private const int BarHeightStart = 21;
@@ -33,6 +35,9 @@ namespace SadConsole.UI.Windows
         private ListBox _previousColors;
         private static List<Color> _previousColorList = new List<Color>();
 
+        /// <summary>
+        /// The color selected.
+        /// </summary>
         public Color SelectedColor
         {
             get { return _selectedColor; }
@@ -48,11 +53,17 @@ namespace SadConsole.UI.Windows
             }
         }
 
+        /// <summary>
+        /// An array of colors previously selected.
+        /// </summary>
         public Color[] PreviousColors
         {
             get { return _previousColors.Items.Cast<Color>().ToArray(); }
         }
-        
+
+        /// <summary>
+        /// Creates a new instance of the window.
+        /// </summary>
         public ColorPickerPopup(): base(60, 35)
         {
             Border.AddToWindow(this);
@@ -234,6 +245,9 @@ namespace SadConsole.UI.Windows
             _blueInput.Text = _barB.SelectedColor.B.ToString();
         }
 
+        /// <summary>
+        /// Draws the border lines around the controls.
+        /// </summary>
         protected override void DrawBorder()
         {
             base.DrawBorder();
@@ -276,7 +290,11 @@ namespace SadConsole.UI.Windows
             this.ConnectLines(BorderLineStyle);
 
         }
-        
+
+        /// <summary>
+        /// Adds a color to the array of previous colors.
+        /// </summary>
+        /// <param name="color"></param>
         public void AddPreviousColor(Color color)
         {
             if (!_previousColors.Items.Contains(color))
@@ -288,6 +306,7 @@ namespace SadConsole.UI.Windows
             }
         }
 
+        /// <inheritdoc/>
         public override void Show(bool modal)
         {
             if (IsVisible) return;

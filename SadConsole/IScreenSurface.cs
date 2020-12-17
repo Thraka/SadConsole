@@ -81,7 +81,7 @@ namespace SadConsole
         Point FontSize { get; set; }
 
         /// <summary>
-        /// When <see langword="true"/>, the <see cref="Draw"/> method forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
+        /// When <see langword="true"/>, forces the <see cref="Renderer"/> to refresh the backing texture with the latest state of the object.
         /// </summary>
         bool ForceRendererRefresh { get; set; }
 

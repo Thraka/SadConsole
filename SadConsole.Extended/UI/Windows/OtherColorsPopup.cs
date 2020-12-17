@@ -7,6 +7,9 @@ using SadConsole;
 
 namespace SadConsole.UI.Windows
 {
+    /// <summary>
+    /// A window that displays all known colors.
+    /// </summary>
     public class OtherColorsPopup : SadConsole.UI.Window
     {
         private RadioButton _ansiSelectButton;
@@ -23,8 +26,14 @@ namespace SadConsole.UI.Windows
         private Point _selectedAnsiColorIcon = Point.None;
         private Point _selectedAnsiColorIconPrevious = Point.None;
 
+        /// <summary>
+        /// The selected color.
+        /// </summary>
         public Color SelectedColor { get; private set; }
 
+        /// <summary>
+        /// Creates a new instance of this window with size 40, 20.
+        /// </summary>
         public OtherColorsPopup()
             : base(40, 20)
         {
@@ -248,6 +257,9 @@ namespace SadConsole.UI.Windows
             }
         }
 
+        /// <summary>
+        /// Draws the border around the controls.
+        /// </summary>
         protected override void DrawBorder()
         {
             base.DrawBorder();

@@ -22,6 +22,12 @@
             /// </summary>
             public Color Background;
 
+            /// <summary>
+            /// Creates a new REXPaint cell.
+            /// </summary>
+            /// <param name="character">The glyph.</param>
+            /// <param name="foreground">The foreground color.</param>
+            /// <param name="background">The background color.</param>
             public Cell(int character, Color foreground, Color background)
             {
                 Character = character;

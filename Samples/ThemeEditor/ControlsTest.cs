@@ -12,7 +12,6 @@ namespace ThemeEditor
     internal class ControlsTest : SadConsole.UI.ControlsConsole
     {
         private readonly Color[] backgroundcycle;
-        private int backIndex = 0;
         private readonly SadConsole.Timer progressTimer;
 
         public ControlsTest() : base(80, 23)
@@ -195,7 +194,6 @@ namespace ThemeEditor
             };
 
             backgroundcycle = colors.Select(i => i.Item1).ToArray();
-            backIndex = 5;
 
             //int y = 25 - 20;
             //int x = 0;
