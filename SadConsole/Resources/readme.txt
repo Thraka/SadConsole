@@ -37,10 +37,10 @@ namespace MyProject
         private static void Init()
         {
             // Any startup code for your game. We will use an example console for now
-            var startingConsole = GameHost.Instance.Screen;
+            var startingConsole = (Console)GameHost.Instance.Screen;
             startingConsole.FillWithRandomGarbage(255);
             startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0, Mirror.None);
-            startingConsole.Print(6, 5, "Hello from SadConsole", ColorAnsi.CyanBright);
+            startingConsole.Print(6, 5, "Hello from SadConsole", Color.AnsiCyanBright);
         }
     }
 }
@@ -70,11 +70,11 @@ Module Module1
 
     Sub Init()
 
-        Dim startingConsole = GameHost.Instance.Screen
+        Dim startingConsole = DirectCast(GameHost.Instance.Screen, Console)
 
         startingConsole.FillWithRandomGarbage(255)
-        startingConsole.Fill(New Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0)
-        startingConsole.Print(4, 4, "Hello from SadConsole")
+        startingConsole.Fill(New Rectangle(3, 3, 27, 3), Color.Violet, Color.Black, 0, Mirror.None)
+        startingConsole.Print(6, 5, "Hello from SadConsole", Color.AnsiCyanBright)
 
     End Sub
 
