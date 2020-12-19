@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SadRogue.Primitives;
 
 namespace SadConsole.Tests
@@ -6,6 +8,14 @@ namespace SadConsole.Tests
     [TestClass]
     public class Serialization
     {
+        class Component1 : Components.LogicComponent
+        {
+            public string Name { get; set; }
+
+            public override void Render(IScreenObject host, TimeSpan delta) => throw new NotImplementedException();
+            public override void Update(IScreenObject host, TimeSpan delta) => throw new NotImplementedException();
+        }
+
         [TestMethod]
         public void ScreenObject_SaveLoad()
         {
@@ -26,6 +36,12 @@ namespace SadConsole.Tests
 
             obj.Children.Add(obj2);
 
+            Component1 comp1 = new Component1() { Name = "component 1" };
+            Component1 comp2 = new Component1() { Name = "component 2" };
+
+            obj.SadComponents.Add(comp1);
+            obj2.SadComponents.Add(comp2);
+
             SadConsole.Serializer.Save(obj, "test.file", false);
             var newObj = SadConsole.Serializer.Load<ScreenObject>("test.file", false);
 
@@ -44,6 +60,13 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenObject));
+
+            Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
+            Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
+
+            Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
+            Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
+
         }
 
         [TestMethod]
@@ -68,6 +91,12 @@ namespace SadConsole.Tests
             obj2.UseMouse = true;
 
             obj.Children.Add(obj2);
+
+            Component1 comp1 = new Component1() { Name = "component 1" };
+            Component1 comp2 = new Component1() { Name = "component 2" };
+
+            obj.SadComponents.Add(comp1);
+            obj2.SadComponents.Add(comp2);
 
             SadConsole.Serializer.Save(obj, "test.file", false);
             var newObj = SadConsole.Serializer.Load<ScreenSurface>("test.file", false);
@@ -96,6 +125,12 @@ namespace SadConsole.Tests
             }
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenSurface));
+
+            Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
+            Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
+
+            Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
+            Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
         }
 
         [TestMethod]
@@ -103,15 +138,35 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
 
+            // CreateStatic uses
+            //   AnimationDuration = 1;
+            //   Repeat = true;
+            //   Name = "default";
+
             AnimatedScreenSurface animation = AnimatedScreenSurface.CreateStatic(10, 10, 10, 0.5d);
+            animation.Name = "Static Frames";
+            animation.Center = (2, 2);
             animation.Save("test.file");
             AnimatedScreenSurface animation2 = AnimatedScreenSurface.Load("test.file");
 
+            Assert.AreEqual(animation.Width, animation2.Width);
+            Assert.AreEqual(animation.Height, animation2.Height);
+            Assert.AreEqual(animation.Name, animation2.Name);
             Assert.AreEqual(animation.Frames.Count, animation2.Frames.Count);
             Assert.AreEqual(animation.Font?.Name, animation2.Font?.Name);
+            Assert.AreEqual(animation.FontSize, animation2.FontSize);
+            Assert.AreEqual(animation.Center, animation2.Center);
             Assert.AreEqual(animation.Repeat, animation2.Repeat);
             Assert.AreEqual(animation.AnimationDuration, animation2.AnimationDuration);
             Assert.AreEqual(animation.CurrentFrameIndex, animation2.CurrentFrameIndex);
+
+            var surfaceTest = new CellSurface();
+            var surface1Frames = animation.Frames.ToList();
+            var surface2Frames = animation2.Frames.ToList();
+            for (int i = 0; i < surface1Frames.Count; i++)
+            {
+                surfaceTest.Surface_Equals(surface1Frames[i], surface2Frames[i]);
+            }
         }
     }
 }

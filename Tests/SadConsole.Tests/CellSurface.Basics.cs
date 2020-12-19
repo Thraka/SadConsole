@@ -79,5 +79,24 @@ namespace SadConsole.Tests
 
             Assert.IsTrue(newMirror == surface1[0, 0].Mirror);
         }
+
+        public void Surface_Equals(ICellSurface surface1, ICellSurface surface2)
+        {
+            Assert.AreEqual(surface1.View, surface2.View);
+            Assert.AreEqual(surface1.Area, surface2.Area);
+            Assert.AreEqual(surface1.Count, surface2.Count);
+            Assert.AreEqual(surface1.DefaultBackground, surface2.DefaultBackground);
+            Assert.AreEqual(surface1.DefaultForeground, surface2.DefaultForeground);
+            Assert.AreEqual(surface1.DefaultGlyph, surface2.DefaultGlyph);
+            Assert.AreEqual(surface1.IsScrollable, surface2.IsScrollable);
+            Assert.AreEqual(surface1.TimesShiftedDown, surface2.TimesShiftedDown);
+            Assert.AreEqual(surface1.TimesShiftedLeft, surface2.TimesShiftedLeft);
+            Assert.AreEqual(surface1.TimesShiftedRight, surface2.TimesShiftedRight);
+            Assert.AreEqual(surface1.TimesShiftedUp, surface2.TimesShiftedUp);
+            Assert.AreEqual(surface1.UsePrintProcessor, surface2.UsePrintProcessor);
+
+            for (int i = 0; i < surface1.Count; i++)
+                Assert.IsTrue(surface1[i].Matches(surface2[i]));
+        }
     }
 }
