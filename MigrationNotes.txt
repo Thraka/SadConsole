@@ -12,9 +12,11 @@
 - (?) Components should have a before/after ability where SortOrder < 5 run before the core code and >=5 run after.
 - Print for surface can be optimized. Use SetEffect(IEnumerable) to mass update effects instead of individual cells.
 - Check ListBox.ScrollToSelectedItem is working.
+- Write tests to check ListBox.SelectedIndex works with string values, number values, and objects.
 - Do all of the Theme.RefreshTheme methods get sent control.FindColors? If so, we can get rid of the base logic that finds them...
 - SFML is *still* throwing in phantom keys when you type fast or use multiple keys are once.
 - Character viewer in sample isn't working.
+- Theme editor save on MonoGame fails due to absolute path.
 
 ====== New Features
 

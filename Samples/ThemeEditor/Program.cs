@@ -26,6 +26,11 @@ namespace ThemeEditor
         /// </summary>
         private static void Init()
         {
+#if MONOGAME
+            // This isn't a mobile/xbox game, don't need the title container for serialization.
+            SadConsole.Game.Instance.UseTitleContainer = false;
+#endif
+
             // Any setup
             //if (Settings.UnlimitedFPS)
             //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));

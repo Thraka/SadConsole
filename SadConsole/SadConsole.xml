@@ -175,7 +175,12 @@
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.Frames">
             <summary>
-            All frames of the animation
+            All frames of the animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenSurface.FrameCount">
+            <summary>
+            The total number of frames.
             </summary>
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.Center">

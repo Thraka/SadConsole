@@ -23,7 +23,6 @@ namespace FeatureDemo.CustomConsoles
         private readonly Console basicSurface;
         private readonly AnimatedScreenSurface animatedSurface;
         private readonly Console viewSurface;
-        private readonly Console emptySurface;
 
         public SerializationTests() : base(80, 23)
         {

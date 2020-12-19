@@ -51,9 +51,14 @@ namespace SadConsole
         protected float TimePerFrame;
 
         /// <summary>
-        /// All frames of the animation
+        /// All frames of the animation.
         /// </summary>
         public ReadOnlyCollection<ICellSurface> Frames => FramesList.AsReadOnly();
+
+        /// <summary>
+        /// The total number of frames.
+        /// </summary>
+        public int FrameCount => FramesList.Count;
 
         /// <summary>
         /// Center of the animation used in positioning.
