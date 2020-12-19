@@ -1,13 +1,18 @@
 ## v9.0 Beta 3
 
+- New library added `SadConsole.Extended`. This has different classes, controls, consoles, the can be used by many other projects.
 - Fixed bug in `SadConsole.UI.Colors` when creating a copy.
-- Added mousewheel support to listbox and scroll bar.
 - Changed theme color parts to `AdjustableColor` types.
 - Adjusted all themes to use a different base class.
+- `ScrollBar` operates on all scroll spots.
+- Added mousewheel support to `ListBox` and `ScrollBar`.
 - `Checkbox` and `RadioButton` now use `ToggleButtonBase` and use the same theme but configured for each control.
 - `Settings.WindowTitle` works in SFML now.
 - `IRenderStep` added which allows hooking custom rendering steps into the `Renderer` without writing a whole new renderer.
 - `Window`, `Cursor`, and `ControlHost` converted to use a `IRenderStep` and the normal object renderer.
+- Base types are using primitives library where they can.
+- Entity system changed to a simpler system. No more animations on entities.
+- Cleaned up a lot (300+) project warnings (missing docs, that sort of thing).
 
 ## v9.0 Beta 2
 

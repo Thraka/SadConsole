@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>9.0.0-beta2</Version>
+    <Version>9.0.0-beta3</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -24,8 +24,8 @@
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode</PackageTags>
-    <PackageReleaseNotes>Fixed critical bug related to fonts and UnsupportedGlyphIndex. Updated Window types with DrawBorder and Controls property. Many enhancements to Colors.</PackageReleaseNotes>
+    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
+    <PackageReleaseNotes>New rendering system. Enhanced controls, themes, colors. New simple entity system. Misc bugs.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!--
