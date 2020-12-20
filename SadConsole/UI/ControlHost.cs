@@ -621,8 +621,6 @@ namespace SadConsole.UI
         {
             FocusedControl?.DetermineState();
         }
-            
-
 
         /// <summary>
         /// Captures a control for exclusive mouse focus. Sets the ExclusiveMouse property to true.
@@ -630,6 +628,8 @@ namespace SadConsole.UI
         /// <param name="control">The control to capture</param>
         public void CaptureControl(ControlBase control)
         {
+            if (CapturedControl == control) return;
+
             if (GameHost.Instance.FocusedScreenObjects.ScreenObject != ParentConsole)
             {
                 GameHost.Instance.FocusedScreenObjects.Push(ParentConsole);

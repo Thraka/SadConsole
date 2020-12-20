@@ -137,7 +137,7 @@ namespace SadConsole.UI.Controls
                             return true;
                         }
 
-                        if (state.Mouse.LeftClicked)
+                        if (state.Mouse.LeftClicked )
                         {
                             if (Orientation == Orientation.Horizontal)
                             {
@@ -179,7 +179,7 @@ namespace SadConsole.UI.Controls
 
                         // Need to set a flag signalling that we've locked in a drag.
                         // When the mouse button is let go, clear the flag.
-                        if (state.Mouse.LeftButtonDown)
+                        if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown)
                         {
                             if (Orientation == Orientation.Horizontal)
                             {
