@@ -109,12 +109,12 @@ namespace SadConsole.Input
             else if (leftDown)
                 _leftLastClickedTime += elapsedSeconds;
 
-            if (!_rightPressedLastFrame && leftDown)
+            if (!_rightPressedLastFrame && rightDown)
                 _rightPressedLastFrame = true;
             else if (rightDown)
                 _rightLastClickedTime += elapsedSeconds;
 
-            if (!_middlePressedLastFrame && leftDown)
+            if (!_middlePressedLastFrame && middleDown)
                 _middlePressedLastFrame = true;
             else if (middleDown)
                 _middleLastClickedTime += elapsedSeconds;
