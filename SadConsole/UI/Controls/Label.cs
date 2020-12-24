@@ -40,17 +40,13 @@ namespace SadConsole.UI.Controls
             set
             {
                 if (value == null)
-                {
                     _text = "";
-                }
                 else if (value.Length > Width)
-                {
                     _text = value.Substring(0, Width);
-                }
                 else
-                {
                     _text = value;
-                }
+
+                IsDirty = true;
             }
         }
 
