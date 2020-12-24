@@ -87,6 +87,7 @@ namespace SadConsole.Entities
             SetEntityVisibility(entity);
 
             entity.PositionChanged += Entity_PositionChanged;
+            entity.VisibleChanged += Entity_VisibleChanged;
             entity.IsDirtyChanged += Entity_IsDirtyChanged;
 
             OnEntityAdded(entity);
@@ -112,6 +113,7 @@ namespace SadConsole.Entities
                     OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
 
                     entity.PositionChanged += Entity_PositionChanged;
+                    entity.VisibleChanged += Entity_VisibleChanged;
                     entity.IsDirtyChanged += Entity_IsDirtyChanged;
                 }
             }
@@ -129,6 +131,7 @@ namespace SadConsole.Entities
             if (!_entities.Contains(entity)) return;
 
             entity.PositionChanged -= Entity_PositionChanged;
+            entity.VisibleChanged -= Entity_VisibleChanged;
             entity.IsDirtyChanged -= Entity_IsDirtyChanged;
 
             _entities.Remove(entity);
@@ -216,11 +219,32 @@ namespace SadConsole.Entities
             }
         }
 
+        private void Entity_IsDirtyChanged(object sender, EventArgs e)
+        {
+            var entity = (Entity)sender;
+
+            if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+                IsDirty |= entity.IsDirty;
+        }
+
+        private void Entity_VisibleChanged(object sender, EventArgs e)
+        {
+            var entity = (Entity)sender;
+
+            if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+                IsDirty = true;
+        }
+
         private void Entity_PositionChanged(object sender, ValueChangedEventArgs<SadRogue.Primitives.Point> e)
         {
-            IsDirty = true;
-            SetEntityVisibility((Entity)sender);
-            OnEntityChangedPosition((Entity)sender, e);
+            Entity entity = (Entity)sender;
+
+            // Entity was previously (may no longer be) visible, we always redraw since it moved.
+            if (IsEntityVisible(e.OldValue, entity.UsePixelPositioning))
+                IsDirty = true;
+
+            SetEntityVisibility(entity);
+            OnEntityChangedPosition(entity, e);
         }
 
         /// <summary>
@@ -241,9 +265,6 @@ namespace SadConsole.Entities
         /// </summary>
         /// <param name="entity">The entity.</param>
         protected virtual void OnEntityRemoved(Entity entity) { }
-
-        private void Entity_IsDirtyChanged(object sender, EventArgs e) =>
-            IsDirty |= ((Entity)sender).IsDirty;
 
         private void SetEntityVisibility(Entity entity)
         {
