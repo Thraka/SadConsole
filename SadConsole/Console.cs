@@ -11,6 +11,7 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+    [System.Diagnostics.DebuggerDisplay("Console")]
     public partial class Console: ScreenSurface
     {
         /// <summary>

@@ -188,11 +188,11 @@ namespace SadConsole
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
-        /// <param name="width">The visible width of the surface in cells.</param>
-        /// <param name="height">The visible height of the surface in cells.</param>
-        /// <param name="bufferWidth">The total width of the surface in cells.</param>
-        /// <param name="bufferHeight">The total height of the surface in cells.</param>
-        public CellSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null)
+        /// <param name="viewWidth">The visible width of the surface in cells.</param>
+        /// <param name="viewHeight">The visible height of the surface in cells.</param>
+        /// <param name="totalWidth">The total width of the surface in cells.</param>
+        /// <param name="totalHeight">The total height of the surface in cells.</param>
+        public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight) : this(viewWidth, viewHeight, totalWidth, totalHeight, null)
         {
 
         }
@@ -200,30 +200,30 @@ namespace SadConsole
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
-        /// <param name="width">The width of the surface in cells.</param>
-        /// <param name="height">The height of the surface in cells.</param>
-        /// <param name="bufferWidth">The total width of the surface in cells.</param>
-        /// <param name="bufferHeight">The total height of the surface in cells.</param>
+        /// <param name="viewWidth">The width of the surface in cells.</param>
+        /// <param name="viewHeight">The height of the surface in cells.</param>
+        /// <param name="totalWidth">The total width of the surface in cells.</param>
+        /// <param name="totalHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public CellSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
+        public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
         {
-            if (width == 0) throw new ArgumentOutOfRangeException(nameof(width), "Surface view width must be > 0");
-            if (height == 0) throw new ArgumentOutOfRangeException(nameof(height), "Surface view height must be > 0");
-            if (bufferWidth == 0) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Surface buffer width must be > 0");
-            if (bufferHeight == 0) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Surface buffer height must be > 0");
-            if (width > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
-            if (height > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
+            if (viewWidth == 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
+            if (viewHeight == 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
+            if (totalWidth == 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface buffer width must be > 0");
+            if (totalHeight == 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface buffer height must be > 0");
+            if (viewWidth > totalWidth) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Buffer width must be less than or equal to the width.");
+            if (viewHeight > totalHeight) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Buffer height must be less than or equal to the height.");
 
 
             DefaultForeground = Color.White;
             DefaultBackground = Color.Transparent;
 
-            _viewArea = new BoundedRectangle((0, 0, width, height),
-                                             (0, 0, bufferWidth, bufferHeight));
+            _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
+                                             (0, 0, totalWidth, totalHeight));
 
             if (initialCells == null)
             {
-                Cells = new ColoredGlyph[bufferWidth * bufferHeight];
+                Cells = new ColoredGlyph[totalWidth * totalHeight];
 
                 for (int i = 0; i < Cells.Length; i++)
                 {
@@ -232,13 +232,39 @@ namespace SadConsole
             }
             else
             {
-                if (initialCells.Length != bufferWidth * bufferHeight)
+                if (initialCells.Length != totalWidth * totalHeight)
                 {
                     throw new Exception("Buffer Width * Buffer Height does not match initialCells.Length");
                 }
 
                 Cells = initialCells;
             }
+
+            Effects = new Effects.EffectsManager(this);
+        }
+
+
+        /// <summary>
+        /// Creates a new surface from a grid view with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
+        /// </summary>
+        /// <param name="surface">The surface to use as the source of cells.</param>
+        /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
+        /// <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
+        public CellSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0)
+        {
+            DefaultForeground = Color.White;
+            DefaultBackground = Color.Transparent;
+
+            if (visibleWidth == 0) visibleWidth = surface.Width;
+            if (visibleHeight == 0) visibleHeight = surface.Height;
+
+            _viewArea = new BoundedRectangle((0, 0, visibleWidth, visibleHeight),
+                                             (0, 0, surface.Width, surface.Height));
+
+            Cells = new ColoredGlyph[surface.Count];
+
+            for (int i = 0; i < Cells.Length; i++)
+                Cells[i] = surface[i];
 
             Effects = new Effects.EffectsManager(this);
         }

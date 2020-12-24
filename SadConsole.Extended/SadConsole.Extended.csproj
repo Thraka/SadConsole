@@ -41,7 +41,6 @@
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
-    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

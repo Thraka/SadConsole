@@ -751,20 +751,28 @@
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The visible width of the surface in cells.</param>
-            <param name="height">The visible height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="viewWidth">The visible width of the surface in cells.</param>
+            <param name="viewHeight">The visible height of the surface in cells.</param>
+            <param name="totalWidth">The total width of the surface in cells.</param>
+            <param name="totalHeight">The total height of the surface in cells.</param>
         </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The width of the surface in cells.</param>
-            <param name="height">The height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="viewWidth">The width of the surface in cells.</param>
+            <param name="viewHeight">The height of the surface in cells.</param>
+            <param name="totalWidth">The total width of the surface in cells.</param>
+            <param name="totalHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
+        <member name="M:SadConsole.CellSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface from a grid view with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="surface">The surface to use as the source of cells.</param>
+            <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
+            <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
         </member>
         <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
@@ -7264,10 +7272,18 @@
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The visible width of the surface in cells.</param>
-            <param name="height">The visible height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="viewWidth">The visible width of the surface in cells.</param>
+            <param name="viewHeight">The visible height of the surface in cells.</param>
+            <param name="totalWidth">The total width of the surface in cells.</param>
+            <param name="totalHeight">The total height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
+            <summary>
+            Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+            </summary>
+            <param name="surface">The surface to use as the source of cells.</param>
+            <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
+            <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.Font,System.Nullable{SadRogue.Primitives.Point})">
             <summary>
@@ -7281,10 +7297,10 @@
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The width of the surface in cells.</param>
-            <param name="height">The height of the surface in cells.</param>
-            <param name="bufferWidth">The total width of the surface in cells.</param>
-            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="viewWidth">The width of the surface in cells to show.</param>
+            <param name="viewHeight">The height of the surface in cells to show.</param>
+            <param name="totalWidth">The total width of the surface in cells.</param>
+            <param name="totalHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
@@ -9615,7 +9631,7 @@
         </member>
         <member name="F:SadConsole.UI.Controls.ProgressBar.fillSize">
             <summary>
-            The size of the bar currently filled based on the <see cref="P:SadConsole.UI.Controls.ProgressBar.Progress"/> property.
+            For theme use only. The size of the bar currently filled based on the <see cref="P:SadConsole.UI.Controls.ProgressBar.Progress"/> property.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Controls.ProgressBar.isHorizontal">
@@ -9631,6 +9647,21 @@
         <member name="F:SadConsole.UI.Controls.ProgressBar.verticalAlignment">
             <summary>
             The alignment if the bar is vertical.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayText">
+            <summary>
+            An optional text to display on the bar. If set to <c>"%"</c>, displays the percentage of the progress.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextColor">
+            <summary>
+            The color to print the <see cref="P:SadConsole.UI.Controls.ProgressBar.DisplayText"/> string.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextAlignment">
+            <summary>
+            Alignment to print the <see cref="P:SadConsole.UI.Controls.ProgressBar.DisplayText"/>. <see cref="F:SadConsole.HorizontalAlignment.Stretch"/> is invalid for the property.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ProgressBar.HorizontalAlignment">
@@ -10434,6 +10465,16 @@
         <member name="P:SadConsole.UI.Themes.ProgressBarTheme.Foreground">
             <summary>
             The theme of the progressed part of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ProgressBarTheme.DisplayText">
+            <summary>
+            The theme of the text displayed on the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ProgressBarTheme.PrintDisplayAsDecorator">
+            <summary>
+            When <see langword="true"/>, prints the <see cref="P:SadConsole.UI.Controls.Label.DisplayText"/> on the control in decorators instead of replacing the portation of the bar that overlaps the text.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ProgressBarTheme.#ctor">

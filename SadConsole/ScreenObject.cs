@@ -14,6 +14,7 @@ namespace SadConsole
     /// A generic object processed by SadConsole. Provides parent/child, components, and position.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("ScreenObject")]
     public class ScreenObject : IScreenObject
     {
         [DataMember(Name = "Children")]

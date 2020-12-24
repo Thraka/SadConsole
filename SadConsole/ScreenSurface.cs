@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using SadConsole.Components;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace SadConsole
 {
@@ -14,6 +15,7 @@ namespace SadConsole
     /// An object that renders a <see cref="ICellSurface"/>.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("ScreenSurface")]
     public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     {
         [DataMember(Name = "Font")]
@@ -169,13 +171,24 @@ namespace SadConsole
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
-        /// <param name="width">The visible width of the surface in cells.</param>
-        /// <param name="height">The visible height of the surface in cells.</param>
-        /// <param name="bufferWidth">The total width of the surface in cells.</param>
-        /// <param name="bufferHeight">The total height of the surface in cells.</param>
-        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null)
+        /// <param name="viewWidth">The visible width of the surface in cells.</param>
+        /// <param name="viewHeight">The visible height of the surface in cells.</param>
+        /// <param name="totalWidth">The total width of the surface in cells.</param>
+        /// <param name="totalHeight">The total height of the surface in cells.</param>
+        public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight) : this(viewWidth, viewHeight, totalWidth, totalHeight, null)
         {
 
+        }
+
+        /// <summary>
+        /// Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+        /// </summary>
+        /// <param name="surface">The surface to use as the source of cells.</param>
+        /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
+        /// <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
+        public ScreenSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0): this(new CellSurface(surface, visibleWidth, visibleHeight))
+        {
+            
         }
 
         /// <summary>
@@ -202,14 +215,14 @@ namespace SadConsole
         /// <summary>
         /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
         /// </summary>
-        /// <param name="width">The width of the surface in cells.</param>
-        /// <param name="height">The height of the surface in cells.</param>
-        /// <param name="bufferWidth">The total width of the surface in cells.</param>
-        /// <param name="bufferHeight">The total height of the surface in cells.</param>
+        /// <param name="viewWidth">The width of the surface in cells to show.</param>
+        /// <param name="viewHeight">The height of the surface in cells to show.</param>
+        /// <param name="totalWidth">The total width of the surface in cells.</param>
+        /// <param name="totalHeight">The total height of the surface in cells.</param>
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-        public ScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells)
+        public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
         {
-            Surface = new CellSurface(width, height, bufferWidth, bufferHeight, initialCells);
+            Surface = new CellSurface(viewWidth, viewHeight, totalWidth, totalHeight, initialCells);
             Font = GameHost.Instance.DefaultFont;
             FontSize = Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
 

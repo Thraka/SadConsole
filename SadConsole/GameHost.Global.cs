@@ -72,7 +72,7 @@ namespace SadConsole
         /// <summary>
         /// The active screen processed by the game.
         /// </summary>
-        public ScreenObject Screen { get; set; }
+        public IScreenObject Screen { get; set; }
 
         /// <summary>
         /// The stack of focused consoles used by the mouse and keyboard.
@@ -130,7 +130,7 @@ namespace SadConsole
         private class GlobalState
         {
             public FocusedScreenObjectStack FocusedScreenObjects;
-            public ScreenObject Screen;
+            public IScreenObject Screen;
             public Font DefaultFont;
             public Font.Sizes DefaultFontSize;
         }
