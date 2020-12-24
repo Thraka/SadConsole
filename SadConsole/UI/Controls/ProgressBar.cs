@@ -9,6 +9,10 @@ namespace SadConsole.UI.Controls
     [DataContract]
     public class ProgressBar : ControlBase
     {
+        private string _displayText = "%";
+        private HorizontalAlignment _displayTextAlignment = HorizontalAlignment.Center;
+        private SadRogue.Primitives.Color _displayTextColor;
+
         /// <summary>
         /// Called when the <see cref="Progress"/> property value changes.
         /// </summary>
@@ -27,7 +31,7 @@ namespace SadConsole.UI.Controls
         protected int controlSize;
 
         /// <summary>
-        /// The size of the bar currently filled based on the <see cref="Progress"/> property.
+        /// For theme use only. The size of the bar currently filled based on the <see cref="Progress"/> property.
         /// </summary>
         [DataMember]
         public int fillSize;
@@ -49,6 +53,41 @@ namespace SadConsole.UI.Controls
         /// </summary>
         [DataMember]
         protected VerticalAlignment verticalAlignment;
+
+        /// <summary>
+        /// An optional text to display on the bar. If set to <c>"%"</c>, displays the percentage of the progress.
+        /// </summary>
+        [DataMember]
+        public string DisplayText
+        {
+            get => _displayText;
+            set { _displayText = value; IsDirty = true; }
+        }
+
+        /// <summary>
+        /// The color to print the <see cref="DisplayText"/> string.
+        /// </summary>
+        [DataMember]
+        public SadRogue.Primitives.Color DisplayTextColor
+        {
+            get => _displayTextColor;
+            set { _displayTextColor = value; IsDirty = true; }
+        }
+
+        /// <summary>
+        /// Alignment to print the <see cref="DisplayText"/>. <see cref="HorizontalAlignment.Stretch"/> is invalid for the property.
+        /// </summary>
+        [DataMember]
+        public HorizontalAlignment DisplayTextAlignment
+        {
+            get => _displayTextAlignment;
+            set
+            {
+                if (value == HorizontalAlignment.Stretch) throw new Exception("Stretch is invalid for this property.");
+                _displayTextAlignment = value;
+                IsDirty = true;
+            }
+        }
 
         /// <summary>
         /// The horizontal orientation used when <see cref="IsHorizontal"/> is set to true.
@@ -116,26 +155,16 @@ namespace SadConsole.UI.Controls
                     progressValue = value;
 
                     if (progressValue < 0)
-                    {
                         progressValue = 0;
-                    }
                     else if (progressValue > 1)
-                    {
                         progressValue = 1;
-                    }
 
                     if (progressValue == 0)
-                    {
                         fillSize = 0;
-                    }
                     else if (progressValue == 1)
-                    {
                         fillSize = controlSize;
-                    }
                     else
-                    {
                         fillSize = (int)(controlSize * progressValue);
-                    }
 
                     IsDirty = true;
 
