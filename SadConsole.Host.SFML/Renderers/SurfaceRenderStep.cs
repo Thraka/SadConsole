@@ -107,9 +107,8 @@ namespace SadConsole.Renderers
 
                         cell.IsDirty = false;
 
-                        if (!cell.IsVisible) continue;
-
-                        Host.Global.SharedSpriteBatch.DrawCell(cell, _baseRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != _screen.Surface.DefaultBackground, font);
+                        if (cell.IsVisible)
+                            Host.Global.SharedSpriteBatch.DrawCell(cell, _baseRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != _screen.Surface.DefaultBackground, font);
 
                         i++;
                         rectIndex++;
