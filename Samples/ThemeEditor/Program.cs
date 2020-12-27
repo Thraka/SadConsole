@@ -47,6 +47,7 @@ namespace ThemeEditor
             SadConsole.UI.RegistrarExtended.Register();
 
             GameHost.Instance.Screen = new Container();
+            Game.Instance.RemoveStartingConsole();
 
             //GameHost.Instance.Screen = con;
 

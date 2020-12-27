@@ -23,13 +23,20 @@ namespace ThemeEditor
 
             var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
             {
-                Position = new Point(16, 5)
+                Position = new Point(16, 5),
+                DisplayTextColor = Color.White
             };
+            var theme = (ProgressBarTheme)Library.Default.GetControlTheme(typeof(ProgressBar));
+            //theme.Background.SetGlyph(0);
+            //theme.Foreground.SetGlyph('=');
+            prog1.Theme = theme;
+
             Controls.Add(prog1);
 
             var prog2 = new ProgressBar(1, 6, VerticalAlignment.Bottom)
             {
-                Position = new Point(18, 7)
+                Position = new Point(18, 7),
+                DisplayTextColor = Color.White
             };
             Controls.Add(prog2);
 
