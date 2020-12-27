@@ -6830,6 +6830,11 @@
             Draws a surface.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.IRenderer.Output">
+            <summary>
+            The output texture created by the renderer.
+            </summary>
+        </member>
         <member name="P:SadConsole.Renderers.IRenderer.Opacity">
             <summary>
             A 0 to 255 value represening how transparent the surface is when drawn to the screen. 255 represents full visibility.
@@ -6840,26 +6845,20 @@
             <see langword="true"/> when the renderer is being forced to be redrawn this frame; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.SetSurface(SadConsole.IScreenSurface)">
             <summary>
-            Called when the renderer is added to a surface.
+            Sets the target surface of the renderer.
             </summary>
-            <param name="surfaceObject">The surface.</param>
+            <param name="surface">Target surface.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Detatch(SadConsole.IScreenSurface)">
-            <summary>
-            Called when the renderer is removed from a surface.
-            </summary>
-            <param name="surfaceObject">The surface.</param>
-        </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.IRenderer.Refresh(System.Boolean)">
             <summary>
             Refreshes a cached drawing state.
             </summary>
             <param name="surfaceObject">The surface this renderer is attached to.</param>
             <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderer.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.IRenderer.Render">
             <summary>
             Creates a drawcall in the drawing pipeline.
             </summary>
@@ -6914,25 +6913,30 @@
             <param name="renderer">The renderer the render step was removed from.</param>
             <param name="surface">The surface associated with the renderer. This may be null.</param>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderStep.RefreshPreStart">
+        <member name="M:SadConsole.Renderers.IRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
             <summary>
-            Called when the renderer starts to refresh the textures.
+            Called to redraw the render step if needed.
             </summary>
-            <returns><see langword="true"/> when the step wants to force a render pass. <see langword="false"/> to let the renderer decide if a render pass will happen.</returns>
+            <returns><see langword="true"/> when the step is going to draw something new and is requesting a <see cref="M:SadConsole.Renderers.IRenderStep.Composing"/> step; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderStep.Refresh">
+        <member name="M:SadConsole.Renderers.IRenderStep.Composing">
             <summary>
-            Called before the refresh ends and the renderer is going to clean up its resources.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Renderers.IRenderStep.RenderStart">
-            <summary>
-            Called before the render pipeline creates draw calls.
+            Called when the renderer needs to redraw the <see cref="P:SadConsole.Renderers.IRenderer.Output"/> texture.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.IRenderStep.RenderEnd">
+        <member name="M:SadConsole.Renderers.IRenderStep.Render">
             <summary>
-            Called after the draw calls have been created and the tint has ended. Rendering is considered complete.
+            Called when building draw calls for the render pipeline.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.IRenderStepTexture">
+            <summary>
+            Indicates the render step has an associated texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRenderStepTexture.CachedTexture">
+            <summary>
+            The texture created by the render step.
             </summary>
         </member>
         <member name="T:SadConsole.ScreenObject">

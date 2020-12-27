@@ -45,9 +45,8 @@ namespace SadConsole
             {
                 if (_renderer == value) return;
 
-                _renderer?.Detatch(this);
                 _renderer = value;
-                _renderer?.Attach(this);
+                _renderer?.SetSurface(this);
 
                 OnRendererChanged();
                 IsDirty = true;
@@ -71,8 +70,7 @@ namespace SadConsole
 
                 _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
 
-                _renderer?.Detatch(this);
-                _renderer?.Attach(this);
+                _renderer?.SetSurface(this);
 
                 OnSurfaceChanged(old);
             }
@@ -253,8 +251,8 @@ namespace SadConsole
 
             if (_renderer != null)
             {
-                _renderer.Refresh(this, ForceRendererRefresh);
-                _renderer.Render(this);
+                _renderer.Refresh(ForceRendererRefresh);
+                _renderer.Render();
                 ForceRendererRefresh = false;
             }
 

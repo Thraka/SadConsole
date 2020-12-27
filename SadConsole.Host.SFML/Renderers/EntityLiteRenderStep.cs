@@ -12,6 +12,7 @@ namespace SadConsole.Renderers
     public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     {
         private Entities.Renderer _entityManager;
+        private Host.GameTexture _cachedTexture;
         private ScreenSurfaceRenderer _baseRenderer;
         private IScreenSurface _screen;
 
@@ -21,12 +22,17 @@ namespace SadConsole.Renderers
         public RenderTexture BackingTexture { get; private set; }
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 5;
+        public ITexture CachedTexture => _cachedTexture;
+
+        /// <inheritdoc/>
+        public int SortOrder { get; set; } = 50;
 
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(EntityLiteRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+            if (!(renderer is ScreenSurfaceRenderer))
+                throw new Exception($"Renderer used with {nameof(EntityLiteRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
             _screen = surface;
 
@@ -38,6 +44,8 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
             _screen = null;
             _baseRenderer = null;
             _entityManager = null;
@@ -50,6 +58,8 @@ namespace SadConsole.Renderers
             {
                 BackingTexture?.Dispose();
                 BackingTexture = null;
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
                 _screen = null;
                 _entityManager = null;
             }
@@ -57,6 +67,7 @@ namespace SadConsole.Renderers
             {
                 if (!_screen.HasSadComponent(out Entities.Renderer host))
                     throw new Exception("EntityLiteManager is being run on object without a control host component.");
+
                 _screen = surface;
                 _entityManager = host;
                 // BackingTexture is handled by prestart.
@@ -64,33 +75,22 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public void RenderStart()
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
         {
-            if (_screen.Tint.A != 255)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(_screen.AbsoluteArea.Position.X, _screen.AbsoluteArea.Position.Y), _baseRenderer._finalDrawColor));
-        }
+            bool result = true;
 
-        ///  <inheritdoc/>
-        public void RenderEnd() { }
-
-        ///  <inheritdoc/>
-        public bool RefreshPreStart()
-        {
             // Update texture if something is out of size.
-            if (BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
                 BackingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
-                return true;
+                _cachedTexture?.Dispose();
+                _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
+                result = true;
             }
 
-            return false;
-        }
-
-        ///  <inheritdoc/>
-        public void Refresh()
-        {
-            if (_baseRenderer.IsForced || _entityManager.IsDirty)
+            // Redraw is needed
+            if (result || _entityManager.IsDirty || isForced)
             {
                 BackingTexture.Clear(Color.Transparent);
                 Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
@@ -113,10 +113,26 @@ namespace SadConsole.Renderers
 
                 Host.Global.SharedSpriteBatch.End();
                 BackingTexture.Display();
+
+                result = true;
+                _entityManager.IsDirty = false;
             }
 
-            _entityManager.IsDirty = false;
+            return result;
         }
+
+        ///  <inheritdoc/>
+        public void Composing()
+        {
+            if (_screen.Tint.A != 255)
+            {
+                IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+                Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+            }
+        }
+
+        ///  <inheritdoc/>
+        public void Render() { }
 
         /// <summary>
         /// Disposes the object.
@@ -126,6 +142,8 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
         }
 
         ///  <inheritdoc/>

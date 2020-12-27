@@ -19,6 +19,12 @@ namespace FeatureDemo
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
 
+#if MONOGAME
+            Settings.WindowTitle = "Feature Demo (MonoGame)";
+#elif SFML
+            Settings.WindowTitle = "Feature Demo (SFML)";
+#endif
+
             SadConsole.Game.Create(80, 25); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;

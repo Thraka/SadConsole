@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-
-namespace SadConsole.Renderers
+﻿namespace SadConsole.Renderers
 {
     /// <summary>
     /// Indicates the render step has an associated texture.
@@ -10,6 +8,6 @@ namespace SadConsole.Renderers
         /// <summary>
         /// The texture created by the render step.
         /// </summary>
-        RenderTarget2D BackingTexture { get; }
+        ITexture CachedTexture { get; }
     }
 }

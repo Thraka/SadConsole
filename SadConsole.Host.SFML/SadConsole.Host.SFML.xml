@@ -277,6 +277,9 @@
             The cached texture of the drawn controls layer.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.ControlHostRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -289,16 +292,10 @@
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.OnSurfaceChanged(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderStart">
-             <inheritdoc/>
-        </member>
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderEnd">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RefreshPreStart">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Refresh">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.ProcessContainer(SadConsole.UI.Controls.IContainer)">
@@ -306,6 +303,12 @@
             Processes a container from the control host.
             </summary>
             <param name="controlContainer">The container.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Composing">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render">
+             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Font,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
             <summary>
@@ -348,16 +351,13 @@
         <member name="M:SadConsole.Renderers.CursorRenderStep.OnSurfaceChanged(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.CursorRenderStep.RefreshPreStart">
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.CursorRenderStep.Refresh">
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Composing">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.CursorRenderStep.RenderStart">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.CursorRenderStep.RenderEnd">
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Render">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
@@ -373,6 +373,9 @@
             The cached texture of the drawn entities.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -385,16 +388,13 @@
         <member name="M:SadConsole.Renderers.EntityLiteRenderStep.OnSurfaceChanged(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.RenderStart">
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.RenderEnd">
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Composing">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.RefreshPreStart">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Refresh">
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Render">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose(System.Boolean)">
@@ -411,16 +411,6 @@
             Finalizes the object for collection.
             </summary>
         </member>
-        <member name="T:SadConsole.Renderers.IRenderStepTexture">
-            <summary>
-            Indicates the render step has an associated texture.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.IRenderStepTexture.BackingTexture">
-            <summary>
-            The texture created by the render step.
-            </summary>
-        </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -428,6 +418,21 @@
             <remarks>
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.DoOutputRender">
+            <summary>
+            <see langword="true"/> when the renderer should create a draw call for <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
         </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer._screen">
             <summary>
@@ -462,26 +467,18 @@
             Cached set of rectangles used in rendering each cell.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.DefaultRenderStep">
-            <summary>
-            Default render step for drawing the surface.
-            </summary>
-        </member>
         <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
             <summary>
             Creates the renderer with the <see cref="T:SadConsole.Renderers.SurfaceRenderStep"/> step.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Attach(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.SetSurface(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Detatch(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddRenderStep(SadConsole.Renderers.IRenderStep)">
@@ -503,6 +500,9 @@
             The cached texture of the drawn surface.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -515,16 +515,13 @@
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.OnSurfaceChanged(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.SurfaceRenderStep.RenderStart">
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.SurfaceRenderStep.RenderEnd">
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Composing">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.SurfaceRenderStep.RefreshPreStart">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Refresh">
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Render">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose(System.Boolean)">
@@ -558,16 +555,17 @@
         <member name="M:SadConsole.Renderers.WindowRenderStep.OnSurfaceChanged(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.WindowRenderStep.RefreshPreStart">
-             <inheritdoc/>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Refresh(SadConsole.Renderers.IRenderer,System.Boolean,System.Boolean)">
+            <summary>
+            Does nothing.
+            </summary>
         </member>
-        <member name="M:SadConsole.Renderers.WindowRenderStep.Refresh">
-             <inheritdoc/>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Composing">
+            <summary>
+            Does nothing.
+            </summary>
         </member>
-        <member name="M:SadConsole.Renderers.WindowRenderStep.RenderStart">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.WindowRenderStep.RenderEnd">
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Render">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">

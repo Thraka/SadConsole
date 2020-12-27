@@ -9,7 +9,7 @@ namespace FeatureDemo.HostSpecific.MonoGame
 {
     class HexSurfaceRenderer: SadConsole.Renderers.ScreenSurfaceRenderer
     {
-        public override void Refresh(IScreenSurface screen, bool force = false)
+        public override void Refresh(bool force = false)
         {
             //if (!force && !screen.IsDirty && BackingTexture != null) return;
 

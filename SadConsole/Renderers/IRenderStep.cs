@@ -9,6 +9,12 @@ namespace SadConsole.Renderers
     /// </summary>
     public interface IRenderStep: IDisposable
     {
+        // Maybe add this in the future
+        ///// <summary>
+        ///// <see langword="true"/> when the step uses the active sprite batch in use by the renderer; othwerise <see langword="false"/>.
+        ///// </summary>
+        //bool UseSharedSpriteCompose { get; }
+
         /// <summary>
         /// Indicates priority related to other steps. Lowest runs first.
         /// </summary>
@@ -36,24 +42,19 @@ namespace SadConsole.Renderers
         void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface);
 
         /// <summary>
-        /// Called when the renderer starts to refresh the textures.
+        /// Called to redraw the render step if needed.
         /// </summary>
-        /// <returns><see langword="true"/> when the step wants to force a render pass. <see langword="false"/> to let the renderer decide if a render pass will happen.</returns>
-        bool RefreshPreStart();
+        /// <returns><see langword="true"/> when the step is going to draw something new and is requesting a <see cref="Composing"/> step; otherwise <see langword="false"/>.</returns>
+        bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced);
 
         /// <summary>
-        /// Called before the refresh ends and the renderer is going to clean up its resources.
+        /// Called when the renderer needs to redraw the <see cref="IRenderer.Output"/> texture.
         /// </summary>
-        void Refresh();
+        void Composing();
 
         /// <summary>
-        /// Called before the render pipeline creates draw calls.
+        /// Called when building draw calls for the render pipeline.
         /// </summary>
-        void RenderStart();
-
-        /// <summary>
-        /// Called after the draw calls have been created and the tint has ended. Rendering is considered complete.
-        /// </summary>
-        void RenderEnd();
+        void Render();
     }
 }

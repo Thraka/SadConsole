@@ -16,21 +16,27 @@ namespace SadConsole.Renderers
     /// </summary>
     public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     {
-        private ScreenSurfaceRenderer _baseRenderer;
         private IScreenSurface _screen;
+        private Host.GameTexture _cachedTexture;
+        private ScreenSurfaceRenderer _baseRenderer;
 
         /// <summary>
         /// The cached texture of the drawn surface.
         /// </summary>
         public RenderTarget2D BackingTexture { get; private set; }
 
+        /// <inheritdoc/>//
+        public ITexture CachedTexture => _cachedTexture;
+
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 2;
+        public int SortOrder { get; set; } = 50;
 
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(SurfaceRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+            if (!(renderer is ScreenSurfaceRenderer))
+                throw new Exception($"Renderer used with {nameof(SurfaceRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
             _screen = surface;
         }
@@ -40,8 +46,9 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
             _screen = null;
-            _baseRenderer = null;
         }
 
         ///  <inheritdoc/>
@@ -51,47 +58,34 @@ namespace SadConsole.Renderers
             {
                 BackingTexture?.Dispose();
                 BackingTexture = null;
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
                 _screen = null;
             }
             else
             {
                 _screen = surface;
-                // BackingTexture is handled by prestart.
+                // BackingTexture is handled by CheckRefresh.
             }
         }
 
-
         ///  <inheritdoc/>
-        public void RenderStart()
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
         {
-            // Draw call for surface
-            if (_screen.Tint.A != 255)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture, new Vector2(_screen.AbsoluteArea.Position.X, _screen.AbsoluteArea.Position.Y), _baseRenderer._finalDrawColor));
-        }
+            bool result = true;
 
-        ///  <inheritdoc/>
-        public void RenderEnd()
-        {
-        }
-
-        ///  <inheritdoc/>
-        public bool RefreshPreStart()
-        {
             // Update texture if something is out of size.
-            if (BackingTexture == null || _screen.AbsoluteArea.Width != BackingTexture.Width || _screen.AbsoluteArea.Height != BackingTexture.Height)
+            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != BackingTexture.Width || _screen.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
                 BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, _screen.AbsoluteArea.Width, _screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-                return true;
+                _cachedTexture?.Dispose();
+                _cachedTexture = new Host.GameTexture(BackingTexture);
+                result = true;
             }
 
-            return false;
-        }
-
-        ///  <inheritdoc/>
-        public void Refresh()
-        {
-            if (_baseRenderer.IsForced || _screen.IsDirty)
+            // Redraw is needed
+            if (result || _screen.IsDirty || isForced)
             {
                 Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
@@ -135,10 +129,23 @@ namespace SadConsole.Renderers
 
                 Host.Global.SharedSpriteBatch.End();
                 Host.Global.GraphicsDevice.SetRenderTarget(null);
+
+                result = true;
+                _screen.IsDirty = false;
             }
 
-            _screen.IsDirty = false;
+            return result;
         }
+
+        ///  <inheritdoc/>
+        public void Composing()
+        {
+            if (_screen.Tint.A != 255)
+                Host.Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, Color.White);
+        }
+
+        ///  <inheritdoc/>
+        public void Render() { }
 
         /// <summary>
         /// Disposes the object.
@@ -148,6 +155,8 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
         }
 
         ///  <inheritdoc/>

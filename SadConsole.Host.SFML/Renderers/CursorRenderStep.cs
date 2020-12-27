@@ -19,7 +19,9 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+            if (!(renderer is ScreenSurfaceRenderer))
+                throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
             _screen = surface;
         }
@@ -36,14 +38,14 @@ namespace SadConsole.Renderers
             _screen = surface;
 
         ///  <inheritdoc/>
-        public bool RefreshPreStart() =>
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced) =>
             false;
 
         ///  <inheritdoc/>
-        public void Refresh() { }
+        public void Composing() { }
 
         ///  <inheritdoc/>
-        public void RenderStart()
+        public void Render()
         {
             // If the tint isn't covering everything
             if (_screen.Tint.A != 255)
@@ -53,7 +55,7 @@ namespace SadConsole.Renderers
                 {
                     if (cursor.IsVisible && _screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && _screen.Surface.View.Contains(cursor.Position))
                     {
-                        var cursorPosition = _screen.AbsoluteArea.Position + _screen.Font.GetRenderRect(cursor.Position.X - _screen.Surface.ViewPosition.X, cursor.Position.Y - _screen.Surface.ViewPosition.Y, _screen.FontSize).Position;
+                        Point cursorPosition = _screen.AbsoluteArea.Position + _screen.Font.GetRenderRect(cursor.Position.X - _screen.Surface.ViewPosition.X, cursor.Position.Y - _screen.Surface.ViewPosition.Y, _screen.FontSize).Position;
 
                         GameHost.Instance.DrawCalls.Enqueue(
                             new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
@@ -66,9 +68,6 @@ namespace SadConsole.Renderers
                 }
             }
         }
-
-        ///  <inheritdoc/>
-        public void RenderEnd() { }
 
         ///  <inheritdoc/>
         public void Dispose() { }

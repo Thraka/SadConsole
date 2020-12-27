@@ -16,7 +16,7 @@ namespace SadConsole.Renderers
         private UI.Window _screen;
 
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 1;
+        public int SortOrder { get; set; } = 10;
 
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
@@ -37,26 +37,29 @@ namespace SadConsole.Renderers
         public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface) =>
             _screen = (UI.Window)surface;
 
-        ///  <inheritdoc/>
-        public bool RefreshPreStart() =>
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced) =>
             false;
 
-        ///  <inheritdoc/>
-        public void Refresh() { }
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
+        public void Composing() { }
 
         ///  <inheritdoc/>
-        public void RenderStart()
+        public void Render()
         {
             UI.Colors colors = _screen.Controls.GetThemeColors();
 
             if (_screen.IsModal && colors.ModalBackground.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((SadConsole.Host.GameTexture)_screen.Font.Image).Texture, new Microsoft.Xna.Framework.Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), _screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((Host.GameTexture)_screen.Font.Image).Texture, new XnaRectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), _screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
-        ///  <inheritdoc/>
-        public void RenderEnd() { }
-
-        ///  <inheritdoc/>
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
         public void Dispose() { }
     }
 }

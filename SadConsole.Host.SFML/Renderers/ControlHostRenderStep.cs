@@ -12,8 +12,9 @@ namespace SadConsole.Renderers
     public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     {
         private SadConsole.UI.ControlHost _controlsHost;
-        private ScreenSurfaceRenderer _baseRenderer;
         private IScreenSurface _screen;
+        private Host.GameTexture _cachedTexture;
+        private ScreenSurfaceRenderer _baseRenderer;
 
         /// <summary>
         /// The cached texture of the drawn controls layer.
@@ -21,7 +22,10 @@ namespace SadConsole.Renderers
         public RenderTexture BackingTexture { get; private set; }
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 5;
+        public ITexture CachedTexture => _cachedTexture;
+
+        /// <inheritdoc/>
+        public int SortOrder { get; set; } = 80;
 
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
@@ -38,6 +42,8 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
             _screen = null;
             _baseRenderer = null;
             _controlsHost = null;
@@ -50,6 +56,8 @@ namespace SadConsole.Renderers
             {
                 BackingTexture?.Dispose();
                 BackingTexture = null;
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
                 _screen = null;
                 _controlsHost = null;
             }
@@ -65,36 +73,27 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public void RenderStart()
-        {
-            // Draw call for controls
-            if (_screen.Tint.A != 255)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(BackingTexture.Texture, new SFML.System.Vector2i(_screen.AbsoluteArea.Position.X, _screen.AbsoluteArea.Position.Y), _baseRenderer._finalDrawColor));
-        }
-
-        ///  <inheritdoc/>
         public void RenderEnd()
         {
         }
 
         ///  <inheritdoc/>
-        public bool RefreshPreStart()
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
         {
+            bool result = true;
+
             // Update texture if something is out of size.
-            if (BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
                 BackingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
-                return true;
+                _cachedTexture?.Dispose();
+                _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
+                result = true;
             }
 
-            return false;
-        }
-
-        ///  <inheritdoc/>
-        public void Refresh()
-        {
-            if (_baseRenderer.IsForced || _controlsHost.IsDirty)
+            // Redraw is needed
+            if (result || _controlsHost.IsDirty || isForced)
             {
                 BackingTexture.Clear(Color.Transparent);
                 Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
@@ -103,9 +102,12 @@ namespace SadConsole.Renderers
 
                 Host.Global.SharedSpriteBatch.End();
                 BackingTexture.Display();
+
+                result = true;
+                _controlsHost.IsDirty = false;
             }
 
-            _controlsHost.IsDirty = false;
+            return result;
         }
 
         /// <summary>
@@ -123,6 +125,19 @@ namespace SadConsole.Renderers
                     ProcessContainer(container);
             }
         }
+
+        ///  <inheritdoc/>
+        public void Composing()
+        {
+            if (_screen.Tint.A != 255)
+            {
+                IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+                Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+            }
+        }
+
+        ///  <inheritdoc/>
+        public void Render() { }
 
         /// <summary>
         /// Renders the cells of a control.
@@ -170,6 +185,8 @@ namespace SadConsole.Renderers
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
+            _cachedTexture?.Dispose();
+            _cachedTexture = null;
         }
 
         ///  <inheritdoc/>

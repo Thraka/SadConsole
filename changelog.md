@@ -1,3 +1,9 @@
+## v9.0 ??????
+
+- Fixed bug that prevents right/middle mouse click detections.
+- Added label text to progress bar when in horizontal mode.
+- Adjusted the rendering step system. Now steps have a shared output texture to draw to.
+
 ## v9.0 Beta 3
 
 - New library added `SadConsole.Extended`. This has different classes, controls, consoles, the can be used by many other projects.

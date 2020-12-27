@@ -7,6 +7,7 @@ namespace FeatureDemo.CustomConsoles
     class FadingChild: ScreenSurface
     {
         private ScreenSurface _child;
+        private ScreenSurface _childTint;
 
         private SadConsole.Instructions.InstructionSet _set;
 
@@ -19,10 +20,20 @@ namespace FeatureDemo.CustomConsoles
             _child.Surface.DefaultBackground = Color.Black;
             _child.Surface.Clear();
             _child.Surface.DrawBox(_child.Surface.View, new ColoredGlyph(Color.MediumPurple, Color.Black), connectedLineStyle: ICellSurface.ConnectedLineThick);
-            _child.Surface.Print(2, 2, "Second console");
-            _child.Position = (25, 4);
+            _child.Surface.Print(2, 2, "Transparent console");
+            _child.Position = (40, 4);
 
             Children.Add(_child);
+
+            _childTint = new ScreenSurface(30, 13);
+            _childTint.Surface.DefaultForeground = Color.White;
+            _childTint.Surface.DefaultBackground = Color.Black;
+            _childTint.Surface.Clear();
+            _childTint.Surface.DrawBox(_child.Surface.View, new ColoredGlyph(Color.MediumPurple, Color.Black), connectedLineStyle: ICellSurface.ConnectedLineThick);
+            _childTint.Surface.Print(2, 2, "Tinted console");
+            _childTint.Position = (4, 4);
+
+            Children.Add(_childTint);
 
             _set = new SadConsole.Instructions.InstructionSet()
 
@@ -39,9 +50,12 @@ namespace FeatureDemo.CustomConsoles
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);
-            
+
             if (_set.CurrentInstruction is SadConsole.Instructions.AnimatedValue current)
+            {
                 ((SadConsole.Renderers.ScreenSurfaceRenderer)_child.Renderer).Opacity = (byte)current.Value;
+                _childTint.Tint = Color.Purple.SetAlpha((byte)current.Value);
+            }
         }
     }
 }

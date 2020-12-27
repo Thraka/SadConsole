@@ -343,8 +343,6 @@ namespace SadConsole.Debug
             protected int HorizontalBarY;
             protected int VerticalBarX;
 
-            public Rectangle MouseArea;
-
             public ScrollingSurfaceView(int width, int height) : base(width, height)
             {
                 HorizontalBar = new ScrollBar(Orientation.Horizontal, width - 1);

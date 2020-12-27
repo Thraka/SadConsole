@@ -17,12 +17,14 @@ namespace SadConsole.Renderers
         private IScreenSurface _screen;
 
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 8;
+        public int SortOrder { get; set; } = 70;
 
         ///  <inheritdoc/>
         public void OnAdded(IRenderer renderer, IScreenSurface surface)
         {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+            if (!(renderer is ScreenSurfaceRenderer))
+                throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
+
             _baseRenderer = (ScreenSurfaceRenderer)renderer;
             _screen = surface;
         }
@@ -39,14 +41,14 @@ namespace SadConsole.Renderers
             _screen = surface;
 
         ///  <inheritdoc/>
-        public bool RefreshPreStart() =>
+        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced) =>
             false;
 
         ///  <inheritdoc/>
-        public void Refresh() { }
+        public void Composing() { }
 
         ///  <inheritdoc/>
-        public void RenderStart()
+        public void Render()
         {
             // If the tint isn't covering everything
             if (_screen.Tint.A != 255)
@@ -58,7 +60,7 @@ namespace SadConsole.Renderers
                     {
                         GameHost.Instance.DrawCalls.Enqueue(
                             new DrawCalls.DrawCallGlyph(cursor.CursorRenderCell,
-                                                        ((SadConsole.Host.GameTexture)_screen.Font.Image).Texture,
+                                                        ((Host.GameTexture)_screen.Font.Image).Texture,
                                                         new XnaRectangle(_screen.Font.GetRenderRect(cursor.Position.X - _screen.Surface.ViewPosition.X,
                                                                                                     cursor.Position.Y - _screen.Surface.ViewPosition.Y,
                                                                                                     _screen.FontSize).Translate(_screen.AbsolutePosition).Position.ToMonoPoint(),
@@ -72,8 +74,6 @@ namespace SadConsole.Renderers
             }
         }
 
-        ///  <inheritdoc/>
-        public void RenderEnd() { }
 
         ///  <inheritdoc/>
         public void Dispose() { }
