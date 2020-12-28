@@ -82,11 +82,6 @@ namespace SadConsole
         public Queue<DrawCalls.IDrawCall> DrawCalls { get; } = new Queue<DrawCalls.IDrawCall>();
 
         /// <summary>
-        /// The size of the game window.
-        /// </summary>
-        public Point WindowSize { get; protected set; }
-
-        /// <summary>
         /// How many cells fit in the render area width used by SadConsole.
         /// </summary>
         public int ScreenCellsX { get; protected set; }

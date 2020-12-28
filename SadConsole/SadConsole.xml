@@ -3384,11 +3384,6 @@
             Draw calls registered for the next drawing frame.
             </summary>
         </member>
-        <member name="P:SadConsole.GameHost.WindowSize">
-            <summary>
-            The size of the game window.
-            </summary>
-        </member>
         <member name="P:SadConsole.GameHost.ScreenCellsX">
             <summary>
             How many cells fit in the render area width used by SadConsole.

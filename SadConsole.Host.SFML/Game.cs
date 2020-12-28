@@ -72,8 +72,6 @@ namespace SadConsole
                 // SETUP RENDER vars for global screen size data.
             }
 
-            WindowSize = new Point((int)window.Size.X, (int)window.Size.Y);
-
             window.Closed += (o, e) =>
             {
                 ((SFML.Window.Window)o).Close();
@@ -92,8 +90,8 @@ namespace SadConsole
 
             //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
 
-            SadConsole.Settings.Rendering.RenderWidth = WindowSize.X;
-            SadConsole.Settings.Rendering.RenderHeight = WindowSize.Y;
+            SadConsole.Settings.Rendering.RenderWidth = (int)window.Size.X;
+            SadConsole.Settings.Rendering.RenderHeight = (int)window.Size.Y;
             ResetRendering();
 
             _keyboard = new Keyboard(window);
