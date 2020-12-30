@@ -194,7 +194,8 @@ namespace SadConsole.Entities
                 if (DoEntityUpdate)
                     Entities[i].Update(delta);
 
-                if (Entities[i].Appearance.IsDirty)
+                // Short out if IsDirty has already been marked
+                if (!IsDirty && Entities[i].Appearance.IsDirty && IsEntityVisible(Entities[i].Position, Entities[i].UsePixelPositioning))
                     IsDirty = true;
             }
         }
@@ -266,12 +267,12 @@ namespace SadConsole.Entities
         /// <param name="entity">The entity.</param>
         protected virtual void OnEntityRemoved(Entity entity) { }
 
-        private void SetEntityVisibility(Entity entity)
+        private bool SetEntityVisibility(Entity entity)
         {
             bool isVisible = IsEntityVisible(entity.Position, entity.UsePixelPositioning);
             bool contains = _entitiesVisible.Contains(entity);
 
-            if (isVisible == contains) return;
+            if (isVisible == contains) return isVisible;
 
             IsDirty = true;
 
@@ -283,6 +284,8 @@ namespace SadConsole.Entities
             }
             else
                 _entitiesVisible.Remove(entity);
+
+            return isVisible;
         }
 
         private void UpdateCachedVisibilityArea() =>
