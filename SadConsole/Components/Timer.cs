@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SadConsole
+namespace SadConsole.Components
 {
     /// <summary>
     /// A simple timer with callback.

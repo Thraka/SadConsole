@@ -1701,6 +1701,54 @@
         <member name="M:SadConsole.Components.SurfaceComponentFollowTarget.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.Timer">
+            <summary>
+            A simple timer with callback.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.Timer.TimerElapsed">
+            <summary>
+            Called when the timer elapses.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.Timer.TimerRestart">
+            <summary>
+            Called when the timer restarts.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Timer.Repeat">
+            <summary>
+            If true, the timer will restart when the time has elapsed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Timer.TimerAmount">
+            <summary>
+            How many milliseconds to cause the timer to trigger.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Timer.IsPaused">
+            <summary>
+            When true, the timer does not count time.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Timer.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a new timer.
+            </summary>
+            <param name="triggerTime">Duration of the timer.</param>
+        </member>
+        <member name="M:SadConsole.Components.Timer.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Updates the timer with the time since the last call.
+            </summary>
+            <param name="console">The parent object.</param>
+            <param name="delta">The time since the last frame update.</param>
+        </member>
+        <member name="M:SadConsole.Components.Timer.Restart">
+            <summary>
+            Restarts the timer; sets <see cref="P:SadConsole.Components.Timer.IsPaused"/> to false.
+            </summary>
+        </member>
         <member name="T:SadConsole.Components.UpdateComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -2072,7 +2120,7 @@
         <member name="P:SadConsole.Effects.CellEffectBase.IsFinished">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Effects.CellEffectBase.CloneOnApply">
+        <member name="P:SadConsole.Effects.CellEffectBase.CloneOnAdd">
             <inheritdoc />
         </member>
         <member name="P:SadConsole.Effects.CellEffectBase.StartDelay">
@@ -2081,7 +2129,7 @@
         <member name="P:SadConsole.Effects.CellEffectBase.RemoveOnFinished">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Effects.CellEffectBase.RestoreCellOnFinished">
+        <member name="P:SadConsole.Effects.CellEffectBase.RestoreCellOnRemoved">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CellEffectBase.#ctor">
@@ -2473,9 +2521,9 @@
             True when the effect is finished.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.ICellEffect.CloneOnApply">
+        <member name="P:SadConsole.Effects.ICellEffect.CloneOnAdd">
             <summary>
-            Flags this effect to be cloned when applied to a cell instead of reused.
+            Flags this effect to be cloned when assigned to a cell instead of reused.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.ICellEffect.StartDelay">
@@ -2488,7 +2536,7 @@
             When true, the effect should be disassociated with cells when it has finished processing.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.ICellEffect.RestoreCellOnFinished">
+        <member name="P:SadConsole.Effects.ICellEffect.RestoreCellOnRemoved">
             <summary>
             When <see langword="true"/>, indicates the <see cref="T:SadConsole.Effects.EffectsManager"/> should restore the cell to its original state.
             </summary>
@@ -2586,6 +2634,11 @@
             Indidcates this entity's visual appearance has changed.
             </summary>
         </member>
+        <member name="P:SadConsole.Entities.Entity.Effect">
+            <summary>
+            An effect that can be applied to the <see cref="P:SadConsole.Entities.Entity.Appearance"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
             <summary>
             Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the entity as if it is pixels and not cells.
@@ -2624,6 +2677,12 @@
         </member>
         <member name="M:SadConsole.Entities.Entity.UpdateAbsolutePosition">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Update(System.TimeSpan)">
+            <summary>
+            If an effect is applied to the cell, updates the effect.
+            </summary>
+            <param name="delta"></param>
         </member>
         <member name="M:SadConsole.Entities.Entity.Save(System.String)">
             <summary>
@@ -8025,54 +8084,6 @@
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Timer">
-            <summary>
-            A simple timer with callback.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Timer.TimerElapsed">
-            <summary>
-            Called when the timer elapses.
-            </summary>
-        </member>
-        <member name="E:SadConsole.Timer.TimerRestart">
-            <summary>
-            Called when the timer restarts.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Timer.Repeat">
-            <summary>
-            If true, the timer will restart when the time has elapsed.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Timer.TimerAmount">
-            <summary>
-            How many milliseconds to cause the timer to trigger.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Timer.IsPaused">
-            <summary>
-            When true, the timer does not count time.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Timer.#ctor(System.TimeSpan)">
-            <summary>
-            Creates a new timer.
-            </summary>
-            <param name="triggerTime">Duration of the timer.</param>
-        </member>
-        <member name="M:SadConsole.Timer.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <summary>
-            Updates the timer with the time since the last call.
-            </summary>
-            <param name="console">The parent object.</param>
-            <param name="delta">The time since the last frame update.</param>
-        </member>
-        <member name="M:SadConsole.Timer.Restart">
-            <summary>
-            Restarts the timer; sets <see cref="P:SadConsole.Timer.IsPaused"/> to false.
-            </summary>
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
