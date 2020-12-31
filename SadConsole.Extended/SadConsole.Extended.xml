@@ -170,6 +170,43 @@
             <param name="triggeredPosition">The new position within the zone associated with the event.</param>
             <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
         </member>
+        <member name="T:SadConsole.Entities.Zone">
+            <summary>
+            Defines an area for a scene.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Area">
+            <summary>
+            The area the zone covers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.Appearance">
+            <summary>
+            A visual for the area to help debug.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.Name">
+            <summary>
+            The name of the zone.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Settings">
+            <summary>
+            Key-value pairs for the zone.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
+            <summary>
+            Creates a new zone object with the specified area.
+            </summary>
+            <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.ToString">
+            <summary>
+            Returns the string "Zone - " followed by the <see cref="P:SadConsole.Entities.Zone.Name"/> of the zone. If the name is empty, appends the <see cref="F:SadConsole.Entities.Zone.Area"/> bounds.
+            </summary>
+            <returns>The name of the zone.</returns>
+        </member>
         <member name="T:SadConsole.UI.Border">
             <summary>
             Creates a 3D border around a surface.

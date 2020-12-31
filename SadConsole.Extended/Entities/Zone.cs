@@ -10,7 +10,6 @@ namespace SadConsole.Entities
     /// Defines an area for a scene.
     /// </summary>
     [DataContract]
-    [System.Diagnostics.DebuggerDisplay("Zone")]
     public class Zone : ScreenObject
     {
         /// <summary>
@@ -23,6 +22,12 @@ namespace SadConsole.Entities
         /// </summary>
         [DataMember]
         public ColoredGlyph Appearance { get; set; }
+
+        /// <summary>
+        /// The name of the zone.
+        /// </summary>
+        [DataMember]
+        public string Name { get; set; }
 
         /// <summary>
         /// Key-value pairs for the zone.
@@ -41,5 +46,12 @@ namespace SadConsole.Entities
 
             Area = area;
         }
+
+        /// <summary>
+        /// Returns the string "Zone - " followed by the <see cref="Name"/> of the zone. If the name is empty, appends the <see cref="Area"/> bounds.
+        /// </summary>
+        /// <returns>The name of the zone.</returns>
+        public override string ToString() =>
+            string.IsNullOrEmpty(Name) ? $"Zone - {Area.Bounds}" : $"Zone - {Name}";
     }
 }
