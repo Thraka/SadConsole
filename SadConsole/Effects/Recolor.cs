@@ -73,7 +73,7 @@ namespace SadConsole.Effects
 
             IsFinished = IsFinished,
             StartDelay = StartDelay,
-            CloneOnApply = CloneOnApply,
+            CloneOnAdd = CloneOnAdd,
             RemoveOnFinished = RemoveOnFinished,
             RestoreCellOnRemoved = RestoreCellOnRemoved,
             _timeElapsed = _timeElapsed,

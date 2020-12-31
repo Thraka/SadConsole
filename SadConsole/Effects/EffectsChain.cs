@@ -176,7 +176,7 @@ namespace SadConsole.Effects
 
                 IsFinished = IsFinished,
                 StartDelay = StartDelay,
-                CloneOnApply = CloneOnApply,
+                CloneOnAdd = CloneOnAdd,
                 RemoveOnFinished = RemoveOnFinished,
                 RestoreCellOnRemoved = RestoreCellOnRemoved,
                 _timeElapsed = _timeElapsed,
@@ -184,7 +184,7 @@ namespace SadConsole.Effects
 
             foreach (ICellEffect item in Effects)
             {
-                chain.Effects.Add(item.CloneOnApply ? item.Clone() : item);
+                chain.Effects.Add(item.CloneOnAdd ? item.Clone() : item);
             }
 
             chain._activeEffect = chain.Effects[chain._activeIndex];

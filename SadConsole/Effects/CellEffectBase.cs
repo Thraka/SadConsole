@@ -28,7 +28,7 @@ namespace SadConsole.Effects
 
         /// <inheritdoc />
         [DataMember]
-        public bool CloneOnApply { get; set; }
+        public bool CloneOnAdd { get; set; }
 
         /// <inheritdoc />
         [DataMember]

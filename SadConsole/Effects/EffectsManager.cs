@@ -56,7 +56,7 @@ namespace SadConsole.Effects
             {
                 ColoredGlyphEffectData workingEffect;
 
-                if (effect.CloneOnApply)
+                if (effect.CloneOnAdd)
                 {
                     effect = effect.Clone();
                     workingEffect = new ColoredGlyphEffectData(effect);
@@ -105,7 +105,7 @@ namespace SadConsole.Effects
             {
                 ColoredGlyphEffectData workingEffect;
 
-                if (effect.CloneOnApply)
+                if (effect.CloneOnAdd)
                 {
                     effect = effect.Clone();
                     workingEffect = new ColoredGlyphEffectData(effect);

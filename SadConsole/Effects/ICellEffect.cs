@@ -11,9 +11,9 @@
         bool IsFinished { get; }
 
         /// <summary>
-        /// Flags this effect to be cloned when applied to a cell instead of reused.
+        /// Flags this effect to be cloned when assigned to a cell instead of reused.
         /// </summary>
-        bool CloneOnApply { get; set; }
+        bool CloneOnAdd { get; set; }
 
         /// <summary>
         /// A delay applied to the effect only when it first runs.

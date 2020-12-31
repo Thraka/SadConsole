@@ -86,7 +86,7 @@ namespace SadConsole.Entities
                 if (value == null)
                     _effect = null;
                 else
-                    _effect = value.CloneOnApply ? value.Clone() : value;
+                    _effect = value.CloneOnAdd ? value.Clone() : value;
             }
         }
 
