@@ -12,6 +12,9 @@ namespace SadConsole.Host
         internal bool _resizeBusy = false;
         internal Action<Game> _initCallback;
 
+        public SadConsoleGameComponent SadConsoleComponent;
+        public ClearScreenGameComponent ClearScreenComponent;
+
         /// <summary>
         /// The current game window width.
         /// </summary>
@@ -102,8 +105,11 @@ namespace SadConsole.Host
             IsMouseVisible = true;
 
             // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
-            Components.Add(new ClearScreenGameComponent(this));
-            Components.Add(new SadConsoleGameComponent(this));
+            SadConsoleComponent = new SadConsoleGameComponent(this);
+            ClearScreenComponent = new ClearScreenGameComponent(this);
+
+            Components.Add(SadConsoleComponent);
+            Components.Add(ClearScreenComponent);
 
             // Call the default initialize of the base class.
             base.Initialize();
