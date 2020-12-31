@@ -12,7 +12,7 @@ namespace ThemeEditor
     internal class ControlsTest : SadConsole.UI.ControlsConsole
     {
         private readonly Color[] backgroundcycle;
-        private readonly SadConsole.Timer progressTimer;
+        private readonly SadConsole.Components.Timer progressTimer;
 
         public ControlsTest() : base(80, 23)
         {
@@ -54,7 +54,7 @@ namespace ThemeEditor
             };
             Controls.Add(slider);
 
-            progressTimer = new Timer(TimeSpan.FromSeconds(0.5));
+            progressTimer = new SadConsole.Components.Timer(TimeSpan.FromSeconds(0.5));
             progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
 
             SadComponents.Add(progressTimer);

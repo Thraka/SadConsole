@@ -3,7 +3,6 @@ using SadRogue.Primitives;
 
 namespace FeatureDemo
 {
-    [System.Diagnostics.DebuggerDisplay("Header Area")]
     internal class HeaderConsole : ScreenSurface
     {
         public HeaderConsole() : base(80, 2)
@@ -19,5 +18,12 @@ namespace FeatureDemo
             Surface.Print(1, 1, summary, SadConsole.UI.Themes.Library.Default.Colors.Gray);
             //this.Print(0, 2, new string((char)223, 80), Theme.GrayDark, Color.Transparent);
         }
+
+        /// <summary>
+        /// Returns the value "Window".
+        /// </summary>
+        /// <returns>The string "Window".</returns>
+        public override string ToString() =>
+            "Header Surface";
     }
 }

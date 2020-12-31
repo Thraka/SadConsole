@@ -76,8 +76,8 @@ namespace FeatureDemo.Windows
                 RemoveOnFinished = true,
                 UseCellBackground = false,
                 UseCellForeground = false,
-                CloneOnApply = true,
-                RestoreCellOnFinished = false
+                CloneOnAdd = true,
+                RestoreCellOnRemoved = false
             };
 
             BorderLineStyle = ICellSurface.ConnectedLineThick;

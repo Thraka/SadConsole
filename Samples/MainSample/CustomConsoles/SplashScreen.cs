@@ -64,7 +64,7 @@ namespace FeatureDemo.CustomConsoles
                 FadeDuration = 1f,
                 Repeat = false,
                 RemoveOnFinished = true,
-                CloneOnApply = true
+                CloneOnAdd = true
             });
 
             // Configure the animation

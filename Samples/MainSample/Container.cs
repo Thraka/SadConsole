@@ -9,7 +9,6 @@ using SadRogue.Primitives;
 
 namespace FeatureDemo
 {
-    [System.Diagnostics.DebuggerDisplay("Demo Container")]
     class Container : ScreenObject
     {
         private int currentConsoleIndex = -1;
@@ -85,7 +84,7 @@ namespace FeatureDemo
             GameHost.Instance.FocusedScreenObjects.Set(selectedConsole);
             headerConsole.SetConsole(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
         }
-        
+
         //public override bool ProcessKeyboard(Keyboard state)
         //{
         //    return selectedConsole.ProcessKeyboard(state);
@@ -95,5 +94,12 @@ namespace FeatureDemo
         //{
         //    return selectedConsole.ProcessMouse(state);
         //}
+
+        /// <summary>
+        /// Returns the value "Window".
+        /// </summary>
+        /// <returns>The string "Window".</returns>
+        public override string ToString() =>
+            "Demo Container";
     }
 }
