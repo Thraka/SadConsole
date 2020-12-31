@@ -12,7 +12,6 @@ namespace SadConsole.Entities
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Entity")]
     //[JsonConverter(typeof(EntityJsonConverter))]
     [DataContract]
     public class Entity : ScreenObject
@@ -172,6 +171,13 @@ namespace SadConsole.Entities
                 }
             }
         }
+
+        /// <summary>
+        /// Returns the name of the entity prefixed with "Entity - ".
+        /// </summary>
+        /// <returns>The name.</returns>
+        public override string ToString() =>
+            $"Entity - {Name}";
 
         /// <summary>
         /// Saves the <see cref="Entity"/> to a file.

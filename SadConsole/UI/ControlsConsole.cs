@@ -17,7 +17,6 @@ namespace SadConsole.UI
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
-    [DebuggerDisplay("Console (Controls)")]
     public class ControlsConsole : Console
     {
         /// <summary>
@@ -74,5 +73,12 @@ namespace SadConsole.UI
             Controls = new ControlHost();
             SadComponents.Add(Controls);
         }
+
+        /// <summary>
+        /// Returns the value "Console (Controls)".
+        /// </summary>
+        /// <returns>The string "Console (Controls)".</returns>
+        public override string ToString() =>
+            "Console (Controls)";
     }
 }

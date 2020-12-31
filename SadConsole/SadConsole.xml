@@ -295,7 +295,7 @@
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.ToString">
             <summary>
-            Returns the name of the animation.
+            Returns the name of the animation prefixed with "Animation - ".
             </summary>
             <returns>The name.</returns>
         </member>
@@ -1842,6 +1842,12 @@
             Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.Console.ToString">
+            <summary>
+            Returns the value "Console".
+            </summary>
+            <returns>The string "Console".</returns>
+        </member>
         <member name="P:SadConsole.Console.Item(System.Int32)">
             <inheritdoc/>
         </member>
@@ -2684,6 +2690,12 @@
             </summary>
             <param name="delta"></param>
         </member>
+        <member name="M:SadConsole.Entities.Entity.ToString">
+            <summary>
+            Returns the name of the entity prefixed with "Entity - ".
+            </summary>
+            <returns>The name.</returns>
+        </member>
         <member name="M:SadConsole.Entities.Entity.Save(System.String)">
             <summary>
             Saves the <see cref="T:SadConsole.Entities.Entity"/> to a file.
@@ -2837,32 +2849,6 @@
             Called when an entity is removed.
             </summary>
             <param name="entity">The entity.</param>
-        </member>
-        <member name="T:SadConsole.Entities.Zone">
-            <summary>
-            Defines an area for a scene.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Zone.Area">
-            <summary>
-            The area the zone covers.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Zone.Appearance">
-            <summary>
-            A visual for the area to help debug.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Zone.Settings">
-            <summary>
-            Key-value pairs for the zone.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
-            <summary>
-            Creates a new zone object with the specified area.
-            </summary>
-            <param name="area">The area of the zone.</param>
         </member>
         <member name="T:SadConsole.PointExtensions">
             <summary>
@@ -7144,6 +7130,12 @@
             Sorts the components based on the <see cref="P:SadConsole.Components.IComponent.SortOrder"/> value.
             </summary>
         </member>
+        <member name="M:SadConsole.ScreenObject.ToString">
+            <summary>
+            Returns the value "ScreenObject".
+            </summary>
+            <returns>The string "ScreenObject".</returns>
+        </member>
         <member name="M:SadConsole.ScreenObject.OnSerializingMethod(System.Runtime.Serialization.StreamingContext)">
             <summary>
             Nothing.
@@ -7400,6 +7392,12 @@
             <summary>
             Called when the <see cref="P:SadConsole.ScreenSurface.Renderer"/> property is changed.
             </summary>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.ToString">
+            <summary>
+            Returns the value "ScreenSurface".
+            </summary>
+            <returns>The string "ScreenSurface".</returns>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
@@ -8801,6 +8799,12 @@
             <param name="surface">The surface.</param>
             <param name="font">The font to use with the surface.</param>
             <param name="fontSize">The font size.</param>
+        </member>
+        <member name="M:SadConsole.UI.ControlsConsole.ToString">
+            <summary>
+            Returns the value "Console (Controls)".
+            </summary>
+            <returns>The string "Console (Controls)".</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Button">
             <summary>
@@ -10914,6 +10918,12 @@
             <summary>
             Centers the window within the bounds of <see cref="P:SadConsole.Settings.Rendering.RenderWidth"/> and <see cref="P:SadConsole.Settings.Rendering.RenderHeight"/>
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Window.ToString">
+            <summary>
+            Returns the value "Window".
+            </summary>
+            <returns>The string "Window".</returns>
         </member>
         <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors,SadConsole.UI.Themes.ButtonTheme)">
             <summary>

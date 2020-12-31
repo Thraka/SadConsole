@@ -13,7 +13,6 @@ namespace SadConsole.UI
     /// Represents a windowed controls console.
     /// </summary>
     [DataContract]
-    [DebuggerDisplay("Window")]
     public partial class Window : Console
     {
         /// <summary>
@@ -464,6 +463,13 @@ namespace SadConsole.UI
             else
                 Position = new Point(((screenWidth / FontSize.X) / 2) - (Width / 2), ((screenHeight / FontSize.Y) / 2) - (Height / 2));
         }
+
+        /// <summary>
+        /// Returns the value "Window".
+        /// </summary>
+        /// <returns>The string "Window".</returns>
+        public override string ToString() =>
+            "Window";
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context) =>

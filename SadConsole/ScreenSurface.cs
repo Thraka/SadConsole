@@ -15,7 +15,6 @@ namespace SadConsole
     /// An object that renders a <see cref="ICellSurface"/>.
     /// </summary>
     [DataContract]
-    [System.Diagnostics.DebuggerDisplay("ScreenSurface")]
     public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     {
         [DataMember(Name = "Font")]
@@ -307,6 +306,13 @@ namespace SadConsole
         /// Called when the <see cref="Renderer"/> property is changed.
         /// </summary>
         protected void OnRendererChanged() { }
+
+        /// <summary>
+        /// Returns the value "ScreenSurface".
+        /// </summary>
+        /// <returns>The string "ScreenSurface".</returns>
+        public override string ToString() =>
+            "ScreenSurface";
 
         /// <inheritdoc/>
         [OnDeserialized]

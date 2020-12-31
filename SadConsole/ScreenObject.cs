@@ -14,7 +14,6 @@ namespace SadConsole
     /// A generic object processed by SadConsole. Provides parent/child, components, and position.
     /// </summary>
     [DataContract]
-    [System.Diagnostics.DebuggerDisplay("ScreenObject")]
     public class ScreenObject : IScreenObject
     {
         [DataMember(Name = "Children")]
@@ -540,6 +539,13 @@ namespace SadConsole
 
             return 0;
         }
+
+        /// <summary>
+        /// Returns the value "ScreenObject".
+        /// </summary>
+        /// <returns>The string "ScreenObject".</returns>
+        public override string ToString() =>
+            "ScreenObject";
 
         /// <summary>
         /// Nothing.

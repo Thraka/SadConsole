@@ -153,10 +153,7 @@ namespace SadConsole.Debug
                 AddConsoleToList(_originalScreen);
                 void AddConsoleToList(IScreenObject console, int indent = 0)
                 {
-                    System.Diagnostics.DebuggerDisplayAttribute debugger = console.GetType().GetTypeInfo().GetCustomAttributes<System.Diagnostics.DebuggerDisplayAttribute>().FirstOrDefault();
-                    string text = debugger != null ? debugger.Value : console.ToString();
-
-                    _listConsoles.Items.Add(new ConsoleListboxItem(new string('-', indent) + text, console));
+                    _listConsoles.Items.Add(new ConsoleListboxItem(new string('-', indent) + console.ToString(), console));
 
                     foreach (IScreenObject child in console.Children)
                     {

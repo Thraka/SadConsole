@@ -10,7 +10,6 @@ namespace SadConsole
     /// <summary>
     /// Animates a collection of frames.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Console (Animated)")]
     [DataContract]
     public class AnimatedScreenSurface : ScreenSurface
     {
@@ -308,10 +307,11 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Returns the name of the animation.
+        /// Returns the name of the animation prefixed with "Animation - ".
         /// </summary>
         /// <returns>The name.</returns>
-        public override string ToString() => Name;
+        public override string ToString() =>
+            $"Animation - {Name}";
 
         /// <inheritdoc />
         public override void UpdateAbsolutePosition()

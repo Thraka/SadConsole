@@ -11,7 +11,6 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    [System.Diagnostics.DebuggerDisplay("Console")]
     public partial class Console: ScreenSurface
     {
         /// <summary>
@@ -105,6 +104,13 @@ namespace SadConsole
             if (AutoCursorOnFocus)
                 Cursor.IsVisible = true;
         }
+
+        /// <summary>
+        /// Returns the value "Console".
+        /// </summary>
+        /// <returns>The string "Console".</returns>
+        public override string ToString() =>
+            "Console";
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
