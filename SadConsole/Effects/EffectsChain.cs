@@ -178,7 +178,7 @@ namespace SadConsole.Effects
                 StartDelay = StartDelay,
                 CloneOnApply = CloneOnApply,
                 RemoveOnFinished = RemoveOnFinished,
-                RestoreCellOnFinished = RestoreCellOnFinished,
+                RestoreCellOnRemoved = RestoreCellOnRemoved,
                 _timeElapsed = _timeElapsed,
             };
 

@@ -28,7 +28,7 @@
         /// <summary>
         /// When <see langword="true"/>, indicates the <see cref="EffectsManager"/> should restore the cell to its original state.
         /// </summary>
-        bool RestoreCellOnFinished { get; set; }
+        bool RestoreCellOnRemoved { get; set; }
 
         /// <summary>
         /// Applies the state of the effect to a cell.

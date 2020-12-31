@@ -79,7 +79,7 @@ namespace SadConsole.Entities
             {
                 if (_effect != null)
                 {
-                    if (_effect.RestoreCellOnFinished)
+                    if (_effect.RestoreCellOnRemoved)
                         _effectState.RestoreState(ref _glyph);
                 }
 
@@ -161,7 +161,7 @@ namespace SadConsole.Entities
                 {
                     if (_effect.RemoveOnFinished)
                     {
-                        if (_effect.RestoreCellOnFinished)
+                        if (_effect.RestoreCellOnRemoved)
                             _effectState.RestoreState(ref _glyph);
 
                         _effect = null;

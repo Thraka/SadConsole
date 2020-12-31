@@ -220,7 +220,7 @@ namespace SadConsole.Effects
         {
             if (_effectCells.TryGetValue(cellIndex, out ColoredGlyphEffectData oldEffectData))
             {
-                oldEffectData.RemoveCell(cellIndex, oldEffectData.Effect.RestoreCellOnFinished & oldEffectData.Effect.IsFinished);
+                oldEffectData.RemoveCell(cellIndex, oldEffectData.Effect.RestoreCellOnRemoved & oldEffectData.Effect.IsFinished);
                 _effectCells.Remove(cellIndex);
 
                 if (oldEffectData.CellsStates.Count == 0)
@@ -256,7 +256,7 @@ namespace SadConsole.Effects
 
                 for (int i = 0; i < cellsToRemove.Count; i++)
                 {
-                    effectData.RemoveCell(cellsToRemove[i].CellIndex, effectData.Effect.RestoreCellOnFinished & effectData.Effect.IsFinished);
+                    effectData.RemoveCell(cellsToRemove[i].CellIndex, effectData.Effect.RestoreCellOnRemoved & effectData.Effect.IsFinished);
                     _effectCells.Remove(cellsToRemove[i].CellIndex);
                     _backingSurface.IsDirty = true;
                 }

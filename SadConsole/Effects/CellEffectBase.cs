@@ -44,7 +44,7 @@ namespace SadConsole.Effects
 
         /// <inheritdoc />
         [DataMember]
-        public bool RestoreCellOnFinished { get; set; }
+        public bool RestoreCellOnRemoved { get; set; }
 
         /// <summary>
         /// Creates a new instance of the effect.
