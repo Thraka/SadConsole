@@ -17,6 +17,7 @@
 - SFML is *still* throwing in phantom keys when you type fast or use multiple keys are once.
 - Character viewer in sample isn't working.
 - Theme editor save on MonoGame fails due to absolute path.
+- Test entity.Effect.
 
 ====== New Features
 
