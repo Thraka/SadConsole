@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using SadConsole.Effects;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
@@ -23,6 +24,9 @@ namespace SadConsole.Entities
 
         [DataMember(Name = "Appearance")]
         private ColoredGlyph _glyph;
+
+        private ICellEffect _effect;
+        private EffectsManager.ColoredGlyphState _effectState;
 
         /// <summary>
         /// A friendly name of the game object.
@@ -47,6 +51,8 @@ namespace SadConsole.Entities
                 if (value == null) throw new System.NullReferenceException();
                 _glyph = value;
                 IsDirty = true;
+
+                _effectState = new EffectsManager.ColoredGlyphState(value);
             }
         }
 
@@ -60,6 +66,24 @@ namespace SadConsole.Entities
             {
                 _glyph.IsDirty = value;
                 OnIsDirtyChanged();
+            }
+        }
+
+        /// <summary>
+        /// An effect that can be applied to the <see cref="Appearance"/>.
+        /// </summary>
+        public ICellEffect Effect
+        {
+            get => _effect;
+            set
+            {
+                if (_effect != null)
+                {
+                    if (_effect.RestoreCellOnFinished)
+                        _effectState.RestoreState(ref _glyph);
+                }
+
+                _effect = value;
             }
         }
 
@@ -119,6 +143,31 @@ namespace SadConsole.Entities
         public override void UpdateAbsolutePosition()
         {
             AbsolutePosition = Position;
+        }
+
+        /// <summary>
+        /// If an effect is applied to the cell, updates the effect.
+        /// </summary>
+        /// <param name="delta"></param>
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+
+            if (_effect != null && !_effect.IsFinished)
+            {
+                _effect.Update(delta.TotalSeconds);
+
+                if (_effect.IsFinished)
+                {
+                    if (_effect.RemoveOnFinished)
+                    {
+                        if (_effect.RestoreCellOnFinished)
+                            _effectState.RestoreState(ref _glyph);
+
+                        _effect = null;
+                    }
+                }
+            }
         }
 
         /// <summary>
