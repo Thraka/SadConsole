@@ -83,7 +83,10 @@ namespace SadConsole.Entities
                         _effectState.RestoreState(ref _glyph);
                 }
 
-                _effect = value;
+                if (value == null)
+                    _effect = null;
+                else
+                    _effect = value.CloneOnApply ? value.Clone() : value;
             }
         }
 
