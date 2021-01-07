@@ -13,6 +13,8 @@ namespace SadConsole.Entities
     [DataContract]
     public class Renderer : Components.UpdateComponent
     {
+        private bool _isAttached;
+
         /// <summary>
         /// The entities to process.
         /// </summary>
@@ -152,6 +154,8 @@ namespace SadConsole.Entities
             surface.Renderer.AddRenderStep(RenderStep);
             _screen = surface;
             UpdateCachedVisibilityArea();
+
+            _isAttached = true;
         }
 
         /// <inheritdoc/>
@@ -164,6 +168,8 @@ namespace SadConsole.Entities
             _screenCachedFont = null;
             _screenCachedFontSize = Point.None;
             _screenCachedView = Rectangle.Empty;
+
+            _isAttached = false;
         }
 
         /// <inheritdoc/>
@@ -288,8 +294,13 @@ namespace SadConsole.Entities
             return isVisible;
         }
 
-        private void UpdateCachedVisibilityArea() =>
+        private void UpdateCachedVisibilityArea()
+        {
+            if (!_isAttached) return;
+
             _offsetAreaPixels = _screen.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize).Expand(_screen.FontSize.X, _screen.FontSize.Y);
+        }
+            
 
         private bool IsEntityVisible(Point position, bool isPixel) =>
             isPixel ? _offsetAreaPixels.Contains(position) : _screen.Surface.View.Contains(position);

@@ -2664,7 +2664,7 @@
             Creates a new entity, references the provided glyph as the appearance.
             </summary>
             <param name="appearance">The appearance of the entity.</param>
-            <param name="layer">The rendering order. Lower values are under higher values.</param>
+            <param name="zIndex">The rendering order. Lower values are under higher values.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph,System.Int32)">
             <summary>
@@ -7094,6 +7094,18 @@
         </member>
         <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ScreenObject.SadComponentAdded(SadConsole.Components.IComponent)">
+            <summary>
+            Called when a component is added to the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
+            </summary>
+            <param name="component">The component added.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.SadComponentRemoved(SadConsole.Components.IComponent)">
+            <summary>
+            Called when a component is removed from the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
+            </summary>
+            <param name="component">The component removed.</param>
         </member>
         <member name="M:SadConsole.ScreenObject.HasSadComponent``1(``0@)">
             <inheritdoc/>

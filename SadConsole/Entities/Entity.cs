@@ -112,12 +112,12 @@ namespace SadConsole.Entities
         /// Creates a new entity, references the provided glyph as the appearance.
         /// </summary>
         /// <param name="appearance">The appearance of the entity.</param>
-        /// <param name="layer">The rendering order. Lower values are under higher values.</param>
-        public Entity(ref ColoredGlyph appearance, int layer)
+        /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+        public Entity(ref ColoredGlyph appearance, int zIndex)
         {
             Appearance = appearance;
             Children.IsLocked = true;
-            ZIndex = layer;
+            ZIndex = zIndex;
         }
 
         /// <summary>
