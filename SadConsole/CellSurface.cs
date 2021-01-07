@@ -96,14 +96,14 @@ namespace SadConsole
         public int ViewWidth
         {
             get => _viewArea.Area.Width;
-            set => _viewArea.SetArea(_viewArea.Area.WithWidth(value));
+            set { _viewArea.SetArea(_viewArea.Area.WithWidth(value)); IsDirty = true; }
         }
 
         /// <inheritdoc />
         public int ViewHeight
         {
             get => _viewArea.Area.Height;
-            set => _viewArea.SetArea(_viewArea.Area.WithHeight(value));
+            set { _viewArea.SetArea(_viewArea.Area.WithHeight(value)); IsDirty = true; }
         }
 
         /// <inheritdoc />
@@ -153,14 +153,14 @@ namespace SadConsole
         public ColoredGlyph this[int index]
         {
             get => Cells[index];
-            protected set => Cells[index] = value;
+            protected set { Cells[index] = value; IsDirty = true; }
         }
 
         /// <inheritdoc />
         public ColoredGlyph this[Point position]
         {
             get => Cells[position.ToIndex(Width)];
-            protected set => Cells[position.ToIndex(Width)] = value;
+            protected set { Cells[position.ToIndex(Width)] = value; IsDirty = true; }
         }
 
 
