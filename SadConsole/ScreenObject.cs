@@ -316,6 +316,18 @@ namespace SadConsole
             return null;
         }
 
+        /// <summary>
+        /// Called when a component is added to the <see cref="SadComponents"/> collection.
+        /// </summary>
+        /// <param name="component">The component added.</param>
+        protected virtual void SadComponentAdded(IComponent component) { }
+
+        /// <summary>
+        /// Called when a component is removed from the <see cref="SadComponents"/> collection.
+        /// </summary>
+        /// <param name="component">The component removed.</param>
+        protected virtual void SadComponentRemoved(IComponent component) { }
+
         /// <inheritdoc/>
         public bool HasSadComponent<TComponent>(out TComponent component)
             where TComponent: class, IComponent
@@ -343,6 +355,7 @@ namespace SadConsole
                     {
                         FilterAddItem((IComponent)item);
                         ((IComponent)item).OnAdded(this);
+                        SadComponentAdded((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
@@ -350,6 +363,7 @@ namespace SadConsole
                     {
                         FilterRemoveItem((IComponent)item);
                         ((IComponent)item).OnRemoved(this);
+                        SadComponentRemoved((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
@@ -357,41 +371,63 @@ namespace SadConsole
                     {
                         FilterAddItem((IComponent)item);
                         ((IComponent)item).OnAdded(this);
+                        SadComponentAdded((IComponent)item);
                     }
                     foreach (object item in e.OldItems)
                     {
                         FilterRemoveItem((IComponent)item);
                         ((IComponent)item).OnRemoved(this);
+                        SadComponentRemoved((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Move:
                     break;
                 case NotifyCollectionChangedAction.Reset:
+                    List<IComponent> items = new List<IComponent>(ComponentsRender.Count + ComponentsUpdate.Count + ComponentsKeyboard.Count + ComponentsMouse.Count);
+
                     while (ComponentsRender.Count != 0)
                     {
                         ComponentsRender[0].OnRemoved(this);
                         FilterRemoveItem(ComponentsRender[0]);
+
+                        if (!items.Contains(ComponentsRender[0]))
+                            items.Add(ComponentsRender[0]);
                     }
                     while (ComponentsUpdate.Count != 0)
                     {
                         ComponentsUpdate[0].OnRemoved(this);
                         FilterRemoveItem(ComponentsUpdate[0]);
+
+                        if (!items.Contains(ComponentsUpdate[0]))
+                            items.Add(ComponentsUpdate[0]);
                     }
                     while (ComponentsKeyboard.Count != 0)
                     {
                         ComponentsKeyboard[0].OnRemoved(this);
                         FilterRemoveItem(ComponentsKeyboard[0]);
+
+                        if (!items.Contains(ComponentsKeyboard[0]))
+                            items.Add(ComponentsKeyboard[0]);
                     }
                     while (ComponentsMouse.Count != 0)
                     {
                         ComponentsMouse[0].OnRemoved(this);
                         FilterRemoveItem(ComponentsMouse[0]);
+
+                        if (!items.Contains(ComponentsMouse[0]))
+                            items.Add(ComponentsMouse[0]);
                     }
                     while (ComponentsEmpty.Count != 0)
                     {
                         ComponentsEmpty[0].OnRemoved(this);
                         FilterRemoveItem(ComponentsEmpty[0]);
+
+                        if (!items.Contains(ComponentsEmpty[0]))
+                            items.Add(ComponentsEmpty[0]);
                     }
+
+                    foreach (IComponent item in items)
+                        SadComponentRemoved(item);
 
                     break;
                 default:
