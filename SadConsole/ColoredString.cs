@@ -301,14 +301,10 @@ namespace SadConsole
             ColoredString returnString = new ColoredString(string1.Length + string2.Length);
 
             for (int i = 0; i < string1.Length; i++)
-            {
                 returnString._characters[i] = string1._characters[i].Clone();
-            }
 
             for (int i = 0; i < string2.Length; i++)
-            {
                 returnString._characters[i + string1.Length] = string2._characters[i].Clone();
-            }
 
             returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
             returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
@@ -330,11 +326,14 @@ namespace SadConsole
             var returnString = new ColoredString(string1.Length + string2.Length);
 
             for (int i = 0; i < string1.Length; i++)
-            {
                 returnString._characters[i] = string1._characters[i].Clone();
-            }
 
-            ColoredGlyphEffect templateCharacter = string1[string1.Length - 1];
+            ColoredGlyphEffect templateCharacter;
+
+            if (string1.Length != 0)
+                templateCharacter = string1[string1.Length - 1];
+            else
+                templateCharacter = new ColoredGlyphEffect();
 
             for (int i = 0; i < string2.Length; i++)
             {
@@ -359,7 +358,7 @@ namespace SadConsole
         /// <returns>A new colored string instance.</returns>
         public static ColoredString operator +(string string1, ColoredString string2)
         {
-            var returnString = new ColoredString(string1, string2[0])
+            var returnString = new ColoredString(string1, string2.Length != 0 ? string2[0] : new ColoredGlyphEffect())
             {
                 IgnoreGlyph = string2.IgnoreGlyph,
                 IgnoreForeground = string2.IgnoreForeground,
