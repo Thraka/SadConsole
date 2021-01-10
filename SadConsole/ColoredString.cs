@@ -358,7 +358,7 @@ namespace SadConsole
         /// <returns>A new colored string instance.</returns>
         public static ColoredString operator +(string string1, ColoredString string2)
         {
-            var returnString = new ColoredString(string1, string2.Length != 0 ? string2[0] : new ColoredGlyphEffect())
+            var returnString = new ColoredString(string1)
             {
                 IgnoreGlyph = string2.IgnoreGlyph,
                 IgnoreForeground = string2.IgnoreForeground,
