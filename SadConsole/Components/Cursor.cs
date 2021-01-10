@@ -870,20 +870,8 @@ namespace SadConsole.Components
 
             _cursorRenderStep?.Dispose();
             _cursorRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Cursor);
-
-            var existingSteps = surface.Renderer.GetRenderSteps();
-            Type renderType = _cursorRenderStep.GetType();
-            bool containsRenderStep = false;
-            foreach (var item in existingSteps)
-            {
-                if (item.GetType() == renderType)
-                    containsRenderStep = true;
-            }
-
-            if (!containsRenderStep)
-                surface.Renderer.AddRenderStep(_cursorRenderStep);
-            else
-                _cursorRenderStep = null;
+            _cursorRenderStep.SetData(this);
+            surface.RenderSteps.Add(_cursorRenderStep);
         }
 
         void IComponent.OnRemoved(IScreenObject host)
@@ -892,7 +880,8 @@ namespace SadConsole.Components
 
             if (_cursorRenderStep != null)
             {
-                ((IScreenSurface)host).Renderer.RemoveRenderStep(_cursorRenderStep);
+                ((IScreenSurface)host).RenderSteps.Remove(_cursorRenderStep);
+                _cursorRenderStep.Dispose();
                 _cursorRenderStep = null;
             }
         }

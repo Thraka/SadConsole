@@ -26,40 +26,16 @@ namespace SadConsole.Renderers
         bool IsForced { get; set; }
 
         /// <summary>
-        /// Sets the target surface of the renderer.
-        /// </summary>
-        /// <param name="surface">Target surface.</param>
-        void SetSurface(IScreenSurface surface);
-
-        /// <summary>
         /// Refreshes a cached drawing state.
         /// </summary>
-        /// <param name="surfaceObject">The surface this renderer is attached to.</param>
+        /// <param name="surface">Target surface.</param>
         /// <param name="force">When <see langword="true"/>, indicates the refresh should happen even if a surface isn't dirty.</param>
-        void Refresh(bool force = false);
+        void Refresh(IScreenSurface surface, bool force = false);
 
         /// <summary>
         /// Creates a drawcall in the drawing pipeline.
         /// </summary>
-        /// <param name="surfaceObject">The surface this renderer is attached to.</param>
-        void Render();
-
-        /// <summary>
-        /// Adds a render step to the renderer.
-        /// </summary>
-        /// <param name="step">The render step to add.</param>
-        void AddRenderStep(IRenderStep step);
-
-        /// <summary>
-        /// Removes a render step from the renderer.
-        /// </summary>
-        /// <param name="step">The render step to remove.</param>
-        void RemoveRenderStep(IRenderStep step);
-
-        /// <summary>
-        /// Returns collection of rendersteps associated with the renderer.
-        /// </summary>
-        /// <returns>The steps.</returns>
-        IReadOnlyCollection<IRenderStep> GetRenderSteps();
+        /// <param name="surface">Target surface.</param>
+        void Render(IScreenSurface surface);
     }
 }

@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using SadConsole.Components;
+using SadConsole.Renderers;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -45,12 +46,14 @@ namespace SadConsole
                 if (_renderer == value) return;
 
                 _renderer = value;
-                _renderer?.SetSurface(this);
 
                 OnRendererChanged();
                 IsDirty = true;
             }
         }
+
+        /// <inheritdoc/>
+        public SortedSet<IRenderStep> RenderSteps { get; } = new SortedSet<IRenderStep>(new RenderStepComparer());
 
         /// <summary>
         /// The surface this screen object represents.
@@ -68,8 +71,6 @@ namespace SadConsole
                     old.IsDirtyChanged -= _isDirtyChangedEventHadler;
 
                 _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
-
-                _renderer?.SetSurface(this);
 
                 OnSurfaceChanged(old);
             }
@@ -204,9 +205,12 @@ namespace SadConsole
             // Note, we keep the hardcoded "default" renderer because it requires no setup. If a
             // derived class uses a different render, and that renderer needs the derived class
             // already configured, ready to accept the new renderer, they should call
-            //      Renderer = GameHost.Instance.GetRenderer(GetDefaultRendererName());
+            //      Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
             //
             Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
+            IRenderStep step = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface);
+            step.SetData(this);
+            RenderSteps.Add(step);
         }
 
         /// <summary>
@@ -225,6 +229,9 @@ namespace SadConsole
 
             // See note in other ctor.
             Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
+            IRenderStep step = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface);
+            step.SetData(this);
+            RenderSteps.Add(step);
         }
 
         /// <inheritdoc />
@@ -250,8 +257,8 @@ namespace SadConsole
 
             if (_renderer != null)
             {
-                _renderer.Refresh(ForceRendererRefresh);
-                _renderer.Render();
+                _renderer.Refresh(this, ForceRendererRefresh);
+                _renderer.Render(this);
                 ForceRendererRefresh = false;
             }
 

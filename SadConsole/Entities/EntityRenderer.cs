@@ -148,10 +148,15 @@ namespace SadConsole.Entities
             if (_screen != null) throw new Exception("Component has already been added to a host.");
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
-            RenderStep?.Dispose();
-            RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
+            if (RenderStep != null)
+            {
+                surface.RenderSteps.Remove(RenderStep);
+                RenderStep.Dispose();
+            }
             
-            surface.Renderer.AddRenderStep(RenderStep);
+            RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
+            RenderStep.SetData(this);
+            surface.RenderSteps.Add(RenderStep);
             _screen = surface;
             UpdateCachedVisibilityArea();
 
@@ -161,7 +166,7 @@ namespace SadConsole.Entities
         /// <inheritdoc/>
         public override void OnRemoved(IScreenObject host)
         {
-            ((IScreenSurface)host).Renderer.RemoveRenderStep(RenderStep);
+            ((IScreenSurface)host).RenderSteps.Remove(RenderStep);
             RenderStep?.Dispose();
             RenderStep = null;
             _screen = null;

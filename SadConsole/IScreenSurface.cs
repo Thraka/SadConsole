@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
@@ -54,6 +55,11 @@ namespace SadConsole
         /// The renderer used to draw this surface.
         /// </summary>
         IRenderer Renderer { get; }
+
+        /// <summary>
+        /// The render steps to draw this object.
+        /// </summary>
+        SortedSet<IRenderStep> RenderSteps { get; }
 
         /// <summary>
         /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.

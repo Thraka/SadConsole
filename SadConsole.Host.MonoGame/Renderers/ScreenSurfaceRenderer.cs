@@ -35,19 +35,9 @@ namespace SadConsole.Renderers
         public ITexture Output => _renderTexture;
 
         /// <summary>
-        /// The screen this renderer is attached to.
-        /// </summary>
-        protected IScreenSurface _screen { get; set; }
-
-        /// <summary>
         /// Color used with drawing the texture to the screen. Let's a surface become transparent.
         /// </summary>
         public Color _finalDrawColor = SadRogue.Primitives.Color.White.ToMonoColor();
-
-        /// <summary>
-        /// Render steps to process.
-        /// </summary>
-        protected List<IRenderStep> RenderSteps = new List<IRenderStep>();
 
         /// <summary>
         /// The blend state used by this renderer.
@@ -71,51 +61,32 @@ namespace SadConsole.Renderers
         /// </summary>
         public XnaRectangle[] CachedRenderRects;
 
-
-        /// <summary>
-        /// Creates the renderer with the <see cref="SurfaceRenderStep"/> step.
-        /// </summary>
-        public ScreenSurfaceRenderer()
-        {
-            AddRenderStep(new SurfaceRenderStep());
-            AddRenderStep(new OutputSurfaceRenderStep());
-        }
-
         ///  <inheritdoc/>
-        public virtual void SetSurface(IScreenSurface screen)
-        {
-            _screen = screen;
-
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].OnSurfaceChanged(this, screen);
-        }
-
-        ///  <inheritdoc/>
-        public virtual void Refresh(bool force = false)
+        public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             bool backingTextureChanged = false;
             IsForced = force;
 
             // Update texture if something is out of size.
-            if (_backingTexture == null || _screen.AbsoluteArea.Width != _backingTexture.Width || _screen.AbsoluteArea.Height != _backingTexture.Height)
+            if (_backingTexture == null || screen.AbsoluteArea.Width != _backingTexture.Width || screen.AbsoluteArea.Height != _backingTexture.Height)
             {
                 IsForced = true;
                 backingTextureChanged = true;
                 _backingTexture?.Dispose();
-                _backingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, _screen.AbsoluteArea.Width, _screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                _backingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
                 _renderTexture?.Dispose();
                 _renderTexture = new Host.GameTexture(_backingTexture);
             }
             
             // Update cached drawing rectangles if something is out of size.
-            if (CachedRenderRects == null || CachedRenderRects.Length != _screen.Surface.View.Width * _screen.Surface.View.Height || CachedRenderRects[0].Width != _screen.FontSize.X || CachedRenderRects[0].Height != _screen.FontSize.Y)
+            if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
             {
-                CachedRenderRects = new XnaRectangle[_screen.Surface.View.Width * _screen.Surface.View.Height];
+                CachedRenderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
 
                 for (int i = 0; i < CachedRenderRects.Length; i++)
                 {
-                    var position = SadRogue.Primitives.Point.FromIndex(i, _screen.Surface.View.Width);
-                    CachedRenderRects[i] = _screen.Font.GetRenderRect(position.X, position.Y, _screen.FontSize).ToMonoRectangle();
+                    var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
+                    CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
                 }
 
                 IsForced = true;
@@ -124,8 +95,8 @@ namespace SadConsole.Renderers
             bool composeRequested = IsForced;
 
             // Let everything refresh before compose.
-            for (int i = 0; i < RenderSteps.Count; i++)
-                composeRequested |= RenderSteps[i].Refresh(this, backingTextureChanged, IsForced);
+            foreach (IRenderStep step in screen.RenderSteps)
+                composeRequested |= step.Refresh(this, screen, backingTextureChanged, IsForced);
 
             // If any step (or IsForced) requests a compose, process them.
             if (composeRequested)
@@ -136,8 +107,8 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 // Compose each step
-                for (int i = 0; i < RenderSteps.Count; i++)
-                    RenderSteps[i].Composing();
+                foreach (IRenderStep step in screen.RenderSteps)
+                    step.Composing(this, screen);
 
                 // End sprite batch
                 Host.Global.SharedSpriteBatch.End();
@@ -146,43 +117,16 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public virtual void Render()
+        public virtual void Render(IScreenSurface screen)
         {
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].Render();
-        }
+            if (DoOutputRender && screen.Tint.A != 255)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_backingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y), _finalDrawColor));
 
-        /// <inheritdoc/>
-        public void AddRenderStep(IRenderStep step)
-        {
-            if (RenderSteps.Contains(step)) throw new Exception("Render step has already been added to renderer");
+            foreach (IRenderStep step in screen.RenderSteps)
+                step.Render(this, screen);
 
-            RenderSteps.Add(step);
-            RenderSteps.Sort(CompareStep);
-
-            step.OnAdded(this, _screen);
-        }
-
-        /// <inheritdoc/>
-        public void RemoveRenderStep(IRenderStep step)
-        {
-            RenderSteps.Remove(step);
-            step.OnRemoved(this, _screen);
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyCollection<IRenderStep> GetRenderSteps() =>
-            RenderSteps.AsReadOnly();
-
-        private static int CompareStep(IRenderStep left, IRenderStep right)
-        {
-            if (left.SortOrder > right.SortOrder)
-                return 1;
-
-            if (left.SortOrder < right.SortOrder)
-                return -1;
-
-            return 0;
+            if (DoOutputRender && screen.Tint.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToMonoColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToMonoRectangle(), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
         #region IDisposable Support
@@ -194,9 +138,6 @@ namespace SadConsole.Renderers
             {
                 _backingTexture?.Dispose();
                 _renderTexture?.Dispose();
-
-                foreach (var item in RenderSteps)
-                    item.Dispose();
 
                 disposedValue = true;
             }

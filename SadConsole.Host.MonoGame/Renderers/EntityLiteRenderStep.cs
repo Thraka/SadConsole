@@ -17,9 +17,7 @@ namespace SadConsole.Renderers
     public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     {
         private Entities.Renderer _entityManager;
-        private ScreenSurfaceRenderer _baseRenderer;
         private Host.GameTexture _cachedTexture;
-        private IScreenSurface _screen;
 
         /// <summary>
         /// The cached texture of the drawn entities.
@@ -32,60 +30,38 @@ namespace SadConsole.Renderers
         /// <inheritdoc/>
         public int SortOrder { get; set; } = 60;
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
+        /// <summary>
+        /// Sets the <see cref="Entities.Renderer"/>.
+        /// </summary>
+        /// <param name="data">A <see cref="Entities.Renderer"/> object.</param>
+        public void SetData(object data)
         {
-            if (!(renderer is ScreenSurfaceRenderer)) throw new Exception($"Renderer used with {nameof(EntityLiteRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
-            _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            _screen = surface;
-
-            OnSurfaceChanged(renderer, surface);
+            if (data is Entities.Renderer manager)
+                _entityManager = manager;
+            else
+                throw new ArgumentException($"{nameof(EntityLiteRenderStep)} must have a {nameof(Entities.Renderer)} passed to the {nameof(SetData)} method", nameof(data));
         }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
+        public void Reset()
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
             _cachedTexture?.Dispose();
             _cachedTexture = null;
-            _screen = null;
-            _baseRenderer = null;
             _entityManager = null;
         }
 
         ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface)
-        {
-            if (surface == null)
-            {
-                BackingTexture?.Dispose();
-                BackingTexture = null;
-                _cachedTexture?.Dispose();
-                _cachedTexture = null;
-                _screen = null;
-                _entityManager = null;
-            }
-            else
-            {
-                if (!_screen.HasSadComponent(out Entities.Renderer host))
-                    throw new Exception("EntityLiteManager is being run on object without a control host component.");
-                _screen = surface;
-                _entityManager = host;
-                // BackingTexture is handled by prestart.
-            }
-        }
-
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
             bool result = true;
 
             // Update texture if something is out of size.
-            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != BackingTexture.Width || _screen.AbsoluteArea.Height != BackingTexture.Height)
+            if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != BackingTexture.Width || screenObject.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, _screen.AbsoluteArea.Width, _screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
                 _cachedTexture?.Dispose();
                 _cachedTexture = new Host.GameTexture(BackingTexture);
                 result = true;
@@ -95,10 +71,10 @@ namespace SadConsole.Renderers
             {
                 Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, _baseRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, ((ScreenSurfaceRenderer)renderer).MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-                Texture2D fontImage = ((Host.GameTexture)_screen.Font.Image).Texture;
-                Font font = _screen.Font;
+                Texture2D fontImage = ((Host.GameTexture)screenObject.Font.Image).Texture;
+                Font font = screenObject.Font;
                 ColoredGlyph cell;
                 XnaRectangle renderRect;
 
@@ -134,14 +110,13 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public void Composing()
+        public void Composing(IRenderer renderer, IScreenSurface screenObject)
         {
-            if (_screen.Tint.A != 255)
-                Host.Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, Color.White);
+            Host.Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, Color.White);
         }
 
         ///  <inheritdoc/>
-        public void Render()
+        public void Render(IRenderer renderer, IScreenSurface screenObject)
         {
         }
 

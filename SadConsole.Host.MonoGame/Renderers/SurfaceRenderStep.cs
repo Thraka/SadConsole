@@ -16,9 +16,7 @@ namespace SadConsole.Renderers
     /// </summary>
     public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     {
-        private IScreenSurface _screen;
         private Host.GameTexture _cachedTexture;
-        private ScreenSurfaceRenderer _baseRenderer;
 
         /// <summary>
         /// The cached texture of the drawn surface.
@@ -31,95 +29,73 @@ namespace SadConsole.Renderers
         /// <inheritdoc/>
         public int SortOrder { get; set; } = 50;
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
-        {
-            if (!(renderer is ScreenSurfaceRenderer))
-                throw new Exception($"Renderer used with {nameof(SurfaceRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
-
-            _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            _screen = surface;
-        }
+        /// <summary>
+        /// Not used.
+        /// </summary>
+        public void SetData(object data) { }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
+        public void Reset()
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
             _cachedTexture?.Dispose();
             _cachedTexture = null;
-            _screen = null;
         }
 
         ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface)
-        {
-            if (surface == null)
-            {
-                BackingTexture?.Dispose();
-                BackingTexture = null;
-                _cachedTexture?.Dispose();
-                _cachedTexture = null;
-                _screen = null;
-            }
-            else
-            {
-                _screen = surface;
-                // BackingTexture is handled by CheckRefresh.
-            }
-        }
-
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
             bool result = true;
 
             // Update texture if something is out of size.
-            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != BackingTexture.Width || _screen.AbsoluteArea.Height != BackingTexture.Height)
+            if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != BackingTexture.Width || screenObject.AbsoluteArea.Height != BackingTexture.Height)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, _screen.AbsoluteArea.Width, _screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+                BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
                 _cachedTexture?.Dispose();
                 _cachedTexture = new Host.GameTexture(BackingTexture);
                 result = true;
             }
 
+            var monoRenderer = (ScreenSurfaceRenderer)renderer;
+
             // Redraw is needed
-            if (result || _screen.IsDirty || isForced)
+            if (result || screenObject.IsDirty || isForced)
             {
                 Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, _baseRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, monoRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-                Font font = _screen.Font;
+                Font font = screenObject.Font;
                 Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
                 ColoredGlyph cell;
 
-                if (_screen.Surface.DefaultBackground.A != 0)
-                    Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), _screen.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                if (screenObject.Surface.DefaultBackground.A != 0)
+                    Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), screenObject.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
                 int rectIndex = 0;
 
-                for (int y = 0; y < _screen.Surface.View.Height; y++)
+                for (int y = 0; y < screenObject.Surface.View.Height; y++)
                 {
-                    int i = ((y + _screen.Surface.ViewPosition.Y) * _screen.Surface.Width) + _screen.Surface.ViewPosition.X;
+                    int i = ((y + screenObject.Surface.ViewPosition.Y) * screenObject.Surface.Width) + screenObject.Surface.ViewPosition.X;
 
-                    for (int x = 0; x < _screen.Surface.View.Width; x++)
+                    for (int x = 0; x < screenObject.Surface.View.Width; x++)
                     {
-                        cell = _screen.Surface[i];
+                        cell = screenObject.Surface[i];
                         cell.IsDirty = false;
 
                         if (cell.IsVisible)
                         {
-                            if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != _screen.Surface.DefaultBackground)
-                                Host.Global.SharedSpriteBatch.Draw(fontImage, _baseRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground)
+                                Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                             if (cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
-                                Host.Global.SharedSpriteBatch.Draw(fontImage, _baseRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                                Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
                             foreach (CellDecorator decorator in cell.Decorators)
                                 if (decorator.Color != SadRogue.Primitives.Color.Transparent)
-                                    Host.Global.SharedSpriteBatch.Draw(fontImage, _baseRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                                    Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
                         }
 
                         i++;
@@ -131,33 +107,27 @@ namespace SadConsole.Renderers
                 Host.Global.GraphicsDevice.SetRenderTarget(null);
 
                 result = true;
-                _screen.IsDirty = false;
+                screenObject.IsDirty = false;
             }
 
             return result;
         }
 
         ///  <inheritdoc/>
-        public void Composing()
+        public void Composing(IRenderer renderer, IScreenSurface screenObject)
         {
-            if (_screen.Tint.A != 255)
-                Host.Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, Color.White);
+            Host.Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, Color.White);
         }
 
         ///  <inheritdoc/>
-        public void Render() { }
+        public void Render(IRenderer renderer, IScreenSurface screenObject) { }
 
         /// <summary>
         /// Disposes the object.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
-        protected void Dispose(bool disposing)
-        {
-            BackingTexture?.Dispose();
-            BackingTexture = null;
-            _cachedTexture?.Dispose();
-            _cachedTexture = null;
-        }
+        protected void Dispose(bool disposing) =>
+            Reset();
 
         ///  <inheritdoc/>
         public void Dispose()

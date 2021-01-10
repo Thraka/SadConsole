@@ -201,7 +201,7 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
             //Renderer = GameHost.Instance.GetRenderer("window");
 
             // todo: Perhaps a new design with windows.
@@ -225,7 +225,7 @@ namespace SadConsole.UI
             MoveToFrontOnMouseClick = true;
             Controls = new ControlHost();
             SadComponents.Add(Controls);
-            Renderer.AddRenderStep(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
             DrawBorder();
         }
 

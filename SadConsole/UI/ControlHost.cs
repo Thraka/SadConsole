@@ -164,9 +164,14 @@ namespace SadConsole.UI
             if (ParentConsole != null) throw new Exception("Component has already been added to a host.");
             if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
-            _controlsRenderStep?.Dispose();
-            _controlsRenderStep = SadConsole.GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
-            surface.Renderer.AddRenderStep(_controlsRenderStep);
+            if (_controlsRenderStep != null)
+            {
+                surface.RenderSteps.Add(_controlsRenderStep);
+                _controlsRenderStep?.Dispose();
+            }
+            _controlsRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
+            _controlsRenderStep.SetData(this);
+            surface.RenderSteps.Add(_controlsRenderStep);
             surface.UseKeyboard = true;
             surface.UseMouse = true;
             surface.FocusOnMouseClick = true;
@@ -203,7 +208,7 @@ namespace SadConsole.UI
                         
             ParentConsole = null;
 
-            ((IScreenSurface)host).Renderer.RemoveRenderStep(_controlsRenderStep);
+            ((IScreenSurface)host).RenderSteps.Remove(_controlsRenderStep);
             _controlsRenderStep.Dispose();
             _controlsRenderStep = null;
         }

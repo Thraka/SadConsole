@@ -9,52 +9,44 @@ namespace SadConsole.Renderers
     /// </summary>
     public interface IRenderStep: IDisposable
     {
-        // Maybe add this in the future
-        ///// <summary>
-        ///// <see langword="true"/> when the step uses the active sprite batch in use by the renderer; othwerise <see langword="false"/>.
-        ///// </summary>
-        //bool UseSharedSpriteCompose { get; }
-
         /// <summary>
         /// Indicates priority related to other steps. Lowest runs first.
         /// </summary>
-        int SortOrder { get; }
+        int SortOrder { get; set; }
 
         /// <summary>
-        /// Called when the step is added to the renderer.
+        /// Adds supplemental data to the render step. 
         /// </summary>
-        /// <param name="renderer">The renderer the render step was added to.</param>
-        /// <param name="surface">The surface associated with the renderer. This may be null.</param>
-        void OnAdded(IRenderer renderer, IScreenSurface surface);
+        /// <param name="data">The data to add to the step.</param>
+        void SetData(object data);
 
         /// <summary>
-        /// Called when the step is removed from the renderer.
+        /// Called when the step should reset any state or texture information.
         /// </summary>
-        /// <param name="renderer">The renderer the render step was removed from.</param>
-        /// <param name="surface">The surface associated with the renderer. This may be null.</param>
-        void OnRemoved(IRenderer renderer, IScreenSurface surface);
-
-        /// <summary>
-        /// Called when the surface chances.
-        /// </summary>
-        /// <param name="renderer">The renderer the render step was removed from.</param>
-        /// <param name="surface">The surface associated with the renderer. This may be null.</param>
-        void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface);
+        void Reset();
 
         /// <summary>
         /// Called to redraw the render step if needed.
         /// </summary>
+        /// <param name="renderer">The renderer the render step is using.</param>
+        /// <param name="screenObject">The surface associated with the renderer. This may be null.</param>
+        /// <param name="backingTextureChanged"><see langword="true"/> to indicate the <see cref="IRenderer.Output"/> changed; otherwise <see langword="false"/>.</param>
+        /// <param name="isForced"><see langword="true"/> when refresh is being forced; otherwise <see langword="false"/>.</param>
         /// <returns><see langword="true"/> when the step is going to draw something new and is requesting a <see cref="Composing"/> step; otherwise <see langword="false"/>.</returns>
-        bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced);
+        bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced);
 
         /// <summary>
         /// Called when the renderer needs to redraw the <see cref="IRenderer.Output"/> texture.
         /// </summary>
-        void Composing();
+        /// <param name="renderer">The renderer the render step is using.</param>
+        /// <param name="screenObject">The surface associated with the renderer. This may be null.</param>
+        void Composing(IRenderer renderer, IScreenSurface screenObject);
 
         /// <summary>
         /// Called when building draw calls for the render pipeline.
         /// </summary>
-        void Render();
+        /// <param name="renderer">The renderer the render step is using.</param>
+        /// <param name="screenObject">The surface associated with the renderer. This may be null.</param>
+        void Render(IRenderer renderer, IScreenSurface screenObject);
     }
 }
