@@ -208,9 +208,9 @@ namespace SadConsole
             //      Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
             //
             Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-            IRenderStep step = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface);
-            step.SetData(this);
-            RenderSteps.Add(step);
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
         }
 
         /// <summary>
@@ -229,9 +229,9 @@ namespace SadConsole
 
             // See note in other ctor.
             Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-            IRenderStep step = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface);
-            step.SetData(this);
-            RenderSteps.Add(step);
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
+            RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
         }
 
         /// <inheritdoc />

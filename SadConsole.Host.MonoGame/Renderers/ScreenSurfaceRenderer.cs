@@ -25,11 +25,6 @@ namespace SadConsole.Renderers
         public RenderTarget2D _backingTexture;
         
         /// <summary>
-        /// <see langword="true"/> when the renderer should create a draw call for <see cref="Output"/>.
-        /// </summary>
-        public bool DoOutputRender { get; set; } = true;
-
-        /// <summary>
         /// The cached texture of the drawn surface.
         /// </summary>
         public ITexture Output => _renderTexture;
@@ -119,14 +114,8 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public virtual void Render(IScreenSurface screen)
         {
-            if (DoOutputRender && screen.Tint.A != 255)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_backingTexture, new Vector2(screen.AbsoluteArea.Position.X, screen.AbsoluteArea.Position.Y), _finalDrawColor));
-
             foreach (IRenderStep step in screen.RenderSteps)
                 step.Render(this, screen);
-
-            if (DoOutputRender && screen.Tint.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screen.Tint.ToMonoColor(), ((SadConsole.Host.GameTexture)screen.Font.Image).Texture, screen.AbsoluteArea.ToMonoRectangle(), screen.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
         #region IDisposable Support

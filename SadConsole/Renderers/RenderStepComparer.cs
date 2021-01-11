@@ -12,13 +12,11 @@ namespace SadConsole.Renderers
         /// <inheritdoc/>
         public int Compare(IRenderStep x, IRenderStep y)
         {
-            if (x.SortOrder > y.SortOrder)
-                return 1;
-
             if (x.SortOrder < y.SortOrder)
                 return -1;
 
-            return 0;
+            // default for if (x.SortOrder > y.SortOrder)
+            return 1;
         }
     }
 }

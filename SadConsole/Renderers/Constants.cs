@@ -44,5 +44,15 @@ namespace SadConsole.Renderers.Constants
         /// The render step for a <see cref="Entities.Renderer"/>.
         /// </summary>
         public const string EntityRenderer = "entityrenderer";
+
+        /// <summary>
+        /// The render to draw the output texture of an <see cref="IRenderer"/>.
+        /// </summary>
+        public const string Output = "output";
+
+        /// <summary>
+        /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
+        /// </summary>
+        public const string Tint = "tint";
     }
 }

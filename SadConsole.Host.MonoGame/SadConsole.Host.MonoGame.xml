@@ -464,6 +464,26 @@
             Finalizes the object for collection.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -475,11 +495,6 @@
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
             <summary>
             Quick access to backing texture.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.DoOutputRender">
-            <summary>
-            <see langword="true"/> when the renderer should create a draw call for <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
@@ -562,6 +577,26 @@
             <summary>
             Finalizes the object for collection.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Dispose">
+             <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.WindowRenderStep">
             <summary>
