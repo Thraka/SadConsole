@@ -7,10 +7,13 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
 {
-    class OutputSurfaceRenderStep : IRenderStep
+    /// <summary>
+    /// A render step that draws the <see cref="ScreenSurfaceRenderer._backingTexture"/> texture.
+    /// </summary>
+    public class OutputSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 50;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
 
         /// <summary>
         /// Not used.
@@ -27,6 +30,7 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public void Composing(IRenderer renderer, IScreenSurface screenObject) { }
 
+        ///  <inheritdoc/>
         public void Render(IRenderer renderer, IScreenSurface screenObject)
         {
             var monoRenderer = (ScreenSurfaceRenderer)renderer;

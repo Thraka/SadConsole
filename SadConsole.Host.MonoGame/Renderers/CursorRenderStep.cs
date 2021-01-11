@@ -16,7 +16,7 @@ namespace SadConsole.Renderers
         private Components.Cursor _cursor;
 
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 70;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Cursor;
 
         /// <summary>
         /// Sets the <see cref="Components.Cursor"/>.

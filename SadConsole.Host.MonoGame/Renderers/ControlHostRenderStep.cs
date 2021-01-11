@@ -28,7 +28,7 @@ namespace SadConsole.Renderers
         public ITexture CachedTexture => _cachedTexture;
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 80;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.ControlHost;
 
         /// <summary>
         /// Sets the <see cref="UI.ControlHost"/>.

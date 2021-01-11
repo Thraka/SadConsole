@@ -7,10 +7,13 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
 {
-    class TintSurfaceRenderStep : IRenderStep
+    /// <summary>
+    /// Renders a tint on top of where the output texture is drawn.
+    /// </summary>
+    public class TintSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 90;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Tint;
 
         /// <summary>
         /// Not used.

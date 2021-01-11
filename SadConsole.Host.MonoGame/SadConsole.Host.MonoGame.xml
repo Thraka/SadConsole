@@ -287,14 +287,6 @@
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Game.RemoveStartingConsole">
-            <summary>
-            Destroys the <see cref="P:SadConsole.GameHost.StartingConsole"/> instance.
-            </summary>
-            <remarks>
-            Prior to calling this method, you must set <see cref="P:SadConsole.GameHost.Screen"/> to an object other than <see cref="P:SadConsole.GameHost.StartingConsole"/>.
-            </remarks>
-        </member>
         <member name="T:SadConsole.Readers.TextureToSurfaceReader">
             <summary>
             Reads a texture to a cached surface. Used for animation.
@@ -464,6 +456,11 @@
             Finalizes the object for collection.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
+            <summary>
+            A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
+            </summary>
+        </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -479,6 +476,9 @@
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
@@ -576,6 +576,11 @@
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.Finalize">
             <summary>
             Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.TintSurfaceRenderStep">
+            <summary>
+            Renders a tint on top of where the output texture is drawn.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">

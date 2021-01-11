@@ -14,7 +14,7 @@ namespace SadConsole.Renderers
     public class WindowRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 10;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
 
         /// <summary>
         /// Not used.
@@ -48,6 +48,7 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public void Dispose() { }
+        public void Dispose() =>
+            Reset();
     }
 }
