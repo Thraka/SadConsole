@@ -9,8 +9,9 @@ namespace FeatureDemo.HostSpecific.MonoGame
 {
     class HexSurfaceRenderer: SadConsole.Renderers.ScreenSurfaceRenderer
     {
-        public override void Refresh(bool force = false)
-        {
+
+        //public override void Refresh(bool force = false)
+        //{
             //if (!force && !screen.IsDirty && BackingTexture != null) return;
 
             //// Update texture if something is out of size.
@@ -44,7 +45,7 @@ namespace FeatureDemo.HostSpecific.MonoGame
             //RefreshEnd(screen);
 
             //screen.IsDirty = false;
-        }
+        //}
     }
 }
 

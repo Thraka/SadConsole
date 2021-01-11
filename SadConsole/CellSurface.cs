@@ -12,7 +12,7 @@ namespace SadConsole
     /// </summary>
     [DataContract]
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-    public class CellSurface : ICellSurface
+    public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettable
     {
         private bool _isDirty = true;
         private Color _defaultBackground;
@@ -314,31 +314,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public ICellSurface GetSubSurface(Rectangle view)
-        {
-            if (!new Rectangle(0, 0, Width, Height).Contains(view))
-            {
-                throw new Exception("View is outside of surface bounds.");
-            }
-
-            var cells = new ColoredGlyph[view.Width * view.Height];
-
-            int index = 0;
-
-            for (int y = 0; y < view.Height; y++)
-            {
-                for (int x = 0; x < view.Width; x++)
-                {
-                    cells[index] = this[x + view.X, y + view.Y];
-                    index++;
-                }
-            }
-
-            return new CellSurface(view.Width, view.Height, cells);
-        }
-
-        /// <inheritdoc />
-        public void SetSurface(in ICellSurface surface, Rectangle view = default)
+        public void SetSurface(ICellSurface surface, Rectangle view = default)
         {
             Rectangle rect = view == Rectangle.Empty ? new Rectangle(0, 0, surface.Width, surface.Height) : view;
 
@@ -366,7 +342,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public void SetSurface(in ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
+        public void SetSurface(ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
         {
             if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
 

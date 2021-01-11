@@ -87,8 +87,7 @@ namespace FeatureDemo.CustomConsoles
             basicSurface = new SadConsole.Console(34, 15);
 
             animatedSurface = SadConsole.AnimatedScreenSurface.CreateStatic(34, 15, 15, 0.3d);
-            viewSurface = new Console(1, 1);
-            viewSurface.SetSurface(basicSurface, new Rectangle(5, 2, 34 - 10, 15 - 4));
+            viewSurface = new Console(((CellSurface)basicSurface.Surface).GetSubSurface(new Rectangle(5, 2, 34 - 10, 15 - 4)));
             //emptySurface = (SadConsole.Surfaces.BasicSurface)loadedView.TextSurface;
 
             MakeBasicSurface();
@@ -109,7 +108,7 @@ namespace FeatureDemo.CustomConsoles
             {
                 SadConsole.Serializer.Save<Console>(viewSurface, "viewsurface.view", false);
                 var loaded = SadConsole.Serializer.Load<Console>("viewsurface.view", false);
-                loaded.SetSurface(basicSurface, new Rectangle(5, 2, 34 - 10, 15 - 4));
+                //loaded.SetSurface(basicSurface, new Rectangle(5, 2, 34 - 10, 15 - 4));
                 basicSurface.IsDirty = true;
                 viewSurface.IsDirty = true;
                 loadedView.Children.Add(loaded);

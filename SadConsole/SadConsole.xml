@@ -777,13 +777,10 @@
         <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.CellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
+        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ICellSurface@,SadRogue.Primitives.Rectangle)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyph[],System.Int32,System.Int32,System.Int32,System.Int32)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.CellSurface.SetIsDirtySafe">
@@ -816,6 +813,11 @@
         <member name="T:SadConsole.ColoredGlyph">
             <summary>
             Represents an individual piece of a <see cref="T:SadConsole.ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ColoredGlyph.IsDirtySet">
+            <summary>
+            An event that is raised when the <see cref="P:SadConsole.ColoredGlyph.IsDirty"/> property is set to <see langword="true"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyph.Decorators">
@@ -1917,13 +1919,6 @@
         <member name="M:SadConsole.Console.GetEnumerator">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Console.GetSubSurface(SadRogue.Primitives.Rectangle)">
-            <summary>
-            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
-            </summary>
-            <param name="view">An area of the surface to create a view of.</param>
-            <returns>A new surface</returns>
-        </member>
         <member name="M:SadConsole.Console.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
             Resizes the surface to the specified width and height.
@@ -1933,23 +1928,6 @@
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
-        </member>
-        <member name="M:SadConsole.Console.SetSurface(SadConsole.ICellSurface@,SadRogue.Primitives.Rectangle)">
-            <summary>
-            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
-            </summary>
-            <param name="surface">The target surface to map cells from.</param>
-            <param name="view">A view rectangle of the target surface.</param>
-        </member>
-        <member name="M:SadConsole.Console.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Changes the cells of the surface to the provided array.
-            </summary>
-            <param name="cells">The cells to replace in this surface.</param>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
         </member>
         <member name="T:SadConsole.Debug.Screen">
             <summary>
@@ -3857,40 +3835,6 @@
             Gets or sets the visible width of the surface in cells.
             </summary>
         </member>
-        <member name="M:SadConsole.ICellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
-            <summary>
-            Resizes the surface to the specified width and height.
-            </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
-            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
-        </member>
-        <member name="M:SadConsole.ICellSurface.GetSubSurface(SadRogue.Primitives.Rectangle)">
-            <summary>
-            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
-            </summary>
-            <param name="view">An area of the surface to create a view of.</param>
-            <returns>A new surface</returns>
-        </member>
-        <member name="M:SadConsole.ICellSurface.SetSurface(SadConsole.ICellSurface@,SadRogue.Primitives.Rectangle)">
-            <summary>
-            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
-            </summary>
-            <param name="surface">The target surface to map cells from.</param>
-            <param name="view">A view rectangle of the target surface.</param>
-        </member>
-        <member name="M:SadConsole.ICellSurface.SetSurface(SadConsole.ColoredGlyph[]@,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Changes the cells of the surface to the provided array.
-            </summary>
-            <param name="cells">The cells to replace in this surface.</param>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
-        </member>
         <member name="P:SadConsole.ICellSurface.ConnectedLineThin">
             <summary>
             Glyph indexes for a thin line.
@@ -4152,6 +4096,14 @@
             <param name="surface">The surface being edited.</param>
             <param name="area">The area to get cells from.</param>
             <returns>A new array with references to each cell in the area.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetSubSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="view">An area of the surface to create a view of.</param>
+            <returns>A new surface</returns>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetMirror(SadConsole.ICellSurface,System.Int32,System.Int32)">
             <summary>
@@ -4615,6 +4567,43 @@
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
+        </member>
+        <member name="T:SadConsole.ICellSurfaceResize">
+            <summary>
+            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="!:DefaultForeground"/>, <see cref="!:DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="T:SadConsole.ICellSurfaceSettable">
+            <summary>
+            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceSettable.SetSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Remaps the cells of this surface to a view of the <paramref name="surface"/>.
+            </summary>
+            <param name="surface">The target surface to map cells from.</param>
+            <param name="view">A view rectangle of the target surface.</param>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceSettable.SetSurface(SadConsole.ColoredGlyph[],System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Changes the cells of the surface to the provided array.
+            </summary>
+            <param name="cells">The cells to replace in this surface.</param>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="bufferWidth">The maximum width of the surface.</param>
+            <param name="bufferHeight">The maximum height of the surface.</param>
         </member>
         <member name="T:SadConsole.Input.AsciiKey">
             <summary>
@@ -6868,6 +6857,16 @@
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityRenderer">
             <summary>
             The render step for a <see cref="T:SadConsole.Entities.Renderer"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Output">
+            <summary>
+            The render to draw the output texture of an <see cref="T:SadConsole.Renderers.IRenderer"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Tint">
+            <summary>
+            The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.IRenderer">

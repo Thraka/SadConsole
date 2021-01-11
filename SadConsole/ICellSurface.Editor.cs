@@ -418,6 +418,33 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="view">An area of the surface to create a view of.</param>
+        /// <returns>A new surface</returns>
+        public static ICellSurface GetSubSurface(this ICellSurface surface, Rectangle view)
+        {
+            if (!new Rectangle(0, 0, surface.Width, surface.Height).Contains(view))
+                throw new Exception("View is outside of surface bounds.");
+
+            var cells = new ColoredGlyph[view.Width * view.Height];
+
+            int index = 0;
+
+            for (int y = 0; y < view.Height; y++)
+            {
+                for (int x = 0; x < view.Width; x++)
+                {
+                    cells[index] = surface[x + view.X, y + view.Y];
+                    index++;
+                }
+            }
+
+            return new CellSurface(view.Width, view.Height, cells);
+        }
+
+        /// <summary>
         /// Gets the mirror of a specified cell.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
