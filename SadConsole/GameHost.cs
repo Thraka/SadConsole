@@ -221,6 +221,23 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Destroys the <see cref="StartingConsole"/> instance.
+        /// </summary>
+        /// <remarks>
+        /// Prior to calling this method, you must set <see cref="Screen"/> to an object other than <see cref="StartingConsole"/>.
+        /// </remarks>
+        public void DestroyDefaultStartingConsole()
+        {
+            if (StartingConsole == null) return;
+
+            if (Screen == StartingConsole)
+                throw new Exception($"{nameof(StartingConsole)} cannot be assigned to {nameof(Screen)} when removing the console.");
+
+            StartingConsole.Dispose();
+            StartingConsole = null;
+        }
+
+        /// <summary>
         /// Opens a file stream with the specified mode and access.
         /// </summary>
         /// <param name="file">The file to open.</param>

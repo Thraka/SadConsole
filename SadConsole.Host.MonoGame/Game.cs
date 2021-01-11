@@ -178,21 +178,5 @@ namespace SadConsole
 
         internal void InvokeFrameUpdate() =>
             OnFrameUpdate();
-
-        /// <summary>
-        /// Destroys the <see cref="GameHost.StartingConsole"/> instance.
-        /// </summary>
-        /// <remarks>
-        /// Prior to calling this method, you must set <see cref="GameHost.Screen"/> to an object other than <see cref="GameHost.StartingConsole"/>.
-        /// </remarks>
-        public void RemoveStartingConsole()
-        {
-            if (StartingConsole == null) return;
-            if (Screen == StartingConsole)
-                throw new Exception($"{nameof(StartingConsole)} cannot be assigned to {nameof(Screen)} when removing the console.");
-
-            StartingConsole.Dispose();
-            StartingConsole = null;
-        }
     }
 }

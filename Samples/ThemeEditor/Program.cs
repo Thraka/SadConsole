@@ -45,9 +45,9 @@ namespace ThemeEditor
 
             // Register the extended library controls with the default library
             SadConsole.UI.RegistrarExtended.Register();
+            Game.Instance.Screen = new Container();
+            Game.Instance.DestroyDefaultStartingConsole();
 
-            GameHost.Instance.Screen = new Container();
-            Game.Instance.RemoveStartingConsole();
 
             //GameHost.Instance.Screen = con;
 
