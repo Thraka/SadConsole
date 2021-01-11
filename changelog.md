@@ -1,10 +1,18 @@
-## v9.0 ??????
+## v9.0 Beta 4
 
 - Fixed bug that prevents right/middle mouse click detections.
 - Added label text to progress bar when in horizontal mode.
 - Adjusted the rendering step system. Now steps have a shared output texture to draw to.
 - The new entity type has an `Effect` property now.
 - `ICellEffect.RestoreCellOnFinshed` was renamed to `RestoreCellOnRemoved`.
+- `ICellEffect.CloneOnApply` was renamed to `CloneOnAdd`.
+- Move `Timer` to `SadConsole.Components` namespace
+- Move `Entities.Zone` to the SadConsole.Extended library.
+- ScreenObjects now have a add/remove virtual method for components.
+- RenderSteps are now on `IScreenSurface` instead of `IRenderer`.
+- `ICellSurface` had a few methods moved to interfaces and they're implemented by `CellSurface`.
+- `ColoredGlyph.IsDirtySet` event added which triggers when `IsDirty` is set to `true`.
+- 
 
 ## v9.0 Beta 3
 
