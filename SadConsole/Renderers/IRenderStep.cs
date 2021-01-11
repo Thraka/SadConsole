@@ -12,7 +12,7 @@ namespace SadConsole.Renderers
         /// <summary>
         /// Indicates priority related to other steps. Lowest runs first.
         /// </summary>
-        int SortOrder { get; set; }
+        uint SortOrder { get; set; }
 
         /// <summary>
         /// Adds supplemental data to the render step. 

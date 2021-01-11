@@ -13,7 +13,7 @@ namespace SadConsole.Renderers
     public class TintSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Tint;
+        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Tint;
 
         /// <summary>
         /// Not used.

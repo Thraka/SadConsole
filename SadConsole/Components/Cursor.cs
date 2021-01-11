@@ -171,7 +171,7 @@ namespace SadConsole.Components
         /// <summary>
         /// Sets the sort order of this component within the host.
         /// </summary>
-        public int SortOrder { get; set; }
+        public uint SortOrder { get; set; }
 
         bool IComponent.IsUpdate => true;
 

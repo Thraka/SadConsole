@@ -13,7 +13,7 @@ namespace FeatureDemo.CustomConsoles
         private readonly ColoredGlyph _borderCellStyle;
         private readonly int[] _borderGlyphs;
 
-        public int SortOrder => 0;
+        public uint SortOrder => 0;
 
         public bool IsUpdate => false;
 

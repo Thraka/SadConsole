@@ -27,7 +27,7 @@ namespace SadConsole.Renderers
         public ITexture CachedTexture => _cachedTexture;
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
+        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
 
         /// <summary>
         /// Not used.

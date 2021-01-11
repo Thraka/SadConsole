@@ -11,7 +11,7 @@ namespace SadConsole.Components
         /// <summary>
         /// Indicates priority to other components.
         /// </summary>
-        public int SortOrder { get; set; }
+        public uint SortOrder { get; set; }
 
         /// <summary>
         /// Called by a host when the mouse is being processed.
@@ -27,7 +27,7 @@ namespace SadConsole.Components
         /// <inheritdoc />
         public virtual void OnRemoved(IScreenObject host) { }
 
-        int IComponent.SortOrder => SortOrder;
+        uint IComponent.SortOrder => SortOrder;
 
         bool IComponent.IsUpdate => false;
 

@@ -12,7 +12,7 @@ namespace SadConsole.Renderers
     public class WindowRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
+        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
 
         /// <summary>
         /// Not used.

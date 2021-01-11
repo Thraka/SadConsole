@@ -14,7 +14,7 @@ namespace SadConsole.Renderers
     public class OutputSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
+        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
 
         /// <summary>
         /// Not used.

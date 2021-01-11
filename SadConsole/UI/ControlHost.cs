@@ -19,9 +19,9 @@ namespace SadConsole.UI
         /// <summary>
         /// Indicates priority to other components.
         /// </summary>
-        public int SortOrder { get; set; }
+        public uint SortOrder { get; set; }
 
-        int Components.IComponent.SortOrder => SortOrder;
+        uint Components.IComponent.SortOrder => SortOrder;
 
         bool Components.IComponent.IsUpdate => true;
 

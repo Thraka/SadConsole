@@ -11,7 +11,7 @@ namespace SadConsole.Components
         /// <summary>
         /// Indicates priority to other components.
         /// </summary>
-        int SortOrder { get; }
+        uint SortOrder { get; }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that this component calls the <see cref="Update(IScreenObject, TimeSpan)"/> method.

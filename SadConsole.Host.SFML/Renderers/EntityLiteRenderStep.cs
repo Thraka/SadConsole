@@ -23,7 +23,7 @@ namespace SadConsole.Renderers
         public ITexture CachedTexture => _cachedTexture;
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.EntityRenderer;
+        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.EntityRenderer;
 
         /// <summary>
         /// Sets the <see cref="Entities.Renderer"/>.
