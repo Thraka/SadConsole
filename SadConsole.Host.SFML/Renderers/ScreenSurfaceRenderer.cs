@@ -22,19 +22,9 @@ namespace SadConsole.Renderers
         public RenderTexture _backingTexture;
 
         /// <summary>
-        /// <see langword="true"/> when the renderer should create a draw call for <see cref="Output"/>.
-        /// </summary>
-        public bool DoOutputRender { get; set; } = true;
-
-        /// <summary>
         /// The cached texture of the drawn surface.
         /// </summary>
         public ITexture Output => _renderTexture;
-
-        /// <summary>
-        /// The screen this renderer is attached to.
-        /// </summary>
-        protected IScreenSurface _screen { get; set; }
 
         /// <summary>
         /// Color used with drawing the texture to the screen. Let's a surface become transparent.
@@ -68,49 +58,32 @@ namespace SadConsole.Renderers
         /// </summary>
         public IntRect[] CachedRenderRects;
 
-        /// <summary>
-        /// Creates the renderer with the <see cref="SurfaceRenderStep"/> step.
-        /// </summary>
-        public ScreenSurfaceRenderer()
-        {
-            AddRenderStep(new SurfaceRenderStep());
-            AddRenderStep(new OutputSurfaceRenderStep());
-        }
-
         ///  <inheritdoc/>
-        public virtual void SetSurface(IScreenSurface screen)
-        {
-            _screen = screen;
-
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].OnSurfaceChanged(this, screen);
-        }
-
-        ///  <inheritdoc/>
-        public virtual void Refresh(bool force = false)
+        public virtual void Refresh(IScreenSurface screen, bool force = false)
         {
             bool backingTextureChanged = false;
             IsForced = force;
 
             // Update texture if something is out of size.
-            if (_backingTexture == null || _screen.AbsoluteArea.Width != (int)_backingTexture.Size.X || _screen.AbsoluteArea.Height != (int)_backingTexture.Size.Y)
+            if (_backingTexture == null || screen.AbsoluteArea.Width != (int)_backingTexture.Size.X || screen.AbsoluteArea.Height != (int)_backingTexture.Size.Y)
             {
                 IsForced = true;
+                backingTextureChanged = true;
                 _backingTexture?.Dispose();
-                _backingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
+                _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
                 _renderTexture?.Dispose();
                 _renderTexture = new Host.GameTexture(_backingTexture.Texture);
             }
 
             // Update cached drawing rectangles if something is out of size.
-            if (CachedRenderRects == null || CachedRenderRects.Length != _screen.Surface.View.Width * _screen.Surface.View.Height || CachedRenderRects[0].Width != _screen.FontSize.X || CachedRenderRects[0].Height != _screen.FontSize.Y)
+            if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
             {
-                CachedRenderRects = new IntRect[_screen.Surface.View.Width * _screen.Surface.View.Height];
+                CachedRenderRects = new IntRect[screen.Surface.View.Width * screen.Surface.View.Height];
 
                 for (int i = 0; i < CachedRenderRects.Length; i++)
                 {
-                    var position = Point.FromIndex(i, _screen.Surface.View.Width);
-                    CachedRenderRects[i] = _screen.Font.GetRenderRect(position.X, position.Y, _screen.FontSize).ToIntRect();
+                    var position = Point.FromIndex(i, screen.Surface.View.Width);
+                    CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
                 }
 
                 IsForced = true;
@@ -119,8 +92,8 @@ namespace SadConsole.Renderers
             bool composeRequested = IsForced;
 
             // Let everything refresh before compose.
-            for (int i = 0; i < RenderSteps.Count; i++)
-                composeRequested |= RenderSteps[i].Refresh(this, backingTextureChanged, IsForced);
+            foreach (IRenderStep step in screen.RenderSteps)
+                composeRequested |= step.Refresh(this, screen, backingTextureChanged, IsForced);
 
             // If any step (or IsForced) requests a compose, process them.
             if (composeRequested)
@@ -130,8 +103,8 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Reset(_backingTexture, SFMLBlendState, Transform.Identity);
 
                 // Compose each step
-                for (int i = 0; i < RenderSteps.Count; i++)
-                    RenderSteps[i].Composing();
+                foreach (IRenderStep step in screen.RenderSteps)
+                    step.Composing(this, screen);
 
                 // End sprite batch
                 Host.Global.SharedSpriteBatch.End();
@@ -140,45 +113,11 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public virtual void Render()
+        public virtual void Render(IScreenSurface screen)
         {
-            for (int i = 0; i < RenderSteps.Count; i++)
-                RenderSteps[i].Render();
+            foreach (IRenderStep step in screen.RenderSteps)
+                step.Render(this, screen);
         }
-
-        /// <inheritdoc/>
-        public void AddRenderStep(IRenderStep step)
-        {
-            if (RenderSteps.Contains(step)) throw new Exception("Render step has already been added to renderer");
-
-            RenderSteps.Add(step);
-            RenderSteps.Sort(CompareStep);
-
-            step.OnAdded(this, _screen);
-        }
-
-        /// <inheritdoc/>
-        public void RemoveRenderStep(IRenderStep step)
-        {
-            RenderSteps.Remove(step);
-            step.OnRemoved(this, _screen);
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyCollection<IRenderStep> GetRenderSteps() =>
-            RenderSteps.AsReadOnly();
-
-        private static int CompareStep(IRenderStep left, IRenderStep right)
-        {
-            if (left.SortOrder > right.SortOrder)
-                return 1;
-
-            if (left.SortOrder < right.SortOrder)
-                return -1;
-
-            return 0;
-        }
-
 
         #region IDisposable Support
         protected bool disposedValue = false; // To detect redundant calls

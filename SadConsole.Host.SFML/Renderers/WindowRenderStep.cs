@@ -11,53 +11,41 @@ namespace SadConsole.Renderers
     /// </summary>
     public class WindowRenderStep : IRenderStep
     {
-        private UI.Window _screen;
+        ///  <inheritdoc/>
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
+
+        /// <summary>
+        /// Not used.
+        /// </summary>
+        public void SetData(object data) { }
 
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 10;
-
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
-        {
-            if (!(surface is UI.Window))
-                throw new Exception($"The window render step must be used with a {nameof(UI.Window)} type.");
-
-            _screen = (UI.Window)surface;
-        }
-
-        ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
-        {
-            _screen = null;
-        }
-
-        ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface) =>
-            _screen = (UI.Window)surface;
-
+        public void Reset() { }
 
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced) =>
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) =>
             false;
 
         /// <summary>
         /// Does nothing.
         /// </summary>
-        public void Composing() { }
+        public void Composing(IRenderer renderer, IScreenSurface screenObject) { }
 
         ///  <inheritdoc/>
-        public void Render()
+        public void Render(IRenderer renderer, IScreenSurface screenObject)
         {
-            UI.Colors colors = _screen.Controls.GetThemeColors();
+            UI.Window window = (UI.Window)screenObject;
+            UI.Colors colors = window.Controls.GetThemeColors();
 
-            if (_screen.IsModal && colors.ModalBackground.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)_screen.Font.Image).Texture, new IntRect(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), _screen.Font.SolidGlyphRectangle.ToIntRect()));
+            if (window.IsModal && colors.ModalBackground.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)screenObject.Font.Image).Texture, new IntRect(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screenObject.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
         ///  <inheritdoc/>
-        public void Dispose() { }
+        public void Dispose() =>
+            Reset();
 
     }
 }

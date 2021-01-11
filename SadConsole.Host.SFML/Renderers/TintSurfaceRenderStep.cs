@@ -9,12 +9,12 @@ using Color = SFML.Graphics.Color;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// A render step that draws the <see cref="ScreenSurfaceRenderer._backingTexture"/> texture.
+    /// Renders a tint on top of where the output texture is drawn.
     /// </summary>
-    public class OutputSurfaceRenderStep : IRenderStep
+    public class TintSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Tint;
 
         /// <summary>
         /// Not used.
@@ -36,8 +36,8 @@ namespace SadConsole.Renderers
         {
             var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
 
-            if (screenObject.Tint.A != 255)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(sfmlRenderer._backingTexture.Texture, new SFML.System.Vector2i(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), sfmlRenderer._finalDrawColor));
+            if (screenObject.Tint.A != 0)
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screenObject.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screenObject.Font.Image).Texture, screenObject.AbsoluteArea.ToIntRect(), screenObject.Font.SolidGlyphRectangle.ToIntRect()));
         }
 
         ///  <inheritdoc/>

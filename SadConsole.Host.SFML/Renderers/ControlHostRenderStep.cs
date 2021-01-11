@@ -7,14 +7,12 @@ using SadRogue.Primitives;
 namespace SadConsole.Renderers
 {
     /// <summary>
-    /// Draws a <see cref="SadConsole.UI.ControlHost"/>.
+    /// Draws a <see cref="UI.ControlHost"/>.
     /// </summary>
     public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     {
-        private SadConsole.UI.ControlHost _controlsHost;
-        private IScreenSurface _screen;
-        private Host.GameTexture _cachedTexture;
-        private ScreenSurfaceRenderer _baseRenderer;
+        private UI.ControlHost _controlsHost;
+        private GameTexture _cachedTexture;
 
         /// <summary>
         /// The cached texture of the drawn controls layer.
@@ -25,69 +23,42 @@ namespace SadConsole.Renderers
         public ITexture CachedTexture => _cachedTexture;
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 80;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.ControlHost;
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
+        /// <summary>
+        /// Sets the <see cref="UI.ControlHost"/>.
+        /// </summary>
+        /// <param name="data">A <see cref="UI.ControlHost"/> object.</param>
+        public void SetData(object data)
         {
-            if (!(renderer is ScreenSurfaceRenderer))
-                throw new Exception($"Renderer used with {nameof(ControlHostRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
-
-            _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            OnSurfaceChanged(renderer, surface);
+            if (data is UI.ControlHost host)
+                _controlsHost = host;
+            else
+                throw new Exception($"{nameof(ControlHostRenderStep)} must have a {nameof(UI.ControlHost)} passed to the {nameof(SetData)} method");
         }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
+        public void Reset()
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
             _cachedTexture?.Dispose();
             _cachedTexture = null;
-            _screen = null;
-            _baseRenderer = null;
             _controlsHost = null;
         }
 
         ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface)
-        {
-            if (surface == null)
-            {
-                BackingTexture?.Dispose();
-                BackingTexture = null;
-                _cachedTexture?.Dispose();
-                _cachedTexture = null;
-                _screen = null;
-                _controlsHost = null;
-            }
-            else
-            {
-                if (!surface.HasSadComponent(out UI.ControlHost host))
-                    throw new Exception($"{nameof(ControlHostRenderStep)} is being run on object without a {nameof(UI.ControlHost)} component.");
-
-                _screen = surface;
-                _controlsHost = host;
-                // BackingTexture is handled by prestart.
-            }
-        }
-
-        ///  <inheritdoc/>
-        public void RenderEnd()
-        {
-        }
-
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
             bool result = true;
 
             // Update texture if something is out of size.
-            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
                 _cachedTexture?.Dispose();
+
+                BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
                 _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
                 result = true;
             }
@@ -96,9 +67,9 @@ namespace SadConsole.Renderers
             if (result || _controlsHost.IsDirty || isForced)
             {
                 BackingTexture.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
+                Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
 
-                ProcessContainer(_controlsHost);
+                ProcessContainer(_controlsHost, ((ScreenSurfaceRenderer)renderer), screenObject);
 
                 Host.Global.SharedSpriteBatch.End();
                 BackingTexture.Display();
@@ -114,40 +85,42 @@ namespace SadConsole.Renderers
         /// Processes a container from the control host.
         /// </summary>
         /// <param name="controlContainer">The container.</param>
-        protected void ProcessContainer(UI.Controls.IContainer controlContainer)
+        /// <param name="renderer">The renderer used with this step.</param>
+        /// <param name="screenObject">The screen surface with font information.</param>
+        protected void ProcessContainer(UI.Controls.IContainer controlContainer, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
         {
             foreach (UI.Controls.ControlBase control in controlContainer)
             {
                 if (!control.IsVisible) continue;
-                RenderControlCells(control, _screen.Font, _screen.FontSize, _screen.Surface.View, _screen.Surface.Width);
+                RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
 
                 if (control is UI.Controls.IContainer container)
-                    ProcessContainer(container);
+                    ProcessContainer(container, renderer, screenObject);
             }
         }
 
         ///  <inheritdoc/>
-        public void Composing()
+        public void Composing(IRenderer renderer, IScreenSurface screenObject)
         {
-            if (_screen.Tint.A != 255)
-            {
-                IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-                Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
-            }
+            IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+            Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
         }
 
         ///  <inheritdoc/>
-        public void Render() { }
+        public void Render(IRenderer renderer, IScreenSurface screenObject)
+        {
+        }
 
         /// <summary>
         /// Renders the cells of a control.
         /// </summary>
         /// <param name="control">The control.</param>
+        /// <param name="renderer">The renderer used with this step.</param>
         /// <param name="font">The font to render the cells with.</param>
         /// <param name="fontSize">The size of a cell in pixels.</param>
         /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
         /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
-        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, Font font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
+        protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, Font font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
         {
             font = control.AlternateFont ?? font;
 
@@ -171,7 +144,7 @@ namespace SadConsole.Renderers
 
                 if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                IntRect renderRect = _baseRenderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
+                IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
                 Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
             }
@@ -183,10 +156,7 @@ namespace SadConsole.Renderers
         /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
         protected void Dispose(bool disposing)
         {
-            BackingTexture?.Dispose();
-            BackingTexture = null;
-            _cachedTexture?.Dispose();
-            _cachedTexture = null;
+            Reset();
         }
 
         ///  <inheritdoc/>

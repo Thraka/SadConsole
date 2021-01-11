@@ -13,8 +13,6 @@ namespace SadConsole.Renderers
     {
         private Entities.Renderer _entityManager;
         private Host.GameTexture _cachedTexture;
-        private ScreenSurfaceRenderer _baseRenderer;
-        private IScreenSurface _screen;
 
         /// <summary>
         /// The cached texture of the drawn entities.
@@ -25,65 +23,40 @@ namespace SadConsole.Renderers
         public ITexture CachedTexture => _cachedTexture;
 
         /// <inheritdoc/>
-        public int SortOrder { get; set; } = 50;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.EntityRenderer;
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
+        /// <summary>
+        /// Sets the <see cref="Entities.Renderer"/>.
+        /// </summary>
+        /// <param name="data">A <see cref="Entities.Renderer"/> object.</param>
+        public void SetData(object data)
         {
-            if (!(renderer is ScreenSurfaceRenderer))
-                throw new Exception($"Renderer used with {nameof(EntityLiteRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
-
-            _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            _screen = surface;
-
-            OnSurfaceChanged(renderer, surface);
+            if (data is Entities.Renderer manager)
+                _entityManager = manager;
+            else
+                throw new ArgumentException($"{nameof(EntityLiteRenderStep)} must have a {nameof(Entities.Renderer)} passed to the {nameof(SetData)} method", nameof(data));
         }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
+        public void Reset()
         {
             BackingTexture?.Dispose();
             BackingTexture = null;
             _cachedTexture?.Dispose();
             _cachedTexture = null;
-            _screen = null;
-            _baseRenderer = null;
             _entityManager = null;
         }
 
         ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface)
-        {
-            if (surface == null)
-            {
-                BackingTexture?.Dispose();
-                BackingTexture = null;
-                _cachedTexture?.Dispose();
-                _cachedTexture = null;
-                _screen = null;
-                _entityManager = null;
-            }
-            else
-            {
-                if (!_screen.HasSadComponent(out Entities.Renderer host))
-                    throw new Exception("EntityLiteManager is being run on object without a control host component.");
-
-                _screen = surface;
-                _entityManager = host;
-                // BackingTexture is handled by prestart.
-            }
-        }
-
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced)
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
             bool result = true;
 
             // Update texture if something is out of size.
-            if (backingTextureChanged || BackingTexture == null || _screen.AbsoluteArea.Width != (int)BackingTexture.Size.X || _screen.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
             {
                 BackingTexture?.Dispose();
-                BackingTexture = new RenderTexture((uint)_screen.AbsoluteArea.Width, (uint)_screen.AbsoluteArea.Height);
+                BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
                 _cachedTexture?.Dispose();
                 _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
                 result = true;
@@ -93,7 +66,7 @@ namespace SadConsole.Renderers
             if (result || _entityManager.IsDirty || isForced)
             {
                 BackingTexture.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Reset(BackingTexture, _baseRenderer.SFMLBlendState, Transform.Identity);
+                Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
 
                 ColoredGlyph cell;
                 IntRect renderRect;
@@ -108,7 +81,7 @@ namespace SadConsole.Renderers
 
                     cell.IsDirty = false;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, _screen.Font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, screenObject.Font);
                 }
 
                 Host.Global.SharedSpriteBatch.End();
@@ -122,29 +95,24 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public void Composing()
+        public void Composing(IRenderer renderer, IScreenSurface screenObject)
         {
-            if (_screen.Tint.A != 255)
-            {
-                IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-                Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
-            }
+            IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+            Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
         }
 
         ///  <inheritdoc/>
-        public void Render() { }
+        public void Render(IRenderer renderer, IScreenSurface screenObject)
+        {
+
+        }
 
         /// <summary>
         /// Disposes the object.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
-        protected void Dispose(bool disposing)
-        {
-            BackingTexture?.Dispose();
-            BackingTexture = null;
-            _cachedTexture?.Dispose();
-            _cachedTexture = null;
-        }
+        protected void Dispose(bool disposing) =>
+            Reset();
 
         ///  <inheritdoc/>
         public void Dispose()

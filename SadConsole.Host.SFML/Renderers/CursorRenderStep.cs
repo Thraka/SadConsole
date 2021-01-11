@@ -10,57 +10,53 @@ namespace SadConsole.Renderers
     /// </summary>
     public class CursorRenderStep : IRenderStep
     {
-        private ScreenSurfaceRenderer _baseRenderer;
-        private IScreenSurface _screen;
+        private Components.Cursor _cursor;
 
         ///  <inheritdoc/>
-        public int SortOrder { get; set; } = 8;
+        public int SortOrder { get; set; } = Constants.RenderStepSortValues.Cursor;
 
-        ///  <inheritdoc/>
-        public void OnAdded(IRenderer renderer, IScreenSurface surface)
+        /// <summary>
+        /// Sets the <see cref="Components.Cursor"/>.
+        /// </summary>
+        /// <param name="data">A <see cref="Components.Cursor"/> object.</param>
+        public void SetData(object data)
         {
-            if (!(renderer is ScreenSurfaceRenderer))
-                throw new Exception($"Renderer used with {nameof(CursorRenderStep)} must be of type {nameof(ScreenSurfaceRenderer)}");
-
-            _baseRenderer = (ScreenSurfaceRenderer)renderer;
-            _screen = surface;
+            if (data is Components.Cursor cursor)
+                _cursor = cursor;
+            else
+                throw new Exception($"{nameof(CursorRenderStep)} must have a {nameof(Components.Cursor)} passed to the {nameof(SetData)} method");
         }
 
         ///  <inheritdoc/>
-        public void OnRemoved(IRenderer renderer, IScreenSurface surface)
+        public void Reset()
         {
-            _screen = null;
-            _baseRenderer = null;
+            _cursor = null;
         }
 
         ///  <inheritdoc/>
-        public void OnSurfaceChanged(IRenderer renderer, IScreenSurface surface) =>
-            _screen = surface;
-
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, bool backingTextureChanged, bool isForced) =>
+        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) =>
             false;
 
         ///  <inheritdoc/>
-        public void Composing() { }
+        public void Composing(IRenderer renderer, IScreenSurface screenObject) { }
 
         ///  <inheritdoc/>
-        public void Render()
+        public void Render(IRenderer renderer, IScreenSurface screenObject)
         {
             // If the tint isn't covering everything
-            if (_screen.Tint.A != 255)
+            if (screenObject.Tint.A != 255)
             {
                 // Draw any cursors
-                foreach (Components.Cursor cursor in _screen.GetSadComponents<Components.Cursor>())
+                foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
                 {
-                    if (cursor.IsVisible && _screen.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && _screen.Surface.View.Contains(cursor.Position))
+                    if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
                     {
-                        Point cursorPosition = _screen.AbsoluteArea.Position + _screen.Font.GetRenderRect(cursor.Position.X - _screen.Surface.ViewPosition.X, cursor.Position.Y - _screen.Surface.ViewPosition.Y, _screen.FontSize).Position;
+                        Point cursorPosition = screenObject.AbsoluteArea.Position + screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X, cursor.Position.Y - screenObject.Surface.ViewPosition.Y, screenObject.FontSize).Position;
 
                         GameHost.Instance.DrawCalls.Enqueue(
                             new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
-                                                        new Rectangle(cursorPosition.X, cursorPosition.Y, _screen.FontSize.X, _screen.FontSize.Y).ToIntRect(),
-                                                        _screen.Font,
+                                                        new Rectangle(cursorPosition.X, cursorPosition.Y, screenObject.FontSize.X, screenObject.FontSize.Y).ToIntRect(),
+                                                        screenObject.Font,
                                                         true
                                                         )
                             );
@@ -70,6 +66,7 @@ namespace SadConsole.Renderers
         }
 
         ///  <inheritdoc/>
-        public void Dispose() { }
+        public void Dispose() =>
+            Reset();
     }
 }
