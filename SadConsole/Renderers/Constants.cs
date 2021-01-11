@@ -55,4 +55,45 @@ namespace SadConsole.Renderers.Constants
         /// </summary>
         public const string Tint = "tint";
     }
+
+    /// <summary>
+    /// Renderer names used by hosts and types.
+    /// </summary>
+    public static class RenderStepSortValues
+    {
+        /// <summary>
+        /// The render step for a <see cref="IScreenSurface"/>.
+        /// </summary>
+        public const int Surface = 50;
+
+        /// <summary>
+        /// The render step for a <see cref="UI.ControlHost"/>.
+        /// </summary>
+        public const int ControlHost = 80;
+
+        /// <summary>
+        /// The render step for a <see cref="UI.Window"/>.
+        /// </summary>
+        public const int Window = 10;
+
+        /// <summary>
+        /// The render step for a <see cref="Components.Cursor"/>.
+        /// </summary>
+        public const int Cursor = 70;
+
+        /// <summary>
+        /// The render step for a <see cref="Entities.Renderer"/>.
+        /// </summary>
+        public const int EntityRenderer = 60;
+
+        /// <summary>
+        /// The render to draw the output texture of an <see cref="IRenderer"/>.
+        /// </summary>
+        public const int Output = 50;
+
+        /// <summary>
+        /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
+        /// </summary>
+        public const int Tint = 90;
+    }
 }

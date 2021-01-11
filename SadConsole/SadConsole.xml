@@ -3499,6 +3499,14 @@
             <param name="font">The font file to load.</param>
             <returns>A master font that you can generate a usable font from.</returns>
         </member>
+        <member name="M:SadConsole.GameHost.DestroyDefaultStartingConsole">
+            <summary>
+            Destroys the <see cref="P:SadConsole.GameHost.StartingConsole"/> instance.
+            </summary>
+            <remarks>
+            Prior to calling this method, you must set <see cref="P:SadConsole.GameHost.Screen"/> to an object other than <see cref="P:SadConsole.GameHost.StartingConsole"/>.
+            </remarks>
+        </member>
         <member name="M:SadConsole.GameHost.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
             Opens a file stream with the specified mode and access.
@@ -6865,6 +6873,46 @@
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Tint">
+            <summary>
+            The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.Constants.RenderStepSortValues">
+            <summary>
+            Renderer names used by hosts and types.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Surface">
+            <summary>
+            The render step for a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.ControlHost">
+            <summary>
+            The render step for a <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Window">
+            <summary>
+            The render step for a <see cref="T:SadConsole.UI.Window"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Cursor">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Components.Cursor"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.EntityRenderer">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Entities.Renderer"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Output">
+            <summary>
+            The render to draw the output texture of an <see cref="T:SadConsole.Renderers.IRenderer"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Tint">
             <summary>
             The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
             </summary>
