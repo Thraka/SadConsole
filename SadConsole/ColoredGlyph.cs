@@ -10,10 +10,16 @@ namespace SadConsole
     /// </summary>
     public class ColoredGlyph
     {
+        /// <summary>
+        /// An event that is raised when the <see cref="IsDirty"/> property is set to <see langword="true"/>.
+        /// </summary>
+        public event EventHandler IsDirtySet;
+
         private Color _foreground;
         private Color _background;
         private Mirror _mirror;
         private int _glyph;
+        private bool _isDirty;
 
         /// <summary>
         /// Modifies the look of a cell with additional character. 
@@ -73,7 +79,17 @@ namespace SadConsole
         /// <summary>
         /// <see langword="true"/> when this cell needs to be redrawn; otherwise, <see langword="false"/>.
         /// </summary>
-        public bool IsDirty { get; set; } = true;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set
+            {
+                _isDirty = value;
+
+                if (value)
+                    IsDirtySet?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         /// <summary>
         /// Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
