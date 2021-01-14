@@ -99,8 +99,6 @@ namespace SadConsole.Effects
         /// <param name="effect">The effect to associate with the cell.</param>
         public void SetEffect(IEnumerable<int> cellIndicies, ICellEffect effect)
         {
-            var cells = cellIndicies.Select(i => (_backingSurface[i], i));
-
             if (effect != null)
             {
                 ColoredGlyphEffectData workingEffect;
@@ -120,24 +118,24 @@ namespace SadConsole.Effects
                     }
                 }
 
-                foreach (var cell in cells)
+                foreach (int index in cellIndicies)
                 {
-                    if (!workingEffect.ContainsCell(cell.i))
+                    if (!workingEffect.ContainsCell(index))
                     {
                         // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
-                        ClearCellEffect(cell.i);
+                        ClearCellEffect(index);
 
                         // Add the cell to the effects by cell key and to list of known cells for the effect
-                        _effectCells.Add(cell.i, workingEffect);
-                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell.Item1, cell.i));
+                        _effectCells.Add(index, workingEffect);
+                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(_backingSurface[index], index));
                     }
                 }
             }
             else
             {
-                foreach (var cell in cells)
+                foreach (int index in cellIndicies)
                 {
-                    ClearCellEffect(cell.i);
+                    ClearCellEffect(index);
                 }
             }
         }

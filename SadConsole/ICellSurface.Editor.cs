@@ -324,10 +324,14 @@ namespace SadConsole
         /// <param name="surface">The surface being edited.</param>
         /// <param name="cells">The cells for the effect.</param>
         /// <param name="effect">The desired effect.</param>
-        public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+        public static void SetEffect(this ICellSurface surface, IEnumerable<Point> cells, ICellEffect effect)
         {
-            var cellsList = surface.ToList();
-            surface.Effects.SetEffect(surface.Select(c => cellsList.IndexOf(c)), effect);
+            var cellList = new List<int>(5);
+
+            foreach (Point item in cells)
+                cellList.Add(item.ToIndex(surface.Width));
+
+            surface.Effects.SetEffect(cellList, effect);
             surface.IsDirty = true;
         }
 
@@ -760,14 +764,19 @@ namespace SadConsole
             int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
             int charIndex = 0;
 
+            List<int> effectIndicies = new List<int>(text.Length);
+
             for (; index < end; index++)
             {
                 ColoredGlyph cell = surface[index];
                 appearance.CopyAppearanceTo(cell);
                 cell.Glyph = text[charIndex];
-                surface.Effects.SetEffect(index, effect);
+                effectIndicies.Add(index);
                 charIndex++;
             }
+
+            surface.Effects.SetEffect(effectIndicies, effect);
+
             surface.IsDirty = true;
         }
 
