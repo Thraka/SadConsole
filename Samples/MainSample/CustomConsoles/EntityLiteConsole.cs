@@ -20,6 +20,19 @@ namespace FeatureDemo.CustomConsoles
         public EntityLiteConsole()
             : base(80, 23, 160, 46)
         {
+
+            var fadeEffect = new SadConsole.Effects.Fade
+            {
+                AutoReverse = true,
+                DestinationForeground = new ColorGradient(Color.Blue, Color.Yellow),
+                FadeForeground = true,
+                UseCellForeground = false,
+                Repeat = true,
+                FadeDuration = 0.7f,
+                RemoveOnFinished = true,
+                CloneOnAdd = true
+            };
+
             player = new Entity(Color.Yellow, Color.Black, 1, 100)
             {
                 //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
@@ -40,13 +53,17 @@ namespace FeatureDemo.CustomConsoles
 
             //Children.Add(player);
             others = new List<Entity>();
-            for (int i = 0; i < 5000; i++)
+            for (int i = 0; i < 2500; i++)
             {
                 var item = new Entity(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60), 0)
                 {
                     //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
-                    Position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46))
+                    Position = GetPosition()
                 };
+
+                if (Game.Instance.Random.Next(0, 500) < 50)
+                    item.Effect = fadeEffect;
+
                 entityManager.Add(item);
                 others.Add(item);
             }
@@ -54,6 +71,34 @@ namespace FeatureDemo.CustomConsoles
             // Setup this console to accept keyboard input.
             UseKeyboard = true;
             IsVisible = false;
+        }
+
+        private Point GetPosition()
+        {
+            var position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46));
+
+            bool restart = false;
+            for (int i = 0; i < 10; i++)
+            {
+                foreach (var entity in entityManager.Entities)
+                {
+                    if (entity.Position == position)
+                    {
+                        restart = true;
+                        break;
+                    }
+                }
+
+                if (!restart)
+                    return position;
+                else
+                {
+                    restart = false;
+                    position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46));
+                }
+            }
+
+            return position;
         }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)

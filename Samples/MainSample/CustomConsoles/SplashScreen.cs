@@ -165,11 +165,11 @@ namespace FeatureDemo.CustomConsoles
                 RemoveOnFinished = true
             };
 
-            var cells = new List<ColoredGlyph>();
+            var cells = new List<int>();
             for (int index = 0; index < 10; index++)
             {
                 int point = new Point(26, Height - 1).ToIndex(Width) + 14 + index;
-                cells.Add(this[point]);
+                cells.Add(point);
             }
 
             this.SetEffect(cells, fadeEffect);
