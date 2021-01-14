@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Collections.Specialized;
 using System.Text;
 using SadRogue.Primitives;
+using System.Linq;
 
 namespace SadConsole.Entities
 {
@@ -75,6 +76,40 @@ namespace SadConsole.Entities
                 state.IsInZone = false;
             }
         }
+
+        /// <summary>
+        /// Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+        /// </summary>
+        /// <param name="position">The position to get an entity at.</param>
+        /// <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+        public Entity GetEntityAtPosition(Point position)
+        {
+            if (_entityByPosition.ContainsKey(position))
+                return _entityByPosition[position][0];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+        /// </summary>
+        /// <param name="position">The position to get an entity at.</param>
+        /// <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
+        public Entity[] GetEntitiesAtPosition(Point position)
+        {
+            if (_entityByPosition.ContainsKey(position))
+                return _entityByPosition[position].ToArray();
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+        /// </summary>
+        /// <param name="position">The position to check.</param>
+        /// <returns>A value indicating if an entity exists.</returns>
+        public bool HasEntityAt(Point position) =>
+            _entityByPosition.ContainsKey(position);
 
         /// <inheritdoc/>
         protected override void OnEntityChangedPosition(Entity entity, ValueChangedEventArgs<Point> e) =>
