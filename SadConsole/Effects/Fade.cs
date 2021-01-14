@@ -200,12 +200,14 @@ namespace SadConsole.Effects
             Repeat = Repeat,
             UseCellDestinationReverse = UseCellDestinationReverse,
 
+            AutoReverse = AutoReverse,
             IsFinished = IsFinished,
             StartDelay = StartDelay,
             CloneOnAdd = CloneOnAdd,
             RemoveOnFinished = RemoveOnFinished,
             RestoreCellOnRemoved = RestoreCellOnRemoved,
             _timeElapsed = _timeElapsed,
+
         };
 
         //public override bool Equals(ICellEffect effect)
