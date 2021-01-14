@@ -4046,7 +4046,7 @@
             <param name="index">Index of the cell.</param>
             <param name="effect">The desired effect.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{SadRogue.Primitives.Point},SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of a list of cells to the specified effect.
             </summary>
