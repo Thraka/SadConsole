@@ -46,6 +46,27 @@
             </summary>
             <param name="zone">The hotspot to remove.</param>
         </member>
+        <member name="M:SadConsole.Entities.Manager.GetEntityAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+            </summary>
+            <param name="position">The position to get an entity at.</param>
+            <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+            </summary>
+            <param name="position">The position to get an entity at.</param>
+            <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.HasEntityAt(SadRogue.Primitives.Point)">
+            <summary>
+            Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+            </summary>
+            <param name="position">The position to check.</param>
+            <returns>A value indicating if an entity exists.</returns>
+        </member>
         <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <inheritdoc/>
         </member>

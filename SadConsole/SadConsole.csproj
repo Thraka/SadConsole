@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>9.0.0-beta3</Version>
+    <Version>9.0.0-beta4</Version>
     <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>New rendering system. Enhanced controls, themes, colors. New simple entity system. Misc bugs.</PackageReleaseNotes>
+    <PackageReleaseNotes>Further changes to rendering. Minor bug fixes. GameHost adjustments.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!--
@@ -50,7 +50,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha7-debug" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha8-debug" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
