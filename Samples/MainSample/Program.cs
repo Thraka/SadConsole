@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Linq;
+using System.Linq;
 using Newtonsoft.Json;
 using SadConsole;
+using SadConsole.Components;
 using SadConsole.Input;
+using SadConsole.Renderers;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
@@ -51,10 +56,17 @@ namespace FeatureDemo
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F3))
                 {
                     //SadConsole.Debug.CurrentScreen.Show();
+#if MONOGAME
+                    if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
+                        SadConsole.Debug.MonoGame.Debugger.Start();
+                    else
+                        SadConsole.Debug.MonoGame.Debugger.Stop();
+#endif
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F5))
                 {
                     SadConsole.Game.Instance.ToggleFullScreen();
+
                 }
 
             }
@@ -83,7 +95,8 @@ namespace FeatureDemo
             // We'll instead use our demo consoles that show various features of SadConsole.
 
             Game.Instance.Screen = MainConsole;
-            Game.Instance.RemoveStartingConsole();
+            Game.Instance.DestroyDefaultStartingConsole();
+
 
             //var font = Font.LoadBMFont("Res/Fonts/font.fnt", 9, 12);
 
