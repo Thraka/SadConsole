@@ -16,6 +16,19 @@ namespace SadConsole.Debug.MonoGame
                 ImGui.SetNextWindowSizeConstraints(new Vector2(200, 200), new Vector2(10000, 10000));
                 if (ImGui.Begin("Surface preview", ref GuiState.ShowSurfacePreview, ImGuiWindowFlags.HorizontalScrollbar))
                 {
+
+                    // TODO:
+                    // Change this to have a list box that presents the render steps
+                    // Select render step checks for IRenderTexture
+                    //   - Display selected texture
+                    // Select render step checks if selected is Output
+                    //   - Display final texture
+
+                    // TODO:
+                    // New window that is an editor type for the parent object
+                    // Inspect components to see if entity renderer, controls ui, etc, enable different editors.
+                    // Add ability to add those components.
+
                     // Render output texture
                     if (GuiState._selectedScreenObject is IScreenSurface surface)
                     {
