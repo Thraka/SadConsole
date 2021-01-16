@@ -74,7 +74,7 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
 
-            ScreenSurface obj = new ScreenSurface(10, 10);
+            var obj = new SadConsole.ScreenSurface(10, 10);
             obj.Surface.FillWithRandomGarbage(255);
             obj.Position = (10, 10);
             obj.IsEnabled = false;
@@ -82,7 +82,7 @@ namespace SadConsole.Tests
             obj.UseKeyboard = true;
             obj.UseMouse = false;
 
-            ScreenSurface obj2 = new ScreenSurface(20, 20);
+            var obj2 = new SadConsole.ScreenSurface(20, 20);
             obj2.Surface.FillWithRandomGarbage(255);
             obj2.Position = (15, 2);
             obj2.IsEnabled = true;
@@ -99,7 +99,7 @@ namespace SadConsole.Tests
             obj2.SadComponents.Add(comp2);
 
             SadConsole.Serializer.Save(obj, "test.file", false);
-            var newObj = SadConsole.Serializer.Load<ScreenSurface>("test.file", false);
+            var newObj = SadConsole.Serializer.Load<SadConsole.ScreenSurface>("test.file", false);
 
             Assert.AreEqual(obj.Position, newObj.Position);
             Assert.AreEqual(obj.IsEnabled, newObj.IsEnabled);
@@ -121,10 +121,10 @@ namespace SadConsole.Tests
                 int index2 = SadConsole.GameHost.Instance.Random.Next(0, obj.Surface.Count);
 
                 Assert.IsTrue(obj.Surface[index1].Matches(newObj.Surface[index1]));
-                Assert.IsTrue(obj2.Surface[index2].Matches(((ScreenSurface)newObj.Children[0]).Surface[index2]));
+                Assert.IsTrue(obj2.Surface[index2].Matches(((SadConsole.ScreenSurface)newObj.Children[0]).Surface[index2]));
             }
 
-            Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenSurface));
+            Assert.IsInstanceOfType(newObj.Children[0], typeof(SadConsole.ScreenSurface));
 
             Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
             Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);

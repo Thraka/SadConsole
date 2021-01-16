@@ -10,6 +10,18 @@ namespace SadConsole.Tests
 {
     class BasicGameHost : GameHost
     {
+        public class RenderStep : IRenderStep
+        {
+            public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
+
+            public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
+            public void Dispose() => throw new NotImplementedException();
+            public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
+            public void Render(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
+            public void Reset() => throw new NotImplementedException();
+            public void SetData(object data) { }
+        }
+
         public class Texture : ITexture
         {
             private SixLabors.ImageSharp.Image _graphic;
@@ -75,6 +87,11 @@ namespace SadConsole.Tests
         public override ITexture GetTexture(Stream textureStream)
         {
             return new Texture(textureStream);
+        }
+
+        public override IRenderStep GetRendererStep(string name)
+        {
+            return new RenderStep();
         }
 
         public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
