@@ -35,7 +35,7 @@ namespace SadConsole
                 //else if (objectType == typeof(SadRogue.Primitives.Color))
                 //    contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
 
-                if (objectType == typeof(Font))
+                if (objectType == typeof(IFont))
                     contract.Converter = new SerializedTypes.FontJsonConverter();
 
                 else if (objectType == typeof(ColoredGlyph))

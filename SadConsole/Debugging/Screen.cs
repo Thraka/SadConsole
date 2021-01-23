@@ -27,15 +27,18 @@ namespace SadConsole.Debug
         /// </summary>
         /// <param name="font">The font to use the debugging screen.</param>
         /// <param name="fontSize">The size of the font.</param>
-        public static void Show(Font font, Point fontSize)
+        public static void Show(IFont font, Point fontSize)
         {
             DebugWindow window = new DebugWindow(font);
             window.Show();
             window.Center();
         }
 
+        /// <summary>
+        /// Shows the debug screen with the default font and size.
+        /// </summary>
         public static void Show() =>
-            Show(GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(Font.Sizes.One));
+            Show(GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(IFont.Sizes.One));
 
         private class DebugWindow : Window
         {
@@ -54,10 +57,10 @@ namespace SadConsole.Debug
 
             private bool _isReadingConsole;
 
-            public DebugWindow(Font font) : base(78, 22)
+            public DebugWindow(IFont font) : base(78, 22)
             {
                 Font = font;
-                FontSize = Font.GetFontSize(Font.Sizes.One);
+                FontSize = Font.GetFontSize(IFont.Sizes.One);
 
                 var listboxTheme = (ListBoxTheme)Library.Default.GetControlTheme(typeof(ListBox));
                 listboxTheme.DrawBorder = true;

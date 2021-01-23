@@ -83,7 +83,7 @@ namespace SFML.Graphics
             }
         }
 
-        public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, SadConsole.Font font)
+        public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, SadConsole.IFont font)
         {
             Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
 

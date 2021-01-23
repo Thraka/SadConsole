@@ -39,7 +39,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="fontSize">The size of the font.</param>
         /// <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
         /// <returns></returns>
-        public static ICellSurface ToSurface(this Texture2D image, SadConsole.Font font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
+        public static ICellSurface ToSurface(this Texture2D image, IFont font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;
@@ -162,7 +162,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="font">The font used with the cell surface.</param>
         /// <param name="fontSize">The size of the font.</param>
         /// <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
-        public static void ToSurface(this Texture2D image, ICellSurface surface, Color[] cachedColorArray, Font font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
+        public static void ToSurface(this Texture2D image, ICellSurface surface, Color[] cachedColorArray, IFont font, SadRogue.Primitives.Point fontSize, bool blockMode = false)
         {
             int imageWidth = image.Width;
             int imageHeight = image.Height;

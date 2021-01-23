@@ -17,27 +17,27 @@ namespace SadConsole
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
         /// </summary>
-        public Dictionary<string, Font> Fonts { get; } = new Dictionary<string, Font>();
+        public Dictionary<string, IFont> Fonts { get; } = new Dictionary<string, IFont>();
 
         /// <summary>
         /// The font automatically loaded by SadConsole. Standard IBM style font.
         /// </summary>
-        public Font EmbeddedFont { get; internal set; }
+        public SadFont EmbeddedFont { get; internal set; }
 
         /// <summary>
         /// The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
         /// </summary>
-        public Font EmbeddedFontExtended { get; internal set; }
+        public SadFont EmbeddedFontExtended { get; internal set; }
 
         /// <summary>
         /// The default font for any type that does not provide a font.
         /// </summary>
-        public Font DefaultFont { get; set; }
+        public IFont DefaultFont { get; set; }
 
         /// <summary>
         /// The default font to use with <see cref="DefaultFont"/>.
         /// </summary>
-        public Font.Sizes DefaultFontSize { get; set; } = Font.Sizes.One;
+        public IFont.Sizes DefaultFontSize { get; set; } = IFont.Sizes.One;
 
         /// <summary>
         /// Global keyboard object used by SadConsole during the update frame.
@@ -131,8 +131,8 @@ namespace SadConsole
         {
             public FocusedScreenObjectStack FocusedScreenObjects;
             public IScreenObject Screen;
-            public Font DefaultFont;
-            public Font.Sizes DefaultFontSize;
+            public IFont DefaultFont;
+            public IFont.Sizes DefaultFontSize;
         }
     }
 }

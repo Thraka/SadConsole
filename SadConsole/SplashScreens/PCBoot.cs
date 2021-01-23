@@ -20,7 +20,7 @@ namespace SadConsole.SplashScreens
         /// </summary>
         public PCBoot() : base(new CellSurface((Settings.Rendering.RenderWidth / GameHost.Instance.EmbeddedFont.GlyphWidth) + GameHost.Instance.EmbeddedFont.GlyphWidth,
                                                (Settings.Rendering.RenderHeight / GameHost.Instance.EmbeddedFont.GlyphHeight) + GameHost.Instance.EmbeddedFont.GlyphHeight),
-                                               GameHost.Instance.EmbeddedFont, GameHost.Instance.EmbeddedFont.GetFontSize(Font.Sizes.One))
+                                               GameHost.Instance.EmbeddedFont, ((IFont)GameHost.Instance.EmbeddedFont).GetFontSize(IFont.Sizes.One))
         {
 
             cursor = new Components.Cursor(Surface) { DisableWordBreak = true };

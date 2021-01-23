@@ -120,7 +120,7 @@ namespace SadConsole.Renderers
         /// <param name="fontSize">The size of a cell in pixels.</param>
         /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
         /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
-        protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, Font font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
+        protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
         {
             font = control.AlternateFont ?? font;
 

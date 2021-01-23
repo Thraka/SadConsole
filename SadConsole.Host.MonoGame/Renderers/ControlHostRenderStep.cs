@@ -124,7 +124,7 @@ namespace SadConsole.Renderers
         /// <param name="fontSize">The size of a cell in pixels.</param>
         /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
         /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
-        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, Font font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect, int bufferWidth)
+        protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect, int bufferWidth)
         {
             font = control.AlternateFont ?? font;
 
@@ -144,7 +144,7 @@ namespace SadConsole.Renderers
                 XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
                 if (cell.Background != SadRogue.Primitives.Color.Transparent)
-                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(font.SolidGlyphIndex).ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                 if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
                     Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);

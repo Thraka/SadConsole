@@ -75,7 +75,7 @@ namespace SadConsole.UI.Controls
         /// An alternate font used to render this control.
         /// </summary>
         [DataMember]
-        public Font AlternateFont { get; set; }
+        public IFont AlternateFont { get; set; }
 
         /// <summary>
         /// The cell data to render the control. Controlled by a theme.

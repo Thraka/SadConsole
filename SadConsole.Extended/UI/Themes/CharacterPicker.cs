@@ -27,7 +27,7 @@ namespace SadConsole.UI.Themes
 
             RefreshTheme(control.FindThemeColors(), control);
 
-            Font font = control.AlternateFont ?? control.Parent.Host.ParentConsole.Font;
+            IFont font = control.AlternateFont ?? control.Parent.Host.ParentConsole.Font;
 
             // Sync font with control surface
             if (control.Surface.Width != font.Columns || control.Surface.Height != font.Rows)

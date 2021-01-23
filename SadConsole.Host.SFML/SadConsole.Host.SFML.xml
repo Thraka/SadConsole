@@ -91,7 +91,7 @@
             When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.Font,System.Boolean)">
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
             <summary>
             
             </summary>
@@ -259,14 +259,6 @@
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.RemoveStartingConsole">
-            <summary>
-            Destroys the <see cref="P:SadConsole.GameHost.StartingConsole"/> instance.
-            </summary>
-            <remarks>
-            Prior to calling this method, you must set <see cref="P:SadConsole.GameHost.Screen"/> to an object other than <see cref="P:SadConsole.GameHost.StartingConsole"/>.
-            </remarks>
-        </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
             Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
@@ -309,7 +301,7 @@
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.Font,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
             <summary>
             Renders the cells of a control.
             </summary>

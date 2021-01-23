@@ -13,7 +13,7 @@ namespace SadConsole.DrawCalls
         /// <summary>
         /// The font to use when drawing the glyph.
         /// </summary>
-        public Font Font;
+        public IFont Font;
 
         /// <summary>
         /// The glyph to be drawn.
@@ -37,7 +37,7 @@ namespace SadConsole.DrawCalls
         /// <param name="targetRect">Where on the <see cref="Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
         /// <param name="font">The font to use when drawing the glyph.</param>
         /// <param name="drawBackground">When <see langword="true"/>, draws the <see cref="ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
-        public DrawCallCell(SadConsole.ColoredGlyph cell, Rectangle targetRect, Font font, bool drawBackground)
+        public DrawCallCell(SadConsole.ColoredGlyph cell, Rectangle targetRect, IFont font, bool drawBackground)
         {
             Font = font;
             TargetRect = targetRect;

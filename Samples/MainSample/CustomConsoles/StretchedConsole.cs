@@ -14,7 +14,7 @@ namespace FeatureDemo.CustomConsoles
             // stretch the size of the cells based on the font * 2. This will fill our 
             // area.
             UseKeyboard = false;
-            FontSize = Font.GetFontSize(Font.Sizes.Two);
+            FontSize = Font.GetFontSize(IFont.Sizes.Two);
 
             ColoredString colorString = "Text using a colored string gradient".CreateGradient(Color.DarkGreen, Color.LightGreen);
             this.Print(2, 1, colorString);

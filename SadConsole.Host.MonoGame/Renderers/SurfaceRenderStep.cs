@@ -67,7 +67,7 @@ namespace SadConsole.Renderers
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, monoRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-                Font font = screenObject.Font;
+                IFont font = screenObject.Font;
                 Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
                 ColoredGlyph cell;
 

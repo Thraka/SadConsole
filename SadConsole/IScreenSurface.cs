@@ -79,7 +79,7 @@ namespace SadConsole
         /// <summary>
         /// Font used with rendering.
         /// </summary>
-        Font Font { get; set; }
+        IFont Font { get; set; }
 
         /// <summary>
         /// The size of the <see cref="Font"/> cells applied to the object when rendering.

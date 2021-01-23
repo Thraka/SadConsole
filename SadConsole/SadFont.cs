@@ -8,61 +8,16 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
-    // TODO
-    public interface IFont
-    {
-        Rectangle SolidGlyphRectangle { get; }
-        Rectangle UnsupportedGlyphRectangle { get; }
-    }
-
     /// <summary>
     /// Represents a graphical font used by SadConsole.
     /// </summary>
     [DataContract]
-    public class Font
+    public class SadFont: IFont
     {
         private int _solidGlyphIndex;
         private int _unsupportedGlyphIndex;
 
-        /// <summary>
-        /// The size options of a font.
-        /// </summary>
-        public enum Sizes
-        {
-            /// <summary>
-            /// One quater the size of the font. (Original Width and Height * 0.25)
-            /// </summary>
-            Quarter = 0,
-
-            /// <summary>
-            /// Half the size of the font. (Original Width and Height * 0.50)
-            /// </summary>
-            Half = 1,
-
-            /// <summary>
-            /// Exact size of the font. (Original Width and Height * 1.0)
-            /// </summary>
-            One = 2,
-
-            /// <summary>
-            /// Two times the size of the font. (Original Width and Height * 2.0)
-            /// </summary>
-            Two = 3,
-
-            /// <summary>
-            /// Two times the size of the font. (Original Width and Height * 3.0)
-            /// </summary>
-            Three = 4,
-
-            /// <summary>
-            /// Two times the size of the font. (Original Width and Height * 4.0)
-            /// </summary>
-            Four = 5
-        }
-
-        /// <summary>
-        /// Which glyph index is considered completely solid. Used for shading.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int SolidGlyphIndex
         {
@@ -79,21 +34,15 @@ namespace SadConsole
         /// </summary>
         public Rectangle SolidGlyphRectangle { get; private set; }
 
-        /// <summary>
-        /// How many columns are in the this font.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int Columns { get; protected set; }
 
-        /// <summary>
-        /// How many rows are in this font.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int Rows { get; protected set; }
 
-        /// <summary>
-        /// The name of the font used when it is registered with the <see cref="GameHost.Fonts"/> collection.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public string Name { get; protected set; }
 
@@ -103,15 +52,11 @@ namespace SadConsole
         [DataMember]
         public string FilePath { get; set; }
 
-        /// <summary>
-        /// The height of each glyph in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int GlyphHeight { get; protected set; }
 
-        /// <summary>
-        /// The width of each glyph in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int GlyphWidth { get; protected set; }
 
@@ -121,9 +66,7 @@ namespace SadConsole
         [DataMember]
         public int GlyphPadding { get; protected set; }
 
-        /// <summary>
-        /// The glyph index to use when a glyph used during rendering is not available.
-        /// </summary>
+        /// <inheritdoc/>
         [DataMember]
         public int UnsupportedGlyphIndex
         {
@@ -174,7 +117,7 @@ namespace SadConsole
         /// <param name="image">The texture for of the font.</param>
         /// <param name="name">A font identifier used for serialization of resources using this font.</param>
         /// <param name="glyphRectangles">Glyph mapping dictionary.</param>
-        public Font(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles = null)
+        public SadFont(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles = null)
         {
             Columns = columns;
             Rows = rows;
@@ -193,11 +136,13 @@ namespace SadConsole
         }
 
         [Newtonsoft.Json.JsonConstructor]
-        private Font() { }
+        private SadFont() { }
 
         /// <summary>
-        /// Standard decorators used by your app.
+        /// Gets the rendering rectangle for a glyph.
         /// </summary>
+        /// <param name="glyph">The index of the glyph to get.</param>
+        /// <returns>The rectangle for the glyph if it exists, otherwise returns <see cref="UnsupportedGlyphRectangle"/>.</returns>
         public Rectangle GetGlyphSourceRectangle(int glyph)
         {
             if (glyph >= 0 && GlyphRectangles.TryGetValue(glyph, out Rectangle value))
@@ -240,37 +185,12 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets the pixel size of a font based on a <see cref="Sizes"/>.
-        /// </summary>
-        /// <param name="size">The desired size.</param>
-        /// <returns>The width and height of a font cell.</returns>
-        public Point GetFontSize(Sizes size)
-        {
-            return size switch
-            {
-                Sizes.Quarter   => new Point((int)(GlyphWidth * 0.25), (int)(GlyphHeight * 0.25)),
-                Sizes.Half      => new Point((int)(GlyphWidth * 0.5), (int)(GlyphHeight * 0.5)),
-                Sizes.Two       => new Point(GlyphWidth * 2, GlyphHeight * 2),
-                Sizes.Three     => new Point(GlyphWidth * 3, GlyphHeight * 3),
-                Sizes.Four      => new Point(GlyphWidth * 4, GlyphHeight * 4),
-                _               => new Point(GlyphWidth, GlyphHeight),
-            };
-        }
-
-        /// <summary>
-        /// Returns the ratio in size difference between the font's glyph width and height.
-        /// </summary>
-        /// <param name="fontSize">The glyph size of the font used.</param>
-        /// <returns>A tuple with the names (X, Y) where X is the difference of width to height and Y is the difference of height to width.</returns>
-        public (float X, float Y) GetGlyphRatio(Point fontSize) =>
-            ((float)fontSize.X / fontSize.Y, (float)fontSize.Y / fontSize.X);
-
-        /// <summary>
         /// Returns <see langword="true"/> when the glyph has been defined by name.
         /// </summary>
         /// <param name="name">The name of the glyph</param>
         /// <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
-        public bool HasGlyphDefinition(string name) => GlyphDefinitions.ContainsKey(name);
+        public bool HasGlyphDefinition(string name) =>
+            GlyphDefinitions.ContainsKey(name);
 
         /// <summary>
         /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings.
@@ -307,7 +227,7 @@ namespace SadConsole
         {
             if (FilePath.StartsWith("res:"))
             {
-                using (Stream fontStream = typeof(Font).Assembly.GetManifestResourceStream(FilePath.Substring(4)))
+                using (Stream fontStream = typeof(SadFont).Assembly.GetManifestResourceStream(FilePath.Substring(4)))
                     Image = GameHost.Instance.GetTexture(fontStream);
             }
             else
@@ -323,7 +243,7 @@ namespace SadConsole
         }
 
         // TODO
-        public static Font LoadBMFont(string file, int baseWidth, int baseHeight)
+        public static SadFont LoadBMFont(string file, int baseWidth, int baseHeight)
         {
             throw new NotSupportedException();
             //var bmFont = SharpFNT.BitmapFont.FromFile(file);
@@ -339,24 +259,5 @@ namespace SadConsole
 
             //return new Font(baseWidth, baseHeight, 0, 1, 1, 0, texture, bmFont.Info.Face, mapping);
         }
-
-        /// <summary>
-        /// Returns a rectangle that is positioned and sized based on the font and the cell position specified.
-        /// </summary>
-        /// <param name="x">The x-axis of the cell position.</param>
-        /// <param name="y">The y-axis of the cell position.</param>
-        /// <param name="fontSize">The size of the output cell.</param>
-        /// <returns>A rectangle to representing a specific cell.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Rectangle GetRenderRect(int x, int y, Point fontSize) => new Rectangle(x * fontSize.X, y * fontSize.Y, fontSize.X, fontSize.Y);
-
-        /// <summary>
-        /// Gets the pixel position of a cell position based on the font size.
-        /// </summary>
-        /// <param name="position">The cell position to convert.</param>
-        /// <param name="fontSize">The size of the font used to calculate the pixel position.</param>
-        /// <returns>A new pixel-positioned point.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point GetWorldPosition(Point position, Point fontSize) => new Point(position.X * fontSize.X, position.Y * fontSize.Y);
     }
 }

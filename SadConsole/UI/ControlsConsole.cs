@@ -68,7 +68,7 @@ namespace SadConsole.UI
         /// <param name="surface">The surface.</param>
         /// <param name="font">The font to use with the surface.</param>
         /// <param name="fontSize">The font size.</param>
-        public ControlsConsole(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
+        public ControlsConsole(ICellSurface surface, IFont font = null, Point? fontSize = null) : base(surface, font, fontSize)
         {
             Controls = new ControlHost();
             SadComponents.Add(Controls);

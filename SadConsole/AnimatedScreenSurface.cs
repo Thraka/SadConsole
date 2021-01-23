@@ -173,7 +173,7 @@ namespace SadConsole
         /// <param name="height">The height of each frame this animation will have.</param>
         /// <param name="font">The font used with this animation.</param>
         /// <param name="fontSize">The size of the font.</param>
-        public AnimatedScreenSurface(string name, int width, int height, Font font, Point fontSize) : base(width, height)
+        public AnimatedScreenSurface(string name, int width, int height, IFont font, Point fontSize) : base(width, height)
         {
             Name = name;
             Font = font;
@@ -185,7 +185,7 @@ namespace SadConsole
         }
 
         [JsonConstructor]
-        private AnimatedScreenSurface(ICellSurface surface, Font font = null, Point? fontSize = null):base(surface, font, fontSize) { }
+        private AnimatedScreenSurface(ICellSurface surface, IFont font = null, Point? fontSize = null):base(surface, font, fontSize) { }
         #endregion
 
 

@@ -46,7 +46,7 @@ namespace SadConsole.UI.Themes
             label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
             label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.Width));
 
-            Font font = label.AlternateFont ?? label.Parent?.Host?.ParentConsole?.Font;
+            IFont font = label.AlternateFont ?? label.Parent?.Host?.ParentConsole?.Font;
             Color color = label.TextColor ?? appearance.Foreground;
 
             if (font != null)
@@ -62,7 +62,7 @@ namespace SadConsole.UI.Themes
             label.IsDirty = false;
         }
 
-        private CellDecorator GetStrikethrough(Font font, Color color)
+        private CellDecorator GetStrikethrough(IFont font, Color color)
         {
             if (DecoratorStrikethrough != CellDecorator.Empty)
                 return DecoratorStrikethrough;
@@ -73,7 +73,7 @@ namespace SadConsole.UI.Themes
             return new CellDecorator(color, 196, Mirror.None);
         }
 
-        private CellDecorator GetUnderline(Font font, Color color)
+        private CellDecorator GetUnderline(IFont font, Color color)
         {
             if (DecoratorUnderline != CellDecorator.Empty)
                 return DecoratorUnderline;

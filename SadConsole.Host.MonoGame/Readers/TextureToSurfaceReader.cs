@@ -26,7 +26,7 @@ namespace SadConsole.Readers
         /// <param name="pixelWidth">Width the source texture.</param>
         /// <param name="pixelHeight">Height of the source texture.</param>
         /// <param name="font">Font used for rendering.</param>
-        public TextureToSurfaceReader(int pixelWidth, int pixelHeight, Font font, SadRogue.Primitives.Point fontSize)
+        public TextureToSurfaceReader(int pixelWidth, int pixelHeight, IFont font, SadRogue.Primitives.Point fontSize)
         {
             width = pixelWidth;
             height = pixelHeight;

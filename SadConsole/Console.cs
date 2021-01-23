@@ -69,7 +69,7 @@ namespace SadConsole
         /// <param name="surface">The surface.</param>
         /// <param name="font">The font to use with the surface.</param>
         /// <param name="fontSize">The font size.</param>
-        public Console(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
+        public Console(ICellSurface surface, IFont font = null, Point? fontSize = null) : base(surface, font, fontSize)
         {
             Cursor = new Cursor() { IsVisible = false, IsEnabled = false };
             SadComponents.Add(Cursor);

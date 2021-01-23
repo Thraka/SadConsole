@@ -4,23 +4,23 @@ using Newtonsoft.Json;
 
 namespace SadConsole.SerializedTypes
 {
-    public class FontJsonConverter : JsonConverter<Font>
+    public class FontJsonConverter : JsonConverter<IFont>
     {
-        public override void WriteJson(JsonWriter writer, Font value, JsonSerializer serializer) =>
-            serializer.Serialize(writer, (FontSerialized)value);
+        public override void WriteJson(JsonWriter writer, IFont value, JsonSerializer serializer) =>
+            serializer.Serialize(writer, FontSerialized.FromFont(value));
 
-        public override Font ReadJson(JsonReader reader, Type objectType, Font existingValue, bool hasExistingValue, JsonSerializer serializer) =>
-            serializer.Deserialize<FontSerialized>(reader);
+        public override IFont ReadJson(JsonReader reader, Type objectType, IFont existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+            FontSerialized.ToFont(serializer.Deserialize<FontSerialized>(reader));
     }
 
     public class FontSerialized
     {
         public string Name;
 
-        public static implicit operator FontSerialized(Font font) =>
+        public static FontSerialized FromFont(IFont font) =>
             new FontSerialized() { Name = font.Name };
 
-        public static implicit operator Font(FontSerialized font)
+        public static IFont ToFont(FontSerialized font)
         {
             if (font == null)
                 return null;

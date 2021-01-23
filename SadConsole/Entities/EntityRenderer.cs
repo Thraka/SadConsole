@@ -44,7 +44,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// A cached copy of the <see cref="IScreenSurface.Font"/> of the hosting screen surface.
         /// </summary>
-        protected Font _screenCachedFont;
+        protected IFont _screenCachedFont;
 
         /// <summary>
         /// A cached copy of the <see cref="IScreenSurface.FontSize"/> of the hosting screen surface.

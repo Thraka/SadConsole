@@ -74,7 +74,7 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, ((ScreenSurfaceRenderer)renderer).MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 Texture2D fontImage = ((Host.GameTexture)screenObject.Font.Image).Texture;
-                Font font = screenObject.Font;
+                IFont font = screenObject.Font;
                 ColoredGlyph cell;
                 XnaRectangle renderRect;
 
@@ -89,7 +89,7 @@ namespace SadConsole.Renderers
                     cell.IsDirty = false;
 
                     if (cell.Background != SadRogue.Primitives.Color.Transparent)
-                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(font.SolidGlyphIndex).ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                     if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);

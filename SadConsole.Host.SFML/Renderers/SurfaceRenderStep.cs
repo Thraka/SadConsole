@@ -63,7 +63,7 @@ namespace SadConsole.Renderers
 
                 int rectIndex = 0;
                 ColoredGlyph cell;
-                Font font = screenObject.Font;
+                IFont font = screenObject.Font;
 
                 if (screenObject.Surface.DefaultBackground.A != 0)
                     Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);

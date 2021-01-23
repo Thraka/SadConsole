@@ -96,7 +96,7 @@ namespace SadConsole.UI.Controls
         /// <param name="fill">The default backround for glyphs.</param>
         /// <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
         /// <param name="characterFont">The font to use with the control.</param>
-        public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, Font characterFont)
+        public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, IFont characterFont)
             : this(foreground, fill, selectedCharacterColor)
         {
             //_characterSurface.AlternateFont = characterFont;

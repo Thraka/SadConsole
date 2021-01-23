@@ -191,7 +191,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="font">The font file to load.</param>
         /// <returns>A master font that you can generate a usable font from.</returns>
-        public Font LoadFont(string font)
+        public IFont LoadFont(string font)
         {
             try
             {
@@ -201,7 +201,7 @@ namespace SadConsole
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
                 };
 
-                Font masterFont = SadConsole.Serializer.Load<Font>(font, false);
+                IFont masterFont = SadConsole.Serializer.Load<IFont>(font, false);
 
                 if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
                     GameHost.Instance.Fonts.Remove(masterFont.Name);
@@ -283,9 +283,9 @@ namespace SadConsole
         protected void LoadDefaultFonts(string defaultFont)
         {
             // Load the embedded fonts.
-            System.Reflection.Assembly assembly = typeof(SadConsole.Font).Assembly;
+            System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;
 
-            Font LoadFont(string fontName)
+            SadFont LoadFont(string fontName)
             {
                 using Stream stream = assembly.GetManifestResourceStream(fontName);
                 using StreamReader sr = new StreamReader(stream);
@@ -293,9 +293,9 @@ namespace SadConsole
                 SerializerPathHint = "";
 
                 LoadingEmbeddedFont = true;
-                var masterFont = (Font)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                var masterFont = (SadFont)Newtonsoft.Json.JsonConvert.DeserializeObject(
                     sr.ReadToEnd(),
-                    typeof(Font),
+                    typeof(SadFont),
                     new Newtonsoft.Json.JsonSerializerSettings()
                     {
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
@@ -345,7 +345,7 @@ namespace SadConsole
             {
                 if (disposing)
                 {
-                    foreach (Font font in GameHost.Instance.Fonts.Values)
+                    foreach (IFont font in GameHost.Instance.Fonts.Values)
                         font.Image.Dispose();
 
                     EmbeddedFont.Image.Dispose();

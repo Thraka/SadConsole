@@ -19,7 +19,7 @@ namespace SadConsole
     public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     {
         [DataMember(Name = "Font")]
-        private Font _font;
+        private IFont _font;
         [DataMember(Name = "FontSize")]
         private Point _fontSize;
         [DataMember(Name = "Tint")]
@@ -86,7 +86,7 @@ namespace SadConsole
         }
 
         /// <inheritdoc/>
-        public Font Font
+        public IFont Font
         {
             get => _font;
             set
@@ -94,7 +94,7 @@ namespace SadConsole
                 if (_font == value) return;
 
                 _font = value;
-                FontSize = _font.GetFontSize(Font.Sizes.One);
+                FontSize = _font.GetFontSize(IFont.Sizes.One);
                 IsDirty = true;
             }
         }
@@ -196,7 +196,7 @@ namespace SadConsole
         /// <param name="font">The font to use with the surface.</param>
         /// <param name="fontSize">The font size.</param>
         [JsonConstructor]
-        public ScreenSurface(ICellSurface surface, Font font = null, Point? fontSize = null)
+        public ScreenSurface(ICellSurface surface, IFont font = null, Point? fontSize = null)
         {
             Surface = surface;
             Font = font ?? GameHost.Instance.DefaultFont;
@@ -300,7 +300,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldFont">The font prior to the change.</param>
         /// <param name="oldFontSize">The font size prior to the change.</param>
-        protected void OnFontChanged(Font oldFont, Point oldFontSize) { }
+        protected void OnFontChanged(IFont oldFont, Point oldFontSize) { }
 
 
         /// <summary>

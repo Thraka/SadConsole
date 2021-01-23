@@ -216,7 +216,7 @@ namespace SadConsole.UI
         /// <param name="surface">The surface.</param>
         /// <param name="font">The font to use with the surface.</param>
         /// <param name="fontSize">The font size.</param>
-        public Window(ICellSurface surface, Font font = null, Point? fontSize = null) : base(surface, font, fontSize)
+        public Window(ICellSurface surface, IFont font = null, Point? fontSize = null) : base(surface, font, fontSize)
         {
             _isVisibleProcessing = true;
             IsVisible = false;

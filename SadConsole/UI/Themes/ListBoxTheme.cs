@@ -330,7 +330,7 @@ namespace SadConsole.UI.Themes
                 {
                     bool useExtended = false;
 
-                    Font font = control.AlternateFont ?? control.Parent?.Host?.ParentConsole?.Font;
+                    IFont font = control.AlternateFont ?? control.Parent?.Host?.ParentConsole?.Font;
 
                     if (font != null)
                         useExtended = font.IsSadExtended;
