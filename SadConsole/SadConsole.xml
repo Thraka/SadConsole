@@ -9029,6 +9029,11 @@
             Raised when the <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> property changes.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.EnableWidthHeightChange">
+            <summary>
+            When <see langword="false"/>, causes the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties to throw an exception when set; otherwise <see langword="true"/> to allow size changes.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.UseKeyboard">
             <summary>
             <see langword="true"/> to allow this control to respond to keyboard interactions when focused.

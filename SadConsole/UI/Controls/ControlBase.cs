@@ -20,6 +20,8 @@ namespace SadConsole.UI.Controls
         [DataMember(Name = "ThemeColors")]
         private Colors _themeColors;
         private bool _isDirty;
+        private int _width;
+        private int _height;
 
         /// <summary>
         /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
@@ -45,6 +47,11 @@ namespace SadConsole.UI.Controls
         /// Raised when the <see cref="IsDirty"/> property changes.
         /// </summary>
         public event EventHandler<EventArgs> IsDirtyChanged;
+
+        /// <summary>
+        /// When <see langword="false"/>, causes the <see cref="Width"/> and <see cref="Height"/> properties to throw an exception when set; otherwise <see langword="true"/> to allow size changes.
+        /// </summary>
+        public bool EnableWidthHeightChange { get; set; }
 
         /// <summary>
         /// <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
@@ -163,12 +170,32 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// The width of the control.
         /// </summary>
-        public int Width { get; }
+        public int Width
+        {
+            get => _width;
+            set
+            {
+                if (EnableWidthHeightChange)
+                    _width = value;
+                else
+                    throw new NotSupportedException("Setting this property isn't supported. Size changes are for internal use only.");
+            }
+        }
 
         /// <summary>
         /// The height of the control.
         /// </summary>
-        public int Height { get; }
+        public int Height
+        {
+            get => _height;
+            set
+            {
+                if (EnableWidthHeightChange)
+                    _height = value;
+                else
+                    throw new NotSupportedException("Setting this property isn't supported. Size changes are for internal use only.");
+            }
+        }
 
 
         /// <summary>
@@ -310,8 +337,8 @@ namespace SadConsole.UI.Controls
         /// </summary>
         protected ControlBase(int width, int height)
         {
-            Width = width;
-            Height = height;
+            _width = width;
+            _height = height;
             IsDirty = true;
             TabStop = true;
             IsVisible = true;
