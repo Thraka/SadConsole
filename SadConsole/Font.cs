@@ -314,10 +314,10 @@ namespace SadConsole
                 Image = GameHost.Instance.GetTexture(System.IO.Path.Combine(SadConsole.GameHost.SerializerPathHint, FilePath));
 
             if (Columns == 0)
-                Columns = 16;
+                Columns = (int)System.Math.Floor((double)Image.Width / (GlyphWidth + GlyphPadding));
 
             if (Rows == 0)
-                Rows = (int)System.Math.Ceiling((double)Image.Height / (GlyphHeight + GlyphPadding));
+                Rows = (int)System.Math.Floor((double)Image.Height / (GlyphHeight + GlyphPadding));
 
             ConfigureRects();
         }
