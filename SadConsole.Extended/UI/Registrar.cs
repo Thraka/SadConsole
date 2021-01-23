@@ -21,6 +21,7 @@
             library.SetControlTheme(typeof(Controls.ColorPicker), new Themes.ColorPicker());
             library.SetControlTheme(typeof(Controls.HueBar), new Themes.HueBar());
             library.SetControlTheme(typeof(Controls.FileDirectoryListbox), new Themes.ListBoxTheme(new Themes.ScrollBarTheme()));
+            library.SetControlTheme(typeof(Controls.CharacterPicker), new Themes.CharacterPicker());
         }
     }
 }

@@ -27,24 +27,7 @@ namespace SadConsole.UI.Themes
 
                 if (!control.IsDirty) return;
 
-                ColoredGlyph appearance;
-
                 RefreshTheme(control.FindThemeColors(), control);
-
-                if (Helpers.HasFlag((int)control.State, (int)ControlStates.Disabled))
-                    appearance = ControlThemeState.Disabled;
-
-                //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(presenter.State, ControlStates.MouseRightButtonDown))
-                //    appearance = MouseDown;
-
-                //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseOver))
-                //    appearance = MouseOver;
-
-                else if (Helpers.HasFlag((int)control.State, (int)ControlStates.Focused))
-                    appearance = ControlThemeState.Focused;
-
-                else
-                    appearance = ControlThemeState.Normal;
 
                 Color[] colors = Color.White.LerpSteps(Color.Black, control.Height);
                 Color[] colorsEnd = picker.MasterColor.LerpSteps(Color.Black, control.Height);
@@ -56,8 +39,6 @@ namespace SadConsole.UI.Themes
 
                     control.Surface[0, y].Foreground = new Color(255 - colors[y].R, 255 - colors[y].G, 255 - colors[y].B);
                     control.Surface[control.Width - 1, y].Foreground = new Color(255 - colorsEnd[y].R, 255 - colorsEnd[y].G, 255 - colorsEnd[y].B);
-
-
 
                     Color[] rowColors = colors[y].LerpSteps(colorsEnd[y], control.Width);
 

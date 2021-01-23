@@ -295,6 +295,84 @@
             </summary>
             <param name="contents">The window the border will be around.</param>
         </member>
+        <member name="T:SadConsole.UI.Controls.CharacterPicker">
+            <summary>
+            Displays the glyphs associated with a font and allows the user to select one.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.CharacterPicker.SelectedCharacterChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedCharacter"/> property changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.UseFullClick">
+            <summary>
+            When <see langword="true"/>, indicates that the control should use a mouse click to select a new character; otherwise <see langword="false"/> to indicate that just having the mouse down will select a new character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.OldCharacterLocation">
+            <summary>
+            Gets the position of the previously selected character. Used by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.NewCharacterLocation">
+            <summary>
+            Gets the position of the newly selected character. Used by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.MirrorSetting">
+            <summary>
+            Gets or sets the mirror effect to apply in the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphForeground">
+            <summary>
+            Gets the foreground color used when drawing the glyphs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphBackground">
+            <summary>
+            Gets the background color used when drawing the glyphs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphForeground">
+            <summary>
+            Gets the foreground color used when drawing the selected glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphEffect">
+            <summary>
+            Gets the effect to apply when drawing the selected glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedCharacter">
+            <summary>
+            Gets or sets the selected glyph character.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Font)">
+            <summary>
+            Creates a new picker control with the specified font.
+            </summary>
+            <param name="foreground">The default foreground for glyphs.</param>
+            <param name="fill">The default backround for glyphs.</param>
+            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
+            <param name="characterFont">The font to use with the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new picker control that uses the parent's font.
+            </summary>
+            <param name="foreground">The default foreground for glyphs.</param>
+            <param name="fill">The default backround for glyphs.</param>
+            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.UI.Controls.ColorBar">
             <summary>
             A color bar control.
@@ -503,6 +581,20 @@
             Registers the controls with the provided library.
             </summary>
             <param name="library"></param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.CharacterPicker">
+            <summary>
+            The theme used for the <see cref="T:SadConsole.UI.Controls.CharacterPicker"/> control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.ColorBar">
             <summary>

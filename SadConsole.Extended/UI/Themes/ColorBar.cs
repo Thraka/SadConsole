@@ -26,24 +26,7 @@ namespace SadConsole.UI.Themes
             if (!(control is ColorBarControl bar)) return;
             if (!bar.IsDirty) return;
 
-            ColoredGlyph appearance;
-
             RefreshTheme(control.FindThemeColors(), control);
-
-            if (Helpers.HasFlag((int)control.State, (int)ControlStates.Disabled))
-                appearance = ControlThemeState.Disabled;
-
-            //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseLeftButtonDown) || Helpers.HasFlag(presenter.State, ControlStates.MouseRightButtonDown))
-            //    appearance = MouseDown;
-
-            //else if (Helpers.HasFlag(presenter.State, ControlStates.MouseOver))
-            //    appearance = MouseOver;
-
-            else if (Helpers.HasFlag((int)control.State, (int)ControlStates.Focused))
-                appearance = ControlThemeState.Focused;
-
-            else
-                appearance = ControlThemeState.Normal;
 
             control.Surface.Fill(Color.White, Color.Black, 0, null);
 
