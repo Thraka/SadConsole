@@ -17,7 +17,7 @@ namespace SadConsole
         /// <param name="height">The viewable height of the surface.</param>
         /// <param name="bufferWidth">The maximum width of the surface.</param>
         /// <param name="bufferHeight">The maximum height of the surface.</param>
-        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        /// <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear);
     }
 }

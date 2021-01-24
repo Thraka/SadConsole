@@ -422,7 +422,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+        /// Returns a new surface with reference to each cell inside of the <paramref name="view"/>.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="view">An area of the surface to create a view of.</param>
