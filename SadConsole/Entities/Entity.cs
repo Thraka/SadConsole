@@ -39,21 +39,14 @@ namespace SadConsole.Entities
         public int ZIndex { get; set; }
 
         /// <summary>
-        /// When <see langword="true"/>, prevents the <see cref="Appearance"/> property from being changed; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool IsLocked { get; set; }
-
-        /// <summary>
         /// Represents what the entity looks like.
         /// </summary>
         [DataMember]
         public ColoredGlyph Appearance
         {
             get => _glyph;
-            set
+            protected set
             {
-                if (IsLocked) throw new Exception("Entity is locked, unable to change appearance reference. Instead, change the properties on the the apperance directly.");
-
                 _glyph = value ?? throw new System.NullReferenceException();
                 IsDirty = true;
 
