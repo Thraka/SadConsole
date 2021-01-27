@@ -9,7 +9,9 @@ namespace Game.Screens
 {
     class Board : ScreenSurface
     {
+        private List<GameObject> _gameObjects;
         private GameObject _playerControlledObject;
+        private SadConsole.Entities.Renderer _entities;
 
         public string Name { get; protected set; }
 
@@ -31,12 +33,18 @@ namespace Game.Screens
 
         public Board(int width, int height) : base(width, height)
         {
-            for (int i = 0; i < Surface.Cells.Length; i++)
+            var surface = (CellSurface)Surface;
+
+            for (int i = 0; i < Surface.Count; i++)
             {
                 var tile = Game.Factories.TileFactory.Instance.Create("empty", Factories.TileBlueprint.Config.Empty);
                 tile.Position = SadRogue.Primitives.Point.FromIndex(i, width);
-                Surface.Cells[i] = tile;
+                surface.Cells[i] = tile;
             }
+
+            _entities = new SadConsole.Entities.Renderer();
+            _gameObjects = new List<GameObject>();
+            SadComponents.Add(_entities);
         }
 
         internal static Board ImportZZT(ZBoard board)
@@ -176,26 +184,25 @@ namespace Game.Screens
             var gameObject = Factories.GameObjectFactory.Instance.Create(blueprint, config);
             gameObject.Position = position;
 
-            Children.Add(gameObject);
+            gameObject.IsAlive = true;
+            _entities.Add(gameObject);
+            _gameObjects.Add(gameObject);
             gameObject.SendMessage(new Messages.ObjectCreated(gameObject, this));
             return gameObject;
         }
 
         public void DestroyGameObject(GameObject obj)
         {
-            Children.Remove(obj);
+            obj.IsAlive = false;
+            _entities.Remove(obj);
+            _gameObjects.Remove(obj);
             obj.SendMessage(new Messages.ObjectDestroyed(obj, this));
         }
 
         public IEnumerable<GameObject> GetObjects()
         {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                if (Children[i] is GameObject obj)
-                {
-                    yield return obj;
-                }
-            }
+            for (int i = 0; i < _gameObjects.Count; i++)
+                yield return _gameObjects[i];
         }
 
         public bool IsObjectAtPosition(Point position)

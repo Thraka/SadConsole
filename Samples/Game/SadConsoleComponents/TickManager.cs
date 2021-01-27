@@ -9,12 +9,12 @@ namespace Game.SadConsoleComponents
     {
         public TimeSpan TimePerTick { get; }
 
-        private SadConsole.Timer _timer;
+        private SadConsole.Components.Timer _timer;
         public bool TickThisFrame { get; private set; }
 
         public TickManager(TimeSpan time)
         {
-            _timer = new Timer(time);
+            _timer = new SadConsole.Components.Timer(time);
             _timer.TimerElapsed += _timer_TimerElapsed;
         }
 

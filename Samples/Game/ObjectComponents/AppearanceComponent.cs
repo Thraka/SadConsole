@@ -23,9 +23,9 @@ namespace Game.ObjectComponents
 
         public void Added(GameObject obj)
         {
-            obj.Animation.CurrentFrame[0].Foreground = Foreground;
-            obj.Animation.CurrentFrame[0].Background = Background;
-            obj.Animation.CurrentFrame[0].Glyph = Glyph;
+            obj.Appearance.Foreground = Foreground;
+            obj.Appearance.Background = Background;
+            obj.Appearance.Glyph = Glyph;
         }
 
         public void Removed(GameObject obj) { }

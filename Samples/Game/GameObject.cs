@@ -16,12 +16,14 @@ namespace Game
 
         public string DefinitionId { get; set; }
 
-        public GameObject() : this(Color.White, Color.Black, 0) { }
-        public GameObject(Color foreground, Color background, int glyph) : base(foreground, background, glyph)
-        {
-            Animation.CurrentFrame.SetGlyph(0, 0, glyph, foreground, background);
-            
+        /// <summary>
+        /// <see langword="true"/> when the object is still on the map.
+        /// </summary>
+        public bool IsAlive { get; set; }
 
+        public GameObject() : this(Color.White, Color.Black, 0) { }
+        public GameObject(Color foreground, Color background, int glyph) : base(foreground, background, glyph, 0)
+        {
         }
 
         public void ProcessTickComponents(WorldPlay world)

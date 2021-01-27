@@ -38,7 +38,7 @@ namespace Game.ObjectComponents
                             obj.GetComponent<Touchable>().Touch(obj, null, source, board);
 
                         // Check if (1) the object still alive (2) still positioned in same spot (3) blocks move
-                        if (obj.Parent != null && obj.Position == newPosition && obj.HasComponent<BlockingMove>())
+                        if (obj.IsAlive && obj.Position == newPosition && obj.HasComponent<BlockingMove>())
                             result = false;
                     }
 

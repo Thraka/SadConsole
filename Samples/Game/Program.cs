@@ -27,10 +27,10 @@ namespace Game
             //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
             using var reader = System.IO.File.OpenRead("DEMO.ZZT");
             var world = ZReader.ZWorld.Load(reader);
-
-            GameHost.Instance.Screen.Renderer = null;
+            
             var worldScreen = new Screens.WorldPlay();
-            GameHost.Instance.Screen.Children.Add(worldScreen);
+            GameHost.Instance.Screen = worldScreen;
+            GameHost.Instance.DestroyDefaultStartingConsole();
             worldScreen.SadComponents.Add(new KeyboardChangeBoard(world));
             worldScreen.UseKeyboard = true;
             worldScreen.IsFocused = true;
