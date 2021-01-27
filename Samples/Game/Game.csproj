@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="2.6.4" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha5-debug" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha9-debug" />
   </ItemGroup>
 
   <ItemGroup>
