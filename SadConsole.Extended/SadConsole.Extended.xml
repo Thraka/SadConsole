@@ -1,0 +1,767 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Extended</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.Entities.Manager">
+            <summary>
+            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Entities.Manager.EnterZone">
+            <summary>
+            An event to indicate that an entity entered a zone.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Entities.Manager.ExitZone">
+            <summary>
+            An event to indicate that an entity exited a zone.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager._zones">
+            <summary>
+            The zones in this manager.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Manager.Zones">
+            <summary>
+            The zones associated with this manager.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.#ctor">
+            <summary>
+            Creates a new manager to handle entity movement within zones.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
+            <summary>
+            Adds a zone to this manager.
+            </summary>
+            <param name="zone">The zone to add.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
+            <summary>
+            Removes a zone from this manager.
+            </summary>
+            <param name="zone">The hotspot to remove.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.GetEntityAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+            </summary>
+            <param name="position">The position to get an entity at.</param>
+            <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+            </summary>
+            <param name="position">The position to get an entity at.</param>
+            <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.HasEntityAt(SadRogue.Primitives.Point)">
+            <summary>
+            Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+            </summary>
+            <param name="position">The position to check.</param>
+            <returns>A value indicating if an entity exists.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityAdded(SadConsole.Entities.Entity)">
+            <summary>
+            Adds entity state information to an entity when it's added.
+            </summary>
+            <param name="entity">The entity that was added.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityRemoved(SadConsole.Entities.Entity)">
+            <summary>
+            Removes the entity state information of an entity being removed.
+            </summary>
+            <param name="entity">The entity that was removed.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity enters a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity entered.</param>
+            <param name="entity">The entity that entered the zone.</param>
+            <param name="triggeredPosition">The position the entity entered.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity enters a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity exited.</param>
+            <param name="entity">The entity that exited the zone.</param>
+            <param name="triggeredPosition">The new position the entity left.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Called when an entity moves within a zone.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone the entity moved in.</param>
+            <param name="entity">The entity that moved in the zone.</param>
+            <param name="newPosition">The position the entity moved to.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityMoved(SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for the entity movement.
+            </summary>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="newPosition">The position the entity moved to.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)">
+            <summary>
+            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            </summary>
+            <param name="entity">The entity to disable.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.EnableEntity(SadConsole.Entities.Entity)">
+            <summary>
+            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            </summary>
+            <param name="entity">The entity to disable.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.IsEntityDisabled(SadConsole.Entities.Entity)">
+            <summary>
+            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
+            </summary>
+            <param name="entity">The entity to check.</param>
+            <returns><see langword="true"/> when the entity is disabled.</returns>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
+            <summary>
+            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
+            <summary>
+            The zone associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
+            <summary>
+            The entity associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
+            <summary>
+            The host that the zone and entity share.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
+            <summary>
+            The position within the zone associated with the event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone interaction.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
+            <summary>
+            Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="T:SadConsole.Entities.Entity"/> interaction.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
+            <summary>
+            The position within the zone that the entity moved from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for a zone movement event.
+            </summary>
+            <param name="host">The host that the zone and entity share.</param>
+            <param name="zone">The zone associated with the event.</param>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="triggeredPosition">The new position within the zone associated with the event.</param>
+            <param name="movedFromPosition">The position within the zone that the entity moved from.</param>
+        </member>
+        <member name="T:SadConsole.Entities.Zone">
+            <summary>
+            Defines an area for a scene.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Area">
+            <summary>
+            The area the zone covers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.Appearance">
+            <summary>
+            A visual for the area to help debug.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.Name">
+            <summary>
+            The name of the zone.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Zone.Settings">
+            <summary>
+            Key-value pairs for the zone.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
+            <summary>
+            Creates a new zone object with the specified area.
+            </summary>
+            <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.ToString">
+            <summary>
+            Returns the string "Zone - " followed by the <see cref="P:SadConsole.Entities.Zone.Name"/> of the zone. If the name is empty, appends the <see cref="F:SadConsole.Entities.Zone.Area"/> bounds.
+            </summary>
+            <returns>The name of the zone.</returns>
+        </member>
+        <member name="T:SadConsole.Transitions.Fade">
+            <summary>
+            Fades out one <see cref="T:SadConsole.IScreenSurface"/> while fading in another.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Transitions.Fade.DeparentFromObject">
+            <summary>
+            When <see langword="true"/>, removes the "From" object from the parent when the transition finishes. Supersedes <see cref="P:SadConsole.Transitions.Fade.HideFromObject"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Transitions.Fade.HideFromObject">
+            <summary>
+            When <see langword="true"/>, sets <see cref="P:SadConsole.IScreenObject.IsVisible"/> to <see langword="false"/> on the "From" object when the transition finishes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Transitions.Fade.RepositionToObject">
+            <summary>
+            When <see langword="true"/>, sets <see cref="P:SadConsole.IScreenObject.Position"/> value on the "To" object to match the transition finishes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Transitions.Fade.#ctor(SadConsole.IScreenSurface,SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">
+            <summary>
+            
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="duration"></param>
+            <param name="easingFunction"></param>
+        </member>
+        <member name="M:SadConsole.Transitions.Fade.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Processes the fade between two objects.
+            </summary>
+            <param name="componentHost">The host running the component.</param>
+            <param name="delta">The time difference for the frame.</param>
+        </member>
+        <member name="T:SadConsole.UI.Border">
+            <summary>
+            Creates a 3D border around a surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String)">
+            <summary>
+            Creates a border and adds it as a child object to <paramref name="contents"/>.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.UI.Window)">
+            <summary>
+            Creates a border and adds it as a child object to the window.
+            </summary>
+            <param name="contents">The window the border will be around.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.AddToSurface(SadConsole.IScreenSurface,System.String)">
+            <summary>
+            Helper method to add a border to a surface.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.AddToWindow(SadConsole.UI.Window)">
+            <summary>
+            Helper method to add a border to a window.
+            </summary>
+            <param name="contents">The window the border will be around.</param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.CharacterPicker">
+            <summary>
+            Displays the glyphs associated with a font and allows the user to select one.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.CharacterPicker.SelectedCharacterChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedCharacter"/> property changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.UseFullClick">
+            <summary>
+            When <see langword="true"/>, indicates that the control should use a mouse click to select a new character; otherwise <see langword="false"/> to indicate that just having the mouse down will select a new character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.OldCharacterLocation">
+            <summary>
+            Gets the position of the previously selected character. Used by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.NewCharacterLocation">
+            <summary>
+            Gets the position of the newly selected character. Used by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.MirrorSetting">
+            <summary>
+            Gets or sets the mirror effect to apply in the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphForeground">
+            <summary>
+            Gets the foreground color used when drawing the glyphs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphBackground">
+            <summary>
+            Gets the background color used when drawing the glyphs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphForeground">
+            <summary>
+            Gets the foreground color used when drawing the selected glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphEffect">
+            <summary>
+            Gets the effect to apply when drawing the selected glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.SelectedCharacter">
+            <summary>
+            Gets or sets the selected glyph character.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.IFont)">
+            <summary>
+            Creates a new picker control with the specified font.
+            </summary>
+            <param name="foreground">The default foreground for glyphs.</param>
+            <param name="fill">The default backround for glyphs.</param>
+            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
+            <param name="characterFont">The font to use with the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new picker control that uses the parent's font.
+            </summary>
+            <param name="foreground">The default foreground for glyphs.</param>
+            <param name="fill">The default backround for glyphs.</param>
+            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ColorBar">
+            <summary>
+            A color bar control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ColorBar.ColorChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.ColorBar.SelectedColor"/> value changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ColorBar._positions">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ColorBar._colorSteps">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.StartingColor">
+            <summary>
+            Gets or sets the color on the left-side of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.EndingColor">
+            <summary>
+            Gets or sets the color on the right-side of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorBar.SelectedPosition">
+            <summary>
+            The position on the bar currently selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.#ctor(System.Int32)">
+            <summary>
+            Creates a new color bar with the specified width.
+            </summary>
+            <param name="width">The width of the bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ColorPicker">
+            <summary>
+            Displays a rectangle gradient area between <see cref="F:SadRogue.Primitives.Color.Black"/> and a target color, and <see cref="F:SadRogue.Primitives.Color.White"/> and a target color.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ColorPicker.SelectedColorChanged">
+            <summary>
+            Raised when <see cref="P:SadConsole.UI.Controls.ColorPicker.SelectedColor"/> changes value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorPicker.SelectedColor">
+            <summary>
+            The color selected by the user. A shade of <see cref="P:SadConsole.UI.Controls.ColorPicker.MasterColor"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ColorPicker.MasterColor">
+            <summary>
+            The main color being shown that all gradients are generated from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.#ctor(System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new panel with the specified width, height, and master color.
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.FileDirectoryListbox">
+            <summary>
+            A listbox control that displays the file system.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.CurrentFolder">
+            <summary>
+            The current folder displayed by the listbox.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.FileFilter">
+            <summary>
+            A *.* wildcard filesystem filter. Use <code>;</code> to split multiple filters.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.OnlyRootAndSubDirs">
+            <summary>
+            When <see langword="true"/>, only allows navigation from the root folder of the original value provided to <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.CurrentFolder"/> and below; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.HideNonFilterFiles">
+            <summary>
+            When <see langword="true"/>, only displays files that match <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.FileFilter"/>; otherwise <see langword="false"/> to display all files.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtentions">
+            <summary>
+            When <see langword="true"/>, only displays files that match <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.FileFilter"/>; otherwise <see langword="false"/> to display all files.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of the control and uses <see cref="T:SadConsole.UI.Themes.FileDirectoryListboxItem"/> as the item theme.
+            </summary>
+            <param name="width">The width of the control.</param>
+            <param name="height">The height of the control.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32,SadConsole.UI.Themes.ListBoxItemTheme)">
+            <summary>
+            Creates a new instance of the control with the specified item theme.
+            </summary>
+            <param name="width">The width of the control.</param>
+            <param name="height">The height of the control.</param>
+            <param name="itemTheme">The theme to use for the items.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.OnItemAction">
+            <summary>
+            Navigates a directory if a directory is selected. Raises the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory">
+            <summary>
+            A listbox item container that represents a fake directory, such as <code>..</code>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory.Name">
+            <summary>
+            The name of the directory.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtFile">
+            <summary>
+            A listbox item container that represents a highlighted file.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtFile.Name">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.HueBar">
+            <summary>
+            Displays the color hues on a bar.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.HueBar.ColorChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.HueBar.SelectedColor"/> value changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.HueBar.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.HueBar.SelectedPosition">
+            <summary>
+            The position on the bar currently selected.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.HueBar._positions">
+            <summary>
+            Internal use by theme.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.#ctor(System.Int32)">
+            <summary>
+            Creates a new hue bar control.
+            </summary>
+            <param name="width">The width of the bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.HueBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.RegistrarExtended">
+            <summary>
+            Registers the controls in SadConsole.Extended with a library.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.RegistrarExtended.Register">
+            <summary>
+            Registers the controls with the <see cref="P:SadConsole.UI.Themes.Library.Default"/> library.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.RegistrarExtended.Register(SadConsole.UI.Themes.Library)">
+            <summary>
+            Registers the controls with the provided library.
+            </summary>
+            <param name="library"></param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.CharacterPicker">
+            <summary>
+            The theme used for the <see cref="T:SadConsole.UI.Controls.CharacterPicker"/> control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.CharacterPicker.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ColorBar">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.ColorBar"/> control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorBar.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.ColorPicker">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.ColorPicker"/> control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ColorPicker.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.FileDirectoryListboxItem">
+            <summary>
+            Displays files and directories in various colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppNormal">
+            <summary>
+            The appearance of a directory in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppMouseOver">
+            <summary>
+            The appearance of a directory when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelected">
+            <summary>
+            The appearance of a directory when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelectedOver">
+            <summary>
+            The appearance of a directory when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppNormal">
+            <summary>
+            The appearance of a file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppMouseOver">
+            <summary>
+            The appearance of a file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelected">
+            <summary>
+            The appearance of a file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelectedOver">
+            <summary>
+            The appearance of a file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppNormal">
+            <summary>
+            The appearance of a highlighted file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppMouseOver">
+            <summary>
+            The appearance of a highlighted file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelected">
+            <summary>
+            The appearance of a highlighted file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelectedOver">
+            <summary>
+            The appearance of a highlighted file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Themes.HueBar">
+            <summary>
+            The theme for the <see cref="T:SadConsole.UI.Controls.HueBar"/> control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.Attached(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.HueBar.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Windows.ColorPickerPopup">
+            <summary>
+            A window that allows a user to select a color in various ways.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.ColorPickerPopup.SelectedColor">
+            <summary>
+            The color selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.ColorPickerPopup.PreviousColors">
+            <summary>
+            An array of colors previously selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.#ctor">
+            <summary>
+            Creates a new instance of the window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.DrawBorder">
+            <summary>
+            Draws the border lines around the controls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.AddPreviousColor(SadRogue.Primitives.Color)">
+            <summary>
+            Adds a color to the array of previous colors.
+            </summary>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.ColorPickerPopup.Show(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Windows.OtherColorsPopup">
+            <summary>
+            A window that displays all known colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Windows.OtherColorsPopup.SelectedColor">
+            <summary>
+            The selected color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.OtherColorsPopup.#ctor">
+            <summary>
+            Creates a new instance of this window with size 40, 20.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.OtherColorsPopup.DrawBorder">
+            <summary>
+            Draws the border around the controls.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,594 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Host.SFML</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.Components.DrawImage">
+            <summary>
+            Draws an image on top of a console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DrawImage.PositionMode">
+            <summary>
+            Sets or gets how the <see cref="P:SadConsole.Components.DrawImage.PositionOffset"/> property is interpreted.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DrawImage.PositionOffset">
+            <summary>
+            The positioning offset.
+            </summary>
+            <remarks>
+            The position the image is displayed is based on the hosting console's position. This property adjusts the position of the image by the specified amount.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.#ctor(System.String)">
+            <summary>
+            Creates a new component with the specified image.
+            </summary>
+            <param name="filePath">Relative path to the image.</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Finalize">
+            <summary>
+            Calls <see cref="M:SadConsole.Components.DrawImage.Dispose"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Render(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Draws the image.
+            </summary>
+            <param name="host">The host of the component.</param>
+            <param name="delta">Unused.</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Dispose">
+            <summary>
+            Disposes the image.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Components.DrawImage.PositionModes">
+            <summary>
+            Indicates how positioning is intepreted.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.DrawImage.PositionModes.Pixels">
+            <summary>
+            Positions in pixels.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.DrawImage.PositionModes.Cells">
+            <summary>
+            Positions by the font of the host in cells.
+            </summary>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallCell">
+            <summary>
+            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.Font">
+            <summary>
+            The font to use when drawing the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallCell.DrawBackground">
+            <summary>
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="cell">The glyph to be drawn.</param>
+            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
+            <param name="font">The font to use when drawing the glyph.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Wraps a <see cref="T:SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Texture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.SkipDispose">
+            <summary>
+            Skips disposing of the texture.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture)">
+            <summary>
+            Wraps a texture. Doesn't dispose it when this object is disposed!
+            </summary>
+            <param name="texture">The texture to wrap</param>
+            <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <summary>
+            Disposes the underlaying texture object and releases reference to it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
+            <summary>
+            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.FPS">
+            <summary>
+            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.WindowTitle">
+            <summary>
+            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
+            <summary>
+            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenBlendMode">
+            <summary>
+            The blend state used when drawing surfaces to the final texture and screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
+            <summary>
+            A shader used when drawing the final texture to the screen.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The SadConsole game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._keyboard">
+            <summary>
+            The keyboard translation object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._mouse">
+            <summary>
+            The mouse translation object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Static instance to the game after the <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/> method has been called.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.#ctor">
+            <summary>
+            Creates the game instance.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)">
+            <summary>
+            Create's a new SadConsole game.
+            </summary>
+            <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
+            <param name="cellCountY">How many cells high the window should be based on the font used.</param>
+            <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
+            <param name="window">A optional window object; otherwise the window is created for you.</param>
+        </member>
+        <member name="M:SadConsole.Game.Initialize(SFML.Graphics.RenderWindow)">
+            <summary>
+            Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="P:SadConsole.GameHost.ScreenCellsX"/>, <see cref="P:SadConsole.GameHost.ScreenCellsY"/>, and the <see cref="P:SadConsole.GameHost.DefaultFontSize"/>.
+            </summary>
+            <param name="window"></param>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            Opens a read-only stream with MonoGame.
+            </summary>
+            <param name="file">The file to open.</param>
+            <param name="mode">File open or create mode.</param>
+            <param name="access">Read or write access.</param>
+            <returns>The stream.</returns>
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and fullscreen rendering for SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.ResetRendering">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.ControlHostRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn controls layer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.UI.ControlHost"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.ProcessContainer(SadConsole.UI.Controls.IContainer,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Processes a container from the control host.
+            </summary>
+            <param name="controlContainer">The container.</param>
+            <param name="renderer">The renderer used with this step.</param>
+            <param name="screenObject">The screen surface with font information.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
+            <summary>
+            Renders the cells of a control.
+            </summary>
+            <param name="control">The control.</param>
+            <param name="renderer">The renderer used with this step.</param>
+            <param name="font">The font to render the cells with.</param>
+            <param name="fontSize">The size of a cell in pixels.</param>
+            <param name="parentViewRect">The view of the parent to cull cells from.</param>
+            <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.ControlHostRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.CursorRenderStep">
+            <summary>
+            Renders a cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.Cursor"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.Cursor"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.EntityLiteRenderStep">
+            <summary>
+            Draws the entities of a <see cref="T:SadConsole.Entities.Renderer"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn entities.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Entities.Renderer"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Entities.Renderer"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
+            <summary>
+            A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
+            <summary>
+            Render steps to process.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+            <summary>
+            Cached set of rectangles used in rendering each cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.SurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.SurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.TintSurfaceRenderStep">
+            <summary>
+            Renders a tint on top of where the output texture is drawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderStep">
+            <summary>
+            Renders the dimmed background screen when a window is modal.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+    </members>
+</doc>
