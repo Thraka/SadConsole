@@ -60,6 +60,8 @@ namespace FeatureDemo.CustomConsoles
             listbox.Items.Add("item 6");
             listbox.Items.Add("item 7");
             listbox.Items.Add("item 8");
+            listbox.Items.Add("item 9");
+
             Controls.Add(listbox);
 
             var radioButton = new RadioButton(20, 1)
@@ -131,6 +133,7 @@ namespace FeatureDemo.CustomConsoles
                 Position = new Point(1, 5),
                 Theme = new Button3dTheme()
             };
+            button.Click += (s, a) => listbox.ScrollToSelectedItem();
             //button.AlternateFont = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
             Controls.Add(button);
 

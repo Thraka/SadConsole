@@ -81,6 +81,8 @@ namespace FeatureDemo
             //if (Settings.UnlimitedFPS)
             //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
+            SadConsole.UI.RegistrarExtended.Register();
+
             //SadConsole.Game.Instance.Window.Title = "DemoProject Core";
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
@@ -98,31 +100,9 @@ namespace FeatureDemo
             Game.Instance.DestroyDefaultStartingConsole();
 
 
-            //var font = Font.LoadBMFont("Res/Fonts/font.fnt", 9, 12);
-
-            //var con = new Console(20, 20);
-            //con.Font = font;
-
-            //con.Print(0, 0, "hello", Color.Green, Color.White);
-
-            //GameHost.Instance.Screen = con;
-
             // Initialize the windows
-            _characterWindow = new Windows.CharacterViewer();
+            _characterWindow = new Windows.CharacterViewer(0);
         }
 
-        class MouseTest : SadConsole.Components.MouseConsoleComponent
-        {
-            public override void ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled)
-            {
-                if (state.Mouse.IsOnScreen)
-                {
-                    host.Position = state.WorldCellPosition;
-                    handled = true;
-                }
-                else
-                    handled = false;
-            }
-        }
     }
 }
