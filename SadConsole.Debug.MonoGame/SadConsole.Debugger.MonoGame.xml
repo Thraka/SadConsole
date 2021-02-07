@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Debug.MonoGame</name>
+    </assembly>
+    <members>
+        <!-- Badly formed XML comment ignored for member "T:SadConsole.Debug.MonoGame.ImGuiRenderer" -->
+        <member name="P:SadConsole.Debug.MonoGame.ImGuiRenderer.WantsMouseCapture">
+            <summary>
+            When <see langowrd="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Debug.MonoGame.ImGuiRenderer.WantsKeyboardCapture">
+            <summary>
+            When <see langowrd="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.RebuildFontAtlas">
+            <summary>
+            Creates a texture and loads the font data from ImGui. Should be called when the <see cref="T:Microsoft.Xna.Framework.Graphics.GraphicsDevice" /> is initialized but before any rendering is done
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.BindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:ImGuiNET.ImGui.Image(System.IntPtr,System.Numerics.Vector2)" />. That pointer is then used by ImGui to let us know what texture to draw
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.UnbindTexture(System.IntPtr)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.UnbindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.BeforeLayout(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Sets up ImGui for a new frame, should be called at frame start
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.AfterLayout">
+            <summary>
+            Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.SetupInput">
+            <summary>
+            Maps ImGui keys to XNA keys. We use this later on to tell ImGui what keys were pressed
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.UpdateEffect(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Updates the <see cref="T:Microsoft.Xna.Framework.Graphics.Effect" /> to the current matrices and texture
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.UpdateInput">
+            <summary>
+            Sends XNA input state to ImGui
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiRenderer.RenderDrawData(ImGuiNET.ImDrawDataPtr)">
+            <summary>
+            Gets the geometry as set up by ImGui and sends it to the graphics device
+            </summary>
+        </member>
+        <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
+            <summary>
+            Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
+            </summary>
+            <param name="obj">The object to check.</param>
+            <returns>A string respresenting the object.</returns>
+        </member>
+    </members>
+</doc>
