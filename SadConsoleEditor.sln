@@ -13,13 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasePlugin", "Editor\BasePl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityPlugin", "Editor\EntityPlugin\EntityPlugin.csproj", "{B8237BCA-47EE-4DD2-BD1F-BD386C1CD53F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SadConsole Projects", "SadConsole Projects", "{0C3D429D-C30E-4443-8F08-1F0062262C3F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SadConsole Libraries", "SadConsole Libraries", "{0C3D429D-C30E-4443-8F08-1F0062262C3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.SFML", "SadConsole.Host.SFML\SadConsole.Host.SFML.csproj", "{70D8B42B-8379-4C0A-8264-473FCE8E6CC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole", "SadConsole\SadConsole.csproj", "{8610519E-609E-4B7D-B221-B97E1D3C0E3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.MonoGame", "SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj", "{2CA6F913-1F91-488B-9F1C-57D272CDA381}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Extended", "SadConsole.Extended\SadConsole.Extended.csproj", "{961B920F-A21F-467E-85A5-ECD2EDB3A341}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Debug.MonoGame", "SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj", "{670E82B6-391B-4662-9B7E-5B2827D11A98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{2CA6F913-1F91-488B-9F1C-57D272CDA381}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA6F913-1F91-488B-9F1C-57D272CDA381}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA6F913-1F91-488B-9F1C-57D272CDA381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961B920F-A21F-467E-85A5-ECD2EDB3A341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961B920F-A21F-467E-85A5-ECD2EDB3A341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961B920F-A21F-467E-85A5-ECD2EDB3A341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961B920F-A21F-467E-85A5-ECD2EDB3A341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{670E82B6-391B-4662-9B7E-5B2827D11A98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{670E82B6-391B-4662-9B7E-5B2827D11A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{670E82B6-391B-4662-9B7E-5B2827D11A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{670E82B6-391B-4662-9B7E-5B2827D11A98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +71,8 @@ Global
 		{70D8B42B-8379-4C0A-8264-473FCE8E6CC8} = {0C3D429D-C30E-4443-8F08-1F0062262C3F}
 		{8610519E-609E-4B7D-B221-B97E1D3C0E3D} = {0C3D429D-C30E-4443-8F08-1F0062262C3F}
 		{2CA6F913-1F91-488B-9F1C-57D272CDA381} = {0C3D429D-C30E-4443-8F08-1F0062262C3F}
+		{961B920F-A21F-467E-85A5-ECD2EDB3A341} = {0C3D429D-C30E-4443-8F08-1F0062262C3F}
+		{670E82B6-391B-4662-9B7E-5B2827D11A98} = {0C3D429D-C30E-4443-8F08-1F0062262C3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76595534-D136-4AE8-8A18-B8187DDB178C}
