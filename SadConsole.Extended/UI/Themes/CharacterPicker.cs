@@ -27,7 +27,7 @@ namespace SadConsole.UI.Themes
 
             RefreshTheme(control.FindThemeColors(), control);
 
-            IFont font = control.AlternateFont ?? control.Parent.Host.ParentConsole.Font;
+            SadFont font = (control.AlternateFont ?? control.Parent.Host.ParentConsole.Font) as SadFont ?? throw new NotSupportedException("The character picker control only supports SadFont fonts.");
 
             // Sync font with control surface
             if (control.Surface.Width != font.Columns || control.Surface.Height != font.Rows)
