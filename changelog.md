@@ -1,3 +1,10 @@
+## v9.0 xxxx
+
+- [ExtendedLib] Added `SadConsole.Transisions.Fade` instruction to easily allow fading between two objects.
+- Changed `Entity.Appearance` to protected.
+- Changed fonts to `IFont` and added `SadFont` which represents the font system SadConsole uses.
+- Merged code base back to normal develop branch!!
+
 ## v9.0 Beta 4
 
 - Fixed bug that prevents right/middle mouse click detections.
@@ -12,7 +19,9 @@
 - RenderSteps are now on `IScreenSurface` instead of `IRenderer`.
 - `ICellSurface` had a few methods moved to interfaces and they're implemented by `CellSurface`.
 - `ColoredGlyph.IsDirtySet` event added which triggers when `IsDirty` is set to `true`.
-- 
+- Fixed bug with `Entity` not drawing the effect.
+- `SortOrder` for various objects changed to `uint`.
+- Printing on a surface with effects works a bit faster now.
 
 ## v9.0 Beta 3
 
