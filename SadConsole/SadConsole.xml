@@ -3950,7 +3950,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetSubSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
             <summary>
-            Returns a new surface instance from the current instance based on the <paramref name="view"/>.
+            Returns a new surface with reference to each cell inside of the <paramref name="view"/>.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="view">An area of the surface to create a view of.</param>
@@ -4432,7 +4432,7 @@
             <param name="height">The viewable height of the surface.</param>
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
-            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="!:DefaultForeground"/>, <see cref="!:DefaultBackground"/> and glyph 0.</param>
+            <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         </member>
         <member name="T:SadConsole.ICellSurfaceSettable">
             <summary>
@@ -4476,19 +4476,14 @@
             The width of each glyph in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.IFont.Columns">
-            <summary>
-            How many columns are in the this font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IFont.Rows">
-            <summary>
-            How many rows are in this font.
-            </summary>
-        </member>
         <member name="P:SadConsole.IFont.SolidGlyphIndex">
             <summary>
             Which glyph index is considered completely solid. Used for shading.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IFont.TotalGlyphs">
+            <summary>
+            Gets how many glyphs this font has.
             </summary>
         </member>
         <member name="P:SadConsole.IFont.SolidGlyphRectangle">
@@ -6999,6 +6994,11 @@
         </member>
         <member name="P:SadConsole.SadFont.Rows">
             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.SadFont.TotalGlyphs">
+            <summary>
+            Gets the total glyphs in this font, which represents the last index. Calculated from <see cref="P:SadConsole.SadFont.Columns"/> times <see cref="P:SadConsole.SadFont.Rows"/>.
+            </summary>
         </member>
         <member name="P:SadConsole.SadFont.Name">
             <inheritdoc/>

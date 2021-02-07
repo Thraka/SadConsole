@@ -1985,7 +1985,7 @@ namespace SadConsole
         /// <param name="surface">The surface being edited.</param>
         /// <param name="associatedFont">The font used in assigning glyphs randomly.</param>
         public static void FillWithRandomGarbage(this ICellSurface surface, IFont associatedFont) =>
-            FillWithRandomGarbage(surface, associatedFont.Columns * associatedFont.Rows);
+            FillWithRandomGarbage(surface, associatedFont.TotalGlyphs);
 
         /// <summary>
         /// Fills a console with random colors and glyphs.

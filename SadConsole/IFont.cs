@@ -5,7 +5,7 @@ namespace SadConsole
     /// <summary>
     /// Represents a font used by the rendering engine.
     /// </summary>
-    public interface IFont
+    public interface IFont  // TODO: We should probably support IDisposable, though you generally don't destroy fonts during your game...
     {
         /// <summary>
         /// The name of the font used when it is registered with the <see cref="GameHost.Fonts"/> collection.
@@ -23,19 +23,14 @@ namespace SadConsole
         int GlyphWidth { get; }
 
         /// <summary>
-        /// How many columns are in the this font.
-        /// </summary>
-        int Columns { get; }
-
-        /// <summary>
-        /// How many rows are in this font.
-        /// </summary>
-        int Rows { get; }
-
-        /// <summary>
         /// Which glyph index is considered completely solid. Used for shading.
         /// </summary>
         int SolidGlyphIndex { get; }
+
+        /// <summary>
+        /// Gets how many glyphs this font has.
+        /// </summary>
+        int TotalGlyphs { get; }
 
         /// <summary>
         /// The rectangle to draw the solid glyph used for shading.
@@ -55,12 +50,12 @@ namespace SadConsole
         /// <summary>
         /// True when the font supports SadConsole extended decorators; otherwise false.
         /// </summary>
-        bool IsSadExtended { get; set; }
+        bool IsSadExtended { get; }
 
         /// <summary>
         /// The texture used by the font.
         /// </summary>
-        ITexture Image { get; set; }
+        ITexture Image { get; }
 
         /// <summary>
         /// Gets the rendering rectangle for a glyph.

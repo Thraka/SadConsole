@@ -42,6 +42,11 @@ namespace SadConsole
         [DataMember]
         public int Rows { get; protected set; }
 
+        /// <summary>
+        /// Gets the total glyphs in this font, which represents the last index. Calculated from <see cref="Columns"/> times <see cref="Rows"/>.
+        /// </summary>
+        public int TotalGlyphs => Columns * Rows;
+
         /// <inheritdoc/>
         [DataMember]
         public string Name { get; protected set; }
