@@ -4,12 +4,13 @@
     "classifications": [
         "Console",
         "Roguelike",
-        "SadConsole"
+        "SadConsole",
+        "SFML"
     ],
-    "identity": "SadConsole.v8.Project.CSharp",
-    "groupIdentity":"SadConsole.v8.Project",
-    "name": "SadConsole v8 Game",
-    "shortName": "sadconsole8",
+    "identity": "SadConsole.Project.SFML.CSharp",
+    "groupIdentity":"SadConsole.Project.SFML",
+    "name": "SadConsole Game for SFML",
+    "shortName": "scgame-sfml",
     "preferNameDirectory": true,
     "tags": {
         "language": "C#",

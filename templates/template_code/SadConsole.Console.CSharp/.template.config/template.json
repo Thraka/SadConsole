@@ -5,11 +5,11 @@
         "Console",
         "SadConsole"
     ],
-    "identity": "SadConsole.v8.Console.CSharp",
-    "groupIdentity":"SadConsole.v8.Console",
-    "name": "SadConsole v8 Console Class",
+    "identity": "SadConsole.Console.CSharp",
+    "groupIdentity":"SadConsole.Console",
+    "name": "SadConsole Console Class",
     "sourceName": "MyConsole",
-    "shortName": "sadconsole8console",
+    "shortName": "scconsole",
     "tags": {
         "language": "C#",
         "type": "item"
