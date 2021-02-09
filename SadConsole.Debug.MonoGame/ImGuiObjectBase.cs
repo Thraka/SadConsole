@@ -6,6 +6,6 @@ namespace SadConsole.Debug.MonoGame
 {
     public abstract class ImGuiObjectBase
     {
-        internal protected abstract void BuildUI(ImGuiRenderer renderer);
+        public abstract void BuildUI(ImGuiRenderer renderer);
     }
 }

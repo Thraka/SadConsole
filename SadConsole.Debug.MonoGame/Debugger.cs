@@ -8,6 +8,8 @@ namespace SadConsole.Debug.MonoGame
     {
         private static ImGuiHost _imGui;
 
+        public static List<ImGuiObjectBase> GuiComponents => _imGui.UIComponents;
+
         public static bool IsOpened
         {
             get
@@ -18,6 +20,19 @@ namespace SadConsole.Debug.MonoGame
         }
 
         //private static CoolTheme coolTheme = new CoolTheme();
+
+        /// <summary>
+        /// Initializes the debugger.
+        /// </summary>
+        public static void BasicInit()
+        {
+            _imGui = new ImGuiHost(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+            _imGui.Font = "Roboto-Regular.ttf";
+            _imGui.fontSize = 14f;
+
+            Game.Instance.MonoGameInstance.Components.Add(_imGui);
+            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        }
 
         public static void Start()
         {

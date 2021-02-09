@@ -23,7 +23,7 @@ namespace SadConsole.Debug.MonoGame
         private byte[] _textBuffer = new byte[100];
         private bool _pauseForEdit;
 
-        protected internal override void BuildUI(ImGuiRenderer renderer)
+        public override void BuildUI(ImGuiRenderer renderer)
         {
             if (_pauseForEdit)
             {

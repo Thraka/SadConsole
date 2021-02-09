@@ -8,7 +8,7 @@ namespace SadConsole.Debug.MonoGame
 {
     class GuiSurfacePreview : ImGuiObjectBase
     {
-        protected internal override void BuildUI(ImGuiRenderer renderer)
+        public override void BuildUI(ImGuiRenderer renderer)
         {
             if (GuiState.ShowSurfacePreview)
             {

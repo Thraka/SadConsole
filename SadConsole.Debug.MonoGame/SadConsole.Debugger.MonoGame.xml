@@ -4,6 +4,11 @@
         <name>SadConsole.Debug.MonoGame</name>
     </assembly>
     <members>
+        <member name="M:SadConsole.Debug.MonoGame.Debugger.BasicInit">
+            <summary>
+            Initializes the debugger.
+            </summary>
+        </member>
         <!-- Badly formed XML comment ignored for member "T:SadConsole.Debug.MonoGame.ImGuiRenderer" -->
         <member name="P:SadConsole.Debug.MonoGame.ImGuiRenderer.WantsMouseCapture">
             <summary>

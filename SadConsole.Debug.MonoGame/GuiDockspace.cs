@@ -10,7 +10,7 @@ namespace SadConsole.Debug.MonoGame
     {
         private bool p_open;
 
-        protected internal override void BuildUI(ImGuiRenderer renderer)
+        public override void BuildUI(ImGuiRenderer renderer)
         {
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
             ImGui.SetNextWindowPos(viewport.Pos);
