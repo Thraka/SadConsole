@@ -4781,6 +4781,16 @@
             A collection of keys that were just released this frame.
             </summary>
         </member>
+        <member name="P:SadConsole.Input.Keyboard.HasKeysDown">
+            <summary>
+            <see langword="true"/> when the <see cref="P:SadConsole.Input.Keyboard.KeysDown"/> collection has at least one key; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.Keyboard.HasKeysPressed">
+            <summary>
+            <see langword="true"/> when the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection has at least one key; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Input.Keyboard.RepeatDelay">
             <summary>
             How often a key is included in the <see cref="P:SadConsole.Input.Keyboard.KeysPressed"/> collection after the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/> time has passed.

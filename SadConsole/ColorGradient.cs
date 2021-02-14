@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace SadRogue.Primitives
 {
@@ -8,6 +9,7 @@ namespace SadRogue.Primitives
     /// Represents a gradient with multiple color stops.
     /// </summary>
     [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class ColorGradient : IEnumerable<ColorGradientStop>
     {
         /// <summary>

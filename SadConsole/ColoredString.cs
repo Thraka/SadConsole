@@ -5,14 +5,18 @@ using System.Runtime.Serialization;
 using SadRogue.Primitives;
 using SadConsole.Effects;
 using SadConsole.StringParser;
+using Newtonsoft.Json;
 
 namespace SadConsole
 {
     /// <summary>
     /// Represents a string that has foreground and background colors for each character in the string.
     /// </summary>
+    [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffect>
     {
+        [DataMember(Name = "Glyphs")]
         private ColoredGlyphEffect[] _characters;
 
         /// <summary>
