@@ -84,7 +84,7 @@ namespace SadConsole.UI.Themes
             SetControlTheme(typeof(RadioButton), new RadioButtonTheme());
             SetControlTheme(typeof(TextBox), new TextBoxTheme());
             SetControlTheme(typeof(SelectionButton), new ButtonTheme());
-            SetControlTheme(typeof(DrawingSurface), new DrawingSurfaceTheme());
+            SetControlTheme(typeof(DrawingArea), new DrawingAreaTheme());
             SetControlTheme(typeof(Button), new ButtonTheme());
             SetControlTheme(typeof(Label), new LabelTheme());
             SetControlTheme(typeof(Panel), new PanelTheme());

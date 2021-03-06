@@ -10,7 +10,7 @@ namespace SadConsole.UI.Controls
     {
         Mirror _mirrorSetting;
 
-        private DrawingSurface _characterSurface;
+        private DrawingArea _characterSurface;
         private Effects.Fade _selectedCharEffect;
         private int _selectedChar;
 

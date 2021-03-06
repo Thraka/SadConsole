@@ -44,12 +44,12 @@ namespace SadConsole.UI
 
             if (colors != null) window.Controls.ThemeColors = colors;
 
-            var printArea = new DrawingSurface(window.Width, window.Height)
+            var printArea = new DrawingArea(window.Width, window.Height)
             {
                 OnDraw = (ds, time) =>
                 {
                     if (!ds.IsDirty) return;
-                    ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance;
                     ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
                     ds.Surface.Print(2, 2, message);
                     ds.IsDirty = true;
@@ -127,12 +127,12 @@ namespace SadConsole.UI
 
             message.IgnoreBackground = true;
 
-            var printArea = new DrawingSurface(window.Width, window.Height)
+            var printArea = new DrawingArea(window.Width, window.Height)
             {
                 OnDraw = (ds, time) =>
                 {
                     if (!ds.IsDirty) return;
-                    ColoredGlyph appearance = ((Themes.DrawingSurfaceTheme)ds.Theme).Appearance;
+                    ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance;
                     ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
                     ds.Surface.Print(2, 2, message);
                     ds.IsDirty = true;

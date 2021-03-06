@@ -59,7 +59,7 @@ namespace SadConsole.Renderers
             }
 
             var monoRenderer = (ScreenSurfaceRenderer)renderer;
-
+            
             // Redraw is needed
             if (result || screenObject.IsDirty || isForced)
             {
