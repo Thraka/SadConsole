@@ -9,6 +9,11 @@
             Animates the movement of an object. 
             </summary>
         </member>
+        <member name="P:SadConsole.Components.SmoothMove.IsMoving">
+            <summary>
+            <see langword="true"/> when this component currently is animating the movement of the host object; otherwise <see langword="false"/>.
+            </summary>
+        </member>
         <member name="E:SadConsole.Components.SmoothMove.MoveStarted">
             <summary>
             Raised when the smoothing component starts moving an object.

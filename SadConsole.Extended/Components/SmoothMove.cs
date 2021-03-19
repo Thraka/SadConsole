@@ -17,6 +17,11 @@ namespace SadConsole.Components
         private bool _isEntity;
 
         /// <summary>
+        /// <see langword="true"/> when this component currently is animating the movement of the host object; otherwise <see langword="false"/>.
+        /// </summary>
+        public bool IsMoving => _isAnimating;
+
+        /// <summary>
         /// Raised when the smoothing component starts moving an object.
         /// </summary>
         public event EventHandler MoveStarted;
