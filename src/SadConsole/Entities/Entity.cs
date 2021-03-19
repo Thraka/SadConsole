@@ -120,9 +120,9 @@ namespace SadConsole.Entities
         }
 
         /// <summary>
-        /// Creates a new Entity with a default animation/
+        /// Creates a new Entity with a default animation.
         /// </summary>
-        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedConsole.Name"/> property changesd to "default".</param>
+        /// <param name="animation">The default animation. The animation will have its <see cref="AnimatedConsole.Name"/> property changed to "default".</param>
         public Entity(AnimatedConsole animation)
         {
             Font = animation.Font;
@@ -196,7 +196,7 @@ namespace SadConsole.Entities
             public readonly Entity Entity;
 
             /// <summary>
-            /// The positiont the <see cref="Entity"/> moved from.
+            /// The position the <see cref="Entity"/> moved from.
             /// </summary>
             public readonly Point FromPosition;
 
