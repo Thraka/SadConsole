@@ -26,7 +26,15 @@ namespace SadConsole.Components
         {
             var host = (IScreenSurface)hostObject;
 
-            host.Surface.View = host.Surface.View.WithCenter(Target?.Position ?? Point.None);
+            if (Target != null)
+            {
+                if (Target is Entity ent)
+                    host.Surface.View = host.Surface.View.WithCenter(ent.UsePixelPositioning ? ent.AbsolutePosition / host.FontSize : ent.AbsolutePosition);
+                else if (Target is IScreenSurface screenSurface)
+                    host.Surface.View = host.Surface.View.WithCenter(screenSurface.UsePixelPositioning ? screenSurface.Position / host.FontSize : host.Position);
+                else
+                    host.Surface.View = host.Surface.View.WithCenter(Target.Position);
+            }
         }
     }
 }

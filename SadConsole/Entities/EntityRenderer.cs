@@ -158,9 +158,9 @@ namespace SadConsole.Entities
             RenderStep.SetData(this);
             surface.RenderSteps.Add(RenderStep);
             _screen = surface;
-            UpdateCachedVisibilityArea();
-
             _isAttached = true;
+
+            UpdateCachedVisibilityArea();
         }
 
         /// <inheritdoc/>
@@ -220,10 +220,7 @@ namespace SadConsole.Entities
         public Rectangle GetRenderRectangle(Point position, bool isPixel)
         {
             if (isPixel)
-            {
-                Point renderPosition = position - _offsetAreaPixels.Position;
-                return new Rectangle(renderPosition.X, renderPosition.Y, _screen.FontSize.X, _screen.FontSize.Y);
-            }
+                return new Rectangle(position.X, position.Y, _screen.FontSize.X, _screen.FontSize.Y);
             else
             {
                 Point renderPosition = position - _screen.Surface.View.Position;
