@@ -4,6 +4,73 @@
         <name>SadConsole.Extended</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Components.SmoothMove">
+            <summary>
+            Animates the movement of an object. 
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.SmoothMove.MovingStarted">
+            <summary>
+            Raised when the smoothing component starts moving an object.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.SmoothMove.MovingEnded">
+            <summary>
+            Raised when the smoothing component ends moving an object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.SmoothMove.FontSize">
+            <summary>
+            The size of the parent object's font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.SmoothMove.TransitionEasingFunction">
+            <summary>
+            The easing function applied to smoothing the objects movement.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.SmoothMove.TransitionTime">
+            <summary>
+            The amount of time it takes to animated the movement.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.#ctor">
+            <summary>
+            Creates a new instance of this object with a default transition time of 200 milliseconds.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.#ctor(SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new instance of this object with a fixed size for calculating smooth movement.
+            </summary>
+            <param name="fontSize">The size of the font used to display the object hosting the component.</param>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a new instance of this object with a specific transition time.
+            </summary>
+            <param name="transitionTime">The amount of time it takes to animate the movement.</param>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.#ctor(SadRogue.Primitives.Point,System.TimeSpan)">
+            <summary>
+            Creates a new instance of this object with a fixed size for calculating smooth movement and the specified transition time.
+            </summary>
+            <param name="fontSize">The size of the font used to display the object hosting the component.</param>
+            <param name="transitionTime">The amount of time it takes to animate the movement.</param>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.OnAdded(SadConsole.IScreenObject)">
+            <summary>
+            Called by the <paramref name="host"/> when the component is added to an object. Add to a <see cref="T:SadConsole.IScreenSurface"/> or <see cref="T:SadConsole.Entities.Entity"/>.
+            </summary>
+            <param name="host">The <see cref="T:SadConsole.IScreenSurface"/> or <see cref="T:SadConsole.Entities.Entity"/>.</param>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Updates the component. If the object is moving, changes to pixel positioning (if required) and animates the movement.
+            </summary>
+            <param name="host">The host object being moved.</param>
+            <param name="delta">The time difference from the previous frame.</param>
+        </member>
         <member name="T:SadConsole.Entities.Manager">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
