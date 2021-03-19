@@ -70,7 +70,7 @@ namespace Game
             BASICExecutor = new ExecutorFrameBased(this, BASICRunEnvironment, BASICProgramRepository, BASICTokensProvider, BASICTokeniser);
         }
 
-        public int SortOrder { get; set; }
+        public uint SortOrder { get; set; }
 
         public bool IsUpdate => true;
 
@@ -200,7 +200,7 @@ namespace Game
         private bool _canEdit;
         private string _editText;
 
-        public short Width => (short)_console.BufferWidth;
+        public short Width => (short)_console.Width;
 
         public bool CanEdit => _canEdit;
 
@@ -211,7 +211,7 @@ namespace Game
 
         public string Read()
         {
-            return _console.GetString(Point.ToIndex(0, _console.Cursor.Position.Y, _console.BufferWidth), _console.BufferWidth);
+            return _console.GetString(Point.ToIndex(0, _console.Cursor.Position.Y, _console.Width), _console.Width);
         }
 
         public char ReadChar()

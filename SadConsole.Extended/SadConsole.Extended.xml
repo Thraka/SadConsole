@@ -9,12 +9,12 @@
             Animates the movement of an object. 
             </summary>
         </member>
-        <member name="E:SadConsole.Components.SmoothMove.MovingStarted">
+        <member name="E:SadConsole.Components.SmoothMove.MoveStarted">
             <summary>
             Raised when the smoothing component starts moving an object.
             </summary>
         </member>
-        <member name="E:SadConsole.Components.SmoothMove.MovingEnded">
+        <member name="E:SadConsole.Components.SmoothMove.MoveEnded">
             <summary>
             Raised when the smoothing component ends moving an object.
             </summary>
@@ -63,6 +63,9 @@
             Called by the <paramref name="host"/> when the component is added to an object. Add to a <see cref="T:SadConsole.IScreenSurface"/> or <see cref="T:SadConsole.Entities.Entity"/>.
             </summary>
             <param name="host">The <see cref="T:SadConsole.IScreenSurface"/> or <see cref="T:SadConsole.Entities.Entity"/>.</param>
+        </member>
+        <member name="M:SadConsole.Components.SmoothMove.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Components.SmoothMove.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
