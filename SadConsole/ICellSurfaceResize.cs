@@ -5,7 +5,7 @@ using SadRogue.Primitives;
 namespace SadConsole
 {
     /// <summary>
-    /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
+    /// Adds a method to support resizing a surface.
     /// </summary>
     public partial interface ICellSurfaceResize
     {

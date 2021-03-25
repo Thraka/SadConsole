@@ -87,6 +87,7 @@ namespace SadConsole
             get => _viewArea.Area;
             set
             {
+                if (_viewArea.Area == value) return;
                 _viewArea.SetArea(value);
                 IsDirty = true;
             }

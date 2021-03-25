@@ -25,8 +25,5 @@ namespace SadConsole.UI.Controls
             UseKeyboard = false;
             TabStop = false;
         }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context) => base.TabStop = false;
     }
 }
