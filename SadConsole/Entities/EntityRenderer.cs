@@ -187,6 +187,8 @@ namespace SadConsole.Entities
                 _screenCachedFontSize = _screen.FontSize;
                 _screenCachedView = _screen.Surface.View;
 
+                UpdateCachedVisibilityArea();
+
                 IsDirty = true;
 
                 for (int i = 0; i < Entities.Count; i++)
@@ -220,7 +222,7 @@ namespace SadConsole.Entities
         public Rectangle GetRenderRectangle(Point position, bool isPixel)
         {
             if (isPixel)
-                return new Rectangle(position.X, position.Y, _screen.FontSize.X, _screen.FontSize.Y);
+                return new Rectangle(position.X - (_screen.Surface.ViewPosition.X * _screen.FontSize.X), position.Y - (_screen.Surface.ViewPosition.Y * _screen.FontSize.Y), _screen.FontSize.X, _screen.FontSize.Y);
             else
             {
                 Point renderPosition = position - _screen.Surface.View.Position;
