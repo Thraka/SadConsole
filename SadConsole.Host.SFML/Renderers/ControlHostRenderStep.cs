@@ -123,6 +123,7 @@ namespace SadConsole.Renderers
         protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
         {
             font = control.AlternateFont ?? font;
+            ColoredGlyph cell;
 
             //if (control.Surface.DefaultBackground.A != 0)
             //{
@@ -131,22 +132,28 @@ namespace SadConsole.Renderers
 
             //    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
             //}
-
-            for (int i = 0; i < control.Surface.Count; i++)
+            for (int y = 0; y < control.Surface.View.Height; y++)
             {
-                ColoredGlyph cell = control.Surface[i];
+                int i = ((y + control.Surface.ViewPosition.Y) * control.Surface.Width) + control.Surface.ViewPosition.X;
 
-                cell.IsDirty = false;
+                for (int x = 0; x < control.Surface.View.Width; x++)
+                {
+                    cell = control.Surface[i];
+                    cell.IsDirty = false;
 
-                if (!cell.IsVisible) continue;
+                    if (cell.IsVisible)
+                    {
+                        SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
 
-                Point cellRenderPosition = Point.FromIndex(i, control.Surface.View.Width) + control.AbsolutePosition;
+                        if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                if (!parentViewRect.Contains(cellRenderPosition)) continue;
+                        IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
-                IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
+                        Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
+                    }
 
-                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
+                    i++;
+                }
             }
         }
 

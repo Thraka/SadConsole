@@ -131,27 +131,36 @@ namespace SadConsole.Renderers
             var fontImage = ((SadConsole.Host.GameTexture)font.Image).Texture;
             ColoredGlyph cell;
 
-            for (int i = 0; i < control.Surface.Count; i++)
+            for (int y = 0; y < control.Surface.View.Height; y++)
             {
-                cell = control.Surface[i];
-                cell.IsDirty = false;
-                if (!cell.IsVisible) continue;
+                int i = ((y + control.Surface.ViewPosition.Y) * control.Surface.Width) + control.Surface.ViewPosition.X;
 
-                SadRogue.Primitives.Point cellRenderPosition = SadRogue.Primitives.Point.FromIndex(i, control.Surface.View.Width) + control.AbsolutePosition;
+                for (int x = 0; x < control.Surface.View.Width; x++)
+                {
+                    cell = control.Surface[i];
+                    cell.IsDirty = false;
 
-                if (!parentViewRect.Contains(cellRenderPosition)) continue;
+                    if (cell.IsVisible)
+                    {
+                        SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
 
-                XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
+                        if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                if (cell.Background != SadRogue.Primitives.Color.Transparent)
-                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 
-                if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
-                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                        if (cell.Background != SadRogue.Primitives.Color.Transparent)
+                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
-                foreach (CellDecorator decorator in cell.Decorators)
-                    if (decorator.Color != SadRogue.Primitives.Color.Transparent)
-                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                        if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
+                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+
+                        foreach (CellDecorator decorator in cell.Decorators)
+                            if (decorator.Color != SadRogue.Primitives.Color.Transparent)
+                                Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                    }
+
+                    i++;
+                }
             }
         }
 
