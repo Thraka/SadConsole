@@ -36,8 +36,8 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-beta4" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0-alpha9-debug" />
-    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0-alpha4-debug" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0" />
     <PackageReference Include="SFML.Net" Version="2.5.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>

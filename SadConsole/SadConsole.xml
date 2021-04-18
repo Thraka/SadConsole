@@ -4421,7 +4421,7 @@
         </member>
         <member name="T:SadConsole.ICellSurfaceResize">
             <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            Adds a method to support resizing a surface.
             </summary>
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
@@ -4436,7 +4436,7 @@
         </member>
         <member name="T:SadConsole.ICellSurfaceSettable">
             <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            Adds a method to change the backing cells of a surface.
             </summary>
         </member>
         <member name="M:SadConsole.ICellSurfaceSettable.SetSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
@@ -9123,11 +9123,6 @@
             Raised when the <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> property changes.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ControlBase.EnableWidthHeightChange">
-            <summary>
-            When <see langword="false"/>, causes the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties to throw an exception when set; otherwise <see langword="true"/> to allow size changes.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.UseKeyboard">
             <summary>
             <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
@@ -9141,6 +9136,11 @@
         <member name="P:SadConsole.UI.Controls.ControlBase.CanFocus">
             <summary>
             <see langword="true"/> to indicate this control can be focused, generally by clicking on the control or tabbing with the keyboard. Otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ControlBase.CanResize">
+            <summary>
+            When <see langword="true"/>, indicates that this control can be resized with the <see cref="M:SadConsole.UI.Controls.ControlBase.Resize(System.Int32,System.Int32)"/> method; otherwise <see langword="false"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.AlternateFont">
@@ -9366,6 +9366,22 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.Resize(System.Int32,System.Int32)">
+             <summary>
+             Resizes the control if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property is <see langword="true"/>.
+             </summary>
+             <remarks>
+             When overriding this method, to perhaps restrct the requested size, make sure to do the following:
+            
+             - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw a <see cref="T:System.InvalidOperationException"/>.
+             - The <see cref="F:SadConsole.UI.Controls.ControlBase._width"/> and <see cref="F:SadConsole.UI.Controls.ControlBase._height"/> variables of the control are set to the values provided.
+             - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property to the same width and height values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
+             - The <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/>, if set, is reattached by calling <see cref="M:SadConsole.UI.Themes.ThemeBase.Attached(SadConsole.UI.Controls.ControlBase)"/>.
+             - Set <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> to <see langword="true"/>.
+             </remarks>
+             <param name="width">The desired width of the control.</param>
+             <param name="height">The desired height of the control.</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
             Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
@@ -9486,17 +9502,17 @@
             THe control is selected
             </summary>
         </member>
-        <member name="T:SadConsole.UI.Controls.DrawingSurface">
+        <member name="T:SadConsole.UI.Controls.DrawingArea">
             <summary>
             A simple surface for drawing text that can be moved and sized like a control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.DrawingSurface.OnDraw">
+        <member name="P:SadConsole.UI.Controls.DrawingArea.OnDraw">
             <summary>
             Called when the surface is redrawn.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.DrawingSurface.#ctor(System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.DrawingArea.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new drawing surface control with the specified width and height.
             </summary>
@@ -9720,7 +9736,7 @@
         </member>
         <member name="T:SadConsole.UI.Controls.Panel">
             <summary>
-            A simple surface for drawing text that can be moved and sized like a control.
+            A control container that processes the mouse on each child. <see cref="P:SadConsole.UI.Controls.ControlBase.TabStop"/> defaults to <see langword="false"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.Panel.Controls">
@@ -9958,6 +9974,9 @@
             <param name="size">The height or width of the control.</param>
             <returns>The new control instance.</returns>
         </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.Resize(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
@@ -10014,6 +10033,64 @@
             Selects the next selection button.
             </summary>
             <returns>Returns the next selection button.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.SurfaceViewer">
+            <summary>
+            Draws a <see cref="T:SadConsole.ICellSurface"/> within an area. Optionally supports scroll bars.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes">
+            <summary>
+            Determines how the control draws the scroll bars.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes.Always">
+            <summary>
+            Always draw the scroll bars on the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes.Never">
+            <summary>
+            Never show the scroll bars on the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes.AsNeeded">
+            <summary>
+            Display the scroll bars if needed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.SurfaceViewer.ScrollBarMode">
+            <summary>
+            Sets the visual behavior of the scroll bars for the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface">
+            <summary>
+            The surface rendered on this control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.HorizontalScroller">
+            <summary>
+            The horizontal scroll bar. This shouldn't be changed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.VerticalScroller">
+            <summary>
+            The vertical scroll bar. This shouldn't be changed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.SurfaceViewer.SurfaceControl">
+            <summary>
+            A control that displays the view area of the <see cref="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.#ctor(System.Int32,System.Int32,SadConsole.ICellSurface)">
+            <summary>
+            Creates a new drawing surface control with the specified width and height.
+            </summary>
+            <param name="width">Width of the control.</param>
+            <param name="height">Height of the control.</param>
+            <param name="surface">The surface to view.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.TextBox">
             <summary>
@@ -10135,6 +10212,9 @@
             Creates a new instance of the input box.
             </summary>
             <param name="width">The width of the input box.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.Resize(System.Int32,System.Int32)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.TextBox.Validate">
             <summary>
@@ -10390,25 +10470,25 @@
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Clone">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.UI.Themes.DrawingSurfaceTheme">
+        <member name="T:SadConsole.UI.Themes.DrawingAreaTheme">
             <summary>
             A basic theme for a drawing surface that simply fills the surface based on the state.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.DrawingSurfaceTheme.UseNormalStateOnly">
+        <member name="P:SadConsole.UI.Themes.DrawingAreaTheme.UseNormalStateOnly">
             <summary>
             When true, only uses <see cref="P:SadConsole.UI.Themes.ThemeStates.Normal"/> for drawing.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Themes.DrawingSurfaceTheme.Appearance">
+        <member name="P:SadConsole.UI.Themes.DrawingAreaTheme.Appearance">
             <summary>
             The current appearance based on the control state.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+        <member name="M:SadConsole.UI.Themes.DrawingAreaTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.DrawingSurfaceTheme.Clone">
+        <member name="M:SadConsole.UI.Themes.DrawingAreaTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.LabelTheme">
@@ -10717,6 +10797,17 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.ScrollBarTheme.Clone">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.UI.Themes.SurfaceViewerTheme">
+            <summary>
+            A basic theme for a drawing surface that simply fills the surface based on the state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.SurfaceViewerTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.SurfaceViewerTheme.Clone">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Themes.TextBoxTheme">
@@ -11130,12 +11221,34 @@
             The new object.
             </summary>
         </member>
-        <member name="M:SadConsole.ValueChangedEventArgs`1.#ctor(`0,`0)">
+        <member name="F:SadConsole.ValueChangedEventArgs`1.SupportsCancel">
+            <summary>
+            When <see langword="true"/>, indicates this value change can be cancelled; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ValueChangedEventArgs`1.SupportsHandled">
+            <summary>
+            When <see langword="true"/>, indicates this value change can be flagged as handled and stop further event handlers; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ValueChangedEventArgs`1.IsCancelled">
+            <summary>
+            When <see cref="F:SadConsole.ValueChangedEventArgs`1.SupportsCancel"/> is <see langword="true"/>, setting this property to <see langword="true"/> causes the value change to be cancelled and to stop processing further event handlers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ValueChangedEventArgs`1.IsHandled">
+            <summary>
+            When <see cref="F:SadConsole.ValueChangedEventArgs`1.SupportsHandled"/> is <see langword="true"/>, setting this property to <see langword="true"/> flags this change as handled and to stop processing further event handlers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ValueChangedEventArgs`1.#ctor(`0,`0,System.Boolean,System.Boolean)">
             <summary>
             Creates a new instance of this object with the specified old and new value.
             </summary>
             <param name="oldValue">The old value.</param>
             <param name="newValue">The new value.</param>
+            <param name="supportsCancel">When <see langword="true"/>, indicates this value change can be cancelled.</param>
+            <param name="supportsHandled">When <see langword="true"/>, indicates this value change can be flagged as handled and stop further event handlers.</param>
         </member>
         <member name="T:SadRogue.Primitives.ColorGradient">
             <summary>
