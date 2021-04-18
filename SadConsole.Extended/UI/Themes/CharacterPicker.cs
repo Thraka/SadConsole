@@ -12,10 +12,13 @@ namespace SadConsole.UI.Themes
         /// <inheritdoc />
         public override void Attached(ControlBase control)
         {
-            if (!(control is Controls.CharacterPicker)) throw new Exception($"Theme can only be added to a {nameof(CharacterPicker)}");
+            if (!(control is Controls.CharacterPicker picker)) throw new Exception($"Theme can only be added to a {nameof(CharacterPicker)}");
 
             control.Surface = new CellSurface(control.Width, control.Height);
+            control.Surface.DefaultForeground = picker.GlyphForeground;
+            control.Surface.DefaultBackground = picker.GlyphBackground;
             control.Surface.Clear();
+            control.MouseArea = new Rectangle(0, 0, control.Width, control.Height);
         }
 
         /// <inheritdoc />
@@ -31,20 +34,7 @@ namespace SadConsole.UI.Themes
 
             // Sync font with control surface
             if (control.Surface.Width != font.Columns || control.Surface.Height != font.Rows)
-            {
-                control.Surface = new CellSurface(font.Columns, font.Rows);
-                control.Surface.DefaultForeground = picker.GlyphForeground;
-                control.Surface.DefaultBackground = picker.GlyphBackground;
-                control.Surface.Fill();
-
-                bool oldValue = control.EnableWidthHeightChange;
-                control.EnableWidthHeightChange = true;
-                control.Width = control.Surface.Width;
-                control.Height = control.Surface.Height;
-                control.EnableWidthHeightChange = oldValue;
-
-                control.MouseArea = new Rectangle(0, 0, control.Width, control.Height);
-            }
+                control.Resize(font.Columns, font.Rows);
 
             if (picker.NewCharacterLocation != new Point(-1, -1))
                 control.Surface.SetEffect(picker.OldCharacterLocation.X, picker.OldCharacterLocation.Y, null);
@@ -52,7 +42,6 @@ namespace SadConsole.UI.Themes
             control.Surface.Fill(picker.GlyphForeground, picker.GlyphBackground, 0, null);
 
             int i = 0;
-
 
             for (int y = 0; y < font.Rows; y++)
             {

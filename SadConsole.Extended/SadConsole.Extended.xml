@@ -303,6 +303,19 @@
             </summary>
             <returns>The name of the zone.</returns>
         </member>
+        <member name="T:SadConsole.StringExtensions2">
+            <summary>
+            Extensions for the <see cref="T:System.String"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringExtensions2.ToAscii(System.String,System.Int32)">
+            <summary>
+            Converts a string into codepage 437.
+            </summary>
+            <param name="text">The string to convert</param>
+            <param name="codepage">Optional codepage to provide.</param>
+            <returns>A transformed string.</returns>
+        </member>
         <member name="T:SadConsole.Transitions.Fade">
             <summary>
             Fades out one <see cref="T:SadConsole.IScreenSurface"/> while fading in another.
