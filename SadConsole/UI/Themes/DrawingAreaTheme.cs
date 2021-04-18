@@ -34,7 +34,7 @@ namespace SadConsole.UI.Themes
             else
                 Appearance = ControlThemeState.Normal;
 
-            drawingSurface?.OnDraw(drawingSurface, time);
+            drawingSurface.OnDraw?.Invoke(drawingSurface, time);
             control.IsDirty = false;
         }
 
