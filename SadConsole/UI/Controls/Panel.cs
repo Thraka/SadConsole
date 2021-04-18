@@ -7,7 +7,7 @@ using SadConsole.Input;
 namespace SadConsole.UI.Controls
 {
     /// <summary>
-    /// A simple surface for drawing text that can be moved and sized like a control.
+    /// A control container that processes the mouse on each child. <see cref="ControlBase.TabStop"/> defaults to <see langword="false"/>.
     /// </summary>
     [DataContract]
     public class Panel : ControlBase, IContainer

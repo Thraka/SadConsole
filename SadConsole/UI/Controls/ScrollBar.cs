@@ -113,6 +113,23 @@ namespace SadConsole.UI.Controls
         }
 
         /// <inheritdoc/>
+        public override void Resize(int width, int height)
+        {
+            if (Orientation == Orientation.Vertical)
+            {
+                if (height < 2) throw new Exception("Slider bar height must be 2 or more");
+                SliderBarSize = height - 2;
+                base.Resize(1, height);
+            }
+            else
+            {
+                if (width < 2) throw new Exception("Slider bar width must be 2 or more");
+                SliderBarSize = width - 2;
+                base.Resize(width, 1);
+            }
+        }
+
+        /// <inheritdoc/>
         public override bool ProcessMouse(Input.MouseScreenObjectState state)
         {
             if (IsEnabled)

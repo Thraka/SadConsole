@@ -20,8 +20,8 @@ namespace SadConsole.UI.Controls
         [DataMember(Name = "ThemeColors")]
         private Colors _themeColors;
         private bool _isDirty;
-        private int _width;
-        private int _height;
+        protected int _width;
+        protected int _height;
 
         /// <summary>
         /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
@@ -49,11 +49,6 @@ namespace SadConsole.UI.Controls
         public event EventHandler<EventArgs> IsDirtyChanged;
 
         /// <summary>
-        /// When <see langword="false"/>, causes the <see cref="Width"/> and <see cref="Height"/> properties to throw an exception when set; otherwise <see langword="true"/> to allow size changes.
-        /// </summary>
-        public bool EnableWidthHeightChange { get; set; }
-
-        /// <summary>
         /// <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
         /// </summary>
         [DataMember]
@@ -70,6 +65,12 @@ namespace SadConsole.UI.Controls
         /// </summary>
         [DataMember]
         public bool CanFocus { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates that this control can be resized with the <see cref="Resize(int, int)"/> method; otherwise <see langword="false"/>.
+        /// </summary>
+        [DataMember]
+        public bool CanResize { get; protected set; }
 
         /// <summary>
         /// An alternate font used to render this control.
@@ -170,33 +171,12 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// The width of the control.
         /// </summary>
-        public int Width
-        {
-            get => _width;
-            set
-            {
-                if (EnableWidthHeightChange)
-                    _width = value;
-                else
-                    throw new NotSupportedException("Setting this property isn't supported. Size changes are for internal use only.");
-            }
-        }
+        public int Width => _width;
 
         /// <summary>
         /// The height of the control.
         /// </summary>
-        public int Height
-        {
-            get => _height;
-            set
-            {
-                if (EnableWidthHeightChange)
-                    _height = value;
-                else
-                    throw new NotSupportedException("Setting this property isn't supported. Size changes are for internal use only.");
-            }
-        }
-
+        public int Height => _height;
 
         /// <summary>
         /// Gets or sets whether or not this control is focused.
@@ -339,6 +319,7 @@ namespace SadConsole.UI.Controls
         {
             _width = width;
             _height = height;
+            CanResize = true;
             IsDirty = true;
             TabStop = true;
             IsVisible = true;
@@ -549,6 +530,31 @@ namespace SadConsole.UI.Controls
         /// <returns></returns>
         public bool HasThemeColors() =>
             _themeColors != null;
+
+        /// <summary>
+        /// Resizes the control if the <see cref="CanResize"/> property is <see langword="true"/>.
+        /// </summary>
+        /// <remarks>
+        /// When overriding this method, to perhaps restrct the requested size, make sure to do the following:
+        ///
+        /// - Check if the <see cref="CanResize"/> property allows resizing. If it doesn't, throw a <see cref="InvalidOperationException"/>.
+        /// - The <see cref="_width"/> and <see cref="_height"/> variables of the control are set to the values provided.
+        /// - The <see cref="MouseArea"/> property to the same width and height values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
+        /// - The <see cref="Theme"/>, if set, is reattached by calling <see cref="ThemeBase.Attached(ControlBase)"/>.
+        /// - Set <see cref="IsDirty"/> to <see langword="true"/>.
+        /// </remarks>
+        /// <param name="width">The desired width of the control.</param>
+        /// <param name="height">The desired height of the control.</param>
+        public virtual void Resize(int width, int height)
+        {
+            if (!CanResize) throw new InvalidOperationException("This control can't resize.");
+
+            _width = width;
+            _height = height;
+            MouseArea = new Rectangle(0, 0, width, height);
+            Theme?.Attached(this);
+            IsDirty = true;
+        }
 
         /// <summary>
         /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.

@@ -52,7 +52,7 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <param name="width">Width of the button.</param>
         /// <param name="height">Height of the button.</param>
-        public ButtonBase(int width, int height) : base(width, height) { }
+        public ButtonBase(int width, int height) : base(width, height) {  }
 
         /// <summary>
         /// Raises the <see cref="Click"/> event.

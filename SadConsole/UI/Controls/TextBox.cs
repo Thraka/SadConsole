@@ -221,6 +221,12 @@ namespace SadConsole.UI.Controls
         }
         #endregion
 
+        /// <inheritdoc/>
+        public override void Resize(int width, int height)
+        {
+            base.Resize(width, 1);
+        }
+
         /// <summary>
         /// Validates that the value of the input box conforms to the settings of this control and sets the dirty flag to true.
         /// </summary>

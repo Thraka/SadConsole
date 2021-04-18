@@ -41,8 +41,6 @@ namespace SadConsole.UI.Controls
             {
                 if (value == null)
                     _text = "";
-                else if (value.Length > Width)
-                    _text = value.Substring(0, Width);
                 else
                     _text = value;
 
@@ -65,6 +63,9 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <param name="length">The initial length of the label without any text.</param>
         public Label(int length) : base(length, 1) => TabStop = false;
+
+        public override void Resize(int width, int height) =>
+            base.Resize(width, 1);
 
         [OnDeserialized]
         private void AfterDeserialized(StreamingContext context)
