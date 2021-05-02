@@ -127,6 +127,8 @@ namespace SadConsole.UI.Controls
                 SliderBarSize = width - 2;
                 base.Resize(width, 1);
             }
+
+            SetSliderPositionFromValue();
         }
 
         /// <inheritdoc/>

@@ -10092,6 +10092,17 @@
             <param name="height">Height of the control.</param>
             <param name="surface">The surface to view.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.SetSurface(SadConsole.ICellSurface)">
+            <summary>
+            Sets the surface for the view.
+            </summary>
+            <param name="surface"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.ResetSurface">
+            <summary>
+            Resets 
+            </summary>
+        </member>
         <member name="T:SadConsole.UI.Controls.TextBox">
             <summary>
             InputBox control that allows text input.

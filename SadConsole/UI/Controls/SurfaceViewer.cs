@@ -33,7 +33,6 @@ namespace SadConsole.UI.Controls
         private bool _isNullSurface;
         private ICellSurface _surface;
         private ScrollBarModes _scrollModes;
-        private ICellSurface _originalSurface;
 
         /// <summary>
         /// Sets the visual behavior of the scroll bars for the control.
@@ -49,38 +48,7 @@ namespace SadConsole.UI.Controls
         /// The surface rendered on this control.
         /// </summary>
         [DataMember(Name = "ChildSurface")]
-        public ICellSurface ChildSurface
-        {
-            get => _surface;
-            set
-            {
-                if (_surface == value) return;
-
-                if (_surface != null)
-                    _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
-
-                if (value == null)
-                {
-                    _surface = new CellSurface(1, 1);
-                    _surface.DefaultBackground = Color.Transparent;
-                    _surface.Clear();
-                    _isNullSurface = true;
-                }
-                else
-                {
-                    _surface = new CellSurface(value, Width, Height);
-                    _surface.DefaultBackground = value.DefaultBackground;
-                    _surface.DefaultForeground = value.DefaultForeground;
-                    _isNullSurface = false;
-                }
-
-                IsDirty = true;
-
-                SurfaceControl.Surface = _surface;
-                _surface.IsDirty = true;
-                _surface.IsDirtyChanged += _surface_IsDirtyChanged;
-            }
-        }
+        public ICellSurface ChildSurface => _surface;
 
         /// <summary>
         /// The horizontal scroll bar. This shouldn't be changed.
@@ -125,9 +93,53 @@ namespace SadConsole.UI.Controls
 
             HorizontalScroller.ValueChanged += HorizontalScroller_ValueChanged;
             VerticalScroller.ValueChanged += VerticalScroller_ValueChanged;
-            ChildSurface = surface;
+            SetSurface(surface);
 
             UseMouse = true;
+        }
+
+        /// <summary>
+        /// Sets the surface for the view.
+        /// </summary>
+        /// <param name="surface"></param>
+        public void SetSurface(ICellSurface surface)
+        {
+            if (_surface == surface) return;
+            if (surface == null) throw new NullReferenceException($"Use the {nameof(ResetSurface)} method to remove the attached surface.");
+
+            if (_surface != null)
+                _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
+
+            _surface = new CellSurface(surface, Width, Height);
+            _surface.DefaultBackground = surface.DefaultBackground;
+            _surface.DefaultForeground = surface.DefaultForeground;
+            _isNullSurface = false;
+
+            IsDirty = true;
+
+            SurfaceControl.Surface = _surface;
+            _surface.IsDirty = true;
+            _surface.IsDirtyChanged += _surface_IsDirtyChanged;
+        }
+
+        /// <summary>
+        /// Resets 
+        /// </summary>
+        public void ResetSurface()
+        {
+            if (_surface != null)
+                _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
+
+            _surface = new CellSurface(1, 1);
+            _surface.DefaultBackground = Color.Transparent;
+            _surface.Clear();
+            _isNullSurface = true;
+
+            IsDirty = true;
+
+            SurfaceControl.Surface = _surface;
+            _surface.IsDirty = true;
+            _surface.IsDirtyChanged += _surface_IsDirtyChanged;
         }
 
         public override bool ProcessMouse(MouseScreenObjectState state)
@@ -138,10 +150,8 @@ namespace SadConsole.UI.Controls
         private void VerticalScroller_ValueChanged(object sender, EventArgs e) =>
             _surface.ViewPosition = (_surface.ViewPosition.X, VerticalScroller.Value);
 
-        private void HorizontalScroller_ValueChanged(object sender, EventArgs e)
-        {
+        private void HorizontalScroller_ValueChanged(object sender, EventArgs e) =>
             _surface.ViewPosition = (HorizontalScroller.Value, _surface.ViewPosition.Y);
-        }
 
         private class FauxDrawingTheme: Themes.DrawingAreaTheme
         {
