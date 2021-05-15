@@ -15,6 +15,7 @@ namespace SadConsole
         /// <returns>A transformed string.</returns>
         public static string ToAscii(this string text, int codepage = 437)
         {
+            // Converts characters such as ░▒▓│┤╡ ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼■²ⁿ√·
             byte[] stringBytes = CodePagesEncodingProvider.Instance.GetEncoding(437).GetBytes(text);
             char[] stringChars = new char[stringBytes.Length];
 
