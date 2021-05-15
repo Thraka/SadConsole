@@ -9160,7 +9160,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsMouseButtonStateClean">
             <summary>
-            When <see langword="true"/>, indicates the mouse button state can be relied on; othwerise <see langword="false"/>.
+            When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; othwerise <see langword="false"/>.
             </summary>
             <remarks>
             This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
@@ -10102,6 +10102,13 @@
             <summary>
             Resets 
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Proceses the mouse for the scrollers and then the surface area.
+            </summary>
+            <param name="state">The state of the mouse.</param>
+            <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.TextBox">
             <summary>

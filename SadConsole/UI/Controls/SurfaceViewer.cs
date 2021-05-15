@@ -142,9 +142,53 @@ namespace SadConsole.UI.Controls
             _surface.IsDirtyChanged += _surface_IsDirtyChanged;
         }
 
+        /// <summary>
+        /// Proceses the mouse for the scrollers and then the surface area.
+        /// </summary>
+        /// <param name="state">The state of the mouse.</param>
+        /// <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
-            return base.ProcessMouse(state);
+            if (IsEnabled && UseMouse)
+            {
+                var newState = new ControlMouseState(this, state);
+
+                if (newState.IsMouseOver)
+                {
+                    if (VerticalScroller.IsVisible && VerticalScroller.ProcessMouse(state))
+                        return true;
+
+                    if (HorizontalScroller.IsVisible && HorizontalScroller.ProcessMouse(state))
+                        return true;
+
+                    if (MouseState_IsMouseOver != true)
+                    {
+                        MouseState_IsMouseOver = true;
+                        OnMouseEnter(newState);
+                    }
+
+                    bool preventClick = MouseState_EnteredWithButtonDown;
+                    OnMouseIn(newState);
+
+                    if (!preventClick && state.Mouse.LeftClicked)
+                        OnLeftMouseClicked(newState);
+
+                    if (!preventClick && state.Mouse.RightClicked)
+                        OnRightMouseClicked(newState);
+
+                    return true;
+                }
+                else
+                {
+                    if (MouseState_IsMouseOver)
+                    {
+                        MouseState_IsMouseOver = false;
+                        OnMouseExit(newState);
+                    }
+                }
+            }
+
+            return false;
         }
 
         private void VerticalScroller_ValueChanged(object sender, EventArgs e) =>
