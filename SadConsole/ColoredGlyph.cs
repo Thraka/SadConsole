@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace SadConsole
 {
@@ -315,6 +316,14 @@ namespace SadConsole
                 cells[i] = new ColoredGlyph();
 
             return cells;
+        }
+
+        /// <inheritdoc/>
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            if (Decorators.Length == 0)
+                Decorators = Array.Empty<CellDecorator>();
         }
     }
 }

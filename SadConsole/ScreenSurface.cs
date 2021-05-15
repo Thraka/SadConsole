@@ -19,6 +19,7 @@ namespace SadConsole
     public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     {
         [DataMember(Name = "Font")]
+        [JsonConverter(typeof(SerializedTypes.FontJsonConverter))]
         private IFont _font;
         [DataMember(Name = "FontSize")]
         private Point _fontSize;

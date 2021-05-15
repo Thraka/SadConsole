@@ -953,6 +953,9 @@
             <param name="size"></param>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.ColoredGlyph.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.ColoredString">
             <summary>
             Represents a string that has foreground and background colors for each character in the string.
