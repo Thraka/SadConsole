@@ -18,6 +18,11 @@ namespace FeatureDemo
         private static Windows.CharacterViewer _characterWindow;
         private static Container MainConsole;
 
+        public static int MainWidth = 80;
+        public static int MainHeight = 23;
+        public static int HeaderWidth = 80;
+        public static int HeaderHeight = 2;
+
         private static void Main(string[] args)
         {
             //SadConsole.Settings.UnlimitedFPS = true;
@@ -77,30 +82,24 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
-            // Any setup
             //if (Settings.UnlimitedFPS)
             //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
 
+            // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
-
-            //SadConsole.Game.Instance.Window.Title = "DemoProject Core";
-
-            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
-            // We don't want to use that for the sample project so we'll remove it.
 
             // Splash screens show up at the start of the game.
             //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.PCBoot());
 
-            //GameHost.Instance.MouseState.ProcessMouseWhenOffScreen = true;
+            // The demo screen 
             MainConsole = new Container();
 
-            // We'll instead use our demo consoles that show various features of SadConsole.
-
+            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
+            // We don't want to use that for the sample project so we'll remove and then destroy it.
             Game.Instance.Screen = MainConsole;
             Game.Instance.DestroyDefaultStartingConsole();
 
-
-            // Initialize the windows
+            // Initialize the windows used by the global keyboard handler in Instance_FrameUpdate
             _characterWindow = new Windows.CharacterViewer(0);
         }
 
