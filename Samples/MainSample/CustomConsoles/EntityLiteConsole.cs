@@ -16,6 +16,8 @@ namespace FeatureDemo.CustomConsoles
         private Point playerPreviousPosition;
         private Renderer entityManager;
         private bool moveEntities;
+        private bool usePixelPositioning = false;
+        private bool useSmoothMovements = false;
 
         public EntityLiteConsole()
             : base(80, 23, 160, 46)
@@ -36,8 +38,13 @@ namespace FeatureDemo.CustomConsoles
             player = new Entity(Color.Yellow, Color.Black, 1, 100)
             {
                 //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
-                Position = new Point(0, 0)
+                Position = new Point(0, 0),
+                UsePixelPositioning = usePixelPositioning,
             };
+
+            // If we're allowing smooth movements, add the component
+            if (useSmoothMovements)
+                player.SadComponents.Add(new SadConsole.Components.SmoothMove(FontSize, new TimeSpan(0, 0, 0, 0, 300)));
 
             Surface.DefaultBackground = Color.DarkGray;
             Surface.Clear();
@@ -53,13 +60,16 @@ namespace FeatureDemo.CustomConsoles
 
             //Children.Add(player);
             others = new List<Entity>();
-            for (int i = 0; i < 2500; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var item = new Entity(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60), 0)
                 {
-                    //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
-                    Position = GetPosition()
+                    Position = GetRandomPosition(),
+                    UsePixelPositioning = usePixelPositioning,
                 };
+
+                if (useSmoothMovements)
+                    item.SadComponents.Add(new SadConsole.Components.SmoothMove(FontSize, new TimeSpan(0, 0, 0, 0, 300)));
 
                 if (Game.Instance.Random.Next(0, 500) < 50)
                     item.Effect = fadeEffect;
@@ -73,13 +83,15 @@ namespace FeatureDemo.CustomConsoles
             IsVisible = false;
         }
 
-        private Point GetPosition()
+        private Point GetRandomPosition()
         {
-            var position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46));
+            Point position = (0, 0);
 
             bool restart = false;
             for (int i = 0; i < 10; i++)
             {
+                position = new Point(SadConsole.Game.Instance.Random.Next(0, usePixelPositioning ? 160 * FontSize.X : 3), SadConsole.Game.Instance.Random.Next(0, usePixelPositioning ? 46 * FontSize.Y : 5));
+
                 foreach (var entity in entityManager.Entities)
                 {
                     if (entity.Position == position)
@@ -91,11 +103,6 @@ namespace FeatureDemo.CustomConsoles
 
                 if (!restart)
                     return position;
-                else
-                {
-                    restart = false;
-                    position = new Point(SadConsole.Game.Instance.Random.Next(0, 160), SadConsole.Game.Instance.Random.Next(0, 46));
-                }
             }
 
             return position;
@@ -112,55 +119,49 @@ namespace FeatureDemo.CustomConsoles
             // Process logic for moving the entity.
             bool keyHit = false;
             Point oldPosition = player.Position;
+            Point newPosition = (0, 0);
 
-            if (info.IsKeyPressed(Keys.W))
-            {
-                //player.Animation.Surface.AddDecorator(0, 2, new[] { new CellDecorator(Color.Green, 67, Mirror.None) });
-                keyHit = true;
-            }
+            // Toggles entity random movements
             if (info.IsKeyPressed(Keys.Q))
             {
                 moveEntities = !moveEntities;
-                keyHit = true;
             }
 
+            // Process UP/DOWN movements
             if (info.IsKeyPressed(Keys.Up))
             {
-                player.Position = new Point(player.Position.X, player.Position.Y - 1);
+                newPosition = player.Position + (0, -1);
                 keyHit = true;
             }
             else if (info.IsKeyPressed(Keys.Down))
             {
-                player.Position = new Point(player.Position.X, player.Position.Y + 1);
+                newPosition = player.Position + (0, 1);
                 keyHit = true;
             }
 
+            // Process LEFT/RIGHT movements
             if (info.IsKeyPressed(Keys.Left))
             {
-                player.Position = new Point(player.Position.X - 1, player.Position.Y);
+                newPosition = player.Position + (-1, 0);
                 keyHit = true;
             }
             else if (info.IsKeyPressed(Keys.Right))
             {
-                player.Position = new Point(player.Position.X + 1, player.Position.Y);
+                newPosition = player.Position + (1, 0);
                 keyHit = true;
             }
 
-
+            // If a movement key was pressed
             if (keyHit)
             {
                 // Check if the new position is valid
                 if (Surface.Area.Contains(player.Position))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
-                    Surface.SetGlyph(playerPreviousPosition.X, playerPreviousPosition.Y, 250);
-                    playerPreviousPosition = player.Position;
+                    Surface.SetGlyph(player.Position.X, player.Position.Y, 250);
+                    player.Position = newPosition;
 
                     return true;
-                }
-                else  // New position was not in the area of the console, move back
-                {
-                    player.Position = oldPosition;
                 }
             }
 
@@ -173,8 +174,7 @@ namespace FeatureDemo.CustomConsoles
         {
             base.Update(delta);
 
-            if (moveEntities)
-            foreach (var item in others)
+            if (moveEntities) foreach (var item in others)
             {
                 var newPosition = item.Position + new Point(Game.Instance.Random.Next(-1, 2), Game.Instance.Random.Next(-1, 2));
 

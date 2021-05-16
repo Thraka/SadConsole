@@ -58,7 +58,7 @@ namespace FeatureDemo
                 {
                     _characterWindow.Show(true);
                 }
-                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F3))
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F9))
                 {
                     //SadConsole.Debug.CurrentScreen.Show();
 #if MONOGAME
