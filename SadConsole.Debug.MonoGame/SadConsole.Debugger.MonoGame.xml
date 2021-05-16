@@ -9,6 +9,16 @@
             Initializes the debugger.
             </summary>
         </member>
+        <member name="T:SadConsole.Debug.MonoGame.ImGuiObjectCollection">
+            <summary>
+            A collection of <see cref="T:SadConsole.Debug.MonoGame.ImGuiObjectBase"/> objects that can be added to a ImGui renderer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.MonoGame.ImGuiObjectCollection.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
         <!-- Badly formed XML comment ignored for member "T:SadConsole.Debug.MonoGame.ImGuiRenderer" -->
         <member name="P:SadConsole.Debug.MonoGame.ImGuiRenderer.WantsMouseCapture">
             <summary>

@@ -11,10 +11,6 @@ namespace SadConsole.Debug.MonoGame
 {
     class GuiScreenObjects : ImGuiObjectBase
     {
-        public GuiScreenObjects()
-        {
-        }
-
         private float f = 0.0f;
         private bool _toggle_screenObj_doDraw;
         private bool show_test_window = false;

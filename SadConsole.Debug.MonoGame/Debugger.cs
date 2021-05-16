@@ -10,6 +10,8 @@ namespace SadConsole.Debug.MonoGame
 
         public static List<ImGuiObjectBase> GuiComponents => _imGui.UIComponents;
 
+        public static ImGuiRenderer Renderer => _imGui.ImGuiRenderer;
+
         public static bool IsOpened
         {
             get
