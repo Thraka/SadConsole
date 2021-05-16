@@ -1,9 +1,12 @@
-## v9.0 xxxx
+## v9.0 (05/XX/2021)
 
 - [ExtendedLib] Added `SadConsole.Transisions.Fade` instruction to easily allow fading between two objects.
 - Changed `Entity.Appearance` to protected.
 - Changed fonts to `IFont` and added `SadFont` which represents the font system SadConsole uses.
 - Merged code base back to normal develop branch!!
+- Control `DrawingSurface` renamed to `DrawingArea`
+- New control `SurfaceViewer` control which allows you to add a surface as a control with scroll bars to change the view of it.
+- `Control.Resize` now supported.
 
 ## v9.0 Beta 4 (01/14/2021)
 

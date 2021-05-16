@@ -13,6 +13,7 @@
 - SFML is *still* throwing in phantom keys when you type fast or use multiple keys are once.
 - Theme editor save on MonoGame fails due to absolute path.
 - !!!!!! InheritDoc breaks if the parameter name changes on a derived/implemented method.
+- Entity lite demonstration has a weird jitter at the top-left area of the console. Something with the way I'm doing the smooth move?
 
 ====== New Features
 
