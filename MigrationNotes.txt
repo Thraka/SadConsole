@@ -1,0 +1,94 @@
+====== Intro
+
+- A lot of structual changes to split out rendering from SadConsole. You now need to add SadConsole.Host.MonoGame or SadConsole.Host.SFML to your project.
+
+- All console's have a viewport again, eliminating the ScrollingConsole type. This is implemented in a few properties.
+  - ScrollingConsole.ViewPort -> Console.View
+
+- SadConsole.Global is gone. All properties moved to SadConsole.GameHost.Instance
+
+===== TODO
+
+- Write tests to check ListBox.SelectedIndex works with string values, number values, and objects.
+- SFML is *still* throwing in phantom keys when you type fast or use multiple keys are once.
+- Theme editor save on MonoGame fails due to absolute path.
+- !!!!!! InheritDoc breaks if the parameter name changes on a derived/implemented method.
+- Entity lite demonstration has a weird jitter at the top-left area of the console. Something with the way I'm doing the smooth move?
+
+====== New Features
+
+- Controls have a Tag property for user-definable data.
+- Window now has the following features:
+  - Shown event when the window is made visible.
+  - OnShown protected virtual method.
+  - OnHidden protected virtual method.
+  - DrawBorder replaces Invalidated method.
+- Draw/Update have restored the TimeSpan parameter.
+- Controls are hosted by a ControlHost component, allowing a GUI added to any console.
+- ControlsConsole and Window each derive from Console and have a Controls property of type ControlHost.
+- SadConsole.Global no longer exists. Properties from this static type now live in SadConsole.GameHost.Instance.
+- Renderer can now have RenderSteps added to them to inject custom rendering processing without creating a new renderer.
+
+====== Migration notes
+
+Core
+- (RENAME) Font/FontMaster -> Font
+- (RENAME) SadConsole.Global -> SadConsole.GameHost.Instance
+
+CellSurface/Console
+- (RENAME) Components -> SadComponents
+- (CHANGE) Console.New(surface) now wraps the existing surface, using its reference. Doesn't copy cells anymore.
+
+Console
+- (CHANGE) FontSize property is a point x,y size now no longer the enum. Use Font.GetFontSize
+
+ControlsConsole/Window
+- (RENAME) ViewPort -> View
+- (CHANGE) Themes removed
+
+Window
+- (RENAME) Invalidate/OnInvalidated -> DrawBorder
+- (CHANGE) DrawBorder is used to draw the border and title.
+- (CHANGE) No longer inherits from ControlsConsole.
+
+ControlsConsole
+- (CHANGE) No longer a specialized type. The ControlHost component was created and provides the entire controls framework.
+  This can be applied to any console. The ControlsConsole is now just a simple Console with this component automatically added.
+- (CHANGE) Controls are added to a ControlsConsole through the Controls property: MyControlsConsole.Add(control) is now MyControlsConsole.Controls.Add(control)
+
+ScrollingConsole
+- (MOVE) All ViewPort stuff is implemented on ICellSurface, meaning all surfaces can scroll.
+- (RENAME) ViewPort -> View
+
+LayeredConsole
+- (RENAME) LayeredScreenSurface
+
+Input
+- (RENAME) MouseConsoleState -> MouseScreenObjectState
+
+UI
+- (MOVE) SadConsole.Controls -> SadConsole.UI.Controls
+- (MOVE) SadConsole.Themes -> SadConsole.UI.Themes
+- (RENAME) ContainerConsole -> ScreenObject
+
+### Common namespace replacements
+
+| Old | New |
+| --- | --- |
+| `SadConsole.Controls`     | `SadConsole.UI.Controls`  |
+| `SadConsole.Themes`       | `SadConsole.UI.Themes`    |
+| `Microsoft.Xna.Framework` | `SadRogue.Primitives`     |
+
+### Common type replacements
+
+| Old | New |
+| --- | --- |
+| `Cell` | `ColoredGlyph` |
+| `ColorAnsi.Yellow` | `Color.AnsiYellow` |
+| `` | `` |
+| `` | `` |
+| `` | `` |
+| `` | `` |
+
+
+

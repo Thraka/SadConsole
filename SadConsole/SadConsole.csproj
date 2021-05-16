@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <AssemblyName>SadConsole</AssemblyName>
+    <DocumentationFile>SadConsole.xml</DocumentationFile>
+    <Version>9.0.0-beta4</Version>
+    <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
+    <Description>A library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.1.</Description>
+    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SadConsole</PackageId>
+    <PackageIcon>nugeticon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
+    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
+    <PackageReleaseNotes>Further changes to rendering. Minor bug fixes. GameHost adjustments.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!--
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+  -->
+
+  <ItemGroup>
+    <Compile Remove="Input\ConsoleViewInputHandler.cs" />
+    <Compile Remove="Input\MouseEventArgs.cs" />
+    <Compile Remove="SerializedTypes\AnimatedConsole.cs" />
+    <Compile Remove="SerializedTypes\CellSurface.cs" />
+    <Compile Remove="SerializedTypes\CellSurfaceLayer.cs" />
+    <Compile Remove="SerializedTypes\Console.cs" />
+    <Compile Remove="SerializedTypes\Entity.cs" />
+    <Compile Remove="SerializedTypes\ScreenObject.cs" />
+    <Compile Remove="SerializedTypes\ScrollingConsole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IBM8x16_NoPadding_extended.png" />
+    <EmbeddedResource Include="Resources\IBM_ext.font" />
+    <EmbeddedResource Include="Resources\IBM8x16.png" />
+    <EmbeddedResource Include="Resources\IBM.font" />
+    <None Include="Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Remove="SadConsole.xml" />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+</Project>

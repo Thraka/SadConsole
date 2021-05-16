@@ -1,1 +1,0 @@
-nuget pack SadConsole.nuspec -Symbols

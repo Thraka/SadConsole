@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Thraka",
+    "classifications": [
+        "Console",
+        "Roguelike",
+        "SadConsole",
+        "SFML"
+    ],
+    "identity": "SadConsole.Project.SFML.CSharp",
+    "groupIdentity":"SadConsole.Project.SFML",
+    "name": "SadConsole Game for SFML",
+    "shortName": "scgame-sfml",
+    "preferNameDirectory": true,
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "MyGame"
+}

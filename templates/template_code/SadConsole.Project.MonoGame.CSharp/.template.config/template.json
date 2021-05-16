@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Thraka",
+    "classifications": [
+        "Console",
+        "Roguelike",
+        "SadConsole",
+        "MonoGame"
+    ],
+    "identity": "SadConsole.Project.MonoGame.CSharp",
+    "groupIdentity":"SadConsole.Project.MonoGame",
+    "name": "SadConsole Game for MonoGame",
+    "shortName": "scgame-monogame",
+    "preferNameDirectory": true,
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "MyGame"
+}
