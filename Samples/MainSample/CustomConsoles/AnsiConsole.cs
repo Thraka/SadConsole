@@ -16,7 +16,7 @@ namespace FeatureDemo.CustomConsoles
             IsVisible = false;
             UseKeyboard = true;
             //files = SadConsole.Serializer.Load<string[]>("./ansi/files.json");
-            files = System.IO.Directory.GetFiles("./ansi").Where(f => !f.EndsWith("json")).ToArray();
+            files = System.IO.Directory.GetFiles("./Ansi").Where(f => !f.EndsWith("json")).ToArray();
 
             NextAnsi();
             LoadAnsi();

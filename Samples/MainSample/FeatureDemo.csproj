@@ -45,42 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Ansi\files.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ansi\QS-SIERR.ANS">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ansi\ROY-BTC1.ANS">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ansi\ROY-CCU3.ANS">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ansi\ROY-DGZN.ANS">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\Dawnlike2.atlas">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\Dawnlike2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\font.fnt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\font.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\C64.font">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Fonts\Yayo_c64.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\Images\sad.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
+    <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>
