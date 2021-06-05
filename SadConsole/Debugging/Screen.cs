@@ -17,11 +17,6 @@ namespace SadConsole.Debug
     /// </summary>
     public static class Screen
     {
-        static Screen()
-        {
-            SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(ScrollingSurfaceView), new ScrollingSurfaceView.ScrollingSurfaceViewTheme());
-        }
-
         /// <summary>
         /// Displays the debugger.
         /// </summary>
@@ -29,7 +24,7 @@ namespace SadConsole.Debug
         /// <param name="fontSize">The size of the font.</param>
         public static void Show(IFont font, Point fontSize)
         {
-            DebugWindow window = new DebugWindow(font);
+            DebugWindow window = new DebugWindow(font, fontSize);
             window.Show();
             window.Center();
         }
@@ -53,14 +48,14 @@ namespace SadConsole.Debug
             private readonly Button _buttonSetPosition;
             private readonly ListBox _listConsoles;
             private readonly CheckBox _checkIsVisible;
-            private readonly ScrollingSurfaceView _surfaceView;
+            private readonly SurfaceViewer _surfaceView;
 
             private bool _isReadingConsole;
 
-            public DebugWindow(IFont font) : base(78, 22)
+            public DebugWindow(IFont font, Point fontSize) : base(78, 22)
             {
                 Font = font;
-                FontSize = Font.GetFontSize(IFont.Sizes.One);
+                FontSize = fontSize;
 
                 var listboxTheme = (ListBoxTheme)Library.Default.GetControlTheme(typeof(ListBox));
                 listboxTheme.DrawBorder = true;
@@ -77,7 +72,7 @@ namespace SadConsole.Debug
                 Label label = CreateLabel("Current Screen", new Point(_listConsoles.Bounds.X, _listConsoles.Bounds.Y - 1));
                 label = CreateLabel("Selected Console: ", new Point(_listConsoles.Bounds.MaxExtentX + 2, label.Bounds.Y));
                 {
-                    _labelConsoleTitle = new Label(Width - label.Bounds.MaxExtentX) { Position = new Point(label.Bounds.MaxExtentX + 1, label.Bounds.Y) };
+                    _labelConsoleTitle = new Label(Width - label.Bounds.MaxExtentX - 2) { Position = new Point(label.Bounds.MaxExtentX + 1, label.Bounds.Y) };
                     Controls.Add(_labelConsoleTitle);
                 }
 
@@ -117,10 +112,10 @@ namespace SadConsole.Debug
                 Controls.Add(_buttonSetPosition);
                 _buttonSetPosition.Click += _buttonSetPosition_Click;
 
-                _surfaceView = new ScrollingSurfaceView(Width - 3 - _listConsoles.Bounds.MaxExtentX + 2, Height - 6 - _checkIsVisible.Bounds.MaxExtentY + 2)
+                _surfaceView = new SurfaceViewer(Width - 3 - _listConsoles.Bounds.MaxExtentX + 1, Height - 6 - _checkIsVisible.Bounds.MaxExtentY + 2)
                 {
-                    Theme = new ScrollingSurfaceView.ScrollingSurfaceViewTheme(),
-                    Position = new Point(_listConsoles.Bounds.MaxExtentX + 2, _checkIsVisible.Bounds.MaxExtentY + 1)
+                    Position = new Point(_listConsoles.Bounds.MaxExtentX + 2, _checkIsVisible.Bounds.MaxExtentY + 1),
+                    
                 };
                 Controls.Add(_surfaceView);
 
@@ -274,8 +269,10 @@ namespace SadConsole.Debug
                 {
                     _labelConsoleWidth.DisplayText = surface.Surface.Width.ToString();
                     _labelConsoleHeight.DisplayText = surface.Surface.Height.ToString();
-                    _surfaceView.SetTargetSurface(surface);
+                    _surfaceView.SetSurface(surface.Surface);
                 }
+                else
+                    _surfaceView.ResetSurface();
             }
 
             private bool _cellTrackOnControl;
@@ -330,231 +327,6 @@ namespace SadConsole.Debug
             }
 
             public override string ToString() => Title;
-        }
-
-        private class ScrollingSurfaceView : ControlBase
-        {
-            protected ScrollBar HorizontalBar;
-            protected ScrollBar VerticalBar;
-
-            protected ICellSurface SurfaceReference;
-            protected ScreenSurface SurfaceView;
-
-            protected int HorizontalBarY;
-            protected int VerticalBarX;
-
-            public ScrollingSurfaceView(int width, int height) : base(width, height)
-            {
-                HorizontalBar = new ScrollBar(Orientation.Horizontal, width - 1);
-                VerticalBar = new ScrollBar(Orientation.Vertical, height - 1);
-
-                HorizontalBar.Position = new Point(0, height - 1);
-                VerticalBar.Position = new Point(width - 1, 0);
-
-                HorizontalBar.ValueChanged += HorizontalBar_ValueChanged;
-                VerticalBar.ValueChanged += VerticalBar_ValueChanged;
-
-                HorizontalBar.IsEnabled = false;
-                VerticalBar.IsEnabled = false;
-                HorizontalBar.IsVisible = false;
-                VerticalBar.IsVisible = false;
-
-                MouseArea = new Rectangle(1, 1, width - 2, height - 2);
-            }
-
-            private void VerticalBar_ValueChanged(object sender, EventArgs e)
-            {
-                if (!((ScrollBar)sender).IsEnabled)
-                {
-                    return;
-                }
-
-                SurfaceView.Surface.View = SurfaceView.Surface.View.WithY(((ScrollBar)sender).Value);
-                IsDirty = true;
-            }
-
-            private void HorizontalBar_ValueChanged(object sender, EventArgs e)
-            {
-                if (!((ScrollBar)sender).IsEnabled)
-                {
-                    return;
-                }
-                SurfaceView.Surface.View = SurfaceView.Surface.View.WithX(((ScrollBar)sender).Value);
-                IsDirty = true;
-            }
-
-            protected override void OnParentChanged()
-            {
-                VerticalBar.Parent = Parent;
-                HorizontalBar.Parent = Parent;
-            }
-
-            protected override void OnPositionChanged()
-            {
-                VerticalBarX = Width - 1;
-                HorizontalBarY = Height - 1;
-                VerticalBar.Position = Position + new Point(VerticalBarX, 0);
-                HorizontalBar.Position = Position + new Point(0, HorizontalBarY);
-            }
-
-            public void SetTargetSurface(IScreenSurface surface)
-            {
-                SurfaceReference = null;
-                SurfaceView = null;
-
-                SurfaceReference = surface.Surface;
-                SurfaceView = new ScreenSurface(surface.Surface, Width - 2, Height - 2);
-                SurfaceView.Surface.DefaultBackground = surface.Surface.DefaultBackground;
-
-                if (SurfaceView.Surface.ViewWidth != SurfaceView.Surface.Width)
-                {
-                    HorizontalBar.IsEnabled = true;
-                    HorizontalBar.Maximum = SurfaceView.Surface.Width - SurfaceView.Surface.ViewWidth;
-                }
-                else
-                    HorizontalBar.IsEnabled = false;
-
-                if (SurfaceView.Surface.Height != SurfaceView.Surface.Height)
-                {
-                    VerticalBar.IsEnabled = true;
-                    VerticalBar.Maximum = SurfaceView.Surface.Height - SurfaceView.Surface.ViewHeight;
-                }
-                else
-                    VerticalBar.IsEnabled = false;
-
-                VerticalBar.Value = 0;
-                HorizontalBar.Value = 0;
-
-                IsDirty = true;
-            }
-
-            public override bool ProcessMouse(MouseScreenObjectState state)
-            {
-                if (IsEnabled)
-                {
-                    if (MouseState_IsMouseOver)
-                    {
-                        var newState = new ControlMouseState(this, state);
-                        Point mouseControlPosition = newState.MousePosition;
-
-                        if (mouseControlPosition.X == VerticalBarX)
-                            VerticalBar.ProcessMouse(state);
-
-                        if (mouseControlPosition.Y == HorizontalBarY)
-                            HorizontalBar.ProcessMouse(state);
-                    }
-                    else
-                    {
-                        base.ProcessMouse(state);
-                    }
-                }
-
-                return false;
-            }
-
-            public class ScrollingSurfaceViewTheme : SadConsole.UI.Themes.ThemeBase
-            {
-                public override void Attached(ControlBase control)
-                {
-                    control.Surface = new CellSurface(control.Width, control.Height);
-
-                    base.Attached(control);
-                }
-
-                public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-                {
-                    if (!(control is ScrollingSurfaceView scroller))
-                    {
-                        return;
-                    }
-
-                    if (!scroller.IsDirty)
-                    {
-                        return;
-                    }
-
-                    if (scroller.SurfaceView == null)
-                    {
-                        return;
-                    }
-
-                    RefreshTheme(control.FindThemeColors(), control);
-
-                    ColoredGlyph appearance = ControlThemeState.GetStateAppearance(scroller.State);
-
-                    scroller.Surface.DefaultBackground = scroller.SurfaceView.Surface.DefaultBackground;
-                    scroller.Surface.Clear();
-                    scroller.Surface.DrawBox(new Rectangle(0, 0, scroller.Surface.Width, scroller.Surface.Height), appearance, null, ICellSurface.ConnectedLineThin);
-                    scroller.SurfaceView.Surface.Copy(scroller.SurfaceView.Surface.View, scroller.Surface, 1, 1);
-
-                    //if (scroller.SurfaceReference is ControlsConsole controlsConsole)
-                    //{
-                    //    foreach (ControlBase childControl in controlsConsole.Controls)
-                    //    {
-                    //        for (int i = 0; i < childControl.Surface.Cells.Length; i++)
-                    //        {
-                    //            ref Cell cell = ref childControl.Surface.Cells[i];
-
-                    //            if (!cell.IsVisible)
-                    //            {
-                    //                continue;
-                    //            }
-
-                    //            Point cellRenderPosition = i.ToPoint(childControl.Surface.Width) + childControl.Position;
-
-                    //            if (!scroller.SurfaceView.ViewPort.Contains(cellRenderPosition - new Point(1)))
-                    //            {
-                    //                continue;
-                    //            }
-
-                    //            cell.CopyAppearanceTo(scroller.Surface[(cellRenderPosition - scroller.SurfaceView.ViewPort.Location).ToIndex(scroller.Surface.Width)]);
-                    //        }
-                    //    }
-                    //}
-
-                    scroller.VerticalBar.IsDirty = true;
-                    scroller.VerticalBar.Update(time);
-
-                    scroller.HorizontalBar.IsDirty = true;
-                    scroller.HorizontalBar.Update(time);
-
-                    for (int y = 0; y < scroller.VerticalBar.Height; y++)
-                    {
-                        scroller.Surface.SetGlyph(scroller.VerticalBarX, y, scroller.VerticalBar.Surface[0, y].Glyph);
-                        scroller.Surface.SetCellAppearance(scroller.VerticalBarX, y, scroller.VerticalBar.Surface[0, y]);
-                    }
-
-                    for (int x = 0; x < scroller.HorizontalBar.Width; x++)
-                    {
-                        scroller.Surface.SetGlyph(x, scroller.HorizontalBarY, scroller.HorizontalBar.Surface[x, 0].Glyph);
-                        scroller.Surface.SetCellAppearance(x, scroller.HorizontalBarY, scroller.HorizontalBar.Surface[x, 0]);
-                    }
-
-                    scroller.IsDirty = false;
-                }
-
-                public override UI.Themes.ThemeBase Clone() =>
-                    new ScrollingSurfaceViewTheme()
-                    {
-                        ControlThemeState = ControlThemeState
-                    };
-
-                public override void RefreshTheme(Colors themeColors, ControlBase control)
-                {
-                    if (themeColors == null) themeColors = UI.Themes.Library.Default.Colors;
-
-                    base.RefreshTheme(themeColors, control);
-
-                    ControlThemeState.SetForeground(ControlThemeState.Normal.Foreground);
-                    ControlThemeState.SetBackground(ControlThemeState.Normal.Background);
-                    var scroller = (ScrollingSurfaceView)control;
-
-                    scroller.VerticalBar.Theme = new ScrollBarTheme();
-                    scroller.HorizontalBar.Theme = new ScrollBarTheme();
-                    scroller.VerticalBar.Theme.RefreshTheme(themeColors, control);
-                    scroller.HorizontalBar.Theme.RefreshTheme(themeColors, control);
-                }
-            }
         }
     }
 }

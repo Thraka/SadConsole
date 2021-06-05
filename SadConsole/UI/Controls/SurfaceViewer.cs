@@ -105,7 +105,11 @@ namespace SadConsole.UI.Controls
         public void SetSurface(ICellSurface surface)
         {
             if (_surface == surface) return;
-            if (surface == null) throw new NullReferenceException($"Use the {nameof(ResetSurface)} method to remove the attached surface.");
+            if (surface == null)
+            {
+                ResetSurface();
+                return;
+            }
 
             if (_surface != null)
                 _surface.IsDirtyChanged -= _surface_IsDirtyChanged;

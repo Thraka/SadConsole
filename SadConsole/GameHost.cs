@@ -231,7 +231,7 @@ namespace SadConsole
             if (StartingConsole == null) return;
 
             if (Screen == StartingConsole)
-                throw new Exception($"{nameof(StartingConsole)} cannot be assigned to {nameof(Screen)} when removing the console.");
+                throw new Exception($"{nameof(Screen)} must be reassigned to a new instance before this method can be called.");
 
             StartingConsole.Dispose();
             StartingConsole = null;
