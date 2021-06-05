@@ -177,6 +177,16 @@
             A component to draw how many frames per second the engine is performing at.
             </summary>
         </member>
+        <member name="F:SadConsole.Host.Game.SadConsoleComponent">
+            <summary>
+            The game component to control SadConsole updates, input, and rendering.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Host.Game.ClearScreenComponent">
+            <summary>
+            The game component that clears the render output before each frame draw.
+            </summary>
+        </member>
         <member name="P:SadConsole.Host.Game.WindowWidth">
             <summary>
             The current game window width.
@@ -210,6 +220,23 @@
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
         </member>
+        <member name="T:SadConsole.Host.Game.SadConsoleGameComponent">
+            <summary>
+            A game component that handles updating, input, and rendering of SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.SadConsoleGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Draws the SadConsole frame through draw calls when <see cref="F:SadConsole.Settings.DoDraw"/> is true.
+            </summary>
+            <param name="gameTime">Time between drawing frames.</param>
+        </member>
+        <member name="M:SadConsole.Host.Game.SadConsoleGameComponent.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates the SadConsole game objects and handles input. Only runs when <see cref="F:SadConsole.Settings.DoUpdate"/> is true.
+            </summary>
+            <param name="gameTime"></param>
+        </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
             <summary>
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
@@ -225,6 +252,26 @@
             The blend state used when drawing surfaces to the screen.
             </summary>
         </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The MonoGame implementation of the SadConsole Game Host.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenWidth">
+            <summary>
+            Temporary variable to store the screen width before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenHeight">
+            <summary>
+            Temporary variable to store the screen height before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._handleResizeNone">
+            <summary>
+            Temporary variable to store the state of the <see cref="F:SadConsole.Settings.ResizeMode"/> when it's set to None, before going full screen.
+            </summary>
+        </member>
         <member name="P:SadConsole.Game.UseTitleContainer">
             <summary>
             When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
@@ -238,6 +285,11 @@
         <member name="P:SadConsole.Game.Instance">
             <summary>
             Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.#ctor">
+            <summary>
+            Creates an instance of the class.
             </summary>
         </member>
         <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action{SadConsole.Host.Game})">

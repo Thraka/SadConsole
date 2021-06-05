@@ -60,13 +60,13 @@ namespace FeatureDemo
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F9))
                 {
-                    //SadConsole.Debug.CurrentScreen.Show();
-#if MONOGAME
-                    if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
-                        SadConsole.Debug.MonoGame.Debugger.Start();
-                    else
-                        SadConsole.Debug.MonoGame.Debugger.Stop();
-#endif
+                    SadConsole.Debug.Screen.Show();
+//#if MONOGAME
+//                    if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
+//                        SadConsole.Debug.MonoGame.Debugger.Start();
+//                    else
+//                        SadConsole.Debug.MonoGame.Debugger.Stop();
+//#endif
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F5))
                 {

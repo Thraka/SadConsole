@@ -30,7 +30,6 @@ namespace SadConsole.UI.Controls
             AsNeeded
         }
 
-        private bool _isNullSurface;
         private ICellSurface _surface;
         private ScrollBarModes _scrollModes;
 
@@ -117,7 +116,6 @@ namespace SadConsole.UI.Controls
             _surface = new CellSurface(surface, Width, Height);
             _surface.DefaultBackground = surface.DefaultBackground;
             _surface.DefaultForeground = surface.DefaultForeground;
-            _isNullSurface = false;
 
             IsDirty = true;
 
@@ -137,7 +135,6 @@ namespace SadConsole.UI.Controls
             _surface = new CellSurface(1, 1);
             _surface.DefaultBackground = Color.Transparent;
             _surface.Clear();
-            _isNullSurface = true;
 
             IsDirty = true;
 

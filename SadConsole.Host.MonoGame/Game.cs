@@ -4,10 +4,24 @@ using SadRogue.Primitives;
 
 namespace SadConsole
 {
+    /// <summary>
+    /// The MonoGame implementation of the SadConsole Game Host.
+    /// </summary>
     public class Game : GameHost
     {
+        /// <summary>
+        /// Temporary variable to store the screen width before going full screen.
+        /// </summary>
         protected int _preFullScreenWidth;
+
+        /// <summary>
+        /// Temporary variable to store the screen height before going full screen.
+        /// </summary>
         protected int _preFullScreenHeight;
+
+        /// <summary>
+        /// Temporary variable to store the state of the <see cref="Settings.ResizeMode"/> when it's set to None, before going full screen.
+        /// </summary>
         protected bool _handleResizeNone;
 
         /// <summary>
@@ -31,6 +45,9 @@ namespace SadConsole
 
         internal string _font;
 
+        /// <summary>
+        /// Creates an instance of the class.
+        /// </summary>
         protected Game() { }
 
         /// <summary>
@@ -161,6 +178,8 @@ namespace SadConsole
                     Settings.ResizeMode = Settings.WindowResizeOptions.None;
                 }
             }
+
+            Instance.MonoGameInstance.ResetRendering();
         }
         
         /// <inheritdoc/>

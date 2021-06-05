@@ -12,7 +12,14 @@ namespace SadConsole.Host
         internal bool _resizeBusy = false;
         internal Action<Game> _initCallback;
 
+        /// <summary>
+        /// The game component to control SadConsole updates, input, and rendering.
+        /// </summary>
         public SadConsoleGameComponent SadConsoleComponent;
+
+        /// <summary>
+        /// The game component that clears the render output before each frame draw.
+        /// </summary>
         public ClearScreenGameComponent ClearScreenComponent;
 
         /// <summary>

@@ -9599,6 +9599,13 @@
             </summary>
             <param name="length">The initial length of the label without any text.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.Label.Resize(System.Int32,System.Int32)">
+            <summary>
+            Resizes the label but forces a height of 1.
+            </summary>
+            <param name="width">The width of the label.</param>
+            <param name="height">Not used.</param>
+        </member>
         <member name="T:SadConsole.UI.Controls.ListBox">
             <summary>
             A scrollable list control.

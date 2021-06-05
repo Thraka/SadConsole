@@ -64,6 +64,11 @@ namespace SadConsole.UI.Controls
         /// <param name="length">The initial length of the label without any text.</param>
         public Label(int length) : base(length, 1) => TabStop = false;
 
+        /// <summary>
+        /// Resizes the label but forces a height of 1.
+        /// </summary>
+        /// <param name="width">The width of the label.</param>
+        /// <param name="height">Not used.</param>
         public override void Resize(int width, int height) =>
             base.Resize(width, 1);
 

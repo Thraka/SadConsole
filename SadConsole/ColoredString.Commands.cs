@@ -102,7 +102,8 @@
                     catch (Exception e1)
                     {
 #if DEBUG
-                        throw e1;
+                        // Helps track down parsing bugs
+                        System.Diagnostics.Debugger.Break();
 #endif
                     }
                 }

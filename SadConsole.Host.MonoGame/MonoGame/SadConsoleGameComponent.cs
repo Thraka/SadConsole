@@ -5,6 +5,9 @@ namespace SadConsole.Host
 {
     public partial class Game
     {
+        /// <summary>
+        /// A game component that handles updating, input, and rendering of SadConsole.
+        /// </summary>
         public class SadConsoleGameComponent : DrawableGameComponent
         {
             internal SadConsoleGameComponent(Game game) : base(game)
@@ -13,6 +16,10 @@ namespace SadConsole.Host
                 UpdateOrder = 5;
             }
 
+            /// <summary>
+            /// Draws the SadConsole frame through draw calls when <see cref="SadConsole.Settings.DoDraw"/> is true.
+            /// </summary>
+            /// <param name="gameTime">Time between drawing frames.</param>
             public override void Draw(GameTime gameTime)
             {
                 if (SadConsole.Settings.DoDraw)
@@ -53,6 +60,10 @@ namespace SadConsole.Host
                 }
             }
 
+            /// <summary>
+            /// Updates the SadConsole game objects and handles input. Only runs when <see cref="SadConsole.Settings.DoUpdate"/> is true.
+            /// </summary>
+            /// <param name="gameTime"></param>
             public override void Update(GameTime gameTime)
             {
                 if (SadConsole.Settings.DoUpdate)

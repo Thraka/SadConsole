@@ -20,8 +20,8 @@ namespace SadConsole.UI.Controls
         [DataMember(Name = "ThemeColors")]
         private Colors _themeColors;
         private bool _isDirty;
-        protected int _width;
-        protected int _height;
+        private int _width;
+        private int _height;
 
         /// <summary>
         /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
