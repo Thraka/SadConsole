@@ -10,6 +10,7 @@ namespace FeatureDemo.Windows
     public class CharacterViewer : Window
     {
         private CharacterPicker _picker;
+        private Label _label;
         private int _selectedCharacter;
 
         public Mirror MirrorEffect { get { return _picker.MirrorSetting; } set { _picker.MirrorSetting = value; } }
@@ -26,15 +27,26 @@ namespace FeatureDemo.Windows
         }
 
         public CharacterViewer(int character)
-            : base(18, 18)
+            : base(20, 20)
         {
             Center();
             _picker = new CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBackgroundNormal, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
-            _picker.Position = new Point(1, 1);
+            _picker.Position = new Point(2, 1);
             _picker.SelectedCharacter = character;
-            _picker.UseFullClick = true;
+            _picker.UseFullClick = false;
             _picker.SelectedCharacterChanged += SelectedCharacterChangedOnControl;
             Controls.Add(_picker);
+
+            _label = new Label(Width - 6);
+            _label.TextColor = Color.White;
+            _label.Position = (1, _picker.Bounds.MaxExtentY + 2);
+            Controls.Add(_label);
+
+            var closeButton = new Button(7);
+            closeButton.Text = "Close";
+            closeButton.Position = (Width - 8, _label.Position.Y);
+            closeButton.Click += (s, e) => this.Hide();
+            Controls.Add(closeButton);
 
             this.CloseOnEscKey = true;
             this.Title = "Pick a character";
@@ -43,7 +55,24 @@ namespace FeatureDemo.Windows
         private void SelectedCharacterChangedOnControl(object sender, ValueChangedEventArgs<int> e)
         {
             SelectedCharacter = e.NewValue;
-            this.Hide();
+            _label.DisplayText = $"{SelectedCharacter} - {(char)SelectedCharacter}";
+            //this.Hide();
+        }
+
+        protected override void DrawBorder()
+        {
+            base.DrawBorder();
+
+            if (_picker == null) return;
+
+            var themeColors = Controls.GetThemeColors();
+
+            var fillStyle = new ColoredGlyph(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
+            var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
+
+            Surface.DrawLine(new Point(0, _picker.Bounds.MaxExtentY + 1), new Point(Width, _picker.Bounds.MaxExtentY + 1), BorderLineStyle[0], borderStyle.Foreground);
+            Surface.ConnectLines(BorderLineStyle);
+            
         }
     }
 
