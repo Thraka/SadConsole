@@ -4,7 +4,7 @@ using SadConsole.Input;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
-namespace Game
+namespace BasicTerminal
 {
     internal class Program
     {

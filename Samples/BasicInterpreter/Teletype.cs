@@ -7,7 +7,7 @@ using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 
-namespace Game
+namespace BasicTerminal
 {
     class ConsoleBASICInterpreter : SadConsole.Components.IComponent, ITeletype, ITeletypeWithPosition
     {

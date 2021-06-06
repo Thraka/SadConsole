@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using ClassicBasic.Interpreter;
 
-namespace Game
+namespace BasicTerminal
 {
     /// <summary>
     /// Executes the code.

@@ -9,8 +9,8 @@
     ],
     "identity": "SadConsole.Project.MonoGame.CSharp",
     "groupIdentity":"SadConsole.Project.MonoGame",
-    "name": "SadConsole Game for MonoGame",
-    "shortName": "scgame-monogame",
+    "name": "SadConsole Game (MonoGame)",
+    "shortName": "sadconsole-mg",
     "preferNameDirectory": true,
     "tags": {
         "language": "C#",
