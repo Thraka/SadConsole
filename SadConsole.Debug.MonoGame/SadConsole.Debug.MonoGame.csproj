@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>SadConsole.Debug.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Debugger.MonoGame.xml</DocumentationFile>
-    <Version>9.0.0-beta4</Version>
-    <!--COMMENT OUT DURING BETA <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>-->
+    <Version>9.0.0</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -35,9 +35,10 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-beta4" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0" />
 
-    <ProjectReference Include="..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.0.0" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />

@@ -1,4 +1,4 @@
-## v9.0 (05/XX/2021)
+## v9.0 (06/05/2021)
 
 - [ExtendedLib] Added `SadConsole.Transisions.Fade` instruction to easily allow fading between two objects.
 - Changed `Entity.Appearance` to protected.
