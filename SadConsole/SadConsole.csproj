@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Further changes to rendering. Minor bug fixes. GameHost adjustments.</PackageReleaseNotes>
+    <PackageReleaseNotes>Initial release of SadConsole v9.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!--
