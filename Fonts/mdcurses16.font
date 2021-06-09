@@ -1,4 +1,5 @@
 {
+  "$type": "SadConsole.SadFont, SadConsole",
   "FilePath": "Md_curses_16x16.png",
   "GlyphHeight": 16,
   "GlyphPadding": 0,
