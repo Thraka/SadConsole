@@ -1,3 +1,7 @@
+## v9.0.1 (06/XX/2021)
+
+- ListBox can display colored strings now.
+
 ## v9.0 (06/05/2021)
 
 - [ExtendedLib] Added `SadConsole.Transisions.Fade` instruction to easily allow fading between two objects.
