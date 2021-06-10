@@ -54,7 +54,13 @@ namespace FeatureDemo.CustomConsoles
             };
             listbox.Items.Add("item 1");
             listbox.Items.Add("item 2");
-            listbox.Items.Add("item 3");
+            listbox.Items.Add(new ColoredString(new ColoredGlyph(Color.AnsiGreenBright, Color.DarkGreen, 'i'),
+                                                new ColoredGlyph(Color.AnsiCyanBright, Color.AnsiCyan, 't'),
+                                                new ColoredGlyph(Color.DarkGreen, Color.DarkGray, 'e'),
+                                                new ColoredGlyph(Color.YellowGreen, Color.DarkGray, 'm'),
+                                                new ColoredGlyph(Color.Turquoise, Color.DarkGray, ' '),
+                                                new ColoredGlyph(Color.Tomato, Color.DarkGray, '3')
+                                                ));
             listbox.Items.Add("item 4");
             listbox.Items.Add("item 5");
             listbox.Items.Add("item 6");

@@ -42,7 +42,7 @@ namespace FeatureDemo.CustomConsoles
             // Load the logo and convert to a console
             ICellSurface logo;// = sadImage.ToSurface(TextureConvertMode.Background, sadImage.Width / (int)(defaultFontSize.X * defaultFontSizeRatio.Y), sadImage.Height / (int)(defaultFontSize.Y * defaultFontSizeRatio.X));
 
-            if (defaultFontSizeRatio.X == 0 && defaultFontSizeRatio.Y == 0)
+            if (defaultFontSizeRatio.X == 1 && defaultFontSizeRatio.Y == 1)
                 logo = sadImage.ToSurface(TextureConvertMode.Foreground, Width, Height - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
             else if (defaultFontSizeRatio.Y > defaultFontSizeRatio.X)
                 logo = sadImage.ToSurface(TextureConvertMode.Foreground, (int)((Height - 1)* defaultFontSizeRatio.Y), Height - 1, foregroundStyle: TextureConvertForegroundStyle.Block);
