@@ -1,7 +1,7 @@
 ![SadConsole Logo](images/SadConsoleLogo.gif)
 
 
-[![Chat on discord](https://img.shields.io/discord/501465397518925843.svg)](https://discord.gg/mttxqAs)
+[![Chat on discord](https://img.shields.io/discord/501465397518925843.svg)](https://discord.gg/pAFNKYjczM)
 [![Join us on Reddit](https://img.shields.io/badge/reddit-SadConsole-red.svg)](http://reddit.com/r/sadconsole)
 [![NuGet](https://img.shields.io/nuget/v/SadConsole.svg)][nuget]
 
