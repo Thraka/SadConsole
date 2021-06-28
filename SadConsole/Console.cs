@@ -106,6 +106,13 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Updates the cursor's target surface with the new instance.
+        /// </summary>
+        /// <param name="oldSurface">The previous surface.</param>
+        protected override void OnSurfaceChanged(ICellSurface oldSurface) =>
+            Cursor.ChangeTarget(this);
+
+        /// <summary>
         /// Returns the value "Console".
         /// </summary>
         /// <returns>The string "Console".</returns>
@@ -116,9 +123,11 @@ namespace SadConsole
         private void OnDeserialized(StreamingContext context)
         {
             Cursor = SadComponents.OfType<Cursor>().FirstOrDefault();
-
+            
             if (Cursor == null)
                 throw new System.Exception("Cursor not deserialized. Perhaps it was removed? A cursor should always be available on the console.");
+
+            Cursor.ChangeTarget(this);
         }
     }
 }
