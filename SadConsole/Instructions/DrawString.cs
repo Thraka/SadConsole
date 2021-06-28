@@ -7,6 +7,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// Draws a string to a console as if someone was typing.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Draw string")]
     public class DrawString : InstructionBase
     {
         private ColoredString _text;

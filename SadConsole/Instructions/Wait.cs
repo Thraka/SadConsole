@@ -5,6 +5,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// Represents an instruction to pause for a specified duration.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Wait")]
     public class Wait : InstructionBase
     {
         private bool _started = false;

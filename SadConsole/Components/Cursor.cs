@@ -9,6 +9,7 @@ namespace SadConsole.Components
     /// <summary>
     /// A cursor that is attached to a <see cref="Console"/> used for printing.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Cursor")]
     public class Cursor: IComponent
     {
         private ICellSurface _editor;

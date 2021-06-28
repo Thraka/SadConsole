@@ -6,6 +6,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// A set of instructions to be executed sequentially.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Set")]
     public class InstructionSet : InstructionBase
     {
         private LinkedListNode<InstructionBase> _currentInstructionNode;

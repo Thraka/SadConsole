@@ -14,6 +14,7 @@ namespace SadConsole.UI
     /// <summary>
     /// Adds the ability for a host to contain and display controls from <see cref="SadConsole.UI.Controls"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("UI host")]
     public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, IList<ControlBase>, IContainer
     {
         /// <summary>

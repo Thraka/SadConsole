@@ -11,6 +11,7 @@ namespace SadConsole.Entities
     /// Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="IScreenSurface"/> visible area.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Entity host")]
     public class Renderer : Components.UpdateComponent
     {
         private bool _isAttached;

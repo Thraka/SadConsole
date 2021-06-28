@@ -5,6 +5,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// An function that applies an <see cref="EasingFunctions.EasingBase"/> function between two values.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Animated value")]
     public class AnimatedValue: Wait
     {
         /// <summary>

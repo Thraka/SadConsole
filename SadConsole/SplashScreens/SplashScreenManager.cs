@@ -7,6 +7,7 @@ namespace SadConsole.SplashScreens
     /// <summary>
     /// GameHost use only. Use the <see cref="CheckRun"/> method to show any splash screens after <see cref="GameHost.OnStart"/> was called.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Splashscreen Manager")]
     public class SplashScreenManager: ScreenObject
     {
         /// <summary>

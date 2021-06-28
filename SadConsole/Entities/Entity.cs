@@ -21,7 +21,6 @@ namespace SadConsole.Entities
         /// </summary>
         public event EventHandler IsDirtyChanged;
 
-        [DataMember(Name = "Appearance")]
         private ColoredGlyph _glyph;
 
         private ICellEffect _effect;

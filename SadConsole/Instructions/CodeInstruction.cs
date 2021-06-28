@@ -5,6 +5,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// An instruction with a code callback.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Code")]
     public class CodeInstruction : InstructionBase
     {
         private Func<IScreenObject, TimeSpan, bool> _callback;

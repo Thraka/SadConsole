@@ -7623,6 +7623,11 @@
             Common serialization tasks for SadConsole.
             </summary>
         </member>
+        <member name="T:SadConsole.Serializer.Contracts">
+            <summary>
+            Registers the default converters for SadConsole objects, when needed.
+            </summary>
+        </member>
         <member name="P:SadConsole.Serializer.Settings">
             <summary>
             The settings to use during <see cref="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)"/> and <see cref="M:SadConsole.Serializer.Load``1(System.String,System.Boolean)"/>.
