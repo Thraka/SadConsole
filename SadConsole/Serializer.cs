@@ -19,8 +19,10 @@ namespace SadConsole
             _settings.ContractResolver = new Contracts();
         }
 
-
-        private class Contracts: DefaultContractResolver
+        /// <summary>
+        /// Registers the default converters for SadConsole objects, when needed.
+        /// </summary>
+        public class Contracts: DefaultContractResolver
         {
             protected override JsonContract CreateContract(Type objectType)
             {
