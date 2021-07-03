@@ -19,6 +19,9 @@ namespace SadConsole
         [DataMember(Name = "Children")]
         private IScreenObject[] _childrenSerialized;
 
+        [DataMember(Name = "ChildrenLocked")]
+        private bool _isChildrenLocked;
+
         [DataMember(Name = "Components")]
         private IComponent[] _componentsSerialized;
 
@@ -320,13 +323,13 @@ namespace SadConsole
         /// Called when a component is added to the <see cref="SadComponents"/> collection.
         /// </summary>
         /// <param name="component">The component added.</param>
-        protected virtual void SadComponentAdded(IComponent component) { }
+        protected virtual void OnSadComponentAdded(IComponent component) { }
 
         /// <summary>
         /// Called when a component is removed from the <see cref="SadComponents"/> collection.
         /// </summary>
         /// <param name="component">The component removed.</param>
-        protected virtual void SadComponentRemoved(IComponent component) { }
+        protected virtual void OnSadComponentRemoved(IComponent component) { }
 
         /// <inheritdoc/>
         public bool HasSadComponent<TComponent>(out TComponent component)
@@ -345,7 +348,6 @@ namespace SadConsole
             return false;
         }
 
-
         private void Components_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -353,34 +355,35 @@ namespace SadConsole
                 case NotifyCollectionChangedAction.Add:
                     foreach (object item in e.NewItems)
                     {
-                        FilterAddItem((IComponent)item);
+                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                         ((IComponent)item).OnAdded(this);
-                        SadComponentAdded((IComponent)item);
+                        OnSadComponentAdded((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (object item in e.OldItems)
                     {
-                        FilterRemoveItem((IComponent)item);
+                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                         ((IComponent)item).OnRemoved(this);
-                        SadComponentRemoved((IComponent)item);
+                        OnSadComponentRemoved((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     foreach (object item in e.NewItems)
                     {
-                        FilterAddItem((IComponent)item);
+                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                         ((IComponent)item).OnAdded(this);
-                        SadComponentAdded((IComponent)item);
+                        OnSadComponentAdded((IComponent)item);
                     }
                     foreach (object item in e.OldItems)
                     {
-                        FilterRemoveItem((IComponent)item);
+                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                         ((IComponent)item).OnRemoved(this);
-                        SadComponentRemoved((IComponent)item);
+                        OnSadComponentRemoved((IComponent)item);
                     }
                     break;
                 case NotifyCollectionChangedAction.Move:
+                    SortComponents();
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     List<IComponent> items = new List<IComponent>(ComponentsRender.Count + ComponentsUpdate.Count + ComponentsKeyboard.Count + ComponentsMouse.Count);
@@ -392,7 +395,7 @@ namespace SadConsole
                         if (!items.Contains(ComponentsRender[0]))
                             items.Add(ComponentsRender[0]);
 
-                        FilterRemoveItem(ComponentsRender[0]);
+                        Components_FilterRemoveItem(ComponentsRender[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                     }
                     while (ComponentsUpdate.Count != 0)
                     {
@@ -401,7 +404,7 @@ namespace SadConsole
                         if (!items.Contains(ComponentsUpdate[0]))
                             items.Add(ComponentsUpdate[0]);
 
-                        FilterRemoveItem(ComponentsUpdate[0]);
+                        Components_FilterRemoveItem(ComponentsUpdate[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                     }
                     while (ComponentsKeyboard.Count != 0)
                     {
@@ -410,7 +413,7 @@ namespace SadConsole
                         if (!items.Contains(ComponentsKeyboard[0]))
                             items.Add(ComponentsKeyboard[0]);
 
-                        FilterRemoveItem(ComponentsKeyboard[0]);
+                        Components_FilterRemoveItem(ComponentsKeyboard[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                     }
                     while (ComponentsMouse.Count != 0)
                     {
@@ -419,7 +422,7 @@ namespace SadConsole
                         if (!items.Contains(ComponentsMouse[0]))
                             items.Add(ComponentsMouse[0]);
 
-                        FilterRemoveItem(ComponentsMouse[0]);
+                        Components_FilterRemoveItem(ComponentsMouse[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                     }
                     while (ComponentsEmpty.Count != 0)
                     {
@@ -428,91 +431,15 @@ namespace SadConsole
                         if (!items.Contains(ComponentsEmpty[0]))
                             items.Add(ComponentsEmpty[0]);
 
-                        FilterRemoveItem(ComponentsEmpty[0]);
+                        Components_FilterRemoveItem(ComponentsEmpty[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
                     }
 
                     foreach (IComponent item in items)
-                        SadComponentRemoved(item);
+                        OnSadComponentRemoved(item);
 
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
-
-            void FilterAddItem(IComponent component)
-            {
-                if (component.IsRender)
-                {
-                    if (!ComponentsRender.Contains(component))
-                        ComponentsRender.Add(component);
-                }
-
-                if (component.IsUpdate)
-                {
-                    if (!ComponentsUpdate.Contains(component))
-                        ComponentsUpdate.Add(component);
-                }
-
-                if (component.IsKeyboard)
-                {
-                    if (!ComponentsKeyboard.Contains(component))
-                        ComponentsKeyboard.Add(component);
-                }
-
-                if (component.IsMouse)
-                {
-                    if (!ComponentsMouse.Contains(component))
-                        ComponentsMouse.Add(component);
-                }
-
-                if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
-                {
-                    if (!ComponentsEmpty.Contains(component))
-                        ComponentsEmpty.Add(component);
-                }
-
-                ComponentsRender.Sort(CompareComponent);
-                ComponentsUpdate.Sort(CompareComponent);
-                ComponentsKeyboard.Sort(CompareComponent);
-                ComponentsMouse.Sort(CompareComponent);
-            }
-
-            void FilterRemoveItem(IComponent component)
-            {
-                if (component.IsRender)
-                {
-                    if (ComponentsRender.Contains(component))
-                        ComponentsRender.Remove(component);
-                }
-
-                if (component.IsUpdate)
-                {
-                    if (ComponentsUpdate.Contains(component))
-                        ComponentsUpdate.Remove(component);
-                }
-
-                if (component.IsKeyboard)
-                {
-                    if (ComponentsKeyboard.Contains(component))
-                        ComponentsKeyboard.Remove(component);
-                }
-
-                if (component.IsMouse)
-                {
-                    if (ComponentsMouse.Contains(component))
-                        ComponentsMouse.Remove(component);
-                }
-
-                if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
-                {
-                    if (!ComponentsEmpty.Contains(component))
-                        ComponentsEmpty.Remove(component);
-                }
-
-                ComponentsRender.Sort(CompareComponent);
-                ComponentsUpdate.Sort(CompareComponent);
-                ComponentsKeyboard.Sort(CompareComponent);
-                ComponentsMouse.Sort(CompareComponent);
             }
         }
 
@@ -568,17 +495,7 @@ namespace SadConsole
             ComponentsUpdate.Sort(CompareComponent);
             ComponentsKeyboard.Sort(CompareComponent);
             ComponentsMouse.Sort(CompareComponent);
-        }
-
-        static int CompareComponent(IComponent left, IComponent right)
-        {
-            if (left.SortOrder > right.SortOrder)
-                return 1;
-
-            if (left.SortOrder < right.SortOrder)
-                return -1;
-
-            return 0;
+            ComponentsEmpty.Sort(CompareComponent);
         }
 
         /// <summary>
@@ -597,6 +514,7 @@ namespace SadConsole
         {
             _childrenSerialized = Children.ToArray();
             _componentsSerialized = SadComponents.ToArray();
+            _isChildrenLocked = Children.IsLocked;
         }
 
         [OnSerialized]
@@ -615,10 +533,131 @@ namespace SadConsole
             foreach (IComponent item in _componentsSerialized)
                 SadComponents.Add(item);
 
+            Children.IsLocked = _isChildrenLocked;
+
             _componentsSerialized = null;
             _childrenSerialized = null;
 
             UpdateAbsolutePosition();
+        }
+
+
+        /// <summary>
+        /// Adds a component to the provided collections, based on its configuration.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="componentsRender">The render collection.</param>
+        /// <param name="componentsUpdate">The update collection.</param>
+        /// <param name="componentsKeyboard">The keyboard collection.</param>
+        /// <param name="componentsMouse">The mouse collection.</param>
+        /// <param name="componentsEmpty">The empty collection.</param>
+        public static void Components_FilterAddItem(IComponent component,
+                                                    List<IComponent> componentsRender,
+                                                    List<IComponent> componentsUpdate,
+                                                    List<IComponent> componentsKeyboard,
+                                                    List<IComponent> componentsMouse,
+                                                    List<IComponent> componentsEmpty)
+        {
+            if (component.IsRender)
+                if (!componentsRender.Contains(component))
+                    componentsRender.Add(component);
+
+            if (component.IsUpdate)
+                if (!componentsUpdate.Contains(component))
+                    componentsUpdate.Add(component);
+
+            if (component.IsKeyboard)
+                if (!componentsKeyboard.Contains(component))
+                    componentsKeyboard.Add(component);
+
+            if (component.IsMouse)
+                if (!componentsMouse.Contains(component))
+                    componentsMouse.Add(component);
+
+            if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                if (!componentsEmpty.Contains(component))
+                    componentsEmpty.Add(component);
+
+            componentsRender.Sort(CompareComponent);
+            componentsUpdate.Sort(CompareComponent);
+            componentsKeyboard.Sort(CompareComponent);
+            componentsMouse.Sort(CompareComponent);
+            componentsEmpty.Sort(CompareComponent);
+        }
+
+        /// <summary>
+        /// Removes a component to the provided collections, based on its configuration.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="componentsRender">The render collection.</param>
+        /// <param name="componentsUpdate">The update collection.</param>
+        /// <param name="componentsKeyboard">The keyboard collection.</param>
+        /// <param name="componentsMouse">The mouse collection.</param>
+        /// <param name="componentsEmpty">The empty collection.</param>
+        public static void Components_FilterRemoveItem(IComponent component,
+                                                        List<IComponent> componentsRender,
+                                                        List<IComponent> componentsUpdate,
+                                                        List<IComponent> componentsKeyboard,
+                                                        List<IComponent> componentsMouse,
+                                                        List<IComponent> componentsEmpty)
+        {
+            if (component.IsRender)
+                if (componentsRender.Contains(component))
+                    componentsRender.Remove(component);
+
+            if (component.IsUpdate)
+                if (componentsUpdate.Contains(component))
+                    componentsUpdate.Remove(component);
+
+            if (component.IsKeyboard)
+                if (componentsKeyboard.Contains(component))
+                    componentsKeyboard.Remove(component);
+
+            if (component.IsMouse)
+                if (componentsMouse.Contains(component))
+                    componentsMouse.Remove(component);
+
+            if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
+                if (!componentsEmpty.Contains(component))
+                    componentsEmpty.Remove(component);
+
+            componentsRender.Sort(CompareComponent);
+            componentsUpdate.Sort(CompareComponent);
+            componentsKeyboard.Sort(CompareComponent);
+            componentsMouse.Sort(CompareComponent);
+            componentsEmpty.Sort(CompareComponent);
+        }
+
+        /// <summary>
+        /// Helper to sort the components in the split collections.
+        /// </summary>
+        /// <param name="componentsRender">The render collection.</param>
+        /// <param name="componentsUpdate">The update collection.</param>
+        /// <param name="componentsKeyboard">The keyboard collection.</param>
+        /// <param name="componentsMouse">The mouse collection.</param>
+        /// <param name="componentsEmpty">The empty collection.</param>
+        public static void Components_Sort(List<IComponent> componentsRender,
+                                            List<IComponent> componentsUpdate,
+                                            List<IComponent> componentsKeyboard,
+                                            List<IComponent> componentsMouse,
+                                            List<IComponent> componentsEmpty)
+        {
+            componentsRender.Sort(CompareComponent);
+            componentsUpdate.Sort(CompareComponent);
+            componentsKeyboard.Sort(CompareComponent);
+            componentsMouse.Sort(CompareComponent);
+            componentsEmpty.Sort(CompareComponent);
+        }
+
+        static int CompareComponent(IComponent left, IComponent right)
+        {
+            if (left.SortOrder > right.SortOrder)
+                return 1;
+
+            if (left.SortOrder < right.SortOrder)
+                return -1;
+
+            return 0;
         }
     }
 }
