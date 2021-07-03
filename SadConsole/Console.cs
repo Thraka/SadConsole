@@ -110,7 +110,7 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldSurface">The previous surface.</param>
         protected override void OnSurfaceChanged(ICellSurface oldSurface) =>
-            Cursor.ChangeTarget(this);
+            Cursor?.ChangeTarget(this);
 
         /// <summary>
         /// Returns the value "Console".
