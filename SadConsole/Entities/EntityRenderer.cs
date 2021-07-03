@@ -14,7 +14,12 @@ namespace SadConsole.Entities
     [System.Diagnostics.DebuggerDisplay("Entity host")]
     public class Renderer : Components.UpdateComponent
     {
-        private bool _isAttached;
+        /// <summary>
+        /// Indicatest that the entity renderer has been added to a parent object.
+        /// </summary>
+        protected bool IsAttached;
+
+        private List<Entity> _entityHolding;
 
         /// <summary>
         /// The entities to process.
@@ -83,6 +88,13 @@ namespace SadConsole.Entities
         /// <param name="entity">The entity to add.</param>
         public void Add(Entity entity)
         {
+            // Temporary holding of the entities if there is no parent
+            if (!IsAttached)
+            {
+                AddHolding(entity);
+                return;
+            }
+
             if (_entities.Contains(entity)) return;
 
             _entities.Add(entity);
@@ -103,14 +115,20 @@ namespace SadConsole.Entities
         /// <param name="entities">The entities to add.</param>
         public void AddRange(IEnumerable<Entity> entities)
         {
+            // Temporary holding of the entities if there is no parent
+            if (!IsAttached)
+            {
+                AddHolding(entities);
+                return;
+            }
+
             foreach (Entity entity in entities)
             {
                 if (!_entities.Contains(entity))
                 {
                     _entities.Add(entity);
 
-                    if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
-                        _entitiesVisible.Add(entity);
+                    SetEntityVisibility(entity);
 
                     OnEntityAdded(entity);
                     OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
@@ -125,12 +143,40 @@ namespace SadConsole.Entities
             IsDirty = true;
         }
 
+        private bool AddHolding(IEnumerable<Entity> entities)
+        {
+            if (IsAttached) return false;
+
+            foreach (Entity item in entities)
+                AddHolding(item);
+
+            return true;
+        }
+
+        private bool AddHolding(Entity entity)
+        {
+            if (IsAttached) return false;
+
+            if (_entityHolding == null)
+                _entityHolding = new List<Entity>();
+
+            _entityHolding.Add(entity);
+
+            return true;
+        }
+
         /// <summary>
         /// Removes an entity from this manager.
         /// </summary>
         /// <param name="entity">The entity to remove.</param>
         public void Remove(Entity entity)
         {
+            if (!IsAttached)
+            {
+                _entityHolding.Remove(entity);
+                return;
+            }
+
             if (!_entities.Contains(entity)) return;
 
             entity.PositionChanged -= Entity_PositionChanged;
@@ -159,7 +205,13 @@ namespace SadConsole.Entities
             RenderStep.SetData(this);
             surface.RenderSteps.Add(RenderStep);
             _screen = surface;
-            _isAttached = true;
+            IsAttached = true;
+
+            if (_entityHolding != null)
+            {
+                AddRange(_entityHolding);
+                _entityHolding = null;
+            }
 
             UpdateCachedVisibilityArea();
         }
@@ -175,7 +227,20 @@ namespace SadConsole.Entities
             _screenCachedFontSize = Point.None;
             _screenCachedView = Rectangle.Empty;
 
-            _isAttached = false;
+            IsAttached = false;
+
+            // Removed, place existing entities into holding
+            _entityHolding = _entities;
+            _entities = new List<Entity>();
+            _entitiesVisible = new List<Entity>();
+
+            // Detatch events
+            foreach (Entity entity in _entityHolding)
+            {
+                entity.PositionChanged -= Entity_PositionChanged;
+                entity.VisibleChanged -= Entity_VisibleChanged;
+                entity.IsDirtyChanged -= Entity_IsDirtyChanged;
+            }
         }
 
         /// <inheritdoc/>
@@ -278,7 +343,12 @@ namespace SadConsole.Entities
         /// <param name="entity">The entity.</param>
         protected virtual void OnEntityRemoved(Entity entity) { }
 
-        private bool SetEntityVisibility(Entity entity)
+        /// <summary>
+        /// Detects a visibility state change of an entity and changes its internal list position.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
+        protected bool SetEntityVisibility(Entity entity)
         {
             bool isVisible = IsEntityVisible(entity.Position, entity.UsePixelPositioning);
             bool contains = _entitiesVisible.Contains(entity);
@@ -299,9 +369,12 @@ namespace SadConsole.Entities
             return isVisible;
         }
 
-        private void UpdateCachedVisibilityArea()
+        /// <summary>
+        /// Updates the cached view area based on the parent surface.
+        /// </summary>
+        protected void UpdateCachedVisibilityArea()
         {
-            if (!_isAttached) return;
+            if (!IsAttached) return;
 
             _offsetAreaPixels = _screen.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize).Expand(_screen.FontSize.X, _screen.FontSize.Y);
         }

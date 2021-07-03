@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
-using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
 namespace SadConsole.Entities
 {
-    // todo Fix serialization
     /// <summary>
     /// A positionable and animated game object.
     /// </summary>
@@ -23,7 +20,10 @@ namespace SadConsole.Entities
 
         private ColoredGlyph _glyph;
 
+        [DataMember(Name = "Effect")]
         private ICellEffect _effect;
+
+        [DataMember(Name = "Appearance")]
         private EffectsManager.ColoredGlyphState _effectState;
 
         /// <summary>
@@ -35,12 +35,12 @@ namespace SadConsole.Entities
         /// <summary>
         /// The drawing layer this entity is drawn at
         /// </summary>
+        [DataMember]
         public int ZIndex { get; set; }
 
         /// <summary>
         /// Represents what the entity looks like.
         /// </summary>
-        [DataMember]
         public ColoredGlyph Appearance
         {
             get => _glyph;
@@ -78,6 +78,10 @@ namespace SadConsole.Entities
                 {
                     if (_effect.RestoreCellOnRemoved)
                         _effectState.RestoreState(ref _glyph);
+                    else
+                        // If we keep what the effect did to the cell, then replace the state of the cell
+                        // with its latest.
+                        _effectState = new EffectsManager.ColoredGlyphState(_glyph);
                 }
 
                 if (value == null)
@@ -122,9 +126,15 @@ namespace SadConsole.Entities
         /// Creates a new entity, copying the provided appearance to this entity.
         /// </summary>
         /// <param name="appearance">The appearance of the entity.</param>
-        /// <param name="layer">The rendering order. Lower values are under higher values.</param>
-        public Entity(ColoredGlyph appearance, int layer): this(appearance.Foreground, appearance.Background, appearance.Glyph, layer) { }
+        /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+        public Entity(ColoredGlyph appearance, int zIndex) : this(appearance.Foreground, appearance.Background, appearance.Glyph, zIndex) { }
 
+        [JsonConstructor]
+        private Entity(EffectsManager.ColoredGlyphState appearance, ICellEffect effect)
+        {
+            Appearance = new ColoredGlyph(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror, appearance.IsVisible, appearance.Decorators);
+            Effect = effect;
+        }
 
         /// <inheritdoc />
         protected override void OnPositionChanged(Point oldPosition, Point newPosition)

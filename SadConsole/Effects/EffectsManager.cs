@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 
 namespace SadConsole.Effects
@@ -431,6 +432,20 @@ namespace SadConsole.Effects
                 IsVisible = cell.IsVisible;
                 Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
             }
+
+
+            [JsonConstructor]
+            private ColoredGlyphState(CellDecorator[] decorators, Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
+            {
+                Decorators = decorators;
+                Foreground = foreground;
+                Background = background;
+                Glyph = glyph;
+                Mirror = mirror;
+                IsVisible = isVisible;
+            }
+
+
 
             /// <summary>
             /// Restores this state to the specified cell.
