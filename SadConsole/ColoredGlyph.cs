@@ -21,11 +21,16 @@ namespace SadConsole
         private Mirror _mirror;
         private int _glyph;
         private bool _isDirty;
+        private CellDecorator[] _decorators = Array.Empty<CellDecorator>();
 
         /// <summary>
         /// Modifies the look of a cell with additional character. 
         /// </summary>
-        public CellDecorator[] Decorators { get; set; } = Array.Empty<CellDecorator>();
+        public CellDecorator[] Decorators
+        {
+            get => _decorators;
+            set { _decorators = value ?? Array.Empty<CellDecorator>(); IsDirty = true; }
+        }
 
         /// <summary>
         /// The foreground color of this cell.
