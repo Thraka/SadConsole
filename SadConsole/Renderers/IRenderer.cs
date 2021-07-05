@@ -37,5 +37,11 @@ namespace SadConsole.Renderers
         /// </summary>
         /// <param name="surface">Target surface.</param>
         void Render(IScreenSurface surface);
+
+        /// <summary>
+        /// Called when various states in the host change.
+        /// </summary>
+        /// <param name="host">The host that uses this component.</param>
+        public void OnHostUpdated(IScreenObject host) { }
     }
 }

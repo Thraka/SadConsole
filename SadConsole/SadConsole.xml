@@ -1436,12 +1436,6 @@
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
-        <member name="M:SadConsole.Components.Cursor.ChangeTarget(SadConsole.IScreenSurface)">
-            <summary>
-            Changes the target of the cursor. Careful, may desync the host if this component is added to one.
-            </summary>
-            <param name="surface">The target surface</param>
-        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.IScreenObject"/>.
@@ -1513,6 +1507,12 @@
             Called when the component is removed from the host.
             </summary>
             <param name="host">The host that removed the component.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
         </member>
         <member name="T:SadConsole.Components.InputConsoleComponent">
             <summary>
@@ -1846,12 +1846,6 @@
             <summary>
             Called when this console is focused. Shows the <see cref="P:SadConsole.Console.Cursor"/> if <see cref="P:SadConsole.Console.AutoCursorOnFocus"/> is <see langword="true"/>.
             </summary>
-        </member>
-        <member name="M:SadConsole.Console.OnSurfaceChanged(SadConsole.ICellSurface)">
-            <summary>
-            Updates the cursor's target surface with the new instance.
-            </summary>
-            <param name="oldSurface">The previous surface.</param>
         </member>
         <member name="M:SadConsole.Console.ToString">
             <summary>
@@ -6999,6 +6993,12 @@
             </summary>
             <param name="surface">Target surface.</param>
         </member>
+        <member name="M:SadConsole.Renderers.IRenderer.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
+        </member>
         <member name="T:SadConsole.Renderers.IRenderStep">
             <summary>
             A rendering step processed by an <see cref="T:SadConsole.Renderers.IRenderer"/>.
@@ -7043,6 +7043,12 @@
             </summary>
             <param name="renderer">The renderer the render step is using.</param>
             <param name="screenObject">The surface associated with the renderer. This may be null.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
         </member>
         <member name="T:SadConsole.Renderers.IRenderStepTexture">
             <summary>
@@ -7299,13 +7305,13 @@
         <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.SadComponentAdded(SadConsole.Components.IComponent)">
+        <member name="M:SadConsole.ScreenObject.OnSadComponentAdded(SadConsole.Components.IComponent)">
             <summary>
             Called when a component is added to the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
             </summary>
             <param name="component">The component added.</param>
         </member>
-        <member name="M:SadConsole.ScreenObject.SadComponentRemoved(SadConsole.Components.IComponent)">
+        <member name="M:SadConsole.ScreenObject.OnSadComponentRemoved(SadConsole.Components.IComponent)">
             <summary>
             Called when a component is removed from the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
             </summary>
@@ -7357,6 +7363,38 @@
             Nothing.
             </summary>
             <param name="context">Nothing.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_FilterAddItem(SadConsole.Components.IComponent,System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Adds a component to the provided collections, based on its configuration.
+            </summary>
+            <param name="component">The component.</param>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_FilterRemoveItem(SadConsole.Components.IComponent,System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Removes a component to the provided collections, based on its configuration.
+            </summary>
+            <param name="component">The component.</param>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_Sort(System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Helper to sort the components in the split collections.
+            </summary>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
         </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
@@ -7617,6 +7655,11 @@
             Returns the value "ScreenSurface".
             </summary>
             <returns>The string "ScreenSurface".</returns>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.CallOnHostUpdated">
+            <summary>
+            Calls the OnHostUpdated method on components, renderer, and rendersteps.
+            </summary>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>

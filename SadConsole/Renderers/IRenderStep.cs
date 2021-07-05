@@ -48,5 +48,11 @@ namespace SadConsole.Renderers
         /// <param name="renderer">The renderer the render step is using.</param>
         /// <param name="screenObject">The surface associated with the renderer. This may be null.</param>
         void Render(IRenderer renderer, IScreenSurface screenObject);
+
+        /// <summary>
+        /// Called when various states in the host change.
+        /// </summary>
+        /// <param name="host">The host that uses this component.</param>
+        public void OnHostUpdated(IScreenObject host) { }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole.Effects;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace SadConsole.Components
 {
@@ -10,12 +12,15 @@ namespace SadConsole.Components
     /// A cursor that is attached to a <see cref="Console"/> used for printing.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Cursor")]
+    [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Cursor: IComponent
     {
         private ICellSurface _editor;
         private Point _position = new Point();
         private EffectsManager.ColoredGlyphState _cursorRenderCellState;
         private ColoredGlyph _cursorRenderCell;
+        [DataMember]
         private bool _applyCursorEffect = true;
         private ICellEffect _cursorEffect;
         private Renderers.IRenderStep _cursorRenderStep;
@@ -28,6 +33,7 @@ namespace SadConsole.Components
         /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
+        [DataMember(Order = 0)]
         public ColoredGlyph CursorRenderCell
         {
             get => _cursorRenderCell;
@@ -41,16 +47,19 @@ namespace SadConsole.Components
         /// <summary>
         /// Appearance used when printing text. <see cref="PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
         /// </summary>
+        [DataMember]
         public ColoredGlyph PrintAppearance { get; set; }
 
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
         /// </summary>
+        [DataMember]
         public ICellEffect PrintEffect { get; set; }
 
         /// <summary>
         /// This is the cursor visible effect, like blinking.
         /// </summary>
+        [DataMember]
         public ICellEffect CursorEffect
         {
             get => _cursorEffect;
@@ -74,21 +83,25 @@ namespace SadConsole.Components
         /// <summary>
         /// When <see langword="true"/>, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
         /// </summary>
+        [DataMember]
         public bool PrintOnlyCharacterData { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, left-clicking on the host surface will reposition the cursor to the clicked position.
         /// </summary>
+        [DataMember]
         public bool MouseClickReposition { get; set; }
 
         /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
         /// </summary>
+        [DataMember]
         public bool IsVisible { get; set; }
 
         /// <summary>
         /// When <see langword="false"/>, prevents the cursor from running on the host.
         /// </summary>
+        [DataMember]
         public bool IsEnabled { get; set; }
 
         /// <summary>
@@ -110,11 +123,13 @@ namespace SadConsole.Components
         /// <summary>
         /// When <see langword="true"/>, applies the <see cref="PrintEffect"/> to the cursor when it prints.
         /// </summary>
+        [DataMember]
         public bool UsePrintEffect { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the location of the cursor on the console.
         /// </summary>
+        [DataMember]
         public Point Position
         {
             get => _position;
@@ -134,16 +149,19 @@ namespace SadConsole.Components
         /// <summary>
         /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
+        [DataMember]
         public bool DisableWordBreak { get; set; } = false;
 
         /// <summary>
         /// Enables linux-like string parsing where a \n behaves like a \r\n.
         /// </summary>
+        [DataMember]
         public bool UseLinuxLineEndings { get; set; } = false;
 
         /// <summary>
         /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
         /// </summary>
+        [DataMember]
         public bool UseStringParser { get; set; } = false;
 
         /// <summary>
@@ -167,11 +185,13 @@ namespace SadConsole.Components
         /// <summary>
         /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
         /// </summary>
+        [DataMember]
         public bool AutomaticallyShiftRowsUp { get; set; }
 
         /// <summary>
         /// Sets the sort order of this component within the host.
         /// </summary>
+        [DataMember]
         public uint SortOrder { get; set; }
 
         bool IComponent.IsUpdate => true;
@@ -855,13 +875,6 @@ namespace SadConsole.Components
                 RestartCursorEffect();
         }
 
-        /// <summary>
-        /// Changes the target of the cursor. Careful, may desync the host if this component is added to one.
-        /// </summary>
-        /// <param name="surface">The target surface</param>
-        public void ChangeTarget(IScreenSurface surface) =>
-            _editor = surface.Surface;
-
         void IComponent.OnAdded(IScreenObject host)
         {
             if (host is IScreenSurface surface)
@@ -885,6 +898,15 @@ namespace SadConsole.Components
                 _cursorRenderStep.Dispose();
                 _cursorRenderStep = null;
             }
+        }
+
+        void IComponent.OnHostUpdated(IScreenObject host)
+        {
+            if (host is IScreenSurface surface)
+                _editor = surface.Surface;
+
+            if (!_editor.IsValidCell(_position.X, _position.Y))
+                Position = (0, 0);
         }
     }
 }

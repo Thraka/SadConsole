@@ -74,5 +74,11 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="host">The host that removed the component.</param>
         void OnRemoved(IScreenObject host);
+
+        /// <summary>
+        /// Called when various states in the host change.
+        /// </summary>
+        /// <param name="host">The host that uses this component.</param>
+        public void OnHostUpdated(IScreenObject host) { }
     }
 }

@@ -12,7 +12,7 @@ namespace SadConsole.Entities
     /// </summary>
     [DataContract]
     [System.Diagnostics.DebuggerDisplay("Entity host")]
-    public class Renderer : Components.UpdateComponent
+    public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         /// <summary>
         /// Indicatest that the entity renderer has been added to a parent object.
@@ -242,6 +242,9 @@ namespace SadConsole.Entities
                 entity.IsDirtyChanged -= Entity_IsDirtyChanged;
             }
         }
+
+        void SadConsole.Components.IComponent.OnHostUpdated(IScreenObject host) =>
+            UpdateCachedVisibilityArea();
 
         /// <inheritdoc/>
         public override void Update(IScreenObject host, TimeSpan delta)
