@@ -10,6 +10,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// A render step that draws the <see cref="ScreenSurfaceRenderer._backingTexture"/> texture.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Output")]
     public class OutputSurfaceRenderStep : IRenderStep
     {
         ///  <inheritdoc/>

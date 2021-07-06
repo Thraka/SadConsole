@@ -15,6 +15,7 @@ namespace SadConsole.Renderers
     /// <remarks>
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
     /// </remarks>
+    [System.Diagnostics.DebuggerDisplay("Surface")]
     public class ScreenSurfaceRenderer : IRenderer
     {
         private Host.GameTexture _renderTexture;

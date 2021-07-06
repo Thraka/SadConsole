@@ -14,6 +14,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Draws a <see cref="SadConsole.IScreenSurface"/> object.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Surface")]
     public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     {
         private Host.GameTexture _cachedTexture;

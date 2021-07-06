@@ -8,6 +8,7 @@ namespace SadConsole.Components
     /// <summary>
     /// Draws an image on top of a console.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Image")]
     public class DrawImage : RenderComponent, IDisposable
     {
         private bool _hasFont;

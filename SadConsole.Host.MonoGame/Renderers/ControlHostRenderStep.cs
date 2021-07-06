@@ -14,6 +14,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Draws a <see cref="SadConsole.UI.ControlHost"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Control host")]
     public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     {
         private SadConsole.UI.ControlHost _controlsHost;
