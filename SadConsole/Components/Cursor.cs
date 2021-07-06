@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole.Effects;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace SadConsole.Components
 {
     /// <summary>
     /// A cursor that is attached to a <see cref="Console"/> used for printing.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Cursor")]
+    [DataContract]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class Cursor: IComponent
     {
+        private ColoredGlyphState _cursorCellOriginal;
+        private ICellEffect _cursorCellEffect;
+        private ColoredGlyph _cursorCell;
+
         private ICellSurface _editor;
         private Point _position = new Point();
-        private EffectsManager.ColoredGlyphState _cursorRenderCellState;
-        private ColoredGlyph _cursorRenderCell;
+        [DataMember]
         private bool _applyCursorEffect = true;
-        private ICellEffect _cursorEffect;
         private Renderers.IRenderStep _cursorRenderStep;
 
         /// <summary>
@@ -27,36 +34,49 @@ namespace SadConsole.Components
         /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
-        public ColoredGlyph CursorRenderCell
+        [DataMember(Order = 0)]
+        public ColoredGlyphState CursorRenderCell
         {
-            get => _cursorRenderCell;
+            get => _cursorCellOriginal;
             set
             {
-                _cursorRenderCell = value ?? throw new NullReferenceException("The render cell cannot be null. To hide the cursor, use the IsVisible property.");
-                _cursorRenderCellState = new EffectsManager.ColoredGlyphState(_cursorRenderCell);
+                _cursorCellOriginal = value;
+                _cursorCell = new ColoredGlyph();
+                value.RestoreState(ref _cursorCell);
+
+                _cursorCellEffect?.Restart();
             }
         }
+
+
+        /// <summary>
+        /// Used in rendering. The cell after the effect has been applied.
+        /// </summary>
+        public ColoredGlyph CursorRenderCellActiveState => _cursorCell;
 
         /// <summary>
         /// Appearance used when printing text. <see cref="PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
         /// </summary>
+        [DataMember]
         public ColoredGlyph PrintAppearance { get; set; }
 
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
         /// </summary>
+        [DataMember]
         public ICellEffect PrintEffect { get; set; }
 
         /// <summary>
         /// This is the cursor visible effect, like blinking.
         /// </summary>
-        public ICellEffect CursorEffect
+        [DataMember]
+        public ICellEffect CursorRenderEffect
         {
-            get => _cursorEffect;
+            get => _cursorCellEffect;
             set
             {
-                _cursorEffect = value;
-                _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+                _cursorCellEffect = value;
+                _cursorCellOriginal.RestoreState(ref _cursorCell);
             }
         }
 
@@ -66,32 +86,36 @@ namespace SadConsole.Components
         /// </summary>
         public int CursorGlyph
         {
-            get => _cursorRenderCell.Glyph;
-            set => CursorRenderCell = new ColoredGlyph(_cursorRenderCell.Foreground, _cursorRenderCell.Background, value);
+            get => _cursorCellOriginal.Glyph;
+            set => CursorRenderCell = new ColoredGlyph(_cursorCellOriginal.Foreground, _cursorCellOriginal.Background, value).ToState();
         }
 
         /// <summary>
         /// When <see langword="true"/>, indicates that the cursor, when printing, should not use the <see cref="PrintAppearance"/> property in determining the color/effect of the cell, but keep the cell the same as it was.
         /// </summary>
+        [DataMember]
         public bool PrintOnlyCharacterData { get; set; }
 
         /// <summary>
         /// When <see langword="true"/>, left-clicking on the host surface will reposition the cursor to the clicked position.
         /// </summary>
+        [DataMember]
         public bool MouseClickReposition { get; set; }
 
         /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
         /// </summary>
+        [DataMember]
         public bool IsVisible { get; set; }
 
         /// <summary>
         /// When <see langword="false"/>, prevents the cursor from running on the host.
         /// </summary>
+        [DataMember]
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// When <see langword="false"/>, prevents the <see cref="CursorEffect"/> from being applied.
+        /// When <see langword="false"/>, prevents the <see cref="CursorRenderEffect"/> from being applied.
         /// </summary>
         public bool ApplyCursorEffect
         {
@@ -101,19 +125,26 @@ namespace SadConsole.Components
                 _applyCursorEffect = value;
 
                 // If this is disabled, restore cell state
-                if (!_applyCursorEffect)
-                    _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+                if (!value)
+                    _cursorCellOriginal.RestoreState(ref _cursorCell);
+                else
+                {
+                    _cursorCellEffect?.Restart();
+                    _cursorCellEffect?.ApplyToCell(_cursorCell, _cursorCellOriginal);
+                }
             }
         }
 
         /// <summary>
         /// When <see langword="true"/>, applies the <see cref="PrintEffect"/> to the cursor when it prints.
         /// </summary>
+        [DataMember]
         public bool UsePrintEffect { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the location of the cursor on the console.
         /// </summary>
+        [DataMember]
         public Point Position
         {
             get => _position;
@@ -122,10 +153,16 @@ namespace SadConsole.Components
                 if (_editor != null)
                 {
                     if (!(value.X < 0 || value.X >= _editor.Width))
+                    {
                         _position = new Point(value.X, _position.Y);
+                        RestartCursorEffect();
+                    }
 
                     if (!(value.Y < 0 || value.Y >= _editor.Height))
+                    {
                         _position = new Point(_position.X, value.Y);
+                        RestartCursorEffect();
+                    }
                 }
             }
         }
@@ -133,16 +170,19 @@ namespace SadConsole.Components
         /// <summary>
         /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
+        [DataMember]
         public bool DisableWordBreak { get; set; } = false;
 
         /// <summary>
         /// Enables linux-like string parsing where a \n behaves like a \r\n.
         /// </summary>
+        [DataMember]
         public bool UseLinuxLineEndings { get; set; } = false;
 
         /// <summary>
         /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
         /// </summary>
+        [DataMember]
         public bool UseStringParser { get; set; } = false;
 
         /// <summary>
@@ -166,11 +206,13 @@ namespace SadConsole.Components
         /// <summary>
         /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
         /// </summary>
+        [DataMember]
         public bool AutomaticallyShiftRowsUp { get; set; }
 
         /// <summary>
         /// Sets the sort order of this component within the host.
         /// </summary>
+        [DataMember]
         public uint SortOrder { get; set; }
 
         bool IComponent.IsUpdate => true;
@@ -192,7 +234,7 @@ namespace SadConsole.Components
 
             PrintAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
-            CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph);
+            CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph).ToState();
 
             ApplyDefaultCursorEffect();
         }
@@ -209,31 +251,30 @@ namespace SadConsole.Components
         /// </summary>
         public Cursor ApplyDefaultCursorEffect()
         {
-            if (CursorEffect != null)
-                _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+            if (_cursorCellEffect != null)
+                _cursorCellOriginal.RestoreState(ref _cursorCell);
 
-            SadConsole.Effects.Blink blinkEffect = new Effects.Blink
+            CursorRenderEffect = new Effects.Blink
             {
                 BlinkSpeed = 0.35f
             };
-            CursorEffect = blinkEffect;
-            CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+            _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
             return this;
         }
 
         /// <summary>
-        /// Clones and reassigns <see cref="CursorEffect"/> to restart it.
+        /// Clones and reassigns <see cref="CursorRenderEffect"/> to restart it.
         /// </summary>
         /// <returns></returns>
         public Cursor RestartCursorEffect()
         {
-            if (CursorEffect == null) return this;
+            if (_cursorCellEffect == null) return this;
 
-            _cursorRenderCellState.RestoreState(ref _cursorRenderCell);
+            _cursorCellOriginal.RestoreState(ref _cursorCell);
 
-            CursorEffect = CursorEffect.Clone();
-            CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+            _cursorCellEffect.Restart();
+            _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
             return this;
         }
@@ -389,7 +430,8 @@ namespace SadConsole.Components
                 return this;
             }
 
-            CursorEffect?.Restart();
+            _cursorCellEffect?.Restart();
+            _cursorCellEffect?.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
             // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
             // Then use the pretty print system.
@@ -729,10 +771,10 @@ namespace SadConsole.Components
 
         void IComponent.Update(IScreenObject host, TimeSpan delta)
         {
-            if (IsVisible && _applyCursorEffect && CursorEffect != null)
+            if (IsVisible && _applyCursorEffect && _cursorCellEffect != null)
             {
-                CursorEffect.Update(delta.TotalSeconds);
-                CursorEffect.ApplyToCell(_cursorRenderCell, _cursorRenderCellState);
+                _cursorCellEffect.Update(delta.TotalSeconds);
+                _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
             }
         }
 
@@ -854,13 +896,6 @@ namespace SadConsole.Components
                 RestartCursorEffect();
         }
 
-        /// <summary>
-        /// Changes the target of the cursor. Careful, may desync the host if this component is added to one.
-        /// </summary>
-        /// <param name="surface">The target surface</param>
-        public void ChangeTarget(IScreenSurface surface) =>
-            _editor = surface.Surface;
-
         void IComponent.OnAdded(IScreenObject host)
         {
             if (host is IScreenSurface surface)
@@ -884,6 +919,15 @@ namespace SadConsole.Components
                 _cursorRenderStep.Dispose();
                 _cursorRenderStep = null;
             }
+        }
+
+        void IComponent.OnHostUpdated(IScreenObject host)
+        {
+            if (host is IScreenSurface surface)
+                _editor = surface.Surface;
+
+            if (!_editor.IsValidCell(_position.X, _position.Y))
+                Position = (0, 0);
         }
     }
 }

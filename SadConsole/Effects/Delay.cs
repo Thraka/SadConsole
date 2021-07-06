@@ -20,7 +20,7 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState state) => false;
+        public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState state) => false;
 
         /// <inheritdoc />
         public override ICellEffect Clone() => new Delay()

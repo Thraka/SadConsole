@@ -231,6 +231,11 @@ namespace SadConsole.UI.Themes
     /// </summary>
     public class ListBoxItemTheme : ThemeStates
     {
+        /// <summary>
+        /// Gets or sets a value to allow printing the background of a colored string. When <see langword="false"/>, the control state background is used.
+        /// </summary>
+        public bool UseColoredStringBackground { get; set; }
+
         /// <inheritdoc />
         public override void RefreshTheme(Colors themeColors)
         {
@@ -252,23 +257,39 @@ namespace SadConsole.UI.Themes
         /// <param name="itemState">The state of the item.</param>
         public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
-            string value = item.ToString();
-            if (value.Length < area.Width)
+            if (item is ColoredString colored)
             {
-                value += new string(' ', area.Width - value.Length);
-            }
-            else if (value.Length > area.Width)
-            {
-                value = value.Substring(0, area.Width);
-            }
+                ColoredString substring;
 
-            if (Helpers.HasFlag((int)itemState, (int)ControlStates.Selected) && !Helpers.HasFlag((int)itemState, (int)ControlStates.MouseOver))
-            {
-                control.Surface.Print(area.X, area.Y, value, Selected);
+                if (colored.Length > area.Width)
+                    substring = colored.SubString(0, area.Width);
+                else
+                    substring = colored.Clone();
+
+                if (Helpers.HasFlag((int)itemState, (int)ControlStates.Selected) && !Helpers.HasFlag((int)itemState, (int)ControlStates.MouseOver))
+                    control.Surface.Print(area.X, area.Y, substring.ToString(), Selected);
+                else if (Helpers.HasFlag((int)itemState, (int)ControlStates.MouseOver))
+                    control.Surface.Print(area.X, area.Y, substring.ToString(), MouseOver);
+                else
+                {
+                    substring.IgnoreBackground = !UseColoredStringBackground;
+                    control.Surface.Fill(area, background: Selected.Background);
+                    control.Surface.Print(area.X, area.Y, substring);
+                }
             }
             else
             {
-                control.Surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
+                string value = item.ToString();
+
+                if (value.Length < area.Width)
+                    value += new string(' ', area.Width - value.Length);
+                else if (value.Length > area.Width)
+                    value = value.Substring(0, area.Width);
+
+                if (Helpers.HasFlag((int)itemState, (int)ControlStates.Selected) && !Helpers.HasFlag((int)itemState, (int)ControlStates.MouseOver))
+                    control.Surface.Print(area.X, area.Y, value, Selected);
+                else
+                    control.Surface.Print(area.X, area.Y, value, GetStateAppearance(itemState));
             }
         }
 

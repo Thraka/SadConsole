@@ -120,17 +120,17 @@ namespace SadConsole
         void OnFocusLost();
 
         /// <summary>
-        /// Gets components of the specified types.
-        /// </summary>
-        /// <typeparam name="TComponent">The component to find</typeparam>
-        /// <returns>The components found.</returns>
-        TComponent GetSadComponent<TComponent>() where TComponent : class, IComponent;
-
-        /// <summary>
         /// Gets the first component of the specified type.
         /// </summary>
         /// <typeparam name="TComponent">The component to find.</typeparam>
         /// <returns>The component if found, otherwise null.</returns>
+        TComponent GetSadComponent<TComponent>() where TComponent : class, IComponent;
+
+        /// <summary>
+        /// Gets components of the specified types.
+        /// </summary>
+        /// <typeparam name="TComponent">The component to find</typeparam>
+        /// <returns>The components found.</returns>
         IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : class, IComponent;
 
         /// <summary>

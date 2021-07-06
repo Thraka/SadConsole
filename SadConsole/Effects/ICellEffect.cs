@@ -35,7 +35,7 @@
         /// </summary>
         /// <param name="cell">The surface cell using this effect.</param>
         /// <param name="originalState">The state of the cell prior to the effect being applied.</param>
-        bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState);
+        bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState);
 
         /// <summary>
         /// Updates the state of the effect.

@@ -11,6 +11,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Renders the dimmed background screen when a window is modal.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Window")]
     public class WindowRenderStep : IRenderStep
     {
         ///  <inheritdoc/>

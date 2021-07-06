@@ -25,14 +25,14 @@ namespace SadConsole.Effects
         /// </summary>
         public double Duration { get; set; }
 
-        private readonly Func<CodeEffect, ColoredGlyph, EffectsManager.ColoredGlyphState, bool> _applyAction;
+        private readonly Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> _applyAction;
         private readonly Action<CodeEffect, double> _updateAction;
         private readonly Action<CodeEffect> _restartAction;
 
-        public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, EffectsManager.ColoredGlyphState, bool> apply, Action<CodeEffect, double> update, Action<CodeEffect> restart) =>
+        public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, double> update, Action<CodeEffect> restart) =>
             (Id, _applyAction, _updateAction, _restartAction) = (id, apply, update, restart);
 
-        public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState) =>
+        public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState) =>
             _applyAction(this, cell, originalState);
 
         public override ICellEffect Clone() => throw new NotSupportedException();

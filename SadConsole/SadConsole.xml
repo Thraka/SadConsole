@@ -933,6 +933,12 @@
             Resets the foreground, background, glyph, and mirror effect.
             </summary>
         </member>
+        <member name="M:SadConsole.ColoredGlyph.ToState">
+            <summary>
+            Copies the settings of this colored glyph into a new state object.
+            </summary>
+            <returns>The state of this colored glyph.</returns>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.Clone">
             <summary>
             Returns a new cell with the same properties as this one.
@@ -955,6 +961,63 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.ColoredGlyphState">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Decorators">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Foreground">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Background">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Glyph">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Mirror">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.IsVisible">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
+            <summary>
+            Creates a new state from a cell.
+            </summary>
+            <param name="cell">The colored glyph this state is a copy of.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.CellDecorator[],SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean)">
+            <summary>
+            Creates a new state.
+            </summary>
+            <param name="decorators">Decorators for the cell.</param>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+            <param name="mirror">The mirror effect.</param>
+            <param name="isVisible">The visiblity of the glyph.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
+            <summary>
+            Restores this state to the specified cell.
+            </summary>
         </member>
         <member name="T:SadConsole.ColoredString">
             <summary>
@@ -1197,6 +1260,11 @@
             Cell used to render the cursor on the screen.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.Cursor.CursorRenderCellActiveState">
+            <summary>
+            Used in rendering. The cell after the effect has been applied.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.Cursor.PrintAppearance">
             <summary>
             Appearance used when printing text. <see cref="P:SadConsole.Components.Cursor.PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
@@ -1207,7 +1275,7 @@
             This effect is applied to each cell printed by the cursor.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.Cursor.CursorEffect">
+        <member name="P:SadConsole.Components.Cursor.CursorRenderEffect">
             <summary>
             This is the cursor visible effect, like blinking.
             </summary>
@@ -1239,7 +1307,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.ApplyCursorEffect">
             <summary>
-            When <see langword="false"/>, prevents the <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> from being applied.
+            When <see langword="false"/>, prevents the <see cref="P:SadConsole.Components.Cursor.CursorRenderEffect"/> from being applied.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UsePrintEffect">
@@ -1305,7 +1373,7 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.RestartCursorEffect">
             <summary>
-            Clones and reassigns <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> to restart it.
+            Clones and reassigns <see cref="P:SadConsole.Components.Cursor.CursorRenderEffect"/> to restart it.
             </summary>
             <returns></returns>
         </member>
@@ -1436,12 +1504,6 @@
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
-        <member name="M:SadConsole.Components.Cursor.ChangeTarget(SadConsole.IScreenSurface)">
-            <summary>
-            Changes the target of the cursor. Careful, may desync the host if this component is added to one.
-            </summary>
-            <param name="surface">The target surface</param>
-        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.IScreenObject"/>.
@@ -1513,6 +1575,12 @@
             Called when the component is removed from the host.
             </summary>
             <param name="host">The host that removed the component.</param>
+        </member>
+        <member name="M:SadConsole.Components.IComponent.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
         </member>
         <member name="T:SadConsole.Components.InputConsoleComponent">
             <summary>
@@ -2040,7 +2108,7 @@
             Creates a new instance of the blink effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Blink.Update(System.Double)">
@@ -2077,7 +2145,7 @@
             Creates an instance of the blink glyph effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.Update(System.Double)">
@@ -2129,7 +2197,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CellEffectBase.Update(System.Double)">
@@ -2169,7 +2237,7 @@
         <member name="M:SadConsole.Effects.Delay.Update(System.Double)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Delay.Clone">
@@ -2208,7 +2276,7 @@
             Disables the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.EffectsChain.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.EffectsChain.Update(System.Double)">
@@ -2375,52 +2443,6 @@
             <param name="cell">The cell to generate a state from.</param>
             <param name="cellIndex">The index of the cell in the parent surface.</param>
         </member>
-        <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphState">
-            <summary>
-            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Decorators">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Foreground">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Background">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Glyph">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Mirror">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.IsVisible">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
-            <summary>
-            Creates a new state from a cell.
-            </summary>
-            <param name="cell">The colored glyph this state is a copy of.</param>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
-            <summary>
-            Restores this state to the specified cell.
-            </summary>
-        </member>
         <member name="T:SadConsole.Effects.Fade">
             <summary>
             Fades both the background and foreground to seperate colors.
@@ -2491,7 +2513,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Update(System.Double)">
@@ -2533,7 +2555,7 @@
             When <see langword="true"/>, indicates the <see cref="T:SadConsole.Effects.EffectsManager"/> should restore the cell to its original state.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <summary>
             Applies the state of the effect to a cell.
             </summary>
@@ -2587,7 +2609,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Recolor.Clone">
@@ -2657,7 +2679,7 @@
             Creates a new entity, copying the provided appearance to this entity.
             </summary>
             <param name="appearance">The appearance of the entity.</param>
-            <param name="layer">The rendering order. Lower values are under higher values.</param>
+            <param name="zIndex">The rendering order. Lower values are under higher values.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <inheritdoc />
@@ -2720,6 +2742,11 @@
         <member name="T:SadConsole.Entities.Renderer">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Renderer.IsAttached">
+            <summary>
+            Indicatest that the entity renderer has been added to a parent object.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Renderer._entities">
@@ -2835,6 +2862,18 @@
             Called when an entity is removed.
             </summary>
             <param name="entity">The entity.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.SetEntityVisibility(SadConsole.Entities.Entity)">
+            <summary>
+            Detects a visibility state change of an entity and changes its internal list position.
+            </summary>
+            <param name="entity"></param>
+            <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
+            <summary>
+            Updates the cached view area based on the parent surface.
+            </summary>
         </member>
         <member name="T:SadConsole.PointExtensions">
             <summary>
@@ -6343,17 +6382,17 @@
         </member>
         <member name="M:SadConsole.IScreenObject.GetSadComponent``1">
             <summary>
-            Gets components of the specified types.
-            </summary>
-            <typeparam name="TComponent">The component to find</typeparam>
-            <returns>The components found.</returns>
-        </member>
-        <member name="M:SadConsole.IScreenObject.GetSadComponents``1">
-            <summary>
             Gets the first component of the specified type.
             </summary>
             <typeparam name="TComponent">The component to find.</typeparam>
             <returns>The component if found, otherwise null.</returns>
+        </member>
+        <member name="M:SadConsole.IScreenObject.GetSadComponents``1">
+            <summary>
+            Gets components of the specified types.
+            </summary>
+            <typeparam name="TComponent">The component to find</typeparam>
+            <returns>The components found.</returns>
         </member>
         <member name="M:SadConsole.IScreenObject.HasSadComponent``1(``0@)">
             <summary>
@@ -6605,6 +6644,56 @@
             <summary>
             Calculates the cell color based on the surrounding colors of the image.
             </summary>
+        </member>
+        <member name="T:SadConsole.Quick.Keyboard">
+            <summary>
+            Adds keyboard-related extension methods for <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Quick.Keyboard.WithKeyboard(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean})">
+            <summary>
+            Adds a keyboard handler to a <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Keyboard.RemoveKeyboardHooks(SadConsole.IScreenObject)">
+            <summary>
+            Removes all of the keyboard hooks added with <see cref="M:SadConsole.Quick.Keyboard.WithKeyboard(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Keyboard.RemoveKeyboardHook(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean})">
+            <summary>
+            Removes the specified handler that was added with <see cref="M:SadConsole.Quick.Keyboard.WithKeyboard(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
+        </member>
+        <member name="T:SadConsole.Quick.Mouse">
+            <summary>
+            Adds mouse-related extension methods for <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Quick.Mouse.WithMouse(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean})">
+            <summary>
+            Adds a mouse handler to a <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Mouse.RemoveMouseHooks(SadConsole.IScreenObject)">
+            <summary>
+            Removes all of the mouse hooks added with <see cref="M:SadConsole.Quick.Mouse.WithMouse(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Mouse.RemoveMouseHook(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean})">
+            <summary>
+            Removes the specified handler that was added with <see cref="M:SadConsole.Quick.Mouse.WithMouse(SadConsole.IScreenObject,System.Func{SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
         </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>
@@ -6926,6 +7015,12 @@
             </summary>
             <param name="surface">Target surface.</param>
         </member>
+        <member name="M:SadConsole.Renderers.IRenderer.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
+        </member>
         <member name="T:SadConsole.Renderers.IRenderStep">
             <summary>
             A rendering step processed by an <see cref="T:SadConsole.Renderers.IRenderer"/>.
@@ -6970,6 +7065,12 @@
             </summary>
             <param name="renderer">The renderer the render step is using.</param>
             <param name="screenObject">The surface associated with the renderer. This may be null.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.IRenderStep.OnHostUpdated(SadConsole.IScreenObject)">
+            <summary>
+            Called when various states in the host change.
+            </summary>
+            <param name="host">The host that uses this component.</param>
         </member>
         <member name="T:SadConsole.Renderers.IRenderStepTexture">
             <summary>
@@ -7226,13 +7327,13 @@
         <member name="M:SadConsole.ScreenObject.GetSadComponent``1">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.ScreenObject.SadComponentAdded(SadConsole.Components.IComponent)">
+        <member name="M:SadConsole.ScreenObject.OnSadComponentAdded(SadConsole.Components.IComponent)">
             <summary>
             Called when a component is added to the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
             </summary>
             <param name="component">The component added.</param>
         </member>
-        <member name="M:SadConsole.ScreenObject.SadComponentRemoved(SadConsole.Components.IComponent)">
+        <member name="M:SadConsole.ScreenObject.OnSadComponentRemoved(SadConsole.Components.IComponent)">
             <summary>
             Called when a component is removed from the <see cref="P:SadConsole.ScreenObject.SadComponents"/> collection.
             </summary>
@@ -7284,6 +7385,38 @@
             Nothing.
             </summary>
             <param name="context">Nothing.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_FilterAddItem(SadConsole.Components.IComponent,System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Adds a component to the provided collections, based on its configuration.
+            </summary>
+            <param name="component">The component.</param>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_FilterRemoveItem(SadConsole.Components.IComponent,System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Removes a component to the provided collections, based on its configuration.
+            </summary>
+            <param name="component">The component.</param>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObject.Components_Sort(System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
+            <summary>
+            Helper to sort the components in the split collections.
+            </summary>
+            <param name="componentsRender">The render collection.</param>
+            <param name="componentsUpdate">The update collection.</param>
+            <param name="componentsKeyboard">The keyboard collection.</param>
+            <param name="componentsMouse">The mouse collection.</param>
+            <param name="componentsEmpty">The empty collection.</param>
         </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
@@ -7545,6 +7678,11 @@
             </summary>
             <returns>The string "ScreenSurface".</returns>
         </member>
+        <member name="M:SadConsole.ScreenSurface.CallOnHostUpdated">
+            <summary>
+            Calls the OnHostUpdated method on components, renderer, and rendersteps.
+            </summary>
+        </member>
         <member name="M:SadConsole.ScreenSurface.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
         </member>
@@ -7621,6 +7759,11 @@
         <member name="T:SadConsole.Serializer">
             <summary>
             Common serialization tasks for SadConsole.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Serializer.Contracts">
+            <summary>
+            Registers the default converters for SadConsole objects, when needed.
             </summary>
         </member>
         <member name="P:SadConsole.Serializer.Settings">
@@ -10660,6 +10803,11 @@
         <member name="T:SadConsole.UI.Themes.ListBoxItemTheme">
             <summary>
             A generic theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> item.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ListBoxItemTheme.UseColoredStringBackground">
+            <summary>
+            Gets or sets a value to allow printing the background of a colored string. When <see langword="false"/>, the control state background is used.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors)">

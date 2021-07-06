@@ -99,7 +99,7 @@ namespace SadConsole
         /// <summary>
         /// The surface the screen object represents.
         /// </summary>
-        ICellSurface Surface { get; }
+        ICellSurface Surface { get; set; }
 
         /// <summary>
         /// A tint used in rendering.

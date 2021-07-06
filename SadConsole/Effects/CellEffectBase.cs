@@ -58,7 +58,7 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public abstract bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState);
+        public abstract bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState);
 
         /// <inheritdoc />
         public virtual void Update(double gameTimeSeconds)

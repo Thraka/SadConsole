@@ -6,6 +6,7 @@ namespace SadConsole.SplashScreens
     /// <summary>
     /// A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Splashscreen: Simple")]
     public class Simple : ScreenSurface
     {
         private static string _title = " Powered by SadConsole ";

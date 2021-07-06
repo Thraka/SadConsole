@@ -1,3 +1,16 @@
+## v9.1.0 (07/05/2021)
+
+- `ListBox` can display colored strings now.
+- Serialization contracts type is exposed for deriving: `SadConsole.Serializer.Contracts`.
+- Some `On*` members of `ScreenSurface` weren't virtual; fixed.
+- `Cursor` changes it's cached surface when the parent object's surface changes.
+- `Cursor` bug fixes.
+- `Entity` is serializable now.
+- `Entities.Renderer` can now have entities added/removed without a host object.
+- Added new extension methods in the `SadConsole.Quick` namespace to speed up construction of objects.
+- `ScreenObject.SadComponentAdded/Removed` callbacks renamed to OnSadComponentAdded/Removed`.
+- `IScreenObject.Surface` can now be set.
+
 ## v9.0 (06/05/2021)
 
 - [ExtendedLib] Added `SadConsole.Transisions.Fade` instruction to easily allow fading between two objects.

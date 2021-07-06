@@ -17,6 +17,7 @@ namespace SadConsole.UI
     /// A basic console that can contain controls.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("UI Console")]
     public class ControlsConsole : Console
     {
         /// <summary>

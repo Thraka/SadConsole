@@ -7,6 +7,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// Runs one or more instructions at the same time. This instruction completes when all added instructions have finished.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Concurrent")]
     public class ConcurrentInstructions : InstructionBase
     {
         private IEnumerable<InstructionBase> _instructions;

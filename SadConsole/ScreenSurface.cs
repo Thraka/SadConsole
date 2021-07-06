@@ -62,7 +62,7 @@ namespace SadConsole
         public ICellSurface Surface
         {
             get => _surface;
-            protected set
+            set
             {
                 ICellSurface old = _surface;
 
@@ -74,6 +74,7 @@ namespace SadConsole
                 _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
 
                 OnSurfaceChanged(old);
+                CallOnHostUpdated();
             }
         }
 
@@ -301,19 +302,20 @@ namespace SadConsole
         /// </summary>
         /// <param name="oldFont">The font prior to the change.</param>
         /// <param name="oldFontSize">The font size prior to the change.</param>
-        protected void OnFontChanged(IFont oldFont, Point oldFontSize) { }
+        protected virtual void OnFontChanged(IFont oldFont, Point oldFontSize) { }
 
 
         /// <summary>
         /// Called when the <see cref="Surface"/> property is changed.
         /// </summary>
         /// <param name="oldSurface">The previous surface.</param>
-        protected void OnSurfaceChanged(ICellSurface oldSurface) { }
+        protected virtual void OnSurfaceChanged(ICellSurface oldSurface) { }
+            
 
         /// <summary>
         /// Called when the <see cref="Renderer"/> property is changed.
         /// </summary>
-        protected void OnRendererChanged() { }
+        protected virtual void OnRendererChanged() { }
 
         /// <summary>
         /// Returns the value "ScreenSurface".
@@ -321,6 +323,20 @@ namespace SadConsole
         /// <returns>The string "ScreenSurface".</returns>
         public override string ToString() =>
             "ScreenSurface";
+
+        /// <summary>
+        /// Calls the OnHostUpdated method on components, renderer, and rendersteps.
+        /// </summary>
+        public void CallOnHostUpdated()
+        {
+            foreach (IComponent component in SadComponents)
+                component.OnHostUpdated(this);
+
+            Renderer?.OnHostUpdated(this);
+
+            foreach (IRenderStep step in RenderSteps)
+                step.OnHostUpdated(this);
+        }
 
         /// <inheritdoc/>
         [OnDeserialized]

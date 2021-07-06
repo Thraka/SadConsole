@@ -5,6 +5,7 @@ namespace SadConsole.Components
     /// <summary>
     /// A simple timer with callback.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Timer")]
     public class Timer : Components.UpdateComponent
     {
         /// <summary>

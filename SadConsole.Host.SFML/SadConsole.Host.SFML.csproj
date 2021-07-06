@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>9.0.1</Version>
+    <Version>9.1.0</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -14,7 +14,6 @@
     <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.SFML</PackageId>
-    <PackageReleaseNotes>Adjusted rendering system yet again.</PackageReleaseNotes>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -26,6 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
+    <PackageReleaseNotes>Fix bug with rendering cursors.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.1.0" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0" />
     <PackageReference Include="SFML.Net" Version="2.5.0" />

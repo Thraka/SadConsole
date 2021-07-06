@@ -6,6 +6,7 @@ namespace SadConsole.SplashScreens
     /// <summary>
     /// A spashscreen that simulates an old computer boot up process.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Splashscreen: PC Boot")]
     public class PCBoot : ScreenSurface
     {
         private Instructions.InstructionSet _endAnimation;

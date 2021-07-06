@@ -52,7 +52,7 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
+        public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
             Color oldColor = cell.Foreground;
 
@@ -81,11 +81,13 @@ namespace SadConsole.Effects
                 {
                     _isOn = !_isOn;
                     _timeElapsed = 0.0d;
-                    _blinkCounter += 1;
 
-                    if (BlinkCount != -1 && _blinkCounter > (BlinkCount * 2))
+                    if (BlinkCount != -1)
                     {
-                        IsFinished = true;
+                        _blinkCounter += 1;
+
+                        if (BlinkCount != -1 && _blinkCounter > (BlinkCount * 2))
+                            IsFinished = true;
                     }
                 }
             }

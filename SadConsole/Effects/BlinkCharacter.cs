@@ -35,7 +35,7 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
+        public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
             int oldGlyph = cell.Glyph;
 

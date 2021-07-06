@@ -13,6 +13,7 @@ namespace SadConsole.UI
     /// Represents a windowed controls console.
     /// </summary>
     [DataContract]
+    [System.Diagnostics.DebuggerDisplay("Window")]
     public partial class Window : Console
     {
         /// <summary>

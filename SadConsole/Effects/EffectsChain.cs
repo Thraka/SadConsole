@@ -60,7 +60,7 @@ namespace SadConsole.Effects
         public void End() => _enabled = false;
 
         /// <inheritdoc />
-        public override bool ApplyToCell(ColoredGlyph cell, EffectsManager.ColoredGlyphState originalState)
+        public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
         {
             if (_activeEffect != null)
             {

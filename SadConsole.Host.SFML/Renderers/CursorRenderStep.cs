@@ -54,7 +54,7 @@ namespace SadConsole.Renderers
                         Point cursorPosition = screenObject.AbsoluteArea.Position + screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X, cursor.Position.Y - screenObject.Surface.ViewPosition.Y, screenObject.FontSize).Position;
 
                         GameHost.Instance.DrawCalls.Enqueue(
-                            new DrawCalls.DrawCallCell(cursor.CursorRenderCell,
+                            new DrawCalls.DrawCallCell(cursor.CursorRenderCellActiveState,
                                                         new Rectangle(cursorPosition.X, cursorPosition.Y, screenObject.FontSize.X, screenObject.FontSize.Y).ToIntRect(),
                                                         screenObject.Font,
                                                         true

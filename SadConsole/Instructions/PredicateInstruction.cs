@@ -5,6 +5,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// Instruction that waits until the code callback returns <see langword="true"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Predicate")]
     public class PredicateInstruction : InstructionBase
     {
         private Func<bool> _callback;

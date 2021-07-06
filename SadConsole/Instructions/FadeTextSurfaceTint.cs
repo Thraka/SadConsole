@@ -6,6 +6,7 @@ namespace SadConsole.Instructions
     /// <summary>
     /// Animates a color change to <see cref="ScreenSurface.Tint"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Instruction: Fade tint")]
     public class FadeTextSurfaceTint : AnimatedValue
     {
         private IScreenSurface _objectSurface;
