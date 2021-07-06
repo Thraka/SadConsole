@@ -933,6 +933,12 @@
             Resets the foreground, background, glyph, and mirror effect.
             </summary>
         </member>
+        <member name="M:SadConsole.ColoredGlyph.ToState">
+            <summary>
+            Copies the settings of this colored glyph into a new state object.
+            </summary>
+            <returns>The state of this colored glyph.</returns>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.Clone">
             <summary>
             Returns a new cell with the same properties as this one.
@@ -996,6 +1002,17 @@
             Creates a new state from a cell.
             </summary>
             <param name="cell">The colored glyph this state is a copy of.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.CellDecorator[],SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean)">
+            <summary>
+            Creates a new state.
+            </summary>
+            <param name="decorators">Decorators for the cell.</param>
+            <param name="foreground">Foreground color.</param>
+            <param name="background">Background color.</param>
+            <param name="glyph">The glyph index.</param>
+            <param name="mirror">The mirror effect.</param>
+            <param name="isVisible">The visiblity of the glyph.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
             <summary>
@@ -1243,6 +1260,11 @@
             Cell used to render the cursor on the screen.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.Cursor.CursorRenderCellActiveState">
+            <summary>
+            Used in rendering. The cell after the effect has been applied.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.Cursor.PrintAppearance">
             <summary>
             Appearance used when printing text. <see cref="P:SadConsole.Components.Cursor.PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
@@ -1253,7 +1275,7 @@
             This effect is applied to each cell printed by the cursor.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.Cursor.CursorEffect">
+        <member name="P:SadConsole.Components.Cursor.CursorRenderEffect">
             <summary>
             This is the cursor visible effect, like blinking.
             </summary>
@@ -1285,7 +1307,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.ApplyCursorEffect">
             <summary>
-            When <see langword="false"/>, prevents the <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> from being applied.
+            When <see langword="false"/>, prevents the <see cref="P:SadConsole.Components.Cursor.CursorRenderEffect"/> from being applied.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UsePrintEffect">
@@ -1351,7 +1373,7 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.RestartCursorEffect">
             <summary>
-            Clones and reassigns <see cref="P:SadConsole.Components.Cursor.CursorEffect"/> to restart it.
+            Clones and reassigns <see cref="P:SadConsole.Components.Cursor.CursorRenderEffect"/> to restart it.
             </summary>
             <returns></returns>
         </member>

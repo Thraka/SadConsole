@@ -11,6 +11,7 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Renders a cursor.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Cursor")]
     public class CursorRenderStep : IRenderStep
     {
         private Components.Cursor _cursor;
@@ -55,14 +56,14 @@ namespace SadConsole.Renderers
                     if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
                     {
                         GameHost.Instance.DrawCalls.Enqueue(
-                            new DrawCalls.DrawCallGlyph(cursor.CursorRenderCell,
+                            new DrawCalls.DrawCallGlyph(cursor.CursorRenderCellActiveState,
                                                         ((Host.GameTexture)screenObject.Font.Image).Texture,
                                                         new XnaRectangle(screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
                                                                                                     cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
                                                                                                     screenObject.FontSize).Translate(screenObject.AbsolutePosition).Position.ToMonoPoint(),
                                                                             screenObject.FontSize.ToMonoPoint()),
-                                                        screenObject.Font.SolidGlyphRectangle.ToMonoRectangle(),
-                                                        screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCell.Glyph).ToMonoRectangle()
+                                                        screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCellActiveState.Glyph).ToMonoRectangle(),
+                                                        screenObject.Font.SolidGlyphRectangle.ToMonoRectangle()
                                                         )
                             );
                     }

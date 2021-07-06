@@ -56,9 +56,17 @@ namespace SadConsole
             Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
         }
 
-
+        /// <summary>
+        /// Creates a new state.
+        /// </summary>
+        /// <param name="decorators">Decorators for the cell.</param>
+        /// <param name="foreground">Foreground color.</param>
+        /// <param name="background">Background color.</param>
+        /// <param name="glyph">The glyph index.</param>
+        /// <param name="mirror">The mirror effect.</param>
+        /// <param name="isVisible">The visiblity of the glyph.</param>
         [JsonConstructor]
-        private ColoredGlyphState(CellDecorator[] decorators, Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
+        public ColoredGlyphState(CellDecorator[] decorators, Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
         {
             Decorators = decorators;
             Foreground = foreground;
@@ -78,7 +86,11 @@ namespace SadConsole
             cell.Mirror = Mirror;
             cell.Glyph = Glyph;
             cell.IsVisible = IsVisible;
-            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
+
+            if (Decorators == null)
+                cell.Decorators = Array.Empty<CellDecorator>();
+            else
+                cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
         }
     }
 }

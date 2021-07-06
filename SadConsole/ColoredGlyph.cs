@@ -212,6 +212,13 @@ namespace SadConsole
             Decorators = Array.Empty<CellDecorator>();
         }
 
+        /// <summary>
+        /// Copies the settings of this colored glyph into a new state object.
+        /// </summary>
+        /// <returns>The state of this colored glyph.</returns>
+        public ColoredGlyphState ToState() =>
+            new ColoredGlyphState(this);
+
         /* TODO: Move this to extension methods in the actual Renderers library (monogame, gdi+, etc)
         /// <summary>
         /// Draws a single cell using the specified SpriteBatch.
