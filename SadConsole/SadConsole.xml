@@ -956,6 +956,52 @@
         <member name="M:SadConsole.ColoredGlyph.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.ColoredGlyphState">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Decorators">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Foreground">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Background">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Glyph">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.Mirror">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphState.IsVisible">
+            <summary>
+            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
+            <summary>
+            Creates a new state from a cell.
+            </summary>
+            <param name="cell">The colored glyph this state is a copy of.</param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
+            <summary>
+            Restores this state to the specified cell.
+            </summary>
+        </member>
         <member name="T:SadConsole.ColoredString">
             <summary>
             Represents a string that has foreground and background colors for each character in the string.
@@ -2040,7 +2086,7 @@
             Creates a new instance of the blink effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Blink.Update(System.Double)">
@@ -2077,7 +2123,7 @@
             Creates an instance of the blink glyph effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.Update(System.Double)">
@@ -2129,7 +2175,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CellEffectBase.Update(System.Double)">
@@ -2169,7 +2215,7 @@
         <member name="M:SadConsole.Effects.Delay.Update(System.Double)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Delay.Clone">
@@ -2208,7 +2254,7 @@
             Disables the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.EffectsChain.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.EffectsChain.Update(System.Double)">
@@ -2375,52 +2421,6 @@
             <param name="cell">The cell to generate a state from.</param>
             <param name="cellIndex">The index of the cell in the parent surface.</param>
         </member>
-        <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphState">
-            <summary>
-            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Decorators">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Foreground">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Background">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Glyph">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.Mirror">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Effects.EffectsManager.ColoredGlyphState.IsVisible">
-            <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
-            <summary>
-            Creates a new state from a cell.
-            </summary>
-            <param name="cell">The colored glyph this state is a copy of.</param>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
-            <summary>
-            Restores this state to the specified cell.
-            </summary>
-        </member>
         <member name="T:SadConsole.Effects.Fade">
             <summary>
             Fades both the background and foreground to seperate colors.
@@ -2491,7 +2491,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Update(System.Double)">
@@ -2533,7 +2533,7 @@
             When <see langword="true"/>, indicates the <see cref="T:SadConsole.Effects.EffectsManager"/> should restore the cell to its original state.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <summary>
             Applies the state of the effect to a cell.
             </summary>
@@ -2587,7 +2587,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.Effects.EffectsManager.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Recolor.Clone">

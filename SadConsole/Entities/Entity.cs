@@ -24,7 +24,7 @@ namespace SadConsole.Entities
         private ICellEffect _effect;
 
         [DataMember(Name = "Appearance")]
-        private EffectsManager.ColoredGlyphState _effectState;
+        private ColoredGlyphState _effectState;
 
         /// <summary>
         /// A friendly name of the game object.
@@ -49,7 +49,7 @@ namespace SadConsole.Entities
                 _glyph = value ?? throw new System.NullReferenceException();
                 IsDirty = true;
 
-                _effectState = new EffectsManager.ColoredGlyphState(value);
+                _effectState = new ColoredGlyphState(value);
             }
         }
 
@@ -81,7 +81,7 @@ namespace SadConsole.Entities
                     else
                         // If we keep what the effect did to the cell, then replace the state of the cell
                         // with its latest.
-                        _effectState = new EffectsManager.ColoredGlyphState(_glyph);
+                        _effectState = new ColoredGlyphState(_glyph);
                 }
 
                 if (value == null)
@@ -130,7 +130,7 @@ namespace SadConsole.Entities
         public Entity(ColoredGlyph appearance, int zIndex) : this(appearance.Foreground, appearance.Background, appearance.Glyph, zIndex) { }
 
         [JsonConstructor]
-        private Entity(EffectsManager.ColoredGlyphState appearance, ICellEffect effect)
+        private Entity(ColoredGlyphState appearance, ICellEffect effect)
         {
             Appearance = new ColoredGlyph(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror, appearance.IsVisible, appearance.Decorators);
             Effect = effect;

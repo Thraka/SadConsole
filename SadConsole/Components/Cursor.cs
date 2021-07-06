@@ -18,7 +18,7 @@ namespace SadConsole.Components
     {
         private ICellSurface _editor;
         private Point _position = new Point();
-        private EffectsManager.ColoredGlyphState _cursorRenderCellState;
+        private ColoredGlyphState _cursorRenderCellState;
         private ColoredGlyph _cursorRenderCell;
         [DataMember]
         private bool _applyCursorEffect = true;
@@ -40,7 +40,7 @@ namespace SadConsole.Components
             set
             {
                 _cursorRenderCell = value ?? throw new NullReferenceException("The render cell cannot be null. To hide the cursor, use the IsVisible property.");
-                _cursorRenderCellState = new EffectsManager.ColoredGlyphState(_cursorRenderCell);
+                _cursorRenderCellState = new ColoredGlyphState(_cursorRenderCell);
             }
         }
 
