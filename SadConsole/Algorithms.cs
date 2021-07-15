@@ -22,52 +22,44 @@ namespace SadConsole
         /// <summary>
         /// Plot the line from (x0, y0) to (x1, y1) using steep.
         /// </summary>
-        /// <param name="x0">The start x</param>
-        /// <param name="y0">The start y</param>
-        /// <param name="x1">The end x</param>
-        /// <param name="y1">The end y</param>
+        /// <param name="x1">The start x</param>
+        /// <param name="y1">The start y</param>
+        /// <param name="x2">The end x</param>
+        /// <param name="y2">The end y</param>
         /// <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
-        public static void Line(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
+        public static void Line(int x1, int y1, int x2, int y2, Func<int, int, bool> plot)
         {
-            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
-            if (steep) { Swap<int>(ref x0, ref y0); Swap<int>(ref x1, ref y1); }
-            if (x0 > x1) { Swap<int>(ref x0, ref x1); Swap<int>(ref y0, ref y1); }
-            int dX = (x1 - x0), dY = Math.Abs(y1 - y0), err = (dX / 2), ystep = (y0 < y1 ? 1 : -1), y = y0;
-
-            for (int x = x0; x <= x1; ++x)
+            int w = x2 - x1;
+            int h = y2 - y1;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+            if (!(longest > shortest))
             {
-                if (!(steep ? plot(y, x) : plot(x, y)))
-                {
-                    return;
-                }
-
-                err = err - dY;
-                if (err >= 0)
-                {
-                    continue;
-                }
-
-                y += ystep; err += dX;
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
             }
-        }
-
-        /// <summary>
-        /// Plot the line from (x0, y0) to (x1, y1) using an interpolation derived algorithm.
-        /// </summary>
-        /// <param name="x0">The start x</param>
-        /// <param name="y0">The start y</param>
-        /// <param name="x1">The end x</param>
-        /// <param name="y1">The end y</param>
-        /// <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
-        public static void Line2(int x0, int y0, int x1, int y1, Func<int, int, bool> plot)
-        {
-            int len = Math.Max(Math.Abs(x1 - x0), Math.Abs(y1 - y0));
-            for (int i = 0; i < len; i++)
+            int numerator = longest >> 1;
+            for (int i = 0; i <= longest; i++)
             {
-                float t = (float)i / len;
-                double x = Math.Round(x0 * (1.0 - t) + x1 * t);
-                double y = Math.Round(y0 * (1.0 - t) + y1 * t);
-                plot((int)x, (int)y);
+                plot(x1, y1);
+                numerator += shortest;
+                if (!(numerator < longest))
+                {
+                    numerator -= longest;
+                    x1 += dx1;
+                    y1 += dy1;
+                }
+                else
+                {
+                    x1 += dx2;
+                    y1 += dy2;
+                }
             }
         }
 
