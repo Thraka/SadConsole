@@ -39,9 +39,6 @@ namespace SadConsole.Components
 
         void IComponent.Render(IScreenObject host, TimeSpan delta) { }
 
-        void IComponent.ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled) =>
-            ProcessKeyboard(host, keyboard, out handled);
-
         void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
 

@@ -43,8 +43,5 @@ namespace SadConsole.Components
 
         void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
             handled = false;
-
-        void IComponent.Update(IScreenObject host, TimeSpan delta) =>
-            Update(host, delta);
     }
 }
