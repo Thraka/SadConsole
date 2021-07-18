@@ -52,7 +52,7 @@ namespace SadConsole.Host
                 
                 Game.GraphicsDevice.SetRenderTarget(null);
                 Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-                //Global.SharedSpriteBatch.Draw(BackingTexture, Vector2.Zero, XnaColor.White);
+                Global.SharedSpriteBatch.Draw(((GameTexture)surface.Renderer.Output).Texture, Vector2.Zero, XnaColor.White);
                 Global.SharedSpriteBatch.End();
             }
         }
