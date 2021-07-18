@@ -114,6 +114,7 @@ namespace SadConsole
 
             // Create the default console.
             StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+            StartingConsole.IsFocused = true;
             Screen = StartingConsole;
         }
 

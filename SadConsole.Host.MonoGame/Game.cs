@@ -91,6 +91,7 @@ namespace SadConsole
             LoadMappedColors();
 
             StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+            StartingConsole.IsFocused = true;
             Screen = StartingConsole;
 
             OnStart?.Invoke();
