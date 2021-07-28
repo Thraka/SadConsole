@@ -8,25 +8,25 @@ namespace SadConsole
         /// Glyph indexes for a thin line.
         /// </summary>
         public static int[] ConnectedLineThin => new[]
-          { 218, 196, 191,
-            179, 197, 179,
-            192, 196, 217,
+          { 218, 196, 191, // ┌─┐
+            179, 197, 179, // │┼│
+            192, 196, 217, // └─┘
 
-                 194,
-            195,      180,
-                 193};
+                 194,      //  ┬
+            195,      180, // ├ ┤
+                 193};     //  ┴
 
         /// <summary>
         /// Glyph indexes for a thick line.
         /// </summary>
         public static int[] ConnectedLineThick => new[]
-          { 201, 205, 187,
-            186, 206, 186,
-            200, 205, 188,
+          { 201, 205, 187, // ╔═╗
+            186, 206, 186, // ║╬║
+            200, 205, 188, // ╚═╝
 
-                 203,
-            204,      185,
-                 202};
+                 203,      //  ╦
+            204,      185, // ╠ ╣
+                 202};     //  ╩
 
         /// <summary>
         /// Glyph indexes for a thin line using a SadConsole extended font.
@@ -66,9 +66,10 @@ namespace SadConsole
         /// <summary>
         /// Returns a value that indicates a line style array is not null and contains the required number of elements.
         /// </summary>
+        /// <typeparam name="T">Type of the array.</typeparam>
         /// <param name="connectedLineStyle">The array to check based on the <see cref="ConnectedLineIndex"/> enum.</param>
         /// <returns>True when the line style is correct.</returns>
-        public static bool ValidateLineStyle(in int[] connectedLineStyle) =>
+        public static bool ValidateLineStyle<T>(in T[] connectedLineStyle) =>
             connectedLineStyle != null && connectedLineStyle.Length == Enum.GetValues(typeof(ConnectedLineIndex)).Length;
 
         /// <summary>
