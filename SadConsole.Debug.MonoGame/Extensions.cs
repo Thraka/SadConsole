@@ -16,10 +16,10 @@ namespace SadConsole
         {
             var debugger = obj.GetType()
                               .GetCustomAttributes(typeof(System.Diagnostics.DebuggerDisplayAttribute), true)
-                              .First()
+                              .FirstOrDefault()
                               as System.Diagnostics.DebuggerDisplayAttribute;
 
-            return debugger != null ? debugger.Value : obj.ToString();
+            return debugger?.Value ?? obj.ToString();
         }
     }
 }

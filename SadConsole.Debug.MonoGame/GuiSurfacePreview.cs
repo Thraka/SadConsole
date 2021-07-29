@@ -13,7 +13,7 @@ namespace SadConsole.Debug.MonoGame
             if (GuiState.ShowSurfacePreview)
             {
                 ImGui.SetNextWindowBgAlpha(1f);
-                ImGui.SetNextWindowSizeConstraints(new Vector2(200, 200), new Vector2(10000, 10000));
+                //ImGui.SetNextWindowSizeConstraints(new Vector2(200, 200), new Vector2(10000, 10000));
                 if (ImGui.Begin("Surface preview", ref GuiState.ShowSurfacePreview, ImGuiWindowFlags.HorizontalScrollbar))
                 {
                     // TODO:
@@ -39,8 +39,12 @@ namespace SadConsole.Debug.MonoGame
                             var textureSize = new Vector2(gameTexture.Width, gameTexture.Height);
 
                             //drawPointer.AddRectFilled(startPos, startPos + ImGui.GetWindowSize(), ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
-
+                            //ImGui.BeginChild("child_surface_preview", textureSize, false, ImGuiWindowFlags.HorizontalScrollbar);
                             ImGui.Image(texture, textureSize, Vector2.Zero, Vector2.One, Vector4.One, Vector4.One);
+                            //ImGui.EndChild();
+                            //ImGui.Separator();
+                            //ImGui.ArrowButton("somebbutton", ImGuiDir.Left);
+                            
                         }
                         else
                             ImGui.Text("Selected object doesn't have a renderer");

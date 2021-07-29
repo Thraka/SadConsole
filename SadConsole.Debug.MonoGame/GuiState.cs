@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
+using SadConsole.Numerics;
 
 namespace SadConsole.Debug.MonoGame
 {
@@ -8,9 +10,11 @@ namespace SadConsole.Debug.MonoGame
     {
         public static event EventHandler ShowSadConsoleRenderingChanged;
 
-        //private static bool _oldShowSadConsoleRendering;
+        public static FinalOutputWindow GuiFinalOutputWindow;
+
 
         public static bool ShowSurfacePreview = true;
+        public static bool ShowFinalPreview = true;
         public static bool ShutdownRequested;
         public static bool ShowSadConsoleRendering = false;
 
@@ -31,7 +35,7 @@ namespace SadConsole.Debug.MonoGame
             ShowSadConsoleRenderingChanged?.Invoke(null, EventArgs.Empty);
     }
 
-    class ScreenObjectState
+    public class ScreenObjectState
     {
         static int _identifier;
 
@@ -44,7 +48,12 @@ namespace SadConsole.Debug.MonoGame
         public int Width;
         public int Height;
 
+        public Vector4 Tint;
+
         public bool IsScreenSurface;
+
+        public int ComponentsSelectedItem;
+        public string[] Components;
 
         public static ScreenObjectState Create(IScreenObject obj)
         {
@@ -55,8 +64,9 @@ namespace SadConsole.Debug.MonoGame
                 Found = true
             };
 
+            
             state.Refresh();
-
+            state.RefreshComponents();
             return state;
         }
 
@@ -70,9 +80,22 @@ namespace SadConsole.Debug.MonoGame
                 IsScreenSurface = true;
                 Width = surface.Surface.Width;
                 Height = surface.Surface.Height;
+                Tint = surface.Tint.ToVector4();
             }
             else
                 IsScreenSurface = false;
+        }
+
+        public void RefreshComponents()
+        {
+            if (Object.SadComponents.Count == 0)
+                Components = Array.Empty<string>();
+            else
+            {
+                Components = new string[Object.SadComponents.Count];
+                for (int i = 0; i < Components.Length; i++)
+                    Components[i] = Object.SadComponents[i].GetDebuggerDisplayValue();
+            }
         }
     }
 }

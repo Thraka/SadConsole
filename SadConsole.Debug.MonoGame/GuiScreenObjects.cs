@@ -27,7 +27,6 @@ namespace SadConsole.Debug.MonoGame
                 System.Diagnostics.Debugger.Break();
             }
             
-            // 1.Show a simple window
             ImGui.Begin("Screen objects");
             {
                 // Screen objects list
@@ -57,62 +56,12 @@ namespace SadConsole.Debug.MonoGame
                 }
                 ImGui.EndChild();
 
+                // Show right-side properties
                 if (GuiState._selectedScreenObjectState != null)
                 {
                     ImGui.SameLine();
-                    ImGui.BeginChild("selected_object_pane", new Vector2(0, 300), false);
-                    {
-                        ///////
-                        // Position X
-                        ///////
-                        ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Position X: ");
-                        ImGui.SameLine();
-                        ImGui.SetNextItemWidth(100);
-                        if (ImGui.InputInt("##x", ref GuiState._selectedScreenObjectState.PositionX))
-                        {
-                            GuiState._selectedScreenObject.Position = GuiState._selectedScreenObject.Position.WithX(GuiState._selectedScreenObjectState.PositionX);
-                            GuiState._selectedScreenObjectState.Refresh();
-                        }
-
-                        ///////
-                        // Width
-                        ///////
-                        ImGui.SameLine();
-                        ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Width: ");
-                        ImGui.SameLine();
-                        ImGui.SetNextItemWidth(80);
-                        if (GuiState._selectedScreenObjectState.IsScreenSurface)
-                            ImGui.Text(((IScreenSurface)GuiState._selectedScreenObject).Surface.Width.ToString());
-                        else
-                            ImGui.Text("??");
-
-                        ///////
-                        // Position Y
-                        ///////
-                        ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Position Y: ");
-                        ImGui.SameLine();
-                        ImGui.SetNextItemWidth(100);
-                        if (ImGui.InputInt("##y", ref GuiState._selectedScreenObjectState.PositionY))
-                        {
-                            GuiState._selectedScreenObject.Position = GuiState._selectedScreenObject.Position.WithY(GuiState._selectedScreenObjectState.PositionY);
-                            GuiState._selectedScreenObjectState.Refresh();
-                        }
-
-                        ///////
-                        // Height
-                        ///////
-                        ImGui.SameLine();
-                        ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Height: ");
-                        ImGui.SameLine();
-                        ImGui.SetNextItemWidth(80);
-                        if (GuiState._selectedScreenObjectState.IsScreenSurface)
-                            ImGui.Text(((IScreenSurface)GuiState._selectedScreenObject).Surface.Height.ToString());
-                        else
-                            ImGui.Text("??");
-
-                        ImGui.Separator();
-                    }
-                    ImGui.EndChild();
+                    ImGuiObjects.ScreenObjectPanel.Begin("selected_object_panel", GuiState._selectedScreenObjectState);
+                    ImGuiObjects.ScreenObjectPanel.End();
                 }
 
                 ImGui.Separator();

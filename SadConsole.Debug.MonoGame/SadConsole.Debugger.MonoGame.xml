@@ -4,6 +4,25 @@
         <name>SadConsole.Debug.MonoGame</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Numerics.ColorExtensionsNumerics">
+            <summary>
+            Extensions to convert <see cref="T:System.Numerics.Vector4"/> to/from <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Numerics.ColorExtensionsNumerics.ToVector4(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector4"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
+        </member>
+        <member name="M:SadConsole.Numerics.ColorExtensionsNumerics.ToColor(System.Numerics.Vector4)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
+        </member>
         <member name="M:SadConsole.Debug.MonoGame.Debugger.BasicInit">
             <summary>
             Initializes the debugger.
