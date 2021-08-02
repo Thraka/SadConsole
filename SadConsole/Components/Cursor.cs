@@ -800,7 +800,7 @@ namespace SadConsole.Components
         {
             handled = false;
 
-            if (MouseClickReposition && state.IsOnScreenObject && state.ScreenObject == host)
+            if (MouseClickReposition && state.IsOnScreenObject && state.Mouse.LeftClicked)
             {
                 Position = state.CellPosition;
                 handled = true;
