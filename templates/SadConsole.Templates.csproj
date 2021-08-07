@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>2.0.0</PackageVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <PackageId>SadConsole.Templates</PackageId>
     <Title>SadConsole Game Templates</Title>
     <Authors>Thraka</Authors>
