@@ -70,7 +70,7 @@ namespace SadConsole.UI.Themes
 
                 // Side line 1
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX - 1, shadowBounds.Y),
-                    new Point(shadowBounds.MaxExtentX, shadowBounds.MaxExtentY), _shade.Glyph, _shade.Foreground, _shade.Background);
+                    new Point(shadowBounds.MaxExtentX - 1, shadowBounds.MaxExtentY), _shade.Glyph, _shade.Foreground, _shade.Background);
 
                 // Side line 2
                 button.Surface.DrawLine(new Point(shadowBounds.MaxExtentX, shadowBounds.Y),
