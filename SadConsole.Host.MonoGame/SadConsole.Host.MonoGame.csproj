@@ -29,12 +29,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
   </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Include="SadConsole" Version="9.1.1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.1.1" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
