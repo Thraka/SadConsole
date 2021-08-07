@@ -36,7 +36,6 @@ namespace SadConsole.Debug.MonoGame
 
             ImGuiIOPtr io = ImGui.GetIO();
             io.ConfigFlags = io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-            
         }
 
         public override void Draw(GameTime gameTime)

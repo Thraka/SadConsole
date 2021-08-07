@@ -1,3 +1,15 @@
+## v9.1.1 (08/07/2021)
+
+- `StartingConsole` is now focused at the start of the game.
+- Shape drawing routines now accept an overload of `ShapeParameters`. Original shape routines are marked as obsolete.
+- Line drawing math was rewritten and is better now.
+- `Cursor` component has a `.KeyboardPreview` event that lets you cancel the keyboard press for the cursor and do your own thing.
+- `Game.Instance.StartingConsole` is now focused from the start.
+- `Cursor.MouseClickReposition` logic was incorrectly moving the cursor without a click.
+- {BREAKING} `Cursor.PrintAppearanceMatchesHost` added and defaults to `true`. If you were using a customized `Cursor.PrintApperance`, you must set this property to `false`.
+- [ExtendedLib] `Border` helper now has a `BorderParameters` method that lets you set the colors and style of the border.
+- [ExtendedLib] New `AnimatedBoxGrow` helper that animates a box from small to large.
+
 ## v9.1.0 (07/05/2021)
 
 - `ListBox` can display colored strings now.

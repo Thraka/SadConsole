@@ -4,8 +4,10 @@ using System.Text;
 
 namespace SadConsole.Debug.MonoGame
 {
-    public abstract class ImGuiObjectBase
+    public abstract class ImGuiWindow: ImGuiObjectBase
     {
-        public abstract void BuildUI(ImGuiRenderer renderer);
+        public string Title { get; set; }
+
+        public bool IsOpen;
     }
 }

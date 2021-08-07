@@ -151,6 +151,12 @@ namespace FeatureDemo.CustomConsoles
                 keyHit = true;
             }
 
+            if (info.IsKeyPressed(Keys.L))
+            {
+                SadConsole.Serializer.Save(this, "entity.surface", false);
+                return true;
+            }
+
             // If a movement key was pressed
             if (keyHit)
             {

@@ -72,6 +72,9 @@ namespace SadConsole.Debug.MonoGame
             _imGui.UIComponents.Add(new GuiScreenObjects());
             _imGui.UIComponents.Add(new GuiSurfacePreview());
 
+            GuiState.GuiFinalOutputWindow = new FinalOutputWindow("Output preview", true);
+            _imGui.UIComponents.Add(GuiState.GuiFinalOutputWindow);
+
             //_debuggerComponent = new DebuggerComponent(Game.Instance.MonoGameInstance, imGui);
             Game.Instance.MonoGameInstance.Components.Add(_imGui);
 

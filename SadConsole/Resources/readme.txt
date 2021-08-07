@@ -1,7 +1,7 @@
-Welcome to SadConsole. This is a test release of the next version of SadConsole. Things have changed since the preivous version. 
+Welcome to SadConsole.
 
 Questions? Join the Discord channel
-https://discord.gg/mttxqAs
+https://discord.gg/pAFNKYjczM
 
 You must add a host NuGet package to your project, either SadConsole.Host.SFML or SadConsole.Host.MonoGame.
 

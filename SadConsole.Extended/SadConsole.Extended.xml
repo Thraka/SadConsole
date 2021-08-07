@@ -316,6 +316,11 @@
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
         </member>
+        <member name="T:SadConsole.Instructions.AnimatedBoxGrow">
+            <summary>
+            Animates drawing a box. It can either 
+            </summary>
+        </member>
         <member name="T:SadConsole.Transitions.Fade">
             <summary>
             Fades out one <see cref="T:SadConsole.IScreenSurface"/> while fading in another.
@@ -357,12 +362,103 @@
             Creates a 3D border around a surface.
             </summary>
         </member>
+        <member name="T:SadConsole.UI.Border.BorderParameters">
+            <summary>
+            The settings to use when creating a <see cref="T:SadConsole.UI.Border"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.DrawBorder">
+            <summary>
+            When <see langword="true"/>, indicates the <see cref="P:SadConsole.UI.Border.BorderParameters.BorderBox"/> should be used to draw a border.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.BorderBox">
+            <summary>
+            The border box creation parameters.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.Title">
+            <summary>
+            The title to display on the border.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.TitleForeground">
+            <summary>
+            The foreground color of the title.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.TitleBackground">
+            <summary>
+            The background color of the title.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.TitleAlignment">
+            <summary>
+            The alignment of the <see cref="P:SadConsole.UI.Border.BorderParameters.Title"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.DrawShadedArea">
+            <summary>
+            When <see langword="true"/>, indicates the 3d shaded area of the border should be drawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.UseDefaultShadedGlyphs">
+            <summary>
+            When <see langword="true"/>, indicates the  other shaded properties should be ignored and the default shaded glyphs should be used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.UseDefaultShadedColors">
+            <summary>
+            When <see langword="true"/>, indicates the other shaded properties should be ignored and the default shaded glyphs should be used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.ShadedGlyph">
+            <summary>
+            The glyph to use in the shaded area.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.ShadedGlyphForeground">
+            <summary>
+            The forground of the <see cref="P:SadConsole.UI.Border.BorderParameters.ShadedGlyph"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Border.BorderParameters.ShadedGlyphBackground">
+            <summary>
+            The background of the <see cref="P:SadConsole.UI.Border.BorderParameters.ShadedGlyph"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.#ctor(System.Boolean,SadConsole.ShapeParameters,System.String,SadConsole.HorizontalAlignment,SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Boolean,System.Boolean,System.Boolean,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new instance of this class which contains the settings for drawing a border surface around an existing surface.
+            </summary>
+            <param name="drawBorder">When <see langword="true"/>, indicates the <paramref name="borderBox"/> should be used to draw a border.</param>
+            <param name="borderBox">The box drawn around the surface.</param>
+            <param name="title">The title to display on the border.</param>
+            <param name="titleAlignment">The alignment of the <paramref name="title"/>.</param>
+            <param name="titleForeground">The foreground color of the <paramref name="title"/>.</param>
+            <param name="titleBackground">The background color of the <paramref name="title"/>.</param>
+            <param name="drawShadedArea">When <see langword="true"/>, indicates the 3d shaded area of the border should be drawn.</param>
+            <param name="useDefaultShadedGlyphs">When <see langword="true"/>, indicates the  other shaded properties should be ignored and the default shaded glyphs should be used.</param>
+            <param name="useDefaultShadedColors">When <see langword="true"/>, indicates the other shaded properties should be ignored and the default shaded glyphs should be used.</param>
+            <param name="shadedGlyph">The glyph to use in the shaded area.</param>
+            <param name="shadedGlyphForeground">The forground of the <paramref name="shadedGlyph"/>.</param>
+            <param name="shadedGlyphBackground">The background of the <paramref name="shadedGlyph"/>.</param>
+        </member>
         <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String)">
             <summary>
             Creates a border and adds it as a child object to <paramref name="contents"/>.
             </summary>
             <param name="contents">The object the border will be around.</param>
+            <param name="title">Title to display on the border.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a border and adds it as a child object to <paramref name="contents"/>.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
             <param name="title">Optional title to display on the border.</param>
+            <param name="innerBorderForeground">The color of the </param>
+            <param name="outerBorderForeground"></param>
         </member>
         <member name="M:SadConsole.UI.Border.#ctor(SadConsole.UI.Window)">
             <summary>

@@ -21,10 +21,11 @@ namespace SadConsole.Debug.MonoGame
 
                 if (ImGui.BeginMenu("Options"))
                 {
-                    if (ImGui.MenuItem("Show SadConsole game", "s", ref GuiState.ShowSadConsoleRendering, true))
-                        GuiState.RaiseShowSadConsoleRenderingChanged();
+                    //if (ImGui.MenuItem("Show SadConsole game", "s", ref GuiState.ShowSadConsoleRendering, true))
+                    //    GuiState.RaiseShowSadConsoleRenderingChanged();
 
                     ImGui.MenuItem("Show surface preview", "p", ref GuiState.ShowSurfacePreview, true);
+                    ImGui.MenuItem("Show final output", "o", ref GuiState.GuiFinalOutputWindow.IsOpen, true);
                     ImGui.EndMenu();
                 }
 

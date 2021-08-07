@@ -32,6 +32,11 @@ namespace SadConsole.Components
         public static readonly int DefaultCursorGlyph = 219;
 
         /// <summary>
+        /// Raised when the keyboard is processing keys. Each key is sent to this event and can be cancelled
+        /// </summary>
+        public event EventHandler<KeyboardHandledKeyEventArgs> KeyboardPreview;
+
+        /// <summary>
         /// Cell used to render the cursor on the screen.
         /// </summary>
         [DataMember(Order = 0)]
@@ -48,7 +53,6 @@ namespace SadConsole.Components
             }
         }
 
-
         /// <summary>
         /// Used in rendering. The cell after the effect has been applied.
         /// </summary>
@@ -59,6 +63,12 @@ namespace SadConsole.Components
         /// </summary>
         [DataMember]
         public ColoredGlyph PrintAppearance { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, printing will use the host's <see cref="ICellSurface.DefaultForeground"/> and <see cref="ICellSurface.DefaultBackground"/> color properties.
+        /// </summary>
+        [DataMember]
+        public bool PrintAppearanceMatchesHost { get; set; } = true;
 
         /// <summary>
         /// This effect is applied to each cell printed by the cursor.
@@ -231,7 +241,7 @@ namespace SadConsole.Components
             IsEnabled = true;
             IsVisible = true;
             AutomaticallyShiftRowsUp = true;
-
+            
             PrintAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
             CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph).ToState();
@@ -406,7 +416,10 @@ namespace SadConsole.Components
             }
             else
             {
-                coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
+                if (PrintAppearanceMatchesHost)
+                    coloredString = text.CreateColored(_editor.DefaultForeground, _editor.DefaultBackground, Mirror.None);
+                else
+                    coloredString = text.CreateColored(template.Foreground, template.Background, template.Mirror);
 
                 if (UsePrintEffect)
                 {
@@ -787,7 +800,7 @@ namespace SadConsole.Components
         {
             handled = false;
 
-            if (MouseClickReposition && state.IsOnScreenObject && state.ScreenObject == host)
+            if (MouseClickReposition && state.IsOnScreenObject && state.Mouse.LeftClicked)
             {
                 Position = state.CellPosition;
                 handled = true;
@@ -802,6 +815,16 @@ namespace SadConsole.Components
 
             foreach (Input.AsciiKey key in keyboard.KeysPressed)
             {
+                // If someone attached an event to KeyboardPreview, process it
+                if (KeyboardPreview != null)
+                {
+                    KeyboardHandledKeyEventArgs args = new KeyboardHandledKeyEventArgs();
+                    args.Key = key;
+                    KeyboardPreview.Invoke(this, args);
+                    if (args.IsHandled)
+                        continue;
+                }
+
                 if (key.Character == '\0')
                 {
                     switch (key.Key)

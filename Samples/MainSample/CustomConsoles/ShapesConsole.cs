@@ -19,8 +19,8 @@ namespace FeatureDemo.CustomConsoles
             Surface.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);
             Surface.DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ICellSurface.ConnectedLineThick);
 
-            Surface.DrawCircle(new Rectangle(2, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176));
-            Surface.DrawCircle(new Rectangle(19, 12, 16, 10), new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178));
+            Surface.DrawCircle(new Rectangle(2, 12, 16, 10), ShapeParameters.CreateBorder(new ColoredGlyph(Color.White, Color.Black, 176)));
+            Surface.DrawCircle(new Rectangle(19, 12, 16, 10), ShapeParameters.CreateFilled(new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178)));
 
             IsDirty = true;
             IsVisible = false;

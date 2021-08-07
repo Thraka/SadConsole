@@ -42,9 +42,6 @@ namespace SadConsole.Components
         void IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled) =>
             handled = false;
 
-        void IComponent.ProcessMouse(IScreenObject host, MouseScreenObjectState state, out bool handled) =>
-            ProcessMouse(host, state, out handled);
-
         void IComponent.Update(IScreenObject host, TimeSpan delta) { }
     }
 }
