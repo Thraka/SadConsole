@@ -1564,7 +1564,7 @@ namespace SadConsole
         /// <param name="mirror">Mirror to set. If null, skipped.</param>
         /// <returns>A list of cells the line touched; ordered from first to last.</returns>
         /// <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
-        public static IEnumerable<ColoredGlyph> DrawLine(this ICellSurface surface, Point start, Point end, int? glyph, Color ? foreground = null, Color? background = null, Mirror? mirror = null)
+        public static IEnumerable<ColoredGlyph> DrawLine(this ICellSurface surface, Point start, Point end, int? glyph, Color? foreground = null, Color? background = null, Mirror? mirror = null)
         {
             var result = new List<ColoredGlyph>();
             Func<int, int, bool> processor;
@@ -1630,9 +1630,127 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="area">The area of the box.</param>
+        /// <param name="parameters">Provides the options for drawing a border and filling the box.</param>
+        public static void DrawBox(this ICellSurface surface, Rectangle area, ShapeParameters parameters)
+        {
+            Rectangle fillRect = area.Expand(-1, -1);
+
+            if (parameters.HasFill && parameters.FillGlyph != null)
+            {
+                surface.Fill(fillRect,
+                             parameters.IgnoreFillForeground ? (Color?)null : parameters.FillGlyph.Foreground,
+                             parameters.IgnoreFillBackground ? (Color?)null : parameters.FillGlyph.Background,
+                             parameters.IgnoreFillGlyph ? (int?)null : parameters.FillGlyph.Glyph,
+                             parameters.IgnoreFillMirror ? (Mirror?)null : parameters.FillGlyph.Mirror
+                             );
+            }
+
+            if (parameters.HasBorder)
+            {
+                // Using a line style
+                if (parameters.BoxBorderStyle != null)
+                {
+                    int[] connectedLineStyle = parameters.BoxBorderStyle;
+
+                    if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
+                        throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
+
+                    ColoredGlyph border = parameters.BorderGlyph;
+
+                    // Draw the major sides
+                    DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top],
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom],
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position, area.Position + new Point(0, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left],
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right],
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+
+                    // Tweak the corners
+                    surface.SetGlyph(area.X, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopLeft]);
+                    surface.SetGlyph(area.MaxExtentX, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopRight]);
+                    surface.SetGlyph(area.X, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomLeft]);
+                    surface.SetGlyph(area.MaxExtentX, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomRight]);
+                }
+                // Using full glyph line style
+                else if (parameters.BoxBorderStyleGlyphs != null)
+                {
+                    ColoredGlyph[] connectedLineStyle = parameters.BoxBorderStyleGlyphs;
+
+                    if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
+                        throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
+
+                    // Draw the major sides
+                    ColoredGlyph border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top];
+                    DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom];
+                    DrawLine(surface, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left];
+                    DrawLine(surface, area.Position, area.Position + new Point(0, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right];
+                    DrawLine(surface, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+
+                    // Tweak the corners
+                    surface.SetGlyph(area.X, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopLeft].Glyph);
+                    surface.SetGlyph(area.MaxExtentX, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopRight].Glyph);
+                    surface.SetGlyph(area.X, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomLeft].Glyph);
+                    surface.SetGlyph(area.MaxExtentX, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomRight].Glyph);
+                }
+                // Using a single glyph
+                else
+                {
+                    // Draw the major sides
+                    ColoredGlyph border = parameters.BorderGlyph;
+                    DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position, area.Position + new Point(0, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                    DrawLine(surface, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                                parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
+                                parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
+                                parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draws a box.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="area">The area of the box.</param>
         /// <param name="border">The border style.</param>
         /// <param name="fill">The fill style. If null, the box is not filled.</param>
         /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
+        [Obsolete("Use the other DrawBox method")]
         public static void DrawBox(this ICellSurface surface, Rectangle area, ColoredGlyph border, ColoredGlyph fill = null, int[] connectedLineStyle = null)
         {
             if (connectedLineStyle == null)
@@ -1673,8 +1791,85 @@ namespace SadConsole
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="area">The area the ellipse </param>
+        /// <param name="parameters">Provides the options for drawing a border and filling the circle.</param>
+        public static void DrawCircle(this ICellSurface surface, Rectangle area, ShapeParameters parameters)
+        {
+            var cells = new List<int>(area.Width * area.Height);
+
+            Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
+            {
+                if (parameters.HasBorder && surface.IsValidCell(x, y))
+                {
+                    ColoredGlyph cell = surface[x, y];
+
+                    if (!parameters.IgnoreBorderForeground) cell.Foreground = parameters.BorderGlyph.Foreground;
+                    if (!parameters.IgnoreBorderBackground) cell.Background = parameters.BorderGlyph.Background;
+                    if (!parameters.IgnoreBorderGlyph) cell.Glyph = parameters.BorderGlyph.Glyph;
+                    if (!parameters.IgnoreBorderMirror) cell.Mirror = parameters.BorderGlyph.Mirror;
+                }
+
+                cells.Add(Point.ToIndex(x, y, surface.Width));
+            });
+
+            if (parameters.HasFill && parameters.FillGlyph != null)
+            {
+                Func<int, bool> isTargetCell = c => !cells.Contains(c);
+                Action<int> fillCell = c =>
+                {
+                    if (surface.IsValidCell(c))
+                    {
+                        ColoredGlyph cell = surface[c];
+
+                        if (!parameters.IgnoreFillForeground) cell.Foreground = parameters.FillGlyph.Foreground;
+                        if (!parameters.IgnoreFillBackground) cell.Background = parameters.FillGlyph.Background;
+                        if (!parameters.IgnoreFillGlyph) cell.Glyph = parameters.FillGlyph.Glyph;
+                        if (!parameters.IgnoreFillMirror) cell.Mirror = parameters.FillGlyph.Mirror;
+                    }
+
+                    cells.Add(c);
+                };
+                Func<int, Algorithms.NodeConnections<int>> getConnectedCells = c =>
+                {
+                    var connections = new Algorithms.NodeConnections<int>();
+
+                    (int x, int y) = Point.FromIndex(c, surface.Width);
+
+                    if (IsValidCell(surface, x - 1, y))
+                    {
+                        connections.West = Point.ToIndex(x - 1, y, surface.Width);
+                        connections.HasWest = true;
+                    }
+                    if (IsValidCell(surface, x + 1, y))
+                    {
+                        connections.East = Point.ToIndex(x + 1, y, surface.Width);
+                        connections.HasEast = true;
+                    }
+                    if (IsValidCell(surface, x, y - 1))
+                    {
+                        connections.North = Point.ToIndex(x, y - 1, surface.Width);
+                        connections.HasNorth = true;
+                    }
+                    if (IsValidCell(surface, x, y + 1))
+                    {
+                        connections.South = Point.ToIndex(x, y + 1, surface.Width);
+                        connections.HasSouth = true;
+                    }
+
+                    return connections;
+                };
+
+                Algorithms.FloodFill(area.Center.ToIndex(surface.Width), isTargetCell, fillCell, getConnectedCells);
+            }
+        }
+
+        /// <summary>
+        /// Draws an ellipse.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="area">The area the ellipse </param>
         /// <param name="outer">The appearance of the outer line of the ellipse.</param>
         /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
+        [Obsolete("Use the other DrawCircle method")]
         public static void DrawCircle(this ICellSurface surface, Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
         {
             var cells = new List<int>(area.Width * area.Height);
