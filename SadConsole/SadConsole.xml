@@ -21,21 +21,11 @@
             <summary>
             Plot the line from (x0, y0) to (x1, y1) using steep.
             </summary>
-            <param name="x0">The start x</param>
-            <param name="y0">The start y</param>
-            <param name="x1">The end x</param>
-            <param name="y1">The end y</param>
+            <param name="x1">The start x</param>
+            <param name="y1">The start y</param>
+            <param name="x2">The end x</param>
+            <param name="y2">The end y</param>
             <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
-        </member>
-        <member name="M:SadConsole.Algorithms.Line2(System.Int32,System.Int32,System.Int32,System.Int32,System.Func{System.Int32,System.Int32,System.Boolean})">
-            <summary>
-            Plot the line from (x0, y0) to (x1, y1) using an interpolation derived algorithm.
-            </summary>
-            <param name="x0">The start x</param>
-            <param name="y0">The start y</param>
-            <param name="x1">The end x</param>
-            <param name="y1">The end y</param>
-            <param name="plot">The plotting function (if this returns false, the algorithm stops early)</param>
         </member>
         <member name="M:SadConsole.Algorithms.FloodFill``1(``0,System.Func{``0,System.Boolean},System.Action{``0},System.Func{``0,SadConsole.Algorithms.NodeConnections{``0}})">
             <summary>
@@ -1255,6 +1245,11 @@
             The default glyph used for a new cursor. Value 219.
             </summary>
         </member>
+        <member name="E:SadConsole.Components.Cursor.KeyboardPreview">
+            <summary>
+            Raised when the keyboard is processing keys. Each key is sent to this event and can be cancelled
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.Cursor.CursorRenderCell">
             <summary>
             Cell used to render the cursor on the screen.
@@ -1268,6 +1263,11 @@
         <member name="P:SadConsole.Components.Cursor.PrintAppearance">
             <summary>
             Appearance used when printing text. <see cref="P:SadConsole.Components.Cursor.PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.PrintAppearanceMatchesHost">
+            <summary>
+            When <see langword="true"/>, printing will use the host's <see cref="P:SadConsole.ICellSurface.DefaultForeground"/> and <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> color properties.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.PrintEffect">
@@ -3755,10 +3755,11 @@
             <param name="singleGlyph">The glyph to use for the connected line array.</param>
             <returns>An array of glyphs.</returns>
         </member>
-        <member name="M:SadConsole.ICellSurface.ValidateLineStyle(System.Int32[]@)">
+        <member name="M:SadConsole.ICellSurface.ValidateLineStyle``1(``0[]@)">
             <summary>
             Returns a value that indicates a line style array is not null and contains the required number of elements.
             </summary>
+            <typeparam name="T">Type of the array.</typeparam>
             <param name="connectedLineStyle">The array to check based on the <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/> enum.</param>
             <returns>True when the line style is correct.</returns>
         </member>
@@ -4367,6 +4368,14 @@
             <returns>A list of cells the line touched; ordered from first to last.</returns>
             <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.DrawBox(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ShapeParameters)">
+            <summary>
+            Draws a box.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area of the box.</param>
+            <param name="parameters">Provides the options for drawing a border and filling the box.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.DrawBox(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph,System.Int32[])">
             <summary>
             Draws a box.
@@ -4376,6 +4385,14 @@
             <param name="border">The border style.</param>
             <param name="fill">The fill style. If null, the box is not filled.</param>
             <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.DrawCircle(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ShapeParameters)">
+            <summary>
+            Draws an ellipse.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="area">The area the ellipse </param>
+            <param name="parameters">Provides the options for drawing a border and filling the circle.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.DrawCircle(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,SadConsole.ColoredGlyph,SadConsole.ColoredGlyph)">
             <summary>
@@ -4914,6 +4931,16 @@
             Reads the keyboard state from <see cref="M:SadConsole.GameHost.GetKeyboardState"/>.
             </summary>
             <param name="elapsedSeconds">Fractional seconds passed since Update was called.</param>
+        </member>
+        <member name="T:SadConsole.Input.KeyboardHandledKeyEventArgs">
+            <summary>
+            Event handler to preview key presses and cancel them.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Input.KeyboardHandledKeyEventArgs.Key">
+            <summary>
+            The key being pressed.
+            </summary>
         </member>
         <member name="T:SadConsole.Input.Keys">
             <summary>
@@ -7996,6 +8023,30 @@
             <summary>
             Output always matches the window.
             </summary>
+        </member>
+        <member name="T:SadConsole.ShapeParameters">
+            <summary>
+            Defines the parameters for generating a shape with a border and fill glyphs.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.#ctor(System.Boolean,SadConsole.ColoredGlyph,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,SadConsole.ColoredGlyph,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32[],SadConsole.ColoredGlyph[])">
+            <summary>
+            
+            </summary>
+            <param name="hasBorder"></param>
+            <param name="borderGlyph"></param>
+            <param name="ignoreBorderForeground"></param>
+            <param name="ignoreBorderBackground"></param>
+            <param name="ignoreBorderGlyph"></param>
+            <param name="ignoreBorderMirror"></param>
+            <param name="hasFill"></param>
+            <param name="fillGlyph"></param>
+            <param name="ignoreFillForeground"></param>
+            <param name="ignoreFillBackground"></param>
+            <param name="ignoreFillGlyph"></param>
+            <param name="ignoreFillMirror"></param>
+            <param name="boxBorderStyle"></param>
+            <param name="boxBorderStyleGlyphs"></param>
         </member>
         <member name="T:SadConsole.SplashScreens.PCBoot">
             <summary>
