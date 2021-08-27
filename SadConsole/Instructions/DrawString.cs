@@ -148,12 +148,12 @@ namespace SadConsole.Instructions
         }
 
         /// <inheritdoc />
-        public override void Repeat()
+        public override void Reset()
         {
             _started = false;
             _textIndex = 0;
 
-            base.Repeat();
+            base.Reset();
         }
 
         /// <summary>

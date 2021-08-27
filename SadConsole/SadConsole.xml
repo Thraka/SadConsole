@@ -1197,6 +1197,12 @@
             </summary>
             <param name="mirror">The mirror mode.</param>
         </member>
+        <member name="M:SadConsole.ColoredString.SetDecorators(SadConsole.CellDecorator[])">
+            <summary>
+            Applies the decorators to each character in the colored string.
+            </summary>
+            <param name="decorators">The decorators.</param>
+        </member>
         <member name="M:SadConsole.ColoredString.ToString">
             <summary>
             Returns a string representing the glyphs in this object.
@@ -3022,7 +3028,7 @@
             <param name="fillCharacter">The character to use to fill in the extra spaces after alignment.</param>
             <returns>A new string instance.</returns>
         </member>
-        <member name="M:SadConsole.StringExtensions.CreateColored(System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror})">
+        <member name="M:SadConsole.StringExtensions.CreateColored(System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadConsole.Mirror},SadConsole.CellDecorator[])">
             <summary>
             Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
             </summary>
@@ -3030,6 +3036,7 @@
             <param name="foreground">The foreground color. If null, <see cref="P:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
             <param name="background">The background color. If null, <see cref="P:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
             <param name="mirror">The mirror setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
+            <param name="decorators">The decorators setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreDecorators"/> will be set.</param>
             <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
