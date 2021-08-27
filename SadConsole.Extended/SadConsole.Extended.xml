@@ -316,6 +316,26 @@
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
         </member>
+        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Prints text that blinks out the characters each after the specified time, using the default foreground and background colors of the surface.
+            </summary>
+            <param name="surfaceObject">The surface to draw the text on.</param>
+            <param name="text">The text to print.</param>
+            <param name="position">The position where to print the text.</param>
+            <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
+            <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
+        </member>
+        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,SadConsole.ColoredString,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+            <summary>
+            
+            </summary>
+            <param name="surfaceObject">The surface to draw the text on.</param>
+            <param name="text">The text to print.</param>
+            <param name="position">The position where to print the text.</param>
+            <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
+            <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
+        </member>
         <member name="T:SadConsole.Instructions.AnimatedBoxGrow">
             <summary>
             Animates drawing a box. It can either 
