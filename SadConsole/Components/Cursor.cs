@@ -5,6 +5,7 @@ using SadConsole.Input;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace SadConsole.Components
 {
@@ -359,6 +360,9 @@ namespace SadConsole.Components
 
                 if (!settings.IgnoreMirror)
                     cell.Mirror = glyph.Mirror;
+
+                if (!settings.IgnoreDecorators)
+                    cell.Decorators = glyph.Decorators.ToArray();
 
                 if (!settings.IgnoreEffect)
                     _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);

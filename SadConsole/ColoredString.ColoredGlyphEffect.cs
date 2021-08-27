@@ -1,4 +1,5 @@
-﻿using SadConsole.Effects;
+﻿using System.Linq;
+using SadConsole.Effects;
 
 namespace SadConsole
 {
@@ -36,7 +37,8 @@ namespace SadConsole
                     Background = Background,
                     Glyph = Glyph,
                     Mirror = Mirror,
-                    Effect = Effect
+                    Effect = Effect,
+                    Decorators = Decorators.ToArray()
                 };
             }
 
@@ -47,7 +49,7 @@ namespace SadConsole
             /// <param name="effect">When provided, sets the <see cref="ColoredGlyphEffect.Effect"/>.</param>
             /// <returns></returns>
             public static ColoredGlyphEffect FromColoredGlyph(ColoredGlyph glyph, ICellEffect effect = null) =>
-                new ColoredGlyphEffect() { Foreground = glyph.Foreground, Background = glyph.Background, Glyph = glyph.Glyph, Effect = effect };
+                new ColoredGlyphEffect() { Foreground = glyph.Foreground, Background = glyph.Background, Glyph = glyph.Glyph, Decorators = glyph.Decorators.ToArray(), Effect = effect };
         }
     }        
 }

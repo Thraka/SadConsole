@@ -1070,27 +1070,32 @@
             The total number of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> characters in the string.
             </summary>
         </member>
-        <member name="F:SadConsole.ColoredString.IgnoreGlyph">
+        <member name="P:SadConsole.ColoredString.IgnoreGlyph">
             <summary>
             When true, instructs a caller to not render the glyphs of the string.
             </summary>
         </member>
-        <member name="F:SadConsole.ColoredString.IgnoreForeground">
+        <member name="P:SadConsole.ColoredString.IgnoreForeground">
             <summary>
             When true, instructs a caller to not render the foreground color.
             </summary>
         </member>
-        <member name="F:SadConsole.ColoredString.IgnoreBackground">
+        <member name="P:SadConsole.ColoredString.IgnoreBackground">
             <summary>
             When true, instructs a caller to not render the background color.
             </summary>
         </member>
-        <member name="F:SadConsole.ColoredString.IgnoreEffect">
+        <member name="P:SadConsole.ColoredString.IgnoreEffect">
             <summary>
             When true, instructs a caller to not render the effect.
             </summary>
         </member>
-        <member name="F:SadConsole.ColoredString.IgnoreMirror">
+        <member name="P:SadConsole.ColoredString.IgnoreMirror">
+            <summary>
+            When true, instructs a caller to not render the mirror state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredString.IgnoreDecorators">
             <summary>
             When true, instructs a caller to not render the mirror state.
             </summary>
@@ -1112,7 +1117,7 @@
             </summary>
             <param name="value">The backing string.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
+        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,SadConsole.CellDecorator[])">
             <summary>
             Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
             </summary>
@@ -1120,6 +1125,7 @@
             <param name="foreground">The foreground color for each character.</param>
             <param name="background">The background color for each character.</param>
             <param name="mirror">The mirror for each character.</param>
+            <param name="decorators">The decorators to apply to each character.</param>
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredString.ColoredGlyphEffect)">
             <summary>
@@ -1184,6 +1190,12 @@
             Applies the referenced glyph to every character in the colored string.
             </summary>
             <param name="glyph">The glyph to apply.</param>
+        </member>
+        <member name="M:SadConsole.ColoredString.SetMirror(SadConsole.Mirror)">
+            <summary>
+            Applies the mirror value to each character in the colored string.
+            </summary>
+            <param name="mirror">The mirror mode.</param>
         </member>
         <member name="M:SadConsole.ColoredString.ToString">
             <summary>
@@ -1999,6 +2011,23 @@
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -2998,9 +3027,9 @@
             Creates a <see cref="T:SadConsole.ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
             </summary>
             <param name="value">The current string.</param>
-            <param name="foreground">The foreground color. If null, <see cref="F:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
-            <param name="background">The background color. If null, <see cref="F:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
-            <param name="mirror">The mirror setting. If null, <see cref="F:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
+            <param name="foreground">The foreground color. If null, <see cref="P:SadConsole.ColoredString.IgnoreForeground"/> will be set.</param>
+            <param name="background">The background color. If null, <see cref="P:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
+            <param name="mirror">The mirror setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
             <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
@@ -6034,7 +6063,7 @@
         <member name="M:SadConsole.Instructions.DrawString.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Instructions.DrawString.Repeat">
+        <member name="M:SadConsole.Instructions.DrawString.Reset">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Instructions.DrawString.OnAdded(SadConsole.IScreenObject)">
