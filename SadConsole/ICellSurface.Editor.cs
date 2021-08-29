@@ -994,6 +994,7 @@ namespace SadConsole
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
                     destination.Mirror = source.Mirror;
+                    destination.Decorators = source.Decorators;
                 }
             }
 
@@ -1018,6 +1019,7 @@ namespace SadConsole
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.Decorators = cellTuple.Item1.Decorators;
                 }
             }
 
@@ -1083,6 +1085,7 @@ namespace SadConsole
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
                     destination.Mirror = source.Mirror;
+                    destination.Decorators = source.Decorators;
                 }
             }
 
@@ -1107,6 +1110,7 @@ namespace SadConsole
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.Decorators = cellTuple.Item1.Decorators;
                 }
             }
 
@@ -1173,6 +1177,7 @@ namespace SadConsole
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
                     destination.Mirror = source.Mirror;
+                    destination.Decorators = source.Decorators;
                 }
             }
 
@@ -1197,6 +1202,7 @@ namespace SadConsole
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.Decorators = cellTuple.Item1.Decorators;
                 }
             }
 
@@ -1262,6 +1268,7 @@ namespace SadConsole
                     destination.Foreground = source.Foreground;
                     destination.Glyph = source.Glyph;
                     destination.Mirror = source.Mirror;
+                    destination.Decorators = source.Decorators;
                 }
             }
 
@@ -1285,6 +1292,7 @@ namespace SadConsole
                     destination.Foreground = cellTuple.Item1.Foreground;
                     destination.Glyph = cellTuple.Item1.Glyph;
                     destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.Decorators = cellTuple.Item1.Decorators;
                 }
             }
 
