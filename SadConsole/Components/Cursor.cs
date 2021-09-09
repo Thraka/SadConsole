@@ -114,6 +114,12 @@ namespace SadConsole.Components
         public bool MouseClickReposition { get; set; }
 
         /// <summary>
+        /// When <see langword="true"/>, returns a handled status from the mouse processor when the <see cref="MouseClickReposition"/> is enabled. This prevents further left-mouse processing on the host.
+        /// </summary>
+        [DataMember]
+        public bool MouseClickRepositionHandlesMouse { get; set; } = true;
+
+        /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
         /// </summary>
         [DataMember]
@@ -807,7 +813,7 @@ namespace SadConsole.Components
             if (MouseClickReposition && state.IsOnScreenObject && state.Mouse.LeftClicked)
             {
                 Position = state.CellPosition;
-                handled = true;
+                handled = MouseClickRepositionHandlesMouse;
             }
         }
 
