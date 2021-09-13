@@ -28,19 +28,26 @@ namespace SadConsole
             {
                 ColoredGlyphEffect[] existingGlyphs = glyphs.ToArray();
 
+                // Check for an escaped `[ sequence and ignore the escape character `
                 if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
                     continue;
 
+                // If [ is encountered, and the previous character isn't an escape character ` try to process the command
                 if (value[i] == '[' && (i == 0 || value[i - 1] != '`'))
                 {
                     try
                     {
+                        // Check for the next part of the magic sequence
+                        // If the rest of the string is long enough to contain the start of a command, check
+                        // Check for c: and then a ] character for the end of the command.
                         if (i + 4 < value.Length && value[i + 1] == 'c' && value[i + 2] == ':' && value.IndexOf(']', i + 2) != -1)
                         {
+                            // Pull the contents after [c: and before ]
                             int commandExitIndex = value.IndexOf(']', i + 2);
                             string command = value.Substring(i + 3, commandExitIndex - (i + 3));
                             string commandParams = "";
 
+                            // If the command text contains a space, it contains a parameter
                             if (command.Contains(" "))
                             {
                                 string[] commandSections = command.Split(new char[] { ' ' }, 2);
@@ -49,6 +56,7 @@ namespace SadConsole
                             }
 
                             // Check for custom command
+                            // Send the method the command name, the parameters, the current glyphs that have been created, the surface (if it's being actively printed), and the existing commands
                             ParseCommandBase commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
 
                             // No custom command found, run build in ones
