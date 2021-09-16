@@ -7,7 +7,7 @@ namespace SadConsole.Effects
     /// Chains one effect after another.
     /// </summary>
     [DataContract]
-    public class EffectsChain : CellEffectBase
+    public class EffectSet : CellEffectBase
     {
         /// <summary>
         /// The list of effects to process.
@@ -167,7 +167,7 @@ namespace SadConsole.Effects
         /// <inheritdoc />
         public override ICellEffect Clone()
         {
-            EffectsChain chain = new EffectsChain()
+            EffectSet chain = new EffectSet()
             {
                 _enabled = _enabled,
                 _activeIndex = _activeIndex,

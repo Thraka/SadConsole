@@ -3,7 +3,7 @@
 namespace SadConsole.Effects
 {
     /// <summary>
-    /// An effect that doesn't do anything but delays. Usually used with the <see cref="EffectsChain"/> effect.
+    /// An effect that doesn't do anything but delays. Usually used with the <see cref="EffectSet"/> effect.
     /// </summary>
     [DataContract]
     public class Delay : CellEffectBase
