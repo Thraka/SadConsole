@@ -28,7 +28,7 @@ Here are some of the features SadConsole supports.
 ![string pic](images/stringparseexample.gif)
 
 #### GUI library
-![GUI library pic](images/ui-example.gif)
+![GUI library pic](images/controls.gif)
 
 #### Scrolling
 ![scrolling console](images/scrolling-example2.gif)
