@@ -64,7 +64,7 @@ namespace SadConsole.Ansi
         {
             AnsiDocument = ansiDocument;
             _editor = editor;
-            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false };
+            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false, PrintAppearanceMatchesHost = false };
             
             CharactersPerSecond = 800;
 
