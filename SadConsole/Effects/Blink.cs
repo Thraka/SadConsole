@@ -9,10 +9,9 @@ namespace SadConsole.Effects
     [DataContract]
     public class Blink : CellEffectBase
     {
-        [DataMember]
         private int _blinkCounter = 0;
-        [DataMember]
         private bool _isOn;
+        private double _duration = 0d;
 
         /// <summary>
         /// In seconds, how fast the fade in and fade out each are
@@ -39,10 +38,17 @@ namespace SadConsole.Effects
         public int BlinkCount { get; set; }
 
         /// <summary>
+        /// The total duraction this effect will run for, before being flagged as finished. -1 represents forever.
+        /// </summary>
+        [DataMember]
+        public double Duration { get; set; }
+
+        /// <summary>
         /// Creates a new instance of the blink effect.
         /// </summary>
         public Blink()
         {
+            Duration = -1;
             BlinkCount = -1;
             BlinkSpeed = 1d;
             UseCellBackgroundColor = true;
@@ -77,6 +83,16 @@ namespace SadConsole.Effects
 
             if (_delayFinished && !IsFinished)
             {
+                if (Duration != -1)
+                {
+                    _duration += timeElapsed;
+                    if (_duration >= Duration)
+                    {
+                        IsFinished = true;
+                        return;
+                    }
+                }
+
                 if (_timeElapsed >= BlinkSpeed)
                 {
                     _isOn = !_isOn;
@@ -100,6 +116,7 @@ namespace SadConsole.Effects
         {
             _isOn = true;
             _blinkCounter = 0;
+            _duration = 0d;
 
             base.Restart();
         }

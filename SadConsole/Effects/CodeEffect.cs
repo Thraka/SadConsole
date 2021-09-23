@@ -3,7 +3,7 @@
 namespace SadConsole.Effects
 {
     // Not sure if I should make this serailizable... 
-    internal class CodeEffect : CellEffectBase
+    public class CodeEffect : CellEffectBase
     {
         /// <summary>
         /// A user defined identifier of the effect.
