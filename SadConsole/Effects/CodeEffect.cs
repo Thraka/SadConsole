@@ -32,29 +32,39 @@ namespace SadConsole.Effects
         public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, System.TimeSpan> update, Action<CodeEffect> restart) =>
             (Id, _applyAction, _updateAction, _restartAction) = (id, apply, update, restart);
 
+        /// <inheritdoc />
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState) =>
             _applyAction(this, cell, originalState);
 
+        /// <summary>
+        /// Not supported.
+        /// </summary>
         public override ICellEffect Clone() => throw new NotSupportedException();
 
+        /// <inheritdoc />
         public override void Update(System.TimeSpan delta)
         {
-            _timeElapsed += delta;
-
-            if (_timeElapsed >= Duration)
+            if (UseDuration)
             {
-                IsFinished = true;
+                _timeElapsed += delta;
+
+                if (_timeElapsed >= Duration)
+                {
+                    IsFinished = true;
+                }
             }
 
             _updateAction(this, delta);
         }
 
+        /// <inheritdoc />
         public override void Restart()
         {
             base.Restart();
             _restartAction(this);
         }
 
+        /// <inheritdoc />
         public override string ToString() =>
             string.Format("CODE-{0}", Id);
     }

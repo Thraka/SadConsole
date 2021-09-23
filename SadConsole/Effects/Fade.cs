@@ -73,13 +73,11 @@ namespace SadConsole.Effects
         /// <summary>
         /// A value used in lerping the fade.
         /// </summary>
-        [DataMember]
         protected double _calculatedValue;
 
         /// <summary>
         /// Indicates the fade is currently in reverse.
         /// </summary>
-        [DataMember]
         protected bool _goingDown;
 
         /// <summary>
@@ -185,6 +183,15 @@ namespace SadConsole.Effects
                     }
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void Restart()
+        {
+            base.Restart();
+
+            _goingDown = false;
+            _calculatedValue = 0f;
         }
 
         /// <inheritdoc />
