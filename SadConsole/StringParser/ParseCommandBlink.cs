@@ -13,7 +13,7 @@
         /// <summary>
         /// The speed of the blink.
         /// </summary>
-        public double Speed = 0.35d;
+        public System.TimeSpan Speed = System.TimeSpan.FromSeconds(0.35d);
 
         private readonly CustomBlinkEffect _blinkEffect;
 
@@ -29,7 +29,7 @@
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 2)
-                Speed = double.Parse(parametersArray[1], CultureInfo.InvariantCulture);
+                Speed = System.TimeSpan.FromSeconds(double.Parse(parametersArray[1], CultureInfo.InvariantCulture));
 
             if (parametersArray.Length >= 1 && parametersArray[0] != "")
                 _counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);

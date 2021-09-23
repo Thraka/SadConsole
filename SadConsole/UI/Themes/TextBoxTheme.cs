@@ -28,7 +28,7 @@ namespace SadConsole.UI.Themes
             CaretEffect = new Effects.BlinkGlyph()
             {
                 GlyphIndex = 95,
-                BlinkSpeed = 0.4f
+                BlinkSpeed = System.TimeSpan.FromSeconds(0.4d)
             };
 
         /// <inheritdoc />
@@ -55,7 +55,7 @@ namespace SadConsole.UI.Themes
 
             if (textbox.Surface.Effects.Count != 0)
             {
-                textbox.Surface.Effects.UpdateEffects(time.TotalSeconds);
+                textbox.Surface.Effects.UpdateEffects(time);
                 textbox.IsDirty = true;
             }
 

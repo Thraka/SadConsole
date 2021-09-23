@@ -1038,21 +1038,6 @@
             <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect"/>.</param>
             <returns></returns>
         </member>
-        <member name="F:SadConsole.ColoredString.CustomProcessor">
-            <summary>
-            Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
-            </summary>
-        </member>
-        <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
-            <summary>
-            Creates a colored string by parsing commands embedded in the string.
-            </summary>
-            <param name="value">The string to parse.</param>
-            <param name="surfaceIndex">Index of where this string will be printed.</param>
-            <param name="surface">The surface the string will be printed to.</param>
-            <param name="initialBehaviors">Any initial defaults.</param>
-            <returns>The finalized string.</returns>
-        </member>
         <member name="P:SadConsole.ColoredString.Item(System.Int32)">
             <summary>
             Gets a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from the string.
@@ -1253,6 +1238,21 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
+        <member name="F:SadConsole.ColoredString.CustomProcessor">
+            <summary>
+            Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+            <summary>
+            Creates a colored string by parsing commands embedded in the string.
+            </summary>
+            <param name="value">The string to parse.</param>
+            <param name="surfaceIndex">Index of where this string will be printed.</param>
+            <param name="surface">The surface the string will be printed to.</param>
+            <param name="initialBehaviors">Any initial defaults.</param>
+            <returns>The finalized string.</returns>
+        </member>
         <member name="T:SadConsole.Components.Cursor">
             <summary>
             A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
@@ -1311,6 +1311,11 @@
         <member name="P:SadConsole.Components.Cursor.MouseClickReposition">
             <summary>
             When <see langword="true"/>, left-clicking on the host surface will reposition the cursor to the clicked position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Cursor.MouseClickRepositionHandlesMouse">
+            <summary>
+            When <see langword="true"/>, returns a handled status from the mouse processor when the <see cref="P:SadConsole.Components.Cursor.MouseClickReposition"/> is enabled. This prevents further left-mouse processing on the host.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.IsVisible">
@@ -2121,6 +2126,11 @@
             How many times to blink. The value of -1 represents forever.
             </summary>
         </member>
+        <member name="P:SadConsole.Effects.Blink.Duration">
+            <summary>
+            The total duraction this effect will run for, before being flagged as finished. <see cref="F:System.TimeSpan.MaxValue"/> represents forever.
+            </summary>
+        </member>
         <member name="M:SadConsole.Effects.Blink.#ctor">
             <summary>
             Creates a new instance of the blink effect.
@@ -2129,7 +2139,7 @@
         <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Blink.Update(System.Double)">
+        <member name="M:SadConsole.Effects.Blink.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Blink.Restart">
@@ -2158,6 +2168,16 @@
             The glyph index to blink into.
             </summary>
         </member>
+        <member name="P:SadConsole.Effects.BlinkGlyph.BlinkCount">
+            <summary>
+            How many times to blink. The value of -1 represents forever.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.BlinkGlyph.Duration">
+            <summary>
+            The total duraction this effect will run for, before being flagged as finished. <see cref="F:System.TimeSpan.MaxValue"/> represents forever.
+            </summary>
+        </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.#ctor">
             <summary>
             Creates an instance of the blink glyph effect.
@@ -2166,7 +2186,7 @@
         <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.BlinkGlyph.Update(System.Double)">
+        <member name="M:SadConsole.Effects.BlinkGlyph.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.Restart">
@@ -2218,7 +2238,7 @@
         <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.CellEffectBase.Update(System.Double)">
+        <member name="M:SadConsole.Effects.CellEffectBase.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CellEffectBase.Restart">
@@ -2249,10 +2269,10 @@
         </member>
         <member name="T:SadConsole.Effects.Delay">
             <summary>
-            An effect that doesn't do anything but delays. Usually used with the <see cref="T:SadConsole.Effects.EffectsChain"/> effect.
+            An effect that doesn't do anything except run the <see cref="P:SadConsole.Effects.CellEffectBase.StartDelay"/> timer. Usually used with the <see cref="T:SadConsole.Effects.EffectSet"/> effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Delay.Update(System.Double)">
+        <member name="M:SadConsole.Effects.Delay.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
@@ -2261,55 +2281,54 @@
         <member name="M:SadConsole.Effects.Delay.Clone">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Delay.ToString">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.Effects.EffectsChain">
+        <member name="T:SadConsole.Effects.EffectSet">
             <summary>
             Chains one effect after another.
             </summary>
         </member>
-        <member name="F:SadConsole.Effects.EffectsChain.Effects">
+        <member name="P:SadConsole.Effects.EffectSet.Effects">
             <summary>
             The list of effects to process.
             </summary>
         </member>
-        <member name="F:SadConsole.Effects.EffectsChain.Repeat">
+        <member name="P:SadConsole.Effects.EffectSet.Repeat">
             <summary>
             When <see langword="true"/>, instead of ending when finished, it will repeat. Otherwise, <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Effects.EffectsChain.DelayBetweenEffects">
+        <member name="P:SadConsole.Effects.EffectSet.DelayBetweenEffects">
             <summary>
             An artificial delay between each effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.Start">
-            <summary>
-            Enables the effect and starts processing the first effect.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsChain.End">
-            <summary>
-            Disables the effect.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsChain.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.EffectSet.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.Update(System.Double)">
+        <member name="M:SadConsole.Effects.EffectSet.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.Restart">
+        <member name="M:SadConsole.Effects.EffectSet.Restart">
             <summary>
             Restarts the cell effect but does not reset it.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.Clone">
+        <member name="M:SadConsole.Effects.EffectSet.Clone">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.EffectsChain.ToString">
+        <member name="M:SadConsole.Effects.EffectSet.ToString">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.EffectSet.GetEnumerator">
+            <summary>
+            Gets an enumerator of all the effects.
+            </summary>
+            <returns>The enumerator.</returns>
+        </member>
+        <member name="M:SadConsole.Effects.EffectSet.Add(SadConsole.Effects.ICellEffect)">
+            <summary>
+            Adds an effect to the end of the <see cref="P:SadConsole.Effects.EffectSet.Effects"/> collection.
+            </summary>
+            <param name="effect">The effect to add.</param>
         </member>
         <member name="T:SadConsole.Effects.EffectsManager">
             <summary>
@@ -2393,11 +2412,11 @@
             </summary>
             <param name="cellIndex">The cell index.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.UpdateEffects(System.Double)">
+        <member name="M:SadConsole.Effects.EffectsManager.UpdateEffects(System.TimeSpan)">
             <summary>
             Updates all known effects and applies them to their associated cells.
             </summary>
-            <param name="timeElapsed">The time elapased since the last update.</param>
+            <param name="delta">The time elapased since the last update.</param>
         </member>
         <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData">
             <summary>
@@ -2534,7 +2553,7 @@
         <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Fade.Update(System.Double)">
+        <member name="M:SadConsole.Effects.Fade.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Clone">
@@ -2560,7 +2579,7 @@
         </member>
         <member name="P:SadConsole.Effects.ICellEffect.StartDelay">
             <summary>
-            A delay applied to the effect only when it first runs.
+            A delay applied to the effect only when it first runs or is restarted.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.ICellEffect.RemoveOnFinished">
@@ -2580,11 +2599,11 @@
             <param name="cell">The surface cell using this effect.</param>
             <param name="originalState">The state of the cell prior to the effect being applied.</param>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.Update(System.Double)">
+        <member name="M:SadConsole.Effects.ICellEffect.Update(System.TimeSpan)">
             <summary>
             Updates the state of the effect.
             </summary>
-            <param name="gameTimeSeconds">Time since the last call to this effect.</param>
+            <param name="delta">Time since the last call to this effect.</param>
         </member>
         <member name="M:SadConsole.Effects.ICellEffect.Restart">
             <summary>
@@ -3973,6 +3992,14 @@
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="cell">The cells for the effect.</param>
+            <param name="effect">The desired effect.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ICellSurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+            <summary>
+            Changes the effect of a cell to the specified effect.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="cells">The cells for the effect.</param>
             <param name="effect">The desired effect.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetEffect(SadConsole.ICellSurface,System.Int32,System.Int32)">

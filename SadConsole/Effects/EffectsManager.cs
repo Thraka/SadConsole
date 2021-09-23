@@ -234,15 +234,15 @@ namespace SadConsole.Effects
         /// <summary>
         /// Updates all known effects and applies them to their associated cells.
         /// </summary>
-        /// <param name="timeElapsed">The time elapased since the last update.</param>
-        public void UpdateEffects(double timeElapsed)
+        /// <param name="delta">The time elapased since the last update.</param>
+        public void UpdateEffects(TimeSpan delta)
         {
             List<ICellEffect> effectsToRemove = new List<ICellEffect>();
 
             foreach (ColoredGlyphEffectData effectData in _effects.Values)
             {
                 List<ColoredGlyphWithState> cellsToRemove = new List<ColoredGlyphWithState>();
-                effectData.Effect.Update(timeElapsed);
+                effectData.Effect.Update(delta);
 
                 foreach (ColoredGlyphWithState cellState in effectData.CellsStates)
                 {

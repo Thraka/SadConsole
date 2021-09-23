@@ -63,9 +63,9 @@ namespace SadConsole
                 {
                     FadeForeground = true,
                     UseCellBackground = true,
-                    FadeDuration = 0,
+                    FadeDuration = System.TimeSpan.Zero,
                     CloneOnAdd = true,
-                    StartDelay = time.TotalSeconds
+                    StartDelay = time
                 };
             }
 

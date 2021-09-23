@@ -73,7 +73,7 @@ namespace SadConsole.Ansi
 
             _ansiCodeBuilder = new StringBuilder(5);
 
-            BlinkEffect = new Blink() { BlinkSpeed = 0.35f };
+            BlinkEffect = new Blink() { BlinkSpeed = System.TimeSpan.FromSeconds(0.35d) };
         }
 
         /// <summary>

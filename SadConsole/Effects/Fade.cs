@@ -26,7 +26,7 @@ namespace SadConsole.Effects
         /// Gets or sets how long the fade takes to complete in seconds.
         /// </summary>
         [DataMember]
-        public double FadeDuration { get; set; }
+        public System.TimeSpan FadeDuration { get; set; }
 
         /// <summary>
         /// Gets or sets a value to indicate that the fade effect should repeat.
@@ -91,7 +91,7 @@ namespace SadConsole.Effects
             DestinationForeground = Color.Transparent;
             UseCellForeground = true;
             UseCellBackground = true;
-            FadeDuration = 1d;
+            FadeDuration = System.TimeSpan.FromSeconds(1);
             Repeat = false;
         }
 
@@ -125,9 +125,9 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
             if (_delayFinished)
             {
@@ -140,7 +140,7 @@ namespace SadConsole.Effects
                             if (!_goingDown)
                             {
                                 _goingDown = !_goingDown;
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                             }
                             else
                             {
@@ -148,12 +148,12 @@ namespace SadConsole.Effects
                                 {
                                     _calculatedValue = 0f;
                                     IsFinished = true;
-                                    _timeElapsed = 0.0d;
+                                    _timeElapsed = System.TimeSpan.Zero;
                                     return;
                                 }
                                 else
                                 {
-                                    _timeElapsed = 0.0d;
+                                    _timeElapsed = System.TimeSpan.Zero;
                                     _goingDown = !_goingDown;
                                 }
                             }
@@ -165,12 +165,12 @@ namespace SadConsole.Effects
                             {
                                 _calculatedValue = 1f;
                                 IsFinished = true;
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                                 return;
                             }
                             else
                             {
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                             }
                         }
                     }

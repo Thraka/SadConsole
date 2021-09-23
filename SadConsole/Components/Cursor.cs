@@ -273,7 +273,7 @@ namespace SadConsole.Components
 
             CursorRenderEffect = new Effects.Blink
             {
-                BlinkSpeed = 0.35f
+                BlinkSpeed = System.TimeSpan.FromSeconds(0.35d)
             };
             _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
@@ -796,7 +796,7 @@ namespace SadConsole.Components
         {
             if (IsVisible && _applyCursorEffect && _cursorCellEffect != null)
             {
-                _cursorCellEffect.Update(delta.TotalSeconds);
+                _cursorCellEffect.Update(delta);
                 _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
             }
         }

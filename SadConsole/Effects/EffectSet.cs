@@ -32,7 +32,7 @@ namespace SadConsole.Effects
         /// An artificial delay between each effect.
         /// </summary>
         [DataMember]
-        public double DelayBetweenEffects { get; set; } = 0d;
+        public System.TimeSpan DelayBetweenEffects { get; set; } = System.TimeSpan.Zero;
 
         ///// <summary>
         ///// Disables the effect.
@@ -49,7 +49,7 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
             // Check that there are effects to run, otherwise finish and quit
             if (Effects.Count == 0 || IsFinished)
@@ -63,7 +63,7 @@ namespace SadConsole.Effects
                 _currentEffectNode = Effects.First;
 
             // Handles updating _timeElapsed and _delayFinished
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
             if (_delayFinished)
             {
@@ -71,13 +71,13 @@ namespace SadConsole.Effects
                 if (!_inChainDelay)
                 {
                     // Process the effect
-                    _currentEffectNode.Value.Update(gameTimeSeconds);
+                    _currentEffectNode.Value.Update(delta);
 
                     // If the effect finished, we move on to the next effect
                     if (_currentEffectNode.Value.IsFinished)
                     {
                         // Restart time
-                        _timeElapsed = 0d;
+                        _timeElapsed = System.TimeSpan.Zero;
 
                         // Get next node
                         _currentEffectNode = _currentEffectNode.Next;
@@ -93,7 +93,7 @@ namespace SadConsole.Effects
                         else
                         {
                             // When moving to the next effect, check and see if we have a delay. If so, flag and wait.
-                            if (DelayBetweenEffects != 0f)
+                            if (DelayBetweenEffects != System.TimeSpan.Zero)
                                 _inChainDelay = true;
                         }
                     }
@@ -103,7 +103,7 @@ namespace SadConsole.Effects
                     if (_timeElapsed >= DelayBetweenEffects)
                     {
                         _inChainDelay = false;
-                        _timeElapsed = 0d;
+                        _timeElapsed = System.TimeSpan.Zero;
                     }
                 }
             }

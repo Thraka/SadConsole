@@ -8,7 +8,7 @@ namespace SadConsole.Effects
     [DataContract]
     public abstract class CellEffectBase : ICellEffect
     {
-        private double _startDelay;
+        private System.TimeSpan _startDelay;
 
         /// <summary>
         /// A flag to indidcate that the delay timer has finished.
@@ -20,7 +20,7 @@ namespace SadConsole.Effects
         /// The total time elapsed while processing the effect.
         /// </summary>
         [DataMember]
-        protected double _timeElapsed;
+        protected System.TimeSpan _timeElapsed;
 
         /// <inheritdoc />
         [DataMember]
@@ -32,10 +32,10 @@ namespace SadConsole.Effects
 
         /// <inheritdoc />
         [DataMember]
-        public double StartDelay
+        public System.TimeSpan StartDelay
         {
             get => _startDelay;
-            set { _startDelay = value; _delayFinished = _startDelay <= 0.0d; }
+            set { _startDelay = value; _delayFinished = _startDelay <= System.TimeSpan.Zero; }
         }
 
         /// <inheritdoc />
@@ -52,27 +52,27 @@ namespace SadConsole.Effects
         protected CellEffectBase()
         {
             RemoveOnFinished = false;
-            StartDelay = 0d;
+            StartDelay = System.TimeSpan.Zero;
             IsFinished = false;
-            _timeElapsed = 0d;
+            _timeElapsed = System.TimeSpan.Zero;
         }
 
         /// <inheritdoc />
         public abstract bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState);
 
         /// <inheritdoc />
-        public virtual void Update(double gameTimeSeconds)
+        public virtual void Update(System.TimeSpan delta)
         {
             if (!IsFinished)
             {
-                _timeElapsed += gameTimeSeconds;
+                _timeElapsed += delta;
 
                 if (!_delayFinished)
                 {
                     if (_timeElapsed >= _startDelay)
                     {
                         _delayFinished = true;
-                        _timeElapsed = 0.0d;
+                        _timeElapsed = System.TimeSpan.Zero;
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace SadConsole.Effects
         /// <inheritdoc />
         public virtual void Restart()
         {
-            _timeElapsed = 0d;
+            _timeElapsed = System.TimeSpan.Zero;
             IsFinished = false;
             StartDelay = _startDelay;
         }

@@ -280,7 +280,7 @@ namespace SadConsole
         {
             if (!IsEnabled) return;
 
-            Surface.Effects.UpdateEffects(delta.TotalSeconds);
+            Surface.Effects.UpdateEffects(delta);
 
             foreach (IComponent component in ComponentsUpdate.ToArray())
                 component.Update(this, delta);

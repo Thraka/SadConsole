@@ -9,9 +9,9 @@ namespace SadConsole.Effects
     public class Delay : CellEffectBase
     {
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
             if (_delayFinished)
                 IsFinished = true;

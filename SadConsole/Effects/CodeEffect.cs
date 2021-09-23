@@ -23,13 +23,13 @@ namespace SadConsole.Effects
         /// <summary>
         /// The amount of time this effect runs for in seconds.
         /// </summary>
-        public double Duration { get; set; }
+        public System.TimeSpan Duration { get; set; }
 
         private readonly Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> _applyAction;
-        private readonly Action<CodeEffect, double> _updateAction;
+        private readonly Action<CodeEffect, System.TimeSpan> _updateAction;
         private readonly Action<CodeEffect> _restartAction;
 
-        public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, double> update, Action<CodeEffect> restart) =>
+        public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, System.TimeSpan> update, Action<CodeEffect> restart) =>
             (Id, _applyAction, _updateAction, _restartAction) = (id, apply, update, restart);
 
         public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState) =>
@@ -37,16 +37,16 @@ namespace SadConsole.Effects
 
         public override ICellEffect Clone() => throw new NotSupportedException();
 
-        public override void Update(double timeElapsed)
+        public override void Update(System.TimeSpan delta)
         {
-            _timeElapsed += timeElapsed;
+            _timeElapsed += delta;
 
             if (_timeElapsed >= Duration)
             {
                 IsFinished = true;
             }
 
-            _updateAction(this, timeElapsed);
+            _updateAction(this, delta);
         }
 
         public override void Restart()
