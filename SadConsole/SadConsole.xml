@@ -2267,6 +2267,23 @@
             The amount of time this effect runs for in seconds.
             </summary>
         </member>
+        <member name="M:SadConsole.Effects.CodeEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Clone">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Restart">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.ToString">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.Effects.Delay">
             <summary>
             An effect that doesn't do anything except run the <see cref="P:SadConsole.Effects.CellEffectBase.StartDelay"/> timer. Usually used with the <see cref="T:SadConsole.Effects.EffectSet"/> effect.
@@ -2554,6 +2571,9 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Restart">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Clone">
@@ -10413,6 +10433,21 @@
         <member name="F:SadConsole.UI.Controls.TextBox._currentAppearance">
             <summary>
             The current appearance of the control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditModeEnter">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.DisableKeyboard"/> property changes to <see langword="true"/>, causing the textbox to accept keyboard input.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditModeExit">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.DisableKeyboard"/> property changes to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditingTextChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.EditingText"/> property changes while the textbox is being typed in.
             </summary>
         </member>
         <member name="E:SadConsole.UI.Controls.TextBox.TextChanged">
