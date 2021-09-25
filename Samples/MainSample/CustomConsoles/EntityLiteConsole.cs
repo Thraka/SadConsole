@@ -161,7 +161,7 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (Surface.Area.Contains(player.Position))
+                if (Surface.Area.Contains(newPosition))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     Surface.SetGlyph(player.Position.X, player.Position.Y, 250);
