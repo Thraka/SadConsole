@@ -10,6 +10,10 @@ using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
+using SadRogue.Primitives.GridViews;
+using SadConsole.Effects;
+using System.Collections;
+using SadConsole.Quick;
 
 namespace FeatureDemo
 {
@@ -40,6 +44,7 @@ namespace FeatureDemo
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
+            
         }
 
         private static void Instance_FrameUpdate(object sender, GameHost e)
@@ -60,13 +65,13 @@ namespace FeatureDemo
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F9))
                 {
-                    SadConsole.Debug.Screen.Show();
-//#if MONOGAME
-//                    if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
-//                        SadConsole.Debug.MonoGame.Debugger.Start();
-//                    else
-//                        SadConsole.Debug.MonoGame.Debugger.Stop();
-//#endif
+                    //SadConsole.Debug.Screen.Show();
+#if MONOGAME
+                    if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
+                        SadConsole.Debug.MonoGame.Debugger.Start();
+                    else
+                        SadConsole.Debug.MonoGame.Debugger.Stop();
+#endif
                 }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F5))
                 {
@@ -83,7 +88,7 @@ namespace FeatureDemo
         private static void Init()
         {
             //if (Settings.UnlimitedFPS)
-            //    SadConsole.Game.Instance.Components.Add(new SadConsole.Game.FPSCounterComponent(SadConsole.Game.Instance));
+                //SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
 
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
@@ -91,17 +96,64 @@ namespace FeatureDemo
             // Splash screens show up at the start of the game.
             //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.PCBoot());
 
+            // Initialize the windows used by the global keyboard handler in Instance_FrameUpdate
+            _characterWindow = new Windows.CharacterViewer(0);
+
             // The demo screen 
             MainConsole = new Container();
 
             // By default SadConsole adds a blank ready-to-go console to the rendering system. 
             // We don't want to use that for the sample project so we'll remove and then destroy it.
             Game.Instance.Screen = MainConsole;
-            Game.Instance.DestroyDefaultStartingConsole();
-
-            // Initialize the windows used by the global keyboard handler in Instance_FrameUpdate
-            _characterWindow = new Windows.CharacterViewer(0);
         }
 
+        // this is test code for things not yet here...
+        /*
+        static void Init2()
+        {
+            // This stuff needs full tests written for all scenarios
+            var console = new Console(10, 20);
+            //console.PrintFadingText("This is a fade!", (2, 2), TimeSpan.FromSeconds(1));
+            console.Print(0, 0, "0123456789", Color.AnsiBlueBright);
+            console.Print(0, 1, "0123456789", Color.AnsiRedBright);
+            console.Print(0, 2, "0123456789", Color.AnsiYellowBright);
+            console.Print(0, 3, "0123456789", Color.AnsiGreenBright);
+            console.Print(0, 4, "0123456789", Color.AnsiGreenBright);
+
+            console.ShiftRow(0, 4, -3, false);
+
+            console.Cursor.UseStringParser = true;
+            console.Cursor.Move(3, 15).Print("[c:r f:DodgerBlue]4.[c:r f:White] You [c:b 3]can apply [c:b 5:0.17]blink effects.");
+
+            EffectSet set = new EffectSet() { new BlinkGlyph() { BlinkCount = 2 }, new BlinkGlyph() { Duration = System.TimeSpan.FromSeconds(5), GlyphIndex = 2 } };
+            set.Repeat = true;
+            console.SetEffect(3, 3, set.Clone());
+            //console.ShiftRow(0, 0, 3, false);
+            //console.ShiftRow(1, 1, 3, false);
+            //console.ShiftRow(2, 2, 3, false);
+            //console.ShiftRow(3, 2, 10, false);
+            ////console.ShiftRow(4, 20, 10, false);
+
+
+            //console.Print(0, 6, "0123456789", Color.AnsiBlueBright);
+            //console.Print(0, 7, "0123456789", Color.AnsiRedBright);
+            //console.Print(0, 8, "0123456789", Color.AnsiYellowBright);
+            //console.Print(0, 9, "0123456789", Color.AnsiGreenBright);
+            //console.Print(0, 10, "0123456789", Color.AnsiGreenBright);
+
+            //console.ShiftRow(6, 9, -3, false);
+            //console.ShiftRow(7, 8, -3, false);
+            //console.ShiftRow(8, 7, -3, false);
+            //console.ShiftRow(9, 6, -10, false);
+            ////console.ShiftRow(10, 20, -10, false);
+
+
+            Game.Instance.Screen = console;
+
+            Game.Instance.DestroyDefaultStartingConsole();
+        }
+        */
+
     }
+
 }
