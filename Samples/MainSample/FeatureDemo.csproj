@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
-    <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
@@ -47,6 +46,19 @@
   <ItemGroup>
     <None Include="Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
     <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
+    <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\DejaVuSansMono-msdf.fnt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\DejaVuSansMono-msdf.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\MSDFShader.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

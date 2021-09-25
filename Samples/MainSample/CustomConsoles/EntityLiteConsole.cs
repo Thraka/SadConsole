@@ -30,7 +30,7 @@ namespace FeatureDemo.CustomConsoles
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
-                FadeDuration = 0.7f,
+                FadeDuration = System.TimeSpan.FromSeconds(0.7d),
                 RemoveOnFinished = true,
                 CloneOnAdd = true
             };

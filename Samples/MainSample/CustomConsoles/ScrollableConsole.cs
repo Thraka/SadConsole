@@ -33,12 +33,15 @@ namespace FeatureDemo.CustomConsoles
             _controlsContainer.SadComponents.Add(controlHost);
             _controlsContainer.Position = new Point(Position.X + width, Position.Y);
             _controlsContainer.IsVisible = true;
+            _controlsContainer.FocusOnMouseClick = false;
 
             Cursor.IsVisible = true;
             Cursor.IsEnabled = true;
             Cursor.Print("Just start typing!");
 
             UseMouse = true;
+
+            Children.Add(_controlsContainer);
         }
 
         private void ScrollBar_ValueChanged(object sender, EventArgs e)
@@ -47,31 +50,10 @@ namespace FeatureDemo.CustomConsoles
             View = new Rectangle(0, _scrollBar.Value, Width, ViewHeight);
         }
 
-        protected override void OnPositionChanged(Point oldPosition, Point newPosition)
-        {
-            base.OnPositionChanged(oldPosition, newPosition);
-            //Keep the controls console (which is our scroll bar) in sync with where this console is.
-            _controlsContainer.Position = new Point(Position.X + Width, Position.Y);
-        }
-
-        protected override void OnVisibleChanged()
-        {
-            _controlsContainer.IsVisible = this.IsVisible;
-        }
-
-        /// <inheritdoc />
-        public override void Render(TimeSpan delta)
-        {
-            // Draw our console and then draw the scroll bar.
-            base.Render(delta);
-            _controlsContainer.Render(delta);
-        }
-
         public override void Update(TimeSpan delta)
         {
             // Update our console and then update the scroll bar
             base.Update(delta);
-            _controlsContainer.Update(delta);
 
             //If cursor position exceeds our displayable content viewport, 
             //move the ScrollOffset automatically to display new content.
@@ -96,22 +78,6 @@ namespace FeatureDemo.CustomConsoles
                 // Reset the shift amount.
                 TimesShiftedUp = 0;
             }
-        }
-
-        public override bool ProcessMouse(MouseScreenObjectState state)
-        {
-            //Create a state based on our container that has the scroll bar.
-            var stateForScroll = new MouseScreenObjectState(_controlsContainer, state.Mouse);
-
-            //Check if this state based on the console holding the scroll bar.
-            if (stateForScroll.IsOnScreenObject)
-            {
-                _controlsContainer.ProcessMouse(stateForScroll);
-                return true;
-            }
-
-            //If we're here, continue the mouse processing flow ordinarily.
-            return base.ProcessMouse(state);
         }
     }
 
