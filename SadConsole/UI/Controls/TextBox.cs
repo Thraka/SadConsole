@@ -134,6 +134,7 @@ namespace SadConsole.UI.Controls
             get => _editingText;
             protected set
             {
+                var oldText = _editingText;
                 _editingText = value;
 
                 if (MaxLength != 0)
@@ -146,7 +147,9 @@ namespace SadConsole.UI.Controls
 
                 ValidateCursorPosition();
                 IsDirty = true;
-                EditingTextChanged?.Invoke(this, EventArgs.Empty);
+
+                if (_editingText != oldText)
+                    EditingTextChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
