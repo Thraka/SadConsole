@@ -12,6 +12,7 @@ namespace FeatureDemo.CustomConsoles
     {
         SadConsole.Readers.TheDrawFont _selectedFont;
         Rectangle _drawArea;
+        SadConsole.UI.Controls.TextBox _writeTextbox;
 
         public TheDrawConsole(): base (Program.MainWidth, Program.MainHeight)
         {
@@ -22,29 +23,51 @@ namespace FeatureDemo.CustomConsoles
             };
             Controls.Add(label);
 
-            SadConsole.UI.Controls.TextBox box = new SadConsole.UI.Controls.TextBox(Width - label.Bounds.MaxExtentX - 2)
+            SadConsole.UI.Controls.Button selectFont = new SadConsole.UI.Controls.Button(11, 1);
+            selectFont.Position = (Width - selectFont.Width - 1, 1);
+            selectFont.Text = "Font...";
+            selectFont.Click += SelectFont_Click;
+            Controls.Add(selectFont);
+
+            _writeTextbox = new SadConsole.UI.Controls.TextBox(selectFont.Position.X - label.Bounds.MaxExtentX - 2)
             {
                 Position = (label.Bounds.MaxExtentX + 1, label.Position.Y)
             };
-            Controls.Add(box);
+            Controls.Add(_writeTextbox);
 
             _drawArea = new Rectangle(0, 2, Width, Height - 2);
-
-            
 
             var fonts = SadConsole.Readers.TheDrawFont.ReadFonts("./TheDraw/TDFONTS0.TDF").ToArray();
             _selectedFont = fonts[0];
 
-            box.TextChanged += Box_TextChanged;
-            box.EditingTextChanged += Box_EditingTextChanged;
-            box.EditModeExit += Box_TextChanged;
+            _writeTextbox.TextChanged += Box_TextChanged;
+            _writeTextbox.EditingTextChanged += Box_EditingTextChanged;
+            _writeTextbox.EditModeExit += Box_TextChanged;
 
+        }
+
+        private void SelectFont_Click(object sender, EventArgs e)
+        {
+            Windows.TheDrawWindow window = new();
+            window.Center();
+            window.Closed += (s2, e2) =>
+            {
+                if (window.DialogResult)
+                {
+                    _selectedFont = window.SelectedFont;
+                    Box_TextChanged(_writeTextbox, EventArgs.Empty);
+                }
+            };
+            window.Show(true);
         }
 
         private void Box_EditingTextChanged(object sender, EventArgs e)
         {
-            Surface.Clear(_drawArea);
-            PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).EditingText);
+            if (!_writeTextbox.DisableKeyboard)
+            {
+                Surface.Clear(_drawArea);
+                PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).EditingText);
+            }
         }
 
         private void Box_TextChanged(object sender, EventArgs e)
