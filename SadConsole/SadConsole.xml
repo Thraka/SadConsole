@@ -3371,6 +3371,11 @@
             How many cells fit in the render area width used by SadConsole.
             </summary>
         </member>
+        <member name="P:SadConsole.GameHost.FrameNumber">
+            <summary>
+            A frame number counter, incremented every game frame.
+            </summary>
+        </member>
         <member name="M:SadConsole.GameHost.OnFrameRender">
             <summary>
             Raises the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
