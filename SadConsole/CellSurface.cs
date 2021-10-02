@@ -275,7 +275,11 @@ namespace SadConsole
         {
             Effects = new Effects.EffectsManager(this);
         }
-        
+
+        /// <inheritdoc />
+        public void Resize(int width, int height, bool clear) =>
+            Resize(width, height, width, height, clear);
+
         /// <inheritdoc />
         public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
         {

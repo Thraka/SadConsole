@@ -355,7 +355,39 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, ColoredGlyph cell, ICellEffect effect)
         {
-            surface.Effects.SetEffect(surface.ToList().IndexOf(cell), effect);
+            int index = surface.ToList().IndexOf(cell);
+
+            if (index == -1)
+                throw new ArgumentOutOfRangeException(nameof(cell), "Cell doesn't exist in surface.");
+
+            surface.Effects.SetEffect(index, effect);
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Changes the effect of a cell to the specified effect.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="cells">The cells for the effect.</param>
+        /// <param name="effect">The desired effect.</param>
+        public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+        {
+            int counter = 0;
+            var allCells = surface.ToList();
+            List<int> cellIndecies = new List<int>(5);
+
+            foreach (ColoredGlyph item in cells)
+            {
+                int index = allCells.IndexOf(item);
+
+                if (index == -1)
+                    throw new ArgumentOutOfRangeException(nameof(cells), $"Cell doesn't exist in surface, counter was {counter}");
+
+                cellIndecies.Add(index);
+                counter++;
+            }
+
+            surface.Effects.SetEffect(cellIndecies, effect);
             surface.IsDirty = true;
         }
 
@@ -935,6 +967,94 @@ namespace SadConsole
             surface.TimesShiftedRight = 0;
         }
 
+        public static void ShiftRow(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        {
+            if (count == 0) return;
+            if (startingX < 0 || startingX >= surface.Width) throw new ArgumentOutOfRangeException(nameof(startingX), "Column must be 0 or more and less than the width of the surface.");
+            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+
+            if (count < 0)
+                ShiftRowLeftUnchecked(surface, row, startingX, -count, wrap); 
+            else
+                ShiftRowRightUnchecked(surface, row, startingX, count, wrap);
+        }
+
+        public static void ShiftRowRight(this ICellSurface surface, int row, int count, bool wrap)
+        {
+            if (count == 0) return;
+            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+
+            ShiftRowRightUnchecked(surface, row, 0, count, wrap);
+        }
+
+        public static void ShiftRowLeft(this ICellSurface surface, int row, int count, bool wrap)
+        {
+            if (count == 0) return;
+            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+
+            ShiftRowLeftUnchecked(surface, row, surface.Width - 1, count, wrap);
+        }
+
+        public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        {
+            if (wrap)
+            {
+                // TODO Wrap on ShiftRowRightUnchecked
+            }
+            else
+            {
+                if (count > surface.Width - startingX)
+                {
+                    // Shifting all off the side. Clear everything.
+                    for (int x = startingX; x < surface.Width; x++)
+                        Clear(surface, x, row, surface.Width - x);
+                }
+                else
+                {
+                    int startIndex = new Point(surface.Width - count - 1, row).ToIndex(surface.Width);
+                    int copyStopX = new Point(startingX, row).ToIndex(surface.Width);
+
+                    for (int x = startIndex; x >= copyStopX; x--)
+                    {
+                        surface[x].CopyAppearanceTo(surface[x + count]);
+                    }
+
+                    for (int x = 0; x < count; x++)
+                    {
+                        surface[x + copyStopX].Clear();
+                    }
+                }
+            }
+        }
+
+        public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        {
+            if (wrap)
+            {
+                // TODO Wrap on ShiftRowLeftUnchecked
+            }
+            else
+            {
+                if (count + 1 > startingX)
+                {
+                    // Shifting all off the side. Clear everything.
+                    for (int x = 0; x < startingX; x++)
+                        Clear(surface, 0, row, startingX + 1);
+                }
+                else
+                {
+                    int startIndex = new Point(count, row).ToIndex(surface.Width);
+                    int copyStopX = new Point(startingX, row).ToIndex(surface.Width);
+
+                    for (int x = startIndex; x <= copyStopX; x++)
+                        surface[x].CopyAppearanceTo(surface[x - count]);
+
+                    for (int x = 0; x < count; x++)
+                        surface[startingX - x].Clear();
+                }
+            }
+        }
+
         /// <summary>
         /// Scrolls all the console data up by one.
         /// </summary>
@@ -1397,9 +1517,9 @@ namespace SadConsole
         public static void Clear(this ICellSurface surface, int x, int y)
         {
             if (!surface.IsValidCell(x, y, out int index))
-            {
                 return;
-            }
+
+            surface.Effects.SetEffect(index, null);
 
             ColoredGlyph cell = surface[index];
             cell.Clear();
@@ -1418,8 +1538,10 @@ namespace SadConsole
         /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface, int x, int y, int length) =>
-            Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface, int x, int y, int length)
+        {
+            ColoredGlyph[] cells = Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        }
 
         /// <summary>
         /// Clears an area of surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
@@ -1438,8 +1560,10 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Mirror to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-        public static void Fill(this ICellSurface surface, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+        public static ColoredGlyph[] Fill(this ICellSurface surface, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
+            ColoredGlyph[] glyphs = new ColoredGlyph[surface.Count];
+
             for (int i = 0; i < surface.Count; i++)
             {
                 if (background.HasValue)
@@ -1455,9 +1579,13 @@ namespace SadConsole
                     surface[i].Mirror = mirror.Value;
 
                 surface[i].Decorators = Array.Empty<CellDecorator>();
+
+                glyphs[i] = surface[i];
             }
 
             surface.IsDirty = true;
+
+            return glyphs;
         }
 
         /// <summary>
@@ -1474,8 +1602,6 @@ namespace SadConsole
         /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
         public static ColoredGlyph[] Fill(this ICellSurface surface, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
-
-
             if (!surface.IsValidCell(x, y, out int index))
             {
                 return Array.Empty<ColoredGlyph>();

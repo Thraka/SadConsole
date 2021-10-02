@@ -764,6 +764,9 @@
             <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
             <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
         </member>
+        <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.CellSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
@@ -2023,6 +2026,14 @@
             <param name="bufferHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
         </member>
+        <member name="M:SadConsole.Console.Resize(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface and view to the specified width and height.
+            </summary>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
+        </member>
         <member name="T:SadConsole.Debug.Screen">
             <summary>
             A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
@@ -2266,6 +2277,23 @@
             <summary>
             The amount of time this effect runs for in seconds.
             </summary>
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Clone">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.Restart">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.ToString">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Effects.Delay">
             <summary>
@@ -2554,6 +2582,9 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Fade.Restart">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Clone">
@@ -4537,6 +4568,14 @@
             <param name="height">The viewable height of the surface.</param>
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface and view to the specified width and height.
+            </summary>
+            <param name="width">The viewable width of the surface.</param>
+            <param name="height">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         </member>
         <member name="T:SadConsole.ICellSurfaceSettable">
@@ -6964,6 +7003,72 @@
             </summary>
             <param name="width">The width of the layer.</param>
             <param name="height">The height of the layer.</param>
+        </member>
+        <member name="T:SadConsole.Readers.TheDrawFont">
+            <summary>
+            Represents a TheDraw ascii font. http://www.roysac.com/thedrawfonts-tdf.html
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.TheDrawFont.FontType">
+            <summary>
+            The type of font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.FontType.Outline">
+            <summary>
+            An outline font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.FontType.Block">
+            <summary>
+            A block-based font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.FontType.Color">
+            <summary>
+            A font supporting color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TheDrawFont.Title">
+            <summary>
+            The title of the font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TheDrawFont.Type">
+            <summary>
+            The type of font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TheDrawFont.LetterSpacing">
+            <summary>
+            The empty characters between letters when drawing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TheDrawFont.CharactersSupported">
+            <summary>
+            An array indexed by character code, indicating if a glyph character is supported by the font. Characters 33 to 126 are supported, starting at index 0.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TheDrawFont.Characters">
+            <summary>
+            A dictionary keyed by character code representing each character in the font. Characters 33 to 126 are supported but indexed starting at 0.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.TheDrawFont.IsCharacterSupported(System.Int32)">
+            <summary>
+            Returns <see langword="true"/> when the specified character glyph is supported by this font; otherwise <see langword="false"/>.
+            </summary>
+            <param name="glyph"></param>
+            <returns>A boolean value indicating whether or not the specified glyph is supported.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.TheDrawFont.GetCharacter(System.Int32)">
+            <summary>
+            Gets a character from this font by character code.
+            </summary>
+            <param name="glyph">The character to get.</param>
+            <returns>The specified character.</returns>
+            <exception cref="T:System.InvalidOperationException">The character glyph index is valid but isn't included in this font.</exception>
+            <exception cref="T:System.IndexOutOfRangeException">The character glyph index isn't in range. It must be between 33 and 126.</exception>
         </member>
         <member name="T:SadConsole.Renderers.Constants.RendererNames">
             <summary>
@@ -10413,6 +10518,21 @@
         <member name="F:SadConsole.UI.Controls.TextBox._currentAppearance">
             <summary>
             The current appearance of the control.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditModeEnter">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.DisableKeyboard"/> property changes to <see langword="true"/>, causing the textbox to accept keyboard input.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditModeExit">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.DisableKeyboard"/> property changes to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.EditingTextChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.EditingText"/> property changes while the textbox is being typed in.
             </summary>
         </member>
         <member name="E:SadConsole.UI.Controls.TextBox.TextChanged">

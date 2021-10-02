@@ -4,6 +4,17 @@
         <name>SadConsole.Extended</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Components.MouseTint">
+            <summary>
+            Tints a surface when that surface would use the mouse. Helps debug which object is receiving mouse input as you move the mouse around.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MouseTint.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.MouseTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.SmoothMove">
             <summary>
             Animates the movement of an object. 

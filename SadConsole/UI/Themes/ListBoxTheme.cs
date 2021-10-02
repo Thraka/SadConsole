@@ -62,7 +62,10 @@ namespace SadConsole.UI.Themes
         protected void SetupScrollBar(ListBox listbox)
         {
             if (DrawBorder)
+            {
+                if (listbox.Height < 5) throw new Exception("Listbox with a bordermust have a height of 5 or more.");
                 listbox.SetupScrollBar(Orientation.Vertical, listbox.Height - 2, new Point(listbox.Width - 1, 1));
+            }
             else
                 listbox.SetupScrollBar(Orientation.Vertical, listbox.Height, new Point(listbox.Width - 1, 0));
         }
@@ -257,6 +260,11 @@ namespace SadConsole.UI.Themes
         /// <param name="itemState">The state of the item.</param>
         public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
+            if (item is ValueTuple<ColoredString, object> colValue)
+                item = colValue.Item1;
+            else if (item is ValueTuple<string, object> strValue)
+                item = strValue.Item1;
+
             if (item is ColoredString colored)
             {
                 ColoredString substring;

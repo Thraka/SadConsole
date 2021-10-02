@@ -98,6 +98,20 @@ namespace SadConsole
                 throw new Exception("Surface doesn't support resize.");
         }
 
+        /// <summary>
+        /// Resizes the surface and view to the specified width and height.
+        /// </summary>
+        /// <param name="width">The viewable width of the surface.</param>
+        /// <param name="height">The viewable height of the surface.</param>
+        /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="DefaultForeground"/>, <see cref="DefaultBackground"/> and glyph 0.</param>
+        public void Resize(int width, int height, bool clear)
+        {
+            if (Surface is ICellSurfaceResize surface)
+                surface.Resize(width, height, clear);
+            else
+                throw new Exception("Surface doesn't support resize.");
+        }
+
         IEnumerator IEnumerable.GetEnumerator() => Surface.GetEnumerator();
     }
 }

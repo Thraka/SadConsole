@@ -69,6 +69,21 @@ namespace SadConsole.UI.Controls
         protected ColoredGlyph _currentAppearance;
 
         /// <summary>
+        /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="true"/>, causing the textbox to accept keyboard input.
+        /// </summary>
+        public event EventHandler EditModeEnter;
+
+        /// <summary>
+        /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="false"/>.
+        /// </summary>
+        public event EventHandler EditModeExit;
+
+        /// <summary>
+        /// Raised when the <see cref="EditingText"/> property changes while the textbox is being typed in.
+        /// </summary>
+        public event EventHandler EditingTextChanged;
+
+        /// <summary>
         /// Raised when the text has changed and the preview has accepted it.
         /// </summary>
         public event EventHandler TextChanged;
@@ -101,10 +116,14 @@ namespace SadConsole.UI.Controls
                 _disableKeyboardEdit = value;
 
                 if (!_disableKeyboardEdit)
-                {
                     _caretPos = Text.Length;
-                }
+
+                if (value)
+                    EditModeExit?.Invoke(this, EventArgs.Empty);
+                else
+                    EditModeEnter?.Invoke(this, EventArgs.Empty);
             }
+
         }
 
         /// <summary>
@@ -115,6 +134,7 @@ namespace SadConsole.UI.Controls
             get => _editingText;
             protected set
             {
+                var oldText = _editingText;
                 _editingText = value;
 
                 if (MaxLength != 0)
@@ -126,8 +146,10 @@ namespace SadConsole.UI.Controls
                 }
 
                 ValidateCursorPosition();
-                DetermineState();
                 IsDirty = true;
+
+                if (_editingText != oldText)
+                    EditingTextChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -368,6 +390,7 @@ namespace SadConsole.UI.Controls
                         }
                         else if (info.KeysPressed[i].Key == Keys.Escape)
                         {
+                            EditingText = "";
                             DisableKeyboard = true;
                             return true;
                         }
@@ -428,6 +451,7 @@ namespace SadConsole.UI.Controls
                         }
                         else if (info.KeysPressed[i].Key == Keys.Escape)
                         {
+                            EditingText = "";
                             DisableKeyboard = true;
                             return true;
                         }
@@ -487,6 +511,7 @@ namespace SadConsole.UI.Controls
             base.FocusLost();
             DisableKeyboard = true;
             Text = EditingText;
+            EditingText = "";
             IsDirty = true;
         }
 
