@@ -153,7 +153,7 @@ namespace SadRogue.Primitives
             (color * 0.25f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.25f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.25f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
@@ -162,7 +162,7 @@ namespace SadRogue.Primitives
             (color * 1.25f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.50f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.50f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
@@ -171,7 +171,7 @@ namespace SadRogue.Primitives
             (color * 1.50f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.75f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.75f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
