@@ -4,6 +4,114 @@
         <name>SadConsole.Extended</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Components.C64KeyboardHandler">
+            <summary>
+            A console prompt keyboard handler that acts like the text editor on the Commodore 64 and VIC-20 computers.
+            </summary>
+            <remarks>
+            This handler lets the user move the cursor with the keyboard arrow keys. When the <kbd>ENTER</kbd> key is pressed, the current line is sent to the <see cref="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction"/> callback. All empty characters are trimmed from the start and end of the string.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.Prompt">
+            <summary>
+            The prompt to display to the user.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.EraseGlyph">
+            <summary>
+            The glyph to print when erasing a character, such as when the backspace key is pressed to erase a character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.ReplaceEmptyGlyph">
+            <summary>
+            The glyph used to replace the empty characters that may be in the string sent to <see cref="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction">
+            <summary>
+            This is a callback for the owner of this keyboard handler. When it returns <see langword="true"/>, the handler will print the prompt. The parameters are the component itself, the <see cref="T:SadConsole.Components.Cursor"/> used by the handler, and the string input by the user. It's called when the user presses ENTER.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.#ctor(System.String)">
+            <summary>
+            Creates a new keyboard handler with the specified prompt.
+            </summary>
+            <param name="prompt">The prompt to display to the user.</param>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+             <summary>
+             Called when this component is added to an object with a cursor; caches reference to the cursor.
+             </summary>
+             <param name="host">The host object for the component.</param>
+             <remarks>
+             Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
+            
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.PrintPrompt">
+            <summary>
+            Prints the prompt at the cursors current position.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Components.ClassicConsoleKeyboardHandler">
+            <summary>
+            A classic console/terminal prompt keyboard handler.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.Prompt">
+            <summary>
+            The prompt to display to the user.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.EraseGlyph">
+            <summary>
+            The glyph to print when erasing a character, such as when the backspace key is pressed to erase a character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.ReplaceEmptyGlyph">
+            <summary>
+            The glyph used to replace the empty characters that may be in the string sent to <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler.EnterPressedAction"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.CursorLastY">
+            <summary>
+            This holds the row that the virtual cursor is starting from when someone is typing.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ClassicConsoleKeyboardHandler.EnterPressedAction">
+            <summary>
+            This is a callback for the owner of this keyboard handler. The parameters are the component itself, the <see cref="T:SadConsole.Components.Cursor"/> used by the handler, and the string input by the user. It's called when the user presses ENTER.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.#ctor(System.String)">
+            <summary>
+            Creates the handler with the specified prompt.
+            </summary>
+            <param name="prompt">The prompt to display to the user.</param>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+             <summary>
+             Called when this component is added to an object with a cursor; caches reference to the cursor.
+             </summary>
+             <param name="host">The host object for the component.</param>
+             <remarks>
+             Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
+            
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.PrintPrompt">
+            <summary>
+            Prints the prompt and locks the cursor to the column that ends at the prompt.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.MouseTint">
             <summary>
             Tints a surface when that surface would use the mouse. Helps debug which object is receiving mouse input as you move the mouse around.
@@ -13,6 +121,51 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Components.MouseTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Components.MoveViewPortKeyboardHandler">
+            <summary>
+            Moves the view of an <see cref="T:SadConsole.IScreenSurface"/> with a set of specified keyboard keys.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Left">
+            <summary>
+            The key to move left.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Right">
+            <summary>
+            The key to move right.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Up">
+            <summary>
+            The key to move up.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Down">
+            <summary>
+            The key to move down.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.#ctor">
+            <summary>
+            Creates this handler with the arrow keys.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.#ctor(SadConsole.Input.Keys,SadConsole.Input.Keys,SadConsole.Input.Keys,SadConsole.Input.Keys)">
+            <summary>
+            Creates this handler with the specified keys.
+            </summary>
+            <param name="left">The key to move left.</param>
+            <param name="right">The key to move right.</param>
+            <param name="up">The key to move up.</param>
+            <param name="down">The key to move down.</param>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.Components.SmoothMove">
