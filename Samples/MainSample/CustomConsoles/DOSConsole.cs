@@ -1,17 +1,14 @@
 ﻿using System;
 using SadConsole;
 using Console = SadConsole.Console;
-using FeatureDemo.InputHandling;
 using SadRogue.Primitives;
+using SadConsole.Components;
 
 namespace FeatureDemo.CustomConsoles
 {
     internal class DOSConsole : Console
     {
-        public string Prompt { get; set; }
-
         private readonly ClassicConsoleKeyboardHandler _keyboardHandlerObject;
-
 
         // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
         public DOSConsole()
@@ -20,17 +17,14 @@ namespace FeatureDemo.CustomConsoles
             IsVisible = false;
 
             // This is our cusotmer keyboard handler we'll be using to process the cursor on this console.
-            _keyboardHandlerObject = new InputHandling.ClassicConsoleKeyboardHandler();
+            _keyboardHandlerObject = new ClassicConsoleKeyboardHandler("Prompt> ");
 
             // Our custom handler has a call back for processing the commands the user types. We could handle
             // this in any method object anywhere, but we've implemented it on this console directly.
             _keyboardHandlerObject.EnterPressedAction = EnterPressedActionHandler;
 
-            // Enable the keyboard and setup the prompt.
+            // Enable the keyboard
             UseKeyboard = true;
-            Cursor.IsVisible = true;
-            Prompt = "Prompt> ";
-
 
             // Startup description
             ClearText();
@@ -42,10 +36,6 @@ namespace FeatureDemo.CustomConsoles
             _keyboardHandlerObject.CursorLastY = 24;
             TimesShiftedUp = 0;
 
-            Cursor.DisableWordBreak = true;
-            Cursor.Print(Prompt);
-            Cursor.DisableWordBreak = false;
-
             // Assign our custom handler method from our handler object to this consoles keyboard handler.
             // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
             // can use your own handler on any console type.
@@ -55,11 +45,11 @@ namespace FeatureDemo.CustomConsoles
         public void ClearText()
         {
             this.Clear();
-            Cursor.Position = new Point(0, 24);
-            _keyboardHandlerObject.CursorLastY = 24;
+            Cursor.Position = new Point(0, 0);
+            _keyboardHandlerObject.CursorLastY = 0;
         }
 
-        private void EnterPressedActionHandler(string value)
+        private void EnterPressedActionHandler(ClassicConsoleKeyboardHandler keyboardComponent, Cursor cursor, string value)
         {
             if (value.ToLower() == "help")
             {
@@ -83,7 +73,10 @@ namespace FeatureDemo.CustomConsoles
             }
             else if (value.ToLower() == "look")
             {
+                // In this case we want word breaks to be nice when the cursor prints the next string.
+                Cursor.DisableWordBreak = false;
                 Cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
+                Cursor.DisableWordBreak = true;
             }
             else if (value.ToLower() == "exit" || value.ToLower() == "quit")
             {
