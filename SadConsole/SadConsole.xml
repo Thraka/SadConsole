@@ -1050,7 +1050,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.String">
             <summary>
-            Gets or sets the characters representing this string. When set, first processes the string through <see cref="M:SadConsole.StringParser.IParser.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/>.
+            Gets or sets the characters representing this string. When set, first processes the string through <see cref="!:StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredString.Length">
@@ -1243,13 +1243,8 @@
         </member>
         <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
-            The method to parse a string into a <see cref="T:SadConsole.ColoredString"/>.
+            This method is obsolete. Use <see cref="P:SadConsole.ColoredString.Parser"/>.
             </summary>
-            <param name="value"></param>
-            <param name="surfaceIndex"></param>
-            <param name="surface"></param>
-            <param name="initialBehaviors"></param>
-            <returns></returns>
         </member>
         <member name="P:SadConsole.ColoredString.Parser">
             <summary>
@@ -1358,7 +1353,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
+            Indicates this cursor should process te string through the <see cref="!:StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -8266,7 +8261,7 @@
             Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.Default.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.Default.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Creates a colored string by parsing commands embedded in the string.
             </summary>
@@ -8331,7 +8326,7 @@
             Type of command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Builds a glyph.
             </summary>
@@ -8362,7 +8357,7 @@
             <param name="commandStack">The current commands for the string.</param>
             <param name="surface">The surface hosting the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBlink.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBlink.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandClearEffect">
@@ -8377,7 +8372,7 @@
             <param name="parameters">The string to parse for parameters.</param>
             <param name="commandStack">The current commands for the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandClearEffect.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandClearEffect.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandSetGlyph">
@@ -8411,7 +8406,7 @@
             </summary>
             <param name="parameters">The string to parse for parameters.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandSetGlyph.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandSetGlyph.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandGradient">
@@ -8440,7 +8435,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandGradient.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandGradient.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandMirror">
@@ -8464,7 +8459,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandMirror.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandMirror.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandRecolor">
@@ -8528,7 +8523,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandRecolor.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandRecolor.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandStacks">
@@ -8601,7 +8596,7 @@
             <param name="parameters">The string to parse for parameters.</param>
             <param name="stacks">The current commands for the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.String,SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">

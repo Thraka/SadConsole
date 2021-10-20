@@ -9,6 +9,6 @@ namespace SadConsole.StringParser
     /// </summary>
     public interface IParser
     {
-        ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null);
+        ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null);
     }
 }

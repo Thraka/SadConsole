@@ -56,6 +56,6 @@
         /// <param name="processedString">The entire string being processed.</param>
         /// <param name="commandStack">The state of commands.</param>
         public abstract void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-            ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack);
+            ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack);
     }
 }

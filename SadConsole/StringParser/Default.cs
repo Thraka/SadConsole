@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using static SadConsole.ColoredString;
+using SadConsole.Extensions;
 
 namespace SadConsole.StringParser
 {
@@ -23,7 +24,7 @@ namespace SadConsole.StringParser
         /// <param name="surface">The surface the string will be printed to.</param>
         /// <param name="initialBehaviors">Any initial defaults.</param>
         /// <returns>The finalized string.</returns>
-        public ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null)
+        public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null)
         {
             ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
             List<ColoredGlyphEffect> glyphs = new List<ColoredGlyphEffect>(value.Length);
@@ -44,21 +45,26 @@ namespace SadConsole.StringParser
                         // Check for the next part of the magic sequence
                         // If the rest of the string is long enough to contain the start of a command, check
                         // Check for c: and then a ] character for the end of the command.
-                        if (i + 4 < value.Length && value[i + 1] == 'c' && value[i + 2] == ':' && value.IndexOf(']', i + 2) != -1)
+                        if (i + 4 < value.Length && value[i + 1] == 'c' && value[i + 2] == ':' && value.Slice(i).Next(']', out int commandExitIndex))
                         {
                             // Pull the contents after [c: and before ]
-                            int commandExitIndex = value.IndexOf(']', i + 2);
-                            string command = value.Substring(i + 3, commandExitIndex - (i + 3));
-                            string commandParams = "";
+                            commandExitIndex += i;
 
-                            // If the command text contains a space, it contains a parameter
-                            if (command.Contains(" "))
+                            string commandParams;
+                            string command;
+                            ReadOnlySpan<char> fullCommand = value.Slice(i + 3, commandExitIndex - (i + 3));
+                            int splitPos = fullCommand.IndexOf(' ');
+                            
+                            if (splitPos != -1)
                             {
-                                string[] commandSections = command.Split(new char[] { ' ' }, 2);
-                                command = commandSections[0].ToLower();
-                                commandParams = commandSections[1];
+                                commandParams = fullCommand.Slice(splitPos + 1).ToString();
+                                command = fullCommand.Slice(0, splitPos).ToString();
                             }
-
+                            else
+                            {
+                                commandParams = String.Empty;
+                                command = fullCommand.ToString();
+                            }
                             // Check for custom command
                             // Send the method the command name, the parameters, the current glyphs that have been created, the surface (if it's being actively printed), and the existing commands
                             ParseCommandBase commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
@@ -175,5 +181,6 @@ namespace SadConsole.StringParser
             return new ColoredString(glyphs.ToArray()) { IgnoreEffect = !commandStacks.TurnOnEffects };
         }
 
+        
     }
 }
