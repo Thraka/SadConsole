@@ -315,7 +315,7 @@ namespace ThemeEditor
                 if (i == _themePartSelectedIndex)
                 {
                     themeY = row;
-                    Surface.Print(3, row, ColoredString.Parse(GetThemePartString(selectedSetting.ComputedColor, selectedSetting.Name.Replace("Control ", ""))));
+                    Surface.Print(3, row, ColoredString.Parser.Parse(GetThemePartString(selectedSetting.ComputedColor, selectedSetting.Name.Replace("Control ", ""))));
                     Surface.SetGlyph(2, row, ICellSurface.ConnectedLineThin[0], colors.Lines);
                     Surface.DrawLine(new Point(2, row + 1), (_themePartsArea.MaxExtentX, row + 1), ICellSurface.ConnectedLineThin[0], colors.Lines);
                     Surface.DrawLine(new Point(_themePartsArea.MaxExtentX, row + 1), new Point(_themePartsArea.MaxExtentX, row + _themePartSelectedAreaSize), ICellSurface.ConnectedLineThin[0], colors.Lines);
@@ -325,7 +325,7 @@ namespace ThemeEditor
                 }
                 else
                 {
-                    Surface.Print(3, row, ColoredString.Parse(GetThemePartString(_themeParts[i].ComputedColor, _themeParts[i].Name.Replace("Control ", ""))));
+                    Surface.Print(3, row, ColoredString.Parser.Parse(GetThemePartString(_themeParts[i].ComputedColor, _themeParts[i].Name.Replace("Control ", ""))));
                     Surface.SetGlyph(2, row, ICellSurface.ConnectedLineThin[0], colors.Lines);
                 }
             }

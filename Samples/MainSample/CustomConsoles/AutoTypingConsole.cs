@@ -40,7 +40,7 @@ namespace FeatureDemo.CustomConsoles
                                          };
 
             // We want this to print on a sub region of the main console, so we'll create a sub view and use that
-            typingInstruction = new SadConsole.Instructions.DrawString(SadConsole.ColoredString.Parse(string.Join("\r\n", text)));
+            typingInstruction = new SadConsole.Instructions.DrawString(SadConsole.ColoredString.Parser.Parse(string.Join("\r\n", text)));
             typingInstruction.TotalTimeToPrint = 8; // 0.5 seconds per line of text
 
             Cursor.Position = new SadRogue.Primitives.Point(1, 1);

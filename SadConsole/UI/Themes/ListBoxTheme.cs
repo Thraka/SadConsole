@@ -364,14 +364,18 @@ namespace SadConsole.UI.Themes
                     if (font != null)
                         useExtended = font.IsSadExtended;
 
-                    string colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
+                    string colorBoxesCommands;
+
+                    StringParser.Default parser = new StringParser.Default();
 
                     if (useExtended)
                         colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 254]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 301]m[c:sg 302]m";
+                    else
+                        colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
 
-                    colorBoxesCommands = $"[c:r b:{cellLook.Background.ToParser()}]" + colorBoxesCommands;
-
-                    control.Surface.Print(area.X, area.Y, ColoredString.Parse(colorBoxesCommands));
+                    colorBoxesCommands = $"[c:r b:{cellLook.Background.ToParser()}]{colorBoxesCommands}";
+                    
+                    control.Surface.Print(area.X, area.Y, parser.Parse(colorBoxesCommands));
                     control.Surface.Print(area.X + 3, area.Y, color2.Item2.Align(HorizontalAlignment.Left, area.Width - 3), cellLook);
                 }
                 else

@@ -45,7 +45,6 @@
         /// </summary>
         public CommandTypes CommandType = CommandTypes.Invalid;
 
-
         /// <summary>
         /// Builds a glyph.
         /// </summary>

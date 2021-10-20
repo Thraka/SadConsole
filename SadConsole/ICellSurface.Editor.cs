@@ -625,7 +625,7 @@ namespace SadConsole
                 }
             }
             else
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface));
+                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface));
 
             surface.IsDirty = true;
         }
@@ -656,10 +656,9 @@ namespace SadConsole
             }
             else
             {
-                var behavior = new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(behavior);
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -697,7 +696,7 @@ namespace SadConsole
                 var stacks = new ParseCommandStacks();
                 stacks.AddSafe(behaviorFore);
                 stacks.AddSafe(behaviorBack);
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
             }
             surface.IsDirty = true;
         }
@@ -739,7 +738,7 @@ namespace SadConsole
                 stacks.AddSafe(new ParseCommandRecolor { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
                 stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
 
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
             }
             surface.IsDirty = true;
         }
@@ -774,7 +773,7 @@ namespace SadConsole
                 var stacks = new ParseCommandStacks();
                 stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
 
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
             }
             surface.IsDirty = true;
         }

@@ -8,7 +8,7 @@
     public class ParseCommandStacks
     {
         /// <summary>
-        /// Indicates there is a command that uses effets.
+        /// Indicates there is a command that uses effects.
         /// </summary>
         public bool TurnOnEffects { get; set; }
 

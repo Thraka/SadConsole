@@ -1050,7 +1050,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.String">
             <summary>
-            Gets or sets the characters represneting this string. When set, first processes the string through <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/>.
+            Gets or sets the characters representing this string. When set, first processes the string through <see cref="M:SadConsole.StringParser.IParser.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredString.Length">
@@ -1101,7 +1101,7 @@
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.String)">
             <summary>
-            Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> first to process the string.
+            Creates a new instance of the ColoredString class with the specified string value.
             </summary>
             <param name="value">The backing string.</param>
         </member>
@@ -1241,20 +1241,20 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
-        <member name="F:SadConsole.ColoredString.CustomProcessor">
-            <summary>
-            Custom processor called if any built in command is not triggerd. Signature is ("command", "sub command", existing glyphs, text surface, associated editor, command stacks).
-            </summary>
-        </member>
         <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
-            Creates a colored string by parsing commands embedded in the string.
+            The method to parse a string into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
-            <param name="value">The string to parse.</param>
-            <param name="surfaceIndex">Index of where this string will be printed.</param>
-            <param name="surface">The surface the string will be printed to.</param>
-            <param name="initialBehaviors">Any initial defaults.</param>
-            <returns>The finalized string.</returns>
+            <param name="value"></param>
+            <param name="surfaceIndex"></param>
+            <param name="surface"></param>
+            <param name="initialBehaviors"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SadConsole.ColoredString.Parser">
+            <summary>
+            The string parser to use for transforming strings into <see cref="T:SadConsole.ColoredString"/>.
+            </summary>
         </member>
         <member name="T:SadConsole.Components.Cursor">
             <summary>
@@ -1358,7 +1358,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Calls <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
+            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -3744,7 +3744,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.UsePrintProcessor">
             <summary>
-            When true, the <see cref="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> command is used to print strings.
+            When true, the <see cref="P:SadConsole.ColoredString.Parser"/> is used to generate a <see cref="T:SadConsole.ColoredString"/> before printing.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.Effects">
@@ -8256,6 +8256,31 @@
         <member name="M:SadConsole.SplashScreens.SplashScreenManager.Update(System.TimeSpan)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.StringParser.Default">
+            <summary>
+            The default string parser.
+            </summary>
+        </member>
+        <member name="F:SadConsole.StringParser.Default.CustomProcessor">
+            <summary>
+            Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.Default.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+            <summary>
+            Creates a colored string by parsing commands embedded in the string.
+            </summary>
+            <param name="value">The string to parse.</param>
+            <param name="surfaceIndex">Index of where this string will be printed.</param>
+            <param name="surface">The surface the string will be printed to.</param>
+            <param name="initialBehaviors">Any initial defaults.</param>
+            <returns>The finalized string.</returns>
+        </member>
+        <member name="T:SadConsole.StringParser.IParser">
+            <summary>
+            Describes a parser
+            </summary>
+        </member>
         <member name="T:SadConsole.StringParser.CommandTypes">
             <summary>
             Command type of a <see cref="T:SadConsole.StringParser.ParseCommandBase"/>.
@@ -8513,7 +8538,7 @@
         </member>
         <member name="P:SadConsole.StringParser.ParseCommandStacks.TurnOnEffects">
             <summary>
-            Indicates there is a command that uses effets.
+            Indicates there is a command that uses effects.
             </summary>
         </member>
         <member name="P:SadConsole.StringParser.ParseCommandStacks.Foreground">
