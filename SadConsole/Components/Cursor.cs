@@ -185,7 +185,7 @@ namespace SadConsole.Components
         }
 
         /// <summary>
-        /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+        /// When true, prevents any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
         [DataMember]
         public bool DisableWordBreak { get; set; } = false;
@@ -221,7 +221,7 @@ namespace SadConsole.Components
         }
 
         /// <summary>
-        /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+        /// Indicates that when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
         /// </summary>
         [DataMember]
         public bool AutomaticallyShiftRowsUp { get; set; }
@@ -352,7 +352,7 @@ namespace SadConsole.Components
         private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
             ColoredGlyph cell = _editor[_position.Y * _editor.Width + _position.X];
-
+            
             if (!PrintOnlyCharacterData)
             {
                 if (!settings.IgnoreGlyph)
