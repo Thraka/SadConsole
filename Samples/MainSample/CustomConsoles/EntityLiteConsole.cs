@@ -112,7 +112,7 @@ namespace FeatureDemo.CustomConsoles
         {
             // Forward the keyboard data to the entity to handle the movement code.
             // We could detect if the users hit ESC and popup a menu or something.
-            // By not setting the entity as the active object, twe let this
+            // By not setting the entity as the active object, we let this
             // "game level" (the console we're hosting the entity on) determine if
             // the keyboard data should be sent to the entity.
 
