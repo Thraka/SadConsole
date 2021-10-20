@@ -120,32 +120,34 @@ namespace SadConsole.StringParser
                     }
                 }
 
-                // HUH!!!?
-                #region I don't know what this is doing....
+                // If the string is associated with a surface, pull the glyph out and use its colors
                 int fixedSurfaceIndex;
 
                 if (surfaceIndex == -1 || surface == null)
                     fixedSurfaceIndex = -1;
                 else
+                    // If the index is within range of the surface, use it, otherwise -1
                     fixedSurfaceIndex = i + surfaceIndex < surface.Count ? i + surfaceIndex : -1;
 
                 ColoredGlyphEffect newGlyph;
 
+                // If surface index is in range, copy the surface colors to the new glyph
                 if (fixedSurfaceIndex != -1)
                 {
                     newGlyph = new ColoredGlyphEffect();
                     surface[i + surfaceIndex].CopyAppearanceTo(newGlyph);
+
+                    // Get the glyph's character from the string
                     newGlyph.Glyph = value[i];
                 }
                 else
                 {
+                    // Create new noncolored glyph.
                     newGlyph = new ColoredGlyphEffect()
                     {
                         Glyph = value[i]
                     };
                 }
-                #endregion
-
 
                 // Foreground
                 if (commandStacks.Foreground.Count != 0)
