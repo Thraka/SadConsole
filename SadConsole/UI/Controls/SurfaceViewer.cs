@@ -144,7 +144,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Proceses the mouse for the scrollers and then the surface area.
+        /// Processes the mouse for the scrollers and then the surface area.
         /// </summary>
         /// <param name="state">The state of the mouse.</param>
         /// <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>

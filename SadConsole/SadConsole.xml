@@ -1348,7 +1348,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.DisableWordBreak">
             <summary>
-            When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+            When true, prevents any print method from breaking words up by spaces when wrapping lines.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
@@ -1373,7 +1373,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.AutomaticallyShiftRowsUp">
             <summary>
-            Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+            Indicates that when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.SortOrder">
@@ -2942,6 +2942,32 @@
             <summary>
             Updates the cached view area based on the parent surface.
             </summary>
+        </member>
+        <member name="T:SadConsole.ICellSurfaceExtensions">
+            <summary>
+            Various extension methods to classes that implement <see cref="T:SadConsole.ICellSurface"/> interface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceExtensions.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.String,SadConsole.Readers.TheDrawFont,SadConsole.HorizontalAlignment,System.Int32)">
+            <summary>
+            Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
+            </summary>
+            <param name="cellSurface">The instance of <see cref="T:SadConsole.ICellSurface"/>.</param>
+            <param name="y">Y coordinate of the surface.</param>
+            <param name="text">Text to print.</param>
+            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
+            <param name="alignment"><see cref="T:SadConsole.HorizontalAlignment"/> to use.</param>
+            <param name="padding">Amount of regular font characters used as horizontal padding on both sides of the output.</param>
+        </member>
+        <member name="M:SadConsole.ICellSurfaceExtensions.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Readers.TheDrawFont)">
+            <summary>
+            Prints text using TheDrawFont.
+            </summary>
+            <param name="cellSurface">The instance of <see cref="T:SadConsole.ICellSurface"/>.</param>
+            <param name="x">X coordinate of the surface.</param>
+            <param name="y">Y coordinate of the surface.</param>
+            <param name="text">Text to print.</param>
+            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
         </member>
         <member name="T:SadConsole.PointExtensions">
             <summary>
@@ -9099,7 +9125,7 @@
         </member>
         <member name="P:SadConsole.UI.ControlHost.IsReadOnly">
             <summary>
-            Always returns <see langword="true"/>.
+            Always returns <see langword="false"/>.
             </summary>
         </member>
         <member name="M:SadConsole.UI.ControlHost.TabNextControl">
@@ -9358,7 +9384,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
-            Detects if the SPACE and ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
+            Detects if the SPACE or ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
             </summary>
             <param name="info"></param>
         </member>
@@ -9656,7 +9682,7 @@
             Checks if the mouse is the control and calls the appropriate mouse methods.
             </summary>
             <param name="state">Mouse information.</param>
-            <returns>Always returns false.</returns>
+            <returns>True when the control is enabled, set to use the mouse and the mouse is over it, otherwise false.</returns>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.LostMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
@@ -9676,7 +9702,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.PlaceRelativeTo(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Direction.Types,System.Int32)">
             <summary>
-            Plases this control relative to another, taking into account the bounds of the control.
+            Places this control relative to another, taking into account the bounds of the control.
             </summary>
             <param name="control">The other control to place this one relative to.</param>
             <param name="direction">The direction this control should be placed.</param>
@@ -9719,11 +9745,11 @@
              Resizes the control if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property is <see langword="true"/>.
              </summary>
              <remarks>
-             When overriding this method, to perhaps restrct the requested size, make sure to do the following:
+             When overriding this method, to perhaps restrict the requested size, make sure to do the following:
             
-             - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw a <see cref="T:System.InvalidOperationException"/>.
+             - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw an <see cref="T:System.InvalidOperationException"/>.
              - The <see cref="F:SadConsole.UI.Controls.ControlBase._width"/> and <see cref="F:SadConsole.UI.Controls.ControlBase._height"/> variables of the control are set to the values provided.
-             - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property to the same width and height values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
+             - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
              - The <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/>, if set, is reattached by calling <see cref="M:SadConsole.UI.Themes.ThemeBase.Attached(SadConsole.UI.Controls.ControlBase)"/>.
              - Set <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> to <see langword="true"/>.
              </remarks>
@@ -10460,7 +10486,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Proceses the mouse for the scrollers and then the surface area.
+            Processes the mouse for the scrollers and then the surface area.
             </summary>
             <param name="state">The state of the mouse.</param>
             <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
@@ -11793,21 +11819,21 @@
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.GetBright(SadRogue.Primitives.Color)">
             <summary>
-            Gets a darker version of the color. R,G,B channels are * 1.25f.
+            Gets a brighter version of the color. R,G,B channels are * 1.25f.
             </summary>
             <param name="color">Object instance.</param>
             <returns>A darker color.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.GetBrighter(SadRogue.Primitives.Color)">
             <summary>
-            Gets a darker version of the color. R,G,B channels are * 1.50f.
+            Gets a brighter version of the color. R,G,B channels are * 1.50f.
             </summary>
             <param name="color">Object instance.</param>
             <returns>A darker color.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.GetBrightest(SadRogue.Primitives.Color)">
             <summary>
-            Gets a darker version of the color. R,G,B channels are * 1.75f.
+            Gets a brighter version of the color. R,G,B channels are * 1.75f.
             </summary>
             <param name="color">Object instance.</param>
             <returns>A darker color.</returns>

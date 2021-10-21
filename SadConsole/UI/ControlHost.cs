@@ -149,7 +149,7 @@ namespace SadConsole.UI
         public int Count => ControlsList.Count;
 
         /// <summary>
-        /// Always returns <see langword="true"/>.
+        /// Always returns <see langword="false"/>.
         /// </summary>
         public bool IsReadOnly => false;
 
@@ -444,7 +444,6 @@ namespace SadConsole.UI
                 }
             }
         }
-
 
         private bool FindTabControlForward(int startingIndex, int endingIndex, out ControlBase foundControl)
         {
