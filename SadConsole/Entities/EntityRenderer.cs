@@ -189,6 +189,15 @@ namespace SadConsole.Entities
             OnEntityRemoved(entity);
         }
 
+        /// <summary>
+        /// Removes all entities from this renderer.
+        /// </summary>
+        public void RemoveAll()
+        {
+            while (_entities.Count != 0)
+                Remove(_entities[0]);
+        }
+
         /// <inheritdoc/>
         public override void OnAdded(IScreenObject host)
         {
