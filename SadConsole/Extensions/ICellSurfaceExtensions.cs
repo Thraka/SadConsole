@@ -13,7 +13,7 @@ namespace SadConsole
         /// <summary>
         /// Prints text using <see cref="TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
         /// </summary>
-        /// <param name="cellSurface">The instance of <see cref="ICellSurface"/>.</param>
+        /// <param name="cellSurface">Class implementing <see cref="ICellSurface"/>.</param>
         /// <param name="y">Y coordinate of the surface.</param>
         /// <param name="text">Text to print.</param>
         /// <param name="drawFont">Instance of the <see cref="TheDrawFont"/> to use.</param>
@@ -64,9 +64,9 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Prints text using TheDrawFont.
+        /// Prints text using <see cref="TheDrawFont"/>.
         /// </summary>
-        /// <param name="cellSurface">The instance of <see cref="ICellSurface"/>.</param>
+        /// <param name="cellSurface">Class implementing <see cref="ICellSurface"/>.</param>
         /// <param name="x">X coordinate of the surface.</param>
         /// <param name="y">Y coordinate of the surface.</param>
         /// <param name="text">Text to print.</param>
