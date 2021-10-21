@@ -1348,7 +1348,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.DisableWordBreak">
             <summary>
-            When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+            When true, prevents any print method from breaking words up by spaces when wrapping lines.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
@@ -1373,7 +1373,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.AutomaticallyShiftRowsUp">
             <summary>
-            Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+            Indicates that when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.SortOrder">
@@ -9358,7 +9358,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
-            Detects if the SPACE and ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
+            Detects if the SPACE or ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
             </summary>
             <param name="info"></param>
         </member>
@@ -9656,7 +9656,7 @@
             Checks if the mouse is the control and calls the appropriate mouse methods.
             </summary>
             <param name="state">Mouse information.</param>
-            <returns>Always returns false.</returns>
+            <returns>True when the control is enabled, set to use the mouse and the mouse is over it, otherwise false.</returns>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.LostMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
@@ -9676,7 +9676,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.PlaceRelativeTo(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Direction.Types,System.Int32)">
             <summary>
-            Plases this control relative to another, taking into account the bounds of the control.
+            Places this control relative to another, taking into account the bounds of the control.
             </summary>
             <param name="control">The other control to place this one relative to.</param>
             <param name="direction">The direction this control should be placed.</param>
@@ -9719,11 +9719,11 @@
              Resizes the control if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property is <see langword="true"/>.
              </summary>
              <remarks>
-             When overriding this method, to perhaps restrct the requested size, make sure to do the following:
+             When overriding this method, to perhaps restrict the requested size, make sure to do the following:
             
-             - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw a <see cref="T:System.InvalidOperationException"/>.
+             - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw an <see cref="T:System.InvalidOperationException"/>.
              - The <see cref="F:SadConsole.UI.Controls.ControlBase._width"/> and <see cref="F:SadConsole.UI.Controls.ControlBase._height"/> variables of the control are set to the values provided.
-             - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property to the same width and height values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
+             - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
              - The <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/>, if set, is reattached by calling <see cref="M:SadConsole.UI.Themes.ThemeBase.Attached(SadConsole.UI.Controls.ControlBase)"/>.
              - Set <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> to <see langword="true"/>.
              </remarks>
@@ -10460,7 +10460,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
-            Proceses the mouse for the scrollers and then the surface area.
+            Processes the mouse for the scrollers and then the surface area.
             </summary>
             <param name="state">The state of the mouse.</param>
             <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
