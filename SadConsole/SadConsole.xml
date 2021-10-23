@@ -2948,27 +2948,6 @@
             Various extension methods to classes that implement <see cref="T:SadConsole.ICellSurface"/> interface.
             </summary>
         </member>
-        <member name="M:SadConsole.ICellSurfaceExtensions.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.String,SadConsole.Readers.TheDrawFont,SadConsole.HorizontalAlignment,System.Int32)">
-            <summary>
-            Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
-            </summary>
-            <param name="cellSurface">Class implementing <see cref="T:SadConsole.ICellSurface"/>.</param>
-            <param name="y">Y coordinate of the surface.</param>
-            <param name="text">Text to print.</param>
-            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
-            <param name="alignment"><see cref="T:SadConsole.HorizontalAlignment"/> to use.</param>
-            <param name="padding">Amount of regular font characters used as horizontal padding on both sides of the output.</param>
-        </member>
-        <member name="M:SadConsole.ICellSurfaceExtensions.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Readers.TheDrawFont)">
-            <summary>
-            Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/>.
-            </summary>
-            <param name="cellSurface">Class implementing <see cref="T:SadConsole.ICellSurface"/>.</param>
-            <param name="x">X coordinate of the surface.</param>
-            <param name="y">Y coordinate of the surface.</param>
-            <param name="text">Text to print.</param>
-            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
-        </member>
         <member name="T:SadConsole.PointExtensions">
             <summary>
             Extensions for the <see cref="T:SadRogue.Primitives.Point"/> type.
@@ -4580,6 +4559,27 @@
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="maxGlyphValue">The maximum glyph value to use on the surface.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.String,SadConsole.Readers.TheDrawFont,SadConsole.HorizontalAlignment,System.Int32)">
+            <summary>
+            Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
+            </summary>
+            <param name="cellSurface">Class implementing <see cref="T:SadConsole.ICellSurface"/>.</param>
+            <param name="y">Y coordinate of the surface.</param>
+            <param name="text">Text to print.</param>
+            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
+            <param name="alignment"><see cref="T:SadConsole.HorizontalAlignment"/> to use.</param>
+            <param name="padding">Amount of regular font characters used as horizontal padding on both sides of the output.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Readers.TheDrawFont)">
+            <summary>
+            Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/>.
+            </summary>
+            <param name="cellSurface">Class implementing <see cref="T:SadConsole.ICellSurface"/>.</param>
+            <param name="x">X coordinate of the surface.</param>
+            <param name="y">Y coordinate of the surface.</param>
+            <param name="text">Text to print.</param>
+            <param name="drawFont">Instance of the <see cref="T:SadConsole.Readers.TheDrawFont"/> to use.</param>
         </member>
         <member name="T:SadConsole.ICellSurfaceResize">
             <summary>
