@@ -66,14 +66,18 @@ namespace FeatureDemo.CustomConsoles
             if (!_writeTextbox.DisableKeyboard)
             {
                 Surface.Clear(_drawArea);
-                PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).EditingText);
+                var text = ((SadConsole.UI.Controls.TextBox)sender).EditingText;
+                Surface.PrintTheDraw(0, 4, text, _selectedFont);
+                //PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).EditingText);
             }
         }
 
         private void Box_TextChanged(object sender, EventArgs e)
         {
             Surface.Clear(_drawArea);
-            PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).Text);
+            var text = ((SadConsole.UI.Controls.TextBox)sender).Text;
+            Surface.PrintTheDraw(0, 4, text, _selectedFont);
+            //PrintTheDrawString(((SadConsole.UI.Controls.TextBox)sender).Text);
         }
 
         private void PrintTheDrawString(string text)

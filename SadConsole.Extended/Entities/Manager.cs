@@ -104,7 +104,7 @@ namespace SadConsole.Entities
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+        /// Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
         /// </summary>
         /// <param name="position">The position to check.</param>
         /// <returns>A value indicating if an entity exists.</returns>

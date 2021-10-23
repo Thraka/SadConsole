@@ -25,9 +25,11 @@ namespace FeatureDemo.CustomConsoles
             // Setup the console text background pattern, which is hidden via colors
             // Print the text template on all of the console surface
             const string textTemplate = "sole SadCon";
-            var text = new System.Text.StringBuilder(Width * Height);
+            int amountOfChars = Width * Height;
+            var text = new System.Text.StringBuilder(amountOfChars);
+            int textRepetitionsNeeded = (amountOfChars / textTemplate.Length) + 1 /* to make sure there are no gaps */;
 
-            for (int i = 0; i < Width * Height; i++)
+            for (int i = 0; i < textRepetitionsNeeded; i++)
             {
                 text.Append(textTemplate);
             }
@@ -126,7 +128,6 @@ namespace FeatureDemo.CustomConsoles
             if (IsVisible)
                 base.Update(delta);
         }
-
 
         public override void Render(TimeSpan delta)
         {

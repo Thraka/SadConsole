@@ -65,7 +65,7 @@ namespace SadConsole.UI.Controls
         public void InvokeClick() => OnClick();
 
         /// <summary>
-        /// Detects if the SPACE and ENTER keys are pressed and calls the <see cref="Click"/> method.
+        /// Detects if the SPACE or ENTER keys are pressed and calls the <see cref="Click"/> method.
         /// </summary>
         /// <param name="info"></param>
         public override bool ProcessKeyboard(Input.Keyboard info)
