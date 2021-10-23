@@ -35,6 +35,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Extended", "SadC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Debug.MonoGame", "SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj", "{3D40BD49-A118-4655-8452-8CFAE677847A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PerformanceTests", "PerformanceTests", "{B9E802D7-CDD5-45B2-B7FE-9B614F8B545F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.PerformanceTests", "PerformanceTests\SadConsole.PerformanceTests\SadConsole.PerformanceTests.csproj", "{234F04EC-2DB9-4212-B839-1B06D9EF2822}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,10 @@ Global
 		{3D40BD49-A118-4655-8452-8CFAE677847A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D40BD49-A118-4655-8452-8CFAE677847A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D40BD49-A118-4655-8452-8CFAE677847A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +101,7 @@ Global
 		{EBCFC071-76C0-4A7A-933E-822C8E133CD0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{D413FA92-01C8-412B-8AF0-416423582EC3} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{7A961499-F7E8-4291-A906-AC1CC520EE03} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
+		{234F04EC-2DB9-4212-B839-1B06D9EF2822} = {B9E802D7-CDD5-45B2-B7FE-9B614F8B545F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}
