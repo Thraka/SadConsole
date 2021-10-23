@@ -6,7 +6,7 @@ using SadConsole.Input;
 namespace SadConsole.PerformanceTests
 {
     /// <summary>
-    /// Test component that does nothing except ensures it is processed in the Update/Render loops, for performance testing
+    /// Test component that does nothing except ensures it is processed in the Update, Render, ProcessKeyboard, and ProcessMouse loops, for performance testing
     /// </summary>
     public class TestComponent : IComponent
     {
@@ -45,6 +45,16 @@ namespace SadConsole.PerformanceTests
     /// Series of benchmarks for various functionality of ScreenObject.  Benchmark functions that call methods which return void will instead return
     /// the screen object being benchmarked, in an effort to ensure that the compiler will not optimize anything out.
     /// </summary>
+    /// <remarks>
+    /// The current tests only test the main-game-loop oriented functions of ScreenObject.  These tests have the following notable characteristics:
+    ///     - The children are all themselves ScreenObject instances, with 0 components and 0 children
+    ///         - This means that optimizations to the ScreenObject functions recursively cause performance gains when children are processed
+    ///     - The components are processed in all 4 elements of the main game loop (Update, Render, ProcessKeyboard, ProcessMouse), but the functions called for these
+    ///       events do nothing (blank implementation).
+    ///         - This is clearly not a realistic use case; it means the tests provide a gauge as to what the OVERHEAD of children/component iteration is, without taking into account
+    ///           whether or not that value is significant relative to the costs of the actual handling functions in a realistic use case.
+    ///     - No changes are made to the Children or components lists during the actual measured performance test; only in the initial setup which is NOT timed.
+    /// </remarks>
     public class ScreenObject
     {
         #region Test Data

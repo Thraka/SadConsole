@@ -6,6 +6,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole.PerformanceTests
 {
+    /// <summary>
+    /// Very basic (placeholder) GameHost that will fulfill the requirements of SadConsole's GameHost to allow us to test classes that depend on the host's functionality.
+    /// </summary>
     class BasicGameHost : GameHost
     {
         public class RenderStep : IRenderStep
