@@ -47,11 +47,6 @@ namespace SadConsole.Input
         public bool HasKeysPressed => KeysPressedInternal.Count != 0;
 
         /// <summary>
-        /// <see langword="true"/> when the <see cref="KeysReleased"/> collection has at least one key; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool HasKeysReleased => KeysReleasedInternal.Count != 0;
-
-        /// <summary>
         /// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
         /// </summary>
         public float RepeatDelay = 0.04f;
