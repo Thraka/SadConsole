@@ -277,9 +277,6 @@ namespace SadConsole
             if (!IsVisible)
                 return false;
 
-            if (!UseMouse)
-                return false;
-
             var components = ComponentsMouse.ToArray();
             for (int i = 0; i < components.Length; i++)
             {
@@ -288,6 +285,9 @@ namespace SadConsole
                 if (isHandled)
                     return true;
             }
+
+            if (!UseMouse)
+                return false;
 
             return false;
         }
