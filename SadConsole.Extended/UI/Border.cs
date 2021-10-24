@@ -171,7 +171,7 @@ namespace SadConsole.UI
         public Border(IScreenSurface contents, string title) : this(contents, new BorderParameters(true, ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin,
                                                                                                                                      new ColoredGlyph(contents.Surface.DefaultForeground,
                                                                                                                                                       contents.Surface.DefaultBackground)),
-                                                                                                     title, HorizontalAlignment.Center, Color.White, Color.Transparent,
+                                                                                                     title, HorizontalAlignment.Center, Color.White, Color.Black,
                                                                                                      true, true, true, 0, Color.White, Color.White))
         {
 

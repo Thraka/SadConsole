@@ -220,7 +220,7 @@
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrame">
             <summary>
-            Gets the currently frame being animated.
+            Gets the current frame being animated.
             </summary>
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.State">
