@@ -39,6 +39,7 @@ namespace FeatureDemo.CustomConsoles
         public void UpdateSize(Console console)
         {
             _borderConsole.Resize(console.Width + 2, console.Height + 2, console.Width + 2, console.Height + 2, true);
+            _borderRectangle = new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height);
             _borderConsole.DrawBox(_borderRectangle, _shapeParams);
         }
 
