@@ -106,7 +106,7 @@ namespace FeatureDemo.CustomConsoles
 
         void PrintTitle(int y, string name)
         {
-            Surface.Print(1, y, $"Example of using a {name} to draw a border around consoles:");
+            Surface.Print(1, y, $"Examples of using a {name} to draw a border around consoles:");
         }
 
         void DisplayConsoleWithBorderComponent(int x, int y, string desc, int[] lines, Color fCol)
