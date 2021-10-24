@@ -8,6 +8,9 @@ using Console = SadConsole.Console;
 
 namespace FeatureDemo.CustomConsoles
 {
+    /// <summary>
+    /// A simple component that draws a border around a console.
+    /// </summary>
     public class BorderComponent : IComponent
     {
         readonly ShapeParameters _shapeParams;
@@ -89,7 +92,7 @@ namespace FeatureDemo.CustomConsoles
             int y = 5;
             IsVisible = false;
 
-            PrintTitle(1, "component");
+            PrintTitle(y - 4, "a component");
             DisplayConsoleWithBorderComponent(02, y, "Glyph line", ICellSurface.CreateLine(176), Color.Red);
             DisplayConsoleWithBorderComponent(17, y, "Glyph line", ICellSurface.CreateLine(177), Color.Red);
             DisplayConsoleWithBorderComponent(32, y, "Glyph line", ICellSurface.CreateLine(178), Color.Red);
@@ -97,7 +100,7 @@ namespace FeatureDemo.CustomConsoles
             DisplayConsoleWithBorderComponent(62, y, "Thin line", ICellSurface.ConnectedLineThin, Color.Orange);
 
             y = 16;
-            PrintTitle(12, "Border class");
+            PrintTitle(y - 4, "the Border class");
             DisplayConsoleWithBorderClass(02, y, "Border Class");
             DisplayConsoleWithBorderClass(19, y, GetBorderParams("Thin", Color.Green, Color.Black, Color.Green, true, 176));
             DisplayConsoleWithBorderClass(36, y, GetBorderParams("Thick", Color.Yellow, Color.Black, Color.Yellow, false, 177));
@@ -106,7 +109,7 @@ namespace FeatureDemo.CustomConsoles
 
         void PrintTitle(int y, string name)
         {
-            Surface.Print(1, y, $"Examples of using a {name} to draw a border around consoles:");
+            Surface.Print(1, y, $"Examples of using {name} to draw a border around consoles:");
         }
 
         void DisplayConsoleWithBorderComponent(int x, int y, string desc, int[] lines, Color fCol)
@@ -118,7 +121,6 @@ namespace FeatureDemo.CustomConsoles
         void DisplayConsoleWithBorderClass(int x, int y, Border.BorderParameters borderParams)
         {
             var console = CreateConsole(x, y, "Content", "Here");
-            
             Border border = new(console, borderParams);
         }
 
@@ -133,7 +135,7 @@ namespace FeatureDemo.CustomConsoles
         {
             return new Border.BorderParameters(true, GetShapeParams(lineStyle, lineColor),
                                                "Border Class", HorizontalAlignment.Center, titleForeCol, titleBackCol,
-                                               true, useDefShade, true, shadeGlyph, Color.Black, Color.White);
+                                               true, useDefShade, true, shadeGlyph, Color.Brown, Color.LightBlue);
         }
 
         ShapeParameters GetShapeParams(string style, Color f) => ShapeParameters.CreateStyledBox(
