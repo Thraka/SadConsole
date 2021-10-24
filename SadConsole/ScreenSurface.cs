@@ -181,7 +181,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+        /// Creates a new surface from a grid view. The cells between this object and the grid view are shared.
         /// </summary>
         /// <param name="surface">The surface to use as the source of cells.</param>
         /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>

@@ -109,6 +109,21 @@
         <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallManager">
+            <summary>
+            Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch">
+            <summary>
+            Called 
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
+            <summary>
+            Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect. Render target remains <see cref="P:SadConsole.Host.Global.RenderOutput"/>.
+            </summary>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.

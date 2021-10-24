@@ -9,9 +9,9 @@ namespace FeatureDemo.CustomConsoles
 {
     public class BorderComponent : IComponent
     {
-        private Console _borderConsole;
-        private readonly ColoredGlyph _borderCellStyle;
-        private readonly int[] _borderGlyphs;
+        readonly ShapeParameters _shapeParams;
+        Rectangle _borderRectangle;
+        Console _borderConsole;
 
         public uint SortOrder => 0;
 
@@ -23,6 +23,8 @@ namespace FeatureDemo.CustomConsoles
 
         public bool IsKeyboard => false;
 
+        public BorderComponent(int glyph, Color foreground, Color background) : this(ICellSurface.CreateLine(glyph), foreground, background) { }
+
         public BorderComponent(int[] connectedLineStyle, Color foreground, Color background)
         {
             if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
@@ -30,30 +32,27 @@ namespace FeatureDemo.CustomConsoles
                 throw new ArgumentException("The connected line array is invalid.", nameof(connectedLineStyle));
             }
 
-            _borderGlyphs = connectedLineStyle;
-            _borderCellStyle = new ColoredGlyph(foreground, background);
-        }
-
-        public BorderComponent(int glyph, Color foreground, Color background)
-        {
-            _borderGlyphs = new int[] { glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph, glyph };
-            _borderCellStyle = new ColoredGlyph(foreground, background);
+            var borderCellStyle = new ColoredGlyph(foreground, background);
+            _shapeParams = ShapeParameters.CreateStyledBox(connectedLineStyle, borderCellStyle);
         }
 
         public void UpdateSize(Console console)
         {
             _borderConsole.Resize(console.Width + 2, console.Height + 2, console.Width + 2, console.Height + 2, true);
-            _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs);
+            _borderConsole.DrawBox(_borderRectangle, _shapeParams);
         }
 
         public void OnAdded(IScreenObject screenObject)
         {
             if (screenObject is Console console)
             {
-                _borderConsole = new Console(console.Width + 2, console.Height + 2);
-                _borderConsole.Font = console.Font;
-                _borderConsole.DrawBox(new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height), _borderCellStyle, null, _borderGlyphs);
-                _borderConsole.Position = new Point(-1, -1);
+                _borderConsole = new(console.Width + 2, console.Height + 2)
+                {
+                    Font = console.Font,
+                    Position = new Point(-1, -1)
+                };
+                _borderRectangle = new Rectangle(0, 0, _borderConsole.Width, _borderConsole.Height);
+                _borderConsole.DrawBox(_borderRectangle, _shapeParams);
                 console.Children.Add(_borderConsole);
             }
             else
