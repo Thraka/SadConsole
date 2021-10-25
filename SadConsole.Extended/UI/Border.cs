@@ -110,6 +110,36 @@ namespace SadConsole.UI
                 ShadedGlyphForeground = shadedGlyphForeground;
                 ShadedGlyphBackground = shadedGlyphBackground;
             }
+
+            /// <summary>
+            /// Creates an instance of BorderParameters with only the thin line as a border.
+            /// </summary>
+            /// <returns></returns>
+            public static BorderParameters GetDefault()
+            {
+                return new BorderParameters(true, ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph()),
+                                            string.Empty, HorizontalAlignment.Center, Color.White, Color.Black,
+                                            true, true, true, 0, Color.White, Color.White);
+            }
+
+            public void AddTitle()
+            {
+
+            }
+
+            public void AddShadow()
+            {
+
+            }
+
+            /// <summary>
+            /// Replaces ShapeParameters ConnectedLine style with a different array of border glyphs
+            /// </summary>
+            public void ChangeOutline()
+            {
+
+            }
+
         }
 
         public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.Width + GetSize(parameters),
