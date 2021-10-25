@@ -27,8 +27,8 @@ namespace FeatureDemo
             consoles = new CustomConsole[] {
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
                 new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
-                new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
+                new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
                 new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
@@ -45,6 +45,7 @@ namespace FeatureDemo
                 //new CustomConsole(new CustomConsoles.EntityZoneConsole(), "Entity zone demonstration", "Entity that can move in and out of zones."),
                 new CustomConsole(new CustomConsoles.BorderedConsole(), "Drawing borders around consoles", "Demonstration of using the Border class and a border component."),
                 new CustomConsole(new CustomConsoles.SubConsoleCursor(), "Subconsole Cursor", "Two consoles with a single backing TextSurface"),
+               
                 //new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
                 
                 //new CustomConsole(new CustomConsoles.EntityConsole(), "Game object", "Use the cursor keys to move the little character"),

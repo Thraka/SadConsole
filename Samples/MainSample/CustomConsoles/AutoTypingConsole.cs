@@ -36,7 +36,8 @@ namespace FeatureDemo.CustomConsoles
                                            "[c:r f:LightGreen]11[c:r f:green])[c:u 2] Serialization     -- [c:r f:white]Uses SadConsole.Ansi to parse an ansi.sys art file[c:u]",
                                            "[c:r f:LightGreen]12[c:r f:green])[c:u 2] Entity demo       -- [c:r f:white]1000s of entities on the screen moving around[c:u]",
                                            "[c:r f:LightGreen]13[c:r f:green])[c:u 2] Ansi console      -- [c:r f:white]Uses SadConsole.Ansi to parse an ansi.sys art file[c:u]",
-                                           "[c:r f:LightGreen]14[c:r f:green])[c:u 2] And more!!",
+                                           "[c:r f:LightGreen]14[c:r f:green])[c:u 2] Animated globe    -- [c:r f:white]An animation showing the use of AnimatedScreenSurface.[c:u]",
+                                           "[c:r f:LightGreen]15[c:r f:green])[c:u 2] And more!!",
                                          };
 
             // We want this to print on a sub region of the main console, so we'll create a sub view and use that
