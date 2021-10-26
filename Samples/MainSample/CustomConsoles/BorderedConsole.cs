@@ -10,72 +10,72 @@ namespace FeatureDemo.CustomConsoles
 {
     internal class BorderedConsole : Console
     {
-        Point _size = new(12, 4);
+        // console sizes
+        readonly Point _sizeSmall = new(12, 4),
+                       _sizeLarge = new(16, 4);
 
         public BorderedConsole() : base(80, 25)
         {
-            int y = 5;
             IsVisible = false;
 
-            PrintTitle(y - 4, "a component");
-            DisplayConsoleWithBorderComponent(02, y, "Glyph line", ICellSurface.CreateLine(176), Color.Red);
-            DisplayConsoleWithBorderComponent(17, y, "Glyph line", ICellSurface.CreateLine(177), Color.Red);
-            DisplayConsoleWithBorderComponent(32, y, "Glyph line", ICellSurface.CreateLine(178), Color.Red);
-            DisplayConsoleWithBorderComponent(47, y, "Thick line", ICellSurface.ConnectedLineThick, Color.Green);
-            DisplayConsoleWithBorderComponent(62, y, "Thin line", ICellSurface.ConnectedLineThin, Color.Orange);
+            // border component section
+            int seperator = 4, x = 2, y = 5;
+            PrintHeading(y - 4, "a component");
+            DisplayConsoleWithBorderComponent((x + _sizeSmall.X * 0 + seperator * 0, y), "Glyph line", ICellSurface.CreateLine(176), Color.Red);
+            DisplayConsoleWithBorderComponent((x + _sizeSmall.X * 1 + seperator * 1, y), "Glyph line", ICellSurface.CreateLine(177), Color.Red);
+            DisplayConsoleWithBorderComponent((x + _sizeSmall.X * 2 + seperator * 2, y), "Glyph line", ICellSurface.CreateLine(178), Color.Red);
+            DisplayConsoleWithBorderComponent((x + _sizeSmall.X * 3 + seperator * 3, y), "Thick line", ICellSurface.ConnectedLineThick, Color.Green);
+            DisplayConsoleWithBorderComponent((x + _sizeSmall.X * 4 + seperator * 4, y), "Thin line", ICellSurface.ConnectedLineThin, Color.Orange);
 
+            // border class section
             y = 16;
-            PrintTitle(y - 4, "the Border class");
-            DisplayConsoleWithBorderClass(02, y, "Border Class");
-
+            PrintHeading(y - 4, "the Border class");
             var borderParams = Border.BorderParameters.GetDefault()
-                .AddTitle("Green Border", Color.Black, Color.Green)
-                .ChangeBorderColors(Color.Green, Color.Black)
+                .AddTitle("White Border", Color.Black, Color.White)
+                .ChangeBorderColors(Color.White, Color.Black)
                 .AddShadow();
-            DisplayConsoleWithBorderClass(19, y, borderParams);
+            DisplayConsoleWithBorderClass((x + _sizeLarge.X * 0 + seperator * 0, y), "Sample|Content", borderParams);
+
+            borderParams.AddTitle("Green Border", Color.Black, Color.Green)
+                .ChangeBorderColors(Color.Green, Color.Black);
+            DisplayConsoleWithBorderClass((x + _sizeLarge.X * 1 + seperator * 1, y), "Lorem|Ipsum", borderParams);
 
             borderParams = Border.BorderParameters.GetDefault()
                 .AddTitle("Thick Border", Color.Black, Color.Yellow)
                 .ChangeBorderGlyph(ICellSurface.ConnectedLineThick, Color.Yellow, Color.Black)
                 .AddShadow(176, Color.YellowGreen, Color.DarkGoldenrod);
-            DisplayConsoleWithBorderClass(36, y, borderParams);
+            DisplayConsoleWithBorderClass((x + _sizeLarge.X * 2 + seperator * 2, y), "Sample|Content", borderParams);
 
             borderParams = Border.BorderParameters.GetDefault()
                 .AddTitle("Glyph Border", Color.White, Color.Crimson)
                 .ChangeBorderGlyph(219, Color.Crimson * 0.9f, Color.Black)
                 .AddShadow(176, Color.LightBlue, Color.Brown);
-            DisplayConsoleWithBorderClass(53, y, borderParams);
+            DisplayConsoleWithBorderClass((x + _sizeLarge.X * 3 + seperator * 3, y), "Lorem|Ipsum", borderParams);
         }
 
-        void PrintTitle(int y, string name)
+        void PrintHeading(int y, string name)
         {
             Surface.Print(1, y, $"Examples of using {name} to draw a border around consoles:");
         }
 
-        void DisplayConsoleWithBorderComponent(int x, int y, string desc, int[] lines, Color fCol)
+        void DisplayConsoleWithBorderComponent(Point position, string content, int[] borderGlyphs, Color glyphForegroundColor)
         {
-            var console = CreateConsole(x, y, desc);
-            console.SadComponents.Add(new BorderComponent(lines, fCol, Color.Black));
+            var console = CreateConsole(position, _sizeSmall, content);
+            console.SadComponents.Add(new BorderComponent(borderGlyphs, glyphForegroundColor, Color.Black));
         }
 
-        void DisplayConsoleWithBorderClass(int x, int y, Border.BorderParameters borderParams)
+        void DisplayConsoleWithBorderClass(Point position, string content, Border.BorderParameters borderParams)
         {
-            var console = CreateConsole(x, y, "Content", "Here");
+            var console = CreateConsole(position, _sizeLarge, content);
             Border border = new(console, borderParams);
         }
 
-        void DisplayConsoleWithBorderClass(int x, int y, string desc)
+        Console CreateConsole(Point position, Point size, string content)
         {
-            var console = CreateConsole(x, y, "Content", "Here");
-            console.Print(1, 1, "Content");
-            Border border = new(console, desc);
-        }
-
-        Console CreateConsole(int x, int y, string line1, string line2 = "")
-        {
-            var console = new Console(_size.X, _size.Y) { Position = (x, y) };
-            console.Print(1, 1, line1);
-            console.Print(6, 2, line2);
+            var console = new Console(size.X, size.Y) { Position = position };
+            string[] lines = content.Split('|', 2);
+            if (lines.Length > 0) console.Print(1, 1, lines[0]);
+            if (lines.Length > 1) console.Print(6, 2, lines[1]);
             Children.Add(console);
             return console;
         }
@@ -84,7 +84,7 @@ namespace FeatureDemo.CustomConsoles
     /// <summary>
     /// A simple component that draws a border around a console.
     /// </summary>
-    public class BorderComponent : IComponent
+    class BorderComponent : IComponent
     {
         readonly ShapeParameters _shapeParams;
         Rectangle _borderRectangle;
