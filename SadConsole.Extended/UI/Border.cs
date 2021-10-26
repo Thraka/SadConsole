@@ -112,7 +112,7 @@ namespace SadConsole.UI
             }
 
             /// <summary>
-            /// Creates an instance of BorderParameters with only the thin line as a border.
+            /// Creates an instance of BorderParameters with the thin line as a border, no title and no shadow.
             /// </summary>
             /// <returns></returns>
             public static BorderParameters GetDefault()
@@ -122,12 +122,25 @@ namespace SadConsole.UI
                                             false, true, true, 0, Color.White, Color.Black);
             }
 
+            /// <summary>
+            /// Sets the Title parameter with the given text.
+            /// </summary>
+            /// <param name="title">Title text.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddTitle(string title)
             {
                 Title = title;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the Title parameter with the given text.
+            /// </summary>
+            /// <param name="title">Title text.</param>
+            /// <param name="foregroundColor">Title foreground <see cref="SadRogue.Primitives.Color"/>.</param>
+            /// <param name="backgroundColor">Title background <see cref="HorizontalAlignment"/>.</param>
+            /// <param name="horizontalAlignment">Title text <see cref="HorizontalAlignment"/>.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddTitle(string title, Color foregroundColor, Color backgroundColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
             {
                 Title = title;
@@ -137,12 +150,21 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Sets the DrawShadedArea to true.
+            /// </summary>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow()
             {
                 DrawShadedArea = true;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the DrawShadedArea to true and modifies shadow glyph.
+            /// </summary>
+            /// <param name="shadedGlyph">Glyph number to use as a shadow.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow(int shadedGlyph)
             {
                 DrawShadedArea = true;
@@ -151,6 +173,12 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Sets the DrawShadedArea to true and modifies default shadow colors.
+            /// </summary>
+            /// <param name="foregroundColor">ShadedGlyph new foreground color.</param>
+            /// <param name="backgroundColor">ShadedGlyph new background color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow(Color foregroundColor, Color backgroundColor)
             {
                 DrawShadedArea = true;
@@ -160,6 +188,13 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Sets the DrawShadedArea to true and modifies default shadow glyph and colors.
+            /// </summary>
+            /// /// <param name="shadedGlyph">Glyph number to use as a shadow.</param>
+            /// <param name="foregroundColor">ShadedGlyph new foreground color.</param>
+            /// <param name="backgroundColor">ShadedGlyph new background color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow(int shadedGlyph, Color foregroundColor, Color backgroundColor)
             {
                 AddShadow(shadedGlyph);
@@ -167,18 +202,35 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Set the BorderBox parameter to the new value.
+            /// </summary>
+            /// <param name="borderStyle">New <see cref="ShapeParameters"/> to use for the border style.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderStyle(ShapeParameters borderStyle)
             {
                 BorderBox = borderStyle;
                 return this;
             }
 
+            /// <summary>
+            /// Changes the array of glyphs to be used as the border line.
+            /// </summary>
+            /// <param name="borderStyle">Array of glyphs to be used as the border line.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int[] borderStyle)
             {
                 BorderBox.BoxBorderStyle = borderStyle;
                 return this;
             }
 
+            /// <summary>
+            /// Changes the array of glyphs to be used as the border line and their colors.
+            /// </summary>
+            /// <param name="borderStyle">Array of glyphs to be used as the border line.</param>
+            /// <param name="foregroundColor">Border line foreground color.</param>
+            /// <param name="backgroundColor">Border line background color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int[] borderStyle, Color foregroundColor, Color backgroundColor)
             {
                 BorderBox.BoxBorderStyle = borderStyle;
@@ -186,19 +238,36 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Fills the array of glyphs to be used as the border line with the given glyph.
+            /// </summary>
+            /// <param name="glyph">The glyph to be used the border line.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int glyph)
             {
                 BorderBox.BoxBorderStyle = ICellSurface.CreateLine(glyph);
                 return this;
             }
 
+            /// <summary>
+            /// Fills the array of glyphs to be used as the border line with the given glyph and changes the border colors.
+            /// </summary>
+            /// <param name="glyph">The glyph to be used the border line.</param>
+            /// <param name="foregroundColor">Border line foreground color.</param>
+            /// <param name="backgroundColor">Border line background color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int glyph, Color foregroundColor, Color backgroundColor)
             {
                 ChangeBorderGlyph(glyph);
                 ChangeBorderColors(foregroundColor, backgroundColor);
                 return this;
             }
-                
+
+            /// <summary>
+            /// Fills the array of glyphs to be used as the border line with the given <see cref="ColoredGlyph"/>.
+            /// </summary>
+            /// <param name="glyph">The <see cref="ColoredGlyph"/> to be used the border line.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(ColoredGlyph glyph)
             {
                 ChangeBorderGlyph(glyph.Glyph);
@@ -206,6 +275,12 @@ namespace SadConsole.UI
                 return this;
             }
 
+            /// <summary>
+            /// Changes border color parameters.
+            /// </summary>
+            /// <param name="foregroundColor">Border line foreground color.</param>
+            /// <param name="backgroundColor">Border line background color.</param>
+            /// <returns></returns>
             public BorderParameters ChangeBorderColors(Color foregroundColor, Color backgroundColor)
             {
                 BorderBox.BorderGlyph.Foreground = foregroundColor;
@@ -214,6 +289,12 @@ namespace SadConsole.UI
             }
         }
 
+        /// <summary>
+        /// Creates a border and adds it as a child object to <paramref name="contents"/>.
+        /// </summary>
+        /// <param name="contents">The object the border will be around.</param>
+        /// <param name="parameters"><see cref="BorderParameters"/> to be used in creating the <see cref="Border"/>.</param>
+        /// <param name="font">Optional <see cref="IFont"/> for the border <see cref="CellSurface"/>.</param>
         public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.Width + GetSize(parameters),
                                                                                                                         contents.Surface.Height + GetSize(parameters)),
                                                                                                         font ?? contents.Font, contents.FontSize)
@@ -264,33 +345,26 @@ namespace SadConsole.UI
             contents.Children.Add(this);
         }
 
-
         /// <summary>
-        /// Creates a border and adds it as a child object to <paramref name="contents"/>.
+        /// Creates a border (with a shadow and a title) and adds it as a child object to <paramref name="contents"/>.
         /// </summary>
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="title">Title to display on the border.</param>
-        public Border(IScreenSurface contents, string title) : this(contents, new BorderParameters(true, ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin,
-                                                                                                                                     new ColoredGlyph(contents.Surface.DefaultForeground,
-                                                                                                                                                      contents.Surface.DefaultBackground)),
-                                                                                                     title, HorizontalAlignment.Center, Color.White, Color.Black,
-                                                                                                     true, true, true, 0, Color.White, Color.White))
+        public Border(IScreenSurface contents, string title) : this(contents, BorderParameters.GetDefault().AddTitle(title).AddShadow())
         {
 
         }
 
         /// <summary>
-        /// Creates a border and adds it as a child object to <paramref name="contents"/>.
+        /// Creates a border (with a shadow and a title) and adds it as a child object to <paramref name="contents"/>.
         /// </summary>
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="title">Optional title to display on the border.</param>
-        /// <param name="innerBorderForeground">The color of the </param>
-        /// <param name="outerBorderForeground"></param>
-        public Border(IScreenSurface contents, string title, Color innerBorderForeground, Color outerBorderForeground) : this(contents, new BorderParameters(true, ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin,
-                                                                                                                                     new ColoredGlyph(innerBorderForeground,
-                                                                                                                                                      outerBorderForeground)),
-                                                                                                     title, HorizontalAlignment.Center, outerBorderForeground, innerBorderForeground,
-                                                                                                     true, true, true, 0, Color.White, Color.White))
+        /// <param name="foregroundColor">Border line and title text foreground color.</param>
+        /// <param name="backgroundColor">Border line and title text background color.</param>
+        public Border(IScreenSurface contents, string title, Color foregroundColor, Color backgroundColor) :
+            this(contents, BorderParameters.GetDefault().AddTitle(title, foregroundColor, foregroundColor)
+                .ChangeBorderColors(foregroundColor, backgroundColor).AddShadow())
         {
             
         }
@@ -318,7 +392,6 @@ namespace SadConsole.UI
         /// <param name="contents">The window the border will be around.</param>
         public static void AddToWindow(Window contents) =>
             new Border(contents);
-
 
         private static int GetSize(BorderParameters parameters)
         {
