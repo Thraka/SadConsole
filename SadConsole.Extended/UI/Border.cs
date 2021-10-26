@@ -280,10 +280,32 @@ namespace SadConsole.UI
             /// </summary>
             /// <param name="foregroundColor">Border line foreground color.</param>
             /// <param name="backgroundColor">Border line background color.</param>
-            /// <returns></returns>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderColors(Color foregroundColor, Color backgroundColor)
             {
                 BorderBox.BorderGlyph.Foreground = foregroundColor;
+                BorderBox.BorderGlyph.Background = backgroundColor;
+                return this;
+            }
+
+            /// <summary>
+            /// Changes border foreground color.
+            /// </summary>
+            /// <param name="foregroundColor">Border line foreground color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
+            public BorderParameters ChangeBorderForegroundColor(Color foregroundColor)
+            {
+                BorderBox.BorderGlyph.Foreground = foregroundColor;
+                return this;
+            }
+
+            /// <summary>
+            /// Changes border background color.
+            /// </summary>
+            /// <param name="backgroundColor">Border line background color.</param>
+            /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
+            public BorderParameters ChangeBorderBackgroundColor(Color backgroundColor)
+            {
                 BorderBox.BorderGlyph.Background = backgroundColor;
                 return this;
             }
@@ -360,11 +382,11 @@ namespace SadConsole.UI
         /// </summary>
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="title">Optional title to display on the border.</param>
-        /// <param name="foregroundColor">Border line and title text foreground color.</param>
-        /// <param name="backgroundColor">Border line and title text background color.</param>
-        public Border(IScreenSurface contents, string title, Color foregroundColor, Color backgroundColor) :
-            this(contents, BorderParameters.GetDefault().AddTitle(title, foregroundColor, foregroundColor)
-                .ChangeBorderColors(foregroundColor, backgroundColor).AddShadow())
+        /// <param name="textColor">Title text foreground color.</param>
+        /// <param name="borderColor">Border line foreground color and title text background color.</param>
+        public Border(IScreenSurface contents, string title, Color textColor, Color borderColor) :
+            this(contents, BorderParameters.GetDefault().AddTitle(title, textColor, borderColor)
+                .ChangeBorderForegroundColor(borderColor).AddShadow())
         {
             
         }
