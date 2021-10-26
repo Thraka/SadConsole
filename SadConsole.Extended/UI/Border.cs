@@ -134,7 +134,7 @@ namespace SadConsole.UI
             }
 
             /// <summary>
-            /// Sets the Title parameter with the given text.
+            /// Sets the Title parameter with the given text and changes title colors.
             /// </summary>
             /// <param name="title">Title text.</param>
             /// <param name="foregroundColor">Title foreground <see cref="SadRogue.Primitives.Color"/>.</param>
