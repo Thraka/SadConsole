@@ -119,27 +119,99 @@ namespace SadConsole.UI
             {
                 return new BorderParameters(true, ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph()),
                                             string.Empty, HorizontalAlignment.Center, Color.White, Color.Black,
-                                            true, true, true, 0, Color.White, Color.White);
+                                            false, true, true, 0, Color.White, Color.Black);
             }
 
-            public void AddTitle()
+            public BorderParameters AddTitle(string title)
             {
-
+                Title = title;
+                return this;
             }
 
-            public void AddShadow()
+            public BorderParameters AddTitle(string title, Color foregroundColor, Color backgroundColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
             {
-
+                Title = title;
+                TitleForeground = backgroundColor;
+                TitleBackground = foregroundColor;
+                TitleAlignment = horizontalAlignment;
+                return this;
             }
 
-            /// <summary>
-            /// Replaces ShapeParameters ConnectedLine style with a different array of border glyphs
-            /// </summary>
-            public void ChangeOutline()
+            public BorderParameters AddShadow()
             {
-
+                DrawShadedArea = true;
+                return this;
             }
 
+            public BorderParameters AddShadow(int shadedGlyph)
+            {
+                DrawShadedArea = true;
+                UseDefaultShadedGlyphs = false;
+                ShadedGlyph = shadedGlyph;
+                return this;
+            }
+
+            public BorderParameters AddShadow(Color foregroundColor, Color backgroundColor)
+            {
+                DrawShadedArea = true;
+                UseDefaultShadedColors = false;
+                ShadedGlyphForeground = foregroundColor;
+                ShadedGlyphBackground = backgroundColor;
+                return this;
+            }
+
+            public BorderParameters AddShadow(int shadedGlyph, Color foregroundColor, Color backgroundColor)
+            {
+                AddShadow(shadedGlyph);
+                AddShadow(foregroundColor, backgroundColor);
+                return this;
+            }
+
+            public BorderParameters ChangeBorderStyle(ShapeParameters borderStyle)
+            {
+                BorderBox = borderStyle;
+                return this;
+            }
+
+            public BorderParameters ChangeBorderGlyph(int[] borderStyle)
+            {
+                BorderBox.BoxBorderStyle = borderStyle;
+                return this;
+            }
+
+            public BorderParameters ChangeBorderGlyph(int[] borderStyle, Color foregroundColor, Color backgroundColor)
+            {
+                BorderBox.BoxBorderStyle = borderStyle;
+                ChangeBorderColors(foregroundColor, backgroundColor);
+                return this;
+            }
+
+            public BorderParameters ChangeBorderGlyph(int glyph)
+            {
+                BorderBox.BoxBorderStyle = ICellSurface.CreateLine(glyph);
+                return this;
+            }
+
+            public BorderParameters ChangeBorderGlyph(int glyph, Color foregroundColor, Color backgroundColor)
+            {
+                ChangeBorderGlyph(glyph);
+                ChangeBorderColors(foregroundColor, backgroundColor);
+                return this;
+            }
+                
+            public BorderParameters ChangeBorderGlyph(ColoredGlyph glyph)
+            {
+                ChangeBorderGlyph(glyph.Glyph);
+                ChangeBorderColors(glyph.Foreground, glyph.Background);
+                return this;
+            }
+
+            public BorderParameters ChangeBorderColors(Color foregroundColor, Color backgroundColor)
+            {
+                BorderBox.BorderGlyph.Foreground = foregroundColor;
+                BorderBox.BorderGlyph.Background = backgroundColor;
+                return this;
+            }
         }
 
         public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.Width + GetSize(parameters),

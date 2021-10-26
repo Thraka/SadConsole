@@ -8,6 +8,79 @@ using Console = SadConsole.Console;
 
 namespace FeatureDemo.CustomConsoles
 {
+    internal class BorderedConsole : Console
+    {
+        Point _size = new(12, 4);
+
+        public BorderedConsole() : base(80, 25)
+        {
+            int y = 5;
+            IsVisible = false;
+
+            PrintTitle(y - 4, "a component");
+            DisplayConsoleWithBorderComponent(02, y, "Glyph line", ICellSurface.CreateLine(176), Color.Red);
+            DisplayConsoleWithBorderComponent(17, y, "Glyph line", ICellSurface.CreateLine(177), Color.Red);
+            DisplayConsoleWithBorderComponent(32, y, "Glyph line", ICellSurface.CreateLine(178), Color.Red);
+            DisplayConsoleWithBorderComponent(47, y, "Thick line", ICellSurface.ConnectedLineThick, Color.Green);
+            DisplayConsoleWithBorderComponent(62, y, "Thin line", ICellSurface.ConnectedLineThin, Color.Orange);
+
+            y = 16;
+            PrintTitle(y - 4, "the Border class");
+            DisplayConsoleWithBorderClass(02, y, "Border Class");
+
+            var borderParams = Border.BorderParameters.GetDefault()
+                .AddTitle("Green Border", Color.Black, Color.Green)
+                .ChangeBorderColors(Color.Green, Color.Black)
+                .AddShadow();
+            DisplayConsoleWithBorderClass(19, y, borderParams);
+
+            borderParams = Border.BorderParameters.GetDefault()
+                .AddTitle("Thick Border", Color.Black, Color.Yellow)
+                .ChangeBorderGlyph(ICellSurface.ConnectedLineThick, Color.Yellow, Color.Black)
+                .AddShadow(176, Color.YellowGreen, Color.DarkGoldenrod);
+            DisplayConsoleWithBorderClass(36, y, borderParams);
+
+            borderParams = Border.BorderParameters.GetDefault()
+                .AddTitle("Glyph Border", Color.White, Color.Crimson)
+                .ChangeBorderGlyph(219, Color.Crimson * 0.9f, Color.Black)
+                .AddShadow(176, Color.LightBlue, Color.Brown);
+            DisplayConsoleWithBorderClass(53, y, borderParams);
+        }
+
+        void PrintTitle(int y, string name)
+        {
+            Surface.Print(1, y, $"Examples of using {name} to draw a border around consoles:");
+        }
+
+        void DisplayConsoleWithBorderComponent(int x, int y, string desc, int[] lines, Color fCol)
+        {
+            var console = CreateConsole(x, y, desc);
+            console.SadComponents.Add(new BorderComponent(lines, fCol, Color.Black));
+        }
+
+        void DisplayConsoleWithBorderClass(int x, int y, Border.BorderParameters borderParams)
+        {
+            var console = CreateConsole(x, y, "Content", "Here");
+            Border border = new(console, borderParams);
+        }
+
+        void DisplayConsoleWithBorderClass(int x, int y, string desc)
+        {
+            var console = CreateConsole(x, y, "Content", "Here");
+            console.Print(1, 1, "Content");
+            Border border = new(console, desc);
+        }
+
+        Console CreateConsole(int x, int y, string line1, string line2 = "")
+        {
+            var console = new Console(_size.X, _size.Y) { Position = (x, y) };
+            console.Print(1, 1, line1);
+            console.Print(6, 2, line2);
+            Children.Add(console);
+            return console;
+        }
+    }
+
     /// <summary>
     /// A simple component that draws a border around a console.
     /// </summary>
@@ -83,73 +156,4 @@ namespace FeatureDemo.CustomConsoles
         public void Update(IScreenObject console, TimeSpan delta) => throw new NotImplementedException();
     }
 
-    internal class BorderedConsole : Console
-    {
-        Point _size = new(12, 4);
-
-        public BorderedConsole() : base(80, 25)
-        {
-            int y = 5;
-            IsVisible = false;
-
-            PrintTitle(y - 4, "a component");
-            DisplayConsoleWithBorderComponent(02, y, "Glyph line", ICellSurface.CreateLine(176), Color.Red);
-            DisplayConsoleWithBorderComponent(17, y, "Glyph line", ICellSurface.CreateLine(177), Color.Red);
-            DisplayConsoleWithBorderComponent(32, y, "Glyph line", ICellSurface.CreateLine(178), Color.Red);
-            DisplayConsoleWithBorderComponent(47, y, "Thick line", ICellSurface.ConnectedLineThick, Color.Green);
-            DisplayConsoleWithBorderComponent(62, y, "Thin line", ICellSurface.ConnectedLineThin, Color.Orange);
-
-            y = 16;
-            PrintTitle(y - 4, "the Border class");
-            DisplayConsoleWithBorderClass(02, y, "Border Class");
-            DisplayConsoleWithBorderClass(19, y, GetBorderParams("Thin", Color.Green, Color.Black, Color.Green, true, 176));
-            DisplayConsoleWithBorderClass(36, y, GetBorderParams("Thick", Color.Yellow, Color.Black, Color.Yellow, false, 177));
-            DisplayConsoleWithBorderClass(53, y, GetBorderParams("219", Color.Crimson * 0.9f, Color.White, Color.Crimson, false, 177));
-        }
-
-        void PrintTitle(int y, string name)
-        {
-            Surface.Print(1, y, $"Examples of using {name} to draw a border around consoles:");
-        }
-
-        void DisplayConsoleWithBorderComponent(int x, int y, string desc, int[] lines, Color fCol)
-        {
-            var console = CreateConsole(x, y, desc);
-            console.SadComponents.Add(new BorderComponent(lines, fCol, Color.Black));
-        }
-
-        void DisplayConsoleWithBorderClass(int x, int y, Border.BorderParameters borderParams)
-        {
-            var console = CreateConsole(x, y, "Content", "Here");
-            Border border = new(console, borderParams);
-        }
-
-        void DisplayConsoleWithBorderClass(int x, int y, string desc)
-        {
-            var console = CreateConsole(x, y, "Content", "Here");
-            console.Print(1, 1, "Content");
-            Border border = new(console, desc);
-        }
-
-        Border.BorderParameters GetBorderParams(string lineStyle, Color lineColor, Color titleBackCol, Color titleForeCol, bool useDefShade, int shadeGlyph)
-        {
-            return new Border.BorderParameters(true, GetShapeParams(lineStyle, lineColor),
-                                               "Border Class", HorizontalAlignment.Center, titleForeCol, titleBackCol,
-                                               true, useDefShade, true, shadeGlyph, Color.Brown, Color.LightBlue);
-        }
-
-        ShapeParameters GetShapeParams(string style, Color f) => ShapeParameters.CreateStyledBox(
-                style == "Thick" ? ICellSurface.ConnectedLineThick :
-                style == "Thin" ? ICellSurface.ConnectedLineThin :
-                ICellSurface.CreateLine(Convert.ToInt32(style)) , new ColoredGlyph(f, Color.Black));
-
-        Console CreateConsole(int x, int y, string line1, string line2 = "")
-        {
-            var console = new Console(_size.X, _size.Y) { Position = (x, y) };
-            console.Print(1, 1, line1);
-            console.Print(6, 2, line2);
-            Children.Add(console);
-            return console;
-        }
-    }
 }
