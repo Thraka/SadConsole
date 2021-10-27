@@ -40,14 +40,16 @@ namespace FeatureDemo.CustomConsoles
                 .ChangeBorderColors(Color.Green, Color.Black);
             DisplayConsoleWithBorderClass((x + _sizeLarge.X * 1 + seperator * 1, y), "Lorem|Ipsum", borderParams);
 
-            borderParams.AddTitle("Thick Border", Color.Black, Color.Yellow)
+            borderParams = Border.BorderParameters.GetDefault()
+                .AddTitle("Thick Border", Color.Black, Color.Yellow)
                 .ChangeBorderGlyph(ICellSurface.ConnectedLineThick, Color.Yellow, Color.Black)
                 .AddShadow(176, Color.YellowGreen, Color.DarkGoldenrod);
             DisplayConsoleWithBorderClass((x + _sizeLarge.X * 2 + seperator * 2, y), "Sample|Content", borderParams);
 
-            borderParams.AddTitle("Glyph Border", Color.White, Color.Crimson)
+            borderParams = Border.BorderParameters.GetDefault()
+                .AddTitle("Glyph Border", Color.White, Color.Crimson)
                 .ChangeBorderGlyph(219, Color.Crimson * 0.9f, Color.Black)
-                .AddShadow(176, Color.LightBlue, Color.Brown);
+                .AddShadow(177, Color.LightBlue, Color.Brown);
             DisplayConsoleWithBorderClass((x + _sizeLarge.X * 3 + seperator * 3, y), "Lorem|Ipsum", borderParams);
         }
 
