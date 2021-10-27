@@ -45,7 +45,7 @@ namespace FeatureDemo
                 //new CustomConsole(new CustomConsoles.EntityZoneConsole(), "Entity zone demonstration", "Entity that can move in and out of zones."),
                 new CustomConsole(new CustomConsoles.BorderedConsole(), "Drawing borders around consoles", "Demonstration of using the Border class and a border component."),
                 new CustomConsole(new CustomConsoles.SubConsoleCursor(), "Subconsole Cursor", "Two consoles with a single backing TextSurface"),
-                new CustomConsole(new CustomConsoles.AnimatedGlobe(), "Animated Globed", "Converting images and creating an animation with AnimatedScreenSurface."),
+                new CustomConsole(new CustomConsoles.AnimatedGlobe(), "Animated Globe", "Converting images and creating an animation with AnimatedScreenSurface."),
                 
                 //new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
                 
@@ -56,6 +56,8 @@ namespace FeatureDemo
                 //new CustomConsole(new CustomConsoles.HexSurface(80 / 2, 23 / 2) { FontSize = SadConsole.GameHost.Instance.DefaultFont.GetFontSize(Font.Sizes.Two) }, "Hex surface", "Using a custom renderer and custom mouse logic to draw hex cells"),
             };
 
+            Children.Add(headerConsole);
+            Children.Add(selectedConsoleContainer);
             MoveNextConsole();
         }
 
@@ -67,11 +69,6 @@ namespace FeatureDemo
                 currentConsoleIndex = 0;
 
             selectedConsole = consoles[currentConsoleIndex].Console;
-
-            Children.Clear();
-            Children.Add(headerConsole);
-            Children.Add(selectedConsoleContainer);
-
             selectedConsoleContainer.Children.Clear();
             selectedConsoleContainer.Children.Add(selectedConsole);
 
@@ -81,6 +78,8 @@ namespace FeatureDemo
 
             GameHost.Instance.FocusedScreenObjects.Set(selectedConsole);
             headerConsole.SetConsole(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
+
+            if (selectedConsole is IRestartable c) c.Restart();
         }
 
         //public override bool ProcessKeyboard(Keyboard state)
