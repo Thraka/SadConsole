@@ -220,7 +220,7 @@
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrame">
             <summary>
-            Gets the currently frame being animated.
+            Gets the current frame being animated.
             </summary>
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.State">
@@ -2890,6 +2890,11 @@
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
+        <member name="M:SadConsole.Entities.Renderer.RemoveAll">
+            <summary>
+            Removes all entities from this renderer.
+            </summary>
+        </member>
         <member name="M:SadConsole.Entities.Renderer.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
@@ -2936,11 +2941,6 @@
         <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
             <summary>
             Updates the cached view area based on the parent surface.
-            </summary>
-        </member>
-        <member name="T:SadConsole.ICellSurfaceExtensions">
-            <summary>
-            Various extension methods to classes that implement <see cref="T:SadConsole.ICellSurface"/> interface.
             </summary>
         </member>
         <member name="T:SadConsole.PointExtensions">
@@ -7812,7 +7812,7 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
             <summary>
-            Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+            Creates a new surface from a grid view. The cells between this object and the grid view are shared.
             </summary>
             <param name="surface">The surface to use as the source of cells.</param>
             <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>

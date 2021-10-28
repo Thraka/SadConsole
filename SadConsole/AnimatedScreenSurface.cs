@@ -129,7 +129,7 @@ namespace SadConsole
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets the currently frame being animated.
+        /// Gets the current frame being animated.
         /// </summary>
         public ICellSurface CurrentFrame => FramesList[CurrentFrameIndexValue];
 
