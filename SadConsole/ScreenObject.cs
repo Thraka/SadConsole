@@ -232,11 +232,13 @@ namespace SadConsole
             if (!IsVisible) return;
 
             var components = ComponentsRender.ToArray();
-            for (int i = 0; i < components.Length; i++)
+            var count = components.Length;
+            for (int i = 0; i < count; i++)
                 components[i].Render(this, delta);
 
             var children = new List<IScreenObject>(Children);
-            for (int i = 0; i < children.Count; i++)
+            count = children.Count;
+            for (int i = 0; i < count; i++)
                 children[i].Render(delta);
         }
 
@@ -339,13 +341,14 @@ namespace SadConsole
 
         /// <inheritdoc/>
         public bool HasSadComponent<TComponent>(out TComponent component)
-            where TComponent: class, IComponent
+            where TComponent : class, IComponent
         {
-            foreach (IComponent comp in SadComponents)
+            int count = SadComponents.Count;
+            for (int i = 0; i < count; i++)
             {
-                if (comp is TComponent)
+                if (SadComponents[i] is TComponent component2)
                 {
-                    component = (TComponent)comp;
+                    component = component2;
                     return true;
                 }
             }
@@ -488,8 +491,9 @@ namespace SadConsole
         {
             AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            int count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].UpdateAbsolutePosition();
         }
 
         /// <summary>

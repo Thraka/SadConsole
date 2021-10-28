@@ -55,8 +55,9 @@ namespace SadConsole.UI.Controls
                 var controls = new List<ControlBase>(Controls);
                 controls.Reverse();
 
-                foreach (var control in controls)
-                    if (control.ProcessMouse(state))
+                int count = controls.Count;
+                for (int i = 0; i < count; i++)
+                    if (controls[i].ProcessMouse(state))
                         return true;
 
                 return processResult;

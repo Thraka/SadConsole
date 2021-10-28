@@ -578,8 +578,10 @@ namespace SadConsole.Components
                 bool movedLines = false;
                 int oldLine = _position.Y;
 
-                foreach (ColoredString.ColoredGlyphEffect glyph in text)
+                int count = text.Length;
+                for (int i = 0; i < count; i++)
                 {
+                    ColoredString.ColoredGlyphEffect glyph = text[i];
                     // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                     if (movedLines)
                     {
@@ -822,8 +824,11 @@ namespace SadConsole.Components
 
             if (!IsEnabled) return;
 
-            foreach (Input.AsciiKey key in keyboard.KeysPressed)
+            System.Collections.ObjectModel.ReadOnlyCollection<AsciiKey> keysPressed = keyboard.KeysPressed;
+            int count = keysPressed.Count;
+            for (int i = 0; i < count; i++)
             {
+                Input.AsciiKey key = keysPressed[i];
                 // If someone attached an event to KeyboardPreview, process it
                 if (KeyboardPreview != null)
                 {

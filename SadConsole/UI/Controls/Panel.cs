@@ -99,8 +99,10 @@ namespace SadConsole.UI.Controls
                 var controls = new List<ControlBase>(Controls);
                 controls.Reverse();
 
-                foreach (var control in controls)
+                int count = controls.Count;
+                for (int i = 0; i < count; i++)
                 {
+                    ControlBase control = controls[i];
                     var state2 = new ControlMouseState(control, state);
 
                     if (state2.IsMouseOver && state.Mouse.RightClicked)

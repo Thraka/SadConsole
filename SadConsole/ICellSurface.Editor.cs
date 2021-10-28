@@ -2360,10 +2360,13 @@ namespace SadConsole
             int spaceWidth = GetTheDrawSpaceCharWidth(drawFont),
                 textLength = 0,
                 printWidth = cellSurface.Width - padding * 2;
+
             string tempText = string.Empty;
 
-            foreach (var item in text)
+            int count = text.Length;
+            for (int i = 0; i < count; i++)
             {
+                char item = text[i];
                 char currentChar = item;
                 int charWidth = 0;
 
@@ -2421,8 +2424,10 @@ namespace SadConsole
             int yPos = y;
             int tempHeight = 0;
 
-            foreach (var item in text)
+            int count = text.Length;
+            for (int i = 0; i < count; i++)
             {
+                char item = text[i];
                 if (drawFont.IsCharacterSupported(item))
                 {
                     var charInfo = drawFont.GetCharacter(item);

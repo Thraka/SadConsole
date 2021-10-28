@@ -244,8 +244,9 @@ namespace SadConsole
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            int count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].UpdateAbsolutePosition();
         }
 
         /// <summary>
@@ -264,11 +265,15 @@ namespace SadConsole
                 ForceRendererRefresh = false;
             }
 
-            foreach (IComponent component in ComponentsRender.ToArray())
-                component.Render(this, delta);
+            int count = ComponentsRender.Count;
+            for (int i = 0; i < count; i++)
+                ComponentsRender[i].Render(this, delta);
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Render(delta);
+            Children.IsLocked = true;
+            count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].Render(delta);
+            Children.IsLocked = false;
         }
 
         /// <summary>
@@ -329,8 +334,9 @@ namespace SadConsole
         /// </summary>
         public void CallOnHostUpdated()
         {
-            foreach (IComponent component in SadComponents)
-                component.OnHostUpdated(this);
+            int count = SadComponents.Count;
+            for (int i = 0; i < count; i++)
+                SadComponents[i].OnHostUpdated(this);
 
             Renderer?.OnHostUpdated(this);
 

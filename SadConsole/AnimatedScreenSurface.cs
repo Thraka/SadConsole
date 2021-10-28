@@ -321,8 +321,9 @@ namespace SadConsole
             else
                 AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            int count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].UpdateAbsolutePosition();
         }
 
         /// <summary>

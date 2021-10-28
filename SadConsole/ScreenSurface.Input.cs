@@ -88,9 +88,7 @@ namespace SadConsole
         public override void LostMouse(MouseScreenObjectState state)
         {
             if (IsMouseOver)
-            {
                 OnMouseExit(state);
-            }
         }
 
         /// <inheritdoc/>
@@ -98,9 +96,10 @@ namespace SadConsole
         {
             if (!IsVisible) return false;
 
-            foreach (SadConsole.Components.IComponent component in ComponentsMouse.ToArray())
+            int count = ComponentsMouse.Count;
+            for (int i = 0; i < count; i++)
             {
-                component.ProcessMouse(this, state, out bool isHandled);
+                ComponentsMouse[i].ProcessMouse(this, state, out bool isHandled);
 
                 if (isHandled)
                     return true;
@@ -119,14 +118,10 @@ namespace SadConsole
                 OnMouseMove(state);
 
                 if (state.Mouse.LeftClicked)
-                {
                     OnMouseLeftClicked(state);
-                }
 
                 if (state.Mouse.RightClicked)
-                {
                     OnRightMouseClicked(state);
-                }
 
                 return true;
             }

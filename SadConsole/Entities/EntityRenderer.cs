@@ -282,11 +282,13 @@ namespace SadConsole.Entities
 
             for (int i = 0; i < Entities.Count; i++)
             {
+                Entity entity = Entities[i];
+
                 if (DoEntityUpdate)
-                    Entities[i].Update(delta);
+                    entity.Update(delta);
 
                 // Short out if IsDirty has already been marked
-                if (!IsDirty && Entities[i].Appearance.IsDirty && IsEntityVisible(Entities[i].Position, Entities[i].UsePixelPositioning))
+                if (!IsDirty && entity.Appearance.IsDirty && IsEntityVisible(entity.Position, entity.UsePixelPositioning))
                     IsDirty = true;
             }
         }

@@ -73,8 +73,9 @@ namespace SadConsole.UI
                 ParentConsole.IsDirty = true;
                 IsDirty = true;
 
-                foreach (ControlBase control in ControlsList)
-                    control.IsDirty = true;
+                int count = ControlsList.Count;
+                for (int i = 0; i < count; i++)
+                    ControlsList[i].IsDirty = true;
             }
         }
 
@@ -262,8 +263,10 @@ namespace SadConsole.UI
                     var controls = ControlsList.ToList();
                     controls.Reverse();
 
-                    foreach (ControlBase control in controls)
+                    int count = controls.Count;
+                    for (int i = 0; i < count; i++)
                     {
+                        ControlBase control = controls[i];
                         if (control.IsVisible && control.Parent == this && control.ProcessMouse(state))
                         {
                             if (_controlWithMouse != null && _controlWithMouse != control)
@@ -670,8 +673,9 @@ namespace SadConsole.UI
         {
             IsDirty = true;
 
-            foreach (var control in ControlsList)
-                control.IsDirty = true;
+            int count = ControlsList.Count;
+            for (int i = 0; i < count; i++)
+                ControlsList[i].IsDirty = true;
         }
 
         /// <summary>
@@ -756,8 +760,9 @@ namespace SadConsole.UI
             var controls = ControlsList.ToArray();
             ControlsList.Clear();
 
-            foreach (ControlBase control in controls)
-                control.Parent = null;
+            int count = controls.Length;
+            for (int i = 0; i < count; i++)
+                controls[i].Parent = null;
 
             IsDirty = true;
         }

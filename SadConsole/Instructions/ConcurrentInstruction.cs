@@ -10,7 +10,7 @@ namespace SadConsole.Instructions
     [System.Diagnostics.DebuggerDisplay("Instruction: Concurrent")]
     public class ConcurrentInstructions : InstructionBase
     {
-        private IEnumerable<InstructionBase> _instructions;
+        private List<InstructionBase> _instructions;
 
         /// <summary>
         /// The instructions to run concurrently.
@@ -18,7 +18,7 @@ namespace SadConsole.Instructions
         public IEnumerable<InstructionBase> Instructions
         {
             get => _instructions;
-            set => _instructions = value ?? throw new NullReferenceException("Instructions cannot be set to null.");
+            set => _instructions = new List<InstructionBase>(value ?? throw new NullReferenceException("Instructions cannot be set to null."));
         }
 
         /// <summary>
@@ -26,21 +26,20 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="instructions">The instructions</param>
         public ConcurrentInstructions(IEnumerable<InstructionBase> instructions) =>
-            _instructions = instructions;
+            _instructions = new List<InstructionBase>(instructions);
 
         /// <inheritdoc />
         public override void Update(IScreenObject componentHost, TimeSpan delta)
         {
             bool stillRunning = false;
 
-            foreach (InstructionBase item in _instructions)
+            int count = _instructions.Count;
+            for (int i = 0; i < count; i++)
             {
-                item.Update(componentHost, delta);
+                _instructions[i].Update(componentHost, delta);
 
-                if (!item.IsFinished)
-                {
+                if (!_instructions[i].IsFinished)
                     stillRunning = true;
-                }
             }
 
             IsFinished = !stillRunning;
@@ -51,10 +50,9 @@ namespace SadConsole.Instructions
         /// <inheritdoc />
         public override void Repeat()
         {
-            foreach (InstructionBase item in _instructions)
-            {
-                item.Repeat();
-            }
+            int count = _instructions.Count;
+            for (int i = 0; i < count; i++)
+                _instructions[i].Repeat();
 
             base.Repeat();
         }
@@ -62,10 +60,9 @@ namespace SadConsole.Instructions
         /// <inheritdoc />
         public override void Reset()
         {
-            foreach (InstructionBase item in _instructions)
-            {
-                item.Reset();
-            }
+            int count = _instructions.Count;
+            for (int i = 0; i < count; i++)
+                _instructions[i].Reset();
 
             base.Reset();
         }

@@ -219,44 +219,6 @@ namespace SadConsole
         public ColoredGlyphState ToState() =>
             new ColoredGlyphState(this);
 
-        /* TODO: Move this to extension methods in the actual Renderers library (monogame, gdi+, etc)
-        /// <summary>
-        /// Draws a single cell using the specified SpriteBatch.
-        /// </summary>
-        /// <param name="batch">Renderers batch.</param>
-        /// <param name="position">Pixel position on the screen to render.</param>
-        /// <param name="size">Renderers size of the cell.</param>
-        /// <param name="font">Font used to draw the cell.</param>
-        public void Draw(SpriteBatch batch, Point position, Point size, Font font) => Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
-
-        /// <summary>
-        /// Draws a single cell using the specified SpriteBatch.
-        /// </summary>
-        /// <param name="batch">Renderers batch.</param>
-        /// <param name="drawingRectangle">Where on the sreen to draw the cell, in pixels.</param>
-        /// <param name="font">Font used to draw the cell.</param>
-        public void Draw(SpriteBatch batch, Rectangle drawingRectangle, Font font)
-        {
-            if (Background != Color.Transparent)
-            {
-                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[font.SolidGlyphIndex], Background, 0f, Vector2.Zero, Mirror.None, 0.3f);
-            }
-
-            if (Foreground != Color.Transparent)
-            {
-                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
-            }
-
-            foreach (ColoredGlyphDecorator decorator in Decorators)
-            {
-                if (decorator.Color != Color.Transparent)
-                {
-                    batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
-                }
-            }
-        }
-        */
-
         /// <summary>
         /// Returns a new cell with the same properties as this one.
         /// </summary>

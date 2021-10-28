@@ -169,8 +169,9 @@ namespace SadConsole.Effects
             {
                 ColoredGlyphWithState[] states = _effects[effect].CellsStates.ToArray();
 
-                foreach (var state in states)
-                    ClearCellEffect(state.CellIndex);
+                int count = states.Length;
+                for (int i = 0; i < count; i++)
+                    ClearCellEffect(states[i].CellIndex);
             }
         }
 
@@ -181,8 +182,10 @@ namespace SadConsole.Effects
         {
             ICellEffect[] effects = _effects.Keys.ToArray();
 
-            foreach (ICellEffect effect in effects)
+            int count = effects.Length;
+            for (int i = 0; i < count; i++)
             {
+                ICellEffect effect = effects[i];
                 Remove(effect);
             }
 
@@ -238,10 +241,10 @@ namespace SadConsole.Effects
         public void UpdateEffects(TimeSpan delta)
         {
             List<ICellEffect> effectsToRemove = new List<ICellEffect>();
+            List<ColoredGlyphWithState> cellsToRemove = new List<ColoredGlyphWithState>();
 
             foreach (ColoredGlyphEffectData effectData in _effects.Values)
             {
-                List<ColoredGlyphWithState> cellsToRemove = new List<ColoredGlyphWithState>();
                 effectData.Effect.Update(delta);
 
                 foreach (ColoredGlyphWithState cellState in effectData.CellsStates)
@@ -253,21 +256,24 @@ namespace SadConsole.Effects
                         cellsToRemove.Add(cellState);
                 }
 
-                for (int i = 0; i < cellsToRemove.Count; i++)
+                int count = cellsToRemove.Count;
+                for (int i = 0; i < count; i++)
                 {
                     effectData.RemoveCell(cellsToRemove[i].CellIndex, effectData.Effect.RestoreCellOnRemoved & effectData.Effect.IsFinished);
                     _effectCells.Remove(cellsToRemove[i].CellIndex);
                     _backingSurface.IsDirty = true;
                 }
 
+                cellsToRemove.Clear();
+
                 if (effectData.CellsStates.Count == 0)
-                {
                     effectsToRemove.Add(effectData.Effect);
-                }
             }
 
-            foreach (ICellEffect effect in effectsToRemove)
+            int count2 = effectsToRemove.Count;
+            for (int i = 0; i < count2; i++)
             {
+                ICellEffect effect = effectsToRemove[i];
                 _effects.Remove(effect);
             }
         }
@@ -344,8 +350,10 @@ namespace SadConsole.Effects
             /// <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
             public bool ContainsCell(int cellIndex)
             {
-                foreach (var state in CellsStates)
+                int count = CellsStates.Count;
+                for (int i = 0; i < count; i++)
                 {
+                    ColoredGlyphWithState state = CellsStates[i];
                     if (state.CellIndex == cellIndex)
                         return true;
                 }

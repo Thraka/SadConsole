@@ -2029,23 +2029,6 @@
             <param name="height">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
         </member>
-        <member name="T:SadConsole.Debug.Screen">
-            <summary>
-            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
-            <summary>
-            Displays the debugger.
-            </summary>
-            <param name="font">The font to use the debugging screen.</param>
-            <param name="fontSize">The size of the font.</param>
-        </member>
-        <member name="M:SadConsole.Debug.Screen.Show">
-            <summary>
-            Shows the debug screen with the default font and size.
-            </summary>
-        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
             A draw call that invokes an <see cref="T:System.Action"/> delegate.
@@ -2890,6 +2873,11 @@
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
+        <member name="M:SadConsole.Entities.Renderer.RemoveAll">
+            <summary>
+            Removes all entities from this renderer.
+            </summary>
+        </member>
         <member name="M:SadConsole.Entities.Renderer.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
@@ -2936,11 +2924,6 @@
         <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
             <summary>
             Updates the cached view area based on the parent surface.
-            </summary>
-        </member>
-        <member name="T:SadConsole.ICellSurfaceExtensions">
-            <summary>
-            Various extension methods to classes that implement <see cref="T:SadConsole.ICellSurface"/> interface.
             </summary>
         </member>
         <member name="T:SadConsole.PointExtensions">

@@ -59,7 +59,7 @@ namespace SadConsole.PerformanceTests
     {
         #region Test Data
 
-        [Params(0, 1, 100, 1000)]
+        [Params(0, 5, 10)]
         public int NumComponents;
 
         [Params(0, 1, 100, 1000)]
@@ -76,11 +76,16 @@ namespace SadConsole.PerformanceTests
         {
             _gameHost = new BasicGameHost();
             _mainObject = new SadConsole.ScreenObject();
-            for (int i = 0; i < NumComponents; i++)
-                _mainObject.SadComponents.Add(new TestComponent());
 
             for (int i = 0; i < NumChildren; i++)
-                _mainObject.Children.Add(new SadConsole.ScreenObject());
+            {
+                var obj = new SadConsole.ScreenObject();
+
+                for (int i2 = 0; i2 < NumComponents; i2++)
+                    obj.SadComponents.Add(new TestComponent());
+
+                _mainObject.Children.Add(obj);
+            }
 
             _delta = TimeSpan.FromMilliseconds(5);
         }
