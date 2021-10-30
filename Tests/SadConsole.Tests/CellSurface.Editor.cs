@@ -120,7 +120,11 @@ namespace SadConsole.Tests
             PrintSurfaceGlyphs(surface, "After:");
 
             for (int x = 0; x < surface.Width; x++)
-                Assert.AreEqual(x >= shiftAmount ? 0 : x + 1 + shiftAmount, surface.GetGlyph(x, centerRow));
+            {
+                int shiftedFromIdx = x + shiftAmount;
+                int shiftedFromValue = shiftedFromIdx + 1;
+                Assert.AreEqual(shiftedFromIdx >= surface.Width ? 0 : shiftedFromValue, surface.GetGlyph(x, centerRow));
+            }
         }
 
         [TestMethod]
@@ -167,7 +171,7 @@ namespace SadConsole.Tests
                 // Old value at x
                 int oldValue = x + 1;
                 // New location for old value that was at x
-                int newLocationX = WrapAround(x + shiftAmount, surface.Width);
+                int newLocationX = WrapAround(x - shiftAmount, surface.Width);
 
                 // Check
                 Assert.AreEqual(oldValue, surface.GetGlyph(newLocationX, centerRow));

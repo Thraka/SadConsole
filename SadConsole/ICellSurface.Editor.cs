@@ -11,6 +11,46 @@ using SadConsole.Readers;
 
 namespace SadConsole
 {
+    // Since shift algorithms make temporary copies of appearance, we use a struct to make sure the copy
+    // is as efficient as possible
+    internal readonly struct ColoredGlyphAppearance
+    {
+        public readonly Color Foreground;
+        public readonly Color Background;
+        public readonly int Glyph;
+        public readonly Mirror Mirror;
+        public readonly CellDecorator[] Decorators;
+
+        public ColoredGlyphAppearance(ColoredGlyph cell)
+        {
+            Foreground = cell.Foreground;
+            Background = cell.Background;
+            Glyph = cell.Glyph;
+            Mirror = cell.Mirror;
+
+            // Shallow copy is OK here because, in the algorithm we use to shift, the item we're copying
+            // is immediately replaced by another; this shallow-copy therefore avoids some allocation.
+            Decorators = cell.Decorators;
+        }
+
+        /// <summary>
+        /// Copies the ColoredGlyphAppearance to the appearance fields of the given ColoredGlyphs.
+        /// The Decorators array is copied using a shallow-copy.
+        /// </summary>
+        /// <remarks>
+        /// This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+        /// </remarks>
+        /// <param name="cell">Cell to copy to.</param>
+        public void ShallowCopyTo(ColoredGlyph cell)
+        {
+            cell.Foreground = Foreground;
+            cell.Background = Background;
+            cell.Glyph = Glyph;
+            cell.Mirror = Mirror;
+            cell.Decorators = Decorators;
+        }
+    }
+
     /// <summary>
     /// Methods to interact with a <see cref="ICellSurface"/>.
     /// </summary>
@@ -703,7 +743,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Draws the string on the console at the specified location with the specified settings. 
+        /// Draws the string on the console at the specified location with the specified settings.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">X location of the text.</param>
@@ -745,7 +785,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Draws the string on the console at the specified location with the specified settings. 
+        /// Draws the string on the console at the specified location with the specified settings.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">X location of the text.</param>
@@ -974,7 +1014,7 @@ namespace SadConsole
             if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
 
             if (count < 0)
-                ShiftRowLeftUnchecked(surface, row, startingX, -count, wrap); 
+                ShiftRowLeftUnchecked(surface, row, startingX, -count, wrap);
             else
                 ShiftRowRightUnchecked(surface, row, startingX, count, wrap);
         }
@@ -997,60 +1037,91 @@ namespace SadConsole
 
         public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
         {
+            int width = surface.Width;
             if (wrap)
             {
-                // TODO Wrap on ShiftRowRightUnchecked
-            }
-            else
-            {
-                if (count > surface.Width - startingX)
+                // Simplify wrap to minimum needed number
+                count %= width;
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[count];
+                // Offset for tempArray
+                int tempArrayOffset = width - count;
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int x = width - 1; x >= 0; x--)
                 {
-                    // Shifting all off the side. Clear everything.
-                    for (int x = startingX; x < surface.Width; x++)
-                        Clear(surface, x, row, surface.Width - x);
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (x >= tempArrayOffset)
+                        tempArray[x - tempArrayOffset] = new ColoredGlyphAppearance(surface[x, row]);
+
+                    // TODO: This CopyAppearanceFrom could do shallow copy, since there is no need to
+                    // duplicate the array; the cell we're copying from will also be copied over
+                    // later in the algorithm.
+                    int copyFromX = x - count;
+                    if (copyFromX >= 0)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                    else
+                        tempArray[x].ShallowCopyTo(surface[x, row]);
                 }
-                else
+            }
+            else // Shift and clear as needed
+            {
+                for (int x = width - 1; x >= 0; x--)
                 {
-                    int startIndex = new Point(surface.Width - count - 1, row).ToIndex(surface.Width);
-                    int copyStopX = new Point(startingX, row).ToIndex(surface.Width);
-
-                    for (int x = startIndex; x >= copyStopX; x--)
-                    {
-                        surface[x].CopyAppearanceTo(surface[x + count]);
-                    }
-
-                    for (int x = 0; x < count; x++)
-                    {
-                        surface[x + copyStopX].Clear();
-                    }
+                    int copyFromX = x - count;
+                    if (copyFromX >= 0)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                    else
+                        surface.Clear(x, row);
                 }
             }
         }
 
         public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
         {
+            int width = surface.Width;
+
             if (wrap)
             {
-                // TODO Wrap on ShiftRowLeftUnchecked
-            }
-            else
-            {
-                if (count + 1 > startingX)
+                // Simplify wrap to minimum needed number
+                count %= width;
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[count];
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int x = 0; x < width; x++)
                 {
-                    // Shifting all off the side. Clear everything.
-                    for (int x = 0; x < startingX; x++)
-                        Clear(surface, 0, row, startingX + 1);
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (x < count)
+                        tempArray[x] = new ColoredGlyphAppearance(surface[x, row]);
+
+                    // TODO: This CopyAppearanceFrom could do shallow copy, since there is no need to
+                    // duplicate the array; the cell we're copying from will also be copied over
+                    // later in the algorithm.
+                    if (x + count < width)
+                        surface[x, row].CopyAppearanceFrom(surface[x + count, row]);
+                    else
+                        tempArray[x + count - width].ShallowCopyTo(surface[x, row]);
                 }
-                else
+            }
+            else // Shift and clear as needed
+            {
+                // TODO: This copy could do shallow copy, since there is no need to
+                // duplicate the array; the cell we're copying from will also be copied over
+                // later in the algorithm.
+                for (int x = 0; x < width; x++)
                 {
-                    int startIndex = new Point(count, row).ToIndex(surface.Width);
-                    int copyStopX = new Point(startingX, row).ToIndex(surface.Width);
-
-                    for (int x = startIndex; x <= copyStopX; x++)
-                        surface[x].CopyAppearanceTo(surface[x - count]);
-
-                    for (int x = 0; x < count; x++)
-                        surface[startingX - x].Clear();
+                    int copyFromX = x + count;
+                    if (copyFromX < width)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                    else
+                        surface.Clear(x, row);
                 }
             }
         }
@@ -2454,5 +2525,8 @@ namespace SadConsole
                 }
             }
         }
+
+        // Helper function for wrapping values around like an array
+        private static int WrapAround(int num, int wrapTo) => (num % wrapTo + wrapTo) % wrapTo;
     }
 }
