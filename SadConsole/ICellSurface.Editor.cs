@@ -1076,6 +1076,8 @@ namespace SadConsole
                         surface.Clear(x, row);
                 }
             }
+
+            surface.IsDirty = true;
         }
 
         public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
@@ -1116,6 +1118,8 @@ namespace SadConsole
                         surface.Clear(x, row);
                 }
             }
+
+            surface.IsDirty = true;
         }
 
         /// <summary>
