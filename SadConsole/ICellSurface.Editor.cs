@@ -1057,12 +1057,10 @@ namespace SadConsole
                     if (x >= tempArrayOffset)
                         tempArray[x - tempArrayOffset] = new ColoredGlyphAppearance(surface[x, row]);
 
-                    // TODO: This CopyAppearanceFrom could do shallow copy, since there is no need to
-                    // duplicate the array; the cell we're copying from will also be copied over
-                    // later in the algorithm.
+                    // Copy appearance from the appropriate location
                     int copyFromX = x - count;
                     if (copyFromX >= 0)
-                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
                     else
                         tempArray[x].ShallowCopyTo(surface[x, row]);
                 }
@@ -1101,25 +1099,19 @@ namespace SadConsole
                     if (x < count)
                         tempArray[x] = new ColoredGlyphAppearance(surface[x, row]);
 
-                    // TODO: This CopyAppearanceFrom could do shallow copy, since there is no need to
-                    // duplicate the array; the cell we're copying from will also be copied over
-                    // later in the algorithm.
                     if (x + count < width)
-                        surface[x, row].CopyAppearanceFrom(surface[x + count, row]);
+                        surface[x, row].CopyAppearanceFrom(surface[x + count, row], false);
                     else
                         tempArray[x + count - width].ShallowCopyTo(surface[x, row]);
                 }
             }
             else // Shift and clear as needed
             {
-                // TODO: This copy could do shallow copy, since there is no need to
-                // duplicate the array; the cell we're copying from will also be copied over
-                // later in the algorithm.
                 for (int x = 0; x < width; x++)
                 {
                     int copyFromX = x + count;
                     if (copyFromX < width)
-                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
                     else
                         surface.Clear(x, row);
                 }
@@ -1180,12 +1172,7 @@ namespace SadConsole
                 {
                     ColoredGlyph destination = surface[(y - amount) * surface.Width + x];
                     ColoredGlyph source = surface[y * surface.Width + x];
-
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
-                    destination.Decorators = source.Decorators;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1205,12 +1192,7 @@ namespace SadConsole
                 foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
-                    destination.Decorators = cellTuple.Item1.Decorators;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1272,11 +1254,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[(y + amount) * surface.Width + x];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
-                    destination.Decorators = source.Decorators;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1296,12 +1274,7 @@ namespace SadConsole
                 foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
-                    destination.Decorators = cellTuple.Item1.Decorators;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1364,11 +1337,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[y * surface.Width + (x + amount)];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
-                    destination.Decorators = source.Decorators;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1388,12 +1357,7 @@ namespace SadConsole
                 foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
-                    destination.Decorators = cellTuple.Item1.Decorators;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1455,11 +1419,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[y * surface.Width + (x - amount)];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
-                    destination.Decorators = source.Decorators;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1478,12 +1438,7 @@ namespace SadConsole
                 foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
                 {
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
-                    destination.Decorators = cellTuple.Item1.Decorators;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
