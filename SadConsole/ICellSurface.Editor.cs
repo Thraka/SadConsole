@@ -2484,8 +2484,5 @@ namespace SadConsole
                 }
             }
         }
-
-        // Helper function for wrapping values around like an array
-        private static int WrapAround(int num, int wrapTo) => (num % wrapTo + wrapTo) % wrapTo;
     }
 }
