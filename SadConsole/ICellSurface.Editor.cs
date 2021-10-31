@@ -1046,6 +1046,16 @@ namespace SadConsole
                 // If count was a multiple of width, everything will end up back where it started so we're done
                 if (count == 0) return;
 
+                // Any shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (width - count < count)
+                {
+                    ShiftRowLeftUnchecked(surface, row, startingX, width - count, true);
+                    return;
+                }
+
                 // Temporary array size of shift value
                 var tempArray = new ColoredGlyphAppearance[count];
                 // Offset for tempArray
@@ -1094,6 +1104,16 @@ namespace SadConsole
 
                 // If count was a multiple of width, everything will end up back where it started so we're done
                 if (count == 0) return;
+
+                // Any shift-left by n is equivalent to a shift-right by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (width - count < count)
+                {
+                    ShiftRowRightUnchecked(surface, row, startingX, width - count, true);
+                    return;
+                }
 
                 // Temporary array size of shift value
                 var tempArray = new ColoredGlyphAppearance[count];
