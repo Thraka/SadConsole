@@ -1046,7 +1046,7 @@ namespace SadConsole
                 // If count was a multiple of width, everything will end up back where it started so we're done
                 if (count == 0) return;
 
-                // Any shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+                // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
                 // allocate a temporary array the size of the value we're shifting during the algorithm,
                 // we'll optimize it by making sure that value is as small as possible.  The largest shift
                 // value we will actually process will then be width / 2.
@@ -1105,7 +1105,7 @@ namespace SadConsole
                 // If count was a multiple of width, everything will end up back where it started so we're done
                 if (count == 0) return;
 
-                // Any shift-left by n is equivalent to a shift-right by width - n.  Because we have to
+                // Any wrapping shift-left by n is equivalent to a shift-right by width - n.  Because we have to
                 // allocate a temporary array the size of the value we're shifting during the algorithm,
                 // we'll optimize it by making sure that value is as small as possible.  The largest shift
                 // value we will actually process will then be width / 2.
