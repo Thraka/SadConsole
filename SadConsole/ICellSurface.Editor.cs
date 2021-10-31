@@ -1043,6 +1043,9 @@ namespace SadConsole
                 // Simplify wrap to minimum needed number
                 count %= width;
 
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (count == 0) return;
+
                 // Temporary array size of shift value
                 var tempArray = new ColoredGlyphAppearance[count];
                 // Offset for tempArray
@@ -1088,6 +1091,9 @@ namespace SadConsole
             {
                 // Simplify wrap to minimum needed number
                 count %= width;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (count == 0) return;
 
                 // Temporary array size of shift value
                 var tempArray = new ColoredGlyphAppearance[count];
