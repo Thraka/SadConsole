@@ -277,11 +277,11 @@ namespace SadConsole
         }
 
         /// <inheritdoc />
-        public void Resize(int width, int height, bool clear) =>
-            Resize(width, height, width, height, clear);
+        public void Resize(int viewWidth, int viewHeight, bool clear) =>
+            Resize(viewWidth, viewHeight, viewWidth, viewHeight, clear);
 
         /// <inheritdoc />
-        public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
+        public void Resize(int viewWidth, int viewHeight, int bufferWidth, int bufferHeight, bool clear)
         {
             var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
 
@@ -311,7 +311,7 @@ namespace SadConsole
             }
 
             Cells = newCells;
-            _viewArea = new BoundedRectangle((0, 0, width, height),
+            _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
                                              (0, 0, bufferWidth, bufferHeight));
             Effects = new Effects.EffectsManager(this);
             IsDirty = true;
