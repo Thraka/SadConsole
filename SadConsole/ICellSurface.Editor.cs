@@ -819,14 +819,12 @@ namespace SadConsole
         /// <param name="x">X location of the text.</param>
         /// <param name="y">Y location of the text.</param>
         /// <param name="glyph">The glyph to display.</param>
-        public static void Print(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
+        public static void SetGlyph(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
         {
             if (glyph == null) return;
             if (!surface.IsValidCell(x, y, out int index)) return;
 
-            ColoredGlyph cell = surface[index];
-            glyph.CopyAppearanceTo(cell);
-            cell.Glyph = glyph.Glyph;
+            glyph.CopyAppearanceTo(surface[index]);
             surface.IsDirty = true;
         }
 
