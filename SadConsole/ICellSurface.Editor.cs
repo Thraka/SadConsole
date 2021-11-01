@@ -487,7 +487,7 @@ namespace SadConsole
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <returns>The color.</returns>
+        /// <returns>The <see cref="Mirror"/> of the cell.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Mirror GetMirror(this ICellSurface surface, int x, int y) =>
             surface[y * surface.Width + x].Mirror;

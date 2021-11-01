@@ -87,6 +87,13 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
+            var sc = Game.Instance.StartingConsole;
+            var s1 = new CellSurface(1, 1);
+            var s2 = new CellSurface(2, 2);
+
+            s1.SetSurface(s2, new Rectangle(0, 0, 3, 3));
+            return;
+
             //if (Settings.UnlimitedFPS)
                 //SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
 

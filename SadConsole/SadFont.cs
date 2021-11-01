@@ -119,7 +119,7 @@ namespace SadConsole
         /// <param name="rows">Number of glyph rows in the <paramref name="image"/>.</param>
         /// <param name="columns">Number of glyph columns in the <paramref name="image"/>.</param>
         /// <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
-        /// <param name="image">The texture for of the font.</param>
+        /// <param name="image">The <see cref="ITexture"/> of the font.</param>
         /// <param name="name">A font identifier used for serialization of resources using this font.</param>
         /// <param name="glyphRectangles">Glyph mapping dictionary.</param>
         public SadFont(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles = null)

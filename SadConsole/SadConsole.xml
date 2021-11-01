@@ -900,7 +900,7 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,SadConsole.CellDecorator[])">
             <summary>
-            Creates a cell with the specified foreground, background, glyph, and mirror effect.
+            Creates a cell with the specified foreground, background, glyph, mirror effect, visibility and decorators.
             </summary>
             <param name="foreground">Foreground color.</param>
             <param name="background">Background color.</param>
@@ -911,19 +911,19 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
             <summary>
-            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
             <param name="cell">The target cell to copy to.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph)">
             <summary>
-            Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
+            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
             <param name="cell">The target cell to copy from.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clear">
             <summary>
-            Resets the foreground, background, glyph, and mirror effect.
+            Resets the foreground, background, glyph, mirror effect and decorators.
             </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyph.ToState">
@@ -4088,7 +4088,7 @@
             <param name="surface">The surface being edited.</param>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
+            <returns>The <see cref="T:SadConsole.Mirror"/> of the cell.</returns>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetMirror(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Mirror)">
             <summary>
