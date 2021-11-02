@@ -412,6 +412,7 @@ namespace SadConsole
         /// <param name="lastFrame">If specified, animation will finish at this frame (zero indexed).</param>
         /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
         /// <remarks>Remarks:<br></br>
+        /// This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
         /// Number of frames is calculated given the frame layout in the image file.<br></br>
         /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br>
         /// As an example, if you use an 8x16 font, the frame cell count X will be the number of X pixels and the cell count Y will be the number of Y pixels / 2. </remarks>
