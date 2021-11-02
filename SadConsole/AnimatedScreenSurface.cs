@@ -400,6 +400,110 @@ namespace SadConsole
         }
 
         /// <summary>
+        /// Converts an image file containing frames to an instance of AnimatedScreenSurface.
+        /// </summary>
+        /// <param name="filePath">File path to the image file.</param>
+        /// <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
+        /// <param name="pixelPadding">Amount of pixels in the image file separating frames: X between the columns, Y between the rows.</param>
+        /// <param name="frameDuration">Duration for a frame in the animation.</param>
+        /// <param name="font">Font to be used when creating an instance of the <see cref="AnimatedScreenSurface"/>.</param>
+        /// <param name="callback">If specified, this will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
+        /// <param name="firstFrame">If specified, animation will start at this frame (zero indexed).</param>
+        /// <param name="lastFrame">If specified, animation will finish at this frame (zero indexed).</param>
+        /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
+        /// <remarks>Remarks:<br></br>
+        /// Number of frames is calculated given the frame layout in the image file.<br></br>
+        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br>
+        /// As an example, if you use an 8x16 font, the frame cell count X will be the number of X pixels and the cell count Y will be the number of Y pixels / 2. </remarks>
+        public static AnimatedScreenSurface ConvertImageFile(string filePath, Point frameLayout, Point pixelPadding, float frameDuration, IFont font, 
+            Action<ColoredGlyph> callback = null, int firstFrame = 0, int lastFrame = 0)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException($"Invalid file path.");
+            }
+
+            if (font is null)
+            {
+                throw new ArgumentException("Font has to be specified.");
+            }
+
+            // get info about the font
+            var fontSize = font.GetFontSize(IFont.Sizes.One);
+            var fontSizeRatio = font.GetGlyphRatio(fontSize);
+
+            // load the image
+            using ITexture image = GameHost.Instance.GetTexture(filePath);
+            Point imageSize = (image.Width, image.Height);
+
+            // convert the image to surface
+            Point surfaceSize = ApplyFontSizeRatio(imageSize, fontSizeRatio);
+            var convertedImage = image.ToSurface(TextureConvertMode.Foreground, surfaceSize.X, surfaceSize.Y);
+            pixelPadding = ApplyFontSizeRatio(pixelPadding, fontSizeRatio);
+
+            // calculate the number of frames
+            int totalFrameCount = frameLayout.X * frameLayout.Y,
+                frameCount = lastFrame - firstFrame;
+            bool customFrameCountIsValid = frameCount > 0 && frameCount <= totalFrameCount && firstFrame >= 0 && lastFrame <= totalFrameCount;
+            frameCount = customFrameCountIsValid ? frameCount : totalFrameCount;
+
+            // calculate the frame size and create an instance of an animated screen surface
+            Point frameSize = ((surfaceSize.X - (pixelPadding.X * (frameLayout.X - 1))) / frameLayout.X, (surfaceSize.Y - (pixelPadding.Y * (frameLayout.Y - 1))) / frameLayout.Y);
+            var clip = new AnimatedScreenSurface("Animation", frameSize.X, frameSize.Y, font, fontSize)
+            {
+                AnimationDuration = frameCount * frameDuration
+            };
+
+            // copy frames from the converted image data
+            var currentFrameArea = new Rectangle(0, 0, frameSize.X, frameSize.Y);
+            CreateFrames();
+
+            return clip;
+
+            // nested loops extracted to a function to be able to get out from anywhere, rather than break.
+            void CreateFrames()
+            {
+                for (int y = 0; y < frameLayout.Y; y++)
+                {
+                    currentFrameArea = currentFrameArea.WithX(0);
+                    for (int x = 0; x < frameLayout.X; x++)
+                    {
+                        if (customFrameCountIsValid)
+                        {
+                            int frameIndex = y * frameLayout.Y + x;
+                            if (frameIndex >= firstFrame)
+                            {
+                                if (frameIndex > lastFrame) return;
+                                else CopyFrameToClip();
+                            }
+                        }
+                        else CopyFrameToClip();
+
+                        int paddingX = x + 1 == frameLayout.X ? 0 : pixelPadding.X;
+                        currentFrameArea = currentFrameArea.ChangeX(frameSize.X + paddingX);
+                    }
+
+                    int paddingY = y + 1 == frameLayout.Y ? 0 : pixelPadding.Y;
+                    currentFrameArea = currentFrameArea.ChangeY(frameSize.Y + paddingY);
+                }
+            }
+
+            void CopyFrameToClip()
+            {
+                CellSurface frame = (CellSurface)clip.CreateFrame();
+                convertedImage.Copy(currentFrameArea, frame, 0, 0);
+                if (callback != null) Array.ForEach(frame.Cells, callback);
+            }
+
+            Point ApplyFontSizeRatio(Point point, (float X, float Y) sizeRatio) =>
+                (ApplySizeRatio(point.X, sizeRatio.X), ApplySizeRatio(point.Y, sizeRatio.Y));
+
+            int ApplySizeRatio(int x, float sizeRatio, bool inverted = false) => !inverted ?
+                sizeRatio < 1 ? x : (int)Math.Floor(x / sizeRatio) :
+                sizeRatio > 1 ? (int)Math.Floor(x * sizeRatio) : x;
+        }
+
+        /// <summary>
         /// Saves the <see cref="AnimatedScreenSurface"/> to a file.
         /// </summary>
         /// <param name="file">The destination file.</param>

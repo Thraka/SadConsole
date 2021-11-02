@@ -36,7 +36,7 @@ namespace FeatureDemo.CustomConsoles
                                            "[c:r f:LightGreen]11[c:r f:green])[c:u 2] Transparent fade  -- [c:r f:white]Demonstrates fading\\blending a console[c:u]",
                                            "[c:r f:LightGreen]12[c:r f:green])[c:u 2] 2000x2000 Console -- [c:r f:white]2000x2000 console that is scrollable[c:u]",
                                            "[c:r f:LightGreen]13[c:r f:green])[c:u 2] Serialization     -- [c:r f:white]Test serializing various types from SadConsole[c:u]",
-                                           "[c:r f:LightGreen]14[c:r f:green])[c:u 2] Animated globe    -- [c:r f:white]Shows use of instructions and AnimatedScreenSurface[c:u]",
+                                           "[c:r f:LightGreen]14[c:r f:green])[c:u 2] Animations        -- [c:r f:white]Show use of instructions and AnimatedScreenSurface[c:u]",
                                            "[c:r f:LightGreen]15[c:r f:green])[c:u 2] And more!!",
                                          };
 

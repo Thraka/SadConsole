@@ -322,6 +322,24 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
+        <member name="M:SadConsole.AnimatedScreenSurface.ConvertImageFile(System.String,SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Single,SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
+            <summary>
+            Converts an image file containing frames to an instance of AnimatedScreenSurface.
+            </summary>
+            <param name="filePath">File path to the image file.</param>
+            <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
+            <param name="pixelPadding">Amount of pixels in the image file separating frames: X between the columns, Y between the rows.</param>
+            <param name="frameDuration">Duration for a frame in the animation.</param>
+            <param name="font">Font to be used when creating an instance of the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
+            <param name="callback">If specified, this will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
+            <param name="firstFrame">If specified, animation will start at this frame (zero indexed).</param>
+            <param name="lastFrame">If specified, animation will finish at this frame (zero indexed).</param>
+            <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
+            <remarks>Remarks:<br></br>
+            Number of frames is calculated given the frame layout in the image file.<br></br>
+            Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br>
+            As an example, if you use an 8x16 font, the frame cell count X will be the number of X pixels and the cell count Y will be the number of Y pixels / 2. </remarks>
+        </member>
         <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
             <summary>
             Saves the <see cref="T:SadConsole.AnimatedScreenSurface"/> to a file.
@@ -3538,7 +3556,7 @@
         </member>
         <member name="P:SadConsole.GameHost.DefaultFontSize">
             <summary>
-            The default font to use with <see cref="P:SadConsole.GameHost.DefaultFont"/>.
+            The default font size to use with the <see cref="P:SadConsole.GameHost.DefaultFont"/>.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Keyboard">
@@ -7375,7 +7393,7 @@
             <param name="rows">Number of glyph rows in the <paramref name="image"/>.</param>
             <param name="columns">Number of glyph columns in the <paramref name="image"/>.</param>
             <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
-            <param name="image">The texture for of the font.</param>
+            <param name="image">The <see cref="T:SadConsole.ITexture"/> of the font.</param>
             <param name="name">A font identifier used for serialization of resources using this font.</param>
             <param name="glyphRectangles">Glyph mapping dictionary.</param>
         </member>
