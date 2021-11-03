@@ -26,9 +26,9 @@ namespace FeatureDemo.CustomConsoles
             _animations = new AnimationDemo[]
             {
                 new AnimatedGlobe(),
+                new AnimatedFlip(),
                 new AnimatedSkater(),
                 new AnimatedSanta(),
-                new AnimatedWalker()
             };
 
             Restart();
@@ -69,11 +69,11 @@ namespace FeatureDemo.CustomConsoles
     class AnimationDemo : ScreenSurface
     {
         string[] _info = {"Name", "Font", "Size", "Frames"};
+        ColoredGlyph _appearance = new(Color.Red, Color.Transparent, 0, Mirror.None, true, new[]{new CellDecorator(Color.Green, 95, Mirror.None)});
 
         public AnimationDemo() : base(Animations.W, Animations.H)
         {
             Surface.DefaultBackground = Color.White;
-            Surface.DefaultForeground = Color.Black;
             Surface.Clear();
         }
 
@@ -96,28 +96,38 @@ namespace FeatureDemo.CustomConsoles
 
         protected void PrintInfo(string fontSize, IScreenObject s)
         {
+            var board = new ScreenSurface(19, 15) { Parent = this };
             for (int i = 0, y = 1, length = _info.Length; i < length; i++, y += 2)
             {
-                Surface.Print(1, y + i, $"{_info[i]}:");
-                Surface.Print(3, y + i + 1, i switch {
+                board.Surface.Print(1, y + i, $"{_info[i]}:", _appearance);
+                board.Surface.Print(3, y + i + 1, i switch {
                     0 => (s as AnimatedScreenSurface).Name,
                     1 => fontSize,
                     2 => GetSize(s as ScreenSurface),
                     _ => (s as AnimatedScreenSurface).FrameCount.ToString()
-                });
+                }, Color.Black);
             }
         }
 
-        protected string GetSize(ScreenSurface s) => $"{s.Surface.Width}x{s.Surface.Height}";
+        protected string GetSize(ScreenSurface s) => $"{s.Surface.Width} x {s.Surface.Height}";
     }
 
-    class AnimatedWalker : AnimationDemo
+    class AnimatedFlip : AnimationDemo
     {
-        public AnimatedWalker() : base()
+        public AnimatedFlip() : base()
         {
-            Surface.DefaultBackground = Color.White;
-            Add(AnimatedScreenSurface.ConvertImageFile("Walking Boy", "Res/Images/Animations/boy_anim.jpg", (7, 2), (6, 31), 0.2f, Game.Instance.DefaultFont));
-            PrintInfo("IBM 8x16", Children[0]);
+            Surface.DefaultBackground = new Color(227, 227, 227);
+            Surface.Clear();
+            var floor = new ScreenSurface(Surface.Width, 5)
+            {
+                Parent = this,
+                Position = (0, Surface.Height - 5)
+            };
+            floor.Surface.DefaultBackground = new Color(235, 235, 235);
+            floor.Surface.Clear();
+            Add(AnimatedScreenSurface.ConvertImageFile("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), (1, 1), 0.1f,
+                Game.Instance.Fonts["Square8"], null, 0, 23));
+            PrintInfo("Square 8 x 8", Children[1]);
         }
     }
 
@@ -126,8 +136,9 @@ namespace FeatureDemo.CustomConsoles
         public AnimatedSanta() : base()
         {
             Action<ColoredGlyph> callback = (c) => { c.Background = c.Background.FillAlpha(); };
-            Add(AnimatedScreenSurface.ConvertImageFile("Running Santa", "Res/Images/Animations/santa_anim.png", (6, 2), (3, 5), 0.2f, Game.Instance.DefaultFont, callback));
-            PrintInfo("IBM 8x16", Children[0]);
+            Add(AnimatedScreenSurface.ConvertImageFile("Running Santa", "Res/Images/Animations/santa_anim.jpg", (6, 2), (3, 5), 0.2f,
+                Game.Instance.DefaultFont, callback));
+            PrintInfo("IBM 8 x 16", Children[0]);
         }
     }
 
@@ -135,8 +146,9 @@ namespace FeatureDemo.CustomConsoles
     {
         public AnimatedSkater() : base()
         {
-            Add(AnimatedScreenSurface.ConvertImageFile("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), (1, 1), 0.15f, Game.Instance.Fonts["Square8"], null, 0, 15));
-            PrintInfo("Square 8x8", Children[0]);
+            Add(AnimatedScreenSurface.ConvertImageFile("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), (1, 1), 0.15f,
+                Game.Instance.Fonts["Square8"], null, 0, 15));
+            PrintInfo("Square 8 x 8", Children[0]);
         }
     }
 
@@ -165,7 +177,8 @@ namespace FeatureDemo.CustomConsoles
 
             // globe animation
             Action<ColoredGlyph> callback = (c) => { if (c.Foreground.GetBrightness() < 1) c.Background = c.Background.FillAlpha(); };
-            _clip = AnimatedScreenSurface.ConvertImageFile("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), (0, 0), 0.17f, Game.Instance.DefaultFont, callback);
+            _clip = AnimatedScreenSurface.ConvertImageFile("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), (0, 0), 0.17f,
+                Game.Instance.DefaultFont, callback);
             _animationScreen.Add(_clip);
 
             // title screen
@@ -219,16 +232,16 @@ namespace FeatureDemo.CustomConsoles
         }
     }
 
-    class ParalaxBackground : ScreenSurface
-    {
-        public ParalaxBackground() : base(Animations.W, Animations.H)
-        {
-            for (var i = 5; i >= 1; i--)
-            {
-                using ITexture image = GameHost.Instance.GetTexture($"Res/Images/Animations/layer{i}.png");
-                var cellSurface = image.ToSurface(TextureConvertMode.Foreground, image.Width, image.Height / 2);
-                Children.Add(new ScreenSurface(cellSurface));
-            }
-        }
-    }
+    //class ParalaxBackground : ScreenSurface
+    //{
+    //    public ParalaxBackground() : base(Animations.W, Animations.H)
+    //    {
+    //        for (var i = 5; i >= 1; i--)
+    //        {
+    //            using ITexture image = GameHost.Instance.GetTexture($"Res/Images/Animations/layer{i}.png");
+    //            var cellSurface = image.ToSurface(TextureConvertMode.Foreground, image.Width, image.Height / 2);
+    //            Children.Add(new ScreenSurface(cellSurface));
+    //        }
+    //    }
+    //}
 }

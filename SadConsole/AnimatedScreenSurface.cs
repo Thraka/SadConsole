@@ -402,6 +402,7 @@ namespace SadConsole
         /// <summary>
         /// Converts an image file containing frames to an instance of AnimatedScreenSurface.
         /// </summary>
+        /// <param name="name">Name for the animation.</param>
         /// <param name="filePath">File path to the image file.</param>
         /// <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
         /// <param name="pixelPadding">Amount of pixels in the image file separating frames: X between the columns, Y between the rows.</param>
@@ -413,9 +414,8 @@ namespace SadConsole
         /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
         /// <remarks>Remarks:<br></br>
         /// This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
-        /// Number of frames is calculated given the frame layout in the image file.<br></br>
-        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br>
-        /// As an example, if you use an 8x16 font, the frame cell count X will be the number of X pixels and the cell count Y will be the number of Y pixels / 2. </remarks>
+        /// Number of frames is calculated by multiplying rows and columns from the frame layout or by specifying start and finish indexes.<br></br>
+        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br></remarks>
         public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, Point pixelPadding, float frameDuration, IFont font, 
             Action<ColoredGlyph> callback = null, int firstFrame = 0, int lastFrame = 0)
         {

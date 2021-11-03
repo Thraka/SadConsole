@@ -326,6 +326,7 @@
             <summary>
             Converts an image file containing frames to an instance of AnimatedScreenSurface.
             </summary>
+            <param name="name">Name for the animation.</param>
             <param name="filePath">File path to the image file.</param>
             <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
             <param name="pixelPadding">Amount of pixels in the image file separating frames: X between the columns, Y between the rows.</param>
