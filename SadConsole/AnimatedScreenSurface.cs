@@ -410,10 +410,10 @@ namespace SadConsole
         /// <param name="frameDuration">Duration for a frame in the animation.</param>
         ///
         /// optional:
-        /// <param name="pixelPadding">Optional: Pixel padding separating frames: X between the columns, Y between the rows.</param>
-        /// <param name="frameStartAndFinish">Optional: Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
-        /// <param name="font">Optional: <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
-        /// <param name="action">Optional: Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
+        /// <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
+        /// <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
+        /// <param name="font"> <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
+        /// <param name="action">Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
         /// <param name="convertMode">The mode used when converting the texture to a surface.</param>
         /// <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Background"/>.</param>
         /// <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
@@ -452,7 +452,7 @@ namespace SadConsole
 
             // calculate the number of frames
             int totalFrameCount = frameLayout.X * frameLayout.Y;
-            bool customFrameCountIsValid = firstFrame >= 0 && lastFrame > 0 && lastFrame > firstFrame && lastFrame < totalFrameCount;
+            bool customFrameCountIsValid = firstFrame >= 0 && lastFrame > firstFrame && lastFrame < totalFrameCount;
             int frameCount = customFrameCountIsValid ? lastFrame - firstFrame + 1 : totalFrameCount;
 
             // calculate the frame size and create an instance of an animated screen surface
