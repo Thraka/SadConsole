@@ -21,12 +21,14 @@ namespace FeatureDemo.CustomConsoles
         {
             IsFocused = true;
             UseKeyboard = true;
+            Game.Instance.LoadFont("Res/Fonts/square.font");
 
             _animations = new AnimationDemo[]
             {
                 new AnimatedGlobe(),
-                new AnimatedBoy(),
-                new AnimatedSanta()
+                new AnimatedSkater(),
+                new AnimatedSanta(),
+                new AnimatedWalker()
             };
 
             Restart();
@@ -66,25 +68,56 @@ namespace FeatureDemo.CustomConsoles
 
     class AnimationDemo : ScreenSurface
     {
-        public AnimationDemo() : base(Animations.W, Animations.H) { }
+        string[] _info = {"Name", "Font", "Size", "Frames"};
+
+        public AnimationDemo() : base(Animations.W, Animations.H)
+        {
+            Surface.DefaultBackground = Color.White;
+            Surface.DefaultForeground = Color.Black;
+            Surface.Clear();
+        }
 
         public void Add(AnimatedScreenSurface a, int row = -1)
         {
-            int x = (Surface.Width - a.Surface.Width) / 2,
-                y = (Surface.Height - a.Surface.Height) / 2;
+            float fontSizeRatioX = (float)Font.GetFontSize(IFont.Sizes.One).X / a.Font.GetFontSize(IFont.Sizes.One).X,
+                fontSizeRatioY = (float)Font.GetFontSize(IFont.Sizes.One).Y / a.Font.GetFontSize(IFont.Sizes.One).Y;
+            int x = Convert.ToInt32((Surface.Width * fontSizeRatioX - a.Surface.Width) / 2),
+                y = Convert.ToInt32((Surface.Height * fontSizeRatioY - a.Surface.Height) / 2);
             a.Position = (x, row != -1 ? row : y);
             a.Repeat = true;
             Children.Add(a);
             a.Start();
         }
+
+        public void Add(ScreenSurface s)
+        {
+            Children.Add(s);
+        }
+
+        protected void PrintInfo(string fontSize, IScreenObject s)
+        {
+            for (int i = 0, y = 1, length = _info.Length; i < length; i++, y += 2)
+            {
+                Surface.Print(1, y + i, $"{_info[i]}:");
+                Surface.Print(3, y + i + 1, i switch {
+                    0 => (s as AnimatedScreenSurface).Name,
+                    1 => fontSize,
+                    2 => GetSize(s as ScreenSurface),
+                    _ => (s as AnimatedScreenSurface).FrameCount.ToString()
+                });
+            }
+        }
+
+        protected string GetSize(ScreenSurface s) => $"{s.Surface.Width}x{s.Surface.Height}";
     }
 
-    class AnimatedBoy : AnimationDemo
+    class AnimatedWalker : AnimationDemo
     {
-        public AnimatedBoy() : base()
+        public AnimatedWalker() : base()
         {
-            var boyAnim = AnimatedScreenSurface.ConvertImageFile("Res/Images/boy_anim.jpg", (7, 2), (6, 31), 0.2f, Game.Instance.DefaultFont);
-            Add(boyAnim);
+            Surface.DefaultBackground = Color.White;
+            Add(AnimatedScreenSurface.ConvertImageFile("Walking Boy", "Res/Images/Animations/boy_anim.jpg", (7, 2), (6, 31), 0.2f, Game.Instance.DefaultFont));
+            PrintInfo("IBM 8x16", Children[0]);
         }
     }
 
@@ -92,8 +125,18 @@ namespace FeatureDemo.CustomConsoles
     {
         public AnimatedSanta() : base()
         {
-            var santaAnim = AnimatedScreenSurface.ConvertImageFile("Res/Images/santa_anim.jpg", (6, 2), (3, 5), 0.2f, Game.Instance.DefaultFont);
-            Add(santaAnim);
+            Action<ColoredGlyph> callback = (c) => { c.Background = c.Background.FillAlpha(); };
+            Add(AnimatedScreenSurface.ConvertImageFile("Running Santa", "Res/Images/Animations/santa_anim.png", (6, 2), (3, 5), 0.2f, Game.Instance.DefaultFont, callback));
+            PrintInfo("IBM 8x16", Children[0]);
+        }
+    }
+
+    class AnimatedSkater : AnimationDemo
+    {
+        public AnimatedSkater() : base()
+        {
+            Add(AnimatedScreenSurface.ConvertImageFile("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), (1, 1), 0.15f, Game.Instance.Fonts["Square8"], null, 0, 15));
+            PrintInfo("Square 8x8", Children[0]);
         }
     }
 
@@ -122,7 +165,7 @@ namespace FeatureDemo.CustomConsoles
 
             // globe animation
             Action<ColoredGlyph> callback = (c) => { if (c.Foreground.GetBrightness() < 1) c.Background = c.Background.FillAlpha(); };
-            _clip = AnimatedScreenSurface.ConvertImageFile("Res/Images/globe_anim.png", (48, 1), (0, 0), 0.17f, Game.Instance.DefaultFont, callback);
+            _clip = AnimatedScreenSurface.ConvertImageFile("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), (0, 0), 0.17f, Game.Instance.DefaultFont, callback);
             _animationScreen.Add(_clip);
 
             // title screen
@@ -173,6 +216,19 @@ namespace FeatureDemo.CustomConsoles
                     return opacity == 0 ? true : false;
                 });
             SadComponents.Add(animationInstructions);
+        }
+    }
+
+    class ParalaxBackground : ScreenSurface
+    {
+        public ParalaxBackground() : base(Animations.W, Animations.H)
+        {
+            for (var i = 5; i >= 1; i--)
+            {
+                using ITexture image = GameHost.Instance.GetTexture($"Res/Images/Animations/layer{i}.png");
+                var cellSurface = image.ToSurface(TextureConvertMode.Foreground, image.Width, image.Height / 2);
+                Children.Add(new ScreenSurface(cellSurface));
+            }
         }
     }
 }

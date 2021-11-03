@@ -416,7 +416,7 @@ namespace SadConsole
         /// Number of frames is calculated given the frame layout in the image file.<br></br>
         /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br>
         /// As an example, if you use an 8x16 font, the frame cell count X will be the number of X pixels and the cell count Y will be the number of Y pixels / 2. </remarks>
-        public static AnimatedScreenSurface ConvertImageFile(string filePath, Point frameLayout, Point pixelPadding, float frameDuration, IFont font, 
+        public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, Point pixelPadding, float frameDuration, IFont font, 
             Action<ColoredGlyph> callback = null, int firstFrame = 0, int lastFrame = 0)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -444,13 +444,13 @@ namespace SadConsole
 
             // calculate the number of frames
             int totalFrameCount = frameLayout.X * frameLayout.Y,
-                frameCount = lastFrame - firstFrame;
-            bool customFrameCountIsValid = frameCount > 0 && frameCount <= totalFrameCount && firstFrame >= 0 && lastFrame <= totalFrameCount;
+                frameCount = lastFrame - firstFrame + 1;
+            bool customFrameCountIsValid = lastFrame > 0 && frameCount > 0 && frameCount <= totalFrameCount && firstFrame >= 0 && lastFrame <= totalFrameCount;
             frameCount = customFrameCountIsValid ? frameCount : totalFrameCount;
 
             // calculate the frame size and create an instance of an animated screen surface
             Point frameSize = ((surfaceSize.X - (pixelPadding.X * (frameLayout.X - 1))) / frameLayout.X, (surfaceSize.Y - (pixelPadding.Y * (frameLayout.Y - 1))) / frameLayout.Y);
-            var clip = new AnimatedScreenSurface("Animation", frameSize.X, frameSize.Y, font, fontSize)
+            var clip = new AnimatedScreenSurface(name, frameSize.X, frameSize.Y, font, fontSize)
             {
                 AnimationDuration = frameCount * frameDuration
             };
@@ -471,19 +471,24 @@ namespace SadConsole
                     {
                         if (customFrameCountIsValid)
                         {
-                            int frameIndex = y * frameLayout.Y + x;
+                            int frameIndex = y * frameLayout.X + x;
                             if (frameIndex >= firstFrame)
                             {
-                                if (frameIndex > lastFrame) return;
+                                if (frameIndex > lastFrame)
+                                {
+                                    return;
+                                }
                                 else CopyFrameToClip();
                             }
                         }
                         else CopyFrameToClip();
 
+                        // take into account padding between the frames, not outside them
                         int paddingX = x + 1 == frameLayout.X ? 0 : pixelPadding.X;
                         currentFrameArea = currentFrameArea.ChangeX(frameSize.X + paddingX);
                     }
 
+                    // take into account padding between the frames, not outside them
                     int paddingY = y + 1 == frameLayout.Y ? 0 : pixelPadding.Y;
                     currentFrameArea = currentFrameArea.ChangeY(frameSize.Y + paddingY);
                 }
