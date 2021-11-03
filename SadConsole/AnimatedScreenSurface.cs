@@ -400,8 +400,10 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Converts an image file containing frames to an instance of AnimatedScreenSurface.
+        /// Converts an image file containing frames to an instance of <see cref="AnimatedScreenSurface"/>.
         /// </summary>
+        ///
+        /// required:
         /// <param name="name">Name for the animation.</param>
         /// <param name="filePath">File path to the image file.</param>
         /// <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
@@ -412,14 +414,20 @@ namespace SadConsole
         /// <param name="frameStartAndFinish">Optional: Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
         /// <param name="font">Optional: <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
         /// <param name="action">Optional: Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
+        /// <param name="convertMode">The mode used when converting the texture to a surface.</param>
+        /// <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Background"/>.</param>
+        /// <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
+        /// 
         /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
         /// 
         /// <remarks>Remarks:<br></br>
         /// This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
-        /// Number of frames is calculated by multiplying rows and columns from the frame layout or by specifying start and finish indexes.<br></br>
-        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br></remarks>
+        /// Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.<br></br>
+        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.<br></br></remarks>
         public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, float frameDuration,
-            Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null)
+            Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null,
+            TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
+            TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
         {
             // set defaults
             font = font is null ? GameHost.Instance.DefaultFont : font;
@@ -438,7 +446,8 @@ namespace SadConsole
 
             // convert the image to surface
             Point surfaceSize = ApplyFontSizeRatio(imageSize, fontSizeRatio);
-            var convertedImage = image.ToSurface(TextureConvertMode.Foreground, surfaceSize.X, surfaceSize.Y);
+            var convertedImage = image.ToSurface(convertMode, surfaceSize.X, surfaceSize.Y,
+                backgroundStyle: convertBackgroundStyle, foregroundStyle : convertForegroundStyle);
             padding = ApplyFontSizeRatio(padding, fontSizeRatio);
 
             // calculate the number of frames
