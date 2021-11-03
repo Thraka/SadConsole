@@ -405,29 +405,28 @@ namespace SadConsole
         /// <param name="name">Name for the animation.</param>
         /// <param name="filePath">File path to the image file.</param>
         /// <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
-        /// <param name="pixelPadding">Amount of pixels in the image file separating frames: X between the columns, Y between the rows.</param>
         /// <param name="frameDuration">Duration for a frame in the animation.</param>
-        /// <param name="font">Font to be used when creating an instance of the <see cref="AnimatedScreenSurface"/>.</param>
-        /// <param name="callback">If specified, this will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
-        /// <param name="firstFrame">If specified, animation will start at this frame (zero indexed).</param>
-        /// <param name="lastFrame">If specified, animation will finish at this frame (zero indexed).</param>
+        ///
+        /// optional:
+        /// <param name="pixelPadding">Optional: Pixel padding separating frames: X between the columns, Y between the rows.</param>
+        /// <param name="frameStartAndFinish">Optional: Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
+        /// <param name="font">Optional: <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
+        /// <param name="action">Optional: Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
         /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
+        /// 
         /// <remarks>Remarks:<br></br>
         /// This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
         /// Number of frames is calculated by multiplying rows and columns from the frame layout or by specifying start and finish indexes.<br></br>
         /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, count of frames, padding and the font size ratio.<br></br></remarks>
-        public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, Point pixelPadding, float frameDuration, IFont font, 
-            Action<ColoredGlyph> callback = null, int firstFrame = 0, int lastFrame = 0)
+        public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, float frameDuration,
+            Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                throw new ArgumentException($"Invalid file path.");
-            }
-
-            if (font is null)
-            {
-                throw new ArgumentException("Font has to be specified.");
-            }
+            // set defaults
+            font = font is null ? GameHost.Instance.DefaultFont : font;
+            Point padding = pixelPadding ?? (0, 0);
+            frameStartAndFinish ??= (0, 0);
+            int firstFrame = frameStartAndFinish.Value.X,
+                lastFrame = frameStartAndFinish.Value.Y;
 
             // get info about the font
             var fontSize = font.GetFontSize(IFont.Sizes.One);
@@ -440,16 +439,15 @@ namespace SadConsole
             // convert the image to surface
             Point surfaceSize = ApplyFontSizeRatio(imageSize, fontSizeRatio);
             var convertedImage = image.ToSurface(TextureConvertMode.Foreground, surfaceSize.X, surfaceSize.Y);
-            pixelPadding = ApplyFontSizeRatio(pixelPadding, fontSizeRatio);
+            padding = ApplyFontSizeRatio(padding, fontSizeRatio);
 
             // calculate the number of frames
-            int totalFrameCount = frameLayout.X * frameLayout.Y,
-                frameCount = lastFrame - firstFrame + 1;
-            bool customFrameCountIsValid = lastFrame > 0 && frameCount > 0 && frameCount <= totalFrameCount && firstFrame >= 0 && lastFrame <= totalFrameCount;
-            frameCount = customFrameCountIsValid ? frameCount : totalFrameCount;
+            int totalFrameCount = frameLayout.X * frameLayout.Y;
+            bool customFrameCountIsValid = firstFrame >= 0 && lastFrame > 0 && lastFrame > firstFrame && lastFrame < totalFrameCount;
+            int frameCount = customFrameCountIsValid ? lastFrame - firstFrame + 1 : totalFrameCount;
 
             // calculate the frame size and create an instance of an animated screen surface
-            Point frameSize = ((surfaceSize.X - (pixelPadding.X * (frameLayout.X - 1))) / frameLayout.X, (surfaceSize.Y - (pixelPadding.Y * (frameLayout.Y - 1))) / frameLayout.Y);
+            Point frameSize = ((surfaceSize.X - (padding.X * (frameLayout.X - 1))) / frameLayout.X, (surfaceSize.Y - (padding.Y * (frameLayout.Y - 1))) / frameLayout.Y);
             var clip = new AnimatedScreenSurface(name, frameSize.X, frameSize.Y, font, fontSize)
             {
                 AnimationDuration = frameCount * frameDuration
@@ -484,12 +482,12 @@ namespace SadConsole
                         else CopyFrameToClip();
 
                         // take into account padding between the frames, not outside them
-                        int paddingX = x + 1 == frameLayout.X ? 0 : pixelPadding.X;
+                        int paddingX = x + 1 == frameLayout.X ? 0 : padding.X;
                         currentFrameArea = currentFrameArea.ChangeX(frameSize.X + paddingX);
                     }
 
                     // take into account padding between the frames, not outside them
-                    int paddingY = y + 1 == frameLayout.Y ? 0 : pixelPadding.Y;
+                    int paddingY = y + 1 == frameLayout.Y ? 0 : padding.Y;
                     currentFrameArea = currentFrameArea.ChangeY(frameSize.Y + paddingY);
                 }
             }
@@ -498,7 +496,7 @@ namespace SadConsole
             {
                 CellSurface frame = (CellSurface)clip.CreateFrame();
                 convertedImage.Copy(currentFrameArea, frame, 0, 0);
-                if (callback != null) Array.ForEach(frame.Cells, callback);
+                if (action != null) Array.ForEach(frame.Cells, action);
             }
 
             Point ApplyFontSizeRatio(Point point, (float X, float Y) sizeRatio) =>
