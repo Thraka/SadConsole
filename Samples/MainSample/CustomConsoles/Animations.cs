@@ -21,7 +21,7 @@ namespace FeatureDemo.CustomConsoles
         {
             IsFocused = true;
             UseKeyboard = true;
-            Game.Instance.LoadFont("Res/Fonts/square.font");
+            Game.Instance.LoadFont("Res/Fonts/thick_square_8x8.font");
 
             _animations = new AnimationDemo[]
             {
@@ -126,7 +126,7 @@ namespace FeatureDemo.CustomConsoles
             floor.Surface.DefaultBackground = new Color(235, 235, 235);
             floor.Surface.Clear();
             Add(AnimatedScreenSurface.ConvertImageFile("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), 0.1f,
-                pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["Square8"]));
+                pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"]));
             PrintInfo("Square 8 x 8", Children[1]);
         }
     }
@@ -146,7 +146,7 @@ namespace FeatureDemo.CustomConsoles
         public AnimatedSkater() : base()
         {
             Add(AnimatedScreenSurface.ConvertImageFile("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), 0.15f,
-                pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["Square8"]));
+                pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"]));
             PrintInfo("Square 8 x 8", Children[0]);
         }
     }
