@@ -18,12 +18,14 @@ namespace SadConsole.Tests
         // Test center row/column so artifacts on either side would be easily visible
         private const int ShiftRow = SurfaceHeight / 2;
 
+        // Make sure we test shifting a subset where everything ends up back where it's started.
+        private const int SubsetOffset = SurfaceWidth - 3;
 
-        private static readonly IEnumerable<int> s_shiftValues = new[] { 2, SurfaceWidth - 5, SurfaceWidth };
-        private static readonly IEnumerable<(int startingX, int count)> s_rowSubsetValues = new[] { (0, SurfaceWidth), (1, SurfaceWidth - 3)};
+        private static readonly IEnumerable<int> s_shiftValues = new[] { 2, SurfaceWidth - 5, 17, SurfaceWidth };
+        private static readonly IEnumerable<(int startingX, int count)> s_rowSubsetValues = new[] { (0, SurfaceWidth), (1, SubsetOffset)};
         // Want to test shift values both < axis / 2 and > axis / 2, to ensure no wrapping/optimization issues.
         // Also should be composed of at least one odd number.  We also want to test one value that is exactly shift
-        // width
+        // count
         public static IEnumerable<(int startingX, int count, int shift, bool wrap)> ShiftInputs
             => s_rowSubsetValues
                 .Combinate(s_shiftValues)
@@ -45,6 +47,9 @@ namespace SadConsole.Tests
 
             // Also need to test shift of width (everything ends up back where it starts)
             Assert.IsTrue(ShiftInputs.Max(v => v.shift) == SurfaceWidth);
+
+            // Make sure that our other subset test case also tests count
+            Assert.IsTrue(ShiftInputs.Any(v => v.shift == SubsetOffset));
 
             // Need at least one odd shift number because of how we generate test data.  Every other field in a row has
             // a unique value for IsVisible, so we want to ensure at least one shift is odd so that each cell gets
@@ -69,7 +74,7 @@ namespace SadConsole.Tests
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
             // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
-            if (shiftAmount != surface.Width)
+            if (shiftAmount != count)
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
@@ -90,7 +95,7 @@ namespace SadConsole.Tests
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
             // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
-            if (shiftAmount != surface.Width)
+            if (shiftAmount != count)
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
