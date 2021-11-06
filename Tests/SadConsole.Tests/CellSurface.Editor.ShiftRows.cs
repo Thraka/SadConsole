@@ -36,8 +36,6 @@ namespace SadConsole.Tests
         public void TestDataIsValid()
         {
             // Need both halves of the list to be in test cases
-            int min = ShiftInputs.Min(v => v.shift);
-            int max = ShiftInputs.Min(v => v.shift);
             Assert.IsTrue(ShiftInputs.Any(v => v.shift < SurfaceWidth / 2));
             Assert.IsTrue(ShiftInputs.Any(v => v.shift > SurfaceWidth / 2 && v.shift != SurfaceWidth));
 
@@ -62,7 +60,7 @@ namespace SadConsole.Tests
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, shiftAmount, wrap);
+            surface.ShiftRowRight(ShiftRow, 0, surface.Width, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
@@ -71,7 +69,7 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, 0, shiftAmount, wrap);
+            AssertRowHasShifted(surface, ShiftRow, 0, surface.Width, shiftAmount, wrap);
         }
 
         [TestMethod]
@@ -83,7 +81,7 @@ namespace SadConsole.Tests
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, shiftAmount, wrap);
+            surface.ShiftRowLeft(ShiftRow, 0, surface.Width, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
@@ -92,7 +90,7 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, 0, -shiftAmount, wrap);
+            AssertRowHasShifted(surface, ShiftRow, 0, surface.Width, -shiftAmount, wrap);
         }
 
 
@@ -108,7 +106,7 @@ namespace SadConsole.Tests
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeftUnchecked(ShiftRow, startingX, shiftAmount, wrap);
+            surface.ShiftRowLeftUnchecked(ShiftRow, startingX, surface.Width - 3, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
@@ -117,7 +115,7 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, startingX, -shiftAmount, wrap);
+            AssertRowHasShifted(surface, ShiftRow, startingX, surface.Width - 3, -shiftAmount, wrap);
         }
         #endregion
 
@@ -168,7 +166,7 @@ namespace SadConsole.Tests
 
         // Checks that a row has been shifted as specified, assuming the cells were generated via GetShiftCellFor.
         // Also asserts that no other cells (outside of that row) have changed
-        private static void AssertRowHasShifted(ICellSurface surface, int row, int startingX, int shiftAmount, bool wrap)
+        private static void AssertRowHasShifted(ICellSurface surface, int row, int startingX, int count, int shiftAmount, bool wrap)
         {
             // Generate blank glyph appropriate for the surface we're checking
             ColoredGlyph blankGlyph = new ColoredGlyph
@@ -180,16 +178,14 @@ namespace SadConsole.Tests
                 Mirror = Mirror.None
             };
 
-            int width = surface.Width - startingX;
-
             foreach (var (x, y) in surface.Positions())
             {
                 // Row was shifted; check that the value has been pulled from the right cell during shift
-                if (y == ShiftRow && x >= startingX)
+                if (y == row && x >= startingX && x < startingX + count)
                 {
                     int oldX = x - shiftAmount;
 
-                    if (wrap) oldX = WrapAround(oldX - startingX, width) + startingX;
+                    if (wrap) oldX = WrapAround(oldX - startingX, count) + startingX;
                     var expectedGlyph = oldX >= startingX && oldX < surface.Width || wrap ? GetShiftCellFor(oldX) : blankGlyph;
 
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));

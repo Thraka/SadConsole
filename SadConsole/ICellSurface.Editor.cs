@@ -1007,83 +1007,93 @@ namespace SadConsole
             surface.TimesShiftedRight = 0;
         }
 
-        public static void ShiftRow(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        public static void ShiftRow(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
-            if (count == 0) return;
+            if (amount == 0) return;
             if (startingX < 0 || startingX >= surface.Width) throw new ArgumentOutOfRangeException(nameof(startingX), "Column must be 0 or more and less than the width of the surface.");
-            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (row < 0 || row > surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
 
             if (count < 0)
-                ShiftRowLeftUnchecked(surface, row, startingX, -count, wrap);
+                ShiftRowLeftUnchecked(surface, row, startingX, count, -amount, wrap);
             else
-                ShiftRowRightUnchecked(surface, row, startingX, count, wrap);
+                ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
-        public static void ShiftRowRight(this ICellSurface surface, int row, int count, bool wrap)
+        public static void ShiftRowRight(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
-            if (count == 0) return;
+            if (amount == 0) return;
             if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
 
-            ShiftRowRightUnchecked(surface, row, 0, count, wrap);
+            ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
-        public static void ShiftRowLeft(this ICellSurface surface, int row, int count, bool wrap)
+        public static void ShiftRowLeft(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
-            if (count == 0) return;
+            if (amount == 0) return;
             if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
 
-            ShiftRowLeftUnchecked(surface, row, 0, count, wrap);
+            ShiftRowLeftUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
-        public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
-            int width = surface.Width;
             if (wrap)
             {
                 // Simplify wrap to minimum needed number
-                count %= width;
+                amount %= count;
 
                 // If count was a multiple of width, everything will end up back where it started so we're done
-                if (count == 0) return;
+                if (amount == 0) return;
 
                 // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
                 // allocate a temporary array the size of the value we're shifting during the algorithm,
                 // we'll optimize it by making sure that value is as small as possible.  The largest shift
                 // value we will actually process will then be width / 2.
-                if (width - count < count)
+                if (count - amount < amount)
                 {
-                    ShiftRowLeftUnchecked(surface, row, startingX, width - count, true);
+                    ShiftRowLeftUnchecked(surface, row, startingX, count, count - amount, true);
                     return;
                 }
 
                 // Temporary array size of shift value
-                var tempArray = new ColoredGlyphAppearance[count];
+                var tempArray = new ColoredGlyphAppearance[amount];
                 // Offset for tempArray
-                int tempArrayOffset = width - count;
+                int tempArrayOffset = count - amount;
 
                 // Shift each cell to its proper location, using temporary storage as needed.
-                for (int x = width - 1; x >= 0; x--)
+                for (int i = count - 1; i >= 0; i--)
                 {
+                    int x = i + startingX;
                     // In this case, we'll be replacing a wrapped-around cell; so save the cell off
                     // before we overwrite so that we can get the value back later when we need to shift
                     // it down.
-                    if (x >= tempArrayOffset)
-                        tempArray[x - tempArrayOffset] = new ColoredGlyphAppearance(surface[x, row]);
+                    if (i >= tempArrayOffset)
+                        tempArray[i - tempArrayOffset] = new ColoredGlyphAppearance(surface[x, row]);
 
                     // Copy appearance from the appropriate location
-                    int copyFromX = x - count;
-                    if (copyFromX >= 0)
+                    int copyFromX = x - amount;
+                    if (copyFromX >= startingX)
                         surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
                     else
-                        tempArray[x].ShallowCopyTo(surface[x, row]);
+                        tempArray[i].ShallowCopyTo(surface[x, row]);
                 }
             }
             else // Shift and clear as needed
             {
-                for (int x = width - 1; x >= 0; x--)
+                for (int i = count - 1; i >= 0; i--)
                 {
-                    int copyFromX = x - count;
-                    if (copyFromX >= 0)
+                    int x = i + startingX;
+                    int copyFromX = x - amount;
+                    if (copyFromX >= startingX)
                         surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
                     else
                         surface.Clear(x, row);
@@ -1093,54 +1103,52 @@ namespace SadConsole
             surface.IsDirty = true;
         }
 
-        public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
+        public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
-            int width = surface.Width - startingX;
-
             if (wrap)
             {
                 // Simplify wrap to minimum needed number
-                count %= width;
+                amount %= count;
 
                 // If count was a multiple of width, everything will end up back where it started so we're done
-                if (count == 0) return;
+                if (amount == 0) return;
 
                 // Any wrapping shift-left by n is equivalent to a shift-right by width - n.  Because we have to
                 // allocate a temporary array the size of the value we're shifting during the algorithm,
                 // we'll optimize it by making sure that value is as small as possible.  The largest shift
                 // value we will actually process will then be width / 2.
-                if (width - count < count)
+                if (count - amount < amount)
                 {
-                    ShiftRowRightUnchecked(surface, row, startingX, width - count, true);
+                    ShiftRowRightUnchecked(surface, row, startingX, count, count - amount, true);
                     return;
                 }
 
                 // Temporary array size of shift value
-                var tempArray = new ColoredGlyphAppearance[count];
+                var tempArray = new ColoredGlyphAppearance[amount];
 
                 // Shift each cell to its proper location, using temporary storage as needed.
-                for (int i = 0; i < width; i++)
+                for (int i = 0; i < count; i++)
                 {
                     int x = i + startingX;
                     // In this case, we'll be replacing a wrapped-around cell; so save the cell off
                     // before we overwrite so that we can get the value back later when we need to shift
                     // it down.
-                    if (i < count)
+                    if (i < amount)
                         tempArray[i] = new ColoredGlyphAppearance(surface[x, row]);
 
-                    if (i + count < width)
-                        surface[x, row].CopyAppearanceFrom(surface[x + count, row], false);
+                    if (i + amount < count)
+                        surface[x, row].CopyAppearanceFrom(surface[x + amount, row], false);
                     else
-                        tempArray[i + count - width].ShallowCopyTo(surface[x, row]);
+                        tempArray[i + amount - count].ShallowCopyTo(surface[x, row]);
                 }
             }
             else // Shift and clear as needed
             {
-                for (int i = startingX; i < width; i++)
+                for (int i = startingX; i < count; i++)
                 {
                     int x = i + startingX;
-                    int copyFromX = x + count;
-                    if (copyFromX < width)
+                    int copyFromX = x + amount;
+                    if (copyFromX < count)
                         surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
                     else
                         surface.Clear(x, row);
