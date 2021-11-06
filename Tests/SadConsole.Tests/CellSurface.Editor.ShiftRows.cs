@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using Diag = System.Diagnostics;
 
@@ -17,214 +18,81 @@ namespace SadConsole.Tests
         // Test center row/column so artifacts on either side would be easily visible
         private const int ShiftRow = SurfaceHeight / 2;
 
-        // Want to test shift values both < axis / 2 and > axis / 2, to ensure no wrapping/optimization issues
-        public static IEnumerable<int> ShiftValues => new[] { 2, SurfaceWidth - 5 };
 
+        private static readonly IEnumerable<int> s_shiftValues = new[] { 2, SurfaceWidth - 5, SurfaceWidth };
+        // Want to test shift values both < axis / 2 and > axis / 2, to ensure no wrapping/optimization issues.
+        // Also should be composed of at least one odd number.  We also want to test one value that is exactly shift
+        // width
+        public static IEnumerable<(int shift, bool wrap)> ShiftInputs => s_shiftValues.Combinate(new[] { true, false });
+
+        #endregion
+
+        private static readonly Mirror[] s_mirrorValues = LinqExtensions.GetEnumValues<Mirror>().ToArray();
+
+        // A "unit test" that validates that the test data is sufficient to cover some corner cases.
+        #region Test Data Validation
+
+        [TestMethod]
+        public void TestDataIsValid()
+        {
+            // Need both halves of the list to be in test cases
+            int min = ShiftInputs.Min(v => v.shift);
+            int max = ShiftInputs.Min(v => v.shift);
+            Assert.IsTrue(ShiftInputs.Any(v => v.shift < SurfaceWidth / 2));
+            Assert.IsTrue(ShiftInputs.Any(v => v.shift > SurfaceWidth / 2 && v.shift != SurfaceWidth));
+
+            // Also need to test shift of width (everything ends up back where it starts)
+            Assert.IsTrue(ShiftInputs.Max(v => v.shift) == SurfaceWidth);
+
+            // Need at least one odd shift number because of how we generate test data.  Every other field in a row has
+            // a unique value for IsVisible, so we want to ensure at least one shift is odd so that each cell gets
+            // fully new values.
+            Assert.IsTrue(ShiftInputs.Any(v => v.shift % 2 == 1));
+        }
         #endregion
 
         #region ShiftRowRight
+
         [TestMethod]
-        [BetterDynamicDataAttribute(nameof(ShiftValues))]
-        public void ShiftRowRight_NoWrap(int shiftAmount)
+        [BetterDynamicData(nameof(ShiftInputs))]
+        public void ShiftRowRight(int shiftAmount, bool wrap)
         {
             // Create test surface
             var surface = CreateShiftableCellSurface();
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, shiftAmount, false);
+            surface.ShiftRowRight(ShiftRow, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
-            // Verify IsDirty is set
-            Assert.IsTrue(surface.IsDirty);
+            // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+            // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+            if (shiftAmount != surface.Width)
+                Assert.IsTrue(surface.IsDirty);
 
-            // Verify result row
-            for (int x = 0; x < surface.Width; x++)
-                Assert.AreEqual(x < shiftAmount ? 0 : x + 1 - shiftAmount, surface.GetGlyph(x, ShiftRow));
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
+            // Verify shift result
+            AssertRowHasShifted(surface, ShiftRow, shiftAmount, wrap);
         }
 
         [TestMethod]
-        public void ShiftRowRight_NoWrap_ShiftsAll()
+        [BetterDynamicData(nameof(ShiftInputs))]
+        public void ShiftRowLeft(int shiftAmount, bool wrap)
         {
             // Create test surface
             var surface = CreateShiftableCellSurface();
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, surface.Width, false);
+            surface.ShiftRowLeft(ShiftRow, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
-            // IsDirty can be set or not; doesn't matter since the operation didn't actually change anything,
-            // so we won't check it.
+            // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+            // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+            if (shiftAmount != surface.Width)
+                Assert.IsTrue(surface.IsDirty);
 
-            // Verify results; everything was shifted off the end
-            foreach (var pos in surface.Positions())
-                Assert.AreEqual(0, surface.GetGlyph(pos.X, pos.Y));
-        }
-
-        [TestMethod]
-        [BetterDynamicDataAttribute(nameof(ShiftValues))]
-        public void ShiftRowRight_WithWrap(int shiftAmount)
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, shiftAmount, true);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // Verify IsDirty is set
-            Assert.IsTrue(surface.IsDirty);
-
-            // Instead of checking the position we have an x value for, we will check the position
-            // it should have been shifted to, since this is much easier to compute
-            for (int x = 0; x < surface.Width; x++)
-            {
-                // Old value at x
-                int oldValue = x + 1;
-                // New location for old value that was at x
-                int newLocationX = (x + shiftAmount) % surface.Width;
-
-                // Check
-                Assert.AreEqual(oldValue, surface.GetGlyph(newLocationX, ShiftRow));
-            }
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
-        }
-
-        [TestMethod]
-        public void ShiftRowRight_WithWrap_ShiftsAll()
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, surface.Width, true);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // IsDirty can be set or not; doesn't matter since the operation didn't actually change anything,
-            // so we won't check it.
-
-            // Verify results for shifted row; everything ends up back where it started
-            for (int x = 0; x < surface.Width; x++)
-                Assert.AreEqual(x + 1, surface.GetGlyph(x, ShiftRow));
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
-        }
-        #endregion
-
-        #region ShiftRowLeft
-        [TestMethod]
-        [BetterDynamicDataAttribute(nameof(ShiftValues))]
-        public void ShiftRowLeft_NoWrap(int shiftAmount)
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, shiftAmount, false);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // Verify IsDirty is set
-            Assert.IsTrue(surface.IsDirty);
-
-            // Verify results for shifted row
-            for (int x = 0; x < surface.Width; x++)
-            {
-                int shiftedFromIdx = x + shiftAmount;
-                int shiftedFromValue = shiftedFromIdx + 1;
-                Assert.AreEqual(shiftedFromIdx >= surface.Width ? 0 : shiftedFromValue, surface.GetGlyph(x, ShiftRow));
-            }
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
-        }
-
-        [TestMethod]
-        public void ShiftRowLeft_NoWrap_ShiftsAll()
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, surface.Width, false);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // IsDirty can be set or not; doesn't matter since the operation didn't actually change anything,
-            // so we won't check it.
-
-            // Verify results; everything is shifted off the edge
-            foreach (var pos in surface.Positions())
-                Assert.AreEqual(0, surface.GetGlyph(pos.X, pos.Y));
-        }
-
-        [TestMethod]
-        [BetterDynamicDataAttribute(nameof(ShiftValues))]
-        public void ShiftRowLeft_WithWrap(int shiftAmount)
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, shiftAmount, true);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // Verify IsDirty is set
-            Assert.IsTrue(surface.IsDirty);
-
-            // Instead of checking the position we have an x value for, we will check the position
-            // it should have been shifted to, since this is much easier to compute
-            for (int x = 0; x < surface.Width; x++)
-            {
-                // Old value at x
-                int oldValue = x + 1;
-                // New location for old value that was at x
-                int newLocationX = WrapAround(x - shiftAmount, surface.Width);
-
-                // Check
-                Assert.AreEqual(oldValue, surface.GetGlyph(newLocationX, ShiftRow));
-            }
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
-        }
-
-        [TestMethod]
-        public void ShiftRowLeft_WithWrap_ShiftsAll()
-        {
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, surface.Width, true);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // IsDirty can be set or not; doesn't matter since the operation didn't actually change anything,
-            // so we won't check it.
-
-            // Verify results for shifted row; everything ends up back where it started
-            for (int x = 0; x < surface.Width; x++)
-                Assert.AreEqual(x + 1, surface.GetGlyph(x, ShiftRow));
-
-            // Verify no other row was changed
-            foreach (var (x, y) in surface.Positions().Where(pos => pos.Y != ShiftRow))
-                Assert.AreEqual(0, surface.GetGlyph(x, y));
+            // Verify shift result
+            AssertRowHasShifted(surface, ShiftRow, -shiftAmount, wrap);
         }
         #endregion
 
@@ -237,13 +105,71 @@ namespace SadConsole.Tests
 
             // Number it with first cell in row glyph 1, second glyph 2, etc.
             for (int x = 0; x < surface.Width; x++)
-                surface.SetGlyph(x, ShiftRow, x + 1);
+                surface[x, ShiftRow].CopyAppearanceFrom(GetShiftCellFor(x));
 
             // Set IsDirty to false because we want to test that certain functions set it to true, and we're not
             // actually rendering it so it won't matter
             surface.IsDirty = false;
 
             return surface;
+        }
+
+        // Computes a ColoredGlyph with unique values for its appearance-related fields, given an ID. This ID
+        // should be either the X-value or the Y-value for a position on a surface.
+        private static ColoredGlyph GetShiftCellFor(int positionId)
+        {
+            int id = positionId + 1;
+            var colorId = new Color(id, id, id);
+            var mirrorId = s_mirrorValues[positionId % s_mirrorValues.Length];
+            var glyph = new ColoredGlyph
+            {
+                Glyph = id,
+                Background = colorId,
+                Foreground = colorId,
+                Decorators = new[] { new CellDecorator(colorId, id, mirrorId) },
+                Mirror = mirrorId,
+            };
+            return glyph;
+        }
+
+        private static bool CheckAppearancesEqual(ColoredGlyph c1, ColoredGlyph c2)
+        {
+            if (c1.Glyph != c2.Glyph || c1.Background != c2.Background || c1.Foreground != c2.Foreground ||
+                c1.Mirror != c2.Mirror)
+                return false;
+
+            return c1.Decorators.SequenceEqual(c2.Decorators);
+        }
+
+        // Checks that a row has been shifted as specified, assuming the cells were generated via GetShiftCellFor.
+        // Also asserts that no other cells (outside of that row) have changed
+        private static void AssertRowHasShifted(ICellSurface surface, int row, int shiftAmount, bool wrap)
+        {
+            // Generate blank glyph appropriate for the surface we're checking
+            ColoredGlyph blankGlyph = new ColoredGlyph
+            {
+                Glyph = surface.DefaultGlyph,
+                Background = surface.DefaultBackground,
+                Foreground = surface.DefaultForeground,
+                Decorators = Array.Empty<CellDecorator>(),
+                Mirror = Mirror.None
+            };
+
+            foreach (var (x, y) in surface.Positions())
+            {
+                // Row was shifted; check that the value has been pulled from the right cell during shift
+                if (y == ShiftRow)
+                {
+                    int oldX = x - shiftAmount;
+                    if (wrap) oldX = WrapAround(oldX, surface.Width);
+                    var expectedGlyph = surface.Contains(oldX, row) || wrap ? GetShiftCellFor(oldX) : blankGlyph;
+
+                    Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
+                }
+                // Row never had anything in it so nothing should have been added.
+                else
+                    Assert.IsTrue(CheckAppearancesEqual(blankGlyph, surface[x, y]));
+            }
         }
 
         // Wrapping function that wraps -1 around to wrapTo - 1

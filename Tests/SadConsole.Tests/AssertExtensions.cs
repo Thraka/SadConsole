@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SadRogue.Primitives;
 
 namespace SadConsole.Tests
@@ -19,5 +21,8 @@ namespace SadConsole.Tests
         {
             Assert.IsTrue(m1.Matches(m2));
         }
+
+        public static void SequencesAreEqual<T>(IEnumerable<T> e1, IEnumerable<T> e2)
+            => Assert.IsTrue(e1.SequenceEqual(e2));
     }
 }
