@@ -20,10 +20,14 @@ namespace SadConsole.Tests
 
 
         private static readonly IEnumerable<int> s_shiftValues = new[] { 2, SurfaceWidth - 5, SurfaceWidth };
+        private static readonly IEnumerable<(int startingX, int count)> s_rowSubsetValues = new[] { (0, SurfaceWidth), (1, SurfaceWidth - 3)};
         // Want to test shift values both < axis / 2 and > axis / 2, to ensure no wrapping/optimization issues.
         // Also should be composed of at least one odd number.  We also want to test one value that is exactly shift
         // width
-        public static IEnumerable<(int shift, bool wrap)> ShiftInputs => s_shiftValues.Combinate(new[] { true, false });
+        public static IEnumerable<(int startingX, int count, int shift, bool wrap)> ShiftInputs
+            => s_rowSubsetValues
+                .Combinate(s_shiftValues)
+                .Combinate(new[] { true, false });
 
         #endregion
 
@@ -53,14 +57,14 @@ namespace SadConsole.Tests
 
         [TestMethod]
         [BetterDynamicData(nameof(ShiftInputs))]
-        public void ShiftRowRight(int shiftAmount, bool wrap)
+        public void ShiftRowRight(int startingX, int count, int shiftAmount, bool wrap)
         {
             // Create test surface
             var surface = CreateShiftableCellSurface();
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowRight(ShiftRow, 0, surface.Width, shiftAmount, wrap);
+            surface.ShiftRowRight(ShiftRow, startingX, count, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
@@ -69,19 +73,19 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, 0, surface.Width, shiftAmount, wrap);
+            AssertRowHasShifted(surface, ShiftRow, startingX, count, shiftAmount, wrap);
         }
 
         [TestMethod]
         [BetterDynamicData(nameof(ShiftInputs))]
-        public void ShiftRowLeft(int shiftAmount, bool wrap)
+        public void ShiftRowLeft(int startingX, int count, int shiftAmount, bool wrap)
         {
             // Create test surface
             var surface = CreateShiftableCellSurface();
 
             // Shift with some helpful before/after output
             PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeft(ShiftRow, 0, surface.Width, shiftAmount, wrap);
+            surface.ShiftRowLeft(ShiftRow, startingX, count, shiftAmount, wrap);
             PrintSurfaceGlyphs(surface, "After:");
 
             // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
@@ -90,32 +94,7 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface.IsDirty);
 
             // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, 0, surface.Width, -shiftAmount, wrap);
-        }
-
-
-        [TestMethod]
-        public void ShiftRowLeftTest()
-        {
-            int shiftAmount = 2;
-            int startingX = 1;
-            bool wrap = true;
-
-            // Create test surface
-            var surface = CreateShiftableCellSurface();
-
-            // Shift with some helpful before/after output
-            PrintSurfaceGlyphs(surface, "Before:");
-            surface.ShiftRowLeftUnchecked(ShiftRow, startingX, surface.Width - 3, shiftAmount, wrap);
-            PrintSurfaceGlyphs(surface, "After:");
-
-            // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
-            // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
-            if (shiftAmount != surface.Width)
-                Assert.IsTrue(surface.IsDirty);
-
-            // Verify shift result
-            AssertRowHasShifted(surface, ShiftRow, startingX, surface.Width - 3, -shiftAmount, wrap);
+            AssertRowHasShifted(surface, ShiftRow, startingX, count, -shiftAmount, wrap);
         }
         #endregion
 
