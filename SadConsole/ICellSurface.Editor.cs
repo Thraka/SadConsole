@@ -1032,7 +1032,7 @@ namespace SadConsole
             if (count == 0) return;
             if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
 
-            ShiftRowLeftUnchecked(surface, row, surface.Width - 1, count, wrap);
+            ShiftRowLeftUnchecked(surface, row, 0, count, wrap);
         }
 
         public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
@@ -1095,7 +1095,7 @@ namespace SadConsole
 
         public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, bool wrap)
         {
-            int width = surface.Width;
+            int width = surface.Width - startingX;
 
             if (wrap)
             {
@@ -1119,24 +1119,26 @@ namespace SadConsole
                 var tempArray = new ColoredGlyphAppearance[count];
 
                 // Shift each cell to its proper location, using temporary storage as needed.
-                for (int x = 0; x < width; x++)
+                for (int i = 0; i < width; i++)
                 {
+                    int x = i + startingX;
                     // In this case, we'll be replacing a wrapped-around cell; so save the cell off
                     // before we overwrite so that we can get the value back later when we need to shift
                     // it down.
-                    if (x < count)
-                        tempArray[x] = new ColoredGlyphAppearance(surface[x, row]);
+                    if (i < count)
+                        tempArray[i] = new ColoredGlyphAppearance(surface[x, row]);
 
-                    if (x + count < width)
+                    if (i + count < width)
                         surface[x, row].CopyAppearanceFrom(surface[x + count, row], false);
                     else
-                        tempArray[x + count - width].ShallowCopyTo(surface[x, row]);
+                        tempArray[i + count - width].ShallowCopyTo(surface[x, row]);
                 }
             }
             else // Shift and clear as needed
             {
-                for (int x = 0; x < width; x++)
+                for (int i = startingX; i < width; i++)
                 {
+                    int x = i + startingX;
                     int copyFromX = x + count;
                     if (copyFromX < width)
                         surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
