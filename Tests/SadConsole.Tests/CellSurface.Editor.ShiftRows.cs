@@ -165,7 +165,7 @@ namespace SadConsole.Tests
                     int oldX = x - shiftAmount;
 
                     if (wrap) oldX = WrapAround(oldX - startingX, count) + startingX;
-                    var expectedGlyph = oldX >= startingX && oldX < surface.Width || wrap ? GetShiftCellFor(oldX) : blankGlyph;
+                    var expectedGlyph = oldX >= startingX && oldX < startingX + count || wrap ? GetShiftCellFor(oldX) : blankGlyph;
 
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
                 }

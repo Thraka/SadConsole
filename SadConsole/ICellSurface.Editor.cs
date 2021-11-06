@@ -1144,11 +1144,11 @@ namespace SadConsole
             }
             else // Shift and clear as needed
             {
-                for (int i = startingX; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     int x = i + startingX;
                     int copyFromX = x + amount;
-                    if (copyFromX < count)
+                    if (copyFromX < startingX + count)
                         surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
                     else
                         surface.Clear(x, row);
