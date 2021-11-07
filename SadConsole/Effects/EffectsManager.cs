@@ -8,6 +8,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Effects
 {
+    // TODO: Use _effectCells dictionary to check if a cell is added.
+
+
     /// <summary>
     /// Effects manager for a text surface.
     /// </summary>
@@ -21,7 +24,7 @@ namespace SadConsole.Effects
         /// <summary>
         /// A dictionary of effect data keyed by the cell index.
         /// </summary>
-        protected Dictionary<int, ColoredGlyphEffectData> _effectCells;
+        protected Dictionary<ColoredGlyph, ColoredGlyphEffectData> _effectCells;
 
         /// <summary>
         /// The surface hosting this effects manager.
@@ -40,19 +43,17 @@ namespace SadConsole.Effects
         public EffectsManager(ICellSurface surface)
         {
             _effects = new Dictionary<ICellEffect, ColoredGlyphEffectData>(20);
-            _effectCells = new Dictionary<int, ColoredGlyphEffectData>(50);
+            _effectCells = new Dictionary<ColoredGlyph, ColoredGlyphEffectData>(50);
             _backingSurface = surface;
         }
 
         /// <summary>
-        /// Changes the effect of a specific cell.
+        /// Associates a cell effect with a cell.
         /// </summary>
-        /// <param name="cellIndex">Cell index to set the effect for.</param>
+        /// <param name="cell">Cell to set the effect for.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
-        public void SetEffect(int cellIndex, ICellEffect effect)
+        public void SetEffect(ColoredGlyph cell, ICellEffect effect)
         {
-            ColoredGlyph cell = _backingSurface[cellIndex];
-
             if (effect != null)
             {
                 ColoredGlyphEffectData workingEffect;
@@ -72,7 +73,7 @@ namespace SadConsole.Effects
                     }
                     else
                     {
-                        if (workingEffect.ContainsCell(cellIndex))
+                        if (workingEffect.ContainsCell(cell))
                         {
                             // Make sure the effect is attached to the cell.
                             return;
@@ -81,24 +82,24 @@ namespace SadConsole.Effects
                 }
 
                 // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
-                ClearCellEffect(cellIndex);
+                ClearCellEffect(cell);
 
                 // Add the cell to the effects by cell key and to list of known cells for the effect
-                _effectCells.Add(cellIndex, workingEffect);
-                workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell, cellIndex));
+                _effectCells.Add(cell, workingEffect);
+                workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
             }
             else
             {
-                ClearCellEffect(cellIndex);
+                ClearCellEffect(cell);
             }
         }
 
         /// <summary>
-        /// Changes the effect of the <paramref name="cellIndicies"/> provided.
+        /// Changes the effect of the <paramref name="cells"/> provided.
         /// </summary>
-        /// <param name="cellIndicies">A list of cell indicies to change the effect on.</param>
+        /// <param name="cells">A list of cell indicies to change the effect on.</param>
         /// <param name="effect">The effect to associate with the cell.</param>
-        public void SetEffect(IEnumerable<int> cellIndicies, ICellEffect effect)
+        public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect effect)
         {
             if (effect != null)
             {
@@ -119,25 +120,23 @@ namespace SadConsole.Effects
                     }
                 }
 
-                foreach (int index in cellIndicies)
+                foreach (ColoredGlyph cell in cells)
                 {
-                    if (!workingEffect.ContainsCell(index))
+                    if (!workingEffect.ContainsCell(cell))
                     {
                         // Remove the targeted cell from the known cells list if it is already there (associated with another effect)
-                        ClearCellEffect(index);
+                        ClearCellEffect(cell);
 
                         // Add the cell to the effects by cell key and to list of known cells for the effect
-                        _effectCells.Add(index, workingEffect);
-                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(_backingSurface[index], index));
+                        _effectCells.Add(cell, workingEffect);
+                        workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
                     }
                 }
             }
             else
             {
-                foreach (int index in cellIndicies)
-                {
-                    ClearCellEffect(index);
-                }
+                foreach (ColoredGlyph cell in cells)
+                    ClearCellEffect(cell);
             }
         }
 
@@ -145,7 +144,8 @@ namespace SadConsole.Effects
         /// Gets the effect of the specified cell.
         /// </summary>
         /// <returns>The effect.</returns>
-        public Effects.ICellEffect GetEffect(int cellIndex) => _effectCells.ContainsKey(cellIndex) ? _effectCells[cellIndex].Effect : null;
+        public Effects.ICellEffect GetEffect(ColoredGlyph cell) =>
+            _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
 
         /// <summary>
         /// Gets a collection of effects associated with the manager.
@@ -171,7 +171,7 @@ namespace SadConsole.Effects
 
                 int count = states.Length;
                 for (int i = 0; i < count; i++)
-                    ClearCellEffect(states[i].CellIndex);
+                    ClearCellEffect(states[i].Cell);
             }
         }
 
@@ -217,13 +217,13 @@ namespace SadConsole.Effects
         /// <summary>
         /// Clears the effect for the cell specified by index.
         /// </summary>
-        /// <param name="cellIndex">The cell index.</param>
-        protected void ClearCellEffect(int cellIndex)
+        /// <param name="cell">The cell index.</param>
+        protected void ClearCellEffect(ColoredGlyph cell)
         {
-            if (_effectCells.TryGetValue(cellIndex, out ColoredGlyphEffectData oldEffectData))
+            if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData oldEffectData))
             {
-                oldEffectData.RemoveCell(cellIndex, oldEffectData.Effect.RestoreCellOnRemoved & oldEffectData.Effect.IsFinished);
-                _effectCells.Remove(cellIndex);
+                oldEffectData.RemoveCell(cell, oldEffectData.Effect.RestoreCellOnRemoved & oldEffectData.Effect.IsFinished);
+                _effectCells.Remove(cell);
 
                 if (oldEffectData.CellsStates.Count == 0)
                 {
@@ -259,8 +259,8 @@ namespace SadConsole.Effects
                 int count = cellsToRemove.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    effectData.RemoveCell(cellsToRemove[i].CellIndex, effectData.Effect.RestoreCellOnRemoved & effectData.Effect.IsFinished);
-                    _effectCells.Remove(cellsToRemove[i].CellIndex);
+                    effectData.RemoveCell(cellsToRemove[i].Cell, effectData.Effect.RestoreCellOnRemoved & effectData.Effect.IsFinished);
+                    _effectCells.Remove(cellsToRemove[i].Cell);
                     _backingSurface.IsDirty = true;
                 }
 
@@ -323,17 +323,16 @@ namespace SadConsole.Effects
             /// <summary>
             /// Removes a cell by index from the effect data.
             /// </summary>
-            /// <param name="cellIndex">The cell index.</param>
+            /// <param name="cell">The cell.</param>
             /// <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
-            public void RemoveCell(int cellIndex, bool restoreState)
+            public void RemoveCell(ColoredGlyph cell, bool restoreState)
             {
                 for (int i = 0; i < CellsStates.Count; i++)
                 {
                     ColoredGlyphWithState cellState = CellsStates[i];
-                    if (cellState.CellIndex == cellIndex)
-                    {
-                        ColoredGlyph cell = cellState.Cell;
 
+                    if (cellState.Cell == cell)
+                    {
                         if (restoreState)
                             cellState.State.RestoreState(ref cell);
 
@@ -346,15 +345,14 @@ namespace SadConsole.Effects
             /// <summary>
             /// Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
             /// </summary>
-            /// <param name="cellIndex">The cell to check.</param>
+            /// <param name="cell">The cell to check.</param>
             /// <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
-            public bool ContainsCell(int cellIndex)
+            public bool ContainsCell(ColoredGlyph cell)
             {
                 int count = CellsStates.Count;
                 for (int i = 0; i < count; i++)
                 {
-                    ColoredGlyphWithState state = CellsStates[i];
-                    if (state.CellIndex == cellIndex)
+                    if (CellsStates[i].Cell == cell)
                         return true;
                 }
 
@@ -379,17 +377,12 @@ namespace SadConsole.Effects
             public ColoredGlyphState State;
 
             /// <summary>
-            /// The cells index.
-            /// </summary>
-            public int CellIndex;
-
-            /// <summary>
             /// Creates a new instance of this class with the specified cell and index.
             /// </summary>
             /// <param name="cell">The cell to generate a state from.</param>
             /// <param name="cellIndex">The index of the cell in the parent surface.</param>
-            public ColoredGlyphWithState(ColoredGlyph cell, int cellIndex) =>
-                (Cell, State, CellIndex) = (cell, new ColoredGlyphState(cell), cellIndex);
+            public ColoredGlyphWithState(ColoredGlyph cell) =>
+                (Cell, State) = (cell, new ColoredGlyphState(cell));
         }
 
         //TODO: load/save for effects manager now that it saves the cell index.

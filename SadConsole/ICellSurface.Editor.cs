@@ -340,7 +340,7 @@ namespace SadConsole
             if (!surface.IsValidCell(x, y, out int index))
                 return;
 
-            surface.Effects.SetEffect(index, effect);
+            surface.Effects.SetEffect(surface[index], effect);
             surface.IsDirty = true;
         }
 
@@ -355,7 +355,7 @@ namespace SadConsole
             if (!surface.IsValidCell(index))
                 return;
 
-            surface.Effects.SetEffect(index, effect);
+            surface.Effects.SetEffect(surface[index], effect);
             surface.IsDirty = true;
         }
 
@@ -372,7 +372,7 @@ namespace SadConsole
             foreach (Point item in cells)
                 cellList.Add(item.ToIndex(surface.Width));
 
-            surface.Effects.SetEffect(cellList, effect);
+            surface.Effects.SetEffect((IEnumerable<ColoredGlyph>)cellList, effect);
             surface.IsDirty = true;
         }
 
@@ -384,7 +384,12 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, IEnumerable<int> cells, ICellEffect effect)
         {
-            surface.Effects.SetEffect(cells, effect);
+            List<ColoredGlyph> glyphs = new List<ColoredGlyph>(5);
+
+            foreach (var index in cells)
+                glyphs.Add(surface[index]);
+
+            surface.Effects.SetEffect(glyphs, effect);
             surface.IsDirty = true;
         }
 
@@ -396,12 +401,7 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, ColoredGlyph cell, ICellEffect effect)
         {
-            int index = surface.ToList().IndexOf(cell);
-
-            if (index == -1)
-                throw new ArgumentOutOfRangeException(nameof(cell), "Cell doesn't exist in surface.");
-
-            surface.Effects.SetEffect(index, effect);
+            surface.Effects.SetEffect(cell, effect);
             surface.IsDirty = true;
         }
 
@@ -413,22 +413,7 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect effect)
         {
-            int counter = 0;
-            var allCells = surface.ToList();
-            List<int> cellIndecies = new List<int>(5);
-
-            foreach (ColoredGlyph item in cells)
-            {
-                int index = allCells.IndexOf(item);
-
-                if (index == -1)
-                    throw new ArgumentOutOfRangeException(nameof(cells), $"Cell doesn't exist in surface, counter was {counter}");
-
-                cellIndecies.Add(index);
-                counter++;
-            }
-
-            surface.Effects.SetEffect(cellIndecies, effect);
+            surface.Effects.SetEffect(cells, effect);
             surface.IsDirty = true;
         }
 
@@ -441,7 +426,7 @@ namespace SadConsole
         /// <returns>The effect.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICellEffect GetEffect(this ICellSurface surface, int x, int y) =>
-            surface.Effects.GetEffect(Point.ToIndex(x, y, surface.Width));
+            surface.Effects.GetEffect(surface[x, y]);
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -847,7 +832,7 @@ namespace SadConsole
                 charIndex++;
             }
 
-            surface.Effects.SetEffect(effectIndicies, effect);
+            SetEffect(surface, effectIndicies, effect);
 
             surface.IsDirty = true;
         }
@@ -1580,12 +1565,13 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         public static void Clear(this ICellSurface surface, int x, int y)
         {
-            if (!surface.IsValidCell(x, y, out int index))
+            if (!surface.IsValidCell(x, y))
                 return;
 
-            surface.Effects.SetEffect(index, null);
+            ColoredGlyph cell = surface[x, y];
 
-            ColoredGlyph cell = surface[index];
+            surface.Effects.SetEffect(cell, null);
+
             cell.Clear();
             cell.Foreground = surface.DefaultForeground;
             cell.Background = surface.DefaultBackground;
