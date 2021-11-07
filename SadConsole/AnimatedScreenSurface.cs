@@ -19,7 +19,7 @@ namespace SadConsole
         [DataMember(Name = "Width")]
         private int _width;
         [DataMember(Name = "Height")]
-        private int _height;
+        private int _height; 
 
         /// <summary>
         /// Raised when the <see cref="AnimationState"/> changes.
@@ -369,7 +369,7 @@ namespace SadConsole
             var animation = new AnimatedScreenSurface("default", width, height);
             animation.Surface.DefaultBackground = background ?? Color.Black;
 
-            var foregroundColor = foreground ?? Color.White;
+            Color foregroundColor = foreground ?? Color.White;
             for (int f = 0; f < frames; f++)
             {
                 ICellSurface frame = animation.CreateFrame();
@@ -403,14 +403,10 @@ namespace SadConsole
         /// <summary>
         /// Converts an image file containing frames to an instance of <see cref="AnimatedScreenSurface"/>.
         /// </summary>
-        ///
-        /// required:
         /// <param name="name">Name for the animation.</param>
         /// <param name="filePath">File path to the image file.</param>
         /// <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
         /// <param name="frameDuration">Duration for a frame in the animation.</param>
-        ///
-        /// optional:
         /// <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
         /// <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
         /// <param name="font"> <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
@@ -421,25 +417,28 @@ namespace SadConsole
         /// 
         /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
         /// 
-        /// <remarks>Remarks:<br></br>
-        /// This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
-        /// Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.<br></br>
-        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.<br></br></remarks>
+        /// <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
+        /// 
+        /// Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.
+        /// 
+        /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
+        /// </remarks>
         public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, float frameDuration,
             Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null,
             TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
             TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
         {
             // set defaults
-            font = font is null ? GameHost.Instance.DefaultFont : font;
+            font ??= GameHost.Instance.DefaultFont;
             Point padding = pixelPadding ?? (0, 0);
             frameStartAndFinish ??= (0, 0);
-            int firstFrame = frameStartAndFinish.Value.X,
-                lastFrame = frameStartAndFinish.Value.Y;
+
+            int firstFrame = frameStartAndFinish.Value.X;
+            int lastFrame = frameStartAndFinish.Value.Y;
 
             // get info about the font
-            var fontSize = font.GetFontSize(IFont.Sizes.One);
-            var fontSizeRatio = font.GetGlyphRatio(fontSize);
+            Point fontSize = font.GetFontSize(IFont.Sizes.One);
+            (float X, float Y) fontSizeRatio = font.GetGlyphRatio(fontSize);
 
             // load the image
             using ITexture image = GameHost.Instance.GetTexture(filePath);
@@ -447,8 +446,8 @@ namespace SadConsole
 
             // convert the image to surface
             Point surfaceSize = ApplyFontSizeRatio(imageSize, fontSizeRatio);
-            var convertedImage = image.ToSurface(convertMode, surfaceSize.X, surfaceSize.Y,
-                backgroundStyle: convertBackgroundStyle, foregroundStyle : convertForegroundStyle);
+            ICellSurface convertedImage = image.ToSurface(convertMode, surfaceSize.X, surfaceSize.Y,
+                                                          backgroundStyle: convertBackgroundStyle, foregroundStyle : convertForegroundStyle);
             padding = ApplyFontSizeRatio(padding, fontSizeRatio);
 
             // calculate the number of frames
@@ -483,13 +482,13 @@ namespace SadConsole
                             if (frameIndex >= firstFrame)
                             {
                                 if (frameIndex > lastFrame)
-                                {
                                     return;
-                                }
-                                else CopyFrameToClip();
+                                else
+                                    CopyFrameToClip();
                             }
                         }
-                        else CopyFrameToClip();
+                        else
+                            CopyFrameToClip();
 
                         // take into account padding between the frames, not outside them
                         int paddingX = x + 1 == frameLayout.X ? 0 : padding.X;
@@ -509,10 +508,10 @@ namespace SadConsole
                 if (action != null) Array.ForEach(frame.Cells, action);
             }
 
-            Point ApplyFontSizeRatio(Point point, (float X, float Y) sizeRatio) =>
+            static Point ApplyFontSizeRatio(Point point, (float X, float Y) sizeRatio) =>
                 (ApplySizeRatio(point.X, sizeRatio.X), ApplySizeRatio(point.Y, sizeRatio.Y));
 
-            int ApplySizeRatio(int x, float sizeRatio, bool inverted = false) => !inverted ?
+            static int ApplySizeRatio(int x, float sizeRatio, bool inverted = false) => !inverted ?
                 sizeRatio < 1 ? x : (int)Math.Floor(x / sizeRatio) :
                 sizeRatio > 1 ? (int)Math.Floor(x * sizeRatio) : x;
         }
