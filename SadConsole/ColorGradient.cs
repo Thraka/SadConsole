@@ -31,7 +31,7 @@ namespace SadRogue.Primitives
 
             if (colorList.Length != stopList.Length)
             {
-                throw new global::System.Exception("Both colors and stops much match in array length.");
+                throw new global::System.Exception("Both colors and stops must match in array length.");
             }
 
             Stops = new ColorGradientStop[colorList.Length];

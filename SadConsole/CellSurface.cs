@@ -208,10 +208,10 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
         {
-            if (viewWidth == 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
-            if (viewHeight == 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
-            if (totalWidth == 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface buffer width must be > 0");
-            if (totalHeight == 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface buffer height must be > 0");
+            if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
+            if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
+            if (totalWidth <= 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface buffer width must be > 0");
+            if (totalHeight <= 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface buffer height must be > 0");
             if (viewWidth > totalWidth) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Buffer width must be less than or equal to the width.");
             if (viewHeight > totalHeight) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Buffer height must be less than or equal to the height.");
 

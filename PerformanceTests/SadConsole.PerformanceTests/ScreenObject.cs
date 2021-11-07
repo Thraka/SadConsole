@@ -47,7 +47,7 @@ namespace SadConsole.PerformanceTests
     /// </summary>
     /// <remarks>
     /// The current tests only test the main-game-loop oriented functions of ScreenObject.  These tests have the following notable characteristics:
-    ///     - The children are all themselves ScreenObject instances, with 0 components and 0 children
+    ///     - The children are all themselves ScreenObject instances, with the specified number of components and 0 children
     ///         - This means that optimizations to the ScreenObject functions recursively cause performance gains when children are processed
     ///     - The components are processed in all 4 elements of the main game loop (Update, Render, ProcessKeyboard, ProcessMouse), but the functions called for these
     ///       events do nothing (blank implementation).
@@ -62,7 +62,7 @@ namespace SadConsole.PerformanceTests
         [Params(0, 5, 10)]
         public int NumComponents;
 
-        [Params(0, 1, 100, 1000)]
+        [Params(0, 100, 1000)]
         public int NumChildren;
 
         #endregion
@@ -75,16 +75,18 @@ namespace SadConsole.PerformanceTests
         public void GlobalSetup()
         {
             _gameHost = new BasicGameHost();
+
+            // Create parent object
             _mainObject = new SadConsole.ScreenObject();
 
+            // Create number of children, each with the specified number of components
             for (int i = 0; i < NumChildren; i++)
             {
-                var obj = new SadConsole.ScreenObject();
+                var child = new SadConsole.ScreenObject();
+                for (int j = 0; j < NumComponents; j++)
+                    child.SadComponents.Add(new TestComponent());
 
-                for (int i2 = 0; i2 < NumComponents; i2++)
-                    obj.SadComponents.Add(new TestComponent());
-
-                _mainObject.Children.Add(obj);
+                _mainObject.Children.Add(child);
             }
 
             _delta = TimeSpan.FromMilliseconds(5);

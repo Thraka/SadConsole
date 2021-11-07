@@ -220,7 +220,7 @@
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrame">
             <summary>
-            Gets the currently frame being animated.
+            Gets the current frame being animated.
             </summary>
         </member>
         <member name="P:SadConsole.AnimatedScreenSurface.State">
@@ -321,6 +321,33 @@
             <param name="background">The background color of the animation. Defaults to transparent.</param>
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenSurface.ConvertImageFile(System.String,System.String,SadRogue.Primitives.Point,System.Single,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+             <summary>
+             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
+             </summary>
+            
+             required:
+             <param name="name">Name for the animation.</param>
+             <param name="filePath">File path to the image file.</param>
+             <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
+             <param name="frameDuration">Duration for a frame in the animation.</param>
+            
+             optional:
+             <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
+             <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
+             <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
+             <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
+             <param name="convertMode">The mode used when converting the texture to a surface.</param>
+             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
+             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
+             
+             <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
+             
+             <remarks>Remarks:<br></br>
+             This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
+             Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.<br></br>
+             Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.<br></br></remarks>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
             <summary>
@@ -900,7 +927,7 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,SadConsole.CellDecorator[])">
             <summary>
-            Creates a cell with the specified foreground, background, glyph, and mirror effect.
+            Creates a cell with the specified foreground, background, glyph, mirror effect, visibility and decorators.
             </summary>
             <param name="foreground">Foreground color.</param>
             <param name="background">Background color.</param>
@@ -911,19 +938,19 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
             <summary>
-            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
             <param name="cell">The target cell to copy to.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph)">
             <summary>
-            Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
+            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
             <param name="cell">The target cell to copy from.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clear">
             <summary>
-            Resets the foreground, background, glyph, and mirror effect.
+            Resets the foreground, background, glyph, mirror effect and decorators.
             </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyph.ToState">
@@ -3521,7 +3548,7 @@
         </member>
         <member name="P:SadConsole.GameHost.DefaultFontSize">
             <summary>
-            The default font to use with <see cref="P:SadConsole.GameHost.DefaultFont"/>.
+            The default font size to use with the <see cref="P:SadConsole.GameHost.DefaultFont"/>.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Keyboard">
@@ -4071,7 +4098,7 @@
             <param name="surface">The surface being edited.</param>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
-            <returns>The color.</returns>
+            <returns>The <see cref="T:SadConsole.Mirror"/> of the cell.</returns>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetMirror(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.Mirror)">
             <summary>
@@ -7358,7 +7385,7 @@
             <param name="rows">Number of glyph rows in the <paramref name="image"/>.</param>
             <param name="columns">Number of glyph columns in the <paramref name="image"/>.</param>
             <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
-            <param name="image">The texture for of the font.</param>
+            <param name="image">The <see cref="T:SadConsole.ITexture"/> of the font.</param>
             <param name="name">A font identifier used for serialization of resources using this font.</param>
             <param name="glyphRectangles">Glyph mapping dictionary.</param>
         </member>
@@ -7795,7 +7822,7 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
             <summary>
-            Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+            Creates a new surface from a grid view. The cells between this object and the grid view are shared.
             </summary>
             <param name="surface">The surface to use as the source of cells.</param>
             <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
