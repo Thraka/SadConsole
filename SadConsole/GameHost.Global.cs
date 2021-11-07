@@ -36,7 +36,7 @@ namespace SadConsole
         public IFont DefaultFont { get; set; }
 
         /// <summary>
-        /// The default font to use with <see cref="DefaultFont"/>.
+        /// The default font size to use with the <see cref="DefaultFont"/>.
         /// </summary>
         public IFont.Sizes DefaultFontSize { get; set; } = IFont.Sizes.One;
 

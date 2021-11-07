@@ -137,8 +137,8 @@ namespace SadConsole.UI
             /// Sets the Title parameter with the given text and changes title colors.
             /// </summary>
             /// <param name="title">Title text.</param>
-            /// <param name="foregroundColor">Title foreground <see cref="SadRogue.Primitives.Color"/>.</param>
-            /// <param name="backgroundColor">Title background <see cref="HorizontalAlignment"/>.</param>
+            /// <param name="foregroundColor">Title foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">Title background <see cref="Color"/>.</param>
             /// <param name="horizontalAlignment">Title text <see cref="HorizontalAlignment"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddTitle(string title, Color foregroundColor, Color backgroundColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
@@ -176,8 +176,8 @@ namespace SadConsole.UI
             /// <summary>
             /// Sets the DrawShadedArea to true and modifies default shadow colors.
             /// </summary>
-            /// <param name="foregroundColor">ShadedGlyph new foreground color.</param>
-            /// <param name="backgroundColor">ShadedGlyph new background color.</param>
+            /// <param name="foregroundColor">ShadedGlyph new foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">ShadedGlyph new background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow(Color foregroundColor, Color backgroundColor)
             {
@@ -192,8 +192,8 @@ namespace SadConsole.UI
             /// Sets the DrawShadedArea to true and modifies default shadow glyph and colors.
             /// </summary>
             /// /// <param name="shadedGlyph">Glyph number to use as a shadow.</param>
-            /// <param name="foregroundColor">ShadedGlyph new foreground color.</param>
-            /// <param name="backgroundColor">ShadedGlyph new background color.</param>
+            /// <param name="foregroundColor">ShadedGlyph new foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">ShadedGlyph new background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters AddShadow(int shadedGlyph, Color foregroundColor, Color backgroundColor)
             {
@@ -228,8 +228,8 @@ namespace SadConsole.UI
             /// Changes the array of glyphs to be used as the border line and their colors.
             /// </summary>
             /// <param name="borderStyle">Array of glyphs to be used as the border line.</param>
-            /// <param name="foregroundColor">Border line foreground color.</param>
-            /// <param name="backgroundColor">Border line background color.</param>
+            /// <param name="foregroundColor">Border line foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">Border line background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int[] borderStyle, Color foregroundColor, Color backgroundColor)
             {
@@ -253,8 +253,8 @@ namespace SadConsole.UI
             /// Fills the array of glyphs to be used as the border line with the given glyph and changes the border colors.
             /// </summary>
             /// <param name="glyph">The glyph to be used the border line.</param>
-            /// <param name="foregroundColor">Border line foreground color.</param>
-            /// <param name="backgroundColor">Border line background color.</param>
+            /// <param name="foregroundColor">Border line foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">Border line background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderGlyph(int glyph, Color foregroundColor, Color backgroundColor)
             {
@@ -278,8 +278,8 @@ namespace SadConsole.UI
             /// <summary>
             /// Changes border color parameters.
             /// </summary>
-            /// <param name="foregroundColor">Border line foreground color.</param>
-            /// <param name="backgroundColor">Border line background color.</param>
+            /// <param name="foregroundColor">Border line foreground <see cref="Color"/>.</param>
+            /// <param name="backgroundColor">Border line background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderColors(Color foregroundColor, Color backgroundColor)
             {
@@ -291,7 +291,7 @@ namespace SadConsole.UI
             /// <summary>
             /// Changes border foreground color.
             /// </summary>
-            /// <param name="foregroundColor">Border line foreground color.</param>
+            /// <param name="foregroundColor">Border line foreground <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderForegroundColor(Color foregroundColor)
             {
@@ -302,7 +302,7 @@ namespace SadConsole.UI
             /// <summary>
             /// Changes border background color.
             /// </summary>
-            /// <param name="backgroundColor">Border line background color.</param>
+            /// <param name="backgroundColor">Border line background <see cref="Color"/>.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
             public BorderParameters ChangeBorderBackgroundColor(Color backgroundColor)
             {

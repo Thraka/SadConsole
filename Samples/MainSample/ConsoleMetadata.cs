@@ -20,23 +20,4 @@ namespace FeatureDemo
             Summary = summary;
         }
     }
-
-    class RestartableSurface : ScreenSurface, IRestartable
-    {
-        public RestartableSurface(int w, int h) : base(w, h) { }
-
-        public void Restart()
-        {
-            Children.Clear();
-            SadComponents.Clear();
-            Start();
-        }
-
-        protected virtual void Start() { }
-    }
-
-    interface IRestartable
-    {
-        public void Restart();
-    }
 }

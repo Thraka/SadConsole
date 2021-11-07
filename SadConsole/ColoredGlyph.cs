@@ -156,7 +156,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a cell with the specified foreground, background, glyph, and mirror effect.
+        /// Creates a cell with the specified foreground, background, glyph, mirror effect, visibility and decorators.
         /// </summary>
         /// <param name="foreground">Foreground color.</param>
         /// <param name="background">Background color.</param>
@@ -175,7 +175,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
+        /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
         /// </summary>
         /// <param name="cell">The target cell to copy to.</param>
         /// <param name="deepCopy">
@@ -195,7 +195,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
+        /// Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
         /// </summary>
         /// <param name="cell">The target cell to copy from.</param>
         /// <param name="deepCopy">
@@ -215,7 +215,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Resets the foreground, background, glyph, and mirror effect.
+        /// Resets the foreground, background, glyph, mirror effect and decorators.
         /// </summary>
         public void Clear()
         {
