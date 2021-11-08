@@ -13,7 +13,7 @@ namespace SadConsole.DrawCalls
     public static class DrawCallManager
     {
         /// <summary>
-        /// Called 
+        /// Resumes rendering to <see cref="Global.RenderOutput"/> with SadConsole's default settings.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResumeBatch()
@@ -23,7 +23,7 @@ namespace SadConsole.DrawCalls
         }
 
         /// <summary>
-        /// Ends the <see cref="Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect. Render target remains <see cref="Global.RenderOutput"/>.
+        /// Ends the <see cref="Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void InterruptBatch()

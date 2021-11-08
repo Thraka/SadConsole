@@ -37,7 +37,7 @@ namespace SadConsole.Components
         /// </remarks>
         public Point PositionOffset { get; set; } = new Point(0, 0);
 
-        private Host.GameTexture _image;
+        private readonly Host.GameTexture _image;
         private bool _isDisposed;
 
         /// <summary>
