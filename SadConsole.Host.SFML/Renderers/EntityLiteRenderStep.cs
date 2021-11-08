@@ -50,7 +50,7 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
-            bool result = true;
+            bool result = false;
 
             // Update texture if something is out of size.
             if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
