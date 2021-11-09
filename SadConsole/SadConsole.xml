@@ -842,7 +842,7 @@
         </member>
         <member name="P:SadConsole.ColoredGlyph.Decorators">
             <summary>
-            Modifies the look of a cell with additional character. 
+            Modifies the look of a cell with additional character.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyph.Foreground">
@@ -936,17 +936,25 @@
             <param name="isVisible">The visiblity of the glyph.</param>
             <param name="decorators">Decorators for the cell.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
             <param name="cell">The target cell to copy to.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
             <param name="cell">The target cell to copy from.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clear">
             <summary>
@@ -2055,6 +2063,23 @@
             <param name="width">The viewable width of the surface.</param>
             <param name="height">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -3852,6 +3877,16 @@
             Array index enum for line glyphs.
             </summary>
         </member>
+        <member name="M:SadConsole.ColoredGlyphAppearance.ShallowCopyTo(SadConsole.ColoredGlyph)">
+            <summary>
+            Copies the ColoredGlyphAppearance to the appearance fields of the given ColoredGlyphs.
+            The Decorators array is copied using a shallow-copy.
+            </summary>
+            <remarks>
+            This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+            </remarks>
+            <param name="cell">Cell to copy to.</param>
+        </member>
         <member name="T:SadConsole.CellSurfaceEditor">
             <summary>
             Methods to interact with a <see cref="T:SadConsole.ICellSurface"/>.
@@ -4196,7 +4231,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
             <summary>
-            Draws the string on the console at the specified location with the specified settings. 
+            Draws the string on the console at the specified location with the specified settings.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">X location of the text.</param>
@@ -4208,7 +4243,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Mirror)">
             <summary>
-            Draws the string on the console at the specified location with the specified settings. 
+            Draws the string on the console at the specified location with the specified settings.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">X location of the text.</param>
@@ -4227,7 +4262,7 @@
             <param name="appearance">The appearance of the cell</param>
             <param name="effect">An optional effect to apply to the printed surface.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
             <summary>
             Draws a single glyph on the console at the specified location.
             </summary>
@@ -4600,8 +4635,8 @@
             <summary>
             Resizes the surface to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
@@ -4610,8 +4645,8 @@
             <summary>
             Resizes the surface and view to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         </member>
         <member name="T:SadConsole.ICellSurfaceSettable">
