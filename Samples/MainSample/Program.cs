@@ -111,7 +111,7 @@ namespace FeatureDemo
                     else break;
                 }
 
-
+            // this shows the background properly, but the playscii output on the same cell coordinate has black background
             var appearance = (sc.Children[0] as ScreenSurface).Surface.GetCellAppearance(14, 4);
             palette.Surface.SetCellAppearance(25, 0, appearance);
             return;
