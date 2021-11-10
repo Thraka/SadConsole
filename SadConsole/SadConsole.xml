@@ -7034,7 +7034,7 @@
             Use only tile flip (mirror in SadConsole), but not the rotation. Set Z-Depth to 0 on all Playscii layers.<br></br>
             Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyph"/> background like it does in Playscii.</remarks>
             
-            <returns><see cref="T:SadConsole.ScreenObject"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>
         </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>

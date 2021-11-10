@@ -27,7 +27,7 @@ namespace FeatureDemo.CustomConsoles
                                            "[c:r f:LightGreen]02[c:r f:green])[c:u 2] String Parser     -- [c:r f:white]Examples of using the string parser functions[c:u]",
                                            "[c:r f:LightGreen]03[c:r f:green])[c:u 2] Controls Test     -- [c:r f:white]Displays all SadConsole.Controls for testing[c:u]",
                                            "[c:r f:LightGreen]04[c:r f:green])[c:u 2] DOS\\Terminal      -- [c:r f:white]A terminal prompt that accepts commands[c:u]",
-                                           "[c:r f:LightGreen]05[c:r f:green])[c:u 2] Ascii Formats     -- [c:r f:white]Displays Ansi, REXPaint and Playscii files.[c:u]",
+                                           "[c:r f:LightGreen]05[c:r f:green])[c:u 2] Ascii Graphics    -- [c:r f:white]Displays Ansi, REXPaint and Playscii files.[c:u]",
                                            "[c:r f:LightGreen]06[c:r f:green])[c:u 2] Shapes            -- [c:r f:white]Draw different shapes[c:u]",
                                            "[c:r f:LightGreen]07[c:r f:green])[c:u 2] Entity demo       -- [c:r f:white]1000s of entities on the screen moving around[c:u]",
                                            "[c:r f:LightGreen]08[c:r f:green])[c:u 2] Scroll Control    -- [c:r f:white]Single surface with multiple views + scrolling[c:u]",

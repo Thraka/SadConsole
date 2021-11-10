@@ -10,15 +10,16 @@ using SadConsole.Instructions;
 using SadConsole.Readers;
 using SadConsole.Ansi;
 using SadRogue.Primitives;
+using System.IO;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class AsciiEditorConverters : SadConsole.Console, IRestartable
+    internal class AsciiGraphics : SadConsole.Console, IRestartable
     {
         readonly HeaderConsole _header;
         readonly AsciiArt[] _asciiArtPages;
 
-        public AsciiEditorConverters(HeaderConsole header) : base(Program.MainWidth, Program.MainHeight)
+        public AsciiGraphics(HeaderConsole header) : base(Program.MainWidth, Program.MainHeight)
         {
             _header = header;
 
@@ -106,35 +107,23 @@ namespace FeatureDemo.CustomConsoles
 
     class TitlePage : AsciiArt
     {
-        static string[] s_ascii = new[] {
-            @"    .                  .-.    .  _   *     _   .",
-            @"           *          /   \     ((       _/ \       *    .",
-            @"         _    .   .--'\/\_ \     `      /    \  *    ___",
-            @"     *  / \_    _/ ^      \/\'__        /\/\  /\  __/   \ *",
-            @"       /    \  /    .'   _/  /  \  *' /    \/  \/ .`'\_/\   .",
-            @"  .   /\/\  /\/ :' __  ^/  ^/    `--./.'  ^  `-.\ _    _:\ _",
-            @"     /    \/  \  _/  \-' __/.' ^ _   \_   .'\   _/ \ .  __/ \",
-            @"   /\  .-   `. \/     \ / -.   _/ \ -. `_/   \ /    `._/  ^  \",
-            @"  /  `-.__ ^   / .-'.--'    . /    `--./ .-'  `-.  `-. `.  -  `.",
-            @"@/        `.  / /      `-.   /  .-'   / .   .'   \    \  \  .-  \%",
-            @"@&8jgs@@%% @)&@&(88&@.-_=_-=_-=_-=_-=_.8@% &@&&8(8%@%8)(8@%8 8%@)%",
-            @"@88:::&(&8&&8:::::%&`.~-_~~-~~_~-~_~-~~=.'@(&%::::%@8&8)::&#@8::::",
-            @"`::::::8%@@%:::::@%&8:`.=~~-.~~-.~~=..~'8::::::::&@8:::::&8:::::'",
-            @" `::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.'"
-        };
-
         public TitlePage() : base()
         {
-            Print("'._.-= Several formats can be converted to a SadConsole ScreenObject =-._.'", 1, Color.Green);
-            Print("Use arrow keys Left and Right to browse Ansi, REXPaint and Playscii examples.", 4);
-            Print("Arrow keys Up and Down to scroll Ansi files.", 6);
-
+            string line = string.Empty;
             int index = 0;
-            foreach (string line in s_ascii)
-                Surface.Print(0, 9 + index++, $"       {line}");
-        }
 
-        void Print(string s, int y, Color? c = null) => Surface.Print(0, y, s.Align(HorizontalAlignment.Center, Surface.Width), c ?? Surface.DefaultForeground);
+            using (FileStream stream = File.Open("Res/Ascii/ascii_graphics_title.txt", FileMode.Open))
+            using (StreamReader sr = new(stream))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (index == 1)
+                        Surface.Print(0, 0 + index++, line, mirror: Mirror.Vertical);
+                    else
+                        Surface.Print(0, 0 + index++, line);
+                }
+            }
+        }
     }
 
     record Description(string Title, string Summary)
