@@ -195,18 +195,21 @@ namespace FeatureDemo.CustomConsoles
 
         public PlaysciiArt(string playsciiFileName) : base(Descriptions[playsciiFileName])
         {
+            // change background of this surface for better clarity
             Surface.DefaultBackground = Color.Gray;
             Surface.Clear();
 
             // get playscii font
             IFont font = GetFont(Descriptions[playsciiFileName].FontName);
+
+            // convert the playscii file
             ScreenSurface image = Playscii.ToScreenSurface($"Res/Playscii/{playsciiFileName}", font);
 
-            // get playscii background tile
-            //image.Font = GetFont("playscii_background");
+            // change the frame background to cover the transparent tiles
             image.Surface.DefaultBackground = Color.DarkGray.GetDarkest();
             image.Surface.Clear();
 
+            // add image to this surface
             AddCentered(image);
         }
 
