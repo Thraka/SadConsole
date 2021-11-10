@@ -242,7 +242,7 @@ namespace SadConsole.Readers
         /// Use only tile flip (mirror in SadConsole), but not the rotation. Set Z-Depth to 0 on all Playscii layers.<br></br>
         /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyph"/> background like it does in Playscii.</remarks>
         /// 
-        /// <returns><see cref="ScreenObject"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
+        /// <returns><see cref="ScreenSurface"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
         public static ScreenSurface ToScreenSurface(string fileName, IFont font)
         {
             ScreenSurface output = null;
