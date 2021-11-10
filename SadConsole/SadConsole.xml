@@ -6878,6 +6878,164 @@
             <param name="screenObject">The object to use.</param>
             <param name="handler">The handler callback.</param>
         </member>
+        <member name="T:SadConsole.Readers.Playscii">
+            <summary>
+            Playscii converter. Check this excellent ascii editor out at http://vectorpoem.com/playscii/
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.PALETTE_EXTENSIONS">
+            <summary>
+            Palette file extensions supported by the Playscii format.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.MAX_COLORS">
+            <summary>
+            Maximum amount of colors supported by the Playscii format.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.charset">
+            <summary>
+            Name of the font file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.frames">
+            <summary>
+            Hold all the animation frames.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.height">
+            <summary>
+            Surface height.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.palette">
+            <summary>
+            Name of the palette file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.width">
+            <summary>
+            Surface width.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.#ctor">
+            <summary>
+            Basic class constructor.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Frame">
+            <summary>
+            Json frame object in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Frame.delay">
+            <summary>
+            Duration for this frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Frame.layers">
+            <summary>
+            <see cref="T:SadConsole.Readers.Playscii"/> frame layers that will be converted to <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Frame.ToScreenSurface(System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> frame to SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="width">Width of the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="height">Height of the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containing the image from the first animation frame.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Layer">
+            <summary>
+            Json layer in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.name">
+            <summary>
+            Layer name.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.tiles">
+            <summary>
+            <see cref="T:SadConsole.Readers.Playscii"/> tiles that will be converted to <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.visible">
+            <summary>
+            Visibility of this layer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Layer.ToSurface(SadConsole.ScreenSurface,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> layer to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="parent"><see cref="T:SadConsole.ScreenSurface"/> that represents Playscii frame holding this layer.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containg the given <see cref="T:SadConsole.Readers.Playscii"/> layer.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Tile">
+            <summary>
+            Json tile in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.bg">
+            <summary>
+            Tile background color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.glyph">
+            <summary>
+            Tile character index.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.fg">
+            <summary>
+            Tile foreground color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.xform">
+            <summary>
+            Tile rotation and mirror.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Tile.ToColoredGlyph(SadConsole.IFont,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> tile to a SadConsole <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ColoredGlyph"/> equivalent of the <see cref="T:SadConsole.Readers.Playscii"/> tile.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.GetPalette(System.String)">
+            <summary>
+            Converts <see cref="T:SadConsole.Readers.Playscii"/> palette file to a SadConsole <see cref="T:SadRogue.Primitives.Palette"/>.
+            </summary>
+            <param name="fileName">Name and path of the palette file.</param>
+            <returns><see cref="T:SadRogue.Primitives.Palette"/> of <see cref="T:SadConsole.Readers.Playscii"/> colors.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.GetPlayscii(System.String)">
+            <summary>
+            Reads the <see cref="T:SadConsole.Readers.Playscii"/> Json file.
+            </summary>
+            <param name="fileName"></param>
+            <returns>Deserialised object containing <see cref="T:SadConsole.Readers.Playscii"/> save file data.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.ToScreenSurface(System.String,SadConsole.IFont)">
+            <summary>
+            Converts a <see cref="T:SadConsole.Readers.Playscii"/> file to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="fileName">Name and path of the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when converting the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
+            
+            <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
+            Use only tile flip (mirror in SadConsole), but not the rotation. Set Z-Depth to 0 on all Playscii layers.<br></br>
+            Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyph"/> background like it does in Playscii.</remarks>
+            
+            <returns><see cref="T:SadConsole.ScreenObject"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>
+        </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>
             A RexPaint image.

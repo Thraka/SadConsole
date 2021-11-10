@@ -9,15 +9,15 @@ using SadConsole.Input;
 using SadConsole.Instructions;
 using SadConsole.Readers;
 using SadRogue.Primitives;
+using FeatureDemo;
 
 namespace FeatureDemo.CustomConsoles
 {
-    internal class Animations : SadConsole.Console
+    internal class Animations : SadConsole.Console, IRestartable
     {
-        public const int W = 80, H = 23;
         AnimationDemo[] _animations;
 
-        public Animations() : base(W, H)
+        public Animations() : base(Program.MainWidth, Program.MainHeight)
         {
             IsFocused = true;
             UseKeyboard = true;
@@ -45,8 +45,10 @@ namespace FeatureDemo.CustomConsoles
         {
             if (keyboard.HasKeysPressed)
             {
-                if (keyboard.IsKeyPressed(Keys.Right)) return NextAnimation();
-                else if (keyboard.IsKeyPressed(Keys.Left)) return PrevAnimation();
+                if (keyboard.IsKeyPressed(Keys.Right))
+                    return NextAnimation();
+                else if (keyboard.IsKeyPressed(Keys.Left))
+                    return PrevAnimation();
             }
             return false;
         }
@@ -71,7 +73,7 @@ namespace FeatureDemo.CustomConsoles
         string[] _info = {"Name", "Font", "Size", "Frames"};
         ColoredGlyph _appearance = new(Color.Red, Color.Transparent, 0, Mirror.None, true, new[]{new CellDecorator(Color.Green, 95, Mirror.None)});
 
-        public AnimationDemo() : base(Animations.W, Animations.H)
+        public AnimationDemo() : base(Program.MainWidth, Program.MainHeight)
         {
             Surface.DefaultBackground = Color.White;
             Surface.Clear();
@@ -170,7 +172,7 @@ namespace FeatureDemo.CustomConsoles
             _animationScreen = new();
 
             // random noise simulating stars
-            var staticNoise = AnimatedScreenSurface.CreateStatic(Animations.W, Animations.H, 48, 0.9d);
+            var staticNoise = AnimatedScreenSurface.CreateStatic(Program.MainWidth, Program.MainHeight, 48, 0.9d);
             staticNoise.AnimationDuration = 48 * 0.1f;
             _animationScreen.Children.Add(staticNoise);
 
@@ -180,7 +182,7 @@ namespace FeatureDemo.CustomConsoles
             _animationScreen.Add(_clip);
 
             // title screen
-            _titleScreen = new ScreenSurface(Animations.W, Animations.H);
+            _titleScreen = new ScreenSurface(Program.MainWidth, Program.MainHeight);
             _titleScreen.Surface.DefaultBackground = Color.Black;
         }
 
@@ -229,17 +231,4 @@ namespace FeatureDemo.CustomConsoles
             SadComponents.Add(animationInstructions);
         }
     }
-
-    //class ParalaxBackground : ScreenSurface
-    //{
-    //    public ParalaxBackground() : base(Animations.W, Animations.H)
-    //    {
-    //        for (var i = 5; i >= 1; i--)
-    //        {
-    //            using ITexture image = GameHost.Instance.GetTexture($"Res/Images/Animations/layer{i}.png");
-    //            var cellSurface = image.ToSurface(TextureConvertMode.Foreground, image.Width, image.Height / 2);
-    //            Children.Add(new ScreenSurface(cellSurface));
-    //        }
-    //    }
-    //}
 }

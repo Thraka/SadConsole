@@ -90,33 +90,6 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
-            var sc = Game.Instance.StartingConsole;
-            IFont font = Game.Instance.LoadFont("Res/Fonts/c64_petscii.font");
-            var p = Playscii.ToSurface("Res/Images/Playscii/new.psci", font);
-            sc.Children.Add(p.Item1.Children[0]);
-
-            int rowsNeeded = sc.Width / p.Item2.Length + 2;
-            var palette = new ScreenSurface(sc.Width, rowsNeeded) { Parent = sc, Position = (0, sc.Height - rowsNeeded) };
-            int index = 0;
-
-            for (int y = 0; y < palette.Surface.Height; y++)
-                for (int x = 0; x < palette.Surface.Width; x++)
-                {
-                    var i = index++;
-                    if (i < p.Item2.Length)
-                    {
-                        palette.Surface.SetBackground(x, y, p.Item2[i]);
-                        palette.Surface.Print(x, y + 1, (i % 10).ToString());
-                    }
-                    else break;
-                }
-
-            // this shows the background properly, but the playscii output on the same cell coordinate has black background
-            var appearance = (sc.Children[0] as ScreenSurface).Surface.GetCellAppearance(14, 4);
-            palette.Surface.SetCellAppearance(25, 0, appearance);
-            return;
-
-
             //if (Settings.UnlimitedFPS)
             //SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
 
