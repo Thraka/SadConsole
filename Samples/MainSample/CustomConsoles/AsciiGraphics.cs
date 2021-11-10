@@ -61,7 +61,7 @@ namespace FeatureDemo.CustomConsoles
             return false;
         }
 
-        bool NextAsciiArt() => ChangeAsciiArt(_asciiArtPages.Length - 1, 1, _asciiArtPages[1]);
+        bool NextAsciiArt() => ChangeAsciiArt(_asciiArtPages.Length - 1, 1, _asciiArtPages[0]);
 
         bool PrevAsciiArt() => ChangeAsciiArt(0, -1, _asciiArtPages.Last());
 
@@ -74,10 +74,9 @@ namespace FeatureDemo.CustomConsoles
             int currentPageIndex = Array.IndexOf(_asciiArtPages, Children[0]);
             Children.Clear();
 
-            // pull the next page from array and display it (omit the title page)
+            // pull the next page from array and display it
             int nextIndex = currentPageIndex + step;
-            var newPage = currentPageIndex == testIndex ? overlappingPage :
-                nextIndex == 0 ? _asciiArtPages[_asciiArtPages.Length - 1] : _asciiArtPages[nextIndex];
+            var newPage = currentPageIndex == testIndex ? overlappingPage : _asciiArtPages[nextIndex];
             if (newPage is AnsiArt a)
                 a.ResetView();
             Children.Add(newPage);
@@ -109,20 +108,9 @@ namespace FeatureDemo.CustomConsoles
     {
         public TitlePage() : base()
         {
-            string line = string.Empty;
-            int index = 0;
-
-            using (FileStream stream = File.Open("Res/Ascii/ascii_graphics_title.txt", FileMode.Open))
-            using (StreamReader sr = new(stream))
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (index == 1)
-                        Surface.Print(0, 0 + index++, line, mirror: Mirror.Vertical);
-                    else
-                        Surface.Print(0, 0 + index++, line);
-                }
-            }
+            string[] lines = File.ReadAllLines("Res/Ascii/ascii_graphics_title.txt");
+            for (int i = 0; i < lines.Length; i++)
+                Surface.Print(0, i, lines[i], mirror: i == 1 ? Mirror.Vertical : Mirror.None);
         }
     }
 
