@@ -25,8 +25,6 @@ namespace FeatureDemo
             selectedConsoleContainer.Position = (0, headerConsole.AbsoluteArea.MaxExtentY + 1);
 
             consoles = new CustomConsole[] {
-                new CustomConsole(new CustomConsoles.AsciiGraphics(headerConsole), "Ascii Graphics", "Read ANSI, REXPaint and (partially supported) Playscii files."),
-                
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
                 new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
                 new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
