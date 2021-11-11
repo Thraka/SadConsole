@@ -25,7 +25,7 @@ namespace FeatureDemo.CustomConsoles
 
             _asciiArtPages = new AsciiArt[]
             {
-                new TitlePage(),
+                new AsciiGraphicsTitlePage(),
                 new AnsiArt("TES-JC.ANS"),
                 new AnsiArt("QS-SIERR.ANS"),
                 new AnsiArt("ROY-BTC1.ANS"),
@@ -104,9 +104,12 @@ namespace FeatureDemo.CustomConsoles
         public AsciiArt() : base(Program.MainWidth, Program.MainHeight) { }
     }
 
-    class TitlePage : AsciiArt
+    class AsciiGraphicsTitlePage : AsciiArt
     {
-        public TitlePage() : base()
+        public static new string Title => "Ascii Graphics";
+        public static new string Summary => "Read ANSI, REXPaint and (partially supported) Playscii files.";
+
+        public AsciiGraphicsTitlePage() : base(new Description(Title, Summary))
         {
             string[] lines = File.ReadAllLines("Res/Ascii/ascii_graphics_title.txt");
             for (int i = 0; i < lines.Length; i++)
