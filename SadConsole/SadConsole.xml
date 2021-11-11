@@ -7016,14 +7016,14 @@
             <param name="fileName">Name and path of the palette file.</param>
             <returns><see cref="T:SadRogue.Primitives.Palette"/> of <see cref="T:SadConsole.Readers.Playscii"/> colors.</returns>
         </member>
-        <member name="M:SadConsole.Readers.Playscii.GetPlayscii(System.String)">
+        <member name="M:SadConsole.Readers.Playscii.GetPlayscii(System.String,System.String)">
             <summary>
             Reads the <see cref="T:SadConsole.Readers.Playscii"/> Json file.
             </summary>
-            <param name="fileName"></param>
+            <param name="playsciiFileName"></param>
             <returns>Deserialised object containing <see cref="T:SadConsole.Readers.Playscii"/> save file data.</returns>
         </member>
-        <member name="M:SadConsole.Readers.Playscii.ToScreenSurface(System.String,SadConsole.IFont)">
+        <member name="M:SadConsole.Readers.Playscii.ToScreenSurface(System.String,SadConsole.IFont,System.String,System.String)">
             <summary>
             Converts a <see cref="T:SadConsole.Readers.Playscii"/> file to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
             </summary>
@@ -7031,7 +7031,7 @@
             <param name="font"><see cref="T:SadConsole.IFont"/> to be used when converting the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
             
             <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
-            Use only tile flip (mirror in SadConsole), but not the rotation. Set Z-Depth to 0 on all Playscii layers.<br></br>
+            Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
             Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyph"/> background like it does in Playscii.</remarks>
             
             <returns><see cref="T:SadConsole.ScreenSurface"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>

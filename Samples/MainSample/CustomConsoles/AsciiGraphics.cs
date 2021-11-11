@@ -183,7 +183,7 @@ namespace FeatureDemo.CustomConsoles
             IFont font = GetFont(Descriptions[playsciiFileName].FontName);
 
             // convert the playscii file
-            ScreenSurface image = Playscii.ToScreenSurface($"Res/Playscii/{playsciiFileName}", font);
+            ScreenSurface image = Playscii.ToScreenSurface($"{playsciiFileName}", font, zipArchiveName: "Res/Playscii/playscii.zip");
 
             // change the frame background to cover the transparent tiles
             image.Surface.DefaultBackground = Color.DarkGray.GetDarkest();

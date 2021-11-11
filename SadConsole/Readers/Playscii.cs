@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,6 +16,8 @@ namespace SadConsole.Readers
     /// </summary>
     public class Playscii
     {
+        static Dictionary<string, Palette> s_palettes = new Dictionary<string, Palette>();
+
         /// <summary>
         /// Palette file extensions supported by the Playscii format.
         /// </summary>
@@ -196,6 +200,13 @@ namespace SadConsole.Readers
         /// <returns><see cref="Palette"/> of <see cref="Playscii"/> colors.</returns>
         static Palette GetPalette(string fileName)
         {
+            if (!File.Exists(fileName)) throw new FileNotFoundException("Palette file doesn't exist.");
+
+            // check if this palette has already been created previously
+            string paletteName = Path.GetFileName(fileName);
+            if (s_palettes.ContainsKey(paletteName))
+                return s_palettes[paletteName];
+
             var colors = new List<Color>() { new Color(0, 0, 0, 0) };
             using (ITexture image = GameHost.Instance.GetTexture(fileName))
             {
@@ -214,18 +225,52 @@ namespace SadConsole.Readers
                     }
                 }
             }
-            return new Palette(colors);
+
+            Palette palette = new Palette(colors);
+            s_palettes[paletteName] = palette;
+            return palette;
         }
 
         /// <summary>
         /// Reads the <see cref="Playscii"/> Json file.
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="playsciiFileName">Playscii file.</param>
+        /// <param name="zipArchiveName">Zip archive containing playscii file.</param>
         /// <returns>Deserialised object containing <see cref="Playscii"/> save file data.</returns>
-        static Playscii GetPlayscii(string fileName)
+        static Playscii GetPlayscii(string playsciiFileName, string zipArchiveName = "")
         {
-            using (StreamReader file = File.OpenText(fileName))
-            using (JsonTextReader reader = new JsonTextReader(file))
+            if (zipArchiveName != string.Empty)
+            {
+                if (!File.Exists(zipArchiveName)) throw new FileNotFoundException("Zip archive with given name doesn't exist.");
+
+                // open zip file stream for reading
+                using (var zipStream = new FileStream(zipArchiveName, FileMode.Open))
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+                {
+                    if (archive.Entries.Count == 0) throw new FileNotFoundException("Zip file does not contain any files.");
+
+                    // get reference for the playscii file from the archive
+                    var playsciiZipEntry = archive.GetEntry(playsciiFileName);
+                    if (playsciiZipEntry is null) throw new FileNotFoundException("Specified playscii file doesn't exist in the zip archive.");
+
+                    // create stream, read contents and return playscii instance
+                    using (var stream = playsciiZipEntry.Open())
+                    using (var reader = new StreamReader(stream))
+                        return ReadFromStream(reader);
+                }
+            }
+            else
+            {
+                if (!File.Exists(playsciiFileName)) throw new FileNotFoundException("Playscii file doesn't exist.");
+
+                using (StreamReader streamReader = File.OpenText(playsciiFileName))
+                    return ReadFromStream(streamReader);
+            }
+        }
+
+        static Playscii ReadFromStream(StreamReader streamReader)
+        {
+            using (JsonTextReader reader = new JsonTextReader(streamReader))
             {
                 JObject o2 = (JObject)JToken.ReadFrom(reader);
                 return (Playscii)o2.ToObject(typeof(Playscii));
@@ -235,26 +280,28 @@ namespace SadConsole.Readers
         /// <summary>
         /// Converts a <see cref="Playscii"/> file to a SadConsole <see cref="ScreenSurface"/>.
         /// </summary>
-        /// <param name="fileName">Name and path of the <see cref="Playscii"/> file.</param>
+        /// <param name="fileName">Name and path of the <see cref="Playscii"/> file (give only file name if <paramref name="zipArchiveName"/> is used).</param>
         /// <param name="font"><see cref="IFont"/> to be used when converting the <see cref="Playscii"/> file.</param>
+        /// <param name="paletteFileName">Path to an alternative palette file rather than the one specified in the playscii records.</param>
+        /// <param name="zipArchiveName">If specified, the playscii file will be read from this zip archive.</param>
         /// 
         /// <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
-        /// Use only tile flip (mirror in SadConsole), but not the rotation. Set Z-Depth to 0 on all Playscii layers.<br></br>
+        /// Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
         /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyph"/> background like it does in Playscii.</remarks>
         /// 
         /// <returns><see cref="ScreenSurface"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
-        public static ScreenSurface ToScreenSurface(string fileName, IFont font)
+        public static ScreenSurface ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")
         {
             ScreenSurface output = null;
 
             // get the dir name from the file name
-            string dirName = Path.GetDirectoryName(fileName);
+            string dirName = Path.GetDirectoryName(zipArchiveName != string.Empty ? zipArchiveName : fileName);
 
             // read playscii json file
-            if (GetPlayscii(fileName) is Playscii p)
+            if (GetPlayscii(fileName, zipArchiveName) is Playscii p)
             {
                 // read pallete file and generate colors
-                Palette palette = GetPalette($"{dirName}/{p.palette}.png");
+                Palette palette = GetPalette(paletteFileName != string.Empty ? paletteFileName : $"{dirName}/{p.palette}.png");
 
                 // convert the first frame to a screen surface
                 if (p.frames.Length > 0)
