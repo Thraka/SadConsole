@@ -31,6 +31,7 @@ namespace FeatureDemo.CustomConsoles
                 new AnsiArt("ROY-BTC1.ANS"),
                 new AnsiArt("ROY-DGZN.ANS"),
                 new PlaysciiArt("playscii_welcome_art.psci"),
+                new PlaysciiArt("scene.psci"),
                 new PlaysciiArt("ink_splashes.psci")
             };
         }
@@ -167,6 +168,8 @@ namespace FeatureDemo.CustomConsoles
     {
         public static readonly Dictionary<string, Description> Descriptions = new()
         {
+            { "scene.psci", new Description("Playscii Art - RPG Scene",
+                "Sample scene made with an RPG Maker VX RTP Tileset.") { FontName = "RPG_Maker_VX_RTP_Tileset_Wide" } },
             { "playscii_welcome_art.psci", new Description("Playscii Art - Editor Welcome Screen",
                 "Image displayed in the Playscii editor window when the app starts.") { FontName = "c64_petscii" } },
             { "ink_splashes.psci", new Description("Playscii Art - Ink Splashes",

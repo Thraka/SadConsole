@@ -7020,15 +7020,18 @@
             <summary>
             Reads the <see cref="T:SadConsole.Readers.Playscii"/> Json file.
             </summary>
-            <param name="playsciiFileName"></param>
+            <param name="playsciiFileName">Playscii file.</param>
+            <param name="zipArchiveName">Zip archive containing playscii file.</param>
             <returns>Deserialised object containing <see cref="T:SadConsole.Readers.Playscii"/> save file data.</returns>
         </member>
         <member name="M:SadConsole.Readers.Playscii.ToScreenSurface(System.String,SadConsole.IFont,System.String,System.String)">
             <summary>
             Converts a <see cref="T:SadConsole.Readers.Playscii"/> file to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
             </summary>
-            <param name="fileName">Name and path of the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
+            <param name="fileName">Name and path of the <see cref="T:SadConsole.Readers.Playscii"/> file (give only file name if <paramref name="zipArchiveName"/> is used).</param>
             <param name="font"><see cref="T:SadConsole.IFont"/> to be used when converting the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
+            <param name="paletteFileName">Path to an alternative palette file rather than the one specified in the playscii records.</param>
+            <param name="zipArchiveName">If specified, the playscii file will be read from this zip archive.</param>
             
             <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
             Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
