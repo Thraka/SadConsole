@@ -32,7 +32,7 @@ namespace FeatureDemo.CustomConsoles
                 new AnsiArt("ROY-DGZN.ANS"),
                 new PlaysciiArt("playscii_welcome_art.psci"),
                 new PlaysciiArt("scene.psci"),
-                new PlaysciiArt("ink_splashes.psci")
+                new PlaysciiArt("pseudo_picasso.psci")
             };
         }
 
@@ -172,8 +172,8 @@ namespace FeatureDemo.CustomConsoles
                 "Sample scene made with an RPG Maker VX RTP Tileset.") { FontName = "RPG_Maker_VX_RTP_Tileset_Wide" } },
             { "playscii_welcome_art.psci", new Description("Playscii Art - Editor Welcome Screen",
                 "Image displayed in the Playscii editor window when the app starts.") { FontName = "c64_petscii" } },
-            { "ink_splashes.psci", new Description("Playscii Art - Ink Splashes",
-                "Sample image covering the full width and height of the surface.") { FontName = "c64_petscii" } }
+            { "pseudo_picasso.psci", new Description("Playscii Art - Pseudo Picasso",
+                "Image inspired by works of a certain famous artist ;)") { FontName = "jpetscii" } }
         };
 
         public PlaysciiArt(string playsciiFileName) : base(Descriptions[playsciiFileName])
@@ -191,6 +191,14 @@ namespace FeatureDemo.CustomConsoles
             // change the frame background to cover the transparent tiles
             image.Surface.DefaultBackground = Color.DarkGray.GetDarkest();
             image.Surface.Clear();
+
+            float modifier = 2;
+            if (playsciiFileName == "pseudo_picasso.psci")
+            {
+                image.FontSize *= modifier;
+                foreach (var child in image.Children)
+                    (child as ScreenSurface).FontSize *= modifier;
+            }
 
             // add image to this surface
             AddCentered(image);
