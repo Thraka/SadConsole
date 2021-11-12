@@ -203,7 +203,7 @@ namespace FeatureDemo.CustomConsoles
         {
             Children.Add(s);
             s.UsePixelPositioning = true;
-            s.Position = (Settings.Rendering.RenderWidth / 2 - s.AbsoluteArea.Width / 2, Settings.Rendering.RenderHeight / 2 - s.AbsoluteArea.Height / 2);
+            s.Position = (Settings.Rendering.RenderWidth / 2 - s.AbsoluteArea.Width / 2, (Settings.Rendering.RenderHeight / 2 - s.AbsoluteArea.Height / 2) - 16);
         }
     }
 }
