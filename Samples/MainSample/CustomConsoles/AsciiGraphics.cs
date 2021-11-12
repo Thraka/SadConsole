@@ -201,12 +201,9 @@ namespace FeatureDemo.CustomConsoles
 
         void AddCentered(ScreenSurface s)
         {
-            float fontSizeRatioX = (float)Font.GetFontSize(IFont.Sizes.One).X / s.Font.GetFontSize(IFont.Sizes.One).X,
-                fontSizeRatioY = (float)Font.GetFontSize(IFont.Sizes.One).Y / s.Font.GetFontSize(IFont.Sizes.One).Y;
-            int x = Convert.ToInt32((Surface.Width * (1 / fontSizeRatioX) - s.Surface.Width) / 2),
-                y = Convert.ToInt32((Surface.Height * fontSizeRatioY - s.Surface.Height) / 2);
-            s.Position = (x, y);
             Children.Add(s);
+            s.UsePixelPositioning = true;
+            s.Position = (Settings.Rendering.RenderWidth / 2 - s.AbsoluteArea.Width / 2, Settings.Rendering.RenderHeight / 2 - s.AbsoluteArea.Height / 2);
         }
     }
 }
