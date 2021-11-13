@@ -1,0 +1,9 @@
+{
+  "$type": "SadConsole.SadFont, SadConsole",
+  "FilePath": "c64_petscii.png",
+  "GlyphHeight": 8,
+  "GlyphPadding": 0,
+  "GlyphWidth": 8,
+  "Name": "c64_petscii",
+  "SolidGlyphIndex": 94
+}
