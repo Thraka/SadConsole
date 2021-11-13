@@ -16,8 +16,8 @@ namespace FeatureDemo.CustomConsoles
 {
     internal class AsciiGraphics : SadConsole.Console, IRestartable
     {
-        readonly HeaderConsole _header;
-        readonly AsciiArt[] _asciiArtPages;
+        private readonly HeaderConsole _header;
+        private readonly AsciiArt[] _asciiArtPages;
 
         public AsciiGraphics(HeaderConsole header) : base(Program.MainWidth, Program.MainHeight)
         {
@@ -62,11 +62,13 @@ namespace FeatureDemo.CustomConsoles
             return false;
         }
 
-        bool NextAsciiArt() => ChangeAsciiArt(_asciiArtPages.Length - 1, 1, _asciiArtPages[0]);
+        private bool NextAsciiArt() =>
+            ChangeAsciiArt(_asciiArtPages.Length - 1, 1, _asciiArtPages[0]);
 
-        bool PrevAsciiArt() => ChangeAsciiArt(0, -1, _asciiArtPages.Last());
+        private bool PrevAsciiArt() =>
+            ChangeAsciiArt(0, -1, _asciiArtPages.Last());
 
-        bool ChangeAsciiArt(int testIndex, int step, AsciiArt overlappingPage)
+        private bool ChangeAsciiArt(int testIndex, int step, AsciiArt overlappingPage)
         {
             // check if there are more pages than 1
             if (_asciiArtPages.Length <= 1) return true;
@@ -158,10 +160,8 @@ namespace FeatureDemo.CustomConsoles
             return true;
         }
 
-        public void ResetView()
-        {
+        public void ResetView() =>
             Surface.View = Surface.View.WithY(0);
-        }
     }
 
     class PlaysciiArt : AsciiArt
@@ -204,10 +204,10 @@ namespace FeatureDemo.CustomConsoles
             AddCentered(image);
         }
 
-        static IFont GetFont(string fontName) => !Game.Instance.Fonts.ContainsKey(fontName) ?
+        private static IFont GetFont(string fontName) => !Game.Instance.Fonts.ContainsKey(fontName) ?
             Game.Instance.LoadFont($"Res/Fonts/{fontName}.font") : Game.Instance.Fonts[fontName];
 
-        void AddCentered(ScreenSurface s)
+        private void AddCentered(ScreenSurface s)
         {
             Children.Add(s);
             s.UsePixelPositioning = true;
