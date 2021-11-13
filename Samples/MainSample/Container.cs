@@ -33,7 +33,7 @@ namespace FeatureDemo
                 new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
                 new CustomConsole(new CustomConsoles.TheDrawConsole(), "TheDraw Font", "Example of how to load and print TheDraw fonts"),
-                new CustomConsole(new CustomConsoles.AnsiConsole(), "Ansi parsing", "Read in old DOS ANSI files."),
+                new CustomConsole(new CustomConsoles.AsciiGraphics(headerConsole), AsciiGraphicsTitlePage.Title, AsciiGraphicsTitlePage.Summary),
                 new CustomConsole(new CustomConsoles.ShapesConsole(), "Shape Drawing & Text Mouse Cursor", "Examples of drawing shapes and displaying a mouse cursor"),
                 new CustomConsole(new CustomConsoles.EntityLiteConsole(), "Entity lite demonstration", "Demonstrate using multiple visible entities. Press Q to move them"),
                 new CustomConsole(new CustomConsoles.ScrollableView(), "Surface view control", "The Surface View control can peek into surfaces and scroll. Click on one"),
@@ -77,9 +77,10 @@ namespace FeatureDemo
             //selectedConsole.Position = new Point(0, 2);
 
             GameHost.Instance.FocusedScreenObjects.Set(selectedConsole);
-            headerConsole.SetConsole(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
+            headerConsole.SetHeader(consoles[currentConsoleIndex].Title, consoles[currentConsoleIndex].Summary);
 
-            if (selectedConsole is Animations a) a.Restart();
+            if (selectedConsole is IRestartable a)
+                a.Restart();
         }
 
         //public override bool ProcessKeyboard(Keyboard state)

@@ -7,22 +7,22 @@ namespace FeatureDemo
     {
         public HeaderConsole() : base(80, 2)
         {
-            Surface.DefaultBackground = Color.Transparent;
+            Surface.DefaultBackground = SadConsole.UI.Themes.Library.Default.Colors.GrayDark;
             Surface.DefaultForeground = SadConsole.UI.Themes.Library.Default.Colors.Yellow;
         }
 
-        public void SetConsole(string title, string summary)
+        public void SetHeader(string title, string summary)
         {
-            Surface.Fill(SadConsole.UI.Themes.Library.Default.Colors.Yellow, SadConsole.UI.Themes.Library.Default.Colors.GrayDark, 0);
-            Surface.Print(1, 0, title.ToUpper(), SadConsole.UI.Themes.Library.Default.Colors.Yellow);
+            Surface.Clear();
+            Surface.Print(1, 0, title.ToUpper());
             Surface.Print(1, 1, summary, SadConsole.UI.Themes.Library.Default.Colors.Gray);
             //this.Print(0, 2, new string((char)223, 80), Theme.GrayDark, Color.Transparent);
         }
 
         /// <summary>
-        /// Returns the value "Window".
+        /// Returns the value "Header Surface".
         /// </summary>
-        /// <returns>The string "Window".</returns>
+        /// <returns>The string "Header Surface".</returns>
         public override string ToString() =>
             "Header Surface";
     }

@@ -842,7 +842,7 @@
         </member>
         <member name="P:SadConsole.ColoredGlyph.Decorators">
             <summary>
-            Modifies the look of a cell with additional character. 
+            Modifies the look of a cell with additional character.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyph.Foreground">
@@ -936,17 +936,25 @@
             <param name="isVisible">The visiblity of the glyph.</param>
             <param name="decorators">Decorators for the cell.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
             <param name="cell">The target cell to copy to.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
             <param name="cell">The target cell to copy from.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clear">
             <summary>
@@ -2055,6 +2063,23 @@
             <param name="width">The viewable width of the surface.</param>
             <param name="height">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -3852,6 +3877,16 @@
             Array index enum for line glyphs.
             </summary>
         </member>
+        <member name="M:SadConsole.ColoredGlyphAppearance.ShallowCopyTo(SadConsole.ColoredGlyph)">
+            <summary>
+            Copies the ColoredGlyphAppearance to the appearance fields of the given ColoredGlyphs.
+            The Decorators array is copied using a shallow-copy.
+            </summary>
+            <remarks>
+            This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+            </remarks>
+            <param name="cell">Cell to copy to.</param>
+        </member>
         <member name="T:SadConsole.CellSurfaceEditor">
             <summary>
             Methods to interact with a <see cref="T:SadConsole.ICellSurface"/>.
@@ -4196,7 +4231,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror)">
             <summary>
-            Draws the string on the console at the specified location with the specified settings. 
+            Draws the string on the console at the specified location with the specified settings.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">X location of the text.</param>
@@ -4208,7 +4243,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Mirror)">
             <summary>
-            Draws the string on the console at the specified location with the specified settings. 
+            Draws the string on the console at the specified location with the specified settings.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">X location of the text.</param>
@@ -4227,7 +4262,7 @@
             <param name="appearance">The appearance of the cell</param>
             <param name="effect">An optional effect to apply to the printed surface.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
             <summary>
             Draws a single glyph on the console at the specified location.
             </summary>
@@ -4600,8 +4635,8 @@
             <summary>
             Resizes the surface to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
             <param name="bufferWidth">The maximum width of the surface.</param>
             <param name="bufferHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
@@ -4610,8 +4645,8 @@
             <summary>
             Resizes the surface and view to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         </member>
         <member name="T:SadConsole.ICellSurfaceSettable">
@@ -6842,6 +6877,167 @@
             </summary>
             <param name="screenObject">The object to use.</param>
             <param name="handler">The handler callback.</param>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii">
+            <summary>
+            Playscii converter. Check this excellent ascii editor out at http://vectorpoem.com/playscii/
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.PALETTE_EXTENSIONS">
+            <summary>
+            Palette file extensions supported by the Playscii format.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.MAX_COLORS">
+            <summary>
+            Maximum amount of colors supported by the Playscii format.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.charset">
+            <summary>
+            Name of the font file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.frames">
+            <summary>
+            Hold all the animation frames.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.height">
+            <summary>
+            Surface height.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.palette">
+            <summary>
+            Name of the palette file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.width">
+            <summary>
+            Surface width.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.#ctor">
+            <summary>
+            Basic class constructor.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Frame">
+            <summary>
+            Json frame object in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Frame.delay">
+            <summary>
+            Duration for this frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Frame.layers">
+            <summary>
+            <see cref="T:SadConsole.Readers.Playscii"/> frame layers that will be converted to <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Frame.ToScreenSurface(System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> frame to SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="width">Width of the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="height">Height of the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containing the image from the first animation frame.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Layer">
+            <summary>
+            Json layer in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.name">
+            <summary>
+            Layer name.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.tiles">
+            <summary>
+            <see cref="T:SadConsole.Readers.Playscii"/> tiles that will be converted to <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Layer.visible">
+            <summary>
+            Visibility of this layer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Layer.ToSurface(SadConsole.ScreenSurface,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> layer to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="parent"><see cref="T:SadConsole.ScreenSurface"/> that represents Playscii frame holding this layer.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containg the given <see cref="T:SadConsole.Readers.Playscii"/> layer.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.Playscii.Tile">
+            <summary>
+            Json tile in the <see cref="T:SadConsole.Readers.Playscii"/> file.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.bg">
+            <summary>
+            Tile background color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.glyph">
+            <summary>
+            Tile character index.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.fg">
+            <summary>
+            Tile foreground color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.Tile.xform">
+            <summary>
+            Tile rotation and mirror.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.Tile.ToColoredGlyph(SadConsole.IFont,SadRogue.Primitives.Palette)">
+            <summary>
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> tile to a SadConsole <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.ScreenSurface"/>.</param>
+            <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
+            <returns><see cref="T:SadConsole.ColoredGlyph"/> equivalent of the <see cref="T:SadConsole.Readers.Playscii"/> tile.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.GetPalette(System.String)">
+            <summary>
+            Converts <see cref="T:SadConsole.Readers.Playscii"/> palette file to a SadConsole <see cref="T:SadRogue.Primitives.Palette"/>.
+            </summary>
+            <param name="fileName">Name and path of the palette file.</param>
+            <returns><see cref="T:SadRogue.Primitives.Palette"/> of <see cref="T:SadConsole.Readers.Playscii"/> colors.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.GetPlayscii(System.String,System.String)">
+            <summary>
+            Reads the <see cref="T:SadConsole.Readers.Playscii"/> Json file.
+            </summary>
+            <param name="playsciiFileName">Playscii file.</param>
+            <param name="zipArchiveName">Zip archive containing playscii file.</param>
+            <returns>Deserialised object containing <see cref="T:SadConsole.Readers.Playscii"/> save file data.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.Playscii.ToScreenSurface(System.String,SadConsole.IFont,System.String,System.String)">
+            <summary>
+            Converts a <see cref="T:SadConsole.Readers.Playscii"/> file to a SadConsole <see cref="T:SadConsole.ScreenSurface"/>.
+            </summary>
+            <param name="fileName">Name and path of the <see cref="T:SadConsole.Readers.Playscii"/> file (give only file name if <paramref name="zipArchiveName"/> is used).</param>
+            <param name="font"><see cref="T:SadConsole.IFont"/> to be used when converting the <see cref="T:SadConsole.Readers.Playscii"/> file.</param>
+            <param name="paletteFileName">Path to an alternative palette file rather than the one specified in the playscii records.</param>
+            <param name="zipArchiveName">If specified, the playscii file will be read from this zip archive.</param>
+            
+            <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
+            Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
+            Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyph"/> background like it does in Playscii.</remarks>
+            
+            <returns><see cref="T:SadConsole.ScreenSurface"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>
         </member>
         <member name="T:SadConsole.Readers.REXPaintImage">
             <summary>
