@@ -29,7 +29,7 @@ namespace FeatureDemo
 
         private static void Main(string[] args)
         {
-            //SadConsole.Settings.UnlimitedFPS = true;
+            SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
 
@@ -88,8 +88,8 @@ namespace FeatureDemo
         private static void Init()
         {
             //if (Settings.UnlimitedFPS)
-                //SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
-
+            SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
+            
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
 
@@ -154,6 +154,90 @@ namespace FeatureDemo
         }
         */
 
+    }
+
+
+    class CellSurface<TGlyph> : ICellSurface
+        where TGlyph : ColoredGlyph
+    {
+        private TGlyph[] _cells;
+
+        public ColoredGlyph this[Point pos] => throw new NotImplementedException();
+
+        public ColoredGlyph this[int index1D] => throw new NotImplementedException();
+
+        public ColoredGlyph this[int x, int y] => throw new NotImplementedException();
+
+        public int TimesShiftedDown { get; set; }
+        public int TimesShiftedRight { get; set; }
+        public int TimesShiftedLeft { get; set; }
+        public int TimesShiftedUp { get; set; }
+        public bool UsePrintProcessor { get; set; }
+
+        public EffectsManager Effects { get; }
+
+        public Rectangle Area => throw new NotImplementedException();
+
+        public Color DefaultBackground { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color DefaultForeground { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int DefaultGlyph { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsDirty { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public bool IsScrollable => throw new NotImplementedException();
+
+        public Rectangle View { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int ViewHeight { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Point ViewPosition { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int ViewWidth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public int Height => throw new NotImplementedException();
+
+        public int Width => throw new NotImplementedException();
+
+        public int Count => throw new NotImplementedException();
+
+        public event EventHandler IsDirtyChanged;
+
+        public IEnumerator<ColoredGlyph> GetEnumerator() => throw new NotImplementedException();
+        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+    }
+
+
+    class FunGlyph : ColoredGlyph
+    {
+        public FunGlyph()
+        {
+        }
+
+        public FunGlyph(Color foreground) : base(foreground)
+        {
+        }
+
+        public FunGlyph(Color foreground, Color background) : base(foreground, background)
+        {
+        }
+
+        public FunGlyph(Color foreground, Color background, int glyph) : base(foreground, background, glyph)
+        {
+        }
+
+        public FunGlyph(Color foreground, Color background, int glyph, Mirror mirror) : base(foreground, background, glyph, mirror)
+        {
+        }
+
+        public FunGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible) : base(foreground, background, glyph, mirror, isVisible)
+        {
+        }
+
+        public FunGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible, CellDecorator[] decorators) : base(foreground, background, glyph, mirror, isVisible, decorators)
+        {
+        }
+
+        public void Randomize()
+        {
+            Foreground = Foreground.GetRandomColor(SadConsole.Game.Instance.Random);
+            Background = Foreground.GetRandomColor(SadConsole.Game.Instance.Random);
+        }
     }
 
 }
