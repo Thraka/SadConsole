@@ -127,7 +127,7 @@ namespace FeatureDemo.CustomConsoles
             };
             floor.Surface.DefaultBackground = new Color(235, 235, 235);
             floor.Surface.Clear();
-            Add(AnimatedScreenSurface.ConvertImageFile("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), 0.1f,
+            Add(AnimatedScreenSurface.FromImage("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), 0.1f,
                 pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"]));
             PrintInfo("Square 8 x 8", Children[1]);
         }
@@ -137,7 +137,7 @@ namespace FeatureDemo.CustomConsoles
     {
         public AnimatedSanta() : base()
         {
-            Add(AnimatedScreenSurface.ConvertImageFile("Running Santa", "Res/Images/Animations/santa_anim.jpg", (6, 2), 0.2f,
+            Add(AnimatedScreenSurface.FromImage("Running Santa", "Res/Images/Animations/santa_anim.jpg", (6, 2), 0.2f,
                 pixelPadding: (3, 5), action: (c) => { c.Background = c.Background.FillAlpha(); }));
             PrintInfo("IBM 8 x 16", Children[0]);
         }
@@ -147,7 +147,7 @@ namespace FeatureDemo.CustomConsoles
     {
         public AnimatedSkater() : base()
         {
-            Add(AnimatedScreenSurface.ConvertImageFile("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), 0.15f,
+            Add(AnimatedScreenSurface.FromImage("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), 0.15f,
                 pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"]));
             PrintInfo("Square 8 x 8", Children[0]);
         }
@@ -177,7 +177,7 @@ namespace FeatureDemo.CustomConsoles
             _animationScreen.Children.Add(staticNoise);
 
             // globe animation
-            _clip = AnimatedScreenSurface.ConvertImageFile("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), 0.17f,
+            _clip = AnimatedScreenSurface.FromImage("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), 0.17f,
                 action: (c) => { if (c.Foreground.GetBrightness() < 1) c.Background = c.Background.FillAlpha(); });
             _animationScreen.Add(_clip);
 

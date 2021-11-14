@@ -423,7 +423,7 @@ namespace SadConsole
         /// 
         /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
         /// </remarks>
-        public static AnimatedScreenSurface ConvertImageFile(string name, string filePath, Point frameLayout, float frameDuration,
+        public static AnimatedScreenSurface FromImage(string name, string filePath, Point frameLayout, float frameDuration,
             Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null,
             TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
             TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
