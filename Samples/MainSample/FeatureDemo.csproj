@@ -41,10 +41,11 @@
 
   <ItemGroup>
     <Folder Condition=" '$(GameHost)' == 'sfml' " Include="HostSpecific\SFML\" />
+    <Folder Include="Res\REXPaint\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
+    <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
     <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
     <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
   </ItemGroup>

@@ -14,6 +14,9 @@ using SadRogue.Primitives.GridViews;
 using SadConsole.Effects;
 using System.Collections;
 using SadConsole.Quick;
+using SadConsole.Readers;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace FeatureDemo
 {
@@ -87,8 +90,8 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
-            //if (Settings.UnlimitedFPS)
-            SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
+            if (Settings.UnlimitedFPS)
+              SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
             
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();

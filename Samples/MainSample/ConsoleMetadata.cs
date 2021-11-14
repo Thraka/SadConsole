@@ -20,4 +20,9 @@ namespace FeatureDemo
             Summary = summary;
         }
     }
+
+    public interface IRestartable
+    {
+        void Restart();
+    }
 }
