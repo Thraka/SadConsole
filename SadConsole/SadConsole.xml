@@ -323,31 +323,29 @@
             <returns>An animation.</returns>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.ConvertImageFile(System.String,System.String,SadRogue.Primitives.Point,System.Single,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
-             <summary>
-             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
-             </summary>
+            <summary>
+            Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
+            </summary>
+            <param name="name">Name for the animation.</param>
+            <param name="filePath">File path to the image file.</param>
+            <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
+            <param name="frameDuration">Duration for a frame in the animation.</param>
+            <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
+            <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
+            <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
+            <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
+            <param name="convertMode">The mode used when converting the texture to a surface.</param>
+            <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
+            <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
             
-             required:
-             <param name="name">Name for the animation.</param>
-             <param name="filePath">File path to the image file.</param>
-             <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
-             <param name="frameDuration">Duration for a frame in the animation.</param>
+            <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
             
-             optional:
-             <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
-             <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
-             <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
-             <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
-             <param name="convertMode">The mode used when converting the texture to a surface.</param>
-             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
-             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
-             
-             <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
-             
-             <remarks>Remarks:<br></br>
-             This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
-             Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.<br></br>
-             Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.<br></br></remarks>
+            <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
+            
+            Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.
+            
+            Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
+            </remarks>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
             <summary>
@@ -2419,21 +2417,21 @@
             </summary>
             <param name="surface">Text surface to manage.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
             <summary>
-            Changes the effect of a specific cell.
+            Associates a cell effect with a cell.
             </summary>
-            <param name="cellIndex">Cell index to set the effect for.</param>
+            <param name="cell">Cell to set the effect for.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
             <summary>
-            Changes the effect of the <paramref name="cellIndicies"/> provided.
+            Changes the effect of the <paramref name="cells"/> provided.
             </summary>
-            <param name="cellIndicies">A list of cell indicies to change the effect on.</param>
+            <param name="cells">A list of cell indicies to change the effect on.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyph)">
             <summary>
             Gets the effect of the specified cell.
             </summary>
@@ -2464,11 +2462,11 @@
             <param name="effectData">The effect data ssociated with the effect.</param>
             <returns><see langword="true"/> when the effect exists; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(SadConsole.ColoredGlyph)">
             <summary>
             Clears the effect for the cell specified by index.
             </summary>
-            <param name="cellIndex">The cell index.</param>
+            <param name="cell">The cell index.</param>
         </member>
         <member name="M:SadConsole.Effects.EffectsManager.UpdateEffects(System.TimeSpan)">
             <summary>
@@ -2497,18 +2495,18 @@
             </summary>
             <param name="effect">The effect.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(System.Int32,System.Boolean)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Removes a cell by index from the effect data.
             </summary>
-            <param name="cellIndex">The cell index.</param>
+            <param name="cell">The cell.</param>
             <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(SadConsole.ColoredGlyph)">
             <summary>
             Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
             </summary>
-            <param name="cellIndex">The cell to check.</param>
+            <param name="cell">The cell to check.</param>
             <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphWithState">
@@ -2526,12 +2524,7 @@
             The original state of the cell.
             </summary>
         </member>
-        <member name="F:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.CellIndex">
-            <summary>
-            The cells index.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph,System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph)">
             <summary>
             Creates a new instance of this class with the specified cell and index.
             </summary>
@@ -6883,12 +6876,17 @@
             Playscii converter. Check this excellent ascii editor out at http://vectorpoem.com/playscii/
             </summary>
         </member>
-        <member name="F:SadConsole.Readers.Playscii.PALETTE_EXTENSIONS">
+        <member name="F:SadConsole.Readers.Playscii.s_palettes">
+            <summary>
+            Cashed palletes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.Playscii.s_paletteExtensions">
             <summary>
             Palette file extensions supported by the Playscii format.
             </summary>
         </member>
-        <member name="F:SadConsole.Readers.Playscii.MAX_COLORS">
+        <member name="F:SadConsole.Readers.Playscii.MaxColors">
             <summary>
             Maximum amount of colors supported by the Playscii format.
             </summary>
@@ -6916,11 +6914,6 @@
         <member name="F:SadConsole.Readers.Playscii.width">
             <summary>
             Surface width.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Readers.Playscii.#ctor">
-            <summary>
-            Basic class constructor.
             </summary>
         </member>
         <member name="T:SadConsole.Readers.Playscii.Frame">
@@ -7016,7 +7009,7 @@
             <param name="fileName">Name and path of the palette file.</param>
             <returns><see cref="T:SadRogue.Primitives.Palette"/> of <see cref="T:SadConsole.Readers.Playscii"/> colors.</returns>
         </member>
-        <member name="M:SadConsole.Readers.Playscii.GetPlayscii(System.String,System.String)">
+        <member name="M:SadConsole.Readers.Playscii.ReadFile(System.String,System.String)">
             <summary>
             Reads the <see cref="T:SadConsole.Readers.Playscii"/> Json file.
             </summary>

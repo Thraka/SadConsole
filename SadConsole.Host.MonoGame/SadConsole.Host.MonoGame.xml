@@ -116,12 +116,12 @@
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch">
             <summary>
-            Called 
+            Resumes rendering to <see cref="P:SadConsole.Host.Global.RenderOutput"/> with SadConsole's default settings.
             </summary>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
             <summary>
-            Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect. Render target remains <see cref="P:SadConsole.Host.Global.RenderOutput"/>.
+            Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
             </summary>
         </member>
         <member name="T:SadConsole.Host.GameTexture">

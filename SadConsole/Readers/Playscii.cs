@@ -16,17 +16,20 @@ namespace SadConsole.Readers
     /// </summary>
     public class Playscii
     {
-        static Dictionary<string, Palette> s_palettes = new Dictionary<string, Palette>();
+        /// <summary>
+        /// Cashed palletes.
+        /// </summary>
+        static readonly Dictionary<string, Palette> s_palettes = new Dictionary<string, Palette>();
 
         /// <summary>
         /// Palette file extensions supported by the Playscii format.
         /// </summary>
-        readonly string[] PALETTE_EXTENSIONS;
+        static readonly string[] s_paletteExtensions = new string[] { ".png", ".gif", ".bmp" };
 
         /// <summary>
         /// Maximum amount of colors supported by the Playscii format.
         /// </summary>
-        const int MAX_COLORS = 1024;
+        const int MaxColors = 1024;
 
         /// <summary>
         /// Name of the font file.
@@ -52,14 +55,6 @@ namespace SadConsole.Readers
         /// Surface width.
         /// </summary>
         public int width;
-
-        /// <summary>
-        /// Basic class constructor.
-        /// </summary>
-        public Playscii()
-        {
-            PALETTE_EXTENSIONS = new string[] { "png", "gif", "bmp" };
-        }
 
         /// <summary>
         /// Json frame object in the <see cref="Playscii"/> file.
@@ -181,7 +176,6 @@ namespace SadConsole.Readers
                 {
                     // 1 => Rotation.90
                     // 2 => Rotation.180
-                    2 => Mirror.Vertical,
                     // 3 => Rotation.270
                     4 => Mirror.Horizontal,
                     5 => Mirror.Vertical,
@@ -201,9 +195,12 @@ namespace SadConsole.Readers
         static Palette GetPalette(string fileName)
         {
             if (!File.Exists(fileName)) throw new FileNotFoundException("Palette file doesn't exist.");
+            string ext = Path.GetExtension(fileName).ToLower();
+            if (!s_paletteExtensions.Contains(ext))
+                throw new InvalidOperationException("Palette file extension not supported by the Playscii format.");
 
-            // check if this palette has already been created previously
-            string paletteName = Path.GetFileName(fileName);
+                // check if this palette has already been created previously
+                string paletteName = Path.GetFileName(fileName);
             if (s_palettes.ContainsKey(paletteName))
                 return s_palettes[paletteName];
 
@@ -212,11 +209,11 @@ namespace SadConsole.Readers
             {
                 Point imageSize = (image.Width, image.Height);
 
-                for (var y = 0; y < imageSize.Y; y++)
+                for (int y = 0; y < imageSize.Y; y++)
                 {
-                    for (var x = 0; x < imageSize.X; x++)
+                    for (int x = 0; x < imageSize.X; x++)
                     {
-                        if (colors.Count >= MAX_COLORS)
+                        if (colors.Count >= MaxColors)
                             throw new ArgumentException("Palette file contains more colors than the Playscii format allows.");
 
                         var color = image.GetPixel(new Point(x, y));
@@ -237,7 +234,7 @@ namespace SadConsole.Readers
         /// <param name="playsciiFileName">Playscii file.</param>
         /// <param name="zipArchiveName">Zip archive containing playscii file.</param>
         /// <returns>Deserialised object containing <see cref="Playscii"/> save file data.</returns>
-        static Playscii GetPlayscii(string playsciiFileName, string zipArchiveName = "")
+        static Playscii ReadFile(string playsciiFileName, string zipArchiveName = "")
         {
             if (zipArchiveName != string.Empty)
             {
@@ -298,7 +295,7 @@ namespace SadConsole.Readers
             string dirName = Path.GetDirectoryName(zipArchiveName != string.Empty ? zipArchiveName : fileName);
 
             // read playscii json file
-            if (GetPlayscii(fileName, zipArchiveName) is Playscii p)
+            if (ReadFile(fileName, zipArchiveName) is Playscii p)
             {
                 // read pallete file and generate colors
                 Palette palette = GetPalette(paletteFileName != string.Empty ? paletteFileName : $"{dirName}/{p.palette}.png");
