@@ -380,7 +380,6 @@ namespace SadConsole.Effects
             /// Creates a new instance of this class with the specified cell and index.
             /// </summary>
             /// <param name="cell">The cell to generate a state from.</param>
-            /// <param name="cellIndex">The index of the cell in the parent surface.</param>
             public ColoredGlyphWithState(ColoredGlyph cell) =>
                 (Cell, State) = (cell, new ColoredGlyphState(cell));
         }

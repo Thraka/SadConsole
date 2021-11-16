@@ -197,7 +197,7 @@ namespace SadConsole.Components
         public bool UseLinuxLineEndings { get; set; } = false;
 
         /// <summary>
-        /// Indicates this cursor should process te string through the <see cref="StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="ColoredString.Parser"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
+        /// Indicates this cursor should process te string through the <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
         /// </summary>
         [DataMember]
         public bool UseStringParser { get; set; } = false;

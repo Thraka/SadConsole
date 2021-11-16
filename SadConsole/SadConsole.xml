@@ -1083,7 +1083,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.String">
             <summary>
-            Gets or sets the characters representing this string. When set, first processes the string through <see cref="!:StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/>.
+            Gets or sets the characters representing this string. When set, first processes the string through <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredString.Length">
@@ -1386,7 +1386,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Indicates this cursor should process te string through the <see cref="!:StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
+            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -2456,7 +2456,7 @@
         </member>
         <member name="M:SadConsole.Effects.EffectsManager.GetKnownEffect(SadConsole.Effects.ICellEffect,SadConsole.Effects.EffectsManager.ColoredGlyphEffectData@)">
             <summary>
-            Gets effect data from the dicronary if it exists.
+            Gets effect data from the dictionary if it exists.
             </summary>
             <param name="effect">The effect to get.</param>
             <param name="effectData">The effect data ssociated with the effect.</param>
@@ -2529,7 +2529,6 @@
             Creates a new instance of this class with the specified cell and index.
             </summary>
             <param name="cell">The cell to generate a state from.</param>
-            <param name="cellIndex">The index of the cell in the parent surface.</param>
         </member>
         <member name="T:SadConsole.Effects.Fade">
             <summary>

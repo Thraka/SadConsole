@@ -371,6 +371,7 @@
             <param name="pixelWidth">Width the source texture.</param>
             <param name="pixelHeight">Height of the source texture.</param>
             <param name="font">Font used for rendering.</param>
+            <param name="fontSize">Size of the font.</param>
         </member>
         <member name="M:SadConsole.Readers.TextureToSurfaceReader.GetSurface(Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
