@@ -195,7 +195,7 @@ namespace SadConsole.Effects
 
         #region Effect Helpers
         /// <summary>
-        /// Gets effect data from the dicronary if it exists.
+        /// Gets effect data from the dictionary if it exists.
         /// </summary>
         /// <param name="effect">The effect to get.</param>
         /// <param name="effectData">The effect data ssociated with the effect.</param>
