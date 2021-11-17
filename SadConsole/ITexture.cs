@@ -8,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// Represents a texture provided by a game host.
     /// </summary>
-    public interface ITexture: IDisposable
+    public interface ITexture : IDisposable
     {
         /// <summary>
         /// The file path to the texture.
@@ -28,35 +28,35 @@ namespace SadConsole
         /// <summary>
         /// Gets an array of colors. Row-major ordered.
         /// </summary>
-        Color[] GetPixels();
+        Color[] GetPixels(bool refreshCashe = false);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by x,y coordinate.
         /// </summary>
         /// <param name="position">The position of the pixel to set.</param>
         /// <param name="color">The color to set.</param>
-        void SetPixel(Point position, Color color);
+        void SetPixel(Point position, Color color, bool refreshCashe = false);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by index. Row-major ordered.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="color"></param>
-        void SetPixel(int index, Color color);
+        void SetPixel(int index, Color color, bool refreshCashe = false);
 
         /// <summary>
         /// Gets a pixel in the texture by x,y coordinate.
         /// </summary>
         /// <param name="position">The x,y coordinate of the pixel.</param>
         /// <returns>The color of the pixel.</returns>
-        Color GetPixel(Point position);
+        Color GetPixel(Point position, bool refreshCashe = false);
 
         /// <summary>
         /// Gets a pixel in the texture by index. Row-major ordered.
         /// </summary>
         /// <param name="index">The index of the pixel.</param>
         /// <returns>The color of the pixel.</returns>
-        Color GetPixel(int index);
+        Color GetPixel(int index, bool refreshCashe = false);
 
         /// <summary>
         /// Converts the texture into a cell surface based on the specified mode.

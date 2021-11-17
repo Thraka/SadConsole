@@ -18,6 +18,7 @@ namespace SadConsole.Host
         private bool _skipDispose;
         private Microsoft.Xna.Framework.Graphics.Texture2D _texture;
         private string _resourcePath;
+        private MonoColor[] _colors;
 
         /// <inheritdoc />
         public Microsoft.Xna.Framework.Graphics.Texture2D Texture => _texture;
@@ -72,46 +73,64 @@ namespace SadConsole.Host
         }
 
         /// <inheritdoc />
-        public void SetPixel(Point position, Color color) =>
-            SetPixel(position.ToIndex(_texture.Width), color);
+        public void SetPixel(Point position, Color color, bool refreshCashe) =>
+            SetPixel(position.ToIndex(_texture.Width), color, refreshCashe);
 
         /// <inheritdoc />
-        public void SetPixel(int index, Color color)
+        public void SetPixel(int index, Color color, bool refreshCashe = false)
+        {
+            if (_colors is null)
+            {
+                CreateColorsArray();
+                _texture.GetData(_colors);
+            }
+            else if (refreshCashe)
+                _texture.GetData(_colors);
+
+            if (index >= _colors.Length || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
+
+            _colors[index] = color.ToMonoColor();
+            _texture.SetData(_colors);
+        }
+
+        private void CreateColorsArray()
         {
             int size = _texture.Width * _texture.Height;
-
-            if (index >= size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
-
-            var colors = new MonoColor[size];
-
-            _texture.GetData(colors);
-            colors[index] = color.ToMonoColor();
-            _texture.SetData(colors);
+            _colors = new MonoColor[size];
         }
 
         /// <inheritdoc />
-        public Color[] GetPixels()
+        public Color[] GetPixels(bool refreshCashe = false)
         {
-            var colors = new MonoColor[_texture.Width * _texture.Height];
-            _texture.GetData(colors);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(colors).ToArray();
+            if (_colors is null)
+            {
+                CreateColorsArray();
+                _texture.GetData(_colors);
+            }
+            else if (refreshCashe)
+                _texture.GetData(_colors);
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(_colors).ToArray();
         }
 
         /// <inheritdoc />
-        public Color GetPixel(Point position) =>
-            GetPixel(position.ToIndex(_texture.Width));
+        public Color GetPixel(Point position, bool refreshCashe = false) =>
+            GetPixel(position.ToIndex(_texture.Width), refreshCashe);
 
         /// <inheritdoc />
-        public Color GetPixel(int index)
+        public Color GetPixel(int index, bool refreshCashe = false)
         {
-            int size = _texture.Width * _texture.Height;
+            if (_colors is null)
+            {
+                CreateColorsArray();
+                _texture.GetData(_colors);
+            }
+            else if (refreshCashe)
+                _texture.GetData(_colors);
 
-            if (index >= size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
+            if (index >= _colors.Length || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
 
-            var colors = new MonoColor[size];
-
-            _texture.GetData(colors);
-            return colors[index].ToSadRogueColor();
+            return _colors[index].ToSadRogueColor();
         }
 
         /// <inheritdoc />

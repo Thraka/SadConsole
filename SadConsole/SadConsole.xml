@@ -6728,33 +6728,33 @@
             The width of the texture.
             </summary>
         </member>
-        <member name="M:SadConsole.ITexture.GetPixels">
+        <member name="M:SadConsole.ITexture.GetPixels(System.Boolean)">
             <summary>
             Gets an array of colors. Row-major ordered.
             </summary>
         </member>
-        <member name="M:SadConsole.ITexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.ITexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color,System.Boolean)">
             <summary>
             Sets a specific pixel in the texture to a color by x,y coordinate.
             </summary>
             <param name="position">The position of the pixel to set.</param>
             <param name="color">The color to set.</param>
         </member>
-        <member name="M:SadConsole.ITexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.ITexture.SetPixel(System.Int32,SadRogue.Primitives.Color,System.Boolean)">
             <summary>
             Sets a specific pixel in the texture to a color by index. Row-major ordered.
             </summary>
             <param name="index"></param>
             <param name="color"></param>
         </member>
-        <member name="M:SadConsole.ITexture.GetPixel(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.ITexture.GetPixel(SadRogue.Primitives.Point,System.Boolean)">
             <summary>
             Gets a pixel in the texture by x,y coordinate.
             </summary>
             <param name="position">The x,y coordinate of the pixel.</param>
             <returns>The color of the pixel.</returns>
         </member>
-        <member name="M:SadConsole.ITexture.GetPixel(System.Int32)">
+        <member name="M:SadConsole.ITexture.GetPixel(System.Int32,System.Boolean)">
             <summary>
             Gets a pixel in the texture by index. Row-major ordered.
             </summary>
@@ -6770,7 +6770,7 @@
             <param name="surfaceHeight">How many cells high the returned surface is.</param>
             <param name="backgroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="foregroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
-            <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="M:SadConsole.ITexture.GetPixels"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
+            <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="M:SadConsole.ITexture.GetPixels(System.Boolean)"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
             <param name="cachedSurface">The cell surface to use instead of creating a new one. Used with <paramref name="cachedColorArray"/>.</param>
             <returns>A new surface.</returns>
             <remarks></remarks>

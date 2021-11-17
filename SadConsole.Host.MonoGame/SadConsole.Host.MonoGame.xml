@@ -164,19 +164,19 @@
             Disposes the underlaying texture object and releases reference to it.
             </summary>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+        <member name="M:SadConsole.Host.GameTexture.GetPixels(System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
