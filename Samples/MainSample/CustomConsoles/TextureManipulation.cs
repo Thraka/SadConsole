@@ -53,8 +53,7 @@ namespace FeatureDemo.CustomConsoles
 
             if (texture is GameTexture t)
             {
-                _colors = new MonoColor[t.Width * t.Height];
-                t.Texture.GetData(_colors);
+                _colors = t.GetMonoColors();
 
                 for (int y = 0, i = 0; y < t.Height; y++)
                 {
@@ -70,11 +69,6 @@ namespace FeatureDemo.CustomConsoles
         }
 
         void SetNewFrameNumberTarget() => _frameNumberForNewLine = GameHost.Instance.Random.Next(20, 200);
-
-        public override void Render(TimeSpan delta)
-        {
-            base.Render(delta);
-        }
 
         public override void Update(TimeSpan delta)
         {
@@ -97,7 +91,7 @@ namespace FeatureDemo.CustomConsoles
             }
 
             if (Font.Image is GameTexture t)
-                 t.Texture.SetData(_colors);
+                 t.SetMonoColors(_colors);
 
             IsDirty = true;
         }

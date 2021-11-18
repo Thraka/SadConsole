@@ -25,8 +25,6 @@ namespace FeatureDemo
             selectedConsoleContainer.Position = (0, headerConsole.AbsoluteArea.MaxExtentY + 1);
 
             consoles = new CustomConsole[] {
-                new CustomConsole(new CustomConsoles.TextureManipulation(), "Font Texture Manipulation", "Pixel manipulations of a font texture."),
-
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
                 new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
                 new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
@@ -48,9 +46,9 @@ namespace FeatureDemo
                 new CustomConsole(new CustomConsoles.BorderedConsole(), "Drawing borders around consoles", "Demonstration of using the Border class and a border component."),
                 new CustomConsole(new CustomConsoles.SubConsoleCursor(), "Subconsole Cursor", "Two consoles with a single backing TextSurface"),
                 new CustomConsole(new CustomConsoles.Animations(), "Animations", "Converting images and creating an animation with AnimatedScreenSurface."),
-                
+                new CustomConsole(new CustomConsoles.TextureManipulation(), "Font Texture Manipulation", "Pixel manipulations of a font texture."),
+
                 //new CustomConsole(new CustomConsoles.ViewsAndSubViews(), "Sub Views", "Single text surface with two views into it. Click on either view."),
-                
                 //new CustomConsole(new CustomConsoles.EntityConsole(), "Game object", "Use the cursor keys to move the little character"),
                 ////new CustomConsole(new CustomConsoles.WorldGenerationConsole(), "Random world generator", "Generates a random world, displaying it at half-font size."),
                 //new CustomConsole(new CustomConsoles.TextCursorConsole(), "Text Mouse Cursor", "Draws a game object where ever the mouse cursor is."),

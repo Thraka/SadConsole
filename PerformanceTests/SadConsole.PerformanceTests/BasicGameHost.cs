@@ -32,15 +32,18 @@ namespace SadConsole.PerformanceTests
 
             public int Width => _graphic.Width;
 
+            public int Size => Width * Height;
+
             public void Dispose()
             {
                 _graphic.Dispose();
             }
-            public Color GetPixel(Point position, bool refreshCashe) => throw new NotImplementedException();
-            public Color GetPixel(int index, bool refreshCashe) => throw new NotImplementedException();
-            public Color[] GetPixels(bool refreshCashe) => throw new NotImplementedException();
-            public void SetPixel(Point position, Color color, bool refreshCashe) => throw new NotImplementedException();
-            public void SetPixel(int index, Color color, bool refreshCashe) => throw new NotImplementedException();
+            public Color GetPixel(Point position) => throw new NotImplementedException();
+            public Color GetPixel(int index) => throw new NotImplementedException();
+            public Color[] GetPixels() => throw new NotImplementedException();
+            public void SetPixels(Color[] pixels) => throw new NotImplementedException();
+            public void SetPixel(Point position, Color color) => throw new NotImplementedException();
+            public void SetPixel(int index, Color color) => throw new NotImplementedException();
             public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null) => throw new NotImplementedException();
 
             public Texture(string path)
