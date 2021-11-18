@@ -98,6 +98,8 @@ namespace FeatureDemo.CustomConsoles
 
             if (Font.Image is GameTexture t)
                  t.Texture.SetData(_colors);
+
+            IsDirty = true;
         }
 
         class OversizedFont : ScreenSurface

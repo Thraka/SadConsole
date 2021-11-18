@@ -26,37 +26,48 @@ namespace SadConsole
         int Width { get; }
 
         /// <summary>
+        /// Size of the texture (Width * Height).
+        /// </summary>
+        int Size { get; }
+
+        /// <summary>
         /// Gets an array of colors. Row-major ordered.
         /// </summary>
-        Color[] GetPixels(bool refreshCashe = false);
+        Color[] GetPixels();
+
+        /// <summary>
+        /// Sets colors in the texture;
+        /// </summary>
+        /// <param name="colors"></param>
+        void SetPixels(Color[] colors);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by x,y coordinate.
         /// </summary>
         /// <param name="position">The position of the pixel to set.</param>
         /// <param name="color">The color to set.</param>
-        void SetPixel(Point position, Color color, bool refreshCashe = false);
+        void SetPixel(Point position, Color color);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by index. Row-major ordered.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="color"></param>
-        void SetPixel(int index, Color color, bool refreshCashe = false);
+        void SetPixel(int index, Color color);
 
         /// <summary>
         /// Gets a pixel in the texture by x,y coordinate.
         /// </summary>
         /// <param name="position">The x,y coordinate of the pixel.</param>
         /// <returns>The color of the pixel.</returns>
-        Color GetPixel(Point position, bool refreshCashe = false);
+        Color GetPixel(Point position);
 
         /// <summary>
         /// Gets a pixel in the texture by index. Row-major ordered.
         /// </summary>
         /// <param name="index">The index of the pixel.</param>
         /// <returns>The color of the pixel.</returns>
-        Color GetPixel(int index, bool refreshCashe = false);
+        Color GetPixel(int index);
 
         /// <summary>
         /// Converts the texture into a cell surface based on the specified mode.

@@ -24,10 +24,13 @@ namespace SadConsole.Host
         public string ResourcePath => _resourcePath;
 
         /// <inheritdoc />
-        public int Height => (int)_texture.Size.Y;
+        public int Height => (int)Height;
 
         /// <inheritdoc />
-        public int Width => (int)_texture.Size.X;
+        public int Width => (int)Width;
+
+        /// <inheritdoc />
+        public int Size { get; private set; }
 
         /// <summary>
         /// Skips disposing of the texture.
@@ -40,10 +43,15 @@ namespace SadConsole.Host
                 _texture = new Texture(fontStream);
 
             _resourcePath = path;
+            Size = Width * Height;
         }
 
-        internal GameTexture(Stream stream) =>
+        internal GameTexture(Stream stream)
+        {
             _texture = new Texture(stream);
+            Size = Width * Height;
+        }
+            
 
         /// <summary>
         /// Wraps a texture. Doesn't dispose it when this object is disposed!
@@ -54,6 +62,7 @@ namespace SadConsole.Host
         {
             SkipDispose = true;
             _texture = texture;
+            Size = Width * Height;
         }
 
         /// <summary>
@@ -70,7 +79,7 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public void SetPixel(Point position, Color color)
         {
-            if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
+            if (position.X < 0 || position.Y < 0 || position.X >= Width || position.Y >= Height)
                 throw new IndexOutOfRangeException("Pixel position is out of range.");
 
             _texture.Update(new[] { color.R, color.G, color.B, color.A }, 1, 1, (uint)position.X, (uint)position.Y);
@@ -79,12 +88,12 @@ namespace SadConsole.Host
 
         /// <inheritdoc />
         public void SetPixel(int index, Color color) =>
-            SetPixel(Point.FromIndex(index, (int)_texture.Size.X), color);
+            SetPixel(Point.FromIndex(index, Width), color);
 
         /// <inheritdoc />
         public Color[] GetPixels()
         {
-            var colors = new Color[(int)_texture.Size.X * (int)_texture.Size.Y];
+            var colors = new Color[Width * Height];
             using Image image = _texture.CopyToImage();
             byte[] pixels = image.Pixels;
 
@@ -96,9 +105,26 @@ namespace SadConsole.Host
         }
 
         /// <inheritdoc />
+        public void SetPixels(Color[] colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+
+            byte[] pixels = new byte[Size * 4];
+
+            int colorIndex = 0;
+            for (int i = 0; i < pixels.Length; i += 4)
+            {
+                Color c = colors[colorIndex++];
+                (pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]) = (c.R, c.G, c.B, c.A);
+            }
+
+            _texture.Update(pixels);
+        }
+
+        /// <inheritdoc />
         public Color GetPixel(Point position)
         {
-            if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
+            if (position.X < 0 || position.Y < 0 || position.X >= Width || position.Y >= Height)
                 throw new IndexOutOfRangeException("Pixel position is out of range.");
 
             using Image image = _texture.CopyToImage();
@@ -108,12 +134,12 @@ namespace SadConsole.Host
 
         /// <inheritdoc />
         public Color GetPixel(int index) =>
-            GetPixel(Point.FromIndex(index, (int)_texture.Size.X));
+            GetPixel(Point.FromIndex(index, (int)Width));
 
         /// <inheritdoc />
         public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
         {
-            if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth > _texture.Size.X || surfaceHeight > _texture.Size.Y)
+            if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth > Width || surfaceHeight > Height)
                 throw new ArgumentOutOfRangeException("The size of the surface must be equal to or smaller than the texture.");
 
             ICellSurface surface = cachedSurface ?? new CellSurface(surfaceWidth, surfaceHeight);
@@ -137,15 +163,15 @@ namespace SadConsole.Host
             // Calculating color based on surrounding pixels
             Color[] pixels = GetPixels();
 
-            int fontSizeX = (int)_texture.Size.X / surfaceWidth;
-            int fontSizeY = (int)_texture.Size.Y / surfaceHeight;
+            int fontSizeX = (int)Width / surfaceWidth;
+            int fontSizeY = (int)Height / surfaceHeight;
 
-            global::System.Threading.Tasks.Parallel.For(0, (int)_texture.Size.Y / fontSizeY, (h) =>
+            global::System.Threading.Tasks.Parallel.For(0, (int)Height / fontSizeY, (h) =>
             //for (int h = 0; h < imageHeight / fontSizeY; h++)
             {
                 int startY = h * fontSizeY;
                 //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
-                for (int w = 0; w < _texture.Size.X / fontSizeX; w++)
+                for (int w = 0; w < Width / fontSizeX; w++)
                 {
                     int startX = w * fontSizeX;
 
@@ -160,7 +186,7 @@ namespace SadConsole.Host
                             int cY = y + startY;
                             int cX = x + startX;
 
-                            Color color = pixels[cY * _texture.Size.X + cX];
+                            Color color = pixels[cY * Width + cX];
 
                             allR += color.R;
                             allG += color.G;
@@ -228,7 +254,7 @@ namespace SadConsole.Host
 
             var batcher = new SpriteBatch();
             batcher.Reset(resized, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
-            batcher.DrawQuad(new IntRect(0, 0, (int)resized.Size.X, (int)resized.Size.Y), new IntRect(0, 0, (int)_texture.Size.X, (int)_texture.Size.Y), SFMLColor.White, _texture);
+            batcher.DrawQuad(new IntRect(0, 0, (int)resized.Size.X, (int)resized.Size.Y), new IntRect(0, 0, (int)Width, (int)Height), SFMLColor.White, _texture);
             batcher.End();
 
             resized.Display();
