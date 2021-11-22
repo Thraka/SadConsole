@@ -192,6 +192,7 @@ namespace SadConsole.Readers
         /// </summary>
         /// <param name="fileName">Name and path of the palette file.</param>
         /// <returns><see cref="Palette"/> of <see cref="Playscii"/> colors.</returns>
+        /// <remarks>Place the palette file in the same folder as the playscii file.</remarks>
         static Palette GetPalette(string fileName)
         {
             if (!File.Exists(fileName)) throw new FileNotFoundException("Palette file doesn't exist.");
@@ -199,8 +200,8 @@ namespace SadConsole.Readers
             if (!s_paletteExtensions.Contains(ext))
                 throw new InvalidOperationException("Palette file extension not supported by the Playscii format.");
 
-                // check if this palette has already been created previously
-                string paletteName = Path.GetFileName(fileName);
+            // check if this palette has already been created previously
+            string paletteName = Path.GetFileName(fileName);
             if (s_palettes.ContainsKey(paletteName))
                 return s_palettes[paletteName];
 

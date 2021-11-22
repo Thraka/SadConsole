@@ -7018,6 +7018,7 @@
             </summary>
             <param name="fileName">Name and path of the palette file.</param>
             <returns><see cref="T:SadRogue.Primitives.Palette"/> of <see cref="T:SadConsole.Readers.Playscii"/> colors.</returns>
+            <remarks>Place the palette file in the same folder as the playscii file.</remarks>
         </member>
         <member name="M:SadConsole.Readers.Playscii.ReadFile(System.String,System.String)">
             <summary>
