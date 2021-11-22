@@ -322,32 +322,30 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.ConvertImageFile(System.String,System.String,SadRogue.Primitives.Point,System.Single,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
-             <summary>
-             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
-             </summary>
+        <member name="M:SadConsole.AnimatedScreenSurface.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.Single,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+            <summary>
+            Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
+            </summary>
+            <param name="name">Name for the animation.</param>
+            <param name="filePath">File path to the image file.</param>
+            <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
+            <param name="frameDuration">Duration for a frame in the animation.</param>
+            <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
+            <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
+            <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
+            <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
+            <param name="convertMode">The mode used when converting the texture to a surface.</param>
+            <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
+            <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
             
-             required:
-             <param name="name">Name for the animation.</param>
-             <param name="filePath">File path to the image file.</param>
-             <param name="frameLayout">Layout of frames in the image file: X number of columns, Y number of rows.</param>
-             <param name="frameDuration">Duration for a frame in the animation.</param>
+            <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
             
-             optional:
-             <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
-             <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
-             <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
-             <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
-             <param name="convertMode">The mode used when converting the texture to a surface.</param>
-             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
-             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
-             
-             <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
-             
-             <remarks>Remarks:<br></br>
-             This method assumes the image file contains only frames and optional padding between the frames, no border space.<br></br>
-             Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.<br></br>
-             Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.<br></br></remarks>
+            <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
+            
+            Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.
+            
+            Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
+            </remarks>
         </member>
         <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
             <summary>
@@ -2419,21 +2417,21 @@
             </summary>
             <param name="surface">Text surface to manage.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Int32,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
             <summary>
-            Changes the effect of a specific cell.
+            Associates a cell effect with a cell.
             </summary>
-            <param name="cellIndex">Cell index to set the effect for.</param>
+            <param name="cell">Cell to set the effect for.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{System.Int32},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
             <summary>
-            Changes the effect of the <paramref name="cellIndicies"/> provided.
+            Changes the effect of the <paramref name="cells"/> provided.
             </summary>
-            <param name="cellIndicies">A list of cell indicies to change the effect on.</param>
+            <param name="cells">A list of cell indicies to change the effect on.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyph)">
             <summary>
             Gets the effect of the specified cell.
             </summary>
@@ -2464,11 +2462,11 @@
             <param name="effectData">The effect data ssociated with the effect.</param>
             <returns><see langword="true"/> when the effect exists; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(SadConsole.ColoredGlyph)">
             <summary>
             Clears the effect for the cell specified by index.
             </summary>
-            <param name="cellIndex">The cell index.</param>
+            <param name="cell">The cell index.</param>
         </member>
         <member name="M:SadConsole.Effects.EffectsManager.UpdateEffects(System.TimeSpan)">
             <summary>
@@ -2497,18 +2495,18 @@
             </summary>
             <param name="effect">The effect.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(System.Int32,System.Boolean)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(SadConsole.ColoredGlyph,System.Boolean)">
             <summary>
             Removes a cell by index from the effect data.
             </summary>
-            <param name="cellIndex">The cell index.</param>
+            <param name="cell">The cell.</param>
             <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(SadConsole.ColoredGlyph)">
             <summary>
             Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
             </summary>
-            <param name="cellIndex">The cell to check.</param>
+            <param name="cell">The cell to check.</param>
             <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:SadConsole.Effects.EffectsManager.ColoredGlyphWithState">
@@ -2526,12 +2524,69 @@
             The original state of the cell.
             </summary>
         </member>
-        <member name="F:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.CellIndex">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph)">
+            <summary>
+            Creates a new instance of this class with the specified cell and index.
+            </summary>
+            <param name="cell">The cell to generate a state from.</param>
+            <param name="cellIndex">The index of the cell in the parent surface.</param>
+        </member>
+        <member name="T:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData">
+            <summary>
+            Represents a mapping of a single effect and associated cells.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData.Effect">
+            <summary>
+            The effect.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData.CellsStates">
+            <summary>
+            The cells affected by the effect.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData.#ctor(SadConsole.Effects.ICellEffect)">
+            <summary>
+            Creates a new instance of the cell-effect mapping.
+            </summary>
+            <param name="effect">The effect.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData.RemoveCell(System.Int32,System.Boolean)">
+            <summary>
+            Removes a cell by index from the effect data.
+            </summary>
+            <param name="cellIndex">The cell index.</param>
+            <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData.ContainsCell(System.Int32)">
+            <summary>
+            Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
+            </summary>
+            <param name="cellIndex">The cell to check.</param>
+            <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:SadConsole.Effects.EffectsManager2.ColoredGlyphWithState">
+            <summary>
+            A glyph with its original state.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.EffectsManager2.ColoredGlyphWithState.Cell">
+            <summary>
+            The cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.EffectsManager2.ColoredGlyphWithState.State">
+            <summary>
+            The original state of the cell.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Effects.EffectsManager2.ColoredGlyphWithState.CellIndex">
             <summary>
             The cells index.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph,System.Int32)">
+        <member name="M:SadConsole.Effects.EffectsManager2.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph,System.Int32)">
             <summary>
             Creates a new instance of this class with the specified cell and index.
             </summary>
@@ -4323,6 +4378,140 @@
             Resets the shifted amounts to 0, as if the surface has never shifted.
             </summary>
             <param name="surface">The surface being edited.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRow(SadConsole.ICellSurface,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the entire row by the specfied amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRow(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from an X position, by the specfied amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="startingX">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRowRight(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from an X position, by the specfied amount, to the right.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="startingX">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRowLeft(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from an X position, by the specfied amount, to the left.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="startingX">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRowRightUnchecked(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="startingX">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftRowLeftUnchecked(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the left.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="row">The row to shift.</param>
+            <param name="startingX">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumn(SadConsole.ICellSurface,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the entire column by the specfied amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumn(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from an X position, by the specfied amount.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="startingY">The starting row to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnDown(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from n Y position, by the specfied amount, down.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="startingY">The starting row to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnUp(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Shifts the spefied row from n Y position, by the specfied amount, up.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="startingY">The starting row to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnDownUnchecked(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, down.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="startingY">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnUpUnchecked(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, up.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="col">The column to shift.</param>
+            <param name="startingY">The starting column to shift from.</param>
+            <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+            <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+            <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftUp(SadConsole.ICellSurface)">
             <summary>

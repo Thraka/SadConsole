@@ -990,6 +990,34 @@ namespace SadConsole
             surface.TimesShiftedRight = 0;
         }
 
+        #region Shift Rows
+
+        /// <summary>
+        /// Shifts the entire row by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftRow(this ICellSurface surface, int row, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (amount < 0)
+                ShiftRowLeft(surface, row, 0, surface.Width, -amount, wrap);
+            else
+                ShiftRowRight(surface, row, 0, surface.Width, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
         public static void ShiftRow(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
             if (amount == 0) return;
@@ -999,12 +1027,22 @@ namespace SadConsole
                 throw new ArgumentOutOfRangeException(nameof(count),
                     "Count must be less than the width of the console subtract the starting X position of the shift.");
 
-            if (count < 0)
+            if (amount < 0)
                 ShiftRowLeftUnchecked(surface, row, startingX, count, -amount, wrap);
             else
                 ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount, to the right.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
         public static void ShiftRowRight(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
             if (amount == 0) return;
@@ -1016,6 +1054,16 @@ namespace SadConsole
             ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount, to the left.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
         public static void ShiftRowLeft(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
             if (amount == 0) return;
@@ -1027,6 +1075,15 @@ namespace SadConsole
             ShiftRowLeftUnchecked(surface, row, startingX, count, amount, wrap);
         }
 
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
         public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
             if (wrap)
@@ -1086,6 +1143,15 @@ namespace SadConsole
             surface.IsDirty = true;
         }
 
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the left.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
         public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
         {
             if (wrap)
@@ -1140,6 +1206,226 @@ namespace SadConsole
 
             surface.IsDirty = true;
         }
+
+        #endregion
+
+        #region Shift Columns
+
+        /// <summary>
+        /// Shifts the entire column by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumn(this ICellSurface surface, int col, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (amount < 0)
+                ShiftColumnUp(surface, col, 0, surface.Height, -amount, wrap);
+            else
+                ShiftColumnDown(surface, col, 0, surface.Height, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumn(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (startingY < 0 || startingY >= surface.Height) throw new ArgumentOutOfRangeException(nameof(startingY), "Column must be 0 or more and less than the width of the surface.");
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting Y position of the shift.");
+
+            if (amount < 0)
+                ShiftColumnUpUnchecked(surface, col, startingY, count, -amount, wrap);
+            else
+                ShiftColumnDownUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from n Y position, by the specfied amount, down.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumnDown(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting Y position of the shift.");
+
+            ShiftColumnDownUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from n Y position, by the specfied amount, up.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumnUp(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting X position of the shift.");
+
+            ShiftColumnUpUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, down.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumnDownUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftColumnUpUnchecked(surface, col, startingY, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+                // Offset for tempArray
+                int tempArrayOffset = count - amount;
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int y = i + startingY;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i >= tempArrayOffset)
+                        tempArray[i - tempArrayOffset] = new ColoredGlyphAppearance(surface[col, y]);
+
+                    // Copy appearance from the appropriate location
+                    int copyFromY = y - amount;
+                    if (copyFromY >= startingY)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY], false);
+                    else
+                        tempArray[i].ShallowCopyTo(surface[col, y]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int y = i + startingY;
+                    int copyFromY = y - amount;
+                    if (copyFromY >= startingY)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY]);
+                    else
+                        surface.Clear(col, y);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, up.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumnUpUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-left by n is equivalent to a shift-right by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftColumnDownUnchecked(surface, col, startingY, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = 0; i < count; i++)
+                {
+                    int y = i + startingY;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i < amount)
+                        tempArray[i] = new ColoredGlyphAppearance(surface[col, y]);
+
+                    if (i + amount < count)
+                        surface[col, y].CopyAppearanceFrom(surface[col, y + amount], false);
+                    else
+                        tempArray[i + amount - count].ShallowCopyTo(surface[col, y]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    int y = i + startingY;
+                    int copyFromY = y + amount;
+                    if (copyFromY < startingY + count)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY], false);
+                    else
+                        surface.Clear(col, y);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+        #endregion
 
         /// <summary>
         /// Scrolls all the console data up by one.
