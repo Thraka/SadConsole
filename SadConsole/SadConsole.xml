@@ -337,11 +337,13 @@
             <param name="convertMode">The mode used when converting the texture to a surface.</param>
             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
+            
             <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
             
             <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
             
             Frame count is calculated by multiplying rows and columns from the frame layout. It can by limited by specifying frame start and finish indexes.
+            
             Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
             </remarks>
         </member>
@@ -2527,7 +2529,6 @@
             Creates a new instance of this class with the specified cell and index.
             </summary>
             <param name="cell">The cell to generate a state from.</param>
-            <param name="cellIndex">The index of the cell in the parent surface.</param>
         </member>
         <member name="T:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData">
             <summary>
@@ -2589,6 +2590,7 @@
             Creates a new instance of this class with the specified cell and index.
             </summary>
             <param name="cell">The cell to generate a state from.</param>
+            <param name="cellIndex">The index of the cell in the parent surface.</param>
         </member>
         <member name="T:SadConsole.Effects.Fade">
             <summary>
@@ -6924,19 +6926,25 @@
         </member>
         <member name="P:SadConsole.ITexture.Size">
             <summary>
-            Size of the texture (Width * Height).
+            Size of the texture, generally, the count of pixels.
             </summary>
         </member>
         <member name="M:SadConsole.ITexture.GetPixels">
             <summary>
-            Gets an array of colors. Row-major ordered.
+            Gets an array of colors.
             </summary>
         </member>
         <member name="M:SadConsole.ITexture.SetPixels(SadRogue.Primitives.Color[])">
             <summary>
-            Sets colors in the texture;
+            Sets colors in the texture.
             </summary>
-            <param name="colors"></param>
+            <param name="colors">The individual pixel colors to set.</param>
+        </member>
+        <member name="M:SadConsole.ITexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <summary>
+            Sets colors in the texture.
+            </summary>
+            <param name="colors">The individual pixel colors to set.</param>
         </member>
         <member name="M:SadConsole.ITexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
             <summary>
@@ -6961,7 +6969,7 @@
         </member>
         <member name="M:SadConsole.ITexture.GetPixel(System.Int32)">
             <summary>
-            Gets a pixel in the texture by index. Row-major ordered.
+            Gets a pixel in the texture by index.
             </summary>
             <param name="index">The index of the pixel.</param>
             <returns>The color of the pixel.</returns>

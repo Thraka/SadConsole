@@ -26,20 +26,26 @@ namespace SadConsole
         int Width { get; }
 
         /// <summary>
-        /// Size of the texture (Width * Height).
+        /// Size of the texture, generally, the count of pixels.
         /// </summary>
         int Size { get; }
 
         /// <summary>
-        /// Gets an array of colors. Row-major ordered.
+        /// Gets an array of colors.
         /// </summary>
         Color[] GetPixels();
 
         /// <summary>
-        /// Sets colors in the texture;
+        /// Sets colors in the texture.
         /// </summary>
-        /// <param name="colors"></param>
+        /// <param name="colors">The individual pixel colors to set.</param>
         void SetPixels(Color[] colors);
+
+        /// <summary>
+        /// Sets colors in the texture.
+        /// </summary>
+        /// <param name="colors">The individual pixel colors to set.</param>
+        void SetPixels(ReadOnlySpan<Color> colors);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by x,y coordinate.
@@ -63,7 +69,7 @@ namespace SadConsole
         Color GetPixel(Point position);
 
         /// <summary>
-        /// Gets a pixel in the texture by index. Row-major ordered.
+        /// Gets a pixel in the texture by index.
         /// </summary>
         /// <param name="index">The index of the pixel.</param>
         /// <returns>The color of the pixel.</returns>

@@ -160,7 +160,7 @@
             <summary>
             Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
             </summary>
-            <param name="texture"></param>
+            <param name="texture">The texture being wrapped by this object.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.Dispose">
             <summary>
@@ -168,18 +168,30 @@
             </summary>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixels">
-            <inheritdoc />
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+            <returns>The pixels. Row-major ordered.</returns>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetMonoColors">
+        <member name="M:SadConsole.Host.GameTexture.GetPixelsMonoColor">
             <summary>
             Gets an array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
             </summary>
-            <returns></returns>
+            <returns>An array of pixels. Row-major ordered.</returns>
         </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
-            <inheritdoc />
+            <summary>
+            Sets colors in the texture from an array of pixels. Row-major ordered.
+            </summary>
+            <param name="colors">The individual pixel colors to set. Row-major ordered.</param>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.SetMonoColors(Microsoft.Xna.Framework.Color[])">
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <summary>
+            Sets colors in the texture from a span of pixels. Row-major ordered.
+            </summary>
+            <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(Microsoft.Xna.Framework.Color[])">
             <summary>
             Replaces texture colors with the array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
             </summary>
@@ -189,17 +201,17 @@
         <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.SetMonoColor(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Color)">
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Color)">
             <summary>
             Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position.
             </summary>
             <param name="position">Position of the pixel in the texture.</param>
-            <param name="color"><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</param>
+            <param name="color">Color of the pixel.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.SetMonoColor(System.Int32,Microsoft.Xna.Framework.Color)">
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,Microsoft.Xna.Framework.Color)">
             <summary>
             Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index.
             </summary>
@@ -209,7 +221,7 @@
         <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetMonoColor(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(SadRogue.Primitives.Point)">
             <summary>
             Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position in the texture.
             </summary>
@@ -217,9 +229,13 @@
             <returns><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
-            <inheritdoc />
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetMonoColor(System.Int32)">
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(System.Int32)">
             <summary>
             Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index in the texture.
             </summary>
