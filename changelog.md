@@ -1,3 +1,68 @@
+TODO
+
+- Add reference shift for surfaces. Normal shift copies cell data, which is safe when you have multiple surfaces pointing to the same data.
+  Reference shift can be added which moves the cells around in the array. This is most useful when a surface won't have sub surfaces.
+- Improve existing shift:
+  - Add region support to shift methods.
+  - Add Swap rows
+  - Add Swap columns
+  - Add ShiftRow (left/right,amount)
+  - Add ShiftColumn (up/down,amount)
+- Decorator support in Print
+- Easier shader support
+- Look at a TextraConsole type of thing https://github.com/tommyettinger/textramode
+  - IScreenObject
+  - Create text elements, position them based on absolute pixel and/or offset of SadFont size
+  - TextraConsoleRenderer creates backing render surface and handles rendering each loop, no caching
+  - TextraConsole support a Freeze method to lock in what is drawn to enable cached drawing
+  - TextraConsoleCursor (some ideas to add a cursor object that can be used to type with)
+    - Perhaps the console defines a line height (font size?)
+    - Line positions are predetermined based on the line height
+    - Cursor moves up/down between those lines
+    - For rendering, lines are processed glyph by glyph. If the next glyph runs off the edge, it's moved to the start of the next line
+    - ?? More things I've not thought of ??
+- string parse has a code section that checks if a surface is passed and prints while the parse happens. effects are dropped
+- surface.clear doesn't remove effects
+  - detect full clear and just clear all effects
+  - single cell clear sends only that cell for clear
+  - rect clear needs to 
+  - this should be on fill
+- resize on surface loses effects, how can we keep them?
+
+Effects?
+- Should print destroy 
+
+
+## v9.2.0 (XX/XX/XXXX)
+
+- [Breaking] `Print(int x, int y, ColoredGlyph glyph)` renamed to `SetGlyph`.
+- [Breaking] Surface `SetEffect` method signatures have changed.
+- [Behavior] `ColoredString.String.Set` forced the string through the parser. This has now changed to use the characters directly.
+- [Behavior] All `ColoredString` contructors that used the `(string)` overload used the string parser. This is no longer the case.
+- [Behavior] Using `Surface.Print` methods that used the string parser for fore/back/mirror will force those settings **after** the string was parsed and not before.
+- [Core] Cursor didn't respect `Cursor.UseStringParser` because of how `ColoredString` was always using the string parser. This is fixed now.
+- [Core] Cursor has a `Cursor.MouseClickRepositionHandlesMouse` property which sets the handled flag on mouse left-click for the cursor reposition.
+- [Core] `DrawString` instruction overrides reset now, fixing a bug with having the instruction run more than once.
+- [Core] `Surface.ShiftLeft|Right|Up\Down` methods now move decorators.
+- [Core] New `Surface.ShiftRow` and `Surface.ShiftColumn` methods added. (Chris3606)
+- [Core] `ColoredString.SetDecorators` added, to fit in with `SetForeground`, `SetBackground`, etc.
+- [Core] Renamed `EffectsChain` to `EffectSet`
+- [Core] Added TheDraw font reader: `SadConsole.Readers.TheDrawFont`. **Not the same as a SadConsole Font.**
+- [Core] The Effects Manager used by a surface now works on cell instances, not cell indicies.
+- [Core] `AnimatedSurface.FromImage` helper added which converts image-based animations to an animated surface. (RychuP)
+- [Core] [Playscii](http://vectorpoem.com/playscii/) support added in the `SadConsoles.Readers` namespace. (RychuP)
+- [MonoGame] Added DrawCallManager to allow injecting custom sprite batch rendering during final scene composition.
+- [MonoGame/SFML] Fixed a bug that caused all surfaces to redraw all cells 100% of the time even if nothing changed. Should bring 300%-400% fps increase in surfaces that aren't changing content.
+- [MonoGame/SFML] ITexture improvements for GetPixel/SetPixel; Demos on editing textures. (RychuP)
+- [UI] Fix various minor bugs with controls.
+- [UI] `Textbox` has more events related to text changing.
+- [UI] `ListBox` items can be inserted as a `ValueTuple<string, object>` which will use the string (can be a `ColoredString`) as the display text of the item.
+- [StringParser] Introduced new interface for string parsing: `StringParser.IParser`.
+- [StringParser] Moved current parse code to `StringParser.Default`.
+- [StringParser] `ColoredString.Parse` is obsolete and forwards to `ColoredString.Parser.Parse`.
+- [ExtendedLib] Added ClassicConsoleKeyboardHandler and C64KeyboardHandler for cursor handlers.
+- [ExtendedLib] Added MoveViewPortKeyboardHandler component.
+
 ## v9.1.1 (08/07/2021)
 
 - `StartingConsole` is now focused at the start of the game.
