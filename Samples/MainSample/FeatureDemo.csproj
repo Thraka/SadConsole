@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,12 +15,11 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <GameHost>monogame</GameHost>
+    <GameHost>sfml</GameHost>
     <UseProjectReferences>true</UseProjectReferences>
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
@@ -40,7 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Condition=" '$(GameHost)' == 'sfml' " Include="HostSpecific\SFML\" />
+    <Compile Condition=" '$(GameHost)' == 'sfml' " Remove="HostSpecific\MonoGame\**\*.cs" />
+    <Compile Condition=" '$(GameHost)' == 'monogame' " Remove="HostSpecific\SFML\**\*.cs" />
+    
     <Folder Include="Res\REXPaint\" />
   </ItemGroup>
 
