@@ -14,7 +14,6 @@ namespace SadConsole.PerformanceTests
         public class RenderStep : IRenderStep
         {
             public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
-
             public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
             public void Dispose() => throw new NotImplementedException();
             public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
@@ -33,6 +32,8 @@ namespace SadConsole.PerformanceTests
 
             public int Width => _graphic.Width;
 
+            public int Size => Width * Height;
+
             public void Dispose()
             {
                 _graphic.Dispose();
@@ -40,6 +41,7 @@ namespace SadConsole.PerformanceTests
             public Color GetPixel(Point position) => throw new NotImplementedException();
             public Color GetPixel(int index) => throw new NotImplementedException();
             public Color[] GetPixels() => throw new NotImplementedException();
+            public void SetPixels(Color[] pixels) => throw new NotImplementedException();
             public void SetPixel(Point position, Color color) => throw new NotImplementedException();
             public void SetPixel(int index, Color color) => throw new NotImplementedException();
             public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null) => throw new NotImplementedException();

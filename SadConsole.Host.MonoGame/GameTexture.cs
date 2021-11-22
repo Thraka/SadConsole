@@ -31,6 +31,9 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public int Width => _texture.Width;
 
+        /// <inheritdoc />
+        public int Size { get; private set; }
+
         /// <summary>
         /// Loads a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file path.
         /// </summary>
@@ -39,16 +42,19 @@ namespace SadConsole.Host
         {
             using Stream fontStream = SadConsole.Game.Instance.OpenStream(path);
             _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.Host.Global.GraphicsDevice, fontStream);
-
             _resourcePath = path;
+            Size = _texture.Width * _texture.Height;
         }
 
         /// <summary>
         /// Loads a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream.
         /// </summary>
         /// <param name="stream">The stream containing the texture data.</param>
-        public GameTexture(Stream stream) =>
+        public GameTexture(Stream stream)
+        {
             _texture = Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(SadConsole.Host.Global.GraphicsDevice, stream);
+            Size = _texture.Width * _texture.Height;
+        }
 
         /// <summary>
         /// Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
@@ -58,6 +64,7 @@ namespace SadConsole.Host
         {
             _skipDispose = true;
             _texture = texture;
+            Size = _texture.Width * _texture.Height;
         }
 
         /// <summary>
@@ -72,46 +79,114 @@ namespace SadConsole.Host
         }
 
         /// <inheritdoc />
-        public void SetPixel(Point position, Color color) =>
-            SetPixel(position.ToIndex(_texture.Width), color);
+        public Color[] GetPixels()
+        {
+            var colors = GetMonoColors();
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(colors).ToArray();
+        }
+
+        /// <summary>
+        /// Gets an array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.
+        /// </summary>
+        /// <returns></returns>
+        public MonoColor[] GetMonoColors()
+        {
+            var colors = new MonoColor[Size];
+            _texture.GetData(colors);
+            return colors;
+        }
 
         /// <inheritdoc />
-        public void SetPixel(int index, Color color)
+        public void SetPixels(Color[] pixels)
         {
-            int size = _texture.Width * _texture.Height;
+            if (pixels.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+            SetMonoColors(System.Runtime.InteropServices.MemoryMarshal.Cast<Color, MonoColor>(pixels).ToArray());
+        }
 
-            if (index >= size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
-
-            var colors = new MonoColor[size];
-
-            _texture.GetData(colors);
-            colors[index] = color.ToMonoColor();
+        /// <summary>
+        /// Replaces texture colors with the array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.
+        /// </summary>
+        /// <param name="colors">Array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void SetMonoColors(MonoColor[] colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Colors array length must match the texture size.");
             _texture.SetData(colors);
         }
 
         /// <inheritdoc />
-        public Color[] GetPixels()
+        public void SetPixel(Point position, Color color) =>
+            SetMonoColor(position, color.ToMonoColor());
+
+        /// <summary>
+        /// Sets a single pixel in the texture to the specified <see cref="Microsoft.Xna.Framework.Color"/> at the given position.
+        /// </summary>
+        /// <param name="position">Position of the pixel in the texture.</param>
+        /// <param name="color"><see cref="Microsoft.Xna.Framework.Color"/> of the pixel.</param>
+        public void SetMonoColor(Point position, MonoColor color)
         {
-            var colors = new MonoColor[_texture.Width * _texture.Height];
-            _texture.GetData(colors);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(colors).ToArray();
+            int index = position.ToIndex(_texture.Width);
+            SetMonoColor(index, position, color);
+        }
+
+        /// <inheritdoc />
+        public void SetPixel(int index, Color color) =>
+            SetMonoColor(index, color.ToMonoColor());
+
+        /// <summary>
+        /// Sets a single pixel in the texture to the specified <see cref="Microsoft.Xna.Framework.Color"/> at the given index.
+        /// </summary>
+        /// <param name="index">Index of the pixel.</param>
+        /// <param name="color"><see cref="Microsoft.Xna.Framework.Color"/> of the pixel.</param>
+        public void SetMonoColor(int index, MonoColor color)
+        {
+            Point position = Point.FromIndex(index, Width);
+            SetMonoColor(index, position, color);
+        }
+
+        private void SetMonoColor(int index, Point position, MonoColor color)
+        {
+            if (index >= Size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
+            _texture.SetData(0, new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, 1, 1), new MonoColor[] { color }, 0, 1);
         }
 
         /// <inheritdoc />
         public Color GetPixel(Point position) =>
-            GetPixel(position.ToIndex(_texture.Width));
+            GetMonoColor(position).ToSadRogueColor();
+
+        /// <summary>
+        /// Gets the <see cref="Microsoft.Xna.Framework.Color"/> at the given position in the texture.
+        /// </summary>
+        /// <param name="position">Position in the texture.</param>
+        /// <returns><see cref="Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
+        public MonoColor GetMonoColor(Point position)
+        {
+            int index = position.ToIndex(Width);
+            return GetMonoColor(index, position);
+        }
 
         /// <inheritdoc />
-        public Color GetPixel(int index)
+        public Color GetPixel(int index) =>
+            GetMonoColor(index).ToSadRogueColor();
+
+        /// <summary>
+        /// Gets the <see cref="Microsoft.Xna.Framework.Color"/> at the given index in the texture.
+        /// </summary>
+        /// <param name="index">Index of the pixel in the texture.</param>
+        /// <returns><see cref="Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
+        public MonoColor GetMonoColor(int index)
         {
-            int size = _texture.Width * _texture.Height;
+            Point position = Point.FromIndex(index, Width);
+            return GetMonoColor(index, position);
+        }
 
-            if (index >= size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
-
-            var colors = new MonoColor[size];
-
-            _texture.GetData(colors);
-            return colors[index].ToSadRogueColor();
+        private MonoColor GetMonoColor(int index, Point position)
+        {
+            if (index >= Size || index < 0) throw new IndexOutOfRangeException("Pixel position is out of range.");
+            var rect = new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, 1, 1);
+            var data = new MonoColor[1];
+            _texture.GetData(0, rect, data, 0, 1);
+            return data[0];
         }
 
         /// <inheritdoc />

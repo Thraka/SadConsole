@@ -29,6 +29,9 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public int Width => (int)_texture.Size.X;
 
+        /// <inheritdoc />
+        public int Size { get; private set; }
+
         /// <summary>
         /// Skips disposing of the texture.
         /// </summary>
@@ -40,10 +43,15 @@ namespace SadConsole.Host
                 _texture = new Texture(fontStream);
 
             _resourcePath = path;
+            Size = Width * Height;
         }
 
-        internal GameTexture(Stream stream) =>
+        internal GameTexture(Stream stream)
+        {
             _texture = new Texture(stream);
+            Size = Width * Height;
+        }
+            
 
         /// <summary>
         /// Wraps a texture. Doesn't dispose it when this object is disposed!
@@ -54,6 +62,7 @@ namespace SadConsole.Host
         {
             SkipDispose = true;
             _texture = texture;
+            Size = Width * Height;
         }
 
         /// <summary>
@@ -84,15 +93,18 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public Color[] GetPixels()
         {
-            var colors = new Color[(int)_texture.Size.X * (int)_texture.Size.Y];
             using Image image = _texture.CopyToImage();
             byte[] pixels = image.Pixels;
+            Span<byte> byteSpan = pixels.AsSpan();
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, Color>(byteSpan).ToArray();
+        }
 
-            int colorIndex = 0;
-            for (int i = 0; i < pixels.Length; i += 4)
-                colors[colorIndex++] = new Color(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]);
-
-            return colors;
+        /// <inheritdoc />
+        public void SetPixels(Color[] colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+            Span<byte> byteSpan = System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors.AsSpan());
+            _texture.Update(byteSpan.ToArray());
         }
 
         /// <inheritdoc />

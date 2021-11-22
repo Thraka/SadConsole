@@ -31,7 +31,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets the characters representing this string. When set, first processes the string through <see cref="StringParser.IParser.Parse(string, int, ICellSurface, StringParser.ParseCommandStacks)"/> method from <see cref="ColoredString.Parser"/>.
+        /// Gets or sets the characters representing this string. When set, first processes the string through <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/>.
         /// </summary>
         public string String
         {

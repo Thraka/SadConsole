@@ -8,7 +8,7 @@ namespace SadConsole
     /// <summary>
     /// Represents a texture provided by a game host.
     /// </summary>
-    public interface ITexture: IDisposable
+    public interface ITexture : IDisposable
     {
         /// <summary>
         /// The file path to the texture.
@@ -26,9 +26,20 @@ namespace SadConsole
         int Width { get; }
 
         /// <summary>
+        /// Size of the texture (Width * Height).
+        /// </summary>
+        int Size { get; }
+
+        /// <summary>
         /// Gets an array of colors. Row-major ordered.
         /// </summary>
         Color[] GetPixels();
+
+        /// <summary>
+        /// Sets colors in the texture;
+        /// </summary>
+        /// <param name="colors"></param>
+        void SetPixels(Color[] colors);
 
         /// <summary>
         /// Sets a specific pixel in the texture to a color by x,y coordinate.

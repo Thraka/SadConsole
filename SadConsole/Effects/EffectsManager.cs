@@ -195,7 +195,7 @@ namespace SadConsole.Effects
 
         #region Effect Helpers
         /// <summary>
-        /// Gets effect data from the dicronary if it exists.
+        /// Gets effect data from the dictionary if it exists.
         /// </summary>
         /// <param name="effect">The effect to get.</param>
         /// <param name="effectData">The effect data ssociated with the effect.</param>
@@ -380,7 +380,6 @@ namespace SadConsole.Effects
             /// Creates a new instance of this class with the specified cell and index.
             /// </summary>
             /// <param name="cell">The cell to generate a state from.</param>
-            /// <param name="cellIndex">The index of the cell in the parent surface.</param>
             public ColoredGlyphWithState(ColoredGlyph cell) =>
                 (Cell, State) = (cell, new ColoredGlyphState(cell));
         }
