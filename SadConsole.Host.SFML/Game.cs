@@ -82,8 +82,9 @@ namespace SadConsole
                 ResetRendering();
             };
 
-            if (Host.Settings.FPS != 0)
-                window.SetFramerateLimit((uint)Host.Settings.FPS);
+            if (!Settings.UnlimitedFPS)
+                if (Host.Settings.FPS > 0)
+                    window.SetFramerateLimit((uint)Host.Settings.FPS);
 
             SadConsole.Host.Global.GraphicsDevice = window;
             SadConsole.Host.Global.SharedSpriteBatch = new SpriteBatch();

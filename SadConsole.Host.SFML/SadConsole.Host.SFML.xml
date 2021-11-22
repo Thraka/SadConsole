@@ -117,10 +117,8 @@
         <member name="P:SadConsole.Host.GameTexture.Width">
             <inheritdoc />
         </member>
-        <member name="P:SadConsole.Host.GameTexture.SkipDispose">
-            <summary>
-            Skips disposing of the texture.
-            </summary>
+        <member name="P:SadConsole.Host.GameTexture.Size">
+            <inheritdoc />
         </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture)">
             <summary>
@@ -140,14 +138,75 @@
         <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SFML.Graphics.Color)">
+            <summary>
+            Sets the color of a pixel in the texture.
+            </summary>
+            <param name="position">The position to set the color.</param>
+            <param name="color">The color to set.</param>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SFML.Graphics.Color)">
+            <summary>
+            Sets the color of a pixel in the texture by index position.
+            </summary>
+            <param name="index">The position to set the color. Row-major ordered.</param>
+            <param name="color">The color to set.</param>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelsSFMLColor">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Image)">
+            <summary>
+            Updates the texture with the image data.
+            </summary>
+            <param name="image">The image to copy to the texture.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Color[])">
+            <summary>
+            Sets all pixels in the texture to the provided colors.
+            </summary>
+            <param name="colors">The colors to set every pixel to.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(System.Int32)">
+            <summary>
+            Gets a pixel color at the specified index.
+            </summary>
+            <param name="index">The position in the texture.</param>
+            <returns>The color of the position in the texture.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(SadRogue.Primitives.Point)">
+            <summary>
+            Gets a pixel color at the specified position.
+            </summary>
+            <param name="position">The position in the texture.</param>
+            <returns>The color of the position in the texture.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
-            <inheritdoc />
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
         </member>
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
