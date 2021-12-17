@@ -218,12 +218,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string)"/>.
+            The game window title. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">

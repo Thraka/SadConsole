@@ -11,7 +11,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
     <Description>A library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.1.</Description>
-    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2021 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Various fixes. Some interface enhancements. Ability to use IScreenObject.Surface.Set now.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <!--
@@ -50,7 +50,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
