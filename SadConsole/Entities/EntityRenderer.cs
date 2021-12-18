@@ -80,7 +80,7 @@ namespace SadConsole.Entities
         /// <summary>
         /// When <see langword="true"/>, the <see cref="Add(Entity)"/> and <see cref="Remove(Entity)"/> won't check if the entitiy exists before doing its operation.
         /// </summary>
-        public bool SkipExistChecks { get; set; } = false;
+        public bool SkipExistsChecks { get; set; } = false;
 
         /// <summary>
         /// Internal use only
@@ -100,7 +100,7 @@ namespace SadConsole.Entities
                 return;
             }
 
-            if (SkipExistChecks == false && _entities.Contains(entity)) return;
+            if (SkipExistsChecks == false && _entities.Contains(entity)) return;
 
             _entities.Add(entity);
 
@@ -129,7 +129,7 @@ namespace SadConsole.Entities
 
             foreach (Entity entity in entities)
             {
-                if (SkipExistChecks || !_entities.Contains(entity))
+                if (SkipExistsChecks || !_entities.Contains(entity))
                 {
                     _entities.Add(entity);
 
@@ -182,7 +182,7 @@ namespace SadConsole.Entities
                 return;
             }
 
-            if (SkipExistChecks == false && !_entities.Contains(entity)) return;
+            if (SkipExistsChecks == false && !_entities.Contains(entity)) return;
 
             entity.PositionChanged -= Entity_PositionChanged;
             entity.VisibleChanged -= Entity_VisibleChanged;
@@ -200,7 +200,7 @@ namespace SadConsole.Entities
         public void RemoveAll()
         {
             while (_entities.Count != 0)
-                Remove(_entities[0]);
+                Remove(_entities[_entities.Count - 1]);
         }
 
         /// <inheritdoc/>

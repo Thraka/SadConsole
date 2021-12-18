@@ -2530,6 +2530,11 @@
             </summary>
             <param name="cell">The cell to generate a state from.</param>
         </member>
+        <member name="P:SadConsole.Effects.EffectsManager2.Count">
+            <summary>
+            The count of effects associated with this manager.
+            </summary>
+        </member>
         <member name="T:SadConsole.Effects.EffectsManager2.ColoredGlyphEffectData">
             <summary>
             Represents a mapping of a single effect and associated cells.
@@ -2954,6 +2959,11 @@
         <member name="P:SadConsole.Entities.Renderer.DoEntityUpdate">
             <summary>
             When <see langword="true"/>, indicates this manager should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each entity; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Renderer.SkipExistChecks">
+            <summary>
+            When <see langword="true"/>, the <see cref="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)"/> won't check if the entitiy exists before doing its operation.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Renderer.RenderStep">
