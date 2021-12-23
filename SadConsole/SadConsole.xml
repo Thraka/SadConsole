@@ -1074,6 +1074,26 @@
             <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect"/>.</param>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.CopyAppearanceTo(SadConsole.ColoredString.ColoredGlyphEffect,System.Boolean)">
+            <summary>
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
+            </summary>
+            <param name="cell">The target cell to copy to.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
+        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.CopyAppearanceFrom(SadConsole.ColoredString.ColoredGlyphEffect,System.Boolean)">
+            <summary>
+            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
+            </summary>
+            <param name="cell">The target cell to copy from.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
         <member name="P:SadConsole.ColoredString.Item(System.Int32)">
             <summary>
             Gets a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from the string.
@@ -1473,7 +1493,7 @@
             </summary>
             <param name="text">The text to print.</param>
             <param name="template">The way the text will look when it is printed.</param>
-            <param name="templateEffect">Effect to apply to the text as its printed.</param>
+            <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
             <returns>Returns this cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Print(SadConsole.ColoredString)">
@@ -2961,7 +2981,7 @@
             When <see langword="true"/>, indicates this manager should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each entity; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.SkipExistChecks">
+        <member name="P:SadConsole.Entities.Renderer.SkipExistsChecks">
             <summary>
             When <see langword="true"/>, the <see cref="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)"/> won't check if the entitiy exists before doing its operation.
             </summary>
@@ -4580,7 +4600,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface.
+            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface. Doesn't clear the effect.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">The x position.</param>
@@ -4593,7 +4613,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface,System.Int32,System.Int32)">
             <summary>
-            Clears the glyph, mirror, and decorators, for the specified cell.
+            Clears the glyph, mirror, and decorators, for the specified cell. Doesn't clear the effect.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="x">The x position.</param>
@@ -4604,7 +4624,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ICellSurface)">
             <summary>
-            Erases all cells which clears the glyph, mirror, and decorators.
+            Erases all cells which clears the glyph, mirror, and decorators. Doesn't clear the effect.
             </summary>
             <param name="surface">The surface being edited.</param>
             <remarks>
@@ -4644,7 +4664,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ICellSurface,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
             <summary>
-            Fills the console. Clears cell decorators.
+            Fills the console. Clears cell decorators and effects.
             </summary>
             <param name="surface">The surface being edited.</param>
             <param name="foreground">Foreground to apply. If null, skips.</param>

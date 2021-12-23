@@ -91,7 +91,6 @@ namespace SadConsole.Components
             }
         }
 
-
         /// <summary>
         /// Sets the glyph used in rendering. A shortcut to <see cref="CursorRenderCell"/>.
         /// </summary>
@@ -414,7 +413,7 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="text">The text to print.</param>
         /// <param name="template">The way the text will look when it is printed.</param>
-        /// <param name="templateEffect">Effect to apply to the text as its printed.</param>
+        /// <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect templateEffect)
         {
@@ -459,6 +458,7 @@ namespace SadConsole.Components
                 // Prep
                 ColoredString.ColoredGlyphEffect glyph;
                 ColoredString.ColoredGlyphEffect spaceGlyph = text[0].Clone();
+
                 spaceGlyph.GlyphCharacter = ' ';
                 string stringText = text.String.TrimEnd(' ');
 
@@ -513,6 +513,10 @@ namespace SadConsole.Components
                                         glyph = text[c];
 
                                         PrintGlyph(glyph, text);
+
+                                        // Update the space glyph with the last character printed.
+                                        glyph.CopyAppearanceTo(spaceGlyph);
+                                        spaceGlyph.GlyphCharacter = ' ';
 
                                         c++;
                                     }
