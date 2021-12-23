@@ -1755,7 +1755,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface.
+        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x position.</param>
@@ -1793,7 +1793,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Clears the glyph, mirror, and decorators, for the specified cell.
+        /// Clears the glyph, mirror, and decorators, for the specified cell. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x position.</param>
@@ -1816,7 +1816,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Erases all cells which clears the glyph, mirror, and decorators.
+        /// Erases all cells which clears the glyph, mirror, and decorators. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <remarks>
@@ -1874,21 +1874,20 @@ namespace SadConsole
         /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface, int x, int y, int length)
-        {
-            ColoredGlyph[] cells = Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
-        }
+        public static void Clear(this ICellSurface surface, int x, int y, int length) =>
+            Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
 
         /// <summary>
         /// Clears an area of surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="area">The area to clear.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear(this ICellSurface surface, Rectangle area) =>
             Fill(surface, area, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
 
         /// <summary>
-        /// Fills the console. Clears cell decorators.
+        /// Fills the console. Clears cell decorators and effects.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="foreground">Foreground to apply. If null, skips.</param>
@@ -1919,6 +1918,7 @@ namespace SadConsole
                 glyphs[i] = surface[i];
             }
 
+            surface.Effects.SetEffect(glyphs, null);
             surface.IsDirty = true;
 
             return glyphs;
@@ -1939,9 +1939,7 @@ namespace SadConsole
         public static ColoredGlyph[] Fill(this ICellSurface surface, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
             if (!surface.IsValidCell(x, y, out int index))
-            {
                 return Array.Empty<ColoredGlyph>();
-            }
 
             int end = index + length > surface.Count ? surface.Count - index : index + length;
             int total = end - index;
@@ -1968,7 +1966,7 @@ namespace SadConsole
                 resultIndex++;
             }
 
-
+            surface.Effects.SetEffect(result, null);
             surface.IsDirty = true;
             return result;
         }
@@ -1988,7 +1986,7 @@ namespace SadConsole
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
 
             if (area == Rectangle.Empty)
-                return new ColoredGlyph[0];
+                return Array.Empty<ColoredGlyph>();
 
             var result = new ColoredGlyph[area.Width * area.Height];
             int resultIndex = 0;
@@ -2018,6 +2016,7 @@ namespace SadConsole
                 }
             }
 
+            surface.Effects.SetEffect(result, null);
             surface.IsDirty = true;
             return result;
         }
@@ -2220,7 +2219,7 @@ namespace SadConsole
         /// <param name="border">The border style.</param>
         /// <param name="fill">The fill style. If null, the box is not filled.</param>
         /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-        [Obsolete("Use the other DrawBox method")]
+        [Obsolete("Use the other DrawBox method overload")]
         public static void DrawBox(this ICellSurface surface, Rectangle area, ColoredGlyph border, ColoredGlyph fill = null, int[] connectedLineStyle = null)
         {
             if (connectedLineStyle == null)
@@ -2339,7 +2338,7 @@ namespace SadConsole
         /// <param name="area">The area the ellipse </param>
         /// <param name="outer">The appearance of the outer line of the ellipse.</param>
         /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-        [Obsolete("Use the other DrawCircle method")]
+        [Obsolete("Use the other DrawCircle method overload")]
         public static void DrawCircle(this ICellSurface surface, Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
         {
             var cells = new List<int>(area.Width * area.Height);
