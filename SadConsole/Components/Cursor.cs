@@ -447,10 +447,7 @@ namespace SadConsole.Components
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
-            if (text.Length == 0)
-            {
-                return this;
-            }
+            if (text.Length == 0)  return this;
 
             _cursorCellEffect?.Restart();
             _cursorCellEffect?.ApplyToCell(_cursorCell, _cursorCellOriginal);
@@ -470,14 +467,10 @@ namespace SadConsole.Components
                 int spaceCount = stringText.Length - newStringText.Length;
 
                 for (int i = 0; i < spaceCount; i++)
-                {
                     PrintGlyph(spaceGlyph, text);
-                }
 
                 if (spaceCount != 0)
-                {
                     text = text.SubString(spaceCount, text.Length - spaceCount);
-                }
 
                 stringText = newStringText;
                 string[] parts = stringText.Split(' ');
@@ -511,9 +504,7 @@ namespace SadConsole.Components
 
                                         // Fill rest of line with spaces
                                         for (int i = 0; i < spaces; i++)
-                                        {
                                             PrintGlyph(spaceGlyph, text);
-                                        }
                                     }
 
                                     // Print the rest of the text as normal.
@@ -531,13 +522,9 @@ namespace SadConsole.Components
                                     {
                                         // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
                                         if (_position.X == 0 && _position.Y != currentLine)
-                                        {
                                             _position = new Point(_position.X, _position.Y - 1);
-                                        }
                                         else
-                                        {
                                             CarriageReturn();
-                                        }
 
                                         c++;
                                     }
@@ -548,13 +535,9 @@ namespace SadConsole.Components
                             if (newlineParts.Length != 1 && indexNL != newlineParts.Length - 1)
                             {
                                 if (!UseLinuxLineEndings)
-                                {
                                     LineFeed();
-                                }
                                 else
-                                {
                                     NewLine();
-                                }
 
                                 c++;
                             }
@@ -568,9 +551,7 @@ namespace SadConsole.Components
                         c++;
                     }
                     else
-                    {
                         c++;
-                    }
                 }
             }
             else
@@ -591,25 +572,18 @@ namespace SadConsole.Components
                             continue;
                         }
                         else
-                        {
                             movedLines = false;
-                        }
                     }
 
                     if (glyph.GlyphCharacter == '\r')
-                    {
                         CarriageReturn();
-                    }
+
                     else if (glyph.GlyphCharacter == '\n')
                     {
                         if (!UseLinuxLineEndings)
-                        {
                             LineFeed();
-                        }
                         else
-                        {
                             NewLine();
-                        }
                     }
                     else
                     {

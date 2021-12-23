@@ -90,6 +90,7 @@ namespace SadConsole.Effects
             }
             else
             {
+                if (_effectCells.Count == 0) return;
                 ClearCellEffect(cell);
             }
         }
@@ -135,6 +136,8 @@ namespace SadConsole.Effects
             }
             else
             {
+                if (_effectCells.Count == 0) return;
+
                 foreach (ColoredGlyph cell in cells)
                     ClearCellEffect(cell);
             }
