@@ -168,17 +168,8 @@ namespace SadConsole.Components
             {
                 if (_editor != null)
                 {
-                    if (!(value.X < 0 || value.X >= _editor.Width))
-                    {
-                        _position = new Point(value.X, _position.Y);
-                        RestartCursorEffect();
-                    }
-
-                    if (!(value.Y < 0 || value.Y >= _editor.Height))
-                    {
-                        _position = new Point(_position.X, value.Y);
-                        RestartCursorEffect();
-                    }
+                    _position = new Point(Math.Clamp(value.X, 0, _editor.Width - 1), Math.Clamp(value.Y, 0, _editor.Height - 1));
+                    RestartCursorEffect();
                 }
             }
         }

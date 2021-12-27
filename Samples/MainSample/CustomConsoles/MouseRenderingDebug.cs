@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if MONOGAME
+using System;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -138,3 +139,4 @@ namespace FeatureDemo.CustomConsoles
             base.OnMouseLeftClicked(state);
     }
 }
+#endif

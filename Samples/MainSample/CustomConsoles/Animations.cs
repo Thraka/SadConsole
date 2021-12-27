@@ -28,7 +28,6 @@ namespace FeatureDemo.CustomConsoles
                 new AnimatedGlobe(),
                 new AnimatedFlip(),
                 new AnimatedSkater(),
-                new AnimatedSanta(),
             };
 
             Restart();
@@ -130,16 +129,6 @@ namespace FeatureDemo.CustomConsoles
             Add(AnimatedScreenSurface.FromImage("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), 0.1f,
                 pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"]));
             PrintInfo("Square 8 x 8", Children[1]);
-        }
-    }
-
-    class AnimatedSanta : AnimationDemo
-    {
-        public AnimatedSanta() : base()
-        {
-            Add(AnimatedScreenSurface.FromImage("Running Santa", "Res/Images/Animations/santa_anim.jpg", (6, 2), 0.2f,
-                pixelPadding: (3, 5), action: (c) => { c.Background = c.Background.FillAlpha(); }));
-            PrintInfo("IBM 8 x 16", Children[0]);
         }
     }
 

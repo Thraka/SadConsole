@@ -9,7 +9,6 @@ using SadConsole;
 using SadConsole.Host;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
-using MonoColor = Microsoft.Xna.Framework.Color;
 using Settings = SadConsole.Settings;
 
 namespace FeatureDemo.CustomConsoles
@@ -34,7 +33,7 @@ namespace FeatureDemo.CustomConsoles
     {
         const int MaxLines = 10;
         Line[] _lines = new Line[MaxLines];
-        MonoColor[] _colors;
+        Color[] _colors;
         int _frameNumberForNewLine = 0, _frameCounter = 0, _lineCounter = 0;
 
         public Canvas() : base(3, 3)
@@ -53,7 +52,7 @@ namespace FeatureDemo.CustomConsoles
 
             if (texture is GameTexture t)
             {
-                _colors = t.GetMonoColors();
+                _colors = t.GetPixels();
 
                 for (int y = 0, i = 0; y < t.Height; y++)
                 {
@@ -91,7 +90,7 @@ namespace FeatureDemo.CustomConsoles
             }
 
             if (Font.Image is GameTexture t)
-                 t.SetMonoColors(_colors);
+                 t.SetPixels(_colors);
 
             IsDirty = true;
         }
@@ -111,7 +110,7 @@ namespace FeatureDemo.CustomConsoles
             static readonly Rectangle s_surface = new Rectangle(0, 0, 96, 96);
             readonly int _maxIndex;
             readonly Dir _direction;
-            MonoColor _color = RandomColor.ToMonoColor();
+            Color _color = RandomColor;
             Point _start;
             Point _end;
             Sides _side = Sides.None;
@@ -204,7 +203,7 @@ namespace FeatureDemo.CustomConsoles
                 _end = GetOppositePoint(_start);
             }
 
-            public void Draw(MonoColor[] surface)
+            public void Draw(Color[] surface)
             {
                 Move();
 

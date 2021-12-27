@@ -32,6 +32,8 @@ namespace SadConsole.Tests
 
             public int Width => _graphic.Width;
 
+            public int Size => Height * Width;
+
             public void Dispose()
             {
                 _graphic.Dispose();
@@ -42,6 +44,16 @@ namespace SadConsole.Tests
             public void SetPixel(Point position, Color color) => throw new NotImplementedException();
             public void SetPixel(int index, Color color) => throw new NotImplementedException();
             public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null) => throw new NotImplementedException();
+
+            public void SetPixels(Color[] colors)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetPixels(ReadOnlySpan<Color> colors)
+            {
+                throw new NotImplementedException();
+            }
 
             public Texture(string path)
             {

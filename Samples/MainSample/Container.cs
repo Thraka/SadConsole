@@ -25,11 +25,12 @@ namespace FeatureDemo
             selectedConsoleContainer.Position = (0, headerConsole.AbsoluteArea.MaxExtentY + 1);
 
             consoles = new CustomConsole[] {
+                new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
                 //new CustomConsole(new CustomConsoles.MouseRenderingDebug(), "SadConsole.Instructions", "Automatic typing to a console."),
                 new CustomConsole(new CustomConsoles.SplashScreen() { SplashCompleted = MoveNextConsole }, "Splash Screen - Using instructions", "Chains multiple SadConsole.Instruction types to create an animation."),
-                new CustomConsole(new CustomConsoles.AutoTypingConsole(), "Auto Typing", "Automatic typing to a console"),
                 new CustomConsole(new CustomConsoles.StringParsingConsole(), "String Parser", "Examples of using the string parser"),
                 new CustomConsole(new CustomConsoles.ControlsTest(), "Controls Test", "Interact with SadConsole controls"),
+                new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
                 new CustomConsole(new CustomConsoles.DOSConsole(), "Prompt Console", "Emulates a command prompt"),
                 new CustomConsole(new CustomConsoles.ScrollableConsole(20, 10, 60), "Text scrolling", "Renders a tiny console with a cursor along with a scroll bar"),
                 new CustomConsole(new CustomConsoles.TheDrawConsole(), "TheDraw Font", "Example of how to load and print TheDraw fonts"),
@@ -37,7 +38,6 @@ namespace FeatureDemo
                 new CustomConsole(new CustomConsoles.ShapesConsole(), "Shape Drawing & Text Mouse Cursor", "Examples of drawing shapes and displaying a mouse cursor"),
                 new CustomConsole(new CustomConsoles.EntityLiteConsole(), "Entity lite demonstration", "Demonstrate using multiple visible entities. Press Q to move them"),
                 new CustomConsole(new CustomConsoles.ScrollableView(), "Surface view control", "The Surface View control can peek into surfaces and scroll. Click on one"),
-                new CustomConsole(new CustomConsoles.StretchedConsole(), "Font Zoom", "Console where font has been zoomed x2"),
                 new CustomConsole(new CustomConsoles.MultiCursor(), "Multiple Cursors", "Consoles can have multiple cursors. Press F3 to change the active cursor."),
                 new CustomConsole(new CustomConsoles.FadingChild(), "Transparent blend", "Renderer can set transparency on a surface."),
                 new CustomConsole(new CustomConsoles.RandomScrollingConsole(), "Scrolling", "2000x2000 scrollable console. Use the cursor keys."),
