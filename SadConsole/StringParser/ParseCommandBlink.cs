@@ -74,8 +74,6 @@
             if (_blinkEffect == null)
                 _blinkEffect = new CustomBlinkEffect() { BlinkSpeed = Speed };
 
-            commandStack.TurnOnEffects = true;
-
             // No exceptions, set the type
             CommandType = CommandTypes.Effect;
         }

@@ -245,10 +245,7 @@ namespace SadConsole
         /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         public static void SetGlyph(this ICellSurface surface, int x, int y, int glyph, Color foreground, Color background, Mirror mirror, IEnumerable<CellDecorator> decorators)
         {
-            if (!surface.IsValidCell(x, y, out int index))
-            {
-                return;
-            }
+            if (!surface.IsValidCell(x, y, out int index)) return;
 
             surface[index].Background = background;
             surface[index].Foreground = foreground;
@@ -256,6 +253,22 @@ namespace SadConsole
             surface[index].Mirror = mirror;
             surface[index].Decorators = decorators?.ToArray() ?? Array.Empty<CellDecorator>();
 
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Draws a single glyph on the console at the specified location.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="glyph">The glyph to display.</param>
+        public static void SetGlyph(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
+        {
+            if (glyph == null) return;
+            if (!surface.IsValidCell(x, y, out int index)) return;
+
+            glyph.CopyAppearanceTo(surface[index]);
             surface.IsDirty = true;
         }
 
@@ -427,6 +440,16 @@ namespace SadConsole
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICellEffect GetEffect(this ICellSurface surface, int x, int y) =>
             surface.Effects.GetEffect(surface[x, y]);
+
+        /// <summary>
+        /// Gets the effect of the specified cell.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="index">The index of the cell.</param>
+        /// <returns>The effect.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ICellEffect GetEffect(this ICellSurface surface, int index) =>
+            surface.Effects.GetEffect(surface[index]);
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -642,13 +665,19 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
                 PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface));
@@ -671,14 +700,20 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Foreground = foreground;
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
@@ -705,24 +740,29 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Background = background;
                     surface[index].Foreground = foreground;
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var behaviorFore = new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
-                var behaviorBack = new ParseCommandRecolor { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background };
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(behaviorFore);
-                stacks.AddSafe(behaviorBack);
-                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -744,8 +784,10 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
@@ -754,17 +796,70 @@ namespace SadConsole
                     surface[index].Foreground = foreground;
                     surface[index].Mirror = mirror;
 
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
-                stacks.AddSafe(new ParseCommandRecolor { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
-                stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+                stringValue.SetMirror(mirror);
 
-                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, stringValue);
+            }
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Draws the string on the console at the specified location with the specified settings.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        /// <param name="background">Sets the background of all characters in the text.</param>
+        /// <param name="mirror">The mirror to set on all characters in the text.</param>
+        /// <param name="decorators">An array of cell decorators to use on each glyph. A <see langword="null"/> value will clear the decorators.</param>
+        public static void Print(this ICellSurface surface, int x, int y, string text, Color foreground, Color background, Mirror mirror, CellDecorator[] decorators)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            if (!surface.IsValidCell(x, y, out int index)) return;
+
+            if (!surface.UsePrintProcessor)
+            {
+                var effectIndicies = new List<int>(text.Length);
+                int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
+                int charIndex = 0;
+
+                for (; index < end; index++)
+                {
+                    surface[index].Glyph = text[charIndex];
+
+                    surface[index].Background = background;
+                    surface[index].Foreground = foreground;
+                    surface[index].Mirror = mirror;
+                    surface[index].Decorators = decorators;
+
+                    effectIndicies.Add(index);
+                    charIndex++;
+                }
+
+                SetEffect(surface, effectIndicies, null);
+            }
+            else
+            {
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+                stringValue.SetMirror(mirror);
+                stringValue.SetDecorators(decorators);
+
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -784,22 +879,27 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int total = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < total; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Mirror = mirror;
 
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetMirror(mirror);
 
-                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -818,38 +918,34 @@ namespace SadConsole
             if (string.IsNullOrEmpty(text)) return;
             if (!surface.IsValidCell(x, y, out int index)) return;
 
-            int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
-            int charIndex = 0;
-
-            List<int> effectIndicies = new List<int>(text.Length);
-
-            for (; index < end; index++)
+            if (!surface.UsePrintProcessor)
             {
-                ColoredGlyph cell = surface[index];
-                appearance.CopyAppearanceTo(cell);
-                cell.Glyph = text[charIndex];
-                effectIndicies.Add(index);
-                charIndex++;
+                var effectIndicies = new List<int>(text.Length);
+                int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
+                int charIndex = 0;
+
+                for (; index < end; index++)
+                {
+                    ColoredGlyph cell = surface[index];
+                    appearance.CopyAppearanceTo(cell, false);
+                    cell.Glyph = text[charIndex];
+                    effectIndicies.Add(index);
+                    charIndex++;
+                }
+
+                SetEffect(surface, effectIndicies, effect);
+            }
+            else
+            {
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(appearance.Foreground);
+                stringValue.SetBackground(appearance.Background);
+                stringValue.SetMirror(appearance.Mirror);
+                stringValue.SetDecorators(appearance.Decorators);
+
+                PrintNoCheck(surface, index, stringValue);
             }
 
-            SetEffect(surface, effectIndicies, effect);
-
-            surface.IsDirty = true;
-        }
-
-        /// <summary>
-        /// Draws a single glyph on the console at the specified location.
-        /// </summary>
-        /// <param name="surface">The surface being edited.</param>
-        /// <param name="x">X location of the text.</param>
-        /// <param name="y">Y location of the text.</param>
-        /// <param name="glyph">The glyph to display.</param>
-        public static void SetGlyph(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
-        {
-            if (glyph == null) return;
-            if (!surface.IsValidCell(x, y, out int index)) return;
-
-            glyph.CopyAppearanceTo(surface[index]);
             surface.IsDirty = true;
         }
 
@@ -867,7 +963,6 @@ namespace SadConsole
             PrintNoCheck(surface, index, text);
             surface.IsDirty = true;
         }
-
 
         private static void PrintNoCheck(this ICellSurface surface, int index, ColoredString text)
         {
@@ -890,6 +985,9 @@ namespace SadConsole
 
                 if (!text.IgnoreEffect)
                     SetEffect(surface, index, text[charIndex].Effect);
+
+                if (!text.IgnoreDecorators)
+                    surface[index].Decorators = text[charIndex].Decorators;
 
                 charIndex++;
             }

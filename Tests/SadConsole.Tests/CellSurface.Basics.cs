@@ -6,6 +6,45 @@ namespace SadConsole.Tests
     public partial class CellSurface
     {
         [TestMethod]
+        public void Print_DecoratorsClear()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            Color foreground = Color.AliceBlue;
+            Color background = Color.Purple;
+            Mirror mirror = Mirror.Vertical;
+
+            surface1.Print(1, 1, "Test me!", foreground, background, mirror);
+            surface1.SetDecorator(2, 1, 1, new CellDecorator(Color.Yellow, 22, Mirror.None));
+
+            Assert.IsTrue(surface1[1, 1].Foreground == foreground);
+            Assert.IsTrue(surface1[1, 1].Background == background);
+            Assert.IsTrue(surface1[1, 1].Glyph == (int)'T');
+            Assert.IsTrue(surface1[1, 1].Mirror == mirror);
+            Assert.IsTrue(surface1[1, 1].Decorators.Length == 0);
+
+            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
+            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+
+            surface1.Print(1, 1, "Test me!", foreground, background, mirror);
+            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
+            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+
+            CellDecorator dec1 = new CellDecorator(Color.Wheat, 34, Mirror.None);
+            CellDecorator dec2 = new CellDecorator(Color.Purple, 21, Mirror.Vertical);
+            CellDecorator dec3 = new CellDecorator(Color.PapayaWhip, 85, Mirror.Horizontal);
+
+            surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, new[] { dec1, dec2, dec3 });
+            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
+            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 3);
+
+            surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, null);
+            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
+            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 0);
+        }
+
+        [TestMethod]
         public void Glyph_SetForeground()
         {
             new SadConsole.Tests.BasicGameHost();

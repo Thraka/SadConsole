@@ -82,6 +82,9 @@ namespace SadConsole.StringParser
                                     case "m":
                                         commandObject = new ParseCommandMirror(commandParams);
                                         break;
+                                    case "d":
+                                        commandObject = new ParseCommandDecorator(commandParams);
+                                        break;
                                     case "undo":
                                     case "u":
                                         commandObject = new ParseCommandUndo(commandParams, commandStacks);
@@ -143,8 +146,11 @@ namespace SadConsole.StringParser
                     newGlyph = new ColoredGlyphEffect();
                     surface[i + surfaceIndex].CopyAppearanceTo(newGlyph);
 
+                    Effects.ICellEffect effect = surface.GetEffect(i + surfaceIndex);
+
                     // Get the glyph's character from the string
                     newGlyph.Glyph = value[i];
+                    newGlyph.Effect = effect;
                 }
                 else
                 {
@@ -171,6 +177,10 @@ namespace SadConsole.StringParser
                 if (commandStacks.Mirror.Count != 0)
                     commandStacks.Mirror.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
 
+                // Decorator
+                if (commandStacks.Decorator.Count != 0)
+                    commandStacks.Decorator.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+
                 // Effect
                 if (commandStacks.Effect.Count != 0)
                     commandStacks.Effect.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
@@ -178,7 +188,7 @@ namespace SadConsole.StringParser
                 glyphs.Add(newGlyph);
             }
 
-            return new ColoredString(glyphs.ToArray()) { IgnoreEffect = !commandStacks.TurnOnEffects };
+            return new ColoredString(glyphs.ToArray());
         }
 
         

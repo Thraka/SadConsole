@@ -23,8 +23,6 @@ namespace SadConsole.StringParser
             else
                 _counter = -1;
 
-            commandStack.TurnOnEffects = true;
-
             // No exceptions, set the type
             CommandType = CommandTypes.Effect;
         }

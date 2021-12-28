@@ -112,7 +112,7 @@ namespace SadConsole
         /// When true, instructs a caller to not render the effect.
         /// </summary>
         [DataMember]
-        public bool IgnoreEffect { get; set; } = true;
+        public bool IgnoreEffect { get; set; }
 
         /// <summary>
         /// When true, instructs a caller to not render the mirror state.

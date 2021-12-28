@@ -4006,6 +4006,15 @@
             <param name="mirror">Sets how the glyph will be mirrored.</param>
             <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+            <summary>
+            Draws a single glyph on the console at the specified location.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="glyph">The glyph to display.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32)">
             <summary>
             Gets the glyph of a specified cell.
@@ -4258,6 +4267,19 @@
             <param name="background">Sets the background of all characters in the text.</param>
             <param name="mirror">The mirror to set on all characters in the text.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,SadConsole.CellDecorator[])">
+            <summary>
+            Draws the string on the console at the specified location with the specified settings.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="x">X location of the text.</param>
+            <param name="y">Y location of the text.</param>
+            <param name="text">The string to display.</param>
+            <param name="foreground">Sets the foreground of all characters in the text.</param>
+            <param name="background">Sets the background of all characters in the text.</param>
+            <param name="mirror">The mirror to set on all characters in the text.</param>
+            <param name="decorators">An array of cell decorators to use on each glyph. A <see langword="null"/> value will clear the decorators.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,System.String,SadConsole.Mirror)">
             <summary>
             Draws the string on the console at the specified location with the specified settings.
@@ -4278,15 +4300,6 @@
             <param name="text">The string to display.</param>
             <param name="appearance">The appearance of the cell</param>
             <param name="effect">An optional effect to apply to the printed surface.</param>
-        </member>
-        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
-            <summary>
-            Draws a single glyph on the console at the specified location.
-            </summary>
-            <param name="surface">The surface being edited.</param>
-            <param name="x">X location of the text.</param>
-            <param name="y">Y location of the text.</param>
-            <param name="glyph">The glyph to display.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredString)">
             <summary>
@@ -8707,6 +8720,11 @@
             Command should be added to the <see cref="P:SadConsole.StringParser.ParseCommandStacks.Effect"/> stack.
             </summary>
         </member>
+        <member name="F:SadConsole.StringParser.CommandTypes.Decorator">
+            <summary>
+            Command should be added to the <see cref="P:SadConsole.StringParser.ParseCommandStacks.Decorator"/> stack.
+            </summary>
+        </member>
         <member name="F:SadConsole.StringParser.CommandTypes.PureCommand">
             <summary>
             Command runs on creation and is not added to anything in <see cref="T:SadConsole.StringParser.ParseCommandStacks"/>.
@@ -8774,6 +8792,30 @@
             <param name="commandStack">The current commands for the string.</param>
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandClearEffect.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.ParseCommandDecorator">
+            <summary>
+            Sets the mirror of a glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.StringParser.ParseCommandDecorator.Decorator">
+            <summary>
+            The mirror mode.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.String)">
+            <summary>
+            Creates a new instance of this command.
+            </summary>
+            <param name="parameters">The string to parse for parameters.</param>
+        </member>
+        <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of this command.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.ParseCommandDecorator.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandSetGlyph">
@@ -8932,11 +8974,6 @@
             A list of behaviors applied as a string is processed.
             </summary>
         </member>
-        <member name="P:SadConsole.StringParser.ParseCommandStacks.TurnOnEffects">
-            <summary>
-            Indicates there is a command that uses effects.
-            </summary>
-        </member>
         <member name="P:SadConsole.StringParser.ParseCommandStacks.Foreground">
             <summary>
             The commands that affect the foreground.
@@ -8962,9 +8999,19 @@
             The commands that affect the glyph effect.
             </summary>
         </member>
+        <member name="P:SadConsole.StringParser.ParseCommandStacks.Decorator">
+            <summary>
+            The commands that affect the glyph decorators.
+            </summary>
+        </member>
         <member name="P:SadConsole.StringParser.ParseCommandStacks.All">
             <summary>
             All commands.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.ParseCommandStacks.CalculatedDecorators">
+            <summary>
+            Returns the active array that is calculated from the <see cref="P:SadConsole.StringParser.ParseCommandStacks.Decorator"/> stack.
             </summary>
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandStacks.#ctor">

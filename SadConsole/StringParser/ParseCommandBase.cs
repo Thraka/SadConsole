@@ -26,6 +26,10 @@
         /// </summary>
         Effect,
         /// <summary>
+        /// Command should be added to the <see cref="ParseCommandStacks.Decorator"/> stack.
+        /// </summary>
+        Decorator,
+        /// <summary>
         /// Command runs on creation and is not added to anything in <see cref="ParseCommandStacks"/>.
         /// </summary>
         PureCommand,
