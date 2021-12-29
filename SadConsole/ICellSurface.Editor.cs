@@ -1870,7 +1870,7 @@ namespace SadConsole
                 return Array.Empty<ColoredGlyph>();
             }
 
-            int end = index + count > surface.Count ? surface.Count - index : index + count;
+            int end = index + count > surface.Count ? surface.Count : index + count;
             int total = end - index;
             ColoredGlyph[] result = new ColoredGlyph[total];
             int resultIndex = 0;
@@ -1937,9 +1937,22 @@ namespace SadConsole
         /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and mirror set to none. Clears cell decorators.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface) =>
-            Fill(surface, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface)
+        {
+            ColoredGlyph cell;
+
+            for (int i = 0; i < surface.Count; i++)
+            {
+                cell = surface[i];
+                cell.Clear();
+                cell.Foreground = surface.DefaultForeground;
+                cell.Background = surface.DefaultBackground;
+                cell.Glyph = surface.DefaultGlyph;
+            }
+
+            surface.Effects.RemoveAll();
+            surface.IsDirty = true;
+        }
 
         /// <summary>
         /// Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
@@ -1949,8 +1962,7 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         public static void Clear(this ICellSurface surface, int x, int y)
         {
-            if (!surface.IsValidCell(x, y))
-                return;
+            if (!surface.IsValidCell(x, y)) return;
 
             ColoredGlyph cell = surface[x, y];
 
@@ -1960,6 +1972,7 @@ namespace SadConsole
             cell.Foreground = surface.DefaultForeground;
             cell.Background = surface.DefaultBackground;
             cell.Glyph = surface.DefaultGlyph;
+
             surface.IsDirty = true;
         }
 
@@ -1971,18 +1984,65 @@ namespace SadConsole
         /// <param name="y">The y position of the segment.</param>
         /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface, int x, int y, int length) =>
-            Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface, int x, int y, int length)
+        {
+            int index = new Point(x, y).ToIndex(surface.Width);
+            if (index < 0 || index >= surface.Count) return;
+
+            int end = index + length > surface.Count ? surface.Count : index + length;
+            var result = new ColoredGlyph[end - index];
+            int resultIndex = 0;
+            ColoredGlyph cell;
+
+            for (; index < end; index++)
+            {
+                cell = surface[index];
+                cell.Clear();
+                cell.Foreground = surface.DefaultForeground;
+                cell.Background = surface.DefaultBackground;
+                cell.Glyph = surface.DefaultGlyph;
+
+                result[resultIndex] = cell;
+                resultIndex++;
+            }
+
+            surface.Effects.SetEffect(result, null);
+            surface.IsDirty = true;
+        }
 
         /// <summary>
         /// Clears an area of surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="area">The area to clear.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface, Rectangle area) =>
-            Fill(surface, area, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface, Rectangle area)
+        {
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
+
+            if (area == Rectangle.Empty) return;
+
+            var result = new ColoredGlyph[area.Width * area.Height];
+            int resultIndex = 0;
+            ColoredGlyph cell;
+
+            for (int x = area.X; x < area.X + area.Width; x++)
+            {
+                for (int y = area.Y; y < area.Y + area.Height; y++)
+                {
+                    cell = surface[x, y];
+                    cell.Clear();
+                    cell.Foreground = surface.DefaultForeground;
+                    cell.Background = surface.DefaultBackground;
+                    cell.Glyph = surface.DefaultGlyph;
+
+                    result[resultIndex] = cell;
+                    resultIndex++;
+                }
+            }
+
+            surface.Effects.SetEffect(result, null);
+            surface.IsDirty = true;
+        }
 
         /// <summary>
         /// Fills the console. Clears cell decorators and effects.
@@ -2039,9 +2099,8 @@ namespace SadConsole
             if (!surface.IsValidCell(x, y, out int index))
                 return Array.Empty<ColoredGlyph>();
 
-            int end = index + length > surface.Count ? surface.Count - index : index + length;
-            int total = end - index;
-            ColoredGlyph[] result = new ColoredGlyph[total];
+            int end = index + length > surface.Count ? surface.Count : index + length;
+            ColoredGlyph[] result = new ColoredGlyph[end - index];
             int resultIndex = 0;
             for (; index < end; index++)
             {
