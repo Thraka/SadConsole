@@ -191,10 +191,10 @@ namespace SFML.Graphics
 
                 if (cell.Decorators.Length != 0)
                 {
-                    foreach (var decorator in cell.Decorators)
+                    for (int d = 0; d < cell.Decorators.Length; d++)
                     {
-                        glyphRect = font.GetGlyphSourceRectangle(decorator.Glyph).ToIntRect();
-                        foreground = decorator.Color.ToSFMLColor();
+                        glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
+                        foreground = cell.Decorators[d].Color.ToSFMLColor();
 
                         if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
                         {

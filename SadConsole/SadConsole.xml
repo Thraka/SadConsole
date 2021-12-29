@@ -4118,6 +4118,14 @@
             <param name="y">The y location of the cell.</param>
             <returns>The effect.</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetEffect(SadConsole.ICellSurface,System.Int32)">
+            <summary>
+            Gets the effect of the specified cell.
+            </summary>
+            <param name="surface">The surface being edited.</param>
+            <param name="index">The index of the cell.</param>
+            <returns>The effect.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ICellSurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
             <summary>
             Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.

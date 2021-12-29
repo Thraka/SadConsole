@@ -156,9 +156,9 @@ namespace FeatureDemo
                             if (foreground != SadRogue.Primitives.Color.Transparent && foreground != background)
                                 SadConsole.Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
-                            foreach (CellDecorator decorator in cell.Decorators)
-                                if (decorator.Color != SadRogue.Primitives.Color.Transparent)
-                                    SadConsole.Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                            for (int d = 0; d < cell.Decorators.Length; d++)
+                                if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                    SadConsole.Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
                         }
 
                         i++;
