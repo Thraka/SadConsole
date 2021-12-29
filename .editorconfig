@@ -11,6 +11,7 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
+dotnet_style_readonly_field=false:suggestion
 
 [project.json]
 indent_size = 2
@@ -88,7 +89,7 @@ csharp_prefer_simple_using_statement = false:none
 csharp_style_prefer_switch_expression = true:suggestion
 
 # Code quality
-dotnet_style_readonly_field = true:suggestion
+dotnet_style_readonly_field = false:suggestion
 dotnet_code_quality_unused_parameters = non_public:suggestion
 
 # Expression-level preferences

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29310.158
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole", "SadConsole\SadConsole.csproj", "{47532D92-BB78-493A-A693-CC3687F609F6}"
 EndProject
@@ -38,7 +38,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Debug.MonoGame",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PerformanceTests", "PerformanceTests", "{B9E802D7-CDD5-45B2-B7FE-9B614F8B545F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.PerformanceTests", "PerformanceTests\SadConsole.PerformanceTests\SadConsole.PerformanceTests.csproj", "{234F04EC-2DB9-4212-B839-1B06D9EF2822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.PerformanceTests", "PerformanceTests\SadConsole.PerformanceTests\SadConsole.PerformanceTests.csproj", "{234F04EC-2DB9-4212-B839-1B06D9EF2822}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.WPFMonoGame", "SadConsole.Host.WPFMonoGame\SadConsole.Host.WPFMonoGame.csproj", "{0E72751D-13FB-43AC-A3D6-C5F62A5183BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFSadConsole", "Samples\WPFSadConsole\WPFSadConsole.csproj", "{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.WpfInterop", "..\monogame-framework-wpfinterop\MonoGame.Framework.WpfInterop\MonoGame.Framework.WpfInterop.csproj", "{05C50FAB-E168-47D5-AD2A-9C903B52C926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +96,18 @@ Global
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E72751D-13FB-43AC-A3D6-C5F62A5183BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E72751D-13FB-43AC-A3D6-C5F62A5183BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E72751D-13FB-43AC-A3D6-C5F62A5183BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E72751D-13FB-43AC-A3D6-C5F62A5183BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05C50FAB-E168-47D5-AD2A-9C903B52C926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C50FAB-E168-47D5-AD2A-9C903B52C926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C50FAB-E168-47D5-AD2A-9C903B52C926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C50FAB-E168-47D5-AD2A-9C903B52C926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +121,8 @@ Global
 		{D413FA92-01C8-412B-8AF0-416423582EC3} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{7A961499-F7E8-4291-A906-AC1CC520EE03} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822} = {B9E802D7-CDD5-45B2-B7FE-9B614F8B545F}
+		{0E72751D-13FB-43AC-A3D6-C5F62A5183BA} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
+		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}
