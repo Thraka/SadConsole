@@ -91,13 +91,13 @@ namespace SadConsole.Components
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
             // Check each key pressed.
-            foreach (AsciiKey key in info.KeysPressed)
+            for (int i = 0; i < info.KeysPressed.Count; i++)
             {
+                AsciiKey key = info.KeysPressed[i];
+
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
-                {
                     _attachedCursor.Print(key.Character.ToString());
-                }
 
                 // Special character - BACKSPACE
                 else if (key.Key == Keys.Back)

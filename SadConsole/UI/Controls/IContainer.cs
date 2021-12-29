@@ -8,7 +8,7 @@ namespace SadConsole.UI.Controls
     /// <summary>
     /// A simple container for controls.
     /// </summary>
-    public interface IContainer : IEnumerable<ControlBase>
+    public interface IContainer : IReadOnlyList<ControlBase>
     {
         /// <summary>
         /// Gets the position of the container based on any parents position.

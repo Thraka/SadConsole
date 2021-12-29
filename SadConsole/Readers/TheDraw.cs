@@ -123,12 +123,14 @@ namespace SadConsole.Readers
 
                     int y = 0;
 
-                    foreach (var row in character.Rows)
+                    for (int i = 0; i < character.Rows.Length; i++)
                     {
+                        CharacterRow row = character.Rows[i];
                         var x = 0;
 
-                        foreach (var c in row.Characters)
+                        for (int cIndex = 0; cIndex < row.Characters.Length; cIndex++)
                         {
+                            CharacterSpot c = row.Characters[cIndex];
                             surface[x, y].Glyph = c.Character;
 
                             if (Type == FontType.Color)

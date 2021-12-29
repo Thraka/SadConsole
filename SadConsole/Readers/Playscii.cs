@@ -82,9 +82,10 @@ namespace SadConsole.Readers
             public ScreenSurface ToScreenSurface(int width, int height, IFont font, Palette colors)
             {
                 var output = new ScreenSurface(width, height) { Font = font };
-                if (layers.Length > 0)
-                    foreach (var layer in layers)
-                        layer.ToSurface(output, colors);
+
+                for (int i = 0; i < layers.Length; i++)
+                    layers[i].ToSurface(output, colors);
+
                 return output;
             }
         }

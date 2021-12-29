@@ -60,8 +60,11 @@ namespace SadConsole.Components
             if (screen.UseMouse)
                 list.Add(screen);
 
-            foreach (IScreenObject child in screen.Children)
+            for (int i = 0; i < screen.Children.Count; i++)
+            {
+                IScreenObject child = screen.Children[i];
                 GetConsoles(child, ref list);
+            }
         }
     }
 }

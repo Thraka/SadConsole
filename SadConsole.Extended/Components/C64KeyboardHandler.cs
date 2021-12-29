@@ -93,8 +93,10 @@ namespace SadConsole.Components
             var console = (Console)consoleObject;
 
             // Check each key pressed.
-            foreach (AsciiKey key in info.KeysPressed)
+            for (int i = 0; i < info.KeysPressed.Count; i++)
             {
+                AsciiKey key = info.KeysPressed[i];
+
                 // If the character associated with the key pressed is a printable character, print it
                 if (key.Character != '\0')
                 {

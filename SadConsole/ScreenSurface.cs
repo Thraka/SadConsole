@@ -287,11 +287,22 @@ namespace SadConsole
 
             Surface.Effects.UpdateEffects(delta);
 
-            foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this, delta);
+            if (ComponentsUpdate.Count > 0)
+            {
+                IComponent[] array = ComponentsUpdate.ToArray();
+                for (int i = 0; i < array.Length; i++)
+                {
+                    IComponent component = array[i];
+                    component.Update(this, delta);
+                }
+            }
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
+            IScreenObject[] tempChildren = Children.ToArray();
+            for (int i1 = 0; i1 < tempChildren.Length; i1++)
+            {
+                IScreenObject child = tempChildren[i1];
                 child.Update(delta);
+            }
         }
 
         private void _isDirtyChangedEventHadler(object sender, EventArgs e) =>

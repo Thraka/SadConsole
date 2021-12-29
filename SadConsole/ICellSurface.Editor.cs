@@ -1596,8 +1596,10 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
                     destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
@@ -1678,8 +1680,10 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
                     destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
@@ -1761,8 +1765,10 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
                     destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
@@ -1842,8 +1848,10 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
                     destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }

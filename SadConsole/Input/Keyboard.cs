@@ -181,8 +181,10 @@ namespace SadConsole.Input
             // just pressed, then the 'a' needs to get replaced with 'A'.
 
             // For all new keys down, if we don't know them, add them to pressed, add them to down.
-            foreach (Keys unmappedVirtualKey in unmappedVirtualKeys)
+            Keys unmappedVirtualKey;
+            for (int i = 0; i < unmappedVirtualKeys.Length; i++)
             {
+                unmappedVirtualKey = unmappedVirtualKeys[i];
                 bool firstPressed = false;
 
                 AsciiKey key = new AsciiKey();

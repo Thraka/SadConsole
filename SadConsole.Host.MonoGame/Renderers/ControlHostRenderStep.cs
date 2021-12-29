@@ -106,8 +106,12 @@ namespace SadConsole.Renderers
         /// <param name="screenObject">The screen surface with font information.</param>
         protected void ProcessContainer(UI.Controls.IContainer controlContainer, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
         {
-            foreach (UI.Controls.ControlBase control in controlContainer)
+            UI.Controls.ControlBase control;
+
+            for (int i = 0; i < controlContainer.Count; i++)
             {
+                control = controlContainer[i];
+
                 if (!control.IsVisible) continue;
                 RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
 

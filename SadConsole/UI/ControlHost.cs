@@ -286,10 +286,12 @@ namespace SadConsole.UI
             {
                 _parentView = ParentConsole.Surface.View;
                 IsDirty = true;
-            }    
+            }
 
-            foreach (ControlBase control in ControlsList.ToArray())
+            ControlBase[] tempControlArray = ControlsList.ToArray();
+            for (int i = 0; i < tempControlArray.Length; i++)
             {
+                ControlBase control = tempControlArray[i];
                 if (control.IsDirty)
                     IsDirty = true;
 
@@ -615,8 +617,12 @@ namespace SadConsole.UI
         /// <inheritdoc />
         private void Surface_MouseExit(object sender, MouseScreenObjectState state)
         {
-            foreach (ControlBase control in ControlsList)
+            ControlBase control;
+            for (int i = 0; i < ControlsList.Count; i++)
+            {
+                control = ControlsList[i];
                 control.LostMouse(state);
+            }
         }
 
         private void Surface_FocusLost(object sender, EventArgs e)

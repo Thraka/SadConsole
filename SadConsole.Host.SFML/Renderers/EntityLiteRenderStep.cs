@@ -71,8 +71,11 @@ namespace SadConsole.Renderers
                 ColoredGlyph cell;
                 IntRect renderRect;
 
-                foreach (Entities.Entity item in _entityManager.EntitiesVisible)
+                Entities.Entity item;
+                for (int i = 0; i < _entityManager.EntitiesVisible.Count; i++)
                 {
+                    item = _entityManager.EntitiesVisible[i];
+
                     if (!item.IsVisible) continue;
 
                     renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToIntRect();

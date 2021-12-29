@@ -249,8 +249,10 @@ namespace SadConsole.Entities
             _entitiesVisible = new List<Entity>();
 
             // Detatch events
-            foreach (Entity entity in _entityHolding)
+            Entity entity;
+            for (int i = 0; i < _entityHolding.Count; i++)
             {
+                entity = _entityHolding[i];
                 entity.PositionChanged -= Entity_PositionChanged;
                 entity.VisibleChanged -= Entity_VisibleChanged;
                 entity.IsDirtyChanged -= Entity_IsDirtyChanged;

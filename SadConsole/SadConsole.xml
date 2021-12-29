@@ -9884,6 +9884,12 @@
             The controls this composite control is hosting. Use <see cref="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)"/> and <see cref="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)"/> to manage the collection.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.CompositeControl.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CompositeControl.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new control with the specified width and height.
@@ -10584,6 +10590,12 @@
             <summary>
             The controls this panel contains.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Item(System.Int32)">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.UI.Controls.Panel.Host">
             <inheritdoc/>
