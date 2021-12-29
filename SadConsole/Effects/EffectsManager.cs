@@ -163,6 +163,28 @@ namespace SadConsole.Effects
         }
 
         /// <summary>
+        /// Checks all the cells in this manager and removes any that are no longer in the parent surface.
+        /// </summary>
+        public void DropInvalidCells()
+        {
+            if (_effectCells.Count == 0) return;
+
+            // Get all the cells
+            ColoredGlyph[] surfaceCells = _backingSurface.GetCells(_backingSurface.Area).ToArray();
+            List<ColoredGlyph> missingCells = new List<ColoredGlyph>(5);
+
+            foreach (var item in _effectCells)
+            {
+                if (Array.IndexOf(surfaceCells, item.Key) == -1)
+                    missingCells.Add(item.Key);
+            }
+
+            foreach (ColoredGlyph cell in missingCells)
+                ClearCellEffect(cell);
+
+        }
+
+        /// <summary>
         /// Removes an effect and associated cells from the manager.
         /// </summary>
         /// <param name="effect">Effect to remove.</param>
@@ -229,9 +251,7 @@ namespace SadConsole.Effects
                 _effectCells.Remove(cell);
 
                 if (oldEffectData.CellsStates.Count == 0)
-                {
                     _effects.Remove(oldEffectData.Effect);
-                }
 
                 _backingSurface.IsDirty = true;
             }

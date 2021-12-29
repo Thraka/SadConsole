@@ -2463,6 +2463,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.Effects.EffectsManager.DropInvalidCells">
+            <summary>
+            Checks all the cells in this manager and removes any that are no longer in the parent surface.
+            </summary>
+        </member>
         <member name="M:SadConsole.Effects.EffectsManager.Remove(SadConsole.Effects.ICellEffect)">
             <summary>
             Removes an effect and associated cells from the manager.

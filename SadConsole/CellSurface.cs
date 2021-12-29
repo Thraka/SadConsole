@@ -296,12 +296,7 @@ namespace SadConsole
                         newCells[index] = this[x, y];
 
                         if (clear)
-                        {
-                            newCells[index].Foreground = DefaultForeground;
-                            newCells[index].Background = DefaultBackground;
-                            newCells[index].Glyph = 0;
-                            newCells[index].Mirror = Mirror.None;
-                        }
+                            this.Clear(x, y);
                     }
                     else
                     {
@@ -313,7 +308,11 @@ namespace SadConsole
             Cells = newCells;
             _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
                                              (0, 0, bufferWidth, bufferHeight));
-            Effects = new Effects.EffectsManager(this);
+            if (clear)
+                Effects.RemoveAll();
+            else
+                Effects.DropInvalidCells();
+
             IsDirty = true;
             OnCellsReset();
         }
