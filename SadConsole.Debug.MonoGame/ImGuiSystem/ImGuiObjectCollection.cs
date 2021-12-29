@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SadConsole.Debug.MonoGame
+namespace SadConsole.ImGuiSystem
 {
     /// <summary>
     /// A collection of <see cref="ImGuiObjectBase"/> objects that can be added to a ImGui renderer.

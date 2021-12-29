@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SadConsole.Debug.MonoGame
+namespace SadConsole.ImGuiSystem
 {
     public abstract class ImGuiObjectBase
     {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.MonoGame
 {
     public static class Debugger
     {
-        private static ImGuiHost _imGui;
+        private static ImGuiMonoGameComponent _imGui;
 
         public static List<ImGuiObjectBase> GuiComponents => _imGui.UIComponents;
 
@@ -28,7 +29,7 @@ namespace SadConsole.Debug.MonoGame
         /// </summary>
         public static void BasicInit()
         {
-            _imGui = new ImGuiHost(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
             _imGui.Font = "Roboto-Regular.ttf";
             _imGui.fontSize = 14f;
 
@@ -55,11 +56,11 @@ namespace SadConsole.Debug.MonoGame
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
-            _imGui = new ImGuiHost(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
             _imGui.Font = "Roboto-Regular.ttf";
             _imGui.fontSize = 14f;
             //ImGui.Theme = coolTheme;
-
+            _imGui.HostClosed += _imGui_HostClosed;
             
 
             //ImGui.Initialize();
@@ -80,6 +81,9 @@ namespace SadConsole.Debug.MonoGame
 
             //ImGuiNET.ImGui.
         }
+
+        private static void _imGui_HostClosed(object sender, EventArgs e) =>
+            Stop();
 
         public static void Stop()
         {

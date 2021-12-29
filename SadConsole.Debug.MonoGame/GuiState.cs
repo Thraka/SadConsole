@@ -15,7 +15,6 @@ namespace SadConsole.Debug.MonoGame
 
         public static bool ShowSurfacePreview = true;
         public static bool ShowFinalPreview = true;
-        public static bool ShutdownRequested;
         public static bool ShowSadConsoleRendering = false;
 
         public static IScreenObject _selectedScreenObject;

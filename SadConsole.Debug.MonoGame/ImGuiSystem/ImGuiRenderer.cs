@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace SadConsole.Debug.MonoGame
+namespace SadConsole.ImGuiSystem
 {
     /// <summary>
     /// ImGui renderer for use with XNA-likes (FNA & MonoGame)
@@ -44,14 +44,19 @@ namespace SadConsole.Debug.MonoGame
         private List<int> _keys = new List<int>();
 
         /// <summary>
-        /// When <see langowrd="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
+        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
         /// </summary>
         public bool WantsMouseCapture { get; private set; }
 
         /// <summary>
-        /// When <see langowrd="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
+        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
         /// </summary>
         public bool WantsKeyboardCapture { get; private set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
+        /// </summary>
+        public bool HideRequested { get; set; }
 
         internal ImGuiRenderer(Microsoft.Xna.Framework.Game game)
         {

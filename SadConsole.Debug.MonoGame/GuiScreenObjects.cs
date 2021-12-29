@@ -6,6 +6,7 @@ using ImGuiNET;
 using System.Numerics;
 using SadConsole.Numerics;
 using SadRogue.Primitives;
+using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.MonoGame
 {
@@ -14,6 +15,7 @@ namespace SadConsole.Debug.MonoGame
         private float f = 0.0f;
         private bool _toggle_screenObj_doDraw;
         private bool show_test_window = false;
+        private bool show_metrics_window = false;
         private bool show_another_window = false;
         private Vector3 clear_color = new Vector3(114f / 255f, 144f / 255f, 154f / 255f);
         private byte[] _textBuffer = new byte[100];
@@ -81,6 +83,7 @@ namespace SadConsole.Debug.MonoGame
                 ImGui.Separator();
 
                 if (ImGui.Button("ImGui samples window")) show_test_window = !show_test_window;
+                if (ImGui.Button("ImGui Metrics")) show_metrics_window = !show_metrics_window;
                 if (ImGui.Button("Break and edit window")) _pauseForEdit = true;
 
                 //ImGui.Image(_imGuiTexture, new Num.Vector2(300, 150), Num.Vector2.Zero, Num.Vector2.One, Num.Vector4.One, Num.Vector4.One); // Here, the previously loaded texture is used
@@ -100,6 +103,11 @@ namespace SadConsole.Debug.MonoGame
             {
                 ImGui.SetNextWindowPos(new Vector2(650, 20), ImGuiCond.FirstUseEver);
                 ImGui.ShowDemoWindow(ref show_test_window);
+            }
+
+            if (show_metrics_window)
+            {
+                ImGui.ShowMetricsWindow(ref show_metrics_window);
             }
             ImGui.End();
         }
@@ -131,7 +139,16 @@ namespace SadConsole.Debug.MonoGame
                 treeFlags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
                 ImGui.TreeNodeEx(state.Identifier.ToString(), treeFlags, obj.ToString());
 
-                if (ImGui.IsItemClicked())
+                if (ImGui.BeginDragDropSource(ImGuiDragDropFlags.None))
+                {
+                    ImGui.SetDragDropPayload("SCREEN_OBJ", new IntPtr(state.Identifier), sizeof(int));
+                    ImGui.EndDragDropSource();
+                }
+                else if (ImGui.BeginDragDropTarget())
+                {
+                    var stuff = ImGui.AcceptDragDropPayload("SCREEN_OBJ");
+                }
+                else if (ImGui.IsItemClicked())
                     SetScreenObject(obj, state);
             }
             else

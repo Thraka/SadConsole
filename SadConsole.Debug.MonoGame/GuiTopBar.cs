@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ImGuiNET;
+using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.MonoGame
 {
@@ -14,7 +15,7 @@ namespace SadConsole.Debug.MonoGame
                 if (ImGui.BeginMenu("File"))
                 {
                     if (ImGui.MenuItem("Close", "c"))
-                        GuiState.ShutdownRequested = true;
+                        renderer.HideRequested = true;
 
                     ImGui.EndMenu();
                 }

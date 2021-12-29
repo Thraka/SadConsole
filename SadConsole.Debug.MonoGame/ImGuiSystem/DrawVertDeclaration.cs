@@ -3,7 +3,7 @@
 using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SadConsole.Debug.MonoGame
+namespace SadConsole.ImGuiSystem
 {
     public static class DrawVertDeclaration
     {
