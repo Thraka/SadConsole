@@ -126,7 +126,7 @@ namespace SadConsole.UI.Controls
             {
                 FadeBackground = true,
                 UseCellBackground = false,
-                DestinationBackground = new ColorGradient(GlyphBackground, SelectedGlyphForeground * 0.8f),
+                DestinationBackground = new Gradient(GlyphBackground, SelectedGlyphForeground * 0.8f),
                 FadeDuration = System.TimeSpan.FromSeconds(2d),
                 CloneOnAdd = false,
                 AutoReverse = true,

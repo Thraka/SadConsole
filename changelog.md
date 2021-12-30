@@ -5,6 +5,7 @@
 - [Breaking] `Print(int x, int y, ColoredGlyph glyph)` renamed to `SetGlyph`.
 - [Breaking] Surface `SetEffect` method signatures have changed.
 - [Breaking] Renamed `Animation.ConvertImageFile` to `Animation.FromImage`.
+- [Breaking] Removed `ColorGradient` as this type is implemented in the SadRogue.Primitives library as `Gradient`.
 
 ### Behavioral changes
 
@@ -38,7 +39,7 @@
 - [Core] `ColoredString.SetDecorators` added, to fit in with `SetForeground`, `SetBackground`, etc.
 - [Core] Renamed `EffectsChain` to `EffectSet` and added new `CodeEffect` type.
 - [Core] Effects use `TimeSpan` instead of double.
-- [Core] The Effects Manager used by a surface now works on cell instances, not cell indicies.
+- [Core] The `EffectsManager` used by a surface now works on cell instances, not cell indicies.
 - [Core] Resizing a surface without the `clear` parameter keeps existing effects instead of dropping them.
 - [Core] `AnimatedSurface.FromImage` helper added which converts image-based animations to an animated surface. (RychuP)
 - [Core] Added TheDraw font reader: `SadConsole.Readers.TheDrawFont`. **Not a SadConsole Font.**

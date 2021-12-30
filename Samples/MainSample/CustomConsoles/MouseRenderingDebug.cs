@@ -21,7 +21,7 @@ namespace FeatureDemo.CustomConsoles
 
         public MouseRenderingDebug() : base(80, 23)
         {
-            pal = new Palette(new ColorGradient(Color.White, Color.Violet, Color.Black, Color.White).ToColorArray(25));
+            pal = new Palette(new Gradient(Color.White, Color.Violet, Color.Black, Color.White).ToColorArray(25));
             PaletteSurface surfacePal = new PaletteSurface(5, 5, pal);
 
             for (int i = 0; i < 25; i++)

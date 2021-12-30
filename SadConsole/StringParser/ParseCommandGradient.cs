@@ -44,7 +44,7 @@ namespace SadConsole.StringParser
                 for (int i = 1; i < parametersArray.Length - 1; i++)
                     steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
 
-                GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
+                GradientString = new Gradient(steps.ToArray()).ToColoredString(new string(' ', Length));
             }
 
             else

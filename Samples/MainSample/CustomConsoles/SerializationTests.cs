@@ -179,7 +179,7 @@ namespace FeatureDemo.CustomConsoles
             basicSurface.SetGlyph(1, 0, 8);
             basicSurface.SetGlyph(2, 0, 9);
             basicSurface.SetGlyph(3, 0, 10);
-            ColorGradient gradient = new ColorGradient(SadConsole.UI.Themes.Library.Default.Colors.Blue, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
+            Gradient gradient = new Gradient(SadConsole.UI.Themes.Library.Default.Colors.Blue, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
             for (int i = 0; i < 510; i += 10)
             {
                 Point point = Point.FromIndex(i, basicSurface.Width);

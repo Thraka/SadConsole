@@ -31,7 +31,7 @@ namespace SadConsole.UI.Themes
             control.Surface.Fill(Color.White, Color.Black, 0, null);
 
             bar._positions = control.Width;
-            ColorGradient gradient = new ColorGradient(Color.Red, Color.Yellow, Color.Green, Color.Turquoise, Color.Blue, Color.Purple, Color.Red);
+            Gradient gradient = new Gradient(Color.Red, Color.Yellow, Color.Green, Color.Turquoise, Color.Blue, Color.Purple, Color.Red);
 
             for (int x = 0; x < control.Width; x++)
             {

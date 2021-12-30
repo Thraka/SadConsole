@@ -132,7 +132,7 @@ namespace SadConsole
         /// <param name="area">The area to calculate.</param>
         /// <param name="gradient">The color gradient to fill with.</param>
         /// <param name="applyAction">The callback called for each part of the area.</param>
-        public static void GradientFill(Point cellSize, Point position, int strength, int angle, Rectangle area, ColorGradient gradient, Action<int, int, Color> applyAction)
+        public static void GradientFill(Point cellSize, Point position, int strength, int angle, Rectangle area, Gradient gradient, Action<int, int, Color> applyAction)
         {
             double radians = angle * Math.PI / 180; // = Math.Atan2(x1 - x2, y1 - y2);
 

@@ -37,7 +37,7 @@
             <param name="changeNode">After it is determined if the node should change, this changes the node.</param>
             <param name="getNodeConnections">Gets any other nodes connected to this node.</param>
         </member>
-        <member name="M:SadConsole.Algorithms.GradientFill(SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Int32,System.Int32,SadRogue.Primitives.Rectangle,SadRogue.Primitives.ColorGradient,System.Action{System.Int32,System.Int32,SadRogue.Primitives.Color})">
+        <member name="M:SadConsole.Algorithms.GradientFill(SadRogue.Primitives.Point,SadRogue.Primitives.Point,System.Int32,System.Int32,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Gradient,System.Action{System.Int32,System.Int32,SadRogue.Primitives.Color})">
             <summary>
             Processes an area and applies a gradient calculation to each part of the area.
             </summary>
@@ -2732,6 +2732,62 @@
         </member>
         <member name="M:SadConsole.Effects.Recolor.ToString">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Entities.AnimatedAppearanceComponent">
+            <summary>
+            A component for <see cref="T:SadConsole.Entities.Entity"/> that animates the <see cref="P:SadConsole.Entities.Entity.Appearance"/> and <see cref="P:SadConsole.Entities.Entity.Effect"/> properties.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.AnimatedAppearanceComponent.Frames">
+            <summary>
+            The frames of animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.AnimatedAppearanceComponent.AnimationTime">
+            <summary>
+            The total time it takes to play all <see cref="P:SadConsole.Entities.AnimatedAppearanceComponent.Frames"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.AnimatedAppearanceComponent.IsRepeatable">
+            <summary>
+            When <see langword="true"/>, the animation will automatically restart after the last frame is applied. Otherwise, <see langword="false"/> and the animation stops when completed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.OnAdded(SadConsole.IScreenObject)">
+            <summary>
+            Called by the component system when this component is added to an object. Must be of type <see cref="T:SadConsole.Entities.Entity"/>.
+            </summary>
+            <param name="host">The component host.</param>
+            <exception cref="T:System.InvalidCastException">This component was added to a type other than <see cref="T:SadConsole.Entities.Entity"/>.</exception>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.OnRemoved(SadConsole.IScreenObject)">
+            <summary>
+            Called by the component system when this component is removed from an object.
+            </summary>
+            <param name="host">The component host.</param>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Updates the animation frame index and applies the animation to the entity.
+            </summary>
+            <param name="host">The component host.</param>
+            <param name="delta">The time between calls to this method.</param>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.Start">
+            <summary>
+            Starts the animation and immediately applies the current frame to the entity.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The animation was started but there aren't any frames to animate.</exception>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.Stop">
+            <summary>
+            Stops the animation.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.AnimatedAppearanceComponent.Restart">
+            <summary>
+            Restarts the animation at the first frame.
+            </summary>
         </member>
         <member name="T:SadConsole.Entities.Entity">
             <summary>
@@ -6403,7 +6459,7 @@
             The color to fade the tint to.
             </summary>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenSurface,SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadConsole.IScreenSurface,SadRogue.Primitives.Gradient,System.TimeSpan)">
             <summary>
             Creates a new tint fade instruction that targets the specified console.
             </summary>
@@ -6411,7 +6467,7 @@
             <param name="colors">The gradient pattern to fade through.</param>
             <param name="duration">How long the fade takes.</param>
         </member>
-        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadRogue.Primitives.ColorGradient,System.TimeSpan)">
+        <member name="M:SadConsole.Instructions.FadeTextSurfaceTint.#ctor(SadRogue.Primitives.Gradient,System.TimeSpan)">
             <summary>
             Creates a new tint fade instruction that uses the console passed to <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/>.
             </summary>
@@ -12141,96 +12197,6 @@
             <param name="supportsCancel">When <see langword="true"/>, indicates this value change can be cancelled.</param>
             <param name="supportsHandled">When <see langword="true"/>, indicates this value change can be flagged as handled and stop further event handlers.</param>
         </member>
-        <member name="T:SadRogue.Primitives.ColorGradient">
-            <summary>
-            Represents a gradient with multiple color stops.
-            </summary>
-        </member>
-        <member name="P:SadRogue.Primitives.ColorGradient.Stops">
-            <summary>
-            The color stops that define the gradient.
-            </summary>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(System.Collections.Generic.IEnumerable{SadRogue.Primitives.Color},System.Collections.Generic.IEnumerable{System.Single})">
-            <summary>
-            Creates a new color gradient with the defined colors and stops.
-            </summary>
-            <param name="colors">The colors with the gradient.</param>
-            <param name="stops">The gradient stops where the colors are used.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a new color gradient with only two colors, the first at the start, and the second at the end.
-            </summary>
-            <param name="startingColor">The starting color of the gradient.</param>
-            <param name="endingColor">The ending color of the gradient.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.#ctor(SadRogue.Primitives.Color[])">
-            <summary>
-            Creates a new color gradient, evenly spacing them out. At least one color must be provided.
-            </summary>
-            <param name="colors">The colors to create a gradient from.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.GetEnumerator">
-            <summary>
-            Gets an enumerator with all of the gradient stops.
-            </summary>
-            <returns>An enumerator</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Gets an enumerator with all of the gradient stops.
-            </summary>
-            <returns>An enumerator.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.ToColoredString(System.String)">
-            <summary>
-            Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
-            </summary>
-            <param name="text">The text to use for the colored string.</param>
-            <returns>A new colored string object.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.ToColorArray(System.Int32)">
-            <summary>
-            Gets an array of colors based from the gradient.
-            </summary>
-            <param name="count">The amount of colors to produce.</param>
-            <returns>An array of colors.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.Lerp(System.Single)">
-            <summary>
-            Returns a color from this gradient at the specified lerp value.
-            </summary>
-            <param name="amount">The lerp amount.</param>
-            <returns>A color.</returns>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.op_Implicit(SadRogue.Primitives.Color)~SadRogue.Primitives.ColorGradient">
-            <summary>
-            Converts a color into a gradient. The color becomes the first and last stops.
-            </summary>
-            <param name="color">The color to convert.</param>
-        </member>
-        <member name="M:SadRogue.Primitives.ColorGradient.op_Implicit(SadRogue.Primitives.ColorGradient)~SadRogue.Primitives.Color">
-            <summary>
-            Converts a gradient into a color using the first color stop.
-            </summary>
-            <param name="gradient">The gradient to convert.</param>
-        </member>
-        <member name="T:SadRogue.Primitives.ColorGradientStop">
-            <summary>
-            A gradient stop. Defines a color and where it is located within the gradient.
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorGradientStop.Color">
-            <summary>
-            The color.
-            </summary>
-        </member>
-        <member name="F:SadRogue.Primitives.ColorGradientStop.Stop">
-            <summary>
-            The color stop in the gradiant this applies to.
-            </summary>
-        </member>
         <member name="T:SadRogue.Primitives.ColorExtensions2">
             <summary>
             Various extension methods to <see cref="T:SadRogue.Primitives.Color"/> class.
@@ -12491,6 +12457,14 @@
             <param name="name">The name of a color.</param>
             <param name="defaultColor">Fallback color.</param>
             <returns>A color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions2.ToColoredString(SadRogue.Primitives.Gradient,System.String)">
+            <summary>
+            Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
+            </summary>
+            <param name="gradient">The gradient to work with.</param>
+            <param name="text">The text to use for the colored string.</param>
+            <returns>A new colored string object.</returns>
         </member>
     </members>
 </doc>

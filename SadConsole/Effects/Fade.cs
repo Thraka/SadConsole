@@ -14,13 +14,13 @@ namespace SadConsole.Effects
         /// Gets or sets the color gradient used to fade for the cell background.
         /// </summary>
         [DataMember]
-        public ColorGradient DestinationBackground { get; set; }
+        public Gradient DestinationBackground { get; set; }
 
         /// <summary>
         /// Gets or sets the color gradient used to fade for the cell background.
         /// </summary>
         [DataMember]
-        public ColorGradient DestinationForeground { get; set; }
+        public Gradient DestinationForeground { get; set; }
 
         /// <summary>
         /// Gets or sets how long the fade takes to complete in seconds.
@@ -103,7 +103,8 @@ namespace SadConsole.Effects
             {
                 if (UseCellForeground)
                 {
-                    DestinationForeground.Stops[UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0].Color = originalState.Foreground;
+                    int index = UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0;
+                    DestinationForeground.Stops[index] = new GradientStop(originalState.Foreground, DestinationForeground.Stops[index].Stop);
                 }
 
                 cell.Foreground = DestinationForeground.Lerp((float)_calculatedValue);
@@ -113,7 +114,8 @@ namespace SadConsole.Effects
             {
                 if (UseCellBackground)
                 {
-                    DestinationBackground.Stops[UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0].Color = originalState.Background;
+                    int index = UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0;
+                    DestinationBackground.Stops[index] = new GradientStop(originalState.Background, DestinationBackground.Stops[index].Stop);
                 }
 
                 cell.Background = DestinationBackground.Lerp((float)_calculatedValue);

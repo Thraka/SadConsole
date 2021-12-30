@@ -26,7 +26,7 @@ namespace FeatureDemo.CustomConsoles
             var fadeEffect = new SadConsole.Effects.Fade
             {
                 AutoReverse = true,
-                DestinationForeground = new ColorGradient(Color.Blue, Color.Yellow),
+                DestinationForeground = new Gradient(Color.Blue, Color.Yellow),
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
