@@ -45,6 +45,7 @@
 - [Core] Added TheDraw font reader: `SadConsole.Readers.TheDrawFont`. **Not a SadConsole Font.**
 - [Core] [Playscii](http://vectorpoem.com/playscii/) support added in the `SadConsoles.Readers` namespace. (RychuP)
 - [Core] Entity renderer has a `RemoveAll` method to clear out all the entities.
+- [Core] For entities, added `AnimatedAppearanceComponent` which can be added to an entity to animate the glyph like the `AnimatedSurface` did for the old entity type.
 - [UI] Fix various minor bugs with controls.
 - [UI] `Textbox` has more events related to text changing.
 - [UI] `Textbox` behaviors have changed slightly. For example, `EditingText` event doesn't fire when the text ends up being the same prior to editing.
