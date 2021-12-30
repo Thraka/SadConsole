@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>SadConsole.Editor</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.0.0-beta3" />
+    <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-beta3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+    <Folder Include="Res\REXPaint\" />
+    <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
+    <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
+    <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\DejaVuSansMono-msdf.fnt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\DejaVuSansMono-msdf.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

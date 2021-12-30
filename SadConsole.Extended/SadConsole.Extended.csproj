@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>9.1.2</Version>
+    <Version>9.2.0</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole Common Helpers</AssemblyTitle>
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
-    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -26,8 +26,10 @@
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
     <PackageReleaseNotes>
-      - Fixed dependency
-      - Added AnimatedBox instruction
+      - Added two cursor keyboard handlers: ClassicConsoleKeyboardHandler and C64KeyboardHandler.
+      - Added a new MoveViewPortKeyboardHandler component that uses the keyboard to scroll a view port.
+      - New surface.PrintFadingText extension method that prints text that fades into the background.
+      - Other little fixes.
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -37,7 +39,7 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.1.1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
@@ -45,6 +47,7 @@
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Remove="SadConsole.Extended.xml" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">
