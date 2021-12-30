@@ -16,9 +16,9 @@
         bool CloneOnAdd { get; set; }
 
         /// <summary>
-        /// A delay applied to the effect only when it first runs.
+        /// A delay applied to the effect only when it first runs or is restarted.
         /// </summary>
-        double StartDelay { get; set; }
+        System.TimeSpan StartDelay { get; set; }
 
         /// <summary>
         /// When true, the effect should be disassociated with cells when it has finished processing.
@@ -40,8 +40,8 @@
         /// <summary>
         /// Updates the state of the effect.
         /// </summary>
-        /// <param name="gameTimeSeconds">Time since the last call to this effect.</param>
-        void Update(double gameTimeSeconds);
+        /// <param name="delta">Time since the last call to this effect.</param>
+        void Update(System.TimeSpan delta);
 
         /// <summary>
         /// Restarts the cell effect.

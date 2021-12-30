@@ -44,7 +44,7 @@ namespace SadConsole.StringParser
                 for (int i = 1; i < parametersArray.Length - 1; i++)
                     steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));
 
-                GradientString = new ColorGradient(steps.ToArray()).ToColoredString(new string(' ', Length));
+                GradientString = new Gradient(steps.ToArray()).ToColoredString(new string(' ', Length));
             }
 
             else
@@ -61,7 +61,7 @@ namespace SadConsole.StringParser
 
         /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-            ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
         {
             if (CommandType == CommandTypes.Background)
                 glyphState.Background = GradientString[Length - _counter].Foreground;

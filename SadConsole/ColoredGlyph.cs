@@ -24,7 +24,7 @@ namespace SadConsole
         private CellDecorator[] _decorators = Array.Empty<CellDecorator>();
 
         /// <summary>
-        /// Modifies the look of a cell with additional character. 
+        /// Modifies the look of a cell with additional character.
         /// </summary>
         public CellDecorator[] Decorators
         {
@@ -156,7 +156,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a cell with the specified foreground, background, glyph, and mirror effect.
+        /// Creates a cell with the specified foreground, background, glyph, mirror effect, visibility and decorators.
         /// </summary>
         /// <param name="foreground">Foreground color.</param>
         /// <param name="background">Background color.</param>
@@ -175,33 +175,47 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, and mirror effect.
+        /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
         /// </summary>
         /// <param name="cell">The target cell to copy to.</param>
-        public void CopyAppearanceTo(ColoredGlyph cell)
+        /// <param name="deepCopy">
+        /// Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+        /// decorator array reference is moved directly.
+        /// </param>
+        public void CopyAppearanceTo(ColoredGlyph cell, bool deepCopy = true)
         {
             cell.Foreground = Foreground;
             cell.Background = Background;
             cell.Glyph = Glyph;
             cell.Mirror = Mirror;
-            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
+            if (deepCopy)
+                cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
+            else
+                cell.Decorators = Decorators;
         }
 
         /// <summary>
-        /// Sets the foreground, background, glyph, and mirror effect to the same as the specified cell.
+        /// Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
         /// </summary>
         /// <param name="cell">The target cell to copy from.</param>
-        public void CopyAppearanceFrom(ColoredGlyph cell)
+        /// <param name="deepCopy">
+        /// Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+        /// decorator array reference is moved directly.
+        /// </param>
+        public void CopyAppearanceFrom(ColoredGlyph cell, bool deepCopy = true)
         {
             Foreground = cell.Foreground;
             Background = cell.Background;
             Glyph = cell.Glyph;
             Mirror = cell.Mirror;
-            Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
+            if (deepCopy)
+                Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
+            else
+                Decorators = cell.Decorators;
         }
 
         /// <summary>
-        /// Resets the foreground, background, glyph, and mirror effect.
+        /// Resets the foreground, background, glyph, mirror effect and decorators.
         /// </summary>
         public void Clear()
         {
@@ -218,44 +232,6 @@ namespace SadConsole
         /// <returns>The state of this colored glyph.</returns>
         public ColoredGlyphState ToState() =>
             new ColoredGlyphState(this);
-
-        /* TODO: Move this to extension methods in the actual Renderers library (monogame, gdi+, etc)
-        /// <summary>
-        /// Draws a single cell using the specified SpriteBatch.
-        /// </summary>
-        /// <param name="batch">Renderers batch.</param>
-        /// <param name="position">Pixel position on the screen to render.</param>
-        /// <param name="size">Renderers size of the cell.</param>
-        /// <param name="font">Font used to draw the cell.</param>
-        public void Draw(SpriteBatch batch, Point position, Point size, Font font) => Draw(batch, new Rectangle(position.X, position.Y, size.X, size.Y), font);
-
-        /// <summary>
-        /// Draws a single cell using the specified SpriteBatch.
-        /// </summary>
-        /// <param name="batch">Renderers batch.</param>
-        /// <param name="drawingRectangle">Where on the sreen to draw the cell, in pixels.</param>
-        /// <param name="font">Font used to draw the cell.</param>
-        public void Draw(SpriteBatch batch, Rectangle drawingRectangle, Font font)
-        {
-            if (Background != Color.Transparent)
-            {
-                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[font.SolidGlyphIndex], Background, 0f, Vector2.Zero, Mirror.None, 0.3f);
-            }
-
-            if (Foreground != Color.Transparent)
-            {
-                batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[Glyph], Foreground, 0f, Vector2.Zero, Mirror, 0.4f);
-            }
-
-            foreach (ColoredGlyphDecorator decorator in Decorators)
-            {
-                if (decorator.Color != Color.Transparent)
-                {
-                    batch.Draw(font.FontImage, drawingRectangle, font.GlyphRects[decorator.Glyph], decorator.Color, 0f, Vector2.Zero, decorator.Mirror, 0.5f);
-                }
-            }
-        }
-        */
 
         /// <summary>
         /// Returns a new cell with the same properties as this one.

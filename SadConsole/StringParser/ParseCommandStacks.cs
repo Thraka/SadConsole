@@ -8,11 +8,6 @@
     public class ParseCommandStacks
     {
         /// <summary>
-        /// Indicates there is a command that uses effets.
-        /// </summary>
-        public bool TurnOnEffects { get; set; }
-
-        /// <summary>
         /// The commands that affect the foreground.
         /// </summary>
         public Stack<ParseCommandBase> Foreground { get; set; }
@@ -37,10 +32,21 @@
         /// </summary>
         public Stack<ParseCommandBase> Effect { get; set; }
 
+
+        /// <summary>
+        /// The commands that affect the glyph decorators.
+        /// </summary>
+        public Stack<ParseCommandBase> Decorator { get; set; }
+
         /// <summary>
         /// All commands.
         /// </summary>
         public Stack<ParseCommandBase> All { get; set; }
+
+        /// <summary>
+        /// Returns the active array that is calculated from the <see cref="Decorator"/> stack.
+        /// </summary>
+        public CellDecorator[] CalculatedDecorators { get; set; } = System.Array.Empty<CellDecorator>();
 
         /// <summary>
         /// Creates new stacks of commands.
@@ -52,6 +58,7 @@
             Glyph = new Stack<ParseCommandBase>(4);
             Mirror = new Stack<ParseCommandBase>(4);
             Effect = new Stack<ParseCommandBase>(4);
+            Decorator = new Stack<ParseCommandBase>(4);
             All = new Stack<ParseCommandBase>(10);
         }
 
@@ -84,6 +91,10 @@
                     Glyph.Push(command);
                     All.Push(command);
                     break;
+                case CommandTypes.Decorator:
+                    Decorator.Push(command);
+                    All.Push(command);
+                    break;
                 default:
                     break;
             }
@@ -102,37 +113,32 @@
             {
                 case CommandTypes.Foreground:
                     if (Foreground.Count != 0)
-                    {
                         commands = new List<ParseCommandBase>(Foreground);
-                    }
 
                     break;
                 case CommandTypes.Background:
                     if (Background.Count != 0)
-                    {
                         commands = new List<ParseCommandBase>(Background);
-                    }
 
                     break;
                 case CommandTypes.Mirror:
                     if (Mirror.Count != 0)
-                    {
                         commands = new List<ParseCommandBase>(Mirror);
-                    }
 
                     break;
                 case CommandTypes.Effect:
                     if (Effect.Count != 0)
-                    {
                         commands = new List<ParseCommandBase>(Effect);
-                    }
 
                     break;
                 case CommandTypes.Glyph:
                     if (Glyph.Count != 0)
-                    {
                         commands = new List<ParseCommandBase>(Glyph);
-                    }
+
+                    break;
+                case CommandTypes.Decorator:
+                    if (Decorator.Count != 0)
+                        commands = new List<ParseCommandBase>(Decorator);
 
                     break;
                 default:
@@ -161,6 +167,9 @@
                         break;
                     case CommandTypes.Glyph:
                         Glyph = new Stack<ParseCommandBase>(commands);
+                        break;
+                    case CommandTypes.Decorator:
+                        Decorator = new Stack<ParseCommandBase>(commands);
                         break;
                     default:
                         return;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
@@ -165,7 +166,7 @@ namespace SadConsole.Entities
 
             if (_effect != null && !_effect.IsFinished)
             {
-                _effect.Update(delta.TotalSeconds);
+                _effect.Update(delta);
                 _effect.ApplyToCell(Appearance, _effectState);
 
                 if (_effect.IsFinished)

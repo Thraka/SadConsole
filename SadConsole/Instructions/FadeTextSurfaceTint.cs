@@ -10,12 +10,12 @@ namespace SadConsole.Instructions
     public class FadeTextSurfaceTint : AnimatedValue
     {
         private IScreenSurface _objectSurface;
-        private ColorGradient _colors;
+        private Gradient _colors;
 
         /// <summary>
         /// The color to fade the tint to.
         /// </summary>
-        public ColorGradient Colors
+        public Gradient Colors
         {
             get => _colors;
             set => _colors = value ?? throw new Exception($"{nameof(Colors)} can't be set to null");
@@ -27,7 +27,7 @@ namespace SadConsole.Instructions
         /// <param name="objectSurface">The <see cref="IScreenSurface.Tint"/> to fade.</param>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(IScreenSurface objectSurface, ColorGradient colors, TimeSpan duration): base(duration, 0d, 1d)
+        public FadeTextSurfaceTint(IScreenSurface objectSurface, Gradient colors, TimeSpan duration): base(duration, 0d, 1d)
         {
             Colors = colors;
             _objectSurface = objectSurface;
@@ -38,7 +38,7 @@ namespace SadConsole.Instructions
         /// </summary>
         /// <param name="colors">The gradient pattern to fade through.</param>
         /// <param name="duration">How long the fade takes.</param>
-        public FadeTextSurfaceTint(ColorGradient colors, TimeSpan duration) : base(duration, 0d, 1d)
+        public FadeTextSurfaceTint(Gradient colors, TimeSpan duration) : base(duration, 0d, 1d)
         {
             Colors = colors;
         }
@@ -54,7 +54,7 @@ namespace SadConsole.Instructions
         /// </remarks>
         public FadeTextSurfaceTint() : base(TimeSpan.FromSeconds(1), 0d, 1d)
         {
-            Colors = new ColorGradient(Color.White, Color.Transparent);
+            Colors = new Gradient(Color.White, Color.Transparent);
         }
 
         /// <inheritdoc />

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>9.1.1</Version>
+    <Version>9.2.0</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>Fix bug with rendering cursors.</PackageReleaseNotes>
+    <PackageReleaseNotes>Various little fixes. Updates for SadConsole 9.2.0</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -34,8 +34,8 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.1.1" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />

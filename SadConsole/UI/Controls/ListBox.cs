@@ -32,7 +32,7 @@ namespace SadConsole.UI.Controls
         }
 
         [DataMember(Name = "SelectedIndex")]
-        private int _selectedIndex;
+        private int _selectedIndex = -1;
         private object _selectedItem;
         private DateTime _leftMouseLastClick = DateTime.Now;
 

@@ -9,16 +9,15 @@ namespace SadConsole.Effects
     [DataContract]
     public class Blink : CellEffectBase
     {
-        [DataMember]
         private int _blinkCounter = 0;
-        [DataMember]
         private bool _isOn;
+        private System.TimeSpan _duration = System.TimeSpan.Zero;
 
         /// <summary>
         /// In seconds, how fast the fade in and fade out each are
         /// </summary>
         [DataMember]
-        public double BlinkSpeed { get; set; }
+        public System.TimeSpan BlinkSpeed { get; set; }
 
         /// <summary>
         /// When true, uses the current cells background color for fading instead of the value of <see cref="BlinkOutColor"/>.
@@ -39,12 +38,19 @@ namespace SadConsole.Effects
         public int BlinkCount { get; set; }
 
         /// <summary>
+        /// The total duraction this effect will run for, before being flagged as finished. <see cref="System.TimeSpan.MaxValue"/> represents forever.
+        /// </summary>
+        [DataMember]
+        public System.TimeSpan Duration { get; set; }
+
+        /// <summary>
         /// Creates a new instance of the blink effect.
         /// </summary>
         public Blink()
         {
+            Duration = System.TimeSpan.MaxValue;
             BlinkCount = -1;
-            BlinkSpeed = 1d;
+            BlinkSpeed = System.TimeSpan.FromSeconds(1);
             UseCellBackgroundColor = true;
             BlinkOutColor = Color.Transparent;
             _isOn = true;
@@ -71,16 +77,26 @@ namespace SadConsole.Effects
 
 
         /// <inheritdoc />
-        public override void Update(double timeElapsed)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(timeElapsed);
+            base.Update(delta);
 
             if (_delayFinished && !IsFinished)
             {
+                if (Duration != System.TimeSpan.MaxValue)
+                {
+                    _duration += delta;
+                    if (_duration >= Duration)
+                    {
+                        IsFinished = true;
+                        return;
+                    }
+                }
+
                 if (_timeElapsed >= BlinkSpeed)
                 {
                     _isOn = !_isOn;
-                    _timeElapsed = 0.0d;
+                    _timeElapsed = System.TimeSpan.Zero;
 
                     if (BlinkCount != -1)
                     {
@@ -100,6 +116,7 @@ namespace SadConsole.Effects
         {
             _isOn = true;
             _blinkCounter = 0;
+            _duration = System.TimeSpan.Zero;
 
             base.Restart();
         }

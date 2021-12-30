@@ -181,7 +181,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new surface from a grid view. The cells between the this object and the grid view are shared.
+        /// Creates a new surface from a grid view. The cells between this object and the grid view are shared.
         /// </summary>
         /// <param name="surface">The surface to use as the source of cells.</param>
         /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
@@ -244,8 +244,9 @@ namespace SadConsole
             else
                 AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            int count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].UpdateAbsolutePosition();
         }
 
         /// <summary>
@@ -264,11 +265,15 @@ namespace SadConsole
                 ForceRendererRefresh = false;
             }
 
-            foreach (IComponent component in ComponentsRender.ToArray())
-                component.Render(this, delta);
+            int count = ComponentsRender.Count;
+            for (int i = 0; i < count; i++)
+                ComponentsRender[i].Render(this, delta);
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Render(delta);
+            Children.IsLocked = true;
+            count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].Render(delta);
+            Children.IsLocked = false;
         }
 
         /// <summary>
@@ -280,13 +285,24 @@ namespace SadConsole
         {
             if (!IsEnabled) return;
 
-            Surface.Effects.UpdateEffects(delta.TotalSeconds);
+            Surface.Effects.UpdateEffects(delta);
 
-            foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this, delta);
+            if (ComponentsUpdate.Count > 0)
+            {
+                IComponent[] array = ComponentsUpdate.ToArray();
+                for (int i = 0; i < array.Length; i++)
+                {
+                    IComponent component = array[i];
+                    component.Update(this, delta);
+                }
+            }
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
+            IScreenObject[] tempChildren = Children.ToArray();
+            for (int i1 = 0; i1 < tempChildren.Length; i1++)
+            {
+                IScreenObject child = tempChildren[i1];
                 child.Update(delta);
+            }
         }
 
         private void _isDirtyChangedEventHadler(object sender, EventArgs e) =>
@@ -329,8 +345,9 @@ namespace SadConsole
         /// </summary>
         public void CallOnHostUpdated()
         {
-            foreach (IComponent component in SadComponents)
-                component.OnHostUpdated(this);
+            int count = SadComponents.Count;
+            for (int i = 0; i < count; i++)
+                SadComponents[i].OnHostUpdated(this);
 
             Renderer?.OnHostUpdated(this);
 

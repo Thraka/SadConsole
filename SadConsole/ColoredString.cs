@@ -17,7 +17,7 @@ namespace SadConsole
     public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffect>
     {
         [DataMember(Name = "Glyphs")]
-        private ColoredGlyphEffect[] _characters;
+        private ColoredGlyphEffect[] _characters = System.Array.Empty<ColoredGlyphEffect>();
 
         /// <summary>
         /// Gets a <see cref="ColoredGlyphEffect"/> from the string.
@@ -31,7 +31,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Gets or sets the characters represneting this string. When set, first processes the string through <see cref="Parse(string, int, ICellSurface, ParseCommandStacks)"/>.
+        /// Gets or sets the characters representing this string. When set, first processes the string through <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/>.
         /// </summary>
         public string String
         {
@@ -52,7 +52,37 @@ namespace SadConsole
                 return sb.ToString();
             }
 
-            set => _characters = ColoredString.Parse(value)._characters;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    _characters = System.Array.Empty<ColoredGlyphEffect>();
+
+                else
+                {
+                    if (value.Length < _characters.Length)
+                    {
+                        System.Array.Resize(ref _characters, value.Length);
+                    }
+                    else if (value.Length > _characters.Length)
+                    {
+                        int oldLength = _characters.Length;
+                        System.Array.Resize(ref _characters, value.Length);
+
+                        if (oldLength != 0)
+                            for (int i = 0; i < value.Length - oldLength; i++)
+                                _characters[i + oldLength] = _characters[oldLength - 1].Clone();
+                        else
+                            for (int i = 0; i < value.Length - oldLength; i++)
+                                _characters[i + oldLength] = new ColoredGlyphEffect();
+
+                    }
+
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        _characters[i].GlyphCharacter = value[i];
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -64,31 +94,37 @@ namespace SadConsole
         /// When true, instructs a caller to not render the glyphs of the string.
         /// </summary>
         [DataMember]
-        public bool IgnoreGlyph;
+        public bool IgnoreGlyph { get; set; }
 
         /// <summary>
         /// When true, instructs a caller to not render the foreground color.
         /// </summary>
         [DataMember]
-        public bool IgnoreForeground;
+        public bool IgnoreForeground { get; set; }
 
         /// <summary>
         /// When true, instructs a caller to not render the background color.
         /// </summary>
         [DataMember]
-        public bool IgnoreBackground;
+        public bool IgnoreBackground { get; set; }
 
         /// <summary>
         /// When true, instructs a caller to not render the effect.
         /// </summary>
         [DataMember]
-        public bool IgnoreEffect = true;
+        public bool IgnoreEffect { get; set; }
 
         /// <summary>
         /// When true, instructs a caller to not render the mirror state.
         /// </summary>
         [DataMember]
-        public bool IgnoreMirror;
+        public bool IgnoreMirror { get; set; }
+
+        /// <summary>
+        /// When true, instructs a caller to not render the mirror state.
+        /// </summary>
+        [DataMember]
+        public bool IgnoreDecorators { get; set; } = true;
 
         /// <summary>
         /// Default constructor.
@@ -109,10 +145,11 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Creates a new instance of the ColoredString class with the specified string value. Calls <see cref="Parse(string, int, ICellSurface, ParseCommandStacks)"/> first to process the string.
+        /// Creates a new instance of the ColoredString class with the specified string value.
         /// </summary>
         /// <param name="value">The backing string.</param>
-        public ColoredString(string value) => String = value;
+        public ColoredString(string value) =>
+            String = value;
 
         /// <summary>
         /// Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
@@ -121,13 +158,18 @@ namespace SadConsole
         /// <param name="foreground">The foreground color for each character.</param>
         /// <param name="background">The background color for each character.</param>
         /// <param name="mirror">The mirror for each character.</param>
-        public ColoredString(string value, Color foreground, Color background, Mirror mirror = Mirror.None)
+        /// <param name="decorators">The decorators to apply to each character.</param>
+        public ColoredString(string value, Color foreground, Color background, Mirror mirror = Mirror.None, CellDecorator[] decorators = null)
         {
-            var stacks = new ParseCommandStacks();
-            stacks.AddSafe(new ParseCommandRecolor() { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
-            stacks.AddSafe(new ParseCommandRecolor() { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
-            stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror, CommandType = CommandTypes.Mirror });
-            _characters = Parse(value, initialBehaviors: stacks)._characters;
+            String = value;
+
+            for (int i = 0; i < _characters.Length; i++)
+            {
+                _characters[i].Foreground = foreground;
+                _characters[i].Background = background;
+                _characters[i].Mirror = mirror;
+                _characters[i].Decorators = decorators;
+            }
         }
 
         /// <summary>
@@ -165,7 +207,8 @@ namespace SadConsole
                 IgnoreBackground = IgnoreBackground,
                 IgnoreForeground = IgnoreForeground,
                 IgnoreGlyph = IgnoreGlyph,
-                IgnoreEffect = IgnoreEffect
+                IgnoreEffect = IgnoreEffect,
+                IgnoreDecorators = IgnoreDecorators,
             };
 
             for (int i = 0; i < _characters.Length; i++)
@@ -200,7 +243,8 @@ namespace SadConsole
                 IgnoreBackground = IgnoreBackground,
                 IgnoreForeground = IgnoreForeground,
                 IgnoreGlyph = IgnoreGlyph,
-                IgnoreEffect = IgnoreEffect
+                IgnoreEffect = IgnoreEffect,
+                IgnoreDecorators = IgnoreDecorators
             };
 
             for (int i = 0; i < count; i++)
@@ -255,6 +299,26 @@ namespace SadConsole
         {
             for (int i = 0; i < _characters.Length; i++)
                 _characters[i].Glyph = glyph;
+        }
+
+        /// <summary>
+        /// Applies the mirror value to each character in the colored string.
+        /// </summary>
+        /// <param name="mirror">The mirror mode.</param>
+        public void SetMirror(Mirror mirror)
+        {
+            for (int i = 0; i < _characters.Length; i++)
+                _characters[i].Mirror = mirror;
+        }
+
+        /// <summary>
+        /// Applies the decorators to each character in the colored string.
+        /// </summary>
+        /// <param name="decorators">The decorators.</param>
+        public void SetDecorators(CellDecorator[] decorators)
+        {
+            for (int i = 0; i < _characters.Length; i++)
+                _characters[i].Decorators = decorators;
         }
 
         /// <summary>
@@ -313,6 +377,7 @@ namespace SadConsole
             returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
             returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
             returnString.IgnoreBackground = string1.IgnoreBackground && string2.IgnoreBackground;
+            returnString.IgnoreDecorators = string1.IgnoreDecorators && string2.IgnoreDecorators;
             returnString.IgnoreEffect = string1.IgnoreEffect && string2.IgnoreEffect;
 
             return returnString;

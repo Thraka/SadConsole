@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="2.6.4" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

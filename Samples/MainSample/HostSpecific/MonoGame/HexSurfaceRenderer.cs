@@ -1,6 +1,4 @@
-﻿#if MONOGAME
-
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 using Microsoft.Xna.Framework.Graphics;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadConsole;
@@ -48,5 +46,3 @@ namespace FeatureDemo.HostSpecific.MonoGame
         //}
     }
 }
-
-#endif

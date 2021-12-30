@@ -62,7 +62,10 @@ namespace SadConsole.UI.Themes
         protected void SetupScrollBar(ListBox listbox)
         {
             if (DrawBorder)
+            {
+                if (listbox.Height < 5) throw new Exception("Listbox with a bordermust have a height of 5 or more.");
                 listbox.SetupScrollBar(Orientation.Vertical, listbox.Height - 2, new Point(listbox.Width - 1, 1));
+            }
             else
                 listbox.SetupScrollBar(Orientation.Vertical, listbox.Height, new Point(listbox.Width - 1, 0));
         }
@@ -257,6 +260,11 @@ namespace SadConsole.UI.Themes
         /// <param name="itemState">The state of the item.</param>
         public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
         {
+            if (item is ValueTuple<ColoredString, object> colValue)
+                item = colValue.Item1;
+            else if (item is ValueTuple<string, object> strValue)
+                item = strValue.Item1;
+
             if (item is ColoredString colored)
             {
                 ColoredString substring;
@@ -356,14 +364,18 @@ namespace SadConsole.UI.Themes
                     if (font != null)
                         useExtended = font.IsSadExtended;
 
-                    string colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
+                    string colorBoxesCommands;
+
+                    StringParser.Default parser = new StringParser.Default();
 
                     if (useExtended)
                         colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 254]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 301]m[c:sg 302]m";
+                    else
+                        colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 219:2]mm";
 
-                    colorBoxesCommands = $"[c:r b:{cellLook.Background.ToParser()}]" + colorBoxesCommands;
-
-                    control.Surface.Print(area.X, area.Y, ColoredString.Parse(colorBoxesCommands));
+                    colorBoxesCommands = $"[c:r b:{cellLook.Background.ToParser()}]{colorBoxesCommands}";
+                    
+                    control.Surface.Print(area.X, area.Y, parser.Parse(colorBoxesCommands));
                     control.Surface.Print(area.X + 3, area.Y, color2.Item2.Align(HorizontalAlignment.Left, area.Width - 3), cellLook);
                 }
                 else

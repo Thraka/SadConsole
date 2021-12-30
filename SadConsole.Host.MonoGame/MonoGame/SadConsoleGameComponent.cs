@@ -42,10 +42,9 @@ namespace SadConsole.Host
 
                     // Render each draw call
                     Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, SadConsole.Host.Settings.MonoGameScreenBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+
                     foreach (DrawCalls.IDrawCall call in SadConsole.Game.Instance.DrawCalls)
-                    {
                         call.Draw();
-                    }
 
                     Global.SharedSpriteBatch.End();
                     GraphicsDevice.SetRenderTarget(null);

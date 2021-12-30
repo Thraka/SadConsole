@@ -153,7 +153,7 @@ namespace SadRogue.Primitives
             (color * 0.25f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.25f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.25f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
@@ -162,7 +162,7 @@ namespace SadRogue.Primitives
             (color * 1.25f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.50f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.50f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
@@ -171,7 +171,7 @@ namespace SadRogue.Primitives
             (color * 1.50f).FillAlpha();
 
         /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 1.75f.
+        /// Gets a brighter version of the color. R,G,B channels are * 1.75f.
         /// </summary>
         /// <param name="color">Object instance.</param>
         /// <returns>A darker color.</returns>
@@ -563,6 +563,52 @@ namespace SadRogue.Primitives
             if (ColorMappings.ContainsKey(name))
                 return ColorMappings[name];
             return defaultColor;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="SadConsole.ColoredString"/> object using the current gradient.
+        /// </summary>
+        /// <param name="gradient">The gradient to work with.</param>
+        /// <param name="text">The text to use for the colored string.</param>
+        /// <returns>A new colored string object.</returns>
+        public static SadConsole.ColoredString ToColoredString(this Gradient gradient, string text)
+        {
+            SadConsole.ColoredString stringObject = new SadConsole.ColoredString(text);
+
+            switch (gradient.Stops.Length)
+            {
+                case 0:
+                    throw new IndexOutOfRangeException(
+                        "The ColorGradient object does not have any gradient stops defined.");
+                case 1:
+                    stringObject.SetForeground(gradient.Stops[0].Color);
+                    return stringObject;
+            }
+
+            float lerp = 1f / (text.Length - 1);
+            float lerpTotal = 0f;
+
+            stringObject[0].Foreground = gradient.Stops[0].Color;
+            stringObject[text.Length - 1].Foreground = gradient.Stops[gradient.Stops.Length - 1].Color;
+
+            for (int i = 1; i < text.Length - 1; i++)
+            {
+                lerpTotal += lerp;
+                int counter;
+                for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < lerpTotal; counter++)
+                {
+                    ;
+                }
+
+                counter--;
+                counter = MathHelpers.Clamp(counter, 0, gradient.Stops.Length - 2);
+
+                float newLerp = (gradient.Stops[counter].Stop - lerpTotal) / (gradient.Stops[counter].Stop - gradient.Stops[counter + 1].Stop);
+
+                stringObject[i].Foreground = Color.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp);
+            }
+
+            return stringObject;
         }
     }
 }

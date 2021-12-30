@@ -71,32 +71,37 @@ namespace SadConsole
         /// <param name="foreground">The foreground color. If null, <see cref="ColoredString.IgnoreForeground"/> will be set.</param>
         /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
         /// <param name="mirror">The mirror setting. If null, <see cref="ColoredString.IgnoreMirror"/> will be set.</param>
+        /// <param name="decorators">The decorators setting. If null, <see cref="ColoredString.IgnoreDecorators"/> will be set.</param>
         /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null)
+        public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[] decorators = null)
         {
-            var stacks = new ParseCommandStacks();
+            ColoredString returnValue = new ColoredString(value);
 
+            // Foreground
             if (foreground.HasValue)
-                stacks.AddSafe(new ParseCommandRecolor() { R = foreground.Value.R, G = foreground.Value.G, B = foreground.Value.B, A = foreground.Value.A, CommandType = CommandTypes.Foreground });
+                returnValue.SetForeground(foreground.Value);
+            else
+                returnValue.IgnoreForeground = true;
 
+            // Background
             if (background.HasValue)
-                stacks.AddSafe(new ParseCommandRecolor() { R = background.Value.R, G = background.Value.G, B = background.Value.B, A = background.Value.A, CommandType = CommandTypes.Background });
+                returnValue.SetBackground(background.Value);
+            else
+                returnValue.IgnoreBackground = true;
 
+            // Mirror
             if (mirror.HasValue)
-                stacks.AddSafe(new ParseCommandMirror() { Mirror = mirror.Value, CommandType = CommandTypes.Mirror });
+                returnValue.SetMirror(mirror.Value);
+            else
+                returnValue.IgnoreMirror = true;
 
-            ColoredString newString = ColoredString.Parse(value, initialBehaviors: stacks);
+            // Decorators
+            if (decorators != null)
+                returnValue.SetDecorators(decorators);
+            else
+                returnValue.IgnoreDecorators = true;
 
-            if (!foreground.HasValue)
-                newString.IgnoreForeground = true;
-
-            if (!background.HasValue)
-                newString.IgnoreBackground = true;
-
-            if (!mirror.HasValue)
-                newString.IgnoreMirror = true;
-
-            return newString;
+            return returnValue;
         }
 
         /// <summary>

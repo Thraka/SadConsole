@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="CustomConsoles\CursorConsole.cs" />
     <Compile Remove="CustomConsoles\FadeConsole.cs" />
-    <Compile Remove="CustomConsoles\MouseRenderingDebug.cs" />
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
@@ -20,33 +20,50 @@
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.0.0-beta3" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.2.0" />
     <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="9.0.0-beta3" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="9.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
+    
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.0.0-beta3" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Condition=" '$(GameHost)' == 'sfml' " Include="HostSpecific\SFML\" />
+    <Compile Condition=" '$(GameHost)' == 'sfml' " Remove="HostSpecific\MonoGame\**\*.cs" />
+    <Compile Condition=" '$(GameHost)' == 'monogame' " Remove="HostSpecific\SFML\**\*.cs" />
+    
+    <Folder Include="Res\REXPaint\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
+    <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
     <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
+    <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\DejaVuSansMono-msdf.fnt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\DejaVuSansMono-msdf.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\MSDFShader.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

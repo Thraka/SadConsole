@@ -5,6 +5,7 @@ using SadConsole.Input;
 using SadConsole.Effects;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace SadConsole.Components
 {
@@ -90,7 +91,6 @@ namespace SadConsole.Components
             }
         }
 
-
         /// <summary>
         /// Sets the glyph used in rendering. A shortcut to <see cref="CursorRenderCell"/>.
         /// </summary>
@@ -111,6 +111,12 @@ namespace SadConsole.Components
         /// </summary>
         [DataMember]
         public bool MouseClickReposition { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, returns a handled status from the mouse processor when the <see cref="MouseClickReposition"/> is enabled. This prevents further left-mouse processing on the host.
+        /// </summary>
+        [DataMember]
+        public bool MouseClickRepositionHandlesMouse { get; set; } = true;
 
         /// <summary>
         /// Shows or hides the cursor. This does not affect how the cursor operates.
@@ -162,23 +168,14 @@ namespace SadConsole.Components
             {
                 if (_editor != null)
                 {
-                    if (!(value.X < 0 || value.X >= _editor.Width))
-                    {
-                        _position = new Point(value.X, _position.Y);
-                        RestartCursorEffect();
-                    }
-
-                    if (!(value.Y < 0 || value.Y >= _editor.Height))
-                    {
-                        _position = new Point(_position.X, value.Y);
-                        RestartCursorEffect();
-                    }
+                    _position = new Point(Math.Clamp(value.X, 0, _editor.Width - 1), Math.Clamp(value.Y, 0, _editor.Height - 1));
+                    RestartCursorEffect();
                 }
             }
         }
 
         /// <summary>
-        /// When true, prevents the any print method from breaking words up by spaces when wrapping lines.
+        /// When true, prevents any print method from breaking words up by spaces when wrapping lines.
         /// </summary>
         [DataMember]
         public bool DisableWordBreak { get; set; } = false;
@@ -190,7 +187,7 @@ namespace SadConsole.Components
         public bool UseLinuxLineEndings { get; set; } = false;
 
         /// <summary>
-        /// Calls <see cref="ColoredString.Parse"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
+        /// Indicates this cursor should process te string through the <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
         /// </summary>
         [DataMember]
         public bool UseStringParser { get; set; } = false;
@@ -214,7 +211,7 @@ namespace SadConsole.Components
         }
 
         /// <summary>
-        /// Indicates that the when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
+        /// Indicates that when the cursor goes past the last cell of the console, that the rows should be shifted up when the cursor is automatically reset to the next line.
         /// </summary>
         [DataMember]
         public bool AutomaticallyShiftRowsUp { get; set; }
@@ -266,7 +263,7 @@ namespace SadConsole.Components
 
             CursorRenderEffect = new Effects.Blink
             {
-                BlinkSpeed = 0.35f
+                BlinkSpeed = System.TimeSpan.FromSeconds(0.35d)
             };
             _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
@@ -345,7 +342,7 @@ namespace SadConsole.Components
         private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
         {
             ColoredGlyph cell = _editor[_position.Y * _editor.Width + _position.X];
-
+            
             if (!PrintOnlyCharacterData)
             {
                 if (!settings.IgnoreGlyph)
@@ -359,6 +356,9 @@ namespace SadConsole.Components
 
                 if (!settings.IgnoreMirror)
                     cell.Mirror = glyph.Mirror;
+
+                if (!settings.IgnoreDecorators)
+                    cell.Decorators = glyph.Decorators.ToArray();
 
                 if (!settings.IgnoreEffect)
                     _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);
@@ -404,16 +404,15 @@ namespace SadConsole.Components
         /// </summary>
         /// <param name="text">The text to print.</param>
         /// <param name="template">The way the text will look when it is printed.</param>
-        /// <param name="templateEffect">Effect to apply to the text as its printed.</param>
+        /// <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect templateEffect)
         {
             ColoredString coloredString;
 
             if (UseStringParser)
-            {
-                coloredString = ColoredString.Parse(text, _position.Y * _editor.Width + _position.X, _editor, new StringParser.ParseCommandStacks());
-            }
+                coloredString = ColoredString.Parser.Parse(text, _position.Y * _editor.Width + _position.X, _editor);
+
             else
             {
                 if (PrintAppearanceMatchesHost)
@@ -438,10 +437,7 @@ namespace SadConsole.Components
         /// <returns>Returns this cursor object.</returns>
         public Cursor Print(ColoredString text)
         {
-            if (text.Length == 0)
-            {
-                return this;
-            }
+            if (text.Length == 0)  return this;
 
             _cursorCellEffect?.Restart();
             _cursorCellEffect?.ApplyToCell(_cursorCell, _cursorCellOriginal);
@@ -453,6 +449,7 @@ namespace SadConsole.Components
                 // Prep
                 ColoredString.ColoredGlyphEffect glyph;
                 ColoredString.ColoredGlyphEffect spaceGlyph = text[0].Clone();
+
                 spaceGlyph.GlyphCharacter = ' ';
                 string stringText = text.String.TrimEnd(' ');
 
@@ -461,14 +458,10 @@ namespace SadConsole.Components
                 int spaceCount = stringText.Length - newStringText.Length;
 
                 for (int i = 0; i < spaceCount; i++)
-                {
                     PrintGlyph(spaceGlyph, text);
-                }
 
                 if (spaceCount != 0)
-                {
                     text = text.SubString(spaceCount, text.Length - spaceCount);
-                }
 
                 stringText = newStringText;
                 string[] parts = stringText.Split(' ');
@@ -502,9 +495,7 @@ namespace SadConsole.Components
 
                                         // Fill rest of line with spaces
                                         for (int i = 0; i < spaces; i++)
-                                        {
                                             PrintGlyph(spaceGlyph, text);
-                                        }
                                     }
 
                                     // Print the rest of the text as normal.
@@ -514,6 +505,10 @@ namespace SadConsole.Components
 
                                         PrintGlyph(glyph, text);
 
+                                        // Update the space glyph with the last character printed.
+                                        glyph.CopyAppearanceTo(spaceGlyph);
+                                        spaceGlyph.GlyphCharacter = ' ';
+
                                         c++;
                                     }
 
@@ -522,13 +517,9 @@ namespace SadConsole.Components
                                     {
                                         // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
                                         if (_position.X == 0 && _position.Y != currentLine)
-                                        {
                                             _position = new Point(_position.X, _position.Y - 1);
-                                        }
                                         else
-                                        {
                                             CarriageReturn();
-                                        }
 
                                         c++;
                                     }
@@ -539,13 +530,9 @@ namespace SadConsole.Components
                             if (newlineParts.Length != 1 && indexNL != newlineParts.Length - 1)
                             {
                                 if (!UseLinuxLineEndings)
-                                {
                                     LineFeed();
-                                }
                                 else
-                                {
                                     NewLine();
-                                }
 
                                 c++;
                             }
@@ -559,9 +546,7 @@ namespace SadConsole.Components
                         c++;
                     }
                     else
-                    {
                         c++;
-                    }
                 }
             }
             else
@@ -569,8 +554,10 @@ namespace SadConsole.Components
                 bool movedLines = false;
                 int oldLine = _position.Y;
 
-                foreach (ColoredString.ColoredGlyphEffect glyph in text)
+                int count = text.Length;
+                for (int i = 0; i < count; i++)
                 {
+                    ColoredString.ColoredGlyphEffect glyph = text[i];
                     // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                     if (movedLines)
                     {
@@ -580,25 +567,18 @@ namespace SadConsole.Components
                             continue;
                         }
                         else
-                        {
                             movedLines = false;
-                        }
                     }
 
                     if (glyph.GlyphCharacter == '\r')
-                    {
                         CarriageReturn();
-                    }
+
                     else if (glyph.GlyphCharacter == '\n')
                     {
                         if (!UseLinuxLineEndings)
-                        {
                             LineFeed();
-                        }
                         else
-                        {
                             NewLine();
-                        }
                     }
                     else
                     {
@@ -786,7 +766,7 @@ namespace SadConsole.Components
         {
             if (IsVisible && _applyCursorEffect && _cursorCellEffect != null)
             {
-                _cursorCellEffect.Update(delta.TotalSeconds);
+                _cursorCellEffect.Update(delta);
                 _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
             }
         }
@@ -803,7 +783,7 @@ namespace SadConsole.Components
             if (MouseClickReposition && state.IsOnScreenObject && state.Mouse.LeftClicked)
             {
                 Position = state.CellPosition;
-                handled = true;
+                handled = MouseClickRepositionHandlesMouse;
             }
         }
 
@@ -813,8 +793,11 @@ namespace SadConsole.Components
 
             if (!IsEnabled) return;
 
-            foreach (Input.AsciiKey key in keyboard.KeysPressed)
+            System.Collections.ObjectModel.ReadOnlyCollection<AsciiKey> keysPressed = keyboard.KeysPressed;
+            int count = keysPressed.Count;
+            for (int i = 0; i < count; i++)
             {
+                Input.AsciiKey key = keysPressed[i];
                 // If someone attached an event to KeyboardPreview, process it
                 if (KeyboardPreview != null)
                 {

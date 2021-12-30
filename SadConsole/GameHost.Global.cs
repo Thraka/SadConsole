@@ -13,6 +13,7 @@ namespace SadConsole
     public abstract partial class GameHost : IDisposable
     {
         private GlobalState _state;
+        protected DateTime _gameStartedAt = DateTime.Now;
 
         /// <summary>
         /// Collection of fonts. Used mainly by the deserialization system.
@@ -35,7 +36,7 @@ namespace SadConsole
         public IFont DefaultFont { get; set; }
 
         /// <summary>
-        /// The default font to use with <see cref="DefaultFont"/>.
+        /// The default font size to use with the <see cref="DefaultFont"/>.
         /// </summary>
         public IFont.Sizes DefaultFontSize { get; set; } = IFont.Sizes.One;
 
@@ -62,7 +63,7 @@ namespace SadConsole
         /// <summary>
         /// The total time the game has been running.
         /// </summary>
-        public TimeSpan GameRunningTotalTime { get; set; }
+        public TimeSpan GameRunningTotalTime => DateTime.Now - _gameStartedAt;
 
         /// <summary>
         /// The console created by the game and automatically assigned to <see cref="Screen"/>.

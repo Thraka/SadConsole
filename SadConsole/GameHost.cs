@@ -24,8 +24,6 @@ namespace SadConsole
     /// </remarks>
     public abstract partial class GameHost : IDisposable
     {
-        private DateTime _gameStartedAt = DateTime.Now;
-
         /// <summary>
         /// Holds all of the <see cref="IRenderer"/> types.
         /// </summary>
@@ -92,6 +90,11 @@ namespace SadConsole
         public int ScreenCellsY { get; protected set; }
 
         /// <summary>
+        /// A frame number counter, incremented every game frame.
+        /// </summary>
+        public int FrameNumber { get; set; }
+
+        /// <summary>
         /// Raises the <see cref="FrameRender"/> event.
         /// </summary>
         protected virtual void OnFrameRender() =>
@@ -102,7 +105,7 @@ namespace SadConsole
         /// </summary>
         protected virtual void OnFrameUpdate()
         {
-            GameHost.Instance.GameRunningTotalTime = DateTime.Now - _gameStartedAt;
+            FrameNumber += 1;
             FrameUpdate?.Invoke(this, this);
         }
 

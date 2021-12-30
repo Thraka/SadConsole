@@ -139,8 +139,8 @@ namespace SadConsole.Host
         /// Resizes the <see cref="Global.GraphicsDeviceManager"/> by the specified font size.
         /// </summary>
         /// <param name="fontSize">The size of the font to base the final values on.</param>
-        /// <param name="width">The width glyphs.</param>
-        /// <param name="height">The height glyphs.</param>
+        /// <param name="width">The count of glyphs along the X-axis.</param>
+        /// <param name="height">The count of glyphs along the Y-axis.</param>
         /// <param name="additionalWidth">Additional pixel width to add to the resize.</param>
         /// <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         public void ResizeGraphicsDeviceManager(Point fontSize, int width, int height, int additionalWidth, int additionalHeight)
@@ -152,6 +152,7 @@ namespace SadConsole.Host
             SadConsole.Settings.Rendering.RenderHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
 
             Global.GraphicsDeviceManager.ApplyChanges();
+            
         }
 
         /// <summary>

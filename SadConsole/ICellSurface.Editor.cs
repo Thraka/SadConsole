@@ -7,9 +7,50 @@ using System.Text;
 using SadRogue.Primitives;
 using SadConsole.StringParser;
 using SadConsole.Effects;
+using SadConsole.Readers;
 
 namespace SadConsole
 {
+    // Since shift algorithms make temporary copies of appearance, we use a struct to make sure the copy
+    // is as efficient as possible
+    internal readonly struct ColoredGlyphAppearance
+    {
+        public readonly Color Foreground;
+        public readonly Color Background;
+        public readonly int Glyph;
+        public readonly Mirror Mirror;
+        public readonly CellDecorator[] Decorators;
+
+        public ColoredGlyphAppearance(ColoredGlyph cell)
+        {
+            Foreground = cell.Foreground;
+            Background = cell.Background;
+            Glyph = cell.Glyph;
+            Mirror = cell.Mirror;
+
+            // Shallow copy is OK here because, in the algorithm we use to shift, the item we're copying
+            // is immediately replaced by another; this shallow-copy therefore avoids some allocation.
+            Decorators = cell.Decorators;
+        }
+
+        /// <summary>
+        /// Copies the ColoredGlyphAppearance to the appearance fields of the given ColoredGlyphs.
+        /// The Decorators array is copied using a shallow-copy.
+        /// </summary>
+        /// <remarks>
+        /// This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+        /// </remarks>
+        /// <param name="cell">Cell to copy to.</param>
+        public void ShallowCopyTo(ColoredGlyph cell)
+        {
+            cell.Foreground = Foreground;
+            cell.Background = Background;
+            cell.Glyph = Glyph;
+            cell.Mirror = Mirror;
+            cell.Decorators = Decorators;
+        }
+    }
+
     /// <summary>
     /// Methods to interact with a <see cref="ICellSurface"/>.
     /// </summary>
@@ -204,10 +245,7 @@ namespace SadConsole
         /// <param name="decorators">Decorators to set on the cell. Will clear existing decorators first.</param>
         public static void SetGlyph(this ICellSurface surface, int x, int y, int glyph, Color foreground, Color background, Mirror mirror, IEnumerable<CellDecorator> decorators)
         {
-            if (!surface.IsValidCell(x, y, out int index))
-            {
-                return;
-            }
+            if (!surface.IsValidCell(x, y, out int index)) return;
 
             surface[index].Background = background;
             surface[index].Foreground = foreground;
@@ -215,6 +253,22 @@ namespace SadConsole
             surface[index].Mirror = mirror;
             surface[index].Decorators = decorators?.ToArray() ?? Array.Empty<CellDecorator>();
 
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Draws a single glyph on the console at the specified location.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="glyph">The glyph to display.</param>
+        public static void SetGlyph(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
+        {
+            if (glyph == null) return;
+            if (!surface.IsValidCell(x, y, out int index)) return;
+
+            glyph.CopyAppearanceTo(surface[index]);
             surface.IsDirty = true;
         }
 
@@ -299,7 +353,7 @@ namespace SadConsole
             if (!surface.IsValidCell(x, y, out int index))
                 return;
 
-            surface.Effects.SetEffect(index, effect);
+            surface.Effects.SetEffect(surface[index], effect);
             surface.IsDirty = true;
         }
 
@@ -314,7 +368,7 @@ namespace SadConsole
             if (!surface.IsValidCell(index))
                 return;
 
-            surface.Effects.SetEffect(index, effect);
+            surface.Effects.SetEffect(surface[index], effect);
             surface.IsDirty = true;
         }
 
@@ -331,7 +385,7 @@ namespace SadConsole
             foreach (Point item in cells)
                 cellList.Add(item.ToIndex(surface.Width));
 
-            surface.Effects.SetEffect(cellList, effect);
+            surface.Effects.SetEffect((IEnumerable<ColoredGlyph>)cellList, effect);
             surface.IsDirty = true;
         }
 
@@ -343,7 +397,12 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, IEnumerable<int> cells, ICellEffect effect)
         {
-            surface.Effects.SetEffect(cells, effect);
+            List<ColoredGlyph> glyphs = new List<ColoredGlyph>(5);
+
+            foreach (var index in cells)
+                glyphs.Add(surface[index]);
+
+            surface.Effects.SetEffect(glyphs, effect);
             surface.IsDirty = true;
         }
 
@@ -355,7 +414,19 @@ namespace SadConsole
         /// <param name="effect">The desired effect.</param>
         public static void SetEffect(this ICellSurface surface, ColoredGlyph cell, ICellEffect effect)
         {
-            surface.Effects.SetEffect(surface.ToList().IndexOf(cell), effect);
+            surface.Effects.SetEffect(cell, effect);
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Changes the effect of a cell to the specified effect.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="cells">The cells for the effect.</param>
+        /// <param name="effect">The desired effect.</param>
+        public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+        {
+            surface.Effects.SetEffect(cells, effect);
             surface.IsDirty = true;
         }
 
@@ -368,7 +439,17 @@ namespace SadConsole
         /// <returns>The effect.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICellEffect GetEffect(this ICellSurface surface, int x, int y) =>
-            surface.Effects.GetEffect(Point.ToIndex(x, y, surface.Width));
+            surface.Effects.GetEffect(surface[x, y]);
+
+        /// <summary>
+        /// Gets the effect of the specified cell.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="index">The index of the cell.</param>
+        /// <returns>The effect.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ICellEffect GetEffect(this ICellSurface surface, int index) =>
+            surface.Effects.GetEffect(surface[index]);
 
         /// <summary>
         /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
@@ -454,7 +535,7 @@ namespace SadConsole
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x location of the cell.</param>
         /// <param name="y">The y location of the cell.</param>
-        /// <returns>The color.</returns>
+        /// <returns>The <see cref="Mirror"/> of the cell.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Mirror GetMirror(this ICellSurface surface, int x, int y) =>
             surface[y * surface.Width + x].Mirror;
@@ -584,16 +665,22 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface));
+                PrintNoCheck(surface, index, ColoredString.Parser.Parse(text, index, surface));
 
             surface.IsDirty = true;
         }
@@ -613,21 +700,26 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Foreground = foreground;
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var behavior = new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(behavior);
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -648,30 +740,35 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Background = background;
                     surface[index].Foreground = foreground;
+
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var behaviorFore = new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground };
-                var behaviorBack = new ParseCommandRecolor { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background };
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(behaviorFore);
-                stacks.AddSafe(behaviorBack);
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
 
         /// <summary>
-        /// Draws the string on the console at the specified location with the specified settings. 
+        /// Draws the string on the console at the specified location with the specified settings.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">X location of the text.</param>
@@ -687,8 +784,10 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < end; index++)
                 {
                     surface[index].Glyph = text[charIndex];
@@ -697,23 +796,76 @@ namespace SadConsole
                     surface[index].Foreground = foreground;
                     surface[index].Mirror = mirror;
 
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(new ParseCommandRecolor { R = foreground.R, G = foreground.G, B = foreground.B, A = foreground.A, CommandType = CommandTypes.Foreground });
-                stacks.AddSafe(new ParseCommandRecolor { R = background.R, G = background.G, B = background.B, A = background.A, CommandType = CommandTypes.Background });
-                stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+                stringValue.SetMirror(mirror);
 
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
 
         /// <summary>
-        /// Draws the string on the console at the specified location with the specified settings. 
+        /// Draws the string on the console at the specified location with the specified settings.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="x">X location of the text.</param>
+        /// <param name="y">Y location of the text.</param>
+        /// <param name="text">The string to display.</param>
+        /// <param name="foreground">Sets the foreground of all characters in the text.</param>
+        /// <param name="background">Sets the background of all characters in the text.</param>
+        /// <param name="mirror">The mirror to set on all characters in the text.</param>
+        /// <param name="decorators">An array of cell decorators to use on each glyph. A <see langword="null"/> value will clear the decorators.</param>
+        public static void Print(this ICellSurface surface, int x, int y, string text, Color foreground, Color background, Mirror mirror, CellDecorator[] decorators)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            if (!surface.IsValidCell(x, y, out int index)) return;
+
+            if (!surface.UsePrintProcessor)
+            {
+                var effectIndicies = new List<int>(text.Length);
+                int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
+                int charIndex = 0;
+
+                for (; index < end; index++)
+                {
+                    surface[index].Glyph = text[charIndex];
+
+                    surface[index].Background = background;
+                    surface[index].Foreground = foreground;
+                    surface[index].Mirror = mirror;
+                    surface[index].Decorators = decorators;
+
+                    effectIndicies.Add(index);
+                    charIndex++;
+                }
+
+                SetEffect(surface, effectIndicies, null);
+            }
+            else
+            {
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(foreground);
+                stringValue.SetBackground(background);
+                stringValue.SetMirror(mirror);
+                stringValue.SetDecorators(decorators);
+
+                PrintNoCheck(surface, index, stringValue);
+            }
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Draws the string on the console at the specified location with the specified settings.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">X location of the text.</param>
@@ -727,22 +879,27 @@ namespace SadConsole
 
             if (!surface.UsePrintProcessor)
             {
+                var effectIndicies = new List<int>(text.Length);
                 int total = index + text.Length > surface.Count ? surface.Count : index + text.Length;
                 int charIndex = 0;
+
                 for (; index < total; index++)
                 {
                     surface[index].Glyph = text[charIndex];
                     surface[index].Mirror = mirror;
 
+                    effectIndicies.Add(index);
                     charIndex++;
                 }
+
+                SetEffect(surface, effectIndicies, null);
             }
             else
             {
-                var stacks = new ParseCommandStacks();
-                stacks.AddSafe(new ParseCommandMirror { Mirror = mirror, CommandType = CommandTypes.Mirror });
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetMirror(mirror);
 
-                PrintNoCheck(surface, index, ColoredString.Parse(text, index, surface, stacks));
+                PrintNoCheck(surface, index, stringValue);
             }
             surface.IsDirty = true;
         }
@@ -761,40 +918,34 @@ namespace SadConsole
             if (string.IsNullOrEmpty(text)) return;
             if (!surface.IsValidCell(x, y, out int index)) return;
 
-            int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
-            int charIndex = 0;
-
-            List<int> effectIndicies = new List<int>(text.Length);
-
-            for (; index < end; index++)
+            if (!surface.UsePrintProcessor)
             {
-                ColoredGlyph cell = surface[index];
-                appearance.CopyAppearanceTo(cell);
-                cell.Glyph = text[charIndex];
-                effectIndicies.Add(index);
-                charIndex++;
+                var effectIndicies = new List<int>(text.Length);
+                int end = index + text.Length > surface.Count ? surface.Count : index + text.Length;
+                int charIndex = 0;
+
+                for (; index < end; index++)
+                {
+                    ColoredGlyph cell = surface[index];
+                    appearance.CopyAppearanceTo(cell, false);
+                    cell.Glyph = text[charIndex];
+                    effectIndicies.Add(index);
+                    charIndex++;
+                }
+
+                SetEffect(surface, effectIndicies, effect);
+            }
+            else
+            {
+                ColoredString stringValue = ColoredString.Parser.Parse(text, index, surface);
+                stringValue.SetForeground(appearance.Foreground);
+                stringValue.SetBackground(appearance.Background);
+                stringValue.SetMirror(appearance.Mirror);
+                stringValue.SetDecorators(appearance.Decorators);
+
+                PrintNoCheck(surface, index, stringValue);
             }
 
-            surface.Effects.SetEffect(effectIndicies, effect);
-
-            surface.IsDirty = true;
-        }
-
-        /// <summary>
-        /// Draws a single glyph on the console at the specified location.
-        /// </summary>
-        /// <param name="surface">The surface being edited.</param>
-        /// <param name="x">X location of the text.</param>
-        /// <param name="y">Y location of the text.</param>
-        /// <param name="glyph">The glyph to display.</param>
-        public static void Print(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
-        {
-            if (glyph == null) return;
-            if (!surface.IsValidCell(x, y, out int index)) return;
-
-            ColoredGlyph cell = surface[index];
-            glyph.CopyAppearanceTo(cell);
-            cell.Glyph = glyph.Glyph;
             surface.IsDirty = true;
         }
 
@@ -812,7 +963,6 @@ namespace SadConsole
             PrintNoCheck(surface, index, text);
             surface.IsDirty = true;
         }
-
 
         private static void PrintNoCheck(this ICellSurface surface, int index, ColoredString text)
         {
@@ -835,6 +985,9 @@ namespace SadConsole
 
                 if (!text.IgnoreEffect)
                     SetEffect(surface, index, text[charIndex].Effect);
+
+                if (!text.IgnoreDecorators)
+                    surface[index].Decorators = text[charIndex].Decorators;
 
                 charIndex++;
             }
@@ -935,6 +1088,443 @@ namespace SadConsole
             surface.TimesShiftedRight = 0;
         }
 
+        #region Shift Rows
+
+        /// <summary>
+        /// Shifts the entire row by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftRow(this ICellSurface surface, int row, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (amount < 0)
+                ShiftRowLeft(surface, row, 0, surface.Width, -amount, wrap);
+            else
+                ShiftRowRight(surface, row, 0, surface.Width, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        public static void ShiftRow(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (startingX < 0 || startingX >= surface.Width) throw new ArgumentOutOfRangeException(nameof(startingX), "Column must be 0 or more and less than the width of the surface.");
+            if (row < 0 || row > surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
+
+            if (amount < 0)
+                ShiftRowLeftUnchecked(surface, row, startingX, count, -amount, wrap);
+            else
+                ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount, to the right.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        public static void ShiftRowRight(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
+
+            ShiftRowRightUnchecked(surface, row, startingX, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount, to the left.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface width.</exception>
+        public static void ShiftRowLeft(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (row < 0 || row >= surface.Height) throw new ArgumentOutOfRangeException(nameof(row), "Row must be 0 or more and less than the height of the surface.");
+            if (startingX + count > surface.Width)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the width of the console subtract the starting X position of the shift.");
+
+            ShiftRowLeftUnchecked(surface, row, startingX, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftRowLeftUnchecked(surface, row, startingX, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+                // Offset for tempArray
+                int tempArrayOffset = count - amount;
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int x = i + startingX;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i >= tempArrayOffset)
+                        tempArray[i - tempArrayOffset] = new ColoredGlyphAppearance(surface[x, row]);
+
+                    // Copy appearance from the appropriate location
+                    int copyFromX = x - amount;
+                    if (copyFromX >= startingX)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
+                    else
+                        tempArray[i].ShallowCopyTo(surface[x, row]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int x = i + startingX;
+                    int copyFromX = x - amount;
+                    if (copyFromX >= startingX)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row]);
+                    else
+                        surface.Clear(x, row);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the left.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="row">The row to shift.</param>
+        /// <param name="startingX">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-left by n is equivalent to a shift-right by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftRowRightUnchecked(surface, row, startingX, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = 0; i < count; i++)
+                {
+                    int x = i + startingX;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i < amount)
+                        tempArray[i] = new ColoredGlyphAppearance(surface[x, row]);
+
+                    if (i + amount < count)
+                        surface[x, row].CopyAppearanceFrom(surface[x + amount, row], false);
+                    else
+                        tempArray[i + amount - count].ShallowCopyTo(surface[x, row]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    int x = i + startingX;
+                    int copyFromX = x + amount;
+                    if (copyFromX < startingX + count)
+                        surface[x, row].CopyAppearanceFrom(surface[copyFromX, row], false);
+                    else
+                        surface.Clear(x, row);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+
+        #endregion
+
+        #region Shift Columns
+
+        /// <summary>
+        /// Shifts the entire column by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumn(this ICellSurface surface, int col, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (amount < 0)
+                ShiftColumnUp(surface, col, 0, surface.Height, -amount, wrap);
+            else
+                ShiftColumnDown(surface, col, 0, surface.Height, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from an X position, by the specfied amount.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumn(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (startingY < 0 || startingY >= surface.Height) throw new ArgumentOutOfRangeException(nameof(startingY), "Column must be 0 or more and less than the width of the surface.");
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting Y position of the shift.");
+
+            if (amount < 0)
+                ShiftColumnUpUnchecked(surface, col, startingY, count, -amount, wrap);
+            else
+                ShiftColumnDownUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from n Y position, by the specfied amount, down.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumnDown(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting Y position of the shift.");
+
+            ShiftColumnDownUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Shifts the spefied row from n Y position, by the specfied amount, up.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting row to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        /// <exception cref="ArgumentOutOfRangeException">One of the parameters is outside of the surface height.</exception>
+        public static void ShiftColumnUp(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (amount == 0) return;
+            if (col < 0 || col > surface.Width) throw new ArgumentOutOfRangeException(nameof(col), "Col must be 0 or more and less than the width of the surface.");
+            if (startingY + count > surface.Height)
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    "Count must be less than the height of the console subtract the starting X position of the shift.");
+
+            ShiftColumnUpUnchecked(surface, col, startingY, count, amount, wrap);
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, down.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumnDownUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftColumnUpUnchecked(surface, col, startingY, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+                // Offset for tempArray
+                int tempArrayOffset = count - amount;
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int y = i + startingY;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i >= tempArrayOffset)
+                        tempArray[i - tempArrayOffset] = new ColoredGlyphAppearance(surface[col, y]);
+
+                    // Copy appearance from the appropriate location
+                    int copyFromY = y - amount;
+                    if (copyFromY >= startingY)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY], false);
+                    else
+                        tempArray[i].ShallowCopyTo(surface[col, y]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    int y = i + startingY;
+                    int copyFromY = y - amount;
+                    if (copyFromY >= startingY)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY]);
+                    else
+                        surface.Clear(col, y);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, up.
+        /// </summary>
+        /// <param name="surface">The surface being edited.</param>
+        /// <param name="col">The column to shift.</param>
+        /// <param name="startingY">The starting column to shift from.</param>
+        /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
+        /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
+        /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
+        public static void ShiftColumnUpUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+        {
+            if (wrap)
+            {
+                // Simplify wrap to minimum needed number
+                amount %= count;
+
+                // If count was a multiple of width, everything will end up back where it started so we're done
+                if (amount == 0) return;
+
+                // Any wrapping shift-left by n is equivalent to a shift-right by width - n.  Because we have to
+                // allocate a temporary array the size of the value we're shifting during the algorithm,
+                // we'll optimize it by making sure that value is as small as possible.  The largest shift
+                // value we will actually process will then be width / 2.
+                if (count - amount < amount)
+                {
+                    ShiftColumnDownUnchecked(surface, col, startingY, count, count - amount, true);
+                    return;
+                }
+
+                // Temporary array size of shift value
+                var tempArray = new ColoredGlyphAppearance[amount];
+
+                // Shift each cell to its proper location, using temporary storage as needed.
+                for (int i = 0; i < count; i++)
+                {
+                    int y = i + startingY;
+                    // In this case, we'll be replacing a wrapped-around cell; so save the cell off
+                    // before we overwrite so that we can get the value back later when we need to shift
+                    // it down.
+                    if (i < amount)
+                        tempArray[i] = new ColoredGlyphAppearance(surface[col, y]);
+
+                    if (i + amount < count)
+                        surface[col, y].CopyAppearanceFrom(surface[col, y + amount], false);
+                    else
+                        tempArray[i + amount - count].ShallowCopyTo(surface[col, y]);
+                }
+            }
+            else // Shift and clear as needed
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    int y = i + startingY;
+                    int copyFromY = y + amount;
+                    if (copyFromY < startingY + count)
+                        surface[col, y].CopyAppearanceFrom(surface[col, copyFromY], false);
+                    else
+                        surface.Clear(col, y);
+                }
+            }
+
+            surface.IsDirty = true;
+        }
+        #endregion
+
         /// <summary>
         /// Scrolls all the console data up by one.
         /// </summary>
@@ -989,11 +1579,7 @@ namespace SadConsole
                 {
                     ColoredGlyph destination = surface[(y - amount) * surface.Width + x];
                     ColoredGlyph source = surface[y * surface.Width + x];
-
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1010,14 +1596,12 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1079,10 +1663,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[(y + amount) * surface.Width + x];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1099,14 +1680,12 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1169,10 +1748,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[y * surface.Width + (x + amount)];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1189,14 +1765,12 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1258,10 +1832,7 @@ namespace SadConsole
                     ColoredGlyph destination = surface[y * surface.Width + (x - amount)];
                     ColoredGlyph source = surface[y * surface.Width + x];
 
-                    destination.Background = source.Background;
-                    destination.Foreground = source.Foreground;
-                    destination.Glyph = source.Glyph;
-                    destination.Mirror = source.Mirror;
+                    destination.CopyAppearanceFrom(source, false);
                 }
             }
 
@@ -1277,14 +1848,12 @@ namespace SadConsole
             }
             else
             {
-                foreach (Tuple<ColoredGlyph, int> cellTuple in wrappedCells)
+                Tuple<ColoredGlyph, int> cellTuple;
+                for (int i = 0; i < wrappedCells.Count; i++)
                 {
+                    cellTuple = wrappedCells[i];
                     ColoredGlyph destination = surface[cellTuple.Item2];
-
-                    destination.Background = cellTuple.Item1.Background;
-                    destination.Foreground = cellTuple.Item1.Foreground;
-                    destination.Glyph = cellTuple.Item1.Glyph;
-                    destination.Mirror = cellTuple.Item1.Mirror;
+                    destination.CopyAppearanceFrom(cellTuple.Item1, false);
                 }
             }
 
@@ -1292,7 +1861,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface.
+        /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of surface. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x position.</param>
@@ -1309,7 +1878,7 @@ namespace SadConsole
                 return Array.Empty<ColoredGlyph>();
             }
 
-            int end = index + count > surface.Count ? surface.Count - index : index + count;
+            int end = index + count > surface.Count ? surface.Count : index + count;
             int total = end - index;
             ColoredGlyph[] result = new ColoredGlyph[total];
             int resultIndex = 0;
@@ -1330,7 +1899,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Clears the glyph, mirror, and decorators, for the specified cell.
+        /// Clears the glyph, mirror, and decorators, for the specified cell. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="x">The x position.</param>
@@ -1353,7 +1922,7 @@ namespace SadConsole
         }
 
         /// <summary>
-        /// Erases all cells which clears the glyph, mirror, and decorators.
+        /// Erases all cells which clears the glyph, mirror, and decorators. Doesn't clear the effect.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <remarks>
@@ -1376,9 +1945,22 @@ namespace SadConsole
         /// Clears the console data. Characters are reset to 0, the foreground and background are set to default, and mirror set to none. Clears cell decorators.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface) =>
-            Fill(surface, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface)
+        {
+            ColoredGlyph cell;
+
+            for (int i = 0; i < surface.Count; i++)
+            {
+                cell = surface[i];
+                cell.Clear();
+                cell.Foreground = surface.DefaultForeground;
+                cell.Background = surface.DefaultBackground;
+                cell.Glyph = surface.DefaultGlyph;
+            }
+
+            surface.Effects.RemoveAll();
+            surface.IsDirty = true;
+        }
 
         /// <summary>
         /// Clears a cell. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
@@ -1388,16 +1970,17 @@ namespace SadConsole
         /// <param name="y">The y location of the cell.</param>
         public static void Clear(this ICellSurface surface, int x, int y)
         {
-            if (!surface.IsValidCell(x, y, out int index))
-            {
-                return;
-            }
+            if (!surface.IsValidCell(x, y)) return;
 
-            ColoredGlyph cell = surface[index];
+            ColoredGlyph cell = surface[x, y];
+
+            surface.Effects.SetEffect(cell, null);
+
             cell.Clear();
             cell.Foreground = surface.DefaultForeground;
             cell.Background = surface.DefaultBackground;
             cell.Glyph = surface.DefaultGlyph;
+
             surface.IsDirty = true;
         }
 
@@ -1409,20 +1992,68 @@ namespace SadConsole
         /// <param name="y">The y position of the segment.</param>
         /// <param name="length">The length of the segment. If it extends beyond the line, it will wrap to the next line. If it extends beyond the console, then it automatically ends at the last valid cell.</param>
         /// <remarks>This works similarly to printing a string of whitespace</remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Clear(this ICellSurface surface, int x, int y, int length) =>
-            Fill(surface, x, y, length, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface, int x, int y, int length)
+        {
+            int index = new Point(x, y).ToIndex(surface.Width);
+            if (index < 0 || index >= surface.Count) return;
+
+            int end = index + length > surface.Count ? surface.Count : index + length;
+            var result = new ColoredGlyph[end - index];
+            int resultIndex = 0;
+            ColoredGlyph cell;
+
+            for (; index < end; index++)
+            {
+                cell = surface[index];
+                cell.Clear();
+                cell.Foreground = surface.DefaultForeground;
+                cell.Background = surface.DefaultBackground;
+                cell.Glyph = surface.DefaultGlyph;
+
+                result[resultIndex] = cell;
+                resultIndex++;
+            }
+
+            surface.Effects.SetEffect(result, null);
+            surface.IsDirty = true;
+        }
 
         /// <summary>
         /// Clears an area of surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="area">The area to clear.</param>
-        public static void Clear(this ICellSurface surface, Rectangle area) =>
-            Fill(surface, area, surface.DefaultForeground, surface.DefaultBackground, surface.DefaultGlyph, Mirror.None);
+        public static void Clear(this ICellSurface surface, Rectangle area)
+        {
+            area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
+
+            if (area == Rectangle.Empty) return;
+
+            var result = new ColoredGlyph[area.Width * area.Height];
+            int resultIndex = 0;
+            ColoredGlyph cell;
+
+            for (int x = area.X; x < area.X + area.Width; x++)
+            {
+                for (int y = area.Y; y < area.Y + area.Height; y++)
+                {
+                    cell = surface[x, y];
+                    cell.Clear();
+                    cell.Foreground = surface.DefaultForeground;
+                    cell.Background = surface.DefaultBackground;
+                    cell.Glyph = surface.DefaultGlyph;
+
+                    result[resultIndex] = cell;
+                    resultIndex++;
+                }
+            }
+
+            surface.Effects.SetEffect(result, null);
+            surface.IsDirty = true;
+        }
 
         /// <summary>
-        /// Fills the console. Clears cell decorators.
+        /// Fills the console. Clears cell decorators and effects.
         /// </summary>
         /// <param name="surface">The surface being edited.</param>
         /// <param name="foreground">Foreground to apply. If null, skips.</param>
@@ -1430,8 +2061,10 @@ namespace SadConsole
         /// <param name="glyph">Glyph to apply. If null, skips.</param>
         /// <param name="mirror">Mirror to apply. If null, skips.</param>
         /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-        public static void Fill(this ICellSurface surface, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+        public static ColoredGlyph[] Fill(this ICellSurface surface, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
+            ColoredGlyph[] glyphs = new ColoredGlyph[surface.Count];
+
             for (int i = 0; i < surface.Count; i++)
             {
                 if (background.HasValue)
@@ -1447,9 +2080,14 @@ namespace SadConsole
                     surface[i].Mirror = mirror.Value;
 
                 surface[i].Decorators = Array.Empty<CellDecorator>();
+
+                glyphs[i] = surface[i];
             }
 
+            surface.Effects.SetEffect(glyphs, null);
             surface.IsDirty = true;
+
+            return glyphs;
         }
 
         /// <summary>
@@ -1466,16 +2104,11 @@ namespace SadConsole
         /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
         public static ColoredGlyph[] Fill(this ICellSurface surface, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
         {
-
-
             if (!surface.IsValidCell(x, y, out int index))
-            {
                 return Array.Empty<ColoredGlyph>();
-            }
 
-            int end = index + length > surface.Count ? surface.Count - index : index + length;
-            int total = end - index;
-            ColoredGlyph[] result = new ColoredGlyph[total];
+            int end = index + length > surface.Count ? surface.Count : index + length;
+            ColoredGlyph[] result = new ColoredGlyph[end - index];
             int resultIndex = 0;
             for (; index < end; index++)
             {
@@ -1498,7 +2131,7 @@ namespace SadConsole
                 resultIndex++;
             }
 
-
+            surface.Effects.SetEffect(result, null);
             surface.IsDirty = true;
             return result;
         }
@@ -1518,7 +2151,7 @@ namespace SadConsole
             area = Rectangle.GetIntersection(area, new Rectangle(0, 0, surface.Width, surface.Height));
 
             if (area == Rectangle.Empty)
-                return new ColoredGlyph[0];
+                return Array.Empty<ColoredGlyph>();
 
             var result = new ColoredGlyph[area.Width * area.Height];
             int resultIndex = 0;
@@ -1548,6 +2181,7 @@ namespace SadConsole
                 }
             }
 
+            surface.Effects.SetEffect(result, null);
             surface.IsDirty = true;
             return result;
         }
@@ -1750,7 +2384,7 @@ namespace SadConsole
         /// <param name="border">The border style.</param>
         /// <param name="fill">The fill style. If null, the box is not filled.</param>
         /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-        [Obsolete("Use the other DrawBox method")]
+        [Obsolete("Use the other DrawBox method overload")]
         public static void DrawBox(this ICellSurface surface, Rectangle area, ColoredGlyph border, ColoredGlyph fill = null, int[] connectedLineStyle = null)
         {
             if (connectedLineStyle == null)
@@ -1869,7 +2503,7 @@ namespace SadConsole
         /// <param name="area">The area the ellipse </param>
         /// <param name="outer">The appearance of the outer line of the ellipse.</param>
         /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-        [Obsolete("Use the other DrawCircle method")]
+        [Obsolete("Use the other DrawCircle method overload")]
         public static void DrawCircle(this ICellSurface surface, Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
         {
             var cells = new List<int>(area.Width * area.Height);
@@ -2208,6 +2842,122 @@ namespace SadConsole
             }
 
             surface.IsDirty = true;
+        }
+
+        /// <summary>
+        /// Prints text using <see cref="TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
+        /// </summary>
+        /// <param name="cellSurface">Class implementing <see cref="ICellSurface"/>.</param>
+        /// <param name="y">Y coordinate of the surface.</param>
+        /// <param name="text">Text to print.</param>
+        /// <param name="drawFont">Instance of the <see cref="TheDrawFont"/> to use.</param>
+        /// <param name="alignment"><see cref="HorizontalAlignment"/> to use.</param>
+        /// <param name="padding">Amount of regular font characters used as horizontal padding on both sides of the output.</param>
+        public static void PrintTheDraw(this ICellSurface cellSurface, int y, string text, TheDrawFont drawFont, HorizontalAlignment alignment, int padding = 0)
+        {
+            if (drawFont is null) return;
+
+            int spaceWidth = GetTheDrawSpaceCharWidth(drawFont),
+                textLength = 0,
+                printWidth = cellSurface.Width - padding * 2;
+
+            string tempText = string.Empty;
+
+            int count = text.Length;
+            for (int i = 0; i < count; i++)
+            {
+                char item = text[i];
+                char currentChar = item;
+                int charWidth = 0;
+
+                if (drawFont.IsCharacterSupported(item))
+                {
+                    var charInfo = drawFont.GetCharacter(currentChar);
+                    charWidth = charInfo.Width;
+                }
+                else
+                {
+                    currentChar = ' ';
+                    charWidth = spaceWidth;
+                }
+
+                textLength += charWidth;
+
+                if (textLength > printWidth)
+                {
+                    textLength -= charWidth;
+                    break;
+                }
+
+                tempText += currentChar;
+            }
+
+            int x = alignment switch
+            {
+                HorizontalAlignment.Center => (printWidth - textLength) / 2,
+                HorizontalAlignment.Right => printWidth - textLength,
+                _ => 0
+            };
+
+            PrintTheDraw(cellSurface, x + padding, y, tempText, drawFont);
+        }
+
+        static int GetTheDrawSpaceCharWidth(TheDrawFont drawFont) => drawFont.IsCharacterSupported(' ') ? drawFont.GetCharacter(' ').Width :
+                                                                     drawFont.IsCharacterSupported('a') ? drawFont.GetCharacter('a').Width :
+                                                                     drawFont.IsCharacterSupported('i') ? drawFont.GetCharacter('i').Width :
+                                                                     drawFont.IsCharacterSupported('1') ? drawFont.GetCharacter('1').Width :
+                                                                     2;
+
+        /// <summary>
+        /// Prints text using <see cref="TheDrawFont"/>.
+        /// </summary>
+        /// <param name="cellSurface">Class implementing <see cref="ICellSurface"/>.</param>
+        /// <param name="x">X coordinate of the surface.</param>
+        /// <param name="y">Y coordinate of the surface.</param>
+        /// <param name="text">Text to print.</param>
+        /// <param name="drawFont">Instance of the <see cref="TheDrawFont"/> to use.</param>
+        public static void PrintTheDraw(this ICellSurface cellSurface, int x, int y, string text, TheDrawFont drawFont)
+        {
+            if (drawFont is null) return;
+
+            int xPos = x;
+            int yPos = y;
+            int tempHeight = 0;
+
+            int count = text.Length;
+            for (int i = 0; i < count; i++)
+            {
+                char item = text[i];
+                if (drawFont.IsCharacterSupported(item))
+                {
+                    var charInfo = drawFont.GetCharacter(item);
+
+                    if (xPos + charInfo.Width >= cellSurface.Width)
+                    {
+                        yPos += tempHeight + 1;
+                        xPos = 0;
+                    }
+
+                    if (yPos >= cellSurface.Height)
+                        break;
+
+                    var surfaceCharacter = drawFont.GetSurface(item);
+
+                    if (surfaceCharacter != null)
+                    {
+                        surfaceCharacter.Copy(cellSurface, xPos, yPos);
+
+                        if (surfaceCharacter.Height > tempHeight)
+                            tempHeight = surfaceCharacter.Height;
+                    }
+
+                    xPos += charInfo.Width;
+                }
+                else if (item == ' ')
+                {
+                    xPos += GetTheDrawSpaceCharWidth(drawFont);
+                }
+            }
         }
     }
 }

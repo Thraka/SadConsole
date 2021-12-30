@@ -19,7 +19,7 @@ namespace SadConsole
     /// <summary>
     /// Manages the parent and children relationship for <see cref="IScreenObject"/>.
     /// </summary>
-    public class ScreenObjectCollection<TScreenObject> : IEnumerable<TScreenObject>, System.Collections.IEnumerable
+    public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject>, IEnumerable<TScreenObject>, System.Collections.IEnumerable
         where TScreenObject : class, IScreenObject
     {
         /// <summary>

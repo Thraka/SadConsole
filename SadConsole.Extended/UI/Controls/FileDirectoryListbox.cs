@@ -98,7 +98,7 @@ namespace SadConsole.UI.Controls
 
                     foreach (var item in System.IO.Directory.GetDirectories(folder))
                         newItems.Add(new System.IO.DirectoryInfo(item));
-                    var highlightExts = HighlightedExtentions.Trim(';').Split(';');
+                    var highlightExts = HighlightedExtentions?.Trim(';').Split(';') ?? Array.Empty<string>();
                     var filterExts = _extFilter.Trim(';').Split(';');
 
                     foreach (var filter in filterExts)

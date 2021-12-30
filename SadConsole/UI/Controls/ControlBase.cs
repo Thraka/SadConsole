@@ -264,7 +264,7 @@ namespace SadConsole.UI.Controls
                     {
                         IsCustomTheme = false;
                         _activeTheme = Library.Default.GetControlTheme(GetType());
-                        if (_activeTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+                        if (_activeTheme == null) throw new NullReferenceException($"Theme unavailable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
                     }
                     else
                     {
@@ -361,7 +361,7 @@ namespace SadConsole.UI.Controls
         /// Checks if the mouse is the control and calls the appropriate mouse methods.
         /// </summary>
         /// <param name="state">Mouse information.</param>
-        /// <returns>Always returns false.</returns>
+        /// <returns>True when the control is enabled, set to use the mouse and the mouse is over it, otherwise false.</returns>
         public virtual bool ProcessMouse(Input.MouseScreenObjectState state)
         {
             if (IsEnabled && UseMouse)
@@ -422,7 +422,7 @@ namespace SadConsole.UI.Controls
         protected virtual void OnPositionChanged() { }
 
         /// <summary>
-        /// Plases this control relative to another, taking into account the bounds of the control.
+        /// Places this control relative to another, taking into account the bounds of the control.
         /// </summary>
         /// <param name="control">The other control to place this one relative to.</param>
         /// <param name="direction">The direction this control should be placed.</param>
@@ -535,11 +535,11 @@ namespace SadConsole.UI.Controls
         /// Resizes the control if the <see cref="CanResize"/> property is <see langword="true"/>.
         /// </summary>
         /// <remarks>
-        /// When overriding this method, to perhaps restrct the requested size, make sure to do the following:
+        /// When overriding this method, to perhaps restrict the requested size, make sure to do the following:
         ///
-        /// - Check if the <see cref="CanResize"/> property allows resizing. If it doesn't, throw a <see cref="InvalidOperationException"/>.
+        /// - Check if the <see cref="CanResize"/> property allows resizing. If it doesn't, throw an <see cref="InvalidOperationException"/>.
         /// - The <see cref="_width"/> and <see cref="_height"/> variables of the control are set to the values provided.
-        /// - The <see cref="MouseArea"/> property to the same width and height values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
+        /// - The <see cref="MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
         /// - The <see cref="Theme"/>, if set, is reattached by calling <see cref="ThemeBase.Attached(ControlBase)"/>.
         /// - Set <see cref="IsDirty"/> to <see langword="true"/>.
         /// </remarks>

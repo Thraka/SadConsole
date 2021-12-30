@@ -109,6 +109,21 @@
         <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallManager">
+            <summary>
+            Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch">
+            <summary>
+            Resumes rendering to <see cref="P:SadConsole.Host.Global.RenderOutput"/> with SadConsole's default settings.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
+            <summary>
+            Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
+            </summary>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
@@ -124,6 +139,9 @@
             <inheritdoc />
         </member>
         <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Size">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(System.String)">
@@ -142,27 +160,87 @@
             <summary>
             Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
             </summary>
-            <param name="texture"></param>
+            <param name="texture">The texture being wrapped by this object.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.Dispose">
             <summary>
             Disposes the underlaying texture object and releases reference to it.
             </summary>
         </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+            <returns>The pixels. Row-major ordered.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelsMonoColor">
+            <summary>
+            Gets an array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
+            </summary>
+            <returns>An array of pixels. Row-major ordered.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
+            <summary>
+            Sets colors in the texture from an array of pixels. Row-major ordered.
+            </summary>
+            <param name="colors">The individual pixel colors to set. Row-major ordered.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <summary>
+            Sets colors in the texture from a span of pixels. Row-major ordered.
+            </summary>
+            <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(Microsoft.Xna.Framework.Color[])">
+            <summary>
+            Replaces texture colors with the array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
+            </summary>
+            <param name="colors">Array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position.
+            </summary>
+            <param name="position">Position of the pixel in the texture.</param>
+            <param name="color">Color of the pixel.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixels">
-            <inheritdoc />
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index.
+            </summary>
+            <param name="index">Index of the pixel.</param>
+            <param name="color"><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position in the texture.
+            </summary>
+            <param name="position">Position in the texture.</param>
+            <returns><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
-            <inheritdoc />
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(System.Int32)">
+            <summary>
+            Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index in the texture.
+            </summary>
+            <param name="index">Index of the pixel in the texture.</param>
+            <returns><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
         </member>
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
@@ -210,8 +288,8 @@
             Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
             </summary>
             <param name="fontSize">The size of the font to base the final values on.</param>
-            <param name="width">The width glyphs.</param>
-            <param name="height">The height glyphs.</param>
+            <param name="width">The count of glyphs along the X-axis.</param>
+            <param name="height">The count of glyphs along the Y-axis.</param>
             <param name="additionalWidth">Additional pixel width to add to the resize.</param>
             <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         </member>
@@ -356,6 +434,7 @@
             <param name="pixelWidth">Width the source texture.</param>
             <param name="pixelHeight">Height of the source texture.</param>
             <param name="font">Font used for rendering.</param>
+            <param name="fontSize">Size of the font.</param>
         </member>
         <member name="M:SadConsole.Readers.TextureToSurfaceReader.GetSurface(Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>

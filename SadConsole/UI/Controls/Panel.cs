@@ -18,6 +18,12 @@ namespace SadConsole.UI.Controls
         protected List<ControlBase> Controls { get; set; } = new List<ControlBase>();
 
         /// <inheritdoc/>
+        public int Count => Controls.Count;
+
+        /// <inheritdoc/>
+        public ControlBase this[int index] => Controls[index];
+
+        /// <inheritdoc/>
         public ControlHost Host => Parent?.Host;
 
         /// <summary>
@@ -77,8 +83,10 @@ namespace SadConsole.UI.Controls
         {
             base.Update(time);
 
-            foreach (ControlBase control in Controls.ToArray())
+            ControlBase[] tempControls = Controls.ToArray();
+            for (int i = 0; i < tempControls.Length; i++)
             {
+                ControlBase control = tempControls[i];
                 if (control.IsDirty)
                     IsDirty = true;
 
@@ -99,8 +107,10 @@ namespace SadConsole.UI.Controls
                 var controls = new List<ControlBase>(Controls);
                 controls.Reverse();
 
-                foreach (var control in controls)
+                int count = controls.Count;
+                for (int i = 0; i < count; i++)
                 {
+                    ControlBase control = controls[i];
                     var state2 = new ControlMouseState(control, state);
 
                     if (state2.IsMouseOver && state.Mouse.RightClicked)
@@ -123,8 +133,11 @@ namespace SadConsole.UI.Controls
 
             var controls = new List<ControlBase>(Controls);
 
-            foreach (var control in controls)
+            for (int i = 0; i < controls.Count; i++)
+            {
+                ControlBase control = controls[i];
                 control.LostMouse(state.OriginalMouseState);
+            }
         }
 
         /// <inheritdoc/>
@@ -137,9 +150,12 @@ namespace SadConsole.UI.Controls
                 var controls = new List<ControlBase>(Controls);
                 controls.Reverse();
 
-                foreach (var control in controls)
+                for (int i = 0; i < controls.Count; i++)
+                {
+                    ControlBase control = controls[i];
                     if (control.ProcessKeyboard(state))
                         return true;
+                }
 
                 return processResult;
             }

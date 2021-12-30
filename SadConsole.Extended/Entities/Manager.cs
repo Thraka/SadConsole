@@ -69,8 +69,9 @@ namespace SadConsole.Entities
 
             _zones.Remove(zone);
 
-            foreach (var item in Entities)
+            for (int i = 0; i < Entities.Count; i++)
             {
+                Entity item = Entities[i];
                 var state = _entityStates[item];
                 state.Zone = null;
                 state.IsInZone = false;
@@ -104,7 +105,7 @@ namespace SadConsole.Entities
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+        /// Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
         /// </summary>
         /// <param name="position">The position to check.</param>
         /// <returns>A value indicating if an entity exists.</returns>
@@ -257,8 +258,9 @@ namespace SadConsole.Entities
 
         private bool IsPositionZone(in Point point, out Zone zone)
         {
-            foreach (var z in Zones)
+            for (int i = 0; i < Zones.Count; i++)
             {
+                Zone z = Zones[i];
                 if (z.Area.Contains(point))
                 {
                     zone = z;
@@ -294,8 +296,9 @@ namespace SadConsole.Entities
                 {
                     var newList = new Entity[entities.Length - 1];
                     int index = 0;
-                    foreach (var item in entities)
+                    for (int i = 0; i < entities.Length; i++)
                     {
+                        Entity item = entities[i];
                         if (item != entity)
                         {
                             newList[index] = item;

@@ -1,10 +1,50 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace SadConsole.Tests
 {
     public partial class CellSurface
     {
+        [TestMethod]
+        public void Print_DecoratorsClear()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            Color foreground = Color.AliceBlue;
+            Color background = Color.Purple;
+            Mirror mirror = Mirror.Vertical;
+
+            surface1.Print(1, 1, "Test me!", foreground, background, mirror);
+            surface1.SetDecorator(2, 1, 1, new CellDecorator(Color.Yellow, 22, Mirror.None));
+
+            Assert.IsTrue(surface1[1, 1].Foreground == foreground);
+            Assert.IsTrue(surface1[1, 1].Background == background);
+            Assert.IsTrue(surface1[1, 1].Glyph == (int)'T');
+            Assert.IsTrue(surface1[1, 1].Mirror == mirror);
+            Assert.IsTrue(surface1[1, 1].Decorators.Length == 0);
+
+            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
+            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+
+            surface1.Print(1, 1, "Test me!", foreground, background, mirror);
+            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
+            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+
+            CellDecorator dec1 = new CellDecorator(Color.Wheat, 34, Mirror.None);
+            CellDecorator dec2 = new CellDecorator(Color.Purple, 21, Mirror.Vertical);
+            CellDecorator dec3 = new CellDecorator(Color.PapayaWhip, 85, Mirror.Horizontal);
+
+            surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, new[] { dec1, dec2, dec3 });
+            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
+            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 3);
+
+            surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, null);
+            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
+            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 0);
+        }
+
         [TestMethod]
         public void Glyph_SetForeground()
         {
@@ -78,6 +118,92 @@ namespace SadConsole.Tests
             surface1.SetMirror(0, 0, newMirror);
 
             Assert.IsTrue(newMirror == surface1[0, 0].Mirror);
+        }
+
+        [TestMethod]
+        [DataRow(20, 20, 4, 4, 7, 7)]
+        [DataRow(20, 20, -20, -20, 50, 50)]
+        [DataRow(20, 20, 30, 30, 10, 10)]
+        public void Clear_Rect(int width, int height, int regionX, int regionY, int regionWidth, int regionHeight)
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(width, height);
+            var region = new Rectangle(regionX, regionY, regionWidth, regionHeight);
+
+            surface1.FillWithRandomGarbage(255);
+            PrintSurfaceGlyphs(surface1, "Before:");
+            surface1.Clear(region);
+            PrintSurfaceGlyphs(surface1, "After:");
+
+            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+
+            foreach (var item in Rectangle.GetIntersection(region, new Rectangle(0, 0, surface1.Width, surface1.Height)).Positions())
+                Assert.IsTrue(defaultGlyph.Matches(surface1[item]));
+        }
+
+        [TestMethod]
+        [DataRow(5, 5, 0, 1)]
+        [DataRow(5, 5, 4, 4)]
+        [DataRow(5, 5, 3, 3)]
+        [DataRow(5, 5, -1, -1)]
+        public void Clear_XY(int width, int height, int clearX, int clearY)
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(width, height);
+
+            surface1.FillWithRandomGarbage(255);
+            PrintSurfaceGlyphs(surface1, "Before:");
+            surface1.Clear(clearX, clearY);
+            PrintSurfaceGlyphs(surface1, "After:");
+
+            if (surface1.IsValidCell(clearX, clearY))
+            {
+                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                Assert.IsTrue(defaultGlyph.Matches(surface1[clearX, clearY]));
+            }
+        }
+
+        [TestMethod]
+        [DataRow(5, 5, 0, 1, 3)]
+        [DataRow(5, 5, 4, 4, 6)]
+        [DataRow(5, 5, 3, 3, 8)]
+        [DataRow(5, 5, -1, -1, 8)]
+        public void Clear_Length(int width, int height, int clearX, int clearY, int length)
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(width, height);
+
+            surface1.FillWithRandomGarbage(255);
+            PrintSurfaceGlyphs(surface1, "Before:");
+            surface1.Clear(clearX, clearY, length);
+            PrintSurfaceGlyphs(surface1, "After:");
+
+            if (surface1.IsValidCell(clearX, clearY))
+            {
+                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                int startingIndex = new Point(clearX, clearY).ToIndex(surface1.Width);
+                for (int i = 0; i < length; i++)
+                {
+                    if (surface1.IsValidCell(startingIndex + i))
+                        Assert.IsTrue(defaultGlyph.Matches(surface1[startingIndex + i]));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Clear_All()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(7, 10);
+
+            surface1.FillWithRandomGarbage(255);
+            PrintSurfaceGlyphs(surface1, "Before:");
+            surface1.Clear();
+            PrintSurfaceGlyphs(surface1, "After:");
+
+            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+            for (int i = 0; i < surface1.Count; i++)
+                Assert.IsTrue(defaultGlyph.Matches(surface1[i]));
         }
 
         public void Surface_Equals(ICellSurface surface1, ICellSurface surface2)

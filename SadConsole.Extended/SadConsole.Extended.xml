@@ -4,6 +4,170 @@
         <name>SadConsole.Extended</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Components.C64KeyboardHandler">
+            <summary>
+            A console prompt keyboard handler that acts like the text editor on the Commodore 64 and VIC-20 computers.
+            </summary>
+            <remarks>
+            This handler lets the user move the cursor with the keyboard arrow keys. When the <kbd>ENTER</kbd> key is pressed, the current line is sent to the <see cref="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction"/> callback. All empty characters are trimmed from the start and end of the string.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.Prompt">
+            <summary>
+            The prompt to display to the user.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.EraseGlyph">
+            <summary>
+            The glyph to print when erasing a character, such as when the backspace key is pressed to erase a character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.C64KeyboardHandler.ReplaceEmptyGlyph">
+            <summary>
+            The glyph used to replace the empty characters that may be in the string sent to <see cref="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.C64KeyboardHandler.EnterPressedAction">
+            <summary>
+            This is a callback for the owner of this keyboard handler. When it returns <see langword="true"/>, the handler will print the prompt. The parameters are the component itself, the <see cref="T:SadConsole.Components.Cursor"/> used by the handler, and the string input by the user. It's called when the user presses ENTER.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.#ctor(System.String)">
+            <summary>
+            Creates a new keyboard handler with the specified prompt.
+            </summary>
+            <param name="prompt">The prompt to display to the user.</param>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+             <summary>
+             Called when this component is added to an object with a cursor; caches reference to the cursor.
+             </summary>
+             <param name="host">The host object for the component.</param>
+             <remarks>
+             Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
+            
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.PrintPrompt">
+            <summary>
+            Prints the prompt at the cursors current position.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.C64KeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Components.ClassicConsoleKeyboardHandler">
+            <summary>
+            A classic console/terminal prompt keyboard handler.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.Prompt">
+            <summary>
+            The prompt to display to the user.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.EraseGlyph">
+            <summary>
+            The glyph to print when erasing a character, such as when the backspace key is pressed to erase a character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.ReplaceEmptyGlyph">
+            <summary>
+            The glyph used to replace the empty characters that may be in the string sent to <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler.EnterPressedAction"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.CursorLastY">
+            <summary>
+            This holds the row that the virtual cursor is starting from when someone is typing.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.ClassicConsoleKeyboardHandler.EnterPressedAction">
+            <summary>
+            This is a callback for the owner of this keyboard handler. The parameters are the component itself, the <see cref="T:SadConsole.Components.Cursor"/> used by the handler, and the string input by the user. It's called when the user presses ENTER.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.#ctor(System.String)">
+            <summary>
+            Creates the handler with the specified prompt.
+            </summary>
+            <param name="prompt">The prompt to display to the user.</param>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+             <summary>
+             Called when this component is added to an object with a cursor; caches reference to the cursor.
+             </summary>
+             <param name="host">The host object for the component.</param>
+             <remarks>
+             Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
+            
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.PrintPrompt">
+            <summary>
+            Prints the prompt and locks the cursor to the column that ends at the prompt.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Components.MouseTint">
+            <summary>
+            Tints a surface when that surface would use the mouse. Helps debug which object is receiving mouse input as you move the mouse around.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MouseTint.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.MouseTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Components.MoveViewPortKeyboardHandler">
+            <summary>
+            Moves the view of an <see cref="T:SadConsole.IScreenSurface"/> with a set of specified keyboard keys.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Left">
+            <summary>
+            The key to move left.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Right">
+            <summary>
+            The key to move right.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Up">
+            <summary>
+            The key to move up.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MoveViewPortKeyboardHandler.Down">
+            <summary>
+            The key to move down.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.#ctor">
+            <summary>
+            Creates this handler with the arrow keys.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.#ctor(SadConsole.Input.Keys,SadConsole.Input.Keys,SadConsole.Input.Keys,SadConsole.Input.Keys)">
+            <summary>
+            Creates this handler with the specified keys.
+            </summary>
+            <param name="left">The key to move left.</param>
+            <param name="right">The key to move right.</param>
+            <param name="up">The key to move up.</param>
+            <param name="down">The key to move down.</param>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.MoveViewPortKeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.SmoothMove">
             <summary>
             Animates the movement of an object. 
@@ -137,7 +301,7 @@
         </member>
         <member name="M:SadConsole.Entities.Manager.HasEntityAt(SadRogue.Primitives.Point)">
             <summary>
-            Returns <see langword="true"/> when there is an entity has at the specified position; otherwise <see langword="false"/>.
+            Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
             </summary>
             <param name="position">The position to check.</param>
             <returns>A value indicating if an entity exists.</returns>
@@ -316,6 +480,26 @@
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
         </member>
+        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Prints text that blinks out the characters each after the specified time, using the default foreground and background colors of the surface.
+            </summary>
+            <param name="surfaceObject">The surface to draw the text on.</param>
+            <param name="text">The text to print.</param>
+            <param name="position">The position where to print the text.</param>
+            <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
+            <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
+        </member>
+        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,SadConsole.ColoredString,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+            <summary>
+            
+            </summary>
+            <param name="surfaceObject">The surface to draw the text on.</param>
+            <param name="text">The text to print.</param>
+            <param name="position">The position where to print the text.</param>
+            <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
+            <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
+        </member>
         <member name="T:SadConsole.Instructions.AnimatedBoxGrow">
             <summary>
             Animates drawing a box. It can either 
@@ -444,21 +628,150 @@
             <param name="shadedGlyphForeground">The forground of the <paramref name="shadedGlyph"/>.</param>
             <param name="shadedGlyphBackground">The background of the <paramref name="shadedGlyph"/>.</param>
         </member>
-        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String)">
+        <member name="M:SadConsole.UI.Border.BorderParameters.GetDefault">
+            <summary>
+            Creates an instance of BorderParameters with the thin line as a border, no title and no shadow.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddTitle(System.String)">
+            <summary>
+            Sets the Title parameter with the given text.
+            </summary>
+            <param name="title">Title text.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddTitle(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.HorizontalAlignment)">
+            <summary>
+            Sets the Title parameter with the given text and changes title colors.
+            </summary>
+            <param name="title">Title text.</param>
+            <param name="foregroundColor">Title foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">Title background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="horizontalAlignment">Title text <see cref="T:SadConsole.HorizontalAlignment"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddShadow">
+            <summary>
+            Sets the DrawShadedArea to true.
+            </summary>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddShadow(System.Int32)">
+            <summary>
+            Sets the DrawShadedArea to true and modifies shadow glyph.
+            </summary>
+            <param name="shadedGlyph">Glyph number to use as a shadow.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddShadow(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Sets the DrawShadedArea to true and modifies default shadow colors.
+            </summary>
+            <param name="foregroundColor">ShadedGlyph new foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">ShadedGlyph new background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.AddShadow(System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Sets the DrawShadedArea to true and modifies default shadow glyph and colors.
+            </summary>
+            /// <param name="shadedGlyph">Glyph number to use as a shadow.</param>
+            <param name="foregroundColor">ShadedGlyph new foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">ShadedGlyph new background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderStyle(SadConsole.ShapeParameters)">
+            <summary>
+            Set the BorderBox parameter to the new value.
+            </summary>
+            <param name="borderStyle">New <see cref="T:SadConsole.ShapeParameters"/> to use for the border style.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(System.Int32[])">
+            <summary>
+            Changes the array of glyphs to be used as the border line.
+            </summary>
+            <param name="borderStyle">Array of glyphs to be used as the border line.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(System.Int32[],SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Changes the array of glyphs to be used as the border line and their colors.
+            </summary>
+            <param name="borderStyle">Array of glyphs to be used as the border line.</param>
+            <param name="foregroundColor">Border line foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(System.Int32)">
+            <summary>
+            Fills the array of glyphs to be used as the border line with the given glyph.
+            </summary>
+            <param name="glyph">The glyph to be used the border line.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Fills the array of glyphs to be used as the border line with the given glyph and changes the border colors.
+            </summary>
+            <param name="glyph">The glyph to be used the border line.</param>
+            <param name="foregroundColor">Border line foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(SadConsole.ColoredGlyph)">
+            <summary>
+            Fills the array of glyphs to be used as the border line with the given <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+            <param name="glyph">The <see cref="T:SadConsole.ColoredGlyph"/> to be used the border line.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderColors(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Changes border color parameters.
+            </summary>
+            <param name="foregroundColor">Border line foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderForegroundColor(SadRogue.Primitives.Color)">
+            <summary>
+            Changes border foreground color.
+            </summary>
+            <param name="foregroundColor">Border line foreground <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderBackgroundColor(SadRogue.Primitives.Color)">
+            <summary>
+            Changes border background color.
+            </summary>
+            <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
+            <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,SadConsole.UI.Border.BorderParameters,SadConsole.IFont)">
             <summary>
             Creates a border and adds it as a child object to <paramref name="contents"/>.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="parameters"><see cref="T:SadConsole.UI.Border.BorderParameters"/> to be used in creating the <see cref="T:SadConsole.UI.Border"/>.</param>
+            <param name="font">Optional <see cref="T:SadConsole.IFont"/> for the border <see cref="T:SadConsole.CellSurface"/>.</param>
+        </member>
+        <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String)">
+            <summary>
+            Creates a border (with a shadow and a title) and adds it as a child object to <paramref name="contents"/>.
             </summary>
             <param name="contents">The object the border will be around.</param>
             <param name="title">Title to display on the border.</param>
         </member>
         <member name="M:SadConsole.UI.Border.#ctor(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
-            Creates a border and adds it as a child object to <paramref name="contents"/>.
+            Creates a border (with a shadow and a title) and adds it as a child object to <paramref name="contents"/>.
             </summary>
             <param name="contents">The object the border will be around.</param>
             <param name="title">Optional title to display on the border.</param>
-            <param name="innerBorderForeground">The color of the </param>
-            <param name="outerBorderForeground"></param>
+            <param name="textColor">Title text foreground color.</param>
+            <param name="borderColor">Border line foreground color and title text background color.</param>
         </member>
         <member name="M:SadConsole.UI.Border.#ctor(SadConsole.UI.Window)">
             <summary>

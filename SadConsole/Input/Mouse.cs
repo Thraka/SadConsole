@@ -267,10 +267,9 @@ namespace SadConsole.Input
             if (screen.UseMouse)
                 list.Add(screen);
 
-            foreach (IScreenObject child in screen.Children)
-            {
-                GetConsoles(child, ref list);
-            }
+            int count = screen.Children.Count;
+            for (int i = 0; i < count; i++)
+                GetConsoles(screen.Children[i], ref list);
         }
 
         /// <summary>

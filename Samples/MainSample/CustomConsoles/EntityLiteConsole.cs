@@ -26,11 +26,11 @@ namespace FeatureDemo.CustomConsoles
             var fadeEffect = new SadConsole.Effects.Fade
             {
                 AutoReverse = true,
-                DestinationForeground = new ColorGradient(Color.Blue, Color.Yellow),
+                DestinationForeground = new Gradient(Color.Blue, Color.Yellow),
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
-                FadeDuration = 0.7f,
+                FadeDuration = System.TimeSpan.FromSeconds(0.7d),
                 RemoveOnFinished = true,
                 CloneOnAdd = true
             };
@@ -161,7 +161,7 @@ namespace FeatureDemo.CustomConsoles
             if (keyHit)
             {
                 // Check if the new position is valid
-                if (Surface.Area.Contains(player.Position))
+                if (Surface.Area.Contains(newPosition))
                 {
                     // Entity moved. Let's draw a trail of where they moved from.
                     Surface.SetGlyph(player.Position.X, player.Position.Y, 250);

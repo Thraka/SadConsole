@@ -11,6 +11,7 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
+dotnet_style_readonly_field=false:suggestion
 
 [project.json]
 indent_size = 2
@@ -88,7 +89,7 @@ csharp_prefer_simple_using_statement = false:none
 csharp_style_prefer_switch_expression = true:suggestion
 
 # Code quality
-dotnet_style_readonly_field = true:suggestion
+dotnet_style_readonly_field = false:suggestion
 dotnet_code_quality_unused_parameters = non_public:suggestion
 
 # Expression-level preferences
@@ -106,10 +107,10 @@ dotnet_style_prefer_conditional_expression_over_return = true:refactoring
 csharp_prefer_simple_default_expression = true:suggestion
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = true:refactoring
-csharp_style_expression_bodied_constructors = true:refactoring
-csharp_style_expression_bodied_operators = true:refactoring
-csharp_style_expression_bodied_properties = true:refactoring
+csharp_style_expression_bodied_methods =false:silent
+csharp_style_expression_bodied_constructors =false:silent
+csharp_style_expression_bodied_operators =false:silent
+csharp_style_expression_bodied_properties =true:silent
 csharp_style_expression_bodied_indexers = true:refactoring
 csharp_style_expression_bodied_accessors = true:refactoring
 csharp_style_expression_bodied_lambdas = true:refactoring

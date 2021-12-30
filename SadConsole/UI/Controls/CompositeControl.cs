@@ -19,6 +19,12 @@ namespace SadConsole.UI.Controls
         /// </summary>
         protected List<ControlBase> Controls { get; set; } = new List<ControlBase>();
 
+        /// <inheritdoc/>
+        public int Count => Controls.Count;
+
+        /// <inheritdoc/>
+        public ControlBase this[int index] => Controls[index];
+
         /// <summary>
         /// Creates a new control with the specified width and height.
         /// </summary>
@@ -55,8 +61,9 @@ namespace SadConsole.UI.Controls
                 var controls = new List<ControlBase>(Controls);
                 controls.Reverse();
 
-                foreach (var control in controls)
-                    if (control.ProcessMouse(state))
+                int count = controls.Count;
+                for (int i = 0; i < count; i++)
+                    if (controls[i].ProcessMouse(state))
                         return true;
 
                 return processResult;
@@ -103,8 +110,11 @@ namespace SadConsole.UI.Controls
 
             var controls = Controls.ToArray();
 
-            foreach (var control in controls)
+            for (int i = 0; i < controls.Length; i++)
+            {
+                ControlBase control = controls[i];
                 control.Update(time);
+            }
         }
 
         Point IContainer.AbsolutePosition => this.AbsolutePosition;

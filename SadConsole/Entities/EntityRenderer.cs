@@ -78,6 +78,11 @@ namespace SadConsole.Entities
         public bool DoEntityUpdate { get; set; } = true;
 
         /// <summary>
+        /// When <see langword="true"/>, the <see cref="Add(Entity)"/> and <see cref="Remove(Entity)"/> won't check if the entitiy exists before doing its operation.
+        /// </summary>
+        public bool SkipExistsChecks { get; set; } = false;
+
+        /// <summary>
         /// Internal use only
         /// </summary>
         public Renderers.IRenderStep RenderStep;
@@ -95,7 +100,7 @@ namespace SadConsole.Entities
                 return;
             }
 
-            if (_entities.Contains(entity)) return;
+            if (SkipExistsChecks == false && _entities.Contains(entity)) return;
 
             _entities.Add(entity);
 
@@ -124,7 +129,7 @@ namespace SadConsole.Entities
 
             foreach (Entity entity in entities)
             {
-                if (!_entities.Contains(entity))
+                if (SkipExistsChecks || !_entities.Contains(entity))
                 {
                     _entities.Add(entity);
 
@@ -177,7 +182,7 @@ namespace SadConsole.Entities
                 return;
             }
 
-            if (!_entities.Contains(entity)) return;
+            if (SkipExistsChecks == false && !_entities.Contains(entity)) return;
 
             entity.PositionChanged -= Entity_PositionChanged;
             entity.VisibleChanged -= Entity_VisibleChanged;
@@ -187,6 +192,15 @@ namespace SadConsole.Entities
             _entitiesVisible.Remove(entity);
 
             OnEntityRemoved(entity);
+        }
+
+        /// <summary>
+        /// Removes all entities from this renderer.
+        /// </summary>
+        public void RemoveAll()
+        {
+            while (_entities.Count != 0)
+                Remove(_entities[_entities.Count - 1]);
         }
 
         /// <inheritdoc/>
@@ -235,8 +249,10 @@ namespace SadConsole.Entities
             _entitiesVisible = new List<Entity>();
 
             // Detatch events
-            foreach (Entity entity in _entityHolding)
+            Entity entity;
+            for (int i = 0; i < _entityHolding.Count; i++)
             {
+                entity = _entityHolding[i];
                 entity.PositionChanged -= Entity_PositionChanged;
                 entity.VisibleChanged -= Entity_VisibleChanged;
                 entity.IsDirtyChanged -= Entity_IsDirtyChanged;
@@ -273,11 +289,13 @@ namespace SadConsole.Entities
 
             for (int i = 0; i < Entities.Count; i++)
             {
+                Entity entity = Entities[i];
+
                 if (DoEntityUpdate)
-                    Entities[i].Update(delta);
+                    entity.Update(delta);
 
                 // Short out if IsDirty has already been marked
-                if (!IsDirty && Entities[i].Appearance.IsDirty && IsEntityVisible(Entities[i].Position, Entities[i].UsePixelPositioning))
+                if (!IsDirty && entity.Appearance.IsDirty && IsEntityVisible(entity.Position, entity.UsePixelPositioning))
                     IsDirty = true;
             }
         }

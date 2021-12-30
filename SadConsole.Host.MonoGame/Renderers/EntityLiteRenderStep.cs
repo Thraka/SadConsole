@@ -56,7 +56,7 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
-            bool result = true;
+            bool result = false;
 
             // Update texture if something is out of size.
             if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != BackingTexture.Width || screenObject.AbsoluteArea.Height != BackingTexture.Height)
@@ -79,8 +79,11 @@ namespace SadConsole.Renderers
                 ColoredGlyph cell;
                 XnaRectangle renderRect;
 
-                foreach (Entities.Entity item in _entityManager.EntitiesVisible)
+                Entities.Entity item;
+                for (int i = 0; i < _entityManager.EntitiesVisible.Count; i++)
                 {
+                    item = _entityManager.EntitiesVisible[i];
+
                     if (!item.IsVisible) continue;
 
                     renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToMonoRectangle();
@@ -95,9 +98,9 @@ namespace SadConsole.Renderers
                     if (cell.Foreground != SadRogue.Primitives.Color.Transparent)
                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
-                    foreach (CellDecorator decorator in cell.Decorators)
-                        if (decorator.Color != SadRogue.Primitives.Color.Transparent)
-                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(decorator.Glyph).ToMonoRectangle(), decorator.Color.ToMonoColor(), 0f, Vector2.Zero, decorator.Mirror.ToMonoGame(), 0.5f);
+                    for (int d = 0; d < cell.Decorators.Length; d++)
+                        if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
                 }
 
                 Host.Global.SharedSpriteBatch.End();

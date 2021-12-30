@@ -3,20 +3,18 @@
 namespace SadConsole.Effects
 {
     /// <summary>
-    /// An effect that doesn't do anything but delays. Usually used with the <see cref="EffectsChain"/> effect.
+    /// An effect that doesn't do anything except run the <see cref="CellEffectBase.StartDelay"/> timer. Usually used with the <see cref="EffectSet"/> effect.
     /// </summary>
     [DataContract]
     public class Delay : CellEffectBase
     {
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
-            if (_delayFinished && !IsFinished)
-            {
+            if (_delayFinished)
                 IsFinished = true;
-            }
         }
 
         /// <inheritdoc />
@@ -33,23 +31,6 @@ namespace SadConsole.Effects
             _timeElapsed = _timeElapsed,
         };
 
-        //public override bool Equals(ICellEffect effect)
-        //{
-        //    if (effect is Delay)
-        //    {
-        //        if (base.Equals(effect))
-        //        {
-        //            var effect2 = (Delay)effect;
-
-        //            return StartDelay == effect2.StartDelay &&
-        //                   DelayTime == effect2.DelayTime;
-        //        }
-        //    }
-
-        //    return false;
-        //}
-
-        /// <inheritdoc />
         public override string ToString() =>
             string.Format("DELAY-{0}", StartDelay);
     }

@@ -14,6 +14,7 @@ namespace SadConsole.Host
     /// </summary>
     public class GameTexture : ITexture
     {
+        private bool _skipDispose;
         private Texture _texture;
         private string _resourcePath;
 
@@ -29,10 +30,8 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public int Width => (int)_texture.Size.X;
 
-        /// <summary>
-        /// Skips disposing of the texture.
-        /// </summary>
-        public bool SkipDispose { get; set; }
+        /// <inheritdoc />
+        public int Size { get; private set; }
 
         internal GameTexture(string path)
         {
@@ -40,10 +39,15 @@ namespace SadConsole.Host
                 _texture = new Texture(fontStream);
 
             _resourcePath = path;
+            Size = Width * Height;
         }
 
-        internal GameTexture(Stream stream) =>
+        internal GameTexture(Stream stream)
+        {
             _texture = new Texture(stream);
+            Size = Width * Height;
+        }
+            
 
         /// <summary>
         /// Wraps a texture. Doesn't dispose it when this object is disposed!
@@ -52,8 +56,9 @@ namespace SadConsole.Host
         /// <remarks>The only time the backing texture resource is disposed is when the <see cref="GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
         public GameTexture(Texture texture)
         {
-            SkipDispose = true;
+            _skipDispose = true;
             _texture = texture;
+            Size = Width * Height;
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace SadConsole.Host
         /// </summary>
         public void Dispose()
         {
-            if (!SkipDispose)
+            if (!_skipDispose)
                 _texture?.Dispose();
 
             _texture = null;
@@ -81,18 +86,80 @@ namespace SadConsole.Host
         public void SetPixel(int index, Color color) =>
             SetPixel(Point.FromIndex(index, (int)_texture.Size.X), color);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Sets the color of a pixel in the texture.
+        /// </summary>
+        /// <param name="position">The position to set the color.</param>
+        /// <param name="color">The color to set.</param>
+        /// <exception cref="IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        public void SetPixel(Point position, SFMLColor color)
+        {
+            if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
+                throw new IndexOutOfRangeException("Pixel position is out of range.");
+
+            _texture.Update(new[] { color.R, color.G, color.B, color.A }, 1, 1, (uint)position.X, (uint)position.Y);
+        }
+
+        /// <summary>
+        /// Sets the color of a pixel in the texture by index position.
+        /// </summary>
+        /// <param name="index">The position to set the color. Row-major ordered.</param>
+        /// <param name="color">The color to set.</param>
+        public void SetPixel(int index, SFMLColor color) =>
+            SetPixel(Point.FromIndex(index, (int)_texture.Size.X), color);
+
+        /// <summary>
+        /// Gets an array of colors. Row-major ordered.
+        /// </summary>
         public Color[] GetPixels()
         {
-            var colors = new Color[(int)_texture.Size.X * (int)_texture.Size.Y];
             using Image image = _texture.CopyToImage();
             byte[] pixels = image.Pixels;
+            Span<byte> byteSpan = pixels.AsSpan();
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, Color>(byteSpan).ToArray();
+        }
 
-            int colorIndex = 0;
-            for (int i = 0; i < pixels.Length; i += 4)
-                colors[colorIndex++] = new Color(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]);
+        /// <summary>
+        /// Gets an array of colors. Row-major ordered.
+        /// </summary>
+        public SFMLColor[] GetPixelsSFMLColor()
+        {
+            using Image image = _texture.CopyToImage();
+            byte[] pixels = image.Pixels;
+            Span<byte> byteSpan = pixels.AsSpan();
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, SFMLColor>(byteSpan).ToArray();
+        }
 
-            return colors;
+        /// <inheritdoc />
+        public void SetPixels(Color[] colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+            _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors.AsSpan()).ToArray());
+        }
+
+        /// <inheritdoc />
+        public void SetPixels(ReadOnlySpan<Color> colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+            _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors).ToArray());
+        }
+
+        /// <summary>
+        /// Updates the texture with the image data.
+        /// </summary>
+        /// <param name="image">The image to copy to the texture.</param>
+        public void SetPixels(Image image) =>
+            _texture.Update(image);
+
+        /// <summary>
+        /// Sets all pixels in the texture to the provided colors.
+        /// </summary>
+        /// <param name="colors">The colors to set every pixel to.</param>
+        /// <exception cref="ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
+        public void SetPixels(SFMLColor[] colors)
+        {
+            if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+            _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors.AsSpan()).ToArray());
         }
 
         /// <inheritdoc />
@@ -106,7 +173,36 @@ namespace SadConsole.Host
             return image.GetPixel((uint)position.X, (uint)position.Y).ToSadRogueColor();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets a pixel color at the specified index.
+        /// </summary>
+        /// <param name="index">The position in the texture.</param>
+        /// <returns>The color of the position in the texture.</returns>
+        /// <exception cref="IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        public SFMLColor GetPixelSFMLColor(int index) =>
+            GetPixelSFMLColor(Point.FromIndex(index, (int)_texture.Size.X));
+
+        /// <summary>
+        /// Gets a pixel color at the specified position.
+        /// </summary>
+        /// <param name="position">The position in the texture.</param>
+        /// <returns>The color of the position in the texture.</returns>
+        /// <exception cref="IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        public SFMLColor GetPixelSFMLColor(Point position)
+        {
+            if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
+                throw new IndexOutOfRangeException("Pixel position is out of range.");
+
+            using Image image = _texture.CopyToImage();
+            
+            return image.GetPixel((uint)position.X, (uint)position.Y);
+        }
+
+        /// <summary>
+        /// Gets a pixel in the texture by index. Row-major ordered.
+        /// </summary>
+        /// <param name="index">The index of the pixel.</param>
+        /// <returns>The color of the pixel.</returns>
         public Color GetPixel(int index) =>
             GetPixel(Point.FromIndex(index, (int)_texture.Size.X));
 

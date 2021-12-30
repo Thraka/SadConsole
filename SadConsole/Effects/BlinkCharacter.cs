@@ -9,14 +9,15 @@ namespace SadConsole.Effects
     [DataContract]
     public class BlinkGlyph : CellEffectBase
     {
-        [DataMember]
         private bool _isOn;
+        private int _blinkCounter = 0;
+        private System.TimeSpan _duration = System.TimeSpan.Zero;
 
         /// <summary>
         /// In seconds, how fast the fade in and fade out each are
         /// </summary>
         [DataMember]
-        public double BlinkSpeed { get; set; }
+        public System.TimeSpan BlinkSpeed { get; set; }
 
         /// <summary>
         /// The glyph index to blink into.
@@ -25,11 +26,25 @@ namespace SadConsole.Effects
         public int GlyphIndex { get; set; }
 
         /// <summary>
+        /// How many times to blink. The value of -1 represents forever.
+        /// </summary>
+        [DataMember]
+        public int BlinkCount { get; set; }
+
+        /// <summary>
+        /// The total duraction this effect will run for, before being flagged as finished. <see cref="System.TimeSpan.MaxValue"/> represents forever.
+        /// </summary>
+        [DataMember]
+        public System.TimeSpan Duration { get; set; }
+
+        /// <summary>
         /// Creates an instance of the blink glyph effect.
         /// </summary>
         public BlinkGlyph()
         {
-            BlinkSpeed = 1d;
+            Duration = System.TimeSpan.MaxValue;
+            BlinkCount = -1;
+            BlinkSpeed = System.TimeSpan.FromSeconds(1);
             GlyphIndex = 0;
             _isOn = true;
         }
@@ -40,28 +55,48 @@ namespace SadConsole.Effects
             int oldGlyph = cell.Glyph;
 
             if (!_isOn)
-            {
                 cell.Glyph = GlyphIndex;
-            }
             else
-            {
                 cell.Glyph = originalState.Glyph;
-            }
 
             return cell.Glyph != oldGlyph;
         }
 
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
             if (_delayFinished && !IsFinished)
             {
+                if (Duration != System.TimeSpan.MaxValue)
+                {
+                    _duration += delta;
+                    if (_duration >= Duration)
+                    {
+                        IsFinished = true;
+                        return;
+                    }
+                }
+
                 if (_timeElapsed >= BlinkSpeed)
                 {
                     _isOn = !_isOn;
-                    _timeElapsed = 0.0d;
+                    _timeElapsed = System.TimeSpan.Zero;
+
+                    if (BlinkCount != -1)
+                    {
+                        _blinkCounter += 1;
+
+                        if (BlinkCount != -1 && _blinkCounter > (BlinkCount * 2))
+                            IsFinished = true;
+                    }
+                }
+
+                if (_timeElapsed >= BlinkSpeed)
+                {
+                    _isOn = !_isOn;
+                    _timeElapsed = System.TimeSpan.Zero;
                 }
             }
         }
@@ -71,8 +106,9 @@ namespace SadConsole.Effects
         /// </summary>
         public override void Restart()
         {
-            _timeElapsed = 0d;
             _isOn = true;
+            _blinkCounter = 0;
+            _duration = System.TimeSpan.Zero;
 
             base.Restart();
         }

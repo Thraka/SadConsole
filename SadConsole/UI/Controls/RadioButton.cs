@@ -56,8 +56,10 @@ namespace SadConsole.UI.Controls
         {
             if (IsSelected && Parent != null)
             {
-                foreach (ControlBase child in Parent)
+                for (int i = 0; i < Parent.Count; i++)
                 {
+                    ControlBase child = Parent[i];
+
                     if (child is RadioButton button && child != this)
                     {
                         if (button.GroupName.Equals(GroupName, StringComparison.OrdinalIgnoreCase))

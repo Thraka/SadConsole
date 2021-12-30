@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>9.1.1</Version>
+    <Version>9.2.0</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
     <Description>A library that emulates old-school console and command prompt style graphics. Targets .NET Standard 2.1.</Description>
-    <Copyright>Copyright © 2020 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile></PackageReadmeFile>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
@@ -25,7 +26,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Various fixes. Some interface enhancements. Ability to use IScreenObject.Surface.Set now.</PackageReleaseNotes>
+    <PackageReleaseNotes>Lots of changes, including breaking changes. See NuGet or GitHub documentation for more information.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!--
@@ -50,7 +51,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.0.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
@@ -61,6 +62,7 @@
     <EmbeddedResource Include="Resources\IBM.font" />
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
     <None Include="Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
     <None Remove="SadConsole.xml" />
   </ItemGroup>
 

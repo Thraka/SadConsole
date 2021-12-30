@@ -16,7 +16,7 @@ namespace FeatureDemo.CustomConsoles
             int c = 59;
             int r = 1;
 
-            ColoredString.CustomProcessor = CustomParseCommand;
+            ((Default)ColoredString.Parser).CustomProcessor = CustomParseCommand;
 
             Surface.Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]String parsing supports...                                                    ");
             Surface.SetGlyph(0, r, 221, Color.Black, Color.AnsiBlue);
@@ -116,7 +116,7 @@ namespace FeatureDemo.CustomConsoles
                 // No exceptions, set the type
                 CommandType = CommandTypes.Glyph;
             }
-            public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

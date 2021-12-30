@@ -142,7 +142,7 @@ namespace SadConsole.UI.Controls
                 Point mouseControlPosition = newState.MousePosition;
 
                 // This becomes the active mouse subject when the bar is being dragged.
-                if (Parent.Host.CapturedControl == null)
+                if (Parent?.Host?.CapturedControl == null)
                 {
                     if (newState.IsMouseOver)
                     {

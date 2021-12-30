@@ -14,19 +14,19 @@ namespace SadConsole.Effects
         /// Gets or sets the color gradient used to fade for the cell background.
         /// </summary>
         [DataMember]
-        public ColorGradient DestinationBackground { get; set; }
+        public Gradient DestinationBackground { get; set; }
 
         /// <summary>
         /// Gets or sets the color gradient used to fade for the cell background.
         /// </summary>
         [DataMember]
-        public ColorGradient DestinationForeground { get; set; }
+        public Gradient DestinationForeground { get; set; }
 
         /// <summary>
         /// Gets or sets how long the fade takes to complete in seconds.
         /// </summary>
         [DataMember]
-        public double FadeDuration { get; set; }
+        public System.TimeSpan FadeDuration { get; set; }
 
         /// <summary>
         /// Gets or sets a value to indicate that the fade effect should repeat.
@@ -73,13 +73,11 @@ namespace SadConsole.Effects
         /// <summary>
         /// A value used in lerping the fade.
         /// </summary>
-        [DataMember]
         protected double _calculatedValue;
 
         /// <summary>
         /// Indicates the fade is currently in reverse.
         /// </summary>
-        [DataMember]
         protected bool _goingDown;
 
         /// <summary>
@@ -91,7 +89,7 @@ namespace SadConsole.Effects
             DestinationForeground = Color.Transparent;
             UseCellForeground = true;
             UseCellBackground = true;
-            FadeDuration = 1d;
+            FadeDuration = System.TimeSpan.FromSeconds(1);
             Repeat = false;
         }
 
@@ -105,7 +103,8 @@ namespace SadConsole.Effects
             {
                 if (UseCellForeground)
                 {
-                    DestinationForeground.Stops[UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0].Color = originalState.Foreground;
+                    int index = UseCellDestinationReverse ? DestinationForeground.Stops.Length - 1 : 0;
+                    DestinationForeground.Stops[index] = new GradientStop(originalState.Foreground, DestinationForeground.Stops[index].Stop);
                 }
 
                 cell.Foreground = DestinationForeground.Lerp((float)_calculatedValue);
@@ -115,7 +114,8 @@ namespace SadConsole.Effects
             {
                 if (UseCellBackground)
                 {
-                    DestinationBackground.Stops[UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0].Color = originalState.Background;
+                    int index = UseCellDestinationReverse ? DestinationBackground.Stops.Length - 1 : 0;
+                    DestinationBackground.Stops[index] = new GradientStop(originalState.Background, DestinationBackground.Stops[index].Stop);
                 }
 
                 cell.Background = DestinationBackground.Lerp((float)_calculatedValue);
@@ -125,9 +125,9 @@ namespace SadConsole.Effects
         }
 
         /// <inheritdoc />
-        public override void Update(double gameTimeSeconds)
+        public override void Update(System.TimeSpan delta)
         {
-            base.Update(gameTimeSeconds);
+            base.Update(delta);
 
             if (_delayFinished)
             {
@@ -140,7 +140,7 @@ namespace SadConsole.Effects
                             if (!_goingDown)
                             {
                                 _goingDown = !_goingDown;
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                             }
                             else
                             {
@@ -148,12 +148,12 @@ namespace SadConsole.Effects
                                 {
                                     _calculatedValue = 0f;
                                     IsFinished = true;
-                                    _timeElapsed = 0.0d;
+                                    _timeElapsed = System.TimeSpan.Zero;
                                     return;
                                 }
                                 else
                                 {
-                                    _timeElapsed = 0.0d;
+                                    _timeElapsed = System.TimeSpan.Zero;
                                     _goingDown = !_goingDown;
                                 }
                             }
@@ -165,12 +165,12 @@ namespace SadConsole.Effects
                             {
                                 _calculatedValue = 1f;
                                 IsFinished = true;
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                                 return;
                             }
                             else
                             {
-                                _timeElapsed = 0.0d;
+                                _timeElapsed = System.TimeSpan.Zero;
                             }
                         }
                     }
@@ -185,6 +185,15 @@ namespace SadConsole.Effects
                     }
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void Restart()
+        {
+            base.Restart();
+
+            _goingDown = false;
+            _calculatedValue = 0f;
         }
 
         /// <inheritdoc />

@@ -231,11 +231,15 @@ namespace SadConsole
         {
             if (!IsVisible) return;
 
-            foreach (IComponent component in ComponentsRender.ToArray())
-                component.Render(this, delta);
+            var components = ComponentsRender.ToArray();
+            var count = components.Length;
+            for (int i = 0; i < count; i++)
+                components[i].Render(this, delta);
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Render(delta);
+            var children = new List<IScreenObject>(Children);
+            count = children.Count;
+            for (int i = 0; i < count; i++)
+                children[i].Render(delta);
         }
 
         /// <inheritdoc/>
@@ -243,11 +247,13 @@ namespace SadConsole
         {
             if (!IsEnabled) return;
 
-            foreach (IComponent component in ComponentsUpdate.ToArray())
-                component.Update(this, delta);
+            var components = ComponentsUpdate.ToArray();
+            for (int i = 0; i < components.Length; i++)
+                components[i].Update(this, delta);
 
-            foreach (IScreenObject child in new List<IScreenObject>(Children))
-                child.Update(delta);
+            var children = new List<IScreenObject>(Children);
+            for (int i = 0; i < children.Count; i++)
+                children[i].Update(delta);
         }
 
         /// <inheritdoc/>
@@ -255,9 +261,10 @@ namespace SadConsole
         {
             if (!UseKeyboard) return false;
 
-            foreach (Components.IComponent component in ComponentsKeyboard.ToArray())
+            var components = ComponentsKeyboard.ToArray();
+            for (int i = 0; i < components.Length; i++)
             {
-                component.ProcessKeyboard(this, keyboard, out bool isHandled);
+                components[i].ProcessKeyboard(this, keyboard, out bool isHandled);
 
                 if (isHandled)
                     return true;
@@ -272,9 +279,10 @@ namespace SadConsole
             if (!IsVisible)
                 return false;
 
-            foreach (SadConsole.Components.IComponent component in ComponentsMouse.ToArray())
+            var components = ComponentsMouse.ToArray();
+            for (int i = 0; i < components.Length; i++)
             {
-                component.ProcessMouse(this, state, out bool isHandled);
+                components[i].ProcessMouse(this, state, out bool isHandled);
 
                 if (isHandled)
                     return true;
@@ -282,7 +290,7 @@ namespace SadConsole
 
             if (!UseMouse)
                 return false;
-            
+
             return false;
         }
 
@@ -333,13 +341,14 @@ namespace SadConsole
 
         /// <inheritdoc/>
         public bool HasSadComponent<TComponent>(out TComponent component)
-            where TComponent: class, IComponent
+            where TComponent : class, IComponent
         {
-            foreach (IComponent comp in SadComponents)
+            int count = SadComponents.Count;
+            for (int i = 0; i < count; i++)
             {
-                if (comp is TComponent)
+                if (SadComponents[i] is TComponent component2)
                 {
-                    component = (TComponent)comp;
+                    component = component2;
                     return true;
                 }
             }
@@ -482,8 +491,9 @@ namespace SadConsole
         {
             AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
 
-            foreach (IScreenObject child in Children)
-                child.UpdateAbsolutePosition();
+            int count = Children.Count;
+            for (int i = 0; i < count; i++)
+                Children[i].UpdateAbsolutePosition();
         }
 
         /// <summary>

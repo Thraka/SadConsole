@@ -50,7 +50,7 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
         {
-            bool result = true;
+            bool result = false;
 
             // Update texture if something is out of size.
             if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
@@ -89,8 +89,12 @@ namespace SadConsole.Renderers
         /// <param name="screenObject">The screen surface with font information.</param>
         protected void ProcessContainer(UI.Controls.IContainer controlContainer, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
         {
-            foreach (UI.Controls.ControlBase control in controlContainer)
+            UI.Controls.ControlBase control;
+
+            for (int i = 0; i < controlContainer.Count; i++)
             {
+                control = controlContainer[i];
+
                 if (!control.IsVisible) continue;
                 RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
 

@@ -25,9 +25,11 @@ namespace FeatureDemo.CustomConsoles
             // Setup the console text background pattern, which is hidden via colors
             // Print the text template on all of the console surface
             const string textTemplate = "sole SadCon";
-            var text = new System.Text.StringBuilder(Width * Height);
+            int amountOfChars = Width * Height;
+            var text = new System.Text.StringBuilder(amountOfChars);
+            int textRepetitionsNeeded = (amountOfChars / textTemplate.Length) + 1 /* to make sure there are no gaps */;
 
-            for (int i = 0; i < Width * Height; i++)
+            for (int i = 0; i < textRepetitionsNeeded; i++)
             {
                 text.Append(textTemplate);
             }
@@ -55,13 +57,13 @@ namespace FeatureDemo.CustomConsoles
             _consoleImage.Tint = Color.Black;
 
             // Animation for the logo text.
-            var logoText = new ColorGradient(new[] { Color.Magenta, Color.Yellow }, new[] { 0.0f, 1f })
+            var logoText = new Gradient(new[] { Color.Magenta, Color.Yellow }, new[] { 0.0f, 1f })
                                .ToColoredString("[| Powered by SadConsole |]");
             logoText.SetEffect(new Fade()
             {
                 DestinationForeground = Color.Blue,
                 FadeForeground = true,
-                FadeDuration = 1f,
+                FadeDuration = System.TimeSpan.FromSeconds(1d),
                 Repeat = false,
                 RemoveOnFinished = true,
                 CloneOnAdd = true
@@ -94,7 +96,7 @@ namespace FeatureDemo.CustomConsoles
 
                     // Fade in the logo
                     .Instruct(new FadeTextSurfaceTint(_consoleImage,
-                                                      new ColorGradient(Color.Black, Color.Transparent),
+                                                      new Gradient(Color.Black, Color.Transparent),
                                                       TimeSpan.FromSeconds(2)))
 
                     // Blink SadConsole text at the bottom
@@ -105,11 +107,11 @@ namespace FeatureDemo.CustomConsoles
 
                     // Fade out main console and logo console.
                     .InstructConcurrent(new FadeTextSurfaceTint(_consoleImage,
-                                                      new ColorGradient(Color.Transparent, Color.Black),
+                                                      new Gradient(Color.Transparent, Color.Black),
                                                       TimeSpan.FromSeconds(2)),
 
                                         new FadeTextSurfaceTint(this,
-                                                      new ColorGradient(Color.Transparent, Color.Black),
+                                                      new Gradient(Color.Transparent, Color.Black),
                                                       TimeSpan.FromSeconds(1.0d)))
 
                     // Animation has completed, call the callback this console uses to indicate it's complete
@@ -126,7 +128,6 @@ namespace FeatureDemo.CustomConsoles
             if (IsVisible)
                 base.Update(delta);
         }
-
 
         public override void Render(TimeSpan delta)
         {
@@ -147,7 +148,7 @@ namespace FeatureDemo.CustomConsoles
             Color[] colors = new[] { Color.Black, Color.Blue, Color.White, Color.Blue, Color.Black };
             float[] colorStops = new[] { 0f, 0.2f, 0.5f, 0.8f, 1f };
 
-            Algorithms.GradientFill(FontSize, new Point(_gradientPositionX, 12), 10, 45, new Rectangle(0, 0, Width, Height), new ColorGradient(colors, colorStops), (f,b,c) => ((IScreenSurface)console).Surface.SetForeground(f,b,c));
+            Algorithms.GradientFill(FontSize, new Point(_gradientPositionX, 12), 10, 45, new Rectangle(0, 0, Width, Height), new Gradient(colors, colorStops), (f,b,c) => ((IScreenSurface)console).Surface.SetForeground(f,b,c));
 
             return false;
         }
@@ -157,11 +158,11 @@ namespace FeatureDemo.CustomConsoles
             var fadeEffect = new Fade
             {
                 AutoReverse = true,
-                DestinationForeground = new ColorGradient(Color.Blue, Color.Yellow),
+                DestinationForeground = new Gradient(Color.Blue, Color.Yellow),
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
-                FadeDuration = 0.7f,
+                FadeDuration = System.TimeSpan.FromSeconds(0.7d),
                 RemoveOnFinished = true
             };
 

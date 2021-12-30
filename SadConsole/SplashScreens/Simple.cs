@@ -23,7 +23,7 @@ namespace SadConsole.SplashScreens
             Surface.Print(0, 0, _title, Color.Black, Color.AnsiWhite);
 
             _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
-                .Instruct(new Instructions.FadeTextSurfaceTint(new ColorGradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
+                .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
                 .Wait(System.TimeSpan.FromMilliseconds(0.500))
                 .Code((s, d) => { IsVisible = false; return true; });
 
@@ -32,7 +32,7 @@ namespace SadConsole.SplashScreens
                 .Code((s, d) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
 
             var startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
-                .Instruct(new Instructions.FadeTextSurfaceTint(new ColorGradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
+                .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
                 .Wait(System.TimeSpan.FromMilliseconds(0.500));
 
             SadComponents.Add(startAnimation);

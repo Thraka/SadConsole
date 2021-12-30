@@ -153,10 +153,8 @@ namespace SadConsole.Debug
                 {
                     _listConsoles.Items.Add(new ConsoleListboxItem(new string('-', indent) + console.ToString(), console));
 
-                    foreach (IScreenObject child in console.Children)
-                    {
-                        AddConsoleToList(child, indent + 1);
-                    }
+                    for (int i = 0; i < console.Children.Count; i++)
+                        AddConsoleToList(console.Children[i], indent + 1);
                 }
 
                 _wrapperScreen.Children.Add(_originalScreen);

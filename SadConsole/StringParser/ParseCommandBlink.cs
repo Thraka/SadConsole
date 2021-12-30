@@ -13,7 +13,7 @@
         /// <summary>
         /// The speed of the blink.
         /// </summary>
-        public double Speed = 0.35d;
+        public System.TimeSpan Speed = System.TimeSpan.FromSeconds(0.35d);
 
         private readonly CustomBlinkEffect _blinkEffect;
 
@@ -29,7 +29,7 @@
             string[] parametersArray = parameters.Split(':');
 
             if (parametersArray.Length == 2)
-                Speed = double.Parse(parametersArray[1], CultureInfo.InvariantCulture);
+                Speed = System.TimeSpan.FromSeconds(double.Parse(parametersArray[1], CultureInfo.InvariantCulture));
 
             if (parametersArray.Length >= 1 && parametersArray[0] != "")
                 _counter = int.Parse(parametersArray[0], CultureInfo.InvariantCulture);
@@ -74,15 +74,13 @@
             if (_blinkEffect == null)
                 _blinkEffect = new CustomBlinkEffect() { BlinkSpeed = Speed };
 
-            commandStack.TurnOnEffects = true;
-
             // No exceptions, set the type
             CommandType = CommandTypes.Effect;
         }
 
         /// <inheritdoc />
         public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-            ICellSurface surface, ref int stringIndex, string processedString, ParseCommandStacks commandStack)
+            ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
         {
             glyphState.Effect = _blinkEffect;
 

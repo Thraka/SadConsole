@@ -64,7 +64,7 @@ namespace SadConsole.Ansi
         {
             AnsiDocument = ansiDocument;
             _editor = editor;
-            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false };
+            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false, PrintAppearanceMatchesHost = false };
             
             CharactersPerSecond = 800;
 
@@ -73,7 +73,7 @@ namespace SadConsole.Ansi
 
             _ansiCodeBuilder = new StringBuilder(5);
 
-            BlinkEffect = new Blink() { BlinkSpeed = 0.35f };
+            BlinkEffect = new Blink() { BlinkSpeed = System.TimeSpan.FromSeconds(0.35d) };
         }
 
         /// <summary>
@@ -279,9 +279,11 @@ namespace SadConsole.Ansi
                         }
                         else
                         {
-                            foreach (string v in values)
+                            int count = values.Length;
+                            for (int i = 0; i < count; i++)
                             {
-                                int value = Convert.ToInt32(v);
+                                int value = Convert.ToInt32(values[i]);
+
                                 switch (value)
                                 {
                                     case 0:
@@ -352,8 +354,10 @@ namespace SadConsole.Ansi
 
             bool onLastLine = Cursor.Position.Y == _editor.Height - 1;
 
-            foreach (char item in line)
+            int count = line.Length;
+            for (int i = 0; i < count; i++)
             {
+                char item = line[i];
                 if (inEscape)
                 {
                     if (ValidAnsiCodes.Contains(item))
@@ -363,9 +367,7 @@ namespace SadConsole.Ansi
                         inEscape = false;
                     }
                     else
-                    {
                         stringEscape.Append(item);
-                    }
                 }
 
                 else if (item == (char)26)
@@ -402,9 +404,7 @@ namespace SadConsole.Ansi
             Cursor.CarriageReturn();
 
             if ((onLastLine && moreLines) || !onLastLine)
-            {
                 Cursor.LineFeed();
-            }
 
             return true;
         }
@@ -414,19 +414,6 @@ namespace SadConsole.Ansi
         /// </summary>
         public void ReadEntireDocument()
         {
-            //string[] lines = _ansiDoc.AnsiString.Split('\n');
-            //_ansiState.AnsiResetVideo();
-            //int counter = 0;
-
-            //foreach (var line in lines)
-            //{
-            //    counter++;
-            //    bool onLastLine = _cursor.Position.Y == _editor.Height - 1;
-
-            //    if (AnsiReadLine(line, counter != lines.Length) == false)
-            //        return;
-            //}
-
             _ansiState.AnsiResetVideo();
 
             for (int i = 0; i < _bytes.Length; i++)

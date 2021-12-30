@@ -208,10 +208,10 @@ namespace SadConsole
         /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
         {
-            if (viewWidth == 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
-            if (viewHeight == 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
-            if (totalWidth == 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface buffer width must be > 0");
-            if (totalHeight == 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface buffer height must be > 0");
+            if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
+            if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
+            if (totalWidth <= 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface buffer width must be > 0");
+            if (totalHeight <= 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface buffer height must be > 0");
             if (viewWidth > totalWidth) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Buffer width must be less than or equal to the width.");
             if (viewHeight > totalHeight) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Buffer height must be less than or equal to the height.");
 
@@ -275,9 +275,13 @@ namespace SadConsole
         {
             Effects = new Effects.EffectsManager(this);
         }
-        
+
         /// <inheritdoc />
-        public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
+        public void Resize(int viewWidth, int viewHeight, bool clear) =>
+            Resize(viewWidth, viewHeight, viewWidth, viewHeight, clear);
+
+        /// <inheritdoc />
+        public void Resize(int viewWidth, int viewHeight, int bufferWidth, int bufferHeight, bool clear)
         {
             var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
 
@@ -292,12 +296,7 @@ namespace SadConsole
                         newCells[index] = this[x, y];
 
                         if (clear)
-                        {
-                            newCells[index].Foreground = DefaultForeground;
-                            newCells[index].Background = DefaultBackground;
-                            newCells[index].Glyph = 0;
-                            newCells[index].Mirror = Mirror.None;
-                        }
+                            this.Clear(x, y);
                     }
                     else
                     {
@@ -307,9 +306,13 @@ namespace SadConsole
             }
 
             Cells = newCells;
-            _viewArea = new BoundedRectangle((0, 0, width, height),
+            _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
                                              (0, 0, bufferWidth, bufferHeight));
-            Effects = new Effects.EffectsManager(this);
+            if (clear)
+                Effects.RemoveAll();
+            else
+                Effects.DropInvalidCells();
+
             IsDirty = true;
             OnCellsReset();
         }

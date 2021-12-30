@@ -13,14 +13,18 @@ namespace SadConsole.Debug.MonoGame.ImGuiObjects
     {
         public static void Begin(string id, ScreenObjectState screenObjectState)
         {
-            ImGui.BeginChild(id, new Vector2(0, 300), false, ImGuiWindowFlags.HorizontalScrollbar);
+            ImGui.BeginGroup();
+            //ImGui.BeginChild(id, new Vector2(0, 300), false, ImGuiWindowFlags.HorizontalScrollbar);
             {
                 ///////
                 // Components
                 ///////
                 ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Components");
                 ImGui.SameLine();
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
                 ImGui.ListBox("##Components", ref screenObjectState.ComponentsSelectedItem, screenObjectState.Components, screenObjectState.Object.SadComponents.Count);
+
+                ImGui.Separator();
 
                 ///////
                 // Position X
@@ -41,6 +45,7 @@ namespace SadConsole.Debug.MonoGame.ImGuiObjects
                 ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Width: ");
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth(80);
+                var start = ImGui.GetCursorPosX();
                 if (screenObjectState.IsScreenSurface)
                     ImGui.Text(((IScreenSurface)screenObjectState.Object).Surface.Width.ToString());
                 else
@@ -64,6 +69,7 @@ namespace SadConsole.Debug.MonoGame.ImGuiObjects
                 ImGui.SameLine();
                 ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Height: ");
                 ImGui.SameLine();
+                ImGui.SetCursorPosX(start);
                 ImGui.SetNextItemWidth(80);
                 if (screenObjectState.IsScreenSurface)
                     ImGui.Text(((IScreenSurface)screenObjectState.Object).Surface.Height.ToString());
@@ -77,8 +83,10 @@ namespace SadConsole.Debug.MonoGame.ImGuiObjects
                 ///////
                 if (screenObjectState.IsScreenSurface)
                 {
+                    var startX = ImGui.GetCursorPosX();
                     ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Tint: ");
                     ImGui.SameLine();
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
                     if (ImGui.ColorEdit4("##tint", ref screenObjectState.Tint))
                     {
                         ((IScreenSurface)screenObjectState.Object).Tint = screenObjectState.Tint.ToColor();
@@ -89,6 +97,6 @@ namespace SadConsole.Debug.MonoGame.ImGuiObjects
         }
 
         public static void End() =>
-            ImGui.EndChild();
+            ImGui.EndGroup();
     }
 }

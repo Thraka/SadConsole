@@ -1,0 +1,9 @@
+{
+  "$type": "SadConsole.SadFont, SadConsole",
+  "FilePath": "thick_square_8x8.png",
+  "GlyphHeight": 8,
+  "GlyphPadding": 0,
+  "GlyphWidth": 8,
+  "Name": "ThickSquare8",
+  "SolidGlyphIndex": 219
+}
