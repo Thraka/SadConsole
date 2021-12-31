@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Files", "_Solutio
 		.editorconfig = .editorconfig
 		changelog.md = changelog.md
 		MigrationNotes.txt = MigrationNotes.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThemeEditor", "Samples\ThemeEditor\ThemeEditor.csproj", "{7A961499-F7E8-4291-A906-AC1CC520EE03}"
