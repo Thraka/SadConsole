@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Text;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
-using SadConsole.Numerics;
 
 namespace SadConsole.ImGuiSystem
 {
@@ -47,6 +46,7 @@ namespace SadConsole.ImGuiSystem
             ImGui.EndChild();
         }
 
-
+        public static void CenterNextWindow() =>
+            ImGui.SetNextWindowPos(ImGui.GetIO().DisplaySize / 2f, ImGuiCond.Appearing, new System.Numerics.Vector2(0.5f, 0.5f));
     }
 }

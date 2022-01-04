@@ -28,8 +28,9 @@ namespace SadConsole.Editor
 
         //private static CoolTheme coolTheme = new CoolTheme();
 
-        public static GuiParts.GuiTopBar GuiTopBar;
-        public static GuiParts.GuiDockspace GuiDockspace;
+        public static GuiTopBar GuiTopBar;
+        public static GuiDockspace GuiDockspace;
+        public static GuiSidePane GuiSidePane;
 
         /// <summary>
         /// Initializes the debugger.
@@ -64,12 +65,18 @@ namespace SadConsole.Editor
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
             _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            _imGui.ImGuiRenderer.RebuildFontAtlas();
             _imGui.HostClosed += _imGui_HostClosed;
+
+            //var ptr = ImGuiNET.ImGui.GetIO().Fonts.AddFontFromFileTTF(@"C:\Windows\Fonts\ARIAL.TTF", 13);
+            //_imGui.ImGuiRenderer.RebuildFontAtlas();
+            //ImGuiNET.ImGui.PushFont(ptr);
+
+            //ImGuiNET.ImGui.GetStyle().ScaleAllSizes(2f);
 
             GuiTopBar = new();
             GuiDockspace = new();
+            GuiSidePane = new();
 
             ResetUIList();
 
@@ -87,6 +94,7 @@ namespace SadConsole.Editor
             _imGui.UIComponents.Clear();
             _imGui.UIComponents.Add(GuiTopBar);
             _imGui.UIComponents.Add(GuiDockspace);
+            _imGui.UIComponents.Add(GuiSidePane);
         }
 
         public static void ShowCreateDocument()
@@ -96,7 +104,10 @@ namespace SadConsole.Editor
             ImGuiCore.GuiComponents.Add(window);
             window.Closed += (s, e) =>
             {
-
+                if (window.DialogResult)
+                {
+                    State.OpenDocuments = State.OpenDocuments.Append(window.Document).ToArray();
+                }
             };
         }
 
@@ -117,6 +128,19 @@ namespace SadConsole.Editor
 
             Settings.Input.DoKeyboard = true;
             Settings.Input.DoMouse = true;
+        }
+
+        public static class State
+        {
+            public static int SelectedDocumentIndex;
+            public static Model.Document[] OpenDocuments = Array.Empty<Model.Document>();
+            public static string[] OpenDocumentTitles => OpenDocuments.Select(d => d.Name).ToArray();
+
+
+            public static class LayoutInfo
+            {
+                public static float ColorEditBoxWidth = 20;
+            }
         }
     }
 }

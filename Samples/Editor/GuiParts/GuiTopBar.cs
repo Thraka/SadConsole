@@ -8,10 +8,17 @@ namespace SadConsole.Editor.GuiParts
 {
     public class GuiTopBar : ImGuiObjectBase
     {
-
+        private bool _showDemoWindow;
+        private bool _debug;
 
         public override void BuildUI(ImGuiRenderer renderer)
         {
+            if (_debug)
+            {
+                _debug = false;
+                System.Diagnostics.Debugger.Break();
+            }
+
             if (ImGui.BeginMainMenuBar())
             {
                 if (ImGui.BeginMenu("File"))
@@ -25,7 +32,6 @@ namespace SadConsole.Editor.GuiParts
 
                     }
 
-
                     ImGui.EndMenu();
                 }
 
@@ -34,13 +40,26 @@ namespace SadConsole.Editor.GuiParts
                     //if (ImGui.MenuItem("Show SadConsole game", "s", ref GuiState.ShowSadConsoleRendering, true))
                     //    GuiState.RaiseShowSadConsoleRenderingChanged();
 
+                    ImGui.MenuItem("Show demo", "s", ref _showDemoWindow);
+
                     //ImGui.MenuItem("Show surface preview", "p", ref GuiState.ShowSurfacePreview, true);
                     //ImGui.MenuItem("Show final output", "o", ref GuiState.GuiFinalOutputWindow.IsOpen, true);
                     ImGui.EndMenu();
                 }
 
+                if (ImGui.BeginMenu("Debug"))
+                {
+                    if (ImGui.MenuItem("Pause", "p"))
+                        _debug = true;
+
+                    ImGui.EndMenu();
+                }
+
                 ImGui.EndMainMenuBar();
             }
+
+            if (_showDemoWindow)
+                ImGui.ShowDemoWindow();
         }
     }
 }

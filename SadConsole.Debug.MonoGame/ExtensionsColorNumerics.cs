@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Text;
 using SadRogue.Primitives;
 
-namespace SadConsole.Numerics
+namespace System.Numerics
 {
     /// <summary>
     /// Extensions to convert <see cref="Vector4"/> to/from <see cref="Color"/>.

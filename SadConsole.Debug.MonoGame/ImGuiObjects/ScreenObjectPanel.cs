@@ -4,7 +4,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using ImGuiNET;
-using SadConsole.Numerics;
 using SadRogue.Primitives;
 
 namespace SadConsole.Debug.MonoGame.ImGuiObjects

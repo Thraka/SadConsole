@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using ImGuiNET;
 using System.Numerics;
-using SadConsole.Numerics;
 using SadRogue.Primitives;
 using SadConsole.ImGuiSystem;
 

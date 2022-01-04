@@ -11,28 +11,44 @@ namespace SadConsole.Editor.GuiParts
     public class GuiNewFileWindow: ImGuiWindow
     {
         private int _documentSelectedIndex;
+        private string _documentName = "";
+        public Model.Document Document = new Model.Document() { DocumentType = Model.Document.Types.Surface, Settings = new Model.DocumentSurfaceSettings() };
 
         public GuiNewFileWindow()
         {
             Title = "New file";
-
         }
 
         public override void BuildUI(ImGuiRenderer renderer)
         {
             if (IsOpen)
             {
-                if (ImGui.Begin(Title, ref IsOpen, ImGuiWindowFlags.Modal | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse))
+                ImGui.OpenPopup(Title);
+                
+                ImGuiExt.CenterNextWindow();
+                ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, -1));
+                if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
                 {
                     ImGui.Text("Document Type:");
-                    if (ImGui.ListBox("##Document Type", ref _documentSelectedIndex, new[] { "Surface", "Animation" }, 2))
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                    if (ImGui.ListBox("##Document Type", ref _documentSelectedIndex, new[] { "Surface", "Scene", "Animation" }, 3))
                     {
-
+                        Document = _documentSelectedIndex switch
+                        {
+                            _ => new Model.Document() { DocumentType = Model.Document.Types.Surface, Settings = new Model.DocumentSurfaceSettings() },
+                        };
                     }
 
-                    ImGui.Text($"id: {_documentSelectedIndex}");
+                    ImGui.Separator();
 
+                    ImGui.Text("Name");
+                    ImGui.InputText("##name", ref Document.Name, 50);
 
+                    ImGui.Separator();
+
+                    Document.Settings.BuildUINew(renderer);
+
+                    ImGui.Separator();
 
                     if (ImGui.Button("Cancel")) { DialogResult = false; IsOpen = false; }
 
@@ -40,8 +56,10 @@ namespace SadConsole.Editor.GuiParts
                     float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
                     ImGui.SameLine(ImGui.GetWindowWidth() - pos);
                     if (ImGui.Button("Create")) { DialogResult = true; IsOpen = false; }
+
+
+                    ImGui.EndPopup();
                 }
-                ImGui.End();
             }
             else
             {

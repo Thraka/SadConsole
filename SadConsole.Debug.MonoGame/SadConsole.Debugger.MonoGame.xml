@@ -9,25 +9,6 @@
             Initializes the debugger.
             </summary>
         </member>
-        <member name="T:SadConsole.Numerics.ExtensionsColorNumerics">
-            <summary>
-            Extensions to convert <see cref="T:System.Numerics.Vector4"/> to/from <see cref="T:SadRogue.Primitives.Color"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Numerics.ExtensionsColorNumerics.ToVector4(SadRogue.Primitives.Color)">
-            <summary>
-            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector4"/>.
-            </summary>
-            <param name="color">The color to convert.</param>
-            <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
-        </member>
-        <member name="M:SadConsole.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector4)">
-            <summary>
-            Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
-            </summary>
-            <param name="value">The vector color to convert.</param>
-            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
-        </member>
         <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
             <summary>
             Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
@@ -110,6 +91,25 @@
             <summary>
             Gets the geometry as set up by ImGui and sends it to the graphics device
             </summary>
+        </member>
+        <member name="T:System.Numerics.ExtensionsColorNumerics">
+            <summary>
+            Extensions to convert <see cref="T:System.Numerics.Vector4"/> to/from <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector4(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector4"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector4)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
         </member>
     </members>
 </doc>
