@@ -1,3 +1,7 @@
+## v9.2.1 (01/04/2022)
+
+- Rebuild RELEASE build to fix API documentation generation.
+
 ## v9.2.0 (12/30/2021)
 
 ### Breaking changes

@@ -50,7 +50,9 @@ SadConsole uses NuGet for its .NET dependencies:
 
 ## Latest changes
 
-**v9.2.0 (12/30/2021)**
+**v9.2.1 (01/04/2022)**
+
+(v9.2.1 fixes API documentation generation, all other changes are for 9.2.0)
 
 ### Breaking changes
 
