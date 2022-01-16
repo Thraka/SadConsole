@@ -1,3 +1,7 @@
+## v9.2.2 (01/XX/2022)
+
+- [MonoGame] Fix conversion of Mirror to SpriteEffects.
+
 ## v9.2.1 (01/04/2022)
 
 - Rebuild RELEASE build to fix API documentation generation.

@@ -7,19 +7,25 @@ namespace SadConsole.Host.MonoGame
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Converts a <see cref="Mirror"/> type to a MonoGame <see cref="Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
+        /// </summary>
+        /// <param name="mirror">The value to convert.</param>
+        /// <returns>The MonoGame equivalent.</returns>
         public static Microsoft.Xna.Framework.Graphics.SpriteEffects ToMonoGame(this Mirror mirror)
         {
-            switch (mirror)
-            {
-                case Mirror.None:
-                    return Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
-                case Mirror.Vertical:
-                    return Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
-                case Mirror.Horizontal:
-                    return Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
-                default:
-                    return Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
-            }
+            Microsoft.Xna.Framework.Graphics.SpriteEffects result = Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
+
+            if (mirror == Mirror.None)
+                return result;
+
+            if ((mirror & Mirror.Vertical) == Mirror.Vertical)
+                result |= Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
+
+            if ((mirror & Mirror.Horizontal) == Mirror.Horizontal)
+                result |= Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+
+            return result;
         }
     }
 }
