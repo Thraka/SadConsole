@@ -3,7 +3,7 @@
 [![Chat on discord](https://img.shields.io/discord/501465397518925843.svg)](https://discord.gg/pAFNKYjczM)
 [![NuGet](https://img.shields.io/nuget/v/SadConsole.svg)][nuget]
 
-SadConsole is a generic library that emulates old-school console game systems. It provides command prompt-style graphics where one or more tile textures are used to represent an ascii character set. Console's are made up of a grid of cells, each of which can have its own foreground, background, glyph, and special effect applied to it.
+SadConsole is a generic library that emulates old-school console game systems. It provides command prompt-style graphics where one or more tile textures are used to represent an ASCII character set. Console's are made up of a grid of cells, each of which can have its own foreground, background, glyph, and special effect applied to it.
 
 While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for MonoGame and SFML.
 
@@ -16,7 +16,7 @@ For the latest changes in this release, see the [notes below](#latest-changes)
 Here are some of the features SadConsole supports:
 
 - Show any number of consoles.
-- Uses graphical tile-based images to build out an ascii-character font with support for more than 256 characters.
+- Uses graphical tile-based images to build out an ASCII-character font with support for more than 256 characters.
 - Use more than one font file. However, each console is restricted to a single font.
 - Independently controlled entities for game objects.
 - Keyboard and Mouse support.
@@ -78,7 +78,7 @@ SadConsole uses NuGet for its .NET dependencies:
 - [MonoGame] Added DrawCallManager to allow injecting custom sprite batch rendering during final scene composition.
 - [MonoGame/SFML] Fixed a bug that caused all surfaces to redraw all cells 100% of the time even if nothing changed. Should bring 300%-400% fps increase in surfaces that aren't changing content.
 - [MonoGame/SFML] ITexture improvements for GetPixel/SetPixel; Demos on editing textures. (RychuP)
-- [MonoGame/SFML] The game host now has a `FrameNumber` property that incremenets each frame cycle.
+- [MonoGame/SFML] The game host now has a `FrameNumber` property that increments each frame cycle.
 - [SFML] Fixed `Settings.UnlimitedFPS`. This now works.
 
 ## Other changes
@@ -93,7 +93,7 @@ SadConsole uses NuGet for its .NET dependencies:
 - [Core] `ColoredString.SetDecorators` added, to fit in with `SetForeground`, `SetBackground`, etc.
 - [Core] Renamed `EffectsChain` to `EffectSet` and added new `CodeEffect` type.
 - [Core] Effects use `TimeSpan` instead of double.
-- [Core] The `EffectsManager` used by a surface now works on cell instances, not cell indicies.
+- [Core] The `EffectsManager` used by a surface now works on cell instances, not cell indices.
 - [Core] Resizing a surface without the `clear` parameter keeps existing effects instead of dropping them.
 - [Core] `AnimatedSurface.FromImage` helper added which converts image-based animations to an animated surface. (RychuP)
 - [Core] Added TheDraw font reader: `SadConsole.Readers.TheDrawFont`. **Not a SadConsole Font.**
@@ -103,7 +103,7 @@ SadConsole uses NuGet for its .NET dependencies:
 - [Core] For entities, added `AnimatedAppearanceComponent` which can be added to an entity to animate the glyph like the `AnimatedSurface` did for the old entity type.
 - [UI] Fix various minor bugs with controls.
 - [UI] `Textbox` has more events related to text changing.
-- [UI] `Textbox` behaviors have changed slightly. For example, `EditingText` event doesn't fire when the text ends up being the same prior to editing.
+- [UI] `Textbox` behaviors have changed slightly. For example, `EditingText` event doesn't fire when the text ends up being the same before editing.
 - [UI] `ListBox` items can be inserted as a `ValueTuple<string, object>` which will use the string (can be a `ColoredString`) as the display text of the item.
 - [StringParser] Introduced new interface for string parsing: `StringParser.IParser`.
 - [StringParser] Moved current parse code to `StringParser.Default`.
