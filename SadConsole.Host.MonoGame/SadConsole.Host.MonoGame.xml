@@ -124,6 +124,13 @@
             Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
             </summary>
         </member>
+        <member name="M:SadConsole.Host.MonoGame.Extensions.ToMonoGame(SadConsole.Mirror)">
+            <summary>
+            Converts a <see cref="T:SadConsole.Mirror"/> type to a MonoGame <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
+            </summary>
+            <param name="mirror">The value to convert.</param>
+            <returns>The MonoGame equivalent.</returns>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
