@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>9.2.1</Version>
+    <Version>9.2.2</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -26,7 +26,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>9.2.0 contains lots of changes, including breaking changes. See NuGet or GitHub documentation for more information. 9.2.1 only fixes API documentation</PackageReleaseNotes>
+    <PackageReleaseNotes>9.2.0 contains lots of changes, including breaking changes. See NuGet or GitHub documentation for more information. 9.2.1 only fixes API documentation. 9.2.2 hardcodes the mirror enum values.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!--

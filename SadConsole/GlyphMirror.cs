@@ -9,16 +9,16 @@
         /// <summary>
         /// No mirroring set.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Mirror vertically.
         /// </summary>
-        Vertical,
+        Vertical = 1,
 
         /// <summary>
         /// Mirror horizontally.
         /// </summary>
-        Horizontal
+        Horizontal = 2,
     }
 }

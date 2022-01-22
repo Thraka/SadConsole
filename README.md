@@ -50,9 +50,12 @@ SadConsole uses NuGet for its .NET dependencies:
 
 ## Latest changes
 
-**v9.2.1 (01/04/2022)**
+**v9.2.2 (01/22/2022)**
 
-(v9.2.1 fixes API documentation generation, all other changes are for 9.2.0)
+(v9.2.2 Fix conversion of Mirror to SpriteEffects)\
+(v9.2.1 Fix API documentation generation)
+
+**9.2.0**
 
 ### Breaking changes
 
