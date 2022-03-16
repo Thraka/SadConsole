@@ -47,14 +47,15 @@ namespace SadConsole.Host
             _texture = new Texture(stream);
             Size = Width * Height;
         }
-            
+
 
         /// <summary>
         /// Wraps a texture. Doesn't dispose it when this object is disposed!
         /// </summary>
         /// <param name="texture">The texture to wrap</param>
+        /// <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
         /// <remarks>The only time the backing texture resource is disposed is when the <see cref="GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
-        public GameTexture(Texture texture)
+        public GameTexture(Texture texture, bool handleDispose = false)
         {
             _skipDispose = true;
             _texture = texture;

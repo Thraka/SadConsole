@@ -57,12 +57,13 @@ namespace SadConsole.Host
         }
 
         /// <summary>
-        /// Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
+        /// Wraps an existing texture.
         /// </summary>
         /// <param name="texture">The texture being wrapped by this object.</param>
-        public GameTexture(Microsoft.Xna.Framework.Graphics.Texture2D texture)
+        /// <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
+        public GameTexture(Microsoft.Xna.Framework.Graphics.Texture2D texture, bool handleDispose = false)
         {
-            _skipDispose = true;
+            _skipDispose = !handleDispose;
             _texture = texture;
             Size = _texture.Width * _texture.Height;
         }
