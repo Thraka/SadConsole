@@ -90,9 +90,14 @@ namespace SadConsole
 
             LoadMappedColors();
 
-            StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
-            StartingConsole.IsFocused = true;
-            Screen = StartingConsole;
+            if (Settings.CreateStartingConsole)
+            {
+                StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+                StartingConsole.IsFocused = true;
+                Screen = StartingConsole;
+            }
+            else
+                Screen = new ScreenObject() { IsFocused = true };
 
             OnStart?.Invoke();
             SplashScreens.SplashScreenManager.CheckRun();
