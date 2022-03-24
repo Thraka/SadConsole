@@ -204,7 +204,7 @@ namespace SadConsole
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
                 };
 
-                IFont masterFont = SadConsole.Serializer.Load<IFont>(font, false);
+                IFont masterFont = SadConsole.Serializer.Load<SadFont>(font, false);
 
                 if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
                     GameHost.Instance.Fonts.Remove(masterFont.Name);
