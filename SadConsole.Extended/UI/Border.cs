@@ -317,8 +317,8 @@ namespace SadConsole.UI
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="parameters"><see cref="BorderParameters"/> to be used in creating the <see cref="Border"/>.</param>
         /// <param name="font">Optional <see cref="IFont"/> for the border <see cref="CellSurface"/>.</param>
-        public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.Width + GetSize(parameters),
-                                                                                                                        contents.Surface.Height + GetSize(parameters)),
+        public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.ViewWidth + GetSize(parameters),
+                                                                                                                      contents.Surface.ViewHeight + GetSize(parameters)),
                                                                                                         font ?? contents.Font, contents.FontSize)
         {
             if (parameters.DrawBorder)
@@ -340,7 +340,7 @@ namespace SadConsole.UI
             {
                 // Draw the box first, in the smaller area, the other area gets the 3d shade.
                 if (parameters.DrawBorder)
-                    Surface.DrawBox(new Rectangle(0, 0, Surface.Width - 1, Surface.Height - 1), parameters.BorderBox);
+                    Surface.DrawBox(new Rectangle(0, 0, Surface.ViewWidth - 1, Surface.ViewHeight - 1), parameters.BorderBox);
 
                 Color foreground = parameters.UseDefaultShadedColors ? Color.AnsiWhite : parameters.ShadedGlyphForeground;
                 Color background = parameters.UseDefaultShadedColors ? Color.Transparent : parameters.ShadedGlyphBackground;
@@ -348,9 +348,9 @@ namespace SadConsole.UI
                 int bottomBar = parameters.UseDefaultShadedGlyphs ? 223 : parameters.ShadedGlyph; //▀
                 int corner = parameters.UseDefaultShadedGlyphs ? 220 : parameters.ShadedGlyph; //▄
 
-                Surface.DrawLine((Surface.Width - 1, 2), (Surface.Width - 1, Surface.Height - 2), rightSideBar, foreground, background);
-                Surface.DrawLine((1, Surface.Height - 1), (Surface.Width - 1, Surface.Height - 1), bottomBar, foreground, background);
-                Surface.SetGlyph(Surface.Width - 1, 1, corner, foreground, background);
+                Surface.DrawLine((Surface.ViewWidth - 1, 2), (Surface.ViewWidth - 1, Surface.ViewHeight - 2), rightSideBar, foreground, background);
+                Surface.DrawLine((1, Surface.ViewHeight - 1), (Surface.ViewWidth - 1, Surface.ViewHeight - 1), bottomBar, foreground, background);
+                Surface.SetGlyph(Surface.ViewWidth - 1, 1, corner, foreground, background);
             }
             else
                 Surface.DrawBox(Surface.Area, parameters.BorderBox);
@@ -358,7 +358,7 @@ namespace SadConsole.UI
             var title = parameters.Title;
 
             if (!string.IsNullOrEmpty(title))
-                Surface.Print(((Surface.Width - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(parameters.TitleAlignment, title.Length + 2, ' '), parameters.TitleBackground == Color.Transparent ? contents.Surface[0].Background : parameters.TitleBackground, parameters.TitleForeground);
+                Surface.Print(((Surface.ViewWidth - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(parameters.TitleAlignment, title.Length + 2, ' '), parameters.TitleBackground == Color.Transparent ? contents.Surface[0].Background : parameters.TitleBackground, parameters.TitleForeground);
 
             IsEnabled = false;
             UseMouse = false;
