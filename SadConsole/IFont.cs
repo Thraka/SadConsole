@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using System.Collections.Generic;
+using SadRogue.Primitives;
 
 namespace SadConsole
 {
@@ -92,11 +93,24 @@ namespace SadConsole
         CellDecorator GetDecorator(string name, Color color);
 
         /// <summary>
+        /// A collection of named glyph definitions.
+        /// </summary>
+        Dictionary<string, GlyphDefinition> GlyphDefinitions { get; }
+
+        /// <summary>
         /// Returns <see langword="true"/> when the glyph has been defined by name.
         /// </summary>
         /// <param name="name">The name of the glyph</param>
         /// <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
         bool HasGlyphDefinition(string name);
+
+        /// <summary>
+        /// Gets a <see cref="GlyphDefinition"/> by name that is defined by the font file.
+        /// </summary>
+        /// <param name="name">The name of the glyph definition.</param>
+        /// <returns>The glyph definition.</returns>
+        /// <remarks>If the glyph definition doesn't exist, return s<see cref="GlyphDefinition.Empty"/>.</remarks>
+        GlyphDefinition GetGlyphDefinition(string name);
 
         /// <summary>
         /// The size options of a font.

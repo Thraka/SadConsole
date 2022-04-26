@@ -36,11 +36,11 @@ namespace SadConsole
 
         /// <inheritdoc/>
         [DataMember]
-        public int Columns { get; protected set; }
+        public int Columns { get; set; }
 
         /// <inheritdoc/>
         [DataMember]
-        public int Rows { get; protected set; }
+        public int Rows { get; set; }
 
         /// <summary>
         /// Gets the total glyphs in this font, which represents the last index. Calculated from <see cref="Columns"/> times <see cref="Rows"/>.
@@ -49,7 +49,7 @@ namespace SadConsole
 
         /// <inheritdoc/>
         [DataMember]
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The name of the image file as defined in the .font file.
@@ -59,17 +59,17 @@ namespace SadConsole
 
         /// <inheritdoc/>
         [DataMember]
-        public int GlyphHeight { get; protected set; }
+        public int GlyphHeight { get; set; }
 
         /// <inheritdoc/>
         [DataMember]
-        public int GlyphWidth { get; protected set; }
+        public int GlyphWidth { get; set; }
 
         /// <summary>
         /// The amount of pixels between glyphs.
         /// </summary>
         [DataMember]
-        public int GlyphPadding { get; protected set; }
+        public int GlyphPadding { get; set; }
 
         /// <inheritdoc/>
         [DataMember]
@@ -105,10 +105,10 @@ namespace SadConsole
         public ITexture Image { get; set; }
 
         /// <summary>
-        /// Standard decorators used by your app.
+        /// A collection of named glyph definitions.
         /// </summary>
         [DataMember]
-        private Dictionary<string, GlyphDefinition> GlyphDefinitions { get; } = new Dictionary<string, GlyphDefinition>();
+        public Dictionary<string, GlyphDefinition> GlyphDefinitions { get; set; } = new Dictionary<string, GlyphDefinition>();
 
         /// <summary>
         /// Creates a new font with the specified settings.
@@ -136,6 +136,7 @@ namespace SadConsole
                 GlyphRectangles = glyphRectangles;
 
             _solidGlyphIndex = solidGlyphIndex;
+            UnsupportedGlyphIndex = 0;
 
             ConfigureRects();
         }
@@ -166,15 +167,13 @@ namespace SadConsole
         public CellDecorator GetDecorator(string name, Color color)
         {
             if (GlyphDefinitions.ContainsKey(name))
-            {
                 return GlyphDefinitions[name].CreateCellDecorator(color);
-            }
 
             return CellDecorator.Empty;
         }
 
         /// <summary>
-        /// Gets a <see cref="GlyphDefinition"/> by name that is defined by the font file.
+        /// A safe way to get a <see cref="GlyphDefinition"/> by name that is defined by the font file.
         /// </summary>
         /// <param name="name">The name of the glyph definition.</param>
         /// <returns>The glyph definition.</returns>
@@ -182,9 +181,7 @@ namespace SadConsole
         public GlyphDefinition GetGlyphDefinition(string name)
         {
             if (GlyphDefinitions.ContainsKey(name))
-            {
                 return GlyphDefinitions[name];
-            }
 
             return GlyphDefinition.Empty;
         }
@@ -198,29 +195,38 @@ namespace SadConsole
             GlyphDefinitions.ContainsKey(name);
 
         /// <summary>
-        /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings.
+        /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings, if the <see cref="GlyphRectangles"/> dictionary is empty.
         /// </summary>
         public void ConfigureRects()
         {
             // If this is empty, it's an old-style font.
             if (GlyphRectangles.Count == 0)
+                ForceConfigureRects();
+            else
             {
-                for (int i = 0; i < Rows * Columns; i++)
-                {
-                    int cx = i % Columns;
-                    int cy = i / Columns;
+                SolidGlyphRectangle = GetGlyphSourceRectangle(SolidGlyphIndex);
+                UnsupportedGlyphRectangle = GetGlyphSourceRectangle(UnsupportedGlyphIndex);
+            }
+        }
 
-                    if (GlyphPadding != 0)
-                    {
-                        GlyphRectangles.Add(i, new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
-                                                         (cy * GlyphHeight) + ((cy + 1) * GlyphPadding),
-                                                         GlyphWidth, GlyphHeight));
-                    }
-                    else
-                    {
-                        GlyphRectangles.Add(i, new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight));
-                    }
+        /// <summary>
+        /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings.
+        /// </summary>
+        public void ForceConfigureRects()
+        {
+            for (int i = 0; i < Rows * Columns; i++)
+            {
+                int cx = i % Columns;
+                int cy = i / Columns;
+
+                if (GlyphPadding != 0)
+                {
+                    GlyphRectangles[i] = new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
+                                                      (cy * GlyphHeight) + ((cy + 1) * GlyphPadding),
+                                                      GlyphWidth, GlyphHeight);
                 }
+                else
+                    GlyphRectangles[i] = new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
             }
 
             SolidGlyphRectangle = GetGlyphSourceRectangle(SolidGlyphIndex);
