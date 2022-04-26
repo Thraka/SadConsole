@@ -166,7 +166,7 @@ namespace SadConsole.UI.Controls
                                 else if (mouseControlPosition.X == Width - 1)
                                     Value += Step;
 
-                                else if (mouseControlPosition.X > 0 && mouseControlPosition.X < Width - 1)
+                                else if (Width != 3 && mouseControlPosition.X > 0 && mouseControlPosition.X < Width - 1)
                                 {
                                     CurrentSliderPosition = mouseControlPosition.X - 1;
 
@@ -183,7 +183,7 @@ namespace SadConsole.UI.Controls
                                 else if (mouseControlPosition.Y == Height - 1)
                                     Value += Step;
 
-                                else if (mouseControlPosition.Y > 0 && mouseControlPosition.Y < Height - 1)
+                                else if (Height != 3 && mouseControlPosition.Y > 0 && mouseControlPosition.Y < Height - 1)
                                 {
                                     CurrentSliderPosition = mouseControlPosition.Y - 1;
 
@@ -204,7 +204,7 @@ namespace SadConsole.UI.Controls
                             {
                                 if (mouseControlPosition.Y == 0)
                                 {
-                                    if (SliderBarSize != 0 && mouseControlPosition.X == CurrentSliderPosition + 1)
+                                    if (SliderBarSize > 1 && mouseControlPosition.X == CurrentSliderPosition + 1)
                                     {
                                         Parent.Host.CaptureControl(this);
                                         IsSliding = true;
@@ -216,7 +216,7 @@ namespace SadConsole.UI.Controls
                             {
                                 if (mouseControlPosition.X == 0)
                                 {
-                                    if (SliderBarSize != 0 && mouseControlPosition.Y == CurrentSliderPosition + 1)
+                                    if (SliderBarSize > 1 && mouseControlPosition.Y == CurrentSliderPosition + 1)
                                     {
                                         Parent.Host.CaptureControl(this);
                                         IsSliding = true;
