@@ -24,7 +24,7 @@ namespace SadConsole.SplashScreens
                                                GameHost.Instance.EmbeddedFont, ((IFont)GameHost.Instance.EmbeddedFont).GetFontSize(IFont.Sizes.One))
         {
 
-            cursor = new Components.Cursor(Surface) { DisableWordBreak = true };
+            cursor = new Components.Cursor(Surface) { DisableWordBreak = true, PrintAppearanceMatchesHost = false };
 
             _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
                 .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
@@ -80,9 +80,9 @@ namespace SadConsole.SplashScreens
                 .Code(InstructMemoryCounterReset)
                 .Code(InstructMemoryCounter)
                 .Wait(System.TimeSpan.FromSeconds(1))
-                .Code(() => cursor.NewLine().NewLine().Print("Checks: [c:r f:AnsiGreenBright]PASSED[c:u]"))
+                .Code(() => cursor.NewLine().NewLine().Print("Checks: ").SetPrintAppearance(new ColoredGlyph(Color.AnsiGreenBright)).Print("PASSED"))
                 .Wait(System.TimeSpan.FromSeconds(1))
-                .Code(() => cursor.NewLine().NewLine().Print("Powered by SadConsole"))
+                .Code(() => cursor.SetPrintAppearance(new ColoredGlyph(Color.AnsiWhite)).NewLine().NewLine().Print("Powered by SadConsole"))
                 .Wait(System.TimeSpan.FromSeconds(0.4))
                 .Code(() => cursor.NewLine().Print("https://www.sadconsole.com"))
                 .Wait(System.TimeSpan.FromSeconds(2.0))
