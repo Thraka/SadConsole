@@ -181,6 +181,11 @@ namespace SadConsole.Components
         public bool DisableWordBreak { get; set; } = false;
 
         /// <summary>
+        /// When <see langword="true"/>, printing characters to the end of a line won't wrap to the next line. Defaults to <see langword="false"/>, which moves the cursor to the next line if printing goes past the end of the line.
+        /// </summary>
+        public bool DisablePrintAutomaticLineFeed { get; set; } = false;
+
+        /// <summary>
         /// Enables linux-like string parsing where a \n behaves like a \r\n.
         /// </summary>
         [DataMember]
@@ -369,7 +374,7 @@ namespace SadConsole.Components
             (int x, int y) = _position;
             x += 1;
 
-            if (x >= _editor.Width)
+            if (!DisablePrintAutomaticLineFeed && x >= _editor.Width)
             {
                 x = 0;
                 y += 1;
