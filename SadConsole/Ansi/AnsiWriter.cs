@@ -64,7 +64,12 @@ namespace SadConsole.Ansi
         {
             AnsiDocument = ansiDocument;
             _editor = editor;
-            Cursor = new Components.Cursor(editor) { UseStringParser = false, DisableWordBreak = true, PrintOnlyCharacterData = false, PrintAppearanceMatchesHost = false };
+            Cursor = new Components.Cursor(editor) { UseStringParser = false,
+                                                     DisableWordBreak = true,
+                                                     PrintOnlyCharacterData = false,
+                                                     PrintAppearanceMatchesHost = false,
+                                                     UseLinuxLineEndings = true,
+                                                     DisablePrintAutomaticLineFeed = true };
             
             CharactersPerSecond = 800;
 
@@ -123,8 +128,12 @@ namespace SadConsole.Ansi
                                 }
                             }
 
+                            // CTRL-Z
                             else if (character == (char)26)
-                            { }
+                            {
+                                _readerIndex = _bytes.Length - 1;
+                                return;
+                            }
 
                             else if (character == (char)27)
                             {
@@ -435,8 +444,11 @@ namespace SadConsole.Ansi
                     }
                 }
 
+                // CTRL-Z
                 else if (character == (char)26)
-                { }
+                {
+                    break;
+                }
 
                 else if (character == (char)27)
                 {
