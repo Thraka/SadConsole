@@ -615,7 +615,8 @@ namespace SadConsole.Components
         {
             if (_position.Y == _editor.Height - 1)
             {
-                _editor.ShiftUp();
+                if (AutomaticallyShiftRowsUp)
+                    _editor.ShiftUp();
                 //if (((CustomConsole)_console.Target).Data.ResizeOnShift)
                 //    _position.Y++;
             }
