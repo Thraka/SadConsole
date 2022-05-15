@@ -85,7 +85,8 @@ namespace SadConsole
         /// <param name="instance">The object to serialize.</param>
         /// <param name="file">The file to save the object to.</param>
         /// <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
-        public static void Save<T>(T instance, string file, bool compress)
+        /// <param name="settings">Optional settings to use during serialization. If <see langword="null"/>, uses the <see cref="Settings"/> property.</param>
+        public static void Save<T>(T instance, string file, bool compress, JsonSerializerSettings settings = null)
         {
             if (GameHost.Instance.FileExists(file))
                 GameHost.Instance.FileDelete(file);
@@ -96,14 +97,14 @@ namespace SadConsole
                 {
                     using (var sw = new System.IO.Compression.GZipStream(stream, System.IO.Compression.CompressionMode.Compress))
                     {
-                        byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, _settings));
+                        byte[] bytes = Encoding.UTF32.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(instance, Formatting.None, settings ?? _settings));
                         sw.Write(bytes, 0, bytes.Length);
                     }
                 }
                 else
                 {
                     using (var sw = new System.IO.StreamWriter(stream))
-                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, _settings));
+                        sw.Write(JsonConvert.SerializeObject(instance, Formatting.Indented, settings ?? _settings));
                 }
             }
         }
@@ -114,8 +115,9 @@ namespace SadConsole
         /// <typeparam name="T">The type of object to deserialize.</typeparam>
         /// <param name="file">The file to load from.</param>
         /// <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
+        /// <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="Settings"/> property.</param>
         /// <returns>A new object instance.</returns>
-        public static T Load<T>(string file, bool isCompressed)
+        public static T Load<T>(string file, bool isCompressed, JsonSerializerSettings settings = null)
         {
             SadConsole.GameHost.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
 
@@ -130,7 +132,7 @@ namespace SadConsole
                             string value = sr.ReadToEnd();
                             
                             //return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                            return (T)JsonConvert.DeserializeObject(value, typeof(T), _settings);
+                            return (T)JsonConvert.DeserializeObject(value, typeof(T), settings ?? _settings);
                         }
                     }
                 }
@@ -139,7 +141,7 @@ namespace SadConsole
                     using (var sr = new System.IO.StreamReader(fileObject))
                     {
                         //return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), _settings);
+                        return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), settings ?? _settings);
                     }
                 }
             }

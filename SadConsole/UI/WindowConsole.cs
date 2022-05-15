@@ -64,6 +64,7 @@ namespace SadConsole.UI
         /// <summary>
         /// The line sytle for the border.
         /// </summary>
+        [DataMember]
         public int[] BorderLineStyle
         {
             get => _borderLineStyle;
@@ -301,9 +302,7 @@ namespace SadConsole.UI
             var borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
 
             if (BorderLineStyle != null)
-                Surface.DrawBox(new Rectangle(0, 0, Width, Height),
-                                new ColoredGlyph(borderStyle.Foreground, borderStyle.Background, 0),
-                                null, BorderLineStyle);
+                Surface.DrawBox(new Rectangle(0, 0, Width, Height), ShapeParameters.CreateStyledBox(BorderLineStyle, borderStyle));
 
             // Draw title
             string adjustedText = "";

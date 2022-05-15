@@ -64,7 +64,7 @@ namespace SadConsole.Instructions
             if (Cursor == null && surface == null)
                 throw new ArgumentException($"For {nameof(DrawString)} either the {nameof(Cursor)} must be set or run with a {nameof(IScreenSurface)}.");
 
-            else if (surface != null && _privateCursor == null)
+            else if (surface != null && _privateCursor == null && Cursor == null)
                 SetPrivateCursor(surface);
 
             var cursor = Cursor ?? _privateCursor;
@@ -174,6 +174,6 @@ namespace SadConsole.Instructions
         }
 
         private void SetPrivateCursor(IScreenSurface surface) =>
-            _privateCursor = new Components.Cursor(surface.Surface) { IsVisible = false };
+            _privateCursor = new Components.Cursor(surface.Surface) { IsVisible = false, PrintAppearanceMatchesHost = false };
     }
 }

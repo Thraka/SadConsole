@@ -1399,6 +1399,11 @@
             When true, prevents any print method from breaking words up by spaces when wrapping lines.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.Cursor.DisablePrintAutomaticLineFeed">
+            <summary>
+            When <see langword="true"/>, printing characters to the end of a line won't wrap to the next line. Defaults to <see langword="false"/>, which moves the cursor to the next line if printing goes past the end of the line.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
             <summary>
             Enables linux-like string parsing where a \n behaves like a \r\n.
@@ -2081,6 +2086,23 @@
             <param name="width">The viewable width of the surface.</param>
             <param name="height">The viewable height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.Console.DefaultForeground"/>, <see cref="P:SadConsole.Console.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -3908,6 +3930,11 @@
             Glyph indexes for a thick line.
             </summary>
         </member>
+        <member name="P:SadConsole.ICellSurface.Connected3dBox">
+            <summary>
+            Glyph indexes for a block box that looks 3d.
+            </summary>
+        </member>
         <member name="P:SadConsole.ICellSurface.ConnectedLineThinExtended">
             <summary>
             Glyph indexes for a thin line using a SadConsole extended font.
@@ -4965,12 +4992,25 @@
             <returns>The decorator instance.</returns>
             <remarks>If the decorator does not exist, <see cref="P:SadConsole.CellDecorator.Empty"/> is returned.</remarks>
         </member>
+        <member name="P:SadConsole.IFont.GlyphDefinitions">
+            <summary>
+            A collection of named glyph definitions.
+            </summary>
+        </member>
         <member name="M:SadConsole.IFont.HasGlyphDefinition(System.String)">
             <summary>
             Returns <see langword="true"/> when the glyph has been defined by name.
             </summary>
             <param name="name">The name of the glyph</param>
             <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.IFont.GetGlyphDefinition(System.String)">
+            <summary>
+            Gets a <see cref="T:SadConsole.GlyphDefinition"/> by name that is defined by the font file.
+            </summary>
+            <param name="name">The name of the glyph definition.</param>
+            <returns>The glyph definition.</returns>
+            <remarks>If the glyph definition doesn't exist, return s<see cref="P:SadConsole.GlyphDefinition.Empty"/>.</remarks>
         </member>
         <member name="T:SadConsole.IFont.Sizes">
             <summary>
@@ -7111,6 +7151,31 @@
             <param name="screenObject">The object to use.</param>
             <param name="handler">The handler callback.</param>
         </member>
+        <member name="T:SadConsole.Quick.Update">
+            <summary>
+            Adds logic extension methods for <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Quick.Update.WithUpdate(SadConsole.IScreenObject,System.Action{SadConsole.IScreenObject,System.TimeSpan})">
+            <summary>
+            Adds a keyboard handler to a <see cref="T:SadConsole.IScreenObject"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Update.RemoveUpdateHooks(SadConsole.IScreenObject)">
+            <summary>
+            Removes all of the keyboard hooks added with <see cref="M:SadConsole.Quick.Update.WithUpdate(SadConsole.IScreenObject,System.Action{SadConsole.IScreenObject,System.TimeSpan})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+        </member>
+        <member name="M:SadConsole.Quick.Update.RemoveUpdateHook(SadConsole.IScreenObject,System.Action{SadConsole.IScreenObject,System.TimeSpan})">
+            <summary>
+            Removes the specified handler that was added with <see cref="M:SadConsole.Quick.Update.WithUpdate(SadConsole.IScreenObject,System.Action{SadConsole.IScreenObject,System.TimeSpan})"/>.
+            </summary>
+            <param name="screenObject">The object to use.</param>
+            <param name="handler">The handler callback.</param>
+        </member>
         <member name="T:SadConsole.Readers.Playscii">
             <summary>
             Playscii converter. Check this excellent ascii editor out at http://vectorpoem.com/playscii/
@@ -7802,7 +7867,7 @@
         </member>
         <member name="P:SadConsole.SadFont.GlyphDefinitions">
             <summary>
-            Standard decorators used by your app.
+            A collection of named glyph definitions.
             </summary>
         </member>
         <member name="M:SadConsole.SadFont.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ITexture,System.String,System.Collections.Generic.Dictionary{System.Int32,SadRogue.Primitives.Rectangle})">
@@ -7837,7 +7902,7 @@
         </member>
         <member name="M:SadConsole.SadFont.GetGlyphDefinition(System.String)">
             <summary>
-            Gets a <see cref="T:SadConsole.GlyphDefinition"/> by name that is defined by the font file.
+            A safe way to get a <see cref="T:SadConsole.GlyphDefinition"/> by name that is defined by the font file.
             </summary>
             <param name="name">The name of the glyph definition.</param>
             <returns>The glyph definition.</returns>
@@ -7851,6 +7916,11 @@
             <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.SadFont.ConfigureRects">
+            <summary>
+            Builds the <see cref="P:SadConsole.SadFont.GlyphRectangles"/> array based on the current font settings, if the <see cref="P:SadConsole.SadFont.GlyphRectangles"/> dictionary is empty.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SadFont.ForceConfigureRects">
             <summary>
             Builds the <see cref="P:SadConsole.SadFont.GlyphRectangles"/> array based on the current font settings.
             </summary>
@@ -8412,7 +8482,7 @@
         </member>
         <member name="P:SadConsole.Serializer.Settings">
             <summary>
-            The settings to use during <see cref="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)"/> and <see cref="M:SadConsole.Serializer.Load``1(System.String,System.Boolean)"/>.
+            The settings to use during <see cref="!:Save&lt;T&gt;(T, string, bool)"/> and <see cref="!:Load&lt;T&gt;(string, bool)"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Serializer.Serialize``1(``0)">
@@ -8430,7 +8500,7 @@
             <param name="json">The json string to create an object from.</param>
             <returns>An object created from the <paramref name="json"/> parameter.</returns>
         </member>
-        <member name="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean)">
+        <member name="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean,Newtonsoft.Json.JsonSerializerSettings)">
             <summary>
             Serializes the <paramref name="instance"/> to the specified file.
             </summary>
@@ -8438,14 +8508,16 @@
             <param name="instance">The object to serialize.</param>
             <param name="file">The file to save the object to.</param>
             <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
+            <param name="settings">Optional settings to use during serialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
         </member>
-        <member name="M:SadConsole.Serializer.Load``1(System.String,System.Boolean)">
+        <member name="M:SadConsole.Serializer.Load``1(System.String,System.Boolean,Newtonsoft.Json.JsonSerializerSettings)">
             <summary>
             Deserializes a new instance of <typeparamref name="T"/> from the specified file.
             </summary>
             <typeparam name="T">The type of object to deserialize.</typeparam>
             <param name="file">The file to load from.</param>
             <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
+            <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
             <returns>A new object instance.</returns>
         </member>
         <member name="T:SadConsole.Serializer.LogTraceWriter">
@@ -8489,6 +8561,11 @@
         <member name="F:SadConsole.Settings.DefaultScreenObjectUseMouse">
             <summary>
             Gets and sets the default value for <see cref="P:SadConsole.ScreenObject.UseMouse"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Settings.CreateStartingConsole">
+            <summary>
+            When <see langword="true"/>, tells the game host to create the <see cref="P:SadConsole.GameHost.StartingConsole"/> instance.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.ClearColor">
@@ -8664,6 +8741,23 @@
             <param name="ignoreFillMirror"></param>
             <param name="boxBorderStyle"></param>
             <param name="boxBorderStyleGlyphs"></param>
+        </member>
+        <member name="T:SadConsole.SplashScreens.Ansi1">
+            <summary>
+            A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
+            </summary>
+        </member>
+        <member name="M:SadConsole.SplashScreens.Ansi1.#ctor">
+            <summary>
+            A new instance of this class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SplashScreens.Ansi1.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <summary>
+            Ends the animation when a key is pressed.
+            </summary>
+            <param name="keyboard">The keyboard state.</param>
+            <returns>The base implementation of the keyboard.</returns>
         </member>
         <member name="T:SadConsole.SplashScreens.PCBoot">
             <summary>

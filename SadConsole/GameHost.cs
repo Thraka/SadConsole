@@ -198,20 +198,17 @@ namespace SadConsole
         {
             try
             {
-                var oldSettings = SadConsole.Serializer.Settings;
-                SadConsole.Serializer.Settings = new Newtonsoft.Json.JsonSerializerSettings()
+                var settings = new Newtonsoft.Json.JsonSerializerSettings()
                 {
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
                 };
 
-                IFont masterFont = SadConsole.Serializer.Load<IFont>(font, false);
+                IFont masterFont = SadConsole.Serializer.Load<IFont>(font, false, settings);
 
                 if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
                     GameHost.Instance.Fonts.Remove(masterFont.Name);
 
                 GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
-
-                SadConsole.Serializer.Settings = oldSettings;
 
                 return masterFont;
             }

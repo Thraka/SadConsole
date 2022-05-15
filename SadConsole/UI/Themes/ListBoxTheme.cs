@@ -61,11 +61,14 @@ namespace SadConsole.UI.Themes
         /// <param name="listbox"></param>
         protected void SetupScrollBar(ListBox listbox)
         {
-            if (DrawBorder)
+            if (DrawBorder && listbox.Height < 5)
             {
-                if (listbox.Height < 5) throw new Exception("Listbox with a bordermust have a height of 5 or more.");
-                listbox.SetupScrollBar(Orientation.Vertical, listbox.Height - 2, new Point(listbox.Width - 1, 1));
+                DrawBorder = false;
+                _reconfigureSrollBar = false;
             }
+
+            if (DrawBorder)
+                listbox.SetupScrollBar(Orientation.Vertical, listbox.Height - 2, new Point(listbox.Width - 1, 1));
             else
                 listbox.SetupScrollBar(Orientation.Vertical, listbox.Height, new Point(listbox.Width - 1, 0));
         }
