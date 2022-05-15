@@ -60,6 +60,7 @@
     <EmbeddedResource Include="Resources\IBM_ext.font" />
     <EmbeddedResource Include="Resources\IBM8x16.png" />
     <EmbeddedResource Include="Resources\IBM.font" />
+    <EmbeddedResource Include="Resources\logo.ans" />
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
     <None Include="Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
