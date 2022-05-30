@@ -66,7 +66,7 @@ namespace SadConsole.UI.Windows
         /// </summary>
         public ColorPickerPopup(): base(60, 35)
         {
-            Border.AddToWindow(this);
+            Border.CreateForWindow(this);
             Title = "Select color";
             CloseOnEscKey = true;
             CanDrag = false;

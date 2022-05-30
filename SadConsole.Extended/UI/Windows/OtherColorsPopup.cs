@@ -37,7 +37,7 @@ namespace SadConsole.UI.Windows
         public OtherColorsPopup()
             : base(40, 20)
         {
-            Border.AddToWindow(this);
+            Border.CreateForWindow(this);
             Title = "Pick known color";
             Center();
             CloseOnEscKey = true;

@@ -779,14 +779,30 @@
             </summary>
             <param name="contents">The window the border will be around.</param>
         </member>
-        <member name="M:SadConsole.UI.Border.AddToSurface(SadConsole.IScreenSurface,System.String)">
+        <member name="M:SadConsole.UI.Border.Create3DForSurface(SadConsole.IScreenSurface,System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
+            <summary>
+            Creates a chunky 3d border using <see cref="P:SadConsole.ICellSurface.Connected3dBox"/> glyphs.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+            <param name="titleForeground">Foreground color of the title. Defaults to a brighter version of the content's <see cref="P:SadConsole.ICellSurface.DefaultBackground"/>.</param>
+            <param name="titleBackground">Background color of the title. Defaults to the content's <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>.</param>
+            <param name="borderBrightColor">The bright color of the 3D border. Defaults to <see cref="F:SadRogue.Primitives.Color.AnsiWhiteBright"/>.</param>
+            <param name="borderDarkColor">The dark color of the 3D border. Defaults to <see cref="F:SadRogue.Primitives.Color.AnsiBlackBright"/>.</param>
+            <param name="borderBetweenColor">The corner color of the 3D border. Defaults to the content's <see cref="P:SadConsole.ICellSurface.DefaultBackground"/>.</param>
+            <returns>The created border, attached to the content.</returns>
+            <remarks>
+            For a nice looking border, set the content's <see cref="P:SadConsole.ICellSurface.DefaultForeground"/> to <see cref="F:SadRogue.Primitives.Color.AnsiWhite"/> and the <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> to <see cref="F:SadRogue.Primitives.Color.AnsiBlue"/>, before calling this method.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.UI.Border.CreateForSurface(SadConsole.IScreenSurface,System.String)">
             <summary>
             Helper method to add a border to a surface.
             </summary>
             <param name="contents">The object the border will be around.</param>
             <param name="title">Optional title to display on the border.</param>
         </member>
-        <member name="M:SadConsole.UI.Border.AddToWindow(SadConsole.UI.Window)">
+        <member name="M:SadConsole.UI.Border.CreateForWindow(SadConsole.UI.Window)">
             <summary>
             Helper method to add a border to a window.
             </summary>
@@ -847,7 +863,7 @@
             Gets or sets the selected glyph character.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.IFont)">
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.SadFont,System.Int32,System.Int32)">
             <summary>
             Creates a new picker control with the specified font.
             </summary>
@@ -855,14 +871,6 @@
             <param name="fill">The default backround for glyphs.</param>
             <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
             <param name="characterFont">The font to use with the control.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a new picker control that uses the parent's font.
-            </summary>
-            <param name="foreground">The default foreground for glyphs.</param>
-            <param name="fill">The default backround for glyphs.</param>
-            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc/>
@@ -1085,9 +1093,6 @@
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.CharacterPicker.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.UI.Themes.CharacterPicker.Clone">
