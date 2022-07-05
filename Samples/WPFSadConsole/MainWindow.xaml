@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SadConsole.Host"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="900"  >
+        Title="MainWindow" Height="700" Width="900" SizeChanged="Window_SizeChanged" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
@@ -14,6 +14,7 @@
         <StackPanel Margin="4">
             <Label Content="ScreenObjects" />
             <ListBox x:Name="lstScreenObjects" Height="300" />
+            <Button Click="Button_Click" Content="Click" />
         </StackPanel>
         <local:Game Grid.Column="1" Margin="4" x:Name="WpfMonoGameControl" SadConsoleStarted="Game_SadConsoleStarted" WindowResized="Game_WindowResized"  />
     </Grid>

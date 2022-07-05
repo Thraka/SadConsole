@@ -32,6 +32,7 @@ namespace SadConsole.Host
         public static readonly DependencyProperty FontPathProperty =
             DependencyProperty.Register("FontPath", typeof(string), typeof(Game), new PropertyMetadata(""));
 
+        public bool ResetRenderingNextFrame = false;
 
         /// <summary>
         /// The game component to control SadConsole updates, input, and rendering.
@@ -87,6 +88,10 @@ namespace SadConsole.Host
             if (_initMain && _initFirstSize)
                 SadConsoleStarted?.Invoke(this, EventArgs.Empty);
         }
+
+
+        public void ActivateRenderSizeChanged(SizeChangedInfo sizeInfo) =>
+            OnRenderSizeChanged(sizeInfo);
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
@@ -203,5 +208,6 @@ namespace SadConsole.Host
                 SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Global.GraphicsDeviceManager.PreferredBackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / (float)Global.GraphicsDeviceManager.PreferredBackBufferHeight);
             }
         }
+
     }
 }

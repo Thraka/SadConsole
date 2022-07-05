@@ -21,7 +21,7 @@
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
 
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.3.1" />
     
     <!--
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\..\monogame-framework-wpfinterop\MonoGame.Framework.WpfInterop\MonoGame.Framework.WpfInterop.csproj" />

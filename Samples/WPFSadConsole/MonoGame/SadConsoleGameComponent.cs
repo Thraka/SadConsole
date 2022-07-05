@@ -23,6 +23,11 @@ namespace SadConsole.Host
             /// <param name="gameTime">Time between drawing frames.</param>
             public override void Draw(GameTime gameTime)
             {
+                if (((SadConsole.Host.Game)Game).ResetRenderingNextFrame)
+                {
+                    ((SadConsole.Host.Game)Game).ResetRenderingNextFrame = false;
+                    ((SadConsole.Host.Game)Game).ResetRendering();
+                }
                 if (SadConsole.Settings.DoDraw)
                 {
                     Host.Game game = (Host.Game)Game;
