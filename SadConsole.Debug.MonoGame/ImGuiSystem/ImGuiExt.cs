@@ -26,7 +26,7 @@ namespace SadConsole.ImGuiSystem
 
         public static void DrawTextureChild(string id, bool border, int zoomMode, IntPtr texture, Vector2 textureSize, Vector2 region)
         {
-            ImGui.BeginChild(id, region, false, ImGuiWindowFlags.HorizontalScrollbar);
+            ImGui.BeginChild(id, region, false, ImGuiWindowFlags.NoScrollbar);
             {
                 var startPos = ImGui.GetCursorScreenPos();
 

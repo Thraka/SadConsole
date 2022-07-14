@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0</TargetFrameworks>
     <RootNamespace>SadConsole.Debug.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Debugger.MonoGame.xml</DocumentationFile>
     <Version>9.2.0</Version>
