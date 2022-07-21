@@ -34,28 +34,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Debugger.xmmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Debugger.xmmp" />
+    <None Include="Stylesheets\**" LinkBase="Stylesheets\" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Include="Myra" Version="1.4.2" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
 
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.2.0" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.78.0" />
-    <!--
-    <Reference Include="ImGui.NET">
-      <HintPath>..\..\ImGui.NET\bin\Debug\ImGui.NET\netstandard2.0\ImGui.NET.dll</HintPath>
-    </Reference>
-    -->
-  </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />

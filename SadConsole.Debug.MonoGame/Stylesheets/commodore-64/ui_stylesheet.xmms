@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Stylesheet TextureRegionAtlas="ui_stylesheet.xmat">
+  <Fonts>
+    <Font Id="commodore-64" File="commodore-64.fnt"/>
+  </Fonts>
+  <DesktopStyle Background="blue" />
+  <LabelStyles>
+    <LabelStyle Font="commodore-64" TextColor="white" />
+  </LabelStyles>
+  <TextBoxStyles>
+    <TextBoxStyle Background="white" TextColor="black" Font="commodore-64" Cursor="cursor-black" Selection="light-blue" />
+  </TextBoxStyles>
+  <ScrollViewerStyles>
+    <ScrollViewerStyle HorizontalScrollBackground="scroll-bar" HorizontalScrollKnob="scroll-bar-horizontal-knob" VerticalScrollBackground="scroll-bar" VerticalScrollKnob="scroll-bar-vertical-knob" />
+  </ScrollViewerStyles>
+  <ButtonStyles>
+    <ButtonStyle Background="button" Padding="8, 5" PressedBackground="button-down">
+      <LabelStyle Font="commodore-64" TextColor="white" />
+    </ButtonStyle>
+  </ButtonStyles>
+  <CheckBoxStyles>
+    <CheckBoxStyle>
+      <LabelStyle Font="commodore-64" TextColor="white" />
+      <ImageStyle Image="check-box-off" PressedImage="check-box" />
+    </CheckBoxStyle>
+  </CheckBoxStyles>
+  <HorizontalSliderStyles>
+    <HorizontalSliderStyle Background="slider">
+      <KnobStyle>
+        <ImageStyle Image="slider-knob" />
+      </KnobStyle>
+    </HorizontalSliderStyle>
+  </HorizontalSliderStyles>
+  <VerticalSliderStyles>
+    <VerticalSliderStyle Background="slider">
+      <KnobStyle>
+        <ImageStyle Image="slider-knob" />
+      </KnobStyle>
+    </VerticalSliderStyle>
+  </VerticalSliderStyles>
+  <HorizontalProgressBarStyles>
+    <HorizontalProgressBarStyle Background="progress-bar" Filler="progress-bar-knob" Height="16" />
+  </HorizontalProgressBarStyles>
+  <VerticalProgressBarStyles>
+    <VerticalProgressBarStyle Background="progress-bar" Filler="progress-bar-knob" Width="16" />
+  </VerticalProgressBarStyles>
+  <ComboBoxStyles>
+    <ComboBoxStyle Background="list">
+      <LabelStyle Font="commodore-64" TextColor="white" />
+      <ListBoxStyle Background="blue">
+        <ListItemStyle OverBackground="white" Padding="8, 5" PressedBackground="button-down">
+          <LabelStyle Font="commodore-64" TextColor="white" OverTextColor="blue" PressedTextColor="blue" />
+        </ListItemStyle>
+      </ListBoxStyle>
+    </ComboBoxStyle>
+  </ComboBoxStyles>
+  <ListBoxStyles>
+    <ListBoxStyle>
+      <ListItemStyle PressedBackground="white">
+        <LabelStyle Font="commodore-64" TextColor="white" PressedTextColor="blue" />
+      </ListItemStyle>
+    </ListBoxStyle>
+  </ListBoxStyles>
+  <TreeStyles>
+    <TreeStyle SelectionBackground="progress-bar">
+      <MarkStyle>
+        <ImageStyle Image="plus" PressedImage="minus" />
+      </MarkStyle>
+      <LabelStyle Font="commodore-64" TextColor="white" />
+    </TreeStyle>
+  </TreeStyles>
+  <HorizontalSplitPaneStyles>
+    <HorizontalSplitPaneStyle>
+      <HandleStyle Background="horizontal-split-pane" />
+    </HorizontalSplitPaneStyle>
+  </HorizontalSplitPaneStyles>
+  <VerticalSplitPaneStyles>
+    <VerticalSplitPaneStyle>
+      <HandleStyle Background="vertical-split-pane" />
+    </VerticalSplitPaneStyle>
+  </VerticalSplitPaneStyles>
+  <WindowStyles>
+    <WindowStyle Background="window" Padding="25">
+      <TitleStyle Font="commodore-64" TextColor="white" />
+    </WindowStyle>
+  </WindowStyles>
+</Stylesheet>

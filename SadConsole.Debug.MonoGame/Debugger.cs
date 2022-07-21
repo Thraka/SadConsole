@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.MonoGame
 {
     public static class Debugger
     {
-        private static ImGuiMonoGameComponent _imGui;
 
-        public static List<ImGuiObjectBase> GuiComponents => _imGui.UIComponents;
-
-        public static ImGuiRenderer Renderer => _imGui.ImGuiRenderer;
+/* Unmerged change from project 'SadConsole.Debug.MonoGame (net6.0)'
+Before:
+        private static MyraUI.MyraGameComponent _myraGameComponent;
+After:
+        private static MyraGameComponent _myraGameComponent;
+*/
+        private static MyraUI.MyraGameComponent _myraGameComponent;
 
         public static bool IsOpened
         {
             get
             {
-                if (_imGui == null) return false;
-                return _imGui.Visible;
+                if (_myraGameComponent == null) return false;
+                return _myraGameComponent.Visible;
             }
         }
 
@@ -29,20 +31,18 @@ namespace SadConsole.Debug.MonoGame
         /// </summary>
         public static void BasicInit()
         {
-            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            _myraGameComponent = new MyraUI.MyraGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance);
 
-            Game.Instance.MonoGameInstance.Components.Add(_imGui);
+            Game.Instance.MonoGameInstance.Components.Add(_myraGameComponent);
             SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
         }
 
         public static void Start()
         {
-            if (_imGui != null)
+            if (_myraGameComponent != null)
             {
-                _imGui.Visible = true;
-                _imGui.Enabled = true;
+                _myraGameComponent.Visible = true;
+                _myraGameComponent.Enabled = true;
 
                 SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
                 SadConsole.Settings.DoFinalDraw = GuiState.ShowSadConsoleRendering;
@@ -56,11 +56,8 @@ namespace SadConsole.Debug.MonoGame
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
-            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
-            //ImGui.Theme = coolTheme;
-            _imGui.HostClosed += _imGui_HostClosed;
+            _myraGameComponent = new MyraUI.MyraGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance);
+            _myraGameComponent.HostClosed += _imGui_HostClosed;
             
 
             //ImGui.Initialize();
@@ -68,16 +65,16 @@ namespace SadConsole.Debug.MonoGame
 
             GuiState.ShowSadConsoleRenderingChanged += (s, e) => SadConsole.Settings.DoFinalDraw = GuiState.ShowSadConsoleRendering;
 
-            _imGui.UIComponents.Add(new GuiTopBar());
-            _imGui.UIComponents.Add(new GuiDockspace());
-            _imGui.UIComponents.Add(new GuiScreenObjects());
-            _imGui.UIComponents.Add(new GuiSurfacePreview());
+            //_imGui.UIComponents.Add(new GuiTopBar());
+            //_imGui.UIComponents.Add(new GuiDockspace());
+            //_imGui.UIComponents.Add(new GuiScreenObjects());
+            //_imGui.UIComponents.Add(new GuiSurfacePreview());
 
-            GuiState.GuiFinalOutputWindow = new FinalOutputWindow("Output preview", true);
-            _imGui.UIComponents.Add(GuiState.GuiFinalOutputWindow);
+            //GuiState.GuiFinalOutputWindow = new FinalOutputWindow("Output preview", true);
+            //_imGui.UIComponents.Add(GuiState.GuiFinalOutputWindow);
 
             //_debuggerComponent = new DebuggerComponent(Game.Instance.MonoGameInstance, imGui);
-            Game.Instance.MonoGameInstance.Components.Add(_imGui);
+            Game.Instance.MonoGameInstance.Components.Add(_myraGameComponent);
 
             //ImGuiNET.ImGui.
         }
@@ -94,8 +91,8 @@ namespace SadConsole.Debug.MonoGame
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = true;
 
-            _imGui.Visible = false;
-            _imGui.Enabled = false;
+            _myraGameComponent.Visible = false;
+            _myraGameComponent.Enabled = false;
 
             Settings.Input.DoKeyboard = true;
             Settings.Input.DoMouse = true;

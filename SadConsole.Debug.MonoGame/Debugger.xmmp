@@ -1,0 +1,49 @@
+<Project StylesheetPath="Stylesheets\libgdx\ui_stylesheet.xmms">
+  <Project.ExportOptions Namespace="SadConsole.MyraUI" Class="Debugger" OutputPath="C:\code\Fun\SadConsole\SadConsole.Debug.MonoGame" />
+  <VerticalStackPanel>
+    <VerticalStackPanel.Proportions>
+      <Proportion Type="Auto" />
+      <Proportion Type="Fill" />
+      <Proportion Type="Auto" />
+    </VerticalStackPanel.Proportions>
+    <HorizontalMenu Id="mainMenu">
+      <MenuItem Text="Close" Id="mnuClose" />
+    </HorizontalMenu>
+    <HorizontalSplitPane Margin="0, 5">
+      <VerticalStackPanel Margin="10, 0">
+        <VerticalStackPanel.Proportions>
+          <Proportion Type="Auto" />
+          <Proportion Type="Part" />
+          <Proportion Type="Auto" />
+          <Proportion Type="Part" />
+        </VerticalStackPanel.Proportions>
+        <Label Text="Screen Objects" />
+        <Tree Margin="0, 5, 5, 5" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Border="#D9D9D9FF" Id="ScreenObjectTree" />
+        <Label Text="Object Properties" />
+        <VerticalStackPanel Margin="10">
+          <HorizontalStackPanel>
+            <Label Text="Title: " />
+            <Label Text="OBJECT-TITLE" Id="lblSelectedObjectTitle" />
+          </HorizontalStackPanel>
+          <HorizontalStackPanel>
+            <Label Text="Position X: " VerticalAlignment="Center" />
+            <SpinButton Minimum="0" Value="1" MinWidth="50" Margin="5" Id="txtSelectedObjectPosX" />
+            <Label Text="Position Y: " VerticalAlignment="Center" />
+            <SpinButton Minimum="0" Value="1" MinWidth="50" Margin="5" Id="txtSelectedObjectPosY" />
+          </HorizontalStackPanel>
+          <HorizontalSeparator />
+          <CheckBox Text="Is Visible" Id="chkSelectedObjectIsVisible" />
+          <CheckBox Text="Is Enabled" Id="chkSelectedObjectIsEnabled" />
+        </VerticalStackPanel>
+      </VerticalStackPanel>
+      <VerticalStackPanel Margin="10, 0">
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+          <TabItem Text="Final Scene">
+            <Image Margin="3" BorderThickness="1" Border="Yellow" Id="Output" />
+          </TabItem>
+          <TabItem Text="Selected Object" />
+        </TabControl>
+      </VerticalStackPanel>
+    </HorizontalSplitPane>
+  </VerticalStackPanel>
+</Project>
