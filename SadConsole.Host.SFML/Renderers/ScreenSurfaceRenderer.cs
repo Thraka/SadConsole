@@ -17,6 +17,11 @@ namespace SadConsole.Renderers
         private Host.GameTexture _renderTexture;
 
         /// <summary>
+        /// Raised when the <see cref="_backingTexture" /> is recreated.
+        /// </summary>
+        public event EventHandler BackingTextureRecreated;
+
+        /// <summary>
         /// Quick access to backing texture.
         /// </summary>
         public RenderTexture _backingTexture;
@@ -73,6 +78,7 @@ namespace SadConsole.Renderers
                 _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
                 _renderTexture?.Dispose();
                 _renderTexture = new Host.GameTexture(_backingTexture.Texture);
+                BackingTextureRecreated?.Invoke(this, EventArgs.Empty);
             }
 
             // Update cached drawing rectangles if something is out of size.

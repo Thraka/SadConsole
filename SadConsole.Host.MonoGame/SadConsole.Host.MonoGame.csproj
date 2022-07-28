@@ -35,12 +35,15 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.2" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
-    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.0.0" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.3.1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Xaml\**" />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />

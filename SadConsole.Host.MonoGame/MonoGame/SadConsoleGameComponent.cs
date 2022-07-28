@@ -16,6 +16,13 @@ namespace SadConsole.Host
                 UpdateOrder = 5;
             }
 
+#if NOESIS
+            protected override void LoadContent()
+            {
+                NoesisManager.CreateNoesisGUI();
+            }
+#endif
+
             /// <summary>
             /// Draws the SadConsole frame through draw calls when <see cref="SadConsole.Settings.DoDraw"/> is true.
             /// </summary>
@@ -24,6 +31,11 @@ namespace SadConsole.Host
             {
                 if (SadConsole.Settings.DoDraw)
                 {
+#if NOESIS
+                    // GUI
+                    NoesisManager.noesisGUIWrapper.PreRender();
+#endif
+
                     Host.Game game = (Host.Game)Game;
 
                     SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
@@ -56,6 +68,11 @@ namespace SadConsole.Host
                         Global.SharedSpriteBatch.Draw(Global.RenderOutput, SadRogue.Primitives.SadRogueRectangleExtensions.ToMonoRectangle(SadConsole.Settings.Rendering.RenderRect), Color.White);
                         Global.SharedSpriteBatch.End();
                     }
+
+#if NOESIS
+                    // GUI  TODO: Should I move this before rendertarget NULL?
+                    NoesisManager.noesisGUIWrapper.Render();
+#endif
                 }
             }
 
@@ -69,10 +86,25 @@ namespace SadConsole.Host
                 {
                     var game = (Game)Game;
 
+#if NOESIS
+                    bool blockInput = false;
+                    NoesisManager.noesisGUIWrapper.UpdateInput(gameTime, isWindowActive: this.Game.IsActive);
+
+                    blockInput = Global.BlockSadConsoleInput
+                        || NoesisManager.noesisGUIWrapper.Input.ConsumedKeyboardKeys.Count != 0
+                        || NoesisManager.noesisGUIWrapper.Input.ConsumedMouseButtons.Count != 0
+                        || NoesisManager.noesisGUIWrapper.Input.ConsumedMouseDeltaWheel != 0;
+
                     SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
 
-                    if (Game.IsActive)
+                    if (Game.IsActive && !blockInput)
                     {
+#else
+                    SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
+
+                    if (Game.IsActive && !Global.BlockSadConsoleInput)
+                    {
+#endif
                         if (SadConsole.Settings.Input.DoKeyboard)
                         {
                             SadConsole.GameHost.Instance.Keyboard.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
@@ -94,6 +126,11 @@ namespace SadConsole.Host
                     SadConsole.GameHost.Instance.Screen?.Update(SadConsole.GameHost.Instance.UpdateFrameDelta);
 
                     ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
+
+#if NOESIS
+                    // GUI
+                    NoesisManager.noesisGUIWrapper.Update(gameTime);
+#endif
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 
 namespace SadConsole.Host
@@ -18,12 +19,12 @@ namespace SadConsole.Host
         public static Microsoft.Xna.Framework.Graphics.BlendState MonoGameSurfaceBlendState { get; set; }
             = new Microsoft.Xna.Framework.Graphics.BlendState()
             {
-                AlphaBlendFunction = Microsoft.Xna.Framework.Graphics.BlendFunction.Add,
-                AlphaDestinationBlend = Microsoft.Xna.Framework.Graphics.Blend.InverseSourceAlpha,
-                AlphaSourceBlend = Microsoft.Xna.Framework.Graphics.Blend.One,
-                ColorBlendFunction = Microsoft.Xna.Framework.Graphics.BlendFunction.Add,
-                ColorDestinationBlend = Microsoft.Xna.Framework.Graphics.Blend.InverseSourceAlpha,
-                ColorSourceBlend = Microsoft.Xna.Framework.Graphics.Blend.SourceAlpha
+                AlphaBlendFunction = BlendFunction.Add,
+                AlphaDestinationBlend = Blend.InverseSourceAlpha,
+                AlphaSourceBlend = Blend.One,
+                ColorBlendFunction = BlendFunction.Add,
+                ColorDestinationBlend = Blend.InverseSourceAlpha,
+                ColorSourceBlend = Blend.SourceAlpha
             };
 
         /// <summary>
@@ -31,12 +32,18 @@ namespace SadConsole.Host
         /// </summary>
         public static Microsoft.Xna.Framework.Graphics.BlendState MonoGameScreenBlendState { get; set; } = new Microsoft.Xna.Framework.Graphics.BlendState()
         {
-            AlphaBlendFunction = Microsoft.Xna.Framework.Graphics.BlendFunction.Add,
-            AlphaDestinationBlend = Microsoft.Xna.Framework.Graphics.Blend.InverseSourceAlpha,
-            AlphaSourceBlend = Microsoft.Xna.Framework.Graphics.Blend.One,
-            ColorBlendFunction = Microsoft.Xna.Framework.Graphics.BlendFunction.Add,
-            ColorDestinationBlend = Microsoft.Xna.Framework.Graphics.Blend.InverseSourceAlpha,
-            ColorSourceBlend = Microsoft.Xna.Framework.Graphics.Blend.SourceAlpha
+            AlphaBlendFunction = BlendFunction.Add,
+            AlphaDestinationBlend = Blend.InverseSourceAlpha,
+            AlphaSourceBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.Add,
+            ColorDestinationBlend = Blend.InverseSourceAlpha,
+            ColorSourceBlend = Blend.SourceAlpha
         };
+
+        /// <summary>
+        /// The MonoGame graphics profile to target.
+        /// </summary>
+        public static GraphicsProfile GraphicsProfile { get; set; }
+            = GraphicsProfile.Reach;
     }
 }

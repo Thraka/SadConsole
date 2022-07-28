@@ -57,6 +57,17 @@ namespace SadConsole.Host
         }
 
         /// <summary>
+        /// Creates a new game texture with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the texture in pixels.</param>
+        /// <param name="height">The height of the texture in pixels.</param>
+        public GameTexture(int width, int height)
+        {
+            _texture = new Microsoft.Xna.Framework.Graphics.Texture2D(Global.GraphicsDevice, width, height);
+            Size = width * height;
+        }
+
+        /// <summary>
         /// Wraps an existing texture.
         /// </summary>
         /// <param name="texture">The texture being wrapped by this object.</param>

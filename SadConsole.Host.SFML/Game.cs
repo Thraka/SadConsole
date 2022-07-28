@@ -141,7 +141,7 @@ namespace SadConsole
                 {
                     UpdateFrameDelta = TimeSpan.FromSeconds(Host.Global.UpdateTimer.ElapsedTime.AsSeconds());
 
-                    if (SadConsole.Host.Global.GraphicsDevice.HasFocus())
+                    if (SadConsole.Host.Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
                     {
                         if (SadConsole.Settings.Input.DoKeyboard)
                         {

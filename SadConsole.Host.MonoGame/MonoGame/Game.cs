@@ -7,7 +7,7 @@ namespace SadConsole.Host
     /// <summary>
     /// A MonoGame <see cref="Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
     /// </summary>
-    public sealed partial class Game : Microsoft.Xna.Framework.Game
+    public partial class Game : Microsoft.Xna.Framework.Game
     {
         internal bool _resizeBusy = false;
         internal Action<Game> _initCallback;
@@ -43,12 +43,13 @@ namespace SadConsole.Host
 
             Global.GraphicsDeviceManager = new GraphicsDeviceManager(this)
             {
-                GraphicsProfile = Microsoft.Xna.Framework.Graphics.GraphicsProfile.Reach
+                GraphicsProfile = Settings.GraphicsProfile
             };
 
             Content.RootDirectory = "Content";
             
             Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
+
             ctorCallback?.Invoke(this);
         }
 
@@ -107,7 +108,6 @@ namespace SadConsole.Host
             }
             Window.Title = SadConsole.Settings.WindowTitle;
 
-
             // Let the XNA framework show the mouse.
             IsMouseVisible = true;
 
@@ -156,15 +156,27 @@ namespace SadConsole.Host
         }
 
         /// <summary>
-        /// Resets the <see cref="Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+        /// Regenerates the <see cref="Global.RenderOutput"/> if the desired size doesn't match the current size.
         /// </summary>
-        public void ResetRendering()
+        /// <param name="width">The width of the render output.</param>
+        /// <param name="height">The height of the render output.</param>
+        protected virtual void RecreateRenderOutput(int width, int height)
+        {
+            if (Global.RenderOutput == null || Global.RenderOutput.Width != width || Global.RenderOutput.Height != height)
         {
             Global.RenderOutput?.Dispose();
+                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, width, height);
+            }
+        }
 
+        /// <summary>
+        /// Resets the <see cref="Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+        /// </summary>
+        public virtual void ResetRendering()
+        {
             if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
             {
-                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = new Rectangle(
                                                             (GraphicsDevice.PresentationParameters.BackBufferWidth - SadConsole.Settings.Rendering.RenderWidth) / 2,
                                                             (GraphicsDevice.PresentationParameters.BackBufferHeight - SadConsole.Settings.Rendering.RenderHeight) / 2,
@@ -175,7 +187,7 @@ namespace SadConsole.Host
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
             {
-                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 int multiple = 2;
 
                 // Find the bounds
@@ -198,7 +210,7 @@ namespace SadConsole.Host
             }
             else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
             {
-                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 float heightRatio = GraphicsDevice.PresentationParameters.BackBufferHeight / (float)SadConsole.Settings.Rendering.RenderHeight;
                 float widthRatio = GraphicsDevice.PresentationParameters.BackBufferWidth / (float)SadConsole.Settings.Rendering.RenderWidth;
 
@@ -232,13 +244,13 @@ namespace SadConsole.Host
             {
                 SadConsole.Settings.Rendering.RenderWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
                 SadConsole.Settings.Rendering.RenderHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
                 SadConsole.Settings.Rendering.RenderScale = (1, 1);
             }
             else
             {
-                Global.RenderOutput = new RenderTarget2D(GraphicsDevice, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
+                RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
                 SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
                 SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)GraphicsDevice.PresentationParameters.BackBufferWidth, SadConsole.Settings.Rendering.RenderHeight / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             }

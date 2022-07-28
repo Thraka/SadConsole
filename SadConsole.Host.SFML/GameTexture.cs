@@ -33,7 +33,7 @@ namespace SadConsole.Host
         /// <inheritdoc />
         public int Size { get; private set; }
 
-        internal GameTexture(string path)
+        public GameTexture(string path)
         {
             using (Stream fontStream = new FileStream(path, FileMode.Open))
                 _texture = new Texture(fontStream);
@@ -42,12 +42,22 @@ namespace SadConsole.Host
             Size = Width * Height;
         }
 
-        internal GameTexture(Stream stream)
+        public GameTexture(Stream stream)
         {
             _texture = new Texture(stream);
             Size = Width * Height;
         }
 
+        /// <summary>
+        /// Creates a new game texture with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the texture in pixels.</param>
+        /// <param name="height">The height of the texture in pixels.</param>
+        public GameTexture(uint width, uint height)
+        {
+            _texture = new Texture(width, height);
+            Size = (int)(width * height);
+        }
 
         /// <summary>
         /// Wraps a texture. Doesn't dispose it when this object is disposed!

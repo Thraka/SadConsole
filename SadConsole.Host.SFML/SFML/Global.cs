@@ -7,6 +7,8 @@ namespace SadConsole.Host
 {
     public static class Global
     {
+        public static bool BlockSadConsoleInput { get; set; }
+
         public static RenderWindow GraphicsDevice { get; set; }
 
         public static SpriteBatch SharedSpriteBatch { get; set; }
