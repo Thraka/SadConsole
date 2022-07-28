@@ -129,6 +129,7 @@ namespace FeatureDemo.CustomConsoles
     {
         public static readonly Dictionary<string, Description> Descriptions = new()
         {
+            { "logo.ans", new Description("ANSI Doc - SadConsole Logo", "Logo for SadConsole.") },
             { "QS-SIERR.ANS", new Description("ANSI Doc - Sierra BBS", "Advertisement for Sierra BBS by Quick Silver (VALiANT collection 1993).") },
             { "TES-JC.ANS", new Description("ANSI Doc - WILDC.A.T.S", "Advertisement for Jet City BBS by Jim Lee (VALiANT collection 1993).") },
             { "ROY-BTC1.ANS", new Description("ANSI Doc - Blocktronicks", "Art by Roy of SAC. Inspired by Font Designs from Amroth/iCE.") }, 
