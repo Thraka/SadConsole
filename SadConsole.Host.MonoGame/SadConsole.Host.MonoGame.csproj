@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
     <Version>9.2.2</Version>
@@ -10,7 +10,7 @@
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
-    <Description>A graphics hosting library for SadConsole. Targets MonoGame and .NET Standard 2.1.</Description>
+    <Description>A graphics hosting library for SadConsole. Targets MonoGame and .NET 6.</Description>
     <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
@@ -36,7 +36,7 @@
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.2" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.3.1" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
