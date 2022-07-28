@@ -1,85 +1,84 @@
-﻿namespace SadConsole.Readers
+﻿namespace SadConsole.Readers;
+
+using System;
+
+public partial class REXPaintImage
 {
-    using System;
-
-    public partial class REXPaintImage
+    /// <summary>
+    /// A layer of a RexPaint image.
+    /// </summary>
+    public class Layer
     {
+        private readonly Cell[] cells;
+
         /// <summary>
-        /// A layer of a RexPaint image.
+        /// The width of the layer.
         /// </summary>
-        public class Layer
+        public int Width { get; private set; }
+
+        /// <summary>
+        /// The height of the layer.
+        /// </summary>
+        public int Height { get; private set; }
+
+        /// <summary>
+        /// Represents all cells of the layer.
+        /// </summary>
+        public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells => new System.Collections.ObjectModel.ReadOnlyCollection<Cell>(cells);
+
+        /// <summary>
+        /// Gets a cell by coordinates.
+        /// </summary>
+        /// <param name="x">The x (0-based) position of the cell.</param>
+        /// <param name="y">The y (0-based) position of the cell.</param>
+        /// <returns>The cell.</returns>
+        public Cell this[int x, int y]
         {
-            private readonly Cell[] cells;
+            get { CheckForBounds(x, y); return cells[y * Width + x]; }
+            set { CheckForBounds(x, y); cells[y * Width + x] = value; }
+        }
 
-            /// <summary>
-            /// The width of the layer.
-            /// </summary>
-            public int Width { get; private set; }
+        /// <summary>
+        /// Gets a cell by index.
+        /// </summary>
+        /// <param name="index">The index of the cell.</param>
+        /// <returns>The cell.</returns>
+        public Cell this[int index]
+        {
+            get { CheckForIndexBounds(index); return cells[index]; }
+            set { CheckForIndexBounds(index); cells[index] = value; }
+        }
 
-            /// <summary>
-            /// The height of the layer.
-            /// </summary>
-            public int Height { get; private set; }
+        /// <summary>
+        /// Creates a new layer with the specified width and height.
+        /// </summary>
+        /// <param name="width">The width of the layer.</param>
+        /// <param name="height">The height of the layer.</param>
+        public Layer(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            cells = new Cell[width * height];
+        }
 
-            /// <summary>
-            /// Represents all cells of the layer.
-            /// </summary>
-            public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells => new System.Collections.ObjectModel.ReadOnlyCollection<Cell>(cells);
-
-            /// <summary>
-            /// Gets a cell by coordinates.
-            /// </summary>
-            /// <param name="x">The x (0-based) position of the cell.</param>
-            /// <param name="y">The y (0-based) position of the cell.</param>
-            /// <returns>The cell.</returns>
-            public Cell this[int x, int y]
+        private void CheckForIndexBounds(int index)
+        {
+            if (index < 0 || index >= cells.Length)
             {
-                get { CheckForBounds(x, y); return cells[y * Width + x]; }
-                set { CheckForBounds(x, y); cells[y * Width + x] = value; }
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        private void CheckForBounds(int x, int y)
+        {
+            if (x < 0 || x >= Width)
+            {
+                throw new ArgumentOutOfRangeException("x");
             }
 
-            /// <summary>
-            /// Gets a cell by index.
-            /// </summary>
-            /// <param name="index">The index of the cell.</param>
-            /// <returns>The cell.</returns>
-            public Cell this[int index]
+            if (y < 0 || y >= Height)
             {
-                get { CheckForIndexBounds(index); return cells[index]; }
-                set { CheckForIndexBounds(index); cells[index] = value; }
-            }
-
-            /// <summary>
-            /// Creates a new layer with the specified width and height.
-            /// </summary>
-            /// <param name="width">The width of the layer.</param>
-            /// <param name="height">The height of the layer.</param>
-            public Layer(int width, int height)
-            {
-                Width = width;
-                Height = height;
-                cells = new Cell[width * height];
-            }
-
-            private void CheckForIndexBounds(int index)
-            {
-                if (index < 0 || index >= cells.Length)
-                {
-                    throw new IndexOutOfRangeException();
-                }
-            }
-
-            private void CheckForBounds(int x, int y)
-            {
-                if (x < 0 || x >= Width)
-                {
-                    throw new ArgumentOutOfRangeException("x");
-                }
-
-                if (y < 0 || y >= Height)
-                {
-                    throw new ArgumentOutOfRangeException("y");
-                }
+                throw new ArgumentOutOfRangeException("y");
             }
         }
     }

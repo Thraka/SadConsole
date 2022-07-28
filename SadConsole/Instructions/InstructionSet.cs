@@ -1,136 +1,135 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SadConsole.Instructions
+namespace SadConsole.Instructions;
+
+/// <summary>
+/// A set of instructions to be executed sequentially.
+/// </summary>
+[System.Diagnostics.DebuggerDisplay("Instruction: Set")]
+public class InstructionSet : InstructionBase
 {
+    private LinkedListNode<InstructionBase> _currentInstructionNode;
+
     /// <summary>
-    /// A set of instructions to be executed sequentially.
+    /// All instructions in this set.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Instruction: Set")]
-    public class InstructionSet : InstructionBase
+    public LinkedList<InstructionBase> Instructions { get; } = new LinkedList<InstructionBase>();
+
+    /// <summary>
+    /// The name of this instruction to identify it apart from other instruction sets.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Represents the current instruction if this set is currently executing.
+    /// </summary>
+    public InstructionBase CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
+
+
+    /// <inheritdoc />
+    public override void Reset()
     {
-        private LinkedListNode<InstructionBase> _currentInstructionNode;
+        foreach (InstructionBase item in Instructions)
+            item.Reset();
 
-        /// <summary>
-        /// All instructions in this set.
-        /// </summary>
-        public LinkedList<InstructionBase> Instructions { get; } = new LinkedList<InstructionBase>();
+        _currentInstructionNode = Instructions.First;
 
-        /// <summary>
-        /// The name of this instruction to identify it apart from other instruction sets.
-        /// </summary>
-        public string Name { get; set; }
+        base.Reset();
+    }
 
-        /// <summary>
-        /// Represents the current instruction if this set is currently executing.
-        /// </summary>
-        public InstructionBase CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
-
-
-        /// <inheritdoc />
-        public override void Reset()
+    /// <summary>
+    /// Runs the instruction set. Once all instructions are finished, this set will set the <see cref="InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
+    /// </summary>
+    public override void Update(IScreenObject componentHost, TimeSpan delta)
+    {
+        if (!IsFinished && Instructions.Count != 0)
         {
-            foreach (InstructionBase item in Instructions)
-                item.Reset();
+            if (_currentInstructionNode == null)
+                _currentInstructionNode = Instructions.First;
 
-            _currentInstructionNode = Instructions.First;
+            _currentInstructionNode.Value.Update(componentHost, delta);
 
-            base.Reset();
-        }
-
-        /// <summary>
-        /// Runs the instruction set. Once all instructions are finished, this set will set the <see cref="InstructionBase.IsFinished"/> property will be set to <see langword="true"/>.
-        /// </summary>
-        public override void Update(IScreenObject componentHost, TimeSpan delta)
-        {
-            if (!IsFinished && Instructions.Count != 0)
+            if (_currentInstructionNode.Value.IsFinished)
             {
+                _currentInstructionNode = _currentInstructionNode.Next;
+
                 if (_currentInstructionNode == null)
-                    _currentInstructionNode = Instructions.First;
-
-                _currentInstructionNode.Value.Update(componentHost, delta);
-
-                if (_currentInstructionNode.Value.IsFinished)
-                {
-                    _currentInstructionNode = _currentInstructionNode.Next;
-
-                    if (_currentInstructionNode == null)
-                        IsFinished = true;
-                }
+                    IsFinished = true;
             }
-            else
-                IsFinished = true;
-
-            base.Update(componentHost, delta);
         }
+        else
+            IsFinished = true;
 
-        /// <summary>
-        /// Adds a new <see cref="SadConsole.Instructions.Wait"/> instruction with the specified duration to the end of this set.
-        /// </summary>
-        /// <param name="duration">The time to wait.</param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet Wait(TimeSpan duration)
-        {
-            Instructions.AddLast(new Wait(duration));
-            return this;
-        }
+        base.Update(componentHost, delta);
+    }
 
-        /// <summary>
-        /// Adds an instruction to the end of this set.
-        /// </summary>
-        /// <param name="instruction"></param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet Instruct(InstructionBase instruction)
-        {
-            Instructions.AddLast(instruction);
-            return this;
-        }
+    /// <summary>
+    /// Adds a new <see cref="SadConsole.Instructions.Wait"/> instruction with the specified duration to the end of this set.
+    /// </summary>
+    /// <param name="duration">The time to wait.</param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet Wait(TimeSpan duration)
+    {
+        Instructions.AddLast(new Wait(duration));
+        return this;
+    }
 
-        /// <summary>
-        /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
-        /// </summary>
-        /// <param name="expression">The code callback.</param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet Code(Func<IScreenObject, TimeSpan, bool> expression)
-        {
-            Instructions.AddLast(new CodeInstruction(expression));
-            return this;
-        }
+    /// <summary>
+    /// Adds an instruction to the end of this set.
+    /// </summary>
+    /// <param name="instruction"></param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet Instruct(InstructionBase instruction)
+    {
+        Instructions.AddLast(instruction);
+        return this;
+    }
 
-        /// <summary>
-        /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
-        /// </summary>
-        /// <param name="expression">The code callback.</param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet Code(Action expression)
-        {
-            Instructions.AddLast(new CodeInstruction((s, d) => { expression.Invoke(); return true; }));
-            return this;
-        }
+    /// <summary>
+    /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
+    /// </summary>
+    /// <param name="expression">The code callback.</param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet Code(Func<IScreenObject, TimeSpan, bool> expression)
+    {
+        Instructions.AddLast(new CodeInstruction(expression));
+        return this;
+    }
 
-        /// <summary>
-        /// Adds a new <see cref="PredicateInstruction"/> instruction with the specified callback to the end of this set.
-        /// </summary>
-        /// <param name="expression">The code callback.</param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet WaitTrue(Func<bool> expression)
-        {
-            Instructions.AddLast(new PredicateInstruction(expression));
-            return this;
-        }
+    /// <summary>
+    /// Adds a new <see cref="CodeInstruction"/> instruction with the specified callback to the end of this set.
+    /// </summary>
+    /// <param name="expression">The code callback.</param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet Code(Action expression)
+    {
+        Instructions.AddLast(new CodeInstruction((s, d) => { expression.Invoke(); return true; }));
+        return this;
+    }
 
-        /// <summary>
-        /// Adds a <see cref="ConcurrentInstructions"/> to the end of this set.
-        /// </summary>
-        /// <param name="instructions">Instructions to add. Must be two or more instructions.</param>
-        /// <returns>This instruction set.</returns>
-        public InstructionSet InstructConcurrent(params InstructionBase[] instructions)
-        {
-            if (instructions.Length == 0)
-                throw new ArgumentOutOfRangeException(nameof(instructions), "Two or more instruction must be provided.");
+    /// <summary>
+    /// Adds a new <see cref="PredicateInstruction"/> instruction with the specified callback to the end of this set.
+    /// </summary>
+    /// <param name="expression">The code callback.</param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet WaitTrue(Func<bool> expression)
+    {
+        Instructions.AddLast(new PredicateInstruction(expression));
+        return this;
+    }
 
-            Instructions.AddLast(new ConcurrentInstructions(instructions));
-            return this;
-        }
+    /// <summary>
+    /// Adds a <see cref="ConcurrentInstructions"/> to the end of this set.
+    /// </summary>
+    /// <param name="instructions">Instructions to add. Must be two or more instructions.</param>
+    /// <returns>This instruction set.</returns>
+    public InstructionSet InstructConcurrent(params InstructionBase[] instructions)
+    {
+        if (instructions.Length == 0)
+            throw new ArgumentOutOfRangeException(nameof(instructions), "Two or more instruction must be provided.");
+
+        Instructions.AddLast(new ConcurrentInstructions(instructions));
+        return this;
     }
 }

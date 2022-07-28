@@ -3,56 +3,55 @@ using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
-namespace SadConsole.UI.Themes
+namespace SadConsole.UI.Themes;
+
+/// <summary>
+/// A basic theme for a drawing surface that simply fills the surface based on the state.
+/// </summary>
+[DataContract]
+public class PanelTheme : ThemeBase
 {
     /// <summary>
-    /// A basic theme for a drawing surface that simply fills the surface based on the state.
+    /// When true, only uses <see cref="ThemeStates.Normal"/> for drawing.
     /// </summary>
-    [DataContract]
-    public class PanelTheme : ThemeBase
+    [DataMember]
+    public bool UseNormalStateOnly { get; set; } = true;
+
+    /// <summary>
+    /// When true, ignores all states and doesn't draw anything.
+    /// </summary>
+    [DataMember]
+    public bool SkipDrawing { get; set; } = false;
+
+    /// <summary>
+    /// The current appearance based on the control state.
+    /// </summary>
+    [DataMember]
+    public ColoredGlyph Appearance { get; protected set; }
+
+    /// <inheritdoc />
+    public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        /// <summary>
-        /// When true, only uses <see cref="ThemeStates.Normal"/> for drawing.
-        /// </summary>
-        [DataMember]
-        public bool UseNormalStateOnly { get; set; } = true;
+        if (SkipDrawing || !(control is Panel))
+            return;
 
-        /// <summary>
-        /// When true, ignores all states and doesn't draw anything.
-        /// </summary>
-        [DataMember]
-        public bool SkipDrawing { get; set; } = false;
+        RefreshTheme(control.FindThemeColors(), control);
 
-        /// <summary>
-        /// The current appearance based on the control state.
-        /// </summary>
-        [DataMember]
-        public ColoredGlyph Appearance { get; protected set; }
+        if (!UseNormalStateOnly)
+            Appearance = ControlThemeState.GetStateAppearance(control.State);
+        else
+            Appearance = ControlThemeState.Normal;
 
-        /// <inheritdoc />
-        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-        {
-            if (SkipDrawing || !(control is Panel))
-                return;
+        control.Surface.Fill(Appearance.Foreground, Appearance.Background, Appearance.Glyph);
 
-            RefreshTheme(control.FindThemeColors(), control);
-
-            if (!UseNormalStateOnly)
-                Appearance = ControlThemeState.GetStateAppearance(control.State);
-            else
-                Appearance = ControlThemeState.Normal;
-
-            control.Surface.Fill(Appearance.Foreground, Appearance.Background, Appearance.Glyph);
-
-            control.IsDirty = false;
-        }
-
-        /// <inheritdoc />
-        public override ThemeBase Clone() => new PanelTheme()
-        {
-            ControlThemeState = ControlThemeState.Clone(),
-            UseNormalStateOnly = UseNormalStateOnly,
-            SkipDrawing = SkipDrawing
-        };
+        control.IsDirty = false;
     }
+
+    /// <inheritdoc />
+    public override ThemeBase Clone() => new PanelTheme()
+    {
+        ControlThemeState = ControlThemeState.Clone(),
+        UseNormalStateOnly = UseNormalStateOnly,
+        SkipDrawing = SkipDrawing
+    };
 }

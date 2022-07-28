@@ -1,13 +1,12 @@
-﻿namespace SadConsole.DrawCalls
+﻿namespace SadConsole.DrawCalls;
+
+/// <summary>
+/// A draw call used by final rendering.
+/// </summary>
+public interface IDrawCall
 {
     /// <summary>
-    /// A draw call used by final rendering.
+    /// Draws an object.
     /// </summary>
-    public interface IDrawCall
-    {
-        /// <summary>
-        /// Draws an object.
-        /// </summary>
-        void Draw();
-    }
+    void Draw();
 }

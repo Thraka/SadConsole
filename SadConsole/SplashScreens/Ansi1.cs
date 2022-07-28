@@ -4,262 +4,261 @@ using SadConsole.Input;
 using SadRogue.Primitives;
 using SadConsole;
 
-namespace SadConsole.SplashScreens
+namespace SadConsole.SplashScreens;
+
+/// <summary>
+/// A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
+/// </summary>
+[System.Diagnostics.DebuggerDisplay("Splashscreen: Simple")]
+public class Ansi1 : ScreenSurface
 {
-    /// <summary>
-    /// A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
-    /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Splashscreen: Simple")]
-    public class Ansi1 : ScreenSurface
+    private static string _title = " Powered by SadConsole ";
+    private Instructions.InstructionSet _endAnimation;
+    private bool _isEnding = false;
+    private ScreenSurface _ansiChild;
+
+    public Ansi1(IFont font, IFont.Sizes fontSize) : base(GameHost.Instance.ScreenCellsX, GameHost.Instance.ScreenCellsY)
     {
-        private static string _title = " Powered by SadConsole ";
-        private Instructions.InstructionSet _endAnimation;
-        private bool _isEnding = false;
-        private ScreenSurface _ansiChild;
+        UsePixelPositioning = true;
+        Surface.DefaultBackground = Color.Black;
+        Surface.Fill();
+        //Position = (Settings.Rendering.RenderWidth / 2 - AbsoluteArea.Width / 2, Settings.Rendering.RenderHeight / 2 - AbsoluteArea.Height / 2);
+        //Surface.Print(0, 0, _title, Color.Black, Color.AnsiWhite);
 
-        public Ansi1(IFont font, IFont.Sizes fontSize): base(GameHost.Instance.ScreenCellsX, GameHost.Instance.ScreenCellsY)
+        // Create surface
+        _ansiChild = new ScreenSurface(80, 25);
+        _ansiChild.Font = font;
+        _ansiChild.FontSize = font.GetFontSize(fontSize);
+
+        // Center surface on screen
+        Point position = (0, 0);
+
+        if (_ansiChild.WidthPixels > Settings.Rendering.RenderWidth)
+            position = position.WithX(-((_ansiChild.WidthPixels - Settings.Rendering.RenderWidth) / 2));
+
+        else if (_ansiChild.WidthPixels < Settings.Rendering.RenderWidth)
+            position = position.WithX((Settings.Rendering.RenderWidth - _ansiChild.WidthPixels) / 2);
+
+
+        if (_ansiChild.HeightPixels > Settings.Rendering.RenderHeight)
+            position = position.WithY(-((_ansiChild.HeightPixels - Settings.Rendering.RenderHeight) / 2));
+
+        else if (_ansiChild.HeightPixels < Settings.Rendering.RenderHeight)
+            position = position.WithY((Settings.Rendering.RenderHeight - _ansiChild.HeightPixels) / 2);
+
+        _ansiChild.UsePixelPositioning = true;
+        _ansiChild.Position = position;
+        _ansiChild.Surface.DefaultBackground = Color.Black;
+        _ansiChild.Surface.Fill();
+        Children.Add(_ansiChild);
+
+        // Time out animations
+        _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
+            .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
+            .Wait(System.TimeSpan.FromMilliseconds(0.500))
+            .Code((s, d) => { IsVisible = false; return true; });
+
+        var endTimeout = new Instructions.InstructionSet() { RemoveOnFinished = true }
+            .Wait(System.TimeSpan.FromSeconds(3))
+            .Code((s, d) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
+
+        var startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
+            .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
+            //.Wait(System.TimeSpan.FromMilliseconds(0.500));
+            ;
+
+        // Read the ansi file
+        System.Reflection.Assembly assembly = typeof(ScreenSurface).Assembly;
+        using Stream stream = assembly.GetManifestResourceStream("SadConsole.Resources.logo.ans");
+        using BinaryReader sr = new BinaryReader(stream);
+
+        SadConsole.Ansi.Document document = Ansi.Document.FromBytes(sr.ReadBytes((int)stream.Length));
+        SadConsole.Ansi.AnsiWriter writer = new Ansi.AnsiWriter(document, _ansiChild.Surface);
+        writer.Cursor.AutomaticallyShiftRowsUp = false;
+        writer.ReadEntireDocument();
+
+        // Settings for editing the ansi file
+        var monitorRect = new Rectangle((34, 7), (45, 10));
+        CellSurface monitorSurface = new CellSurface(monitorRect.Width, monitorRect.Height);
+        ColoredGlyph tear = new ColoredGlyph();
+        ColoredGlyph tearPrevious = new ColoredGlyph();
+        Point tearPosition = (44, 9);
+        Point textMadeWithPosition = (34, 19);
+        Point textSadConsolePosition = (35, 21);
+        Color fillColor = _ansiChild.Surface.GetForeground(0, 0);
+
+        // Draw made with string
+        var madeWithString = new ColoredString("made with");
+        var fadeEffect = new Effects.Fade()
         {
-            UsePixelPositioning = true;
-            Surface.DefaultBackground = Color.Black;
-            Surface.Fill();
-            //Position = (Settings.Rendering.RenderWidth / 2 - AbsoluteArea.Width / 2, Settings.Rendering.RenderHeight / 2 - AbsoluteArea.Height / 2);
-            //Surface.Print(0, 0, _title, Color.Black, Color.AnsiWhite);
+            DestinationForeground = new Gradient(new[] { Color.Transparent, Color.White, Color.AnsiYellowBright, Color.Black },
+                                                 new[] { 0.0f, 0.3f, 0.5f, 1.0f }),
+            UseCellForeground = false,
+            FadeForeground = true,
+            FadeDuration = TimeSpan.FromSeconds(1),
+            CloneOnAdd = true,
+            RestoreCellOnRemoved = false,
+            RemoveOnFinished = true,
+        };
+        madeWithString.SetEffect(fadeEffect);
+        madeWithString.SetBackground(fillColor);
+        madeWithString.SetForeground(fadeEffect.DestinationForeground.Stops[0].Color);
+        var drawMadeWith = new Instructions.DrawString(madeWithString) { TotalTimeToPrint = 0.4f };
+        drawMadeWith.Position = textMadeWithPosition;
 
-            // Create surface
-            _ansiChild = new ScreenSurface(80, 25);
-            _ansiChild.Font = font;
-            _ansiChild.FontSize = font.GetFontSize(fontSize);
+        // Draw SadConsole string
+        var sadConsoleString = new ColoredString("SadConsole");
+        var fadeEffect2 = new Effects.Fade()
+        {
+            DestinationForeground = new Gradient(new[] { fillColor, fillColor, Color.White },
+                                                 new[] { 0.0f, 0.5f, 1.0f }),
+            UseCellForeground = false,
+            FadeForeground = true,
+            FadeDuration = TimeSpan.FromSeconds(0.8),
+            CloneOnAdd = false,
+            RestoreCellOnRemoved = false,
+            RemoveOnFinished = true,
+        };
+        sadConsoleString.SetEffect(fadeEffect2);
+        sadConsoleString.SetBackground(fillColor);
+        sadConsoleString.SetForeground(fadeEffect2.DestinationForeground.Stops[0].Color);
+        var drawSadConsole = new Instructions.DrawString(sadConsoleString) { TotalTimeToPrint = 0.3f };
+        drawSadConsole.Position = textSadConsolePosition;
 
-            // Center surface on screen
-            Point position = (0, 0);
-
-            if (_ansiChild.WidthPixels > Settings.Rendering.RenderWidth)
-                position = position.WithX(-((_ansiChild.WidthPixels - Settings.Rendering.RenderWidth) / 2));
-
-            else if (_ansiChild.WidthPixels < Settings.Rendering.RenderWidth)
-                position = position.WithX((Settings.Rendering.RenderWidth - _ansiChild.WidthPixels) / 2);
-
-
-            if (_ansiChild.HeightPixels > Settings.Rendering.RenderHeight)
-                position = position.WithY(-((_ansiChild.HeightPixels - Settings.Rendering.RenderHeight) / 2));
-
-            else if (_ansiChild.HeightPixels < Settings.Rendering.RenderHeight)
-                position = position.WithY((Settings.Rendering.RenderHeight - _ansiChild.HeightPixels) / 2);
-
-            _ansiChild.UsePixelPositioning = true;
-            _ansiChild.Position = position;
-            _ansiChild.Surface.DefaultBackground = Color.Black;
-            _ansiChild.Surface.Fill();
-            Children.Add(_ansiChild);
-
-            // Time out animations
-            _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
-                .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
-                .Wait(System.TimeSpan.FromMilliseconds(0.500))
-                .Code((s, d) => { IsVisible = false; return true; });
-
-            var endTimeout = new Instructions.InstructionSet() { RemoveOnFinished = true }
-                .Wait(System.TimeSpan.FromSeconds(3))
-                .Code((s, d) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
-
-            var startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
-                .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
-                //.Wait(System.TimeSpan.FromMilliseconds(0.500));
-                ;
-
-            // Read the ansi file
-            System.Reflection.Assembly assembly = typeof(ScreenSurface).Assembly;
-            using Stream stream = assembly.GetManifestResourceStream("SadConsole.Resources.logo.ans");
-            using BinaryReader sr = new BinaryReader(stream);
-
-            SadConsole.Ansi.Document document = Ansi.Document.FromBytes(sr.ReadBytes((int)stream.Length));
-            SadConsole.Ansi.AnsiWriter writer = new Ansi.AnsiWriter(document, _ansiChild.Surface);
-            writer.Cursor.AutomaticallyShiftRowsUp = false;
-            writer.ReadEntireDocument();
-
-            // Settings for editing the ansi file
-            var monitorRect = new Rectangle((34, 7), (45, 10));
-            CellSurface monitorSurface = new CellSurface(monitorRect.Width, monitorRect.Height);
-            ColoredGlyph tear = new ColoredGlyph();
-            ColoredGlyph tearPrevious = new ColoredGlyph();
-            Point tearPosition = (44, 9);
-            Point textMadeWithPosition = (34, 19);
-            Point textSadConsolePosition = (35, 21);
-            Color fillColor = _ansiChild.Surface.GetForeground(0, 0);
-
-            // Draw made with string
-            var madeWithString = new ColoredString("made with");
-            var fadeEffect = new Effects.Fade()
+        // Tear drop animation
+        var animatedTearSet = new Instructions.InstructionSet()
+            .Code(() =>
             {
-                DestinationForeground = new Gradient(new[] { Color.Transparent, Color.White, Color.AnsiYellowBright, Color.Black },
-                                                     new[] { 0.0f, 0.3f, 0.5f, 1.0f }),
-                UseCellForeground = false,
-                FadeForeground = true,
-                FadeDuration = TimeSpan.FromSeconds(1),
-                CloneOnAdd = true,
-                RestoreCellOnRemoved = false,
-                RemoveOnFinished = true,
-            };
-            madeWithString.SetEffect(fadeEffect);
-            madeWithString.SetBackground(fillColor);
-            madeWithString.SetForeground(fadeEffect.DestinationForeground.Stops[0].Color);
-            var drawMadeWith = new Instructions.DrawString(madeWithString) { TotalTimeToPrint = 0.4f };
-            drawMadeWith.Position = textMadeWithPosition;
+                tearPosition = (44, 9);
 
-            // Draw SadConsole string
-            var sadConsoleString = new ColoredString("SadConsole");
-            var fadeEffect2 = new Effects.Fade()
+                _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
+                tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                _ansiChild.IsDirty = true;
+
+            }).Wait(TimeSpan.FromSeconds(0.3))
+            .Code(() =>
             {
-                DestinationForeground = new Gradient(new[] { fillColor, fillColor, Color.White },
-                                                     new[] { 0.0f, 0.5f, 1.0f }),
-                UseCellForeground = false,
-                FadeForeground = true,
-                FadeDuration = TimeSpan.FromSeconds(0.8),
-                CloneOnAdd = false,
-                RestoreCellOnRemoved = false,
-                RemoveOnFinished = true,
-            };
-            sadConsoleString.SetEffect(fadeEffect2);
-            sadConsoleString.SetBackground(fillColor);
-            sadConsoleString.SetForeground(fadeEffect2.DestinationForeground.Stops[0].Color);
-            var drawSadConsole = new Instructions.DrawString(sadConsoleString) { TotalTimeToPrint = 0.3f };
-            drawSadConsole.Position = textSadConsolePosition;
+                tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                tearPosition += (0, 1);
+                _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
+                tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                _ansiChild.IsDirty = true;
 
-            // Tear drop animation
-            var animatedTearSet = new Instructions.InstructionSet()
-                .Code(() =>
-                {
-                    tearPosition = (44, 9);
+            }).Wait(TimeSpan.FromSeconds(0.3))
+            .Code(() =>
+            {
+                tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                tearPosition += (0, 1);
+                _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
+                tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                _ansiChild.IsDirty = true;
 
-                    _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
-                    tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    _ansiChild.IsDirty = true;
-                  
-                }).Wait(TimeSpan.FromSeconds(0.3))
-                .Code(() =>
-                {
-                    tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    tearPosition += (0, 1);
-                    _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
-                    tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    _ansiChild.IsDirty = true;
+            }).Wait(TimeSpan.FromSeconds(0.3))
+            .Code(() =>
+            {
+                tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
+                _ansiChild.IsDirty = true;
+            }).Wait(TimeSpan.FromSeconds(0.3))
+            ;
+        animatedTearSet.RepeatCount = 2;
 
-                }).Wait(TimeSpan.FromSeconds(0.3))
-                .Code(() =>
-                {
-                    tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    tearPosition += (0, 1);
-                    _ansiChild.Surface[tearPosition].CopyAppearanceTo(tearPrevious);
-                    tear.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    _ansiChild.IsDirty = true;
+        // Main animation
+        var set = new Instructions.InstructionSet()
+            // Edit the ansi to get things ready for animation.
+            .Code(() =>
+            {
+                // Copy and clear tear
+                _ansiChild.Surface[tearPosition].CopyAppearanceTo(tear);
+                _ansiChild.Surface.SetGlyph(tearPosition.X, tearPosition.Y, 0);
 
-                }).Wait(TimeSpan.FromSeconds(0.3))
-                .Code(() =>
-                {
-                    tearPrevious.CopyAppearanceTo(_ansiChild.Surface[tearPosition]);
-                    _ansiChild.IsDirty = true;
-                }).Wait(TimeSpan.FromSeconds(0.3))
-                ;
-            animatedTearSet.RepeatCount = 2;
+                // Block out the monitor
+                _ansiChild.Surface.Copy(monitorRect, monitorSurface, 0, 0);
+                _ansiChild.Surface.Fill(monitorRect, glyph: 0, background: Color.Black);
 
-            // Main animation
-            var set = new Instructions.InstructionSet()
-                // Edit the ansi to get things ready for animation.
-                .Code(() =>
-                {
-                    // Copy and clear tear
-                    _ansiChild.Surface[tearPosition].CopyAppearanceTo(tear);
-                    _ansiChild.Surface.SetGlyph(tearPosition.X, tearPosition.Y, 0);
+                // Recolor the power light
+                _ansiChild.Surface.SetForeground(43, 13, Color.Gray);
 
-                    // Block out the monitor
-                    _ansiChild.Surface.Copy(monitorRect, monitorSurface, 0, 0);
-                    _ansiChild.Surface.Fill(monitorRect, glyph: 0, background: Color.Black);
+                // Erase text
+                _ansiChild.Surface.Print(textMadeWithPosition.X, textMadeWithPosition.Y, "         ", Color.Transparent);
+                _ansiChild.Surface.Print(textSadConsolePosition.X, textSadConsolePosition.Y, "          ", Color.Transparent);
+            })
 
-                    // Recolor the power light
-                    _ansiChild.Surface.SetForeground(43, 13, Color.Gray);
+            // Fade in the ansi
+            .Instruct(startAnimation)
 
-                    // Erase text
-                    _ansiChild.Surface.Print(textMadeWithPosition.X, textMadeWithPosition.Y, "         ", Color.Transparent);
-                    _ansiChild.Surface.Print(textSadConsolePosition.X, textSadConsolePosition.Y, "          ", Color.Transparent);
-                })
+            // Blink light on power
+            .Code(() =>
+            {
+                _ansiChild.Surface.SetEffect(43, 13, null);
 
-                // Fade in the ansi
-                .Instruct(startAnimation)
+                var effectSet = new Effects.EffectSet();
 
-                // Blink light on power
-                .Code(() =>
-                {
-                    _ansiChild.Surface.SetEffect(43, 13, null);
+                effectSet.Add(
+                    new Effects.Blink()
+                    {
+                        UseCellBackgroundColor = false,
+                        BlinkCount = 3,
+                        BlinkSpeed = TimeSpan.FromSeconds(0.2),
+                        BlinkOutColor = Color.AnsiGreenBright,
+                        RemoveOnFinished = true,
+                        RestoreCellOnRemoved = false
+                    });
+                effectSet.Add(new Effects.Recolor() { Background = _ansiChild.Surface.GetBackground(43, 13), Foreground = Color.AnsiRed, RestoreCellOnRemoved = false, RemoveOnFinished = true });
+                effectSet.RemoveOnFinished = true;
+                effectSet.RestoreCellOnRemoved = false;
 
-                    var effectSet = new Effects.EffectSet();
+                _ansiChild.Surface.SetEffect(43, 13, effectSet);
+            })
+            .Wait(TimeSpan.FromSeconds(2))
 
-                    effectSet.Add(
-                        new Effects.Blink()
-                        {
-                            UseCellBackgroundColor = false,
-                            BlinkCount = 3,
-                            BlinkSpeed = TimeSpan.FromSeconds(0.2),
-                            BlinkOutColor = Color.AnsiGreenBright,
-                            RemoveOnFinished = true,
-                            RestoreCellOnRemoved = false
-                        });
-                    effectSet.Add(new Effects.Recolor() { Background = _ansiChild.Surface.GetBackground(43, 13), Foreground = Color.AnsiRed, RestoreCellOnRemoved = false, RemoveOnFinished = true });
-                    effectSet.RemoveOnFinished = true;
-                    effectSet.RestoreCellOnRemoved = false;
+            // Restore monitor
+            .Code(() =>
+            {
+                monitorSurface.Copy(_ansiChild.Surface, monitorRect.X, monitorRect.Y);
+            }).Wait(TimeSpan.FromSeconds(0.5))
 
-                    _ansiChild.Surface.SetEffect(43, 13, effectSet);
-                })
-                .Wait(TimeSpan.FromSeconds(2))
+            // Animate tear
+            .InstructConcurrent(new Instructions.InstructionBase[]
+            {
+                animatedTearSet,
+                new Instructions.InstructionSet()
+                    .Wait(TimeSpan.FromSeconds(0.5))
+                    .Instruct(drawMadeWith)
+                    .Wait(TimeSpan.FromSeconds(0.8))
+                    .Instruct(drawSadConsole)
+            })
 
-                // Restore monitor
-                .Code(() =>
-                {
-                    monitorSurface.Copy(_ansiChild.Surface, monitorRect.X, monitorRect.Y);
-                }).Wait(TimeSpan.FromSeconds(0.5))
+            // Wait and then end
+            .Wait(TimeSpan.FromSeconds(1))
+            .Instruct(_endAnimation)
+            ;
 
-                // Animate tear
-                .InstructConcurrent(new Instructions.InstructionBase[]
-                {
-                    animatedTearSet,
-                    new Instructions.InstructionSet()
-                        .Wait(TimeSpan.FromSeconds(0.5))
-                        .Instruct(drawMadeWith)
-                        .Wait(TimeSpan.FromSeconds(0.8))
-                        .Instruct(drawSadConsole)
-                })
+        _ansiChild.SadComponents.Add(set);
+    }
 
-                // Wait and then end
-                .Wait(TimeSpan.FromSeconds(1))
-                .Instruct(_endAnimation)
-                ;
 
-            _ansiChild.SadComponents.Add(set);
+
+    public Ansi1(IFont.Sizes fontSize) : this(GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
+
+    /// <summary>
+    /// A new instance of this class.
+    /// </summary>
+    public Ansi1() : this(GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
+
+    /// <summary>
+    /// Ends the animation when a key is pressed.
+    /// </summary>
+    /// <param name="keyboard">The keyboard state.</param>
+    /// <returns>The base implementation of the keyboard.</returns>
+    public override bool ProcessKeyboard(Keyboard keyboard)
+    {
+        if (!_isEnding && keyboard.KeysReleased.Count != 0)
+        {
+            _isEnding = true;
+            _ansiChild.SadComponents.Clear();
+            _ansiChild.SadComponents.Add(_endAnimation);
         }
 
-
-
-        public Ansi1(IFont.Sizes fontSize) : this(GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
-
-        /// <summary>
-        /// A new instance of this class.
-        /// </summary>
-        public Ansi1() : this (GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
-
-        /// <summary>
-        /// Ends the animation when a key is pressed.
-        /// </summary>
-        /// <param name="keyboard">The keyboard state.</param>
-        /// <returns>The base implementation of the keyboard.</returns>
-        public override bool ProcessKeyboard(Keyboard keyboard)
-        {
-            if (!_isEnding && keyboard.KeysReleased.Count != 0)
-            {
-                _isEnding = true;
-                _ansiChild.SadComponents.Clear();
-                _ansiChild.SadComponents.Add(_endAnimation);
-            }
-
-            return base.ProcessKeyboard(keyboard);
-        }
+        return base.ProcessKeyboard(keyboard);
     }
 }

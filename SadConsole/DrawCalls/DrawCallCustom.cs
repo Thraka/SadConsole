@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace SadConsole.DrawCalls
+namespace SadConsole.DrawCalls;
+
+/// <summary>
+/// A draw call that invokes an <see cref="Action"/> delegate.
+/// </summary>
+public class DrawCallCustom : IDrawCall
 {
     /// <summary>
-    /// A draw call that invokes an <see cref="Action"/> delegate.
+    /// The delegate to call.
     /// </summary>
-    public class DrawCallCustom : IDrawCall
-    {
-        /// <summary>
-        /// The delegate to call.
-        /// </summary>
-        public Action DrawCallback { get; set; }
+    public Action DrawCallback { get; set; }
 
-        /// <summary>
-        /// Creates a new instance of this object.
-        /// </summary>
-        /// <param name="draw">The delegate to call when the draw call is drawn.</param>
-        public DrawCallCustom(Action draw) =>
-            DrawCallback = draw;
+    /// <summary>
+    /// Creates a new instance of this object.
+    /// </summary>
+    /// <param name="draw">The delegate to call when the draw call is drawn.</param>
+    public DrawCallCustom(Action draw) =>
+        DrawCallback = draw;
 
-        /// <summary>
-        /// Invokes <see cref="DrawCallback"/>.
-        /// </summary>
-        public void Draw() =>
-            DrawCallback();
-    }
+    /// <summary>
+    /// Invokes <see cref="DrawCallback"/>.
+    /// </summary>
+    public void Draw() =>
+        DrawCallback();
 }

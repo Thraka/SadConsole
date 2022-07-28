@@ -1,13 +1,12 @@
-﻿namespace SadConsole.Renderers
+﻿namespace SadConsole.Renderers;
+
+/// <summary>
+/// Indicates the render step has an associated texture.
+/// </summary>
+public interface IRenderStepTexture
 {
     /// <summary>
-    /// Indicates the render step has an associated texture.
+    /// The texture created by the render step.
     /// </summary>
-    public interface IRenderStepTexture
-    {
-        /// <summary>
-        /// The texture created by the render step.
-        /// </summary>
-        ITexture CachedTexture { get; }
-    }
+    ITexture CachedTexture { get; }
 }

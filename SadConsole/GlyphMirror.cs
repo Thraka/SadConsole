@@ -1,24 +1,23 @@
-﻿namespace SadConsole
+﻿namespace SadConsole;
+
+/// <summary>
+/// The mirroring mode
+/// </summary>
+[System.Flags]
+public enum Mirror
 {
     /// <summary>
-    /// The mirroring mode
+    /// No mirroring set.
     /// </summary>
-    [System.Flags]
-    public enum Mirror
-    {
-        /// <summary>
-        /// No mirroring set.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Mirror vertically.
-        /// </summary>
-        Vertical = 1,
+    /// <summary>
+    /// Mirror vertically.
+    /// </summary>
+    Vertical = 1,
 
-        /// <summary>
-        /// Mirror horizontally.
-        /// </summary>
-        Horizontal = 2,
-    }
+    /// <summary>
+    /// Mirror horizontally.
+    /// </summary>
+    Horizontal = 2,
 }

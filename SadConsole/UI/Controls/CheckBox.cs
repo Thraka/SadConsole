@@ -2,39 +2,37 @@
 using SadConsole.Input;
 using System.Runtime.Serialization;
 
-namespace SadConsole.UI.Controls
+namespace SadConsole.UI.Controls;
+
+/// <summary>
+/// Represents a button that can be toggled on/off within a group of other buttons.
+/// </summary>
+[DataContract]
+public class CheckBox : ToggleButtonBase
 {
+    /// <summary>
+    /// Creates a new checkbox control with the specified width and height.
+    /// </summary>
+    /// <param name="width">The width of the control.</param>
+    /// <param name="height">The height of the control.</param>
+    public CheckBox(int width, int height) : base(width, height)
+    {
+        _textAlignment = HorizontalAlignment.Left;
+    }
 
     /// <summary>
-    /// Represents a button that can be toggled on/off within a group of other buttons.
+    /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
     /// </summary>
-    [DataContract]
-    public class CheckBox : ToggleButtonBase
+    protected override void OnClick()
     {
-        /// <summary>
-        /// Creates a new checkbox control with the specified width and height.
-        /// </summary>
-        /// <param name="width">The width of the control.</param>
-        /// <param name="height">The height of the control.</param>
-        public CheckBox(int width, int height) : base(width, height)
-        {
-            _textAlignment = HorizontalAlignment.Left;
-        }
+        base.OnClick();
+        IsSelected = !IsSelected;
+    }
 
-        /// <summary>
-        /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
-        /// </summary>
-        protected override void OnClick()
-        {
-            base.OnClick();
-            IsSelected = !IsSelected;
-        }
-
-        [OnDeserialized]
-        private void AfterDeserialized(StreamingContext context)
-        {
-            DetermineState();
-            IsDirty = true;
-        }
+    [OnDeserialized]
+    private void AfterDeserialized(StreamingContext context)
+    {
+        DetermineState();
+        IsDirty = true;
     }
 }
