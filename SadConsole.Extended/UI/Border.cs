@@ -10,6 +10,7 @@ namespace SadConsole.UI
     /// <summary>
     /// Creates a 3D border around a surface.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Border")]
     public class Border: ScreenSurface
     {
         /// <summary>
