@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -669,5 +670,11 @@ namespace SadConsole
 
             return 0;
         }
+
+        public IEnumerator<IScreenObject> GetEnumerator() =>
+            Children.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            Children.GetEnumerator();
     }
 }
