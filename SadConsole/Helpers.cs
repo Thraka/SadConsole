@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using SadRogue.Primitives;
 
 namespace SadConsole;
 

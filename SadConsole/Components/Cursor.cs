@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using SadRogue.Primitives;
-using SadConsole.Input;
-using SadConsole.Effects;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using System.Linq;
+using SadConsole.Effects;
+using SadConsole.Input;
+using SadRogue.Primitives;
 
 namespace SadConsole.Components;
 

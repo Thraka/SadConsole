@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadRogue.Primitives;
-
-namespace SadConsole;
+﻿namespace SadConsole;
 
 /// <summary>
 /// Defines the parameters for generating a shape with a border and fill glyphs.

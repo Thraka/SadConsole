@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-using SadConsole;
 using SadRogue.Primitives;
 
 namespace SadConsole.Readers;

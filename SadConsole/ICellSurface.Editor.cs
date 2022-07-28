@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
-using SadRogue.Primitives;
-using SadConsole.StringParser;
 using SadConsole.Effects;
 using SadConsole.Readers;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 

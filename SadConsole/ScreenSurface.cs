@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using Newtonsoft.Json;
 using SadConsole.Components;
 using SadConsole.Renderers;

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Collections.Specialized;
-using System.Text;
 using SadRogue.Primitives;
 
 namespace SadConsole.Entities;

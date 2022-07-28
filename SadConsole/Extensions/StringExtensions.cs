@@ -1,6 +1,4 @@
-﻿using SadConsole;
-using SadConsole.StringParser;
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 
 namespace SadConsole;
 

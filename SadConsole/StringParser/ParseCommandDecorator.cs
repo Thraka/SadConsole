@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using SadRogue.Primitives;
 
 namespace SadConsole.StringParser;

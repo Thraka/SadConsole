@@ -1,7 +1,7 @@
-﻿using SadRogueColor = SadRogue.Primitives.Color;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using SadRogueColor = SadRogue.Primitives.Color;
 
 namespace SadConsole.Readers;
 

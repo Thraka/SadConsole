@@ -1,6 +1,5 @@
 ﻿using System;
 using SadConsole.Entities;
-using SadRogue.Primitives;
 
 namespace SadConsole.Components;
 

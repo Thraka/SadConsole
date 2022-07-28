@@ -1,7 +1,7 @@
-﻿using SadConsole.Effects;
-using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Text;
+using SadConsole.Effects;
+using SadRogue.Primitives;
 
 namespace SadConsole.Ansi;
 

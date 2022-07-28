@@ -1,7 +1,7 @@
-﻿namespace SadConsole.Readers;
-
+﻿
 using System;
 
+namespace SadConsole.Readers;
 public partial class REXPaintImage
 {
     /// <summary>

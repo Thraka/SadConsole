@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using SadConsole.Input;
 
 namespace SadConsole.UI.Controls;
 

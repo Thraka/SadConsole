@@ -1,6 +1,6 @@
-﻿using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Runtime.Serialization;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 

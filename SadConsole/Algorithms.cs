@@ -1,11 +1,9 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
 using SadRogue.Primitives;
 
 namespace SadConsole;
-
-using System;
-using System.Collections.Generic;
-
 /// <summary>
 /// The Bresenham algorithm collection
 /// </summary>

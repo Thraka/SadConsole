@@ -1,9 +1,9 @@
-﻿using SadConsole.Input;
-using SadConsole.UI.Themes;
-using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using SadConsole.Input;
+using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 

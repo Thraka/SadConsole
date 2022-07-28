@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using static SadConsole.ColoredString;
 using SadConsole.Extensions;
+using static SadConsole.ColoredString;
 
 namespace SadConsole.StringParser;
 

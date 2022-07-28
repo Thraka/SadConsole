@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using SadRogue.Primitives;
-using SadConsole.Renderers;
 using System.IO;
-using SadConsole.Input;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
+using SadConsole.Input;
+using SadConsole.Renderers;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 

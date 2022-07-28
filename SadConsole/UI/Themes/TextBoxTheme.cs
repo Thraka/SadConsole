@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
-using SadRogue.Primitives;
 
 namespace SadConsole.UI.Themes;
 

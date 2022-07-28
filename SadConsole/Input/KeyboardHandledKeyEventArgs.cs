@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SadConsole.Input;
+﻿namespace SadConsole.Input;
 
 /// <summary>
 /// Event handler to preview key presses and cancel them.

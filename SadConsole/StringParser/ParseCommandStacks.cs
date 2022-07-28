@@ -1,7 +1,7 @@
-﻿namespace SadConsole.StringParser;
-
+﻿
 using System.Collections.Generic;
 
+namespace SadConsole.StringParser;
 /// <summary>
 /// A list of behaviors applied as a string is processed.
 /// </summary>

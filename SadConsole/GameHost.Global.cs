@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using SadRogue.Primitives;
-using SadConsole.Renderers;
-using System.IO;
 
 namespace SadConsole;
 

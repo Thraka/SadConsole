@@ -1,8 +1,8 @@
-﻿namespace SadConsole.StringParser;
-
+﻿
 using System.Collections.Generic;
 using System.Globalization;
 
+namespace SadConsole.StringParser;
 /// <summary>
 /// Blinks characters.
 /// </summary>

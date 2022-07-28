@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SadConsole.Renderers.Constants;
+﻿namespace SadConsole.Renderers.Constants;
 
 /// <summary>
 /// Renderer names used by hosts and types.

@@ -1,9 +1,9 @@
-﻿namespace SadConsole.StringParser;
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
+namespace SadConsole.StringParser;
 /// <summary>
 /// Pops a behavior off of a <see cref="ParseCommandStacks"/>.
 /// </summary>

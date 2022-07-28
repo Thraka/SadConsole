@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SadRogue.Primitives;
-
-namespace SadConsole;
+﻿namespace SadConsole;
 
 /// <summary>
 /// Adds a method to support resizing a surface.

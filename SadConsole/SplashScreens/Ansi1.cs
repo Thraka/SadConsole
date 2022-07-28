@@ -2,7 +2,6 @@
 using System.IO;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using SadConsole;
 
 namespace SadConsole.SplashScreens;
 

@@ -1,6 +1,6 @@
 ﻿using System;
-using SadRogue.Primitives;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole.Input;
+﻿using SadConsole.Input;
 using SadRogue.Primitives;
 
 namespace SadConsole.Components;

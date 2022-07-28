@@ -1,5 +1,4 @@
-﻿using System;
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 
 namespace SadConsole.UI;
 
