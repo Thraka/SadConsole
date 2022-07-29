@@ -244,7 +244,7 @@ public class EffectsManager
     {
         if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData oldEffectData))
         {
-            oldEffectData.RemoveCell(cell, oldEffectData.Effect.RestoreCellOnRemoved & oldEffectData.Effect.IsFinished);
+            oldEffectData.RemoveCell(cell, oldEffectData.Effect.RestoreCellOnRemoved);
             _effectCells.Remove(cell);
 
             if (oldEffectData.CellsStates.Count == 0)

@@ -7,7 +7,7 @@ namespace SadConsole.UI.Themes
     /// <summary>
     /// The theme used for the <see cref="Controls.CharacterPicker"/> control.
     /// </summary>
-    public class CharacterPicker : ThemeBase
+    public class CharacterPicker : SurfaceViewerTheme
     {
         /// <inheritdoc />
         public override void Attached(ControlBase control)
@@ -21,43 +21,43 @@ namespace SadConsole.UI.Themes
             control.MouseArea = new Rectangle(0, 0, control.Width, control.Height);
         }
 
-        /// <inheritdoc />
-        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-        {
-            if (!(control is Controls.CharacterPicker picker)) return;
+        ///// <inheritdoc />
+        //public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+        //{
+        //    if (!(control is Controls.CharacterPicker picker)) return;
 
-            if (!control.IsDirty) return;
+        //    if (!control.IsDirty) return;
 
-            RefreshTheme(control.FindThemeColors(), control);
+        //    RefreshTheme(control.FindThemeColors(), control);
 
-            SadFont font = (control.AlternateFont ?? control.Parent.Host.ParentConsole.Font) as SadFont ?? throw new NotSupportedException("The character picker control only supports SadFont fonts.");
+        //    SadFont font = (control.AlternateFont ?? control.Parent.Host.ParentConsole.Font) as SadFont ?? throw new NotSupportedException("The character picker control only supports SadFont fonts.");
 
-            // Sync font with control surface
-            if (control.Surface.Width != font.Columns || control.Surface.Height != font.Rows)
-                control.Resize(font.Columns, font.Rows);
+        //    // Sync font with control surface
+        //    if (control.Surface.Width != font.Columns || control.Surface.Height != font.Rows)
+        //        control.Resize(font.Columns, font.Rows);
 
-            if (picker.NewCharacterLocation != new Point(-1, -1))
-                control.Surface.SetEffect(picker.OldCharacterLocation.X, picker.OldCharacterLocation.Y, null);
+        //    if (picker.NewCharacterLocation != new Point(-1, -1))
+        //        control.Surface.SetEffect(picker.OldCharacterLocation.X, picker.OldCharacterLocation.Y, null);
 
-            control.Surface.Fill(picker.GlyphForeground, picker.GlyphBackground, 0, null);
+        //    control.Surface.Fill(picker.GlyphForeground, picker.GlyphBackground, 0, null);
 
-            int i = 0;
+        //    int i = 0;
 
-            for (int y = 0; y < font.Rows; y++)
-            {
-                for (int x = 0; x < font.Columns; x++)
-                {
-                    control.Surface.SetGlyph(x, y, i);
-                    control.Surface.SetMirror(x, y, picker.MirrorSetting);
-                    i++;
-                }
-            }
+        //    for (int y = 0; y < font.Rows; y++)
+        //    {
+        //        for (int x = 0; x < font.Columns; x++)
+        //        {
+        //            control.Surface.SetGlyph(x, y, i);
+        //            control.Surface.SetMirror(x, y, picker.MirrorSetting);
+        //            i++;
+        //        }
+        //    }
 
-            control.Surface.SetForeground(picker.NewCharacterLocation.X, picker.NewCharacterLocation.Y, picker.SelectedGlyphForeground);
-            control.Surface.SetEffect(picker.NewCharacterLocation.X, picker.NewCharacterLocation.Y, picker.SelectedGlyphEffect);
+        //    control.Surface.SetForeground(picker.NewCharacterLocation.X, picker.NewCharacterLocation.Y, picker.SelectedGlyphForeground);
+        //    control.Surface.SetEffect(picker.NewCharacterLocation.X, picker.NewCharacterLocation.Y, picker.SelectedGlyphEffect);
 
-            control.IsDirty = false;
-        }
+        //    control.IsDirty = false;
+        //}
 
         /// <inheritdoc />
         public override ThemeBase Clone()

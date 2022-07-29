@@ -6,14 +6,13 @@ namespace SadConsole.UI.Controls
     /// <summary>
     /// Displays the glyphs associated with a font and allows the user to select one.
     /// </summary>
-    public class CharacterPicker : ControlBase
+    public class CharacterPicker : SurfaceViewer
     {
         Mirror _mirrorSetting;
 
-        private DrawingArea _characterSurface;
         private Effects.Fade _selectedCharEffect;
         private int _selectedChar;
-
+        
         /// <summary>
         /// Raised when the <see cref="SelectedCharacter"/> property changes.
         /// </summary>
@@ -76,15 +75,19 @@ namespace SadConsole.UI.Controls
             set
             {
                 if (_selectedChar == value) return;
+                if (value < 0 || value >= SurfaceControl.Surface.Count) return;
 
                 var old = _selectedChar;
                 _selectedChar = value;
 
-                OldCharacterLocation = Point.FromIndex(old, 16);
-                NewCharacterLocation = Point.FromIndex(value, 16);
+                OldCharacterLocation = Point.FromIndex(old, SurfaceControl.Surface.Width);
+                NewCharacterLocation = Point.FromIndex(value, SurfaceControl.Surface.Width);
 
                 SelectedCharacterChanged?.Invoke(this, new ValueChangedEventArgs<int>(old, value));
 
+                SurfaceControl.Surface.SetEffect(OldCharacterLocation.X, OldCharacterLocation.Y, null);
+                _selectedCharEffect.Restart();
+                SurfaceControl.Surface.SetEffect(NewCharacterLocation.X, NewCharacterLocation.Y, _selectedCharEffect);
                 IsDirty = true;
             }
         }
@@ -96,21 +99,13 @@ namespace SadConsole.UI.Controls
         /// <param name="fill">The default backround for glyphs.</param>
         /// <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
         /// <param name="characterFont">The font to use with the control.</param>
-        public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, IFont characterFont)
-            : this(foreground, fill, selectedCharacterColor)
+        /// <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
+        /// <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
+        public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, SadFont characterFont, int visibleColumns, int visibleRows)
+            : base(visibleColumns, visibleRows, new CellSurface(characterFont.Columns, characterFont.Rows) { })
         {
             //_characterSurface.AlternateFont = characterFont;
             AlternateFont = characterFont;
-        }
-
-        /// <summary>
-        /// Creates a new picker control that uses the parent's font.
-        /// </summary>
-        /// <param name="foreground">The default foreground for glyphs.</param>
-        /// <param name="fill">The default backround for glyphs.</param>
-        /// <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
-        public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor) : base(16, 16)
-        {
             UseMouse = true;
 
             SelectedGlyphForeground = selectedCharacterColor;
@@ -124,25 +119,34 @@ namespace SadConsole.UI.Controls
 
             _selectedCharEffect = new SadConsole.Effects.Fade()
             {
-                FadeBackground = true,
+                FadeForeground = true,
                 UseCellBackground = false,
-                DestinationBackground = new Gradient(GlyphBackground, SelectedGlyphForeground * 0.8f),
-                FadeDuration = System.TimeSpan.FromSeconds(2d),
+                UseCellForeground = false,
+                DestinationForeground = new Gradient(SelectedGlyphForeground, GlyphForeground),
+                FadeDuration = System.TimeSpan.FromSeconds(0.5d),
                 CloneOnAdd = false,
                 AutoReverse = true,
                 Repeat = true,
+                RestoreCellOnRemoved = true
             };
 
-            SelectedCharacter = 1;
+            ScrollBarMode = ScrollBarModes.AsNeeded;
+            SurfaceControl.Surface.DefaultBackground = fill;
+            SurfaceControl.Surface.DefaultForeground = foreground;
+            SurfaceControl.Theme = new EffectDrawingTheme();
+
+            for (int i = 0; i < SurfaceControl.Surface.Count; i++)
+                SurfaceControl.Surface[i].Glyph = i;
         }
 
         /// <inheritdoc/>
         protected override void OnMouseIn(ControlMouseState info)
         {
-            if (!MouseState_EnteredWithButtonDown && MouseArea.Contains(info.MousePosition) && info.OriginalMouseState.Mouse.LeftButtonDown)
+            // If the mouse is in the area of the child surface content, check for click
+            if (!MouseState_EnteredWithButtonDown && info.IsMouseOver && info.OriginalMouseState.Mouse.LeftButtonDown)
             {
-                if (!UseFullClick)
-                    SelectedCharacter = Surface[info.MousePosition.ToIndex(Width)].Glyph;
+                if (SurfaceControl.MouseArea.WithPosition(SurfaceControl.Position).Contains(info.MousePosition) && !UseFullClick)
+                    SelectedCharacter = SurfaceControl.Surface[info.MousePosition.Add(SurfaceControl.Surface.ViewPosition).ToIndex(SurfaceControl.Surface.Width)].Glyph;
             }
 
             base.OnMouseIn(info);
@@ -151,12 +155,29 @@ namespace SadConsole.UI.Controls
         /// <inheritdoc/>
         protected override void OnLeftMouseClicked(ControlMouseState info)
         {
-            if (MouseArea.Contains(info.MousePosition))
+            if (info.IsMouseOver)
             {
-                SelectedCharacter = Surface[info.MousePosition.ToIndex(Width)].Glyph;
+                SelectedCharacter = SurfaceControl.Surface[info.MousePosition.Add(SurfaceControl.Surface.ViewPosition).ToIndex(SurfaceControl.Surface.Width)].Glyph;
             }
 
             base.OnLeftMouseClicked(info);
+        }
+
+        private class EffectDrawingTheme : Themes.DrawingAreaTheme
+        {
+            public override void Attached(ControlBase control)
+            {
+                if (control is DrawingArea drawingControl)
+                    drawingControl.Surface.Clear();
+
+                else
+                    throw new InvalidCastException();
+            }
+
+            public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+            {
+                control.Surface.Effects.UpdateEffects(time);
+            }
         }
     }
 }

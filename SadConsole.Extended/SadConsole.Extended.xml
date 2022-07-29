@@ -871,6 +871,8 @@
             <param name="fill">The default backround for glyphs.</param>
             <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
             <param name="characterFont">The font to use with the control.</param>
+            <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
+            <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc/>

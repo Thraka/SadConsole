@@ -238,7 +238,7 @@ public class ScrollBar : ControlBase
                     Parent.Host.ReleaseControl();
                     IsSliding = false;
                     IsDirty = true;
-                    return false;
+                    return newState.IsMouseOver;
                 }
 
                 if (newState.IsMouseOver)
