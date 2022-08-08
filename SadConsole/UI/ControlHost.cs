@@ -462,7 +462,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     {
         for (int i = startingIndex; i <= endingIndex; i++)
         {
-            if (ControlsList[i].TabStop)
+            if (ControlsList[i].TabStop && ControlsList[i].IsEnabled && ControlsList[i].CanFocus)
             {
                 foundControl = ControlsList[i];
                 return true;
@@ -477,7 +477,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     {
         for (int i = startingIndex; i >= endingIndex; i--)
         {
-            if (ControlsList[i].TabStop)
+            if (ControlsList[i].TabStop && ControlsList[i].IsEnabled && ControlsList[i].CanFocus)
             {
                 foundControl = ControlsList[i];
                 return true;
@@ -606,7 +606,8 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <param name="newControl">The control requesting focus.</param>
     /// <param name="oldControl">The control that has focus.</param>
     /// <returns>True when the focus change is allowed; otherwise false.</returns>
-    protected virtual bool FocusedControlChanging(ControlBase? newControl, ControlBase? oldControl) => newControl?.CanFocus ?? true;
+    protected virtual bool FocusedControlChanging(ControlBase? newControl, ControlBase? oldControl) =>
+        newControl != null && newControl.CanFocus && newControl.IsEnabled;
 
     /// <summary>
     /// This method is called when a control gains focus.
