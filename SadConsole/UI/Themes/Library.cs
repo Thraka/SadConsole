@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 
@@ -21,6 +22,7 @@ public class Library
     /// <summary>
     /// If a control does not specify its own theme, the theme from this property will be used.
     /// </summary>
+    [MemberNotNull("_libraryInstance")]
     public static Library Default
     {
         get
@@ -96,8 +98,8 @@ public class Library
     /// </summary>
     public Library()
     {
-        Colors = Colors.CreateAnsi();
-        Colors.IsLibrary = true;
+        _colors = Colors.CreateAnsi();
+        _colors.IsLibrary = true;
 
         _controlThemes = new Dictionary<Type, ThemeBase>(15);
     }

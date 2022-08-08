@@ -32,12 +32,12 @@ public class Playscii
     /// <summary>
     /// Name of the font file.
     /// </summary>
-    public string charset;
+    public string charset = string.Empty;
 
     /// <summary>
     /// Hold all the animation frames.
     /// </summary>
-    public Frame[] frames;
+    public Frame[] frames = Array.Empty<Frame>();
 
     /// <summary>
     /// Surface height.
@@ -47,7 +47,7 @@ public class Playscii
     /// <summary>
     /// Name of the palette file.
     /// </summary>
-    public string palette;
+    public string palette = string.Empty;
 
     /// <summary>
     /// Surface width.
@@ -270,7 +270,7 @@ public class Playscii
         using (JsonTextReader reader = new JsonTextReader(streamReader))
         {
             JObject o2 = (JObject)JToken.ReadFrom(reader);
-            return (Playscii)o2.ToObject(typeof(Playscii));
+            return o2.ToObject(typeof(Playscii)) as Playscii ?? throw new Exception($"Unable to convert object to {nameof(Playscii)}");
         }
     }
 
@@ -287,12 +287,12 @@ public class Playscii
     /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyph"/> background like it does in Playscii.</remarks>
     /// 
     /// <returns><see cref="ScreenSurface"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
-    public static ScreenSurface ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")
+    public static ScreenSurface? ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")
     {
-        ScreenSurface output = null;
+        ScreenSurface? output = null;
 
         // get the dir name from the file name
-        string dirName = Path.GetDirectoryName(zipArchiveName != string.Empty ? zipArchiveName : fileName);
+        string dirName = Path.GetDirectoryName(zipArchiveName != string.Empty ? zipArchiveName : fileName) ?? throw new Exception("Unable to find directory.");
 
         // read playscii json file
         if (ReadFile(fileName, zipArchiveName) is Playscii p)

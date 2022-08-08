@@ -158,7 +158,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// <param name="background">The background color for each character.</param>
     /// <param name="mirror">The mirror for each character.</param>
     /// <param name="decorators">The decorators to apply to each character.</param>
-    public ColoredString(string value, Color foreground, Color background, Mirror mirror = Mirror.None, CellDecorator[] decorators = null)
+    public ColoredString(string value, Color foreground, Color background, Mirror mirror = Mirror.None, CellDecorator[]? decorators = null)
     {
         String = value;
 
@@ -167,7 +167,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
             _characters[i].Foreground = foreground;
             _characters[i].Background = background;
             _characters[i].Mirror = mirror;
-            _characters[i].Decorators = decorators;
+            _characters[i].Decorators = decorators ?? System.Array.Empty<CellDecorator>();
         }
     }
 
@@ -258,7 +258,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// Applies the referenced cell effect to every character in the colored string.
     /// </summary>
     /// <param name="effect">The effect to apply.</param>
-    public void SetEffect(ICellEffect effect)
+    public void SetEffect(ICellEffect? effect)
     {
         for (int i = 0; i < _characters.Length; i++)
         {

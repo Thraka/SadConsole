@@ -76,7 +76,7 @@ public class ListBoxTheme : ThemeBase
     /// <inheritdoc />
     public override void Attached(ControlBase control)
     {
-        if (!(control is ListBox listbox)) throw new Exception("Added ListBoxTheme to a control that isn't a ListBox.");
+        if (control is not ListBox listbox) throw new Exception("Added ListBoxTheme to a control that isn't a ListBox.");
 
         base.Attached(control);
 
@@ -86,7 +86,7 @@ public class ListBoxTheme : ThemeBase
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is ListBox listbox)) return;
+        if (control is not ListBox listbox) return;
         if (!listbox.IsDirty) return;
 
         if (_reconfigureSrollBar)
@@ -203,8 +203,8 @@ public class ListBoxTheme : ThemeBase
     public override ThemeBase Clone() => new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone())
     {
         ControlThemeState = ControlThemeState.Clone(),
-        BorderTheme = BorderTheme?.Clone(),
-        BorderLineStyle = (int[])BorderLineStyle?.Clone(),
+        BorderTheme = BorderTheme.Clone(),
+        BorderLineStyle = (int[])BorderLineStyle.Clone(),
         DrawBorder = DrawBorder,
     };
 
@@ -290,7 +290,7 @@ public class ListBoxItemTheme : ThemeStates
         }
         else
         {
-            string value = item.ToString();
+            string value = item.ToString() ?? string.Empty;
 
             if (value.Length < area.Width)
                 value += new string(' ', area.Width - value.Length);
@@ -362,7 +362,7 @@ public class ListBoxItemColorTheme : ListBoxItemTheme
             {
                 bool useExtended = false;
 
-                IFont font = control.AlternateFont ?? control.Parent?.Host?.ParentConsole?.Font;
+                IFont? font = control.AlternateFont ?? control.Parent?.Host?.ParentConsole?.Font;
 
                 if (font != null)
                     useExtended = font.IsSadExtended;

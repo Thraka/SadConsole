@@ -131,7 +131,7 @@ public class CheckBoxTheme : ThemeBase
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is ToggleButtonBase checkbox)) return;
+        if (control is not ToggleButtonBase checkbox) return;
         if (!control.IsDirty) return;
 
         RefreshTheme(control.FindThemeColors(), control);

@@ -9,7 +9,7 @@ namespace SadConsole.Instructions;
 [System.Diagnostics.DebuggerDisplay("Instruction: Set")]
 public class InstructionSet : InstructionBase
 {
-    private LinkedListNode<InstructionBase> _currentInstructionNode;
+    private LinkedListNode<InstructionBase>? _currentInstructionNode;
 
     /// <summary>
     /// All instructions in this set.
@@ -19,12 +19,12 @@ public class InstructionSet : InstructionBase
     /// <summary>
     /// The name of this instruction to identify it apart from other instruction sets.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Represents the current instruction if this set is currently executing.
     /// </summary>
-    public InstructionBase CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
+    public InstructionBase? CurrentInstruction => _currentInstructionNode != null ? _currentInstructionNode.Value : null;
 
 
     /// <inheritdoc />
@@ -48,7 +48,7 @@ public class InstructionSet : InstructionBase
             if (_currentInstructionNode == null)
                 _currentInstructionNode = Instructions.First;
 
-            _currentInstructionNode.Value.Update(componentHost, delta);
+            _currentInstructionNode!.Value.Update(componentHost, delta);
 
             if (_currentInstructionNode.Value.IsFinished)
             {

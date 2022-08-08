@@ -88,8 +88,8 @@ public interface ITexture : IDisposable
     ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight,
                            TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel,
                            TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block,
-                           Color[] cachedColorArray = null,
-                           ICellSurface cachedSurface = null);
+                           Color[]? cachedColorArray = null,
+                           ICellSurface? cachedSurface = null);
 }
 
 /// <summary>

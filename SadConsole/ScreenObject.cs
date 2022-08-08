@@ -18,40 +18,40 @@ namespace SadConsole;
 public class ScreenObject : IScreenObject
 {
     [DataMember(Name = "Children")]
-    private IScreenObject[] _childrenSerialized;
+    private IScreenObject[]? _childrenSerialized;
 
     [DataMember(Name = "ChildrenLocked")]
     private bool _isChildrenLocked;
 
     [DataMember(Name = "Components")]
-    private IComponent[] _componentsSerialized;
+    private IComponent[]? _componentsSerialized;
 
     [DataMember(Name = "Position")]
     private Point _position;
 
-    private IScreenObject _parentObject;
+    private IScreenObject? _parentObject;
     private bool _isVisible = true;
     private bool _isEnabled = true;
     private bool _isfocused;
 
 
     /// <inheritdoc/>
-    public event EventHandler<ValueChangedEventArgs<IScreenObject>> ParentChanged;
+    public event EventHandler<ValueChangedEventArgs<IScreenObject>>? ParentChanged;
 
     /// <inheritdoc/>
-    public event EventHandler<ValueChangedEventArgs<Point>> PositionChanged;
+    public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanged;
 
     /// <inheritdoc/>
-    public event EventHandler VisibleChanged;
+    public event EventHandler? VisibleChanged;
 
     /// <inheritdoc/>
-    public event EventHandler EnabledChanged;
+    public event EventHandler? EnabledChanged;
 
     /// <inheritdoc/>
-    public event EventHandler FocusLost;
+    public event EventHandler? FocusLost;
 
     /// <inheritdoc/>
-    public event EventHandler Focused;
+    public event EventHandler? Focused;
 
     /// <summary>
     /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
@@ -85,7 +85,7 @@ public class ScreenObject : IScreenObject
     public ScreenObjectCollection Children { get; protected set; }
 
     /// <inheritdoc/>
-    public IScreenObject Parent
+    public IScreenObject? Parent
     {
         get => _parentObject;
         set
@@ -96,7 +96,7 @@ public class ScreenObject : IScreenObject
             if (_parentObject == null)
             {
                 _parentObject = value;
-                _parentObject.Children.Add(this);
+                _parentObject?.Children.Add(this);
                 OnParentChanged(null, _parentObject);
             }
             else
@@ -316,7 +316,7 @@ public class ScreenObject : IScreenObject
     }
 
     /// <inheritdoc/>
-    public TComponent GetSadComponent<TComponent>()
+    public TComponent? GetSadComponent<TComponent>()
         where TComponent : class, IComponent
     {
         foreach (IComponent component in SadComponents)
@@ -341,7 +341,7 @@ public class ScreenObject : IScreenObject
     protected virtual void OnSadComponentRemoved(IComponent component) { }
 
     /// <inheritdoc/>
-    public bool HasSadComponent<TComponent>(out TComponent component)
+    public bool HasSadComponent<TComponent>(out TComponent? component)
         where TComponent : class, IComponent
     {
         int count = SadComponents.Count;
@@ -358,39 +358,43 @@ public class ScreenObject : IScreenObject
         return false;
     }
 
-    private void Components_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Components_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                foreach (object item in e.NewItems)
-                {
-                    Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                    ((IComponent)item).OnAdded(this);
-                    OnSadComponentAdded((IComponent)item);
-                }
+                if (e.NewItems != null)
+                    foreach (object item in e.NewItems)
+                    {
+                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
+                        ((IComponent)item).OnAdded(this);
+                        OnSadComponentAdded((IComponent)item);
+                    }
                 break;
             case NotifyCollectionChangedAction.Remove:
-                foreach (object item in e.OldItems)
-                {
-                    Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                    ((IComponent)item).OnRemoved(this);
-                    OnSadComponentRemoved((IComponent)item);
-                }
+                if (e.OldItems != null)
+                    foreach (object item in e.OldItems)
+                    {
+                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
+                        ((IComponent)item).OnRemoved(this);
+                        OnSadComponentRemoved((IComponent)item);
+                    }
                 break;
             case NotifyCollectionChangedAction.Replace:
-                foreach (object item in e.NewItems)
-                {
-                    Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                    ((IComponent)item).OnAdded(this);
-                    OnSadComponentAdded((IComponent)item);
-                }
-                foreach (object item in e.OldItems)
-                {
-                    Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                    ((IComponent)item).OnRemoved(this);
-                    OnSadComponentRemoved((IComponent)item);
-                }
+                if (e.NewItems != null)
+                    foreach (object item in e.NewItems)
+                    {
+                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
+                        ((IComponent)item).OnAdded(this);
+                        OnSadComponentAdded((IComponent)item);
+                    }
+                if (e.OldItems != null)
+                    foreach (object item in e.OldItems)
+                    {
+                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
+                        ((IComponent)item).OnRemoved(this);
+                        OnSadComponentRemoved((IComponent)item);
+                    }
                 break;
             case NotifyCollectionChangedAction.Move:
                 SortComponents();
@@ -458,7 +462,7 @@ public class ScreenObject : IScreenObject
     /// </summary>
     /// <param name="oldParent">The previous parent.</param>
     /// <param name="newParent">The new parent.</param>
-    protected virtual void OnParentChanged(IScreenObject oldParent, IScreenObject newParent)
+    protected virtual void OnParentChanged(IScreenObject? oldParent, IScreenObject? newParent)
     {
         UpdateAbsolutePosition();
         ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject>(oldParent, newParent));
@@ -538,10 +542,10 @@ public class ScreenObject : IScreenObject
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
     {
-        foreach (IScreenObject item in _childrenSerialized)
+        foreach (IScreenObject item in _childrenSerialized!)
             Children.Add(item);
 
-        foreach (IComponent item in _componentsSerialized)
+        foreach (IComponent item in _componentsSerialized!)
             SadComponents.Add(item);
 
         Children.IsLocked = _isChildrenLocked;
@@ -671,6 +675,10 @@ public class ScreenObject : IScreenObject
         return 0;
     }
 
+    /// <summary>
+    /// Returns an enumerator for <see cref="Children"/>.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator<IScreenObject> GetEnumerator() =>
         Children.GetEnumerator();
 

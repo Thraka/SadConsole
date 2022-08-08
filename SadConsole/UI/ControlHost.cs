@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Input;
@@ -37,12 +38,12 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     [DataMember]
     protected List<ControlBase> ControlsList = new List<ControlBase>();
 
-    private ControlBase _focusedControl;
+    private ControlBase? _focusedControl;
     private bool _wasFocusedBeforeCapture;
     private bool _exclusiveBeforeCapture;
-    private Colors _themeColors;
-    private ControlBase _controlWithMouse;
-    private Renderers.IRenderStep _controlsRenderStep;
+    private Colors? _themeColors;
+    private ControlBase? _controlWithMouse;
+    private Renderers.IRenderStep? _controlsRenderStep;
     private Rectangle _parentView;
 
     #region Properties
@@ -58,19 +59,21 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <summary>
     /// The parent object hosting the controls.
     /// </summary>
-    public IScreenSurface ParentConsole { get; private set; }
+    public IScreenSurface? ParentConsole { get; private set; }
 
     /// <summary>
     /// Gets or sets the colors to use with drawing the console and controls.
     /// </summary>
-    public Colors ThemeColors
+    public Colors? ThemeColors
     {
         get => _themeColors;
         set
         {
             _themeColors = value;
-            ParentConsole.IsDirty = true;
             IsDirty = true;
+
+            if (ParentConsole != null)
+                ParentConsole.IsDirty = true;
 
             int count = ControlsList.Count;
             for (int i = 0; i < count; i++)
@@ -86,12 +89,12 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <summary>
     /// Gets the control currently capturing mouse events.
     /// </summary>
-    public ControlBase CapturedControl { get; private set; }
+    public ControlBase? CapturedControl { get; private set; }
 
     /// <summary>
     /// Gets or sets the control that has keyboard focus.
     /// </summary>
-    public ControlBase FocusedControl
+    public ControlBase? FocusedControl
     {
         get => _focusedControl;
         set
@@ -100,7 +103,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
             {
                 if (FocusedControlChanging(value, _focusedControl))
                 {
-                    ControlBase oldControl = _focusedControl;
+                    ControlBase? oldControl = _focusedControl;
                     _focusedControl = value;
 
                     FocusedControlChanged(_focusedControl, oldControl);
@@ -130,12 +133,12 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <summary>
     /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
     /// </summary>
-    public IScreenSurface NextTabConsole { get; set; }
+    public IScreenSurface? NextTabConsole { get; set; }
 
     /// <summary>
     /// Sets reference to the console to tab to when the <see cref="CanTabToNextConsole"/> property is true. Set this to null to allow the engine to determine the next console.
     /// </summary>
-    public IScreenSurface PreviousTabConsole { get; set; }
+    public IScreenSurface? PreviousTabConsole { get; set; }
 
     /// <summary>
     /// When set to true, child controls are not alerted to focused and non-focused states.
@@ -163,7 +166,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     void Components.IComponent.OnAdded(IScreenObject host)
     {
         if (ParentConsole != null) throw new Exception("Component has already been added to a host.");
-        if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
+        if (host is not IScreenSurface surface) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
         if (_controlsRenderStep != null)
         {
@@ -203,15 +206,21 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
 
     void Components.IComponent.OnRemoved(IScreenObject host)
     {
-        ParentConsole.MouseExit -= Surface_MouseExit;
-        ParentConsole.Focused -= Surface_Focused;
-        ParentConsole.FocusLost -= Surface_FocusLost;
+        if (ParentConsole != null)
+        {
+            ParentConsole.MouseExit -= Surface_MouseExit;
+            ParentConsole.Focused -= Surface_Focused;
+            ParentConsole.FocusLost -= Surface_FocusLost;
 
-        ParentConsole = null;
+            ParentConsole = null;
+        }
 
-        ((IScreenSurface)host).RenderSteps.Remove(_controlsRenderStep);
-        _controlsRenderStep.Dispose();
-        _controlsRenderStep = null;
+        if (_controlsRenderStep != null)
+        {
+            ((IScreenSurface)host).RenderSteps.Remove(_controlsRenderStep);
+            _controlsRenderStep.Dispose();
+            _controlsRenderStep = null;
+        }
     }
 
     void Components.IComponent.ProcessKeyboard(IScreenObject host, Keyboard info, out bool handled)
@@ -281,7 +290,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
 
     void Components.IComponent.Update(IScreenObject host, TimeSpan delta)
     {
-        if (_parentView != ParentConsole.Surface.View)
+        if (_parentView != ParentConsole!.Surface.View)
         {
             _parentView = ParentConsole.Surface.View;
             IsDirty = true;
@@ -311,7 +320,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         if (ControlsList.Count == 0)
             return;
 
-        ControlBase control;
+        ControlBase? control;
 
         if (_focusedControl == null)
         {
@@ -384,7 +393,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         if (ControlsList.Count == 0)
             return;
 
-        ControlBase control;
+        ControlBase? control;
 
         if (_focusedControl == null)
         {
@@ -449,7 +458,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         }
     }
 
-    private bool FindTabControlForward(int startingIndex, int endingIndex, out ControlBase foundControl)
+    private bool FindTabControlForward(int startingIndex, int endingIndex, [NotNullWhen(true)] out ControlBase? foundControl)
     {
         for (int i = startingIndex; i <= endingIndex; i++)
         {
@@ -464,7 +473,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         return false;
     }
 
-    private bool FindTabControlPrevious(int startingIndex, int endingIndex, out ControlBase foundControl)
+    private bool FindTabControlPrevious(int startingIndex, int endingIndex, [NotNullWhen(true)] out ControlBase? foundControl)
     {
         for (int i = startingIndex; i >= endingIndex; i--)
         {
@@ -488,7 +497,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
     protected bool TryTabPreviousConsole()
     {
-        if (!CanTabToNextConsole || ParentConsole.Parent == null) return false;
+        if (!CanTabToNextConsole || ParentConsole?.Parent == null) return false;
 
         IScreenSurface newConsole;
         var consoles = ParentConsole.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
@@ -523,9 +532,13 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         // Set focus to this new console
         GameHost.Instance.FocusedScreenObjects.Set(newConsole);
         FocusedControl = null;
-        var newConsoleComponent = newConsole.GetSadComponent<ControlHost>();
-        newConsoleComponent.FocusedControl = null;
-        newConsoleComponent.TabPreviousControl();
+        ControlHost? newConsoleComponent = newConsole.GetSadComponent<ControlHost>();
+
+        if (newConsoleComponent != null)
+        {
+            newConsoleComponent.FocusedControl = null;
+            newConsoleComponent.TabPreviousControl();
+        }
 
         return true;
     }
@@ -536,7 +549,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
     protected bool TryTabNextConsole()
     {
-        if (!CanTabToNextConsole || ParentConsole.Parent == null) return false;
+        if (!CanTabToNextConsole || ParentConsole?.Parent == null) return false;
 
         IScreenSurface newConsole;
         var consoles = ParentConsole.Parent.Children.OfType<IScreenSurface>().Where(ParentHasComponent).ToList();
@@ -563,9 +576,13 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         // Set focus to this new console
         GameHost.Instance.FocusedScreenObjects.Set(newConsole);
         FocusedControl = null;
-        var newConsoleComponent = newConsole.GetSadComponent<ControlHost>();
-        newConsoleComponent.FocusedControl = null;
-        newConsoleComponent.TabNextControl();
+        ControlHost? newConsoleComponent = newConsole.GetSadComponent<ControlHost>();
+
+        if (newConsoleComponent != null)
+        {
+            newConsoleComponent.FocusedControl = null;
+            newConsoleComponent.TabNextControl();
+        }
 
         return true;
     }
@@ -589,14 +606,14 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <param name="newControl">The control requesting focus.</param>
     /// <param name="oldControl">The control that has focus.</param>
     /// <returns>True when the focus change is allowed; otherwise false.</returns>
-    protected virtual bool FocusedControlChanging(ControlBase newControl, ControlBase oldControl) => newControl?.CanFocus ?? true;
+    protected virtual bool FocusedControlChanging(ControlBase? newControl, ControlBase? oldControl) => newControl?.CanFocus ?? true;
 
     /// <summary>
     /// This method is called when a control gains focus.
     /// </summary>
     /// <param name="newControl">The control that has focus.</param>
     /// <param name="oldControl">The control that previously had focus.</param>
-    protected virtual void FocusedControlChanged(ControlBase newControl, ControlBase oldControl)
+    protected virtual void FocusedControlChanged(ControlBase? newControl, ControlBase? oldControl)
     {
         oldControl?.FocusLost();
         newControl?.Focused();
@@ -614,7 +631,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         });
 
     /// <inheritdoc />
-    private void Surface_MouseExit(object sender, MouseScreenObjectState state)
+    private void Surface_MouseExit(object? sender, MouseScreenObjectState state)
     {
         ControlBase control;
         for (int i = 0; i < ControlsList.Count; i++)
@@ -624,13 +641,13 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         }
     }
 
-    private void Surface_FocusLost(object sender, EventArgs e)
+    private void Surface_FocusLost(object? sender, EventArgs e)
     {
         FocusedControl?.DetermineState();
     }
 
 
-    private void Surface_Focused(object sender, EventArgs e)
+    private void Surface_Focused(object? sender, EventArgs e)
     {
         FocusedControl?.DetermineState();
     }
@@ -641,7 +658,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// <param name="control">The control to capture</param>
     public void CaptureControl(ControlBase control)
     {
-        if (CapturedControl == control) return;
+        if (CapturedControl == control || ParentConsole == null) return;
 
         if (GameHost.Instance.FocusedScreenObjects.ScreenObject != ParentConsole)
         {
@@ -663,6 +680,8 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
     /// </summary>
     public void ReleaseControl()
     {
+        if (CapturedControl == null || ParentConsole == null) return;
+
         if (!_wasFocusedBeforeCapture)
             GameHost.Instance.FocusedScreenObjects.Pop(ParentConsole);
 

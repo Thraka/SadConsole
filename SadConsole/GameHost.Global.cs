@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using SadRogue.Primitives;
 
 namespace SadConsole;
@@ -9,7 +10,12 @@ namespace SadConsole;
 /// </summary>
 public abstract partial class GameHost : IDisposable
 {
-    private GlobalState _state;
+    private GlobalState? _state;
+    private IFont _defaultFont = null; //TODO: Create a better perscriptive guidance on creating a gamehost that initializes everything correctly.
+
+    /// <summary>
+    /// The date and time the game was started.
+    /// </summary>
     protected DateTime _gameStartedAt = DateTime.Now;
 
     /// <summary>
@@ -20,17 +26,24 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The font automatically loaded by SadConsole. Standard IBM style font.
     /// </summary>
-    public SadFont EmbeddedFont { get; internal set; }
+    public SadFont EmbeddedFont { get; internal set; } = null!;
 
     /// <summary>
     /// The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
     /// </summary>
-    public SadFont EmbeddedFontExtended { get; internal set; }
+    public SadFont EmbeddedFontExtended { get; internal set; } = null!;
 
     /// <summary>
     /// The default font for any type that does not provide a font.
     /// </summary>
-    public IFont DefaultFont { get; set; }
+    public IFont DefaultFont
+    {
+        get => _defaultFont;
+        set
+        {
+            _defaultFont = value ?? throw new NullReferenceException("The default font can't be set to a null value.");
+        }
+    }
 
     /// <summary>
     /// The default font size to use with the <see cref="DefaultFont"/>.
@@ -65,12 +78,12 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The console created by the game and automatically assigned to <see cref="Screen"/>.
     /// </summary>
-    public Console StartingConsole { get; protected set; }
+    public Console? StartingConsole { get; protected set; }
 
     /// <summary>
     /// The active screen processed by the game.
     /// </summary>
-    public IScreenObject Screen { get; set; }
+    public IScreenObject? Screen { get; set; }
 
     /// <summary>
     /// The stack of focused consoles used by the mouse and keyboard.
@@ -103,13 +116,7 @@ public abstract partial class GameHost : IDisposable
     /// </summary>
     public void SaveGlobalState()
     {
-        _state = new GlobalState()
-        {
-            FocusedScreenObjects = FocusedScreenObjects,
-            Screen = Screen,
-            DefaultFont = DefaultFont,
-            DefaultFontSize = DefaultFontSize
-        };
+        _state = new GlobalState(FocusedScreenObjects, Screen, DefaultFont, DefaultFontSize);
     }
 
     /// <summary>
@@ -123,13 +130,23 @@ public abstract partial class GameHost : IDisposable
         Screen = _state.Screen;
         DefaultFont = _state.DefaultFont;
         DefaultFontSize = _state.DefaultFontSize;
+
+        _state = null;
     }
 
     private class GlobalState
     {
         public FocusedScreenObjectStack FocusedScreenObjects;
-        public IScreenObject Screen;
+        public IScreenObject? Screen;
         public IFont DefaultFont;
         public IFont.Sizes DefaultFontSize;
+
+        public GlobalState(FocusedScreenObjectStack focusedScreenObjects, IScreenObject? screen, IFont defaultFont, IFont.Sizes defaultFontSize)
+        {
+            FocusedScreenObjects = focusedScreenObjects;
+            Screen = screen;
+            DefaultFont = defaultFont;
+            DefaultFontSize = defaultFontSize;
+        }
     }
 }

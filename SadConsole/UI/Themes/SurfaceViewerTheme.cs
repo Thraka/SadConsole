@@ -16,7 +16,7 @@ public class SurfaceViewerTheme : ThemeBase
     {
         if (!control.IsDirty) return;
 
-        if (!(control is SurfaceViewer surfaceView)) return;
+        if (control is not SurfaceViewer surfaceView) return;
 
         RefreshTheme(control.FindThemeColors(), control);
 

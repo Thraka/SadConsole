@@ -56,7 +56,7 @@ public sealed class ParseCommandUndo : ParseCommandBase
 
         for (int i = 0; i < times; i++)
         {
-            ParseCommandBase behavior = null;
+            ParseCommandBase? behavior = null;
 
             if (!isSpecificStack)
             {
@@ -135,7 +135,7 @@ public sealed class ParseCommandUndo : ParseCommandBase
 
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
 
     }

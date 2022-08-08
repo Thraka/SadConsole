@@ -41,7 +41,7 @@ public static class Keyboard
     /// <param name="handler">The handler callback.</param>
     public static void RemoveKeyboardHook(this IScreenObject screenObject, Func<IScreenObject, Input.Keyboard, bool> handler)
     {
-        KeyboardHook existingHook = null;
+        KeyboardHook? existingHook = null;
 
         foreach (KeyboardHook hook in screenObject.GetSadComponents<KeyboardHook>())
         {

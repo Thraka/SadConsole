@@ -29,7 +29,7 @@ public class Button3dTheme : ButtonTheme
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is Button button)) return;
+        if (control is not Button button) return;
         if (!button.IsDirty) return;
 
         RefreshTheme(control.FindThemeColors(), control);

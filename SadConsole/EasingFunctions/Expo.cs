@@ -52,8 +52,10 @@ public class Expo : EasingBase
 
     }
 
-    private double ExpoEaseOut(double time, double startingValue, double currentValue, double duration) => (time == duration) ? startingValue + currentValue : currentValue * (-Math.Pow(2, -10 * time / duration) + 1) + startingValue;
+    private static double ExpoEaseOut(double time, double startingValue, double currentValue, double duration) =>
+        (time == duration) ? startingValue + currentValue : currentValue * (-Math.Pow(2, -10 * time / duration) + 1) + startingValue;
 
-    private double ExpoEaseIn(double time, double startingValue, double currentValue, double duration) => (time == 0) ? startingValue : currentValue * Math.Pow(2, 10 * (time / duration - 1)) + startingValue;
+    private static double ExpoEaseIn(double time, double startingValue, double currentValue, double duration) =>
+        (time == 0) ? startingValue : currentValue * Math.Pow(2, 10 * (time / duration - 1)) + startingValue;
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -8,9 +8,13 @@ namespace SadConsole.Renderers;
 public class RenderStepComparer : IComparer<Renderers.IRenderStep>
 {
     /// <inheritdoc/>
-    public int Compare(IRenderStep x, IRenderStep y)
+    public int Compare(IRenderStep? x, IRenderStep? y)
     {
-        if (x.SortOrder < y.SortOrder)
+        if (x == null && y == null) return 0;
+        if (x == null && y != null) return 1;
+        if (x != null && y == null) return -1;
+
+        if (x!.SortOrder < y!.SortOrder)
             return -1;
 
         // default for if (x.SortOrder > y.SortOrder)

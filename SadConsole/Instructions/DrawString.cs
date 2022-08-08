@@ -10,7 +10,7 @@ namespace SadConsole.Instructions;
 public class DrawString : InstructionBase
 {
     private ColoredString _text;
-    private Components.Cursor _privateCursor;
+    private Components.Cursor? _privateCursor;
 
     /// <summary>
     /// Gets or sets the text to print.
@@ -34,11 +34,11 @@ public class DrawString : InstructionBase
     /// <summary>
     /// Represents the cursor used in printing. Use this for styling and printing behavior.
     /// </summary>
-    public Components.Cursor Cursor { get; set; }
+    public Components.Cursor? Cursor { get; set; }
 
     private double _timeElapsed = 0d;
     private double _timePerCharacter = 0d;
-    private string _textCopy;
+    private string _textCopy = string.Empty;
     private short _textIndex;
     private bool _started = false;
     private Point _tempLocation;
@@ -47,8 +47,13 @@ public class DrawString : InstructionBase
     /// Creates a new instance of the object with the specified text.
     /// </summary>
     /// <param name="text"></param>
-    public DrawString(ColoredString text) =>
-        Text = text;
+    public DrawString(ColoredString text)
+    {
+        if (text == null) throw new ArgumentNullException(nameof(text));
+
+        _text = text;
+    }
+        
 
     /// <summary>
     /// Creates a new instance of the object. <see cref="Text"/> must be set manually.
@@ -66,7 +71,7 @@ public class DrawString : InstructionBase
         else if (surface != null && _privateCursor == null && Cursor == null)
             SetPrivateCursor(surface);
 
-        var cursor = Cursor ?? _privateCursor;
+        var cursor = Cursor ?? _privateCursor ?? throw new Exception("Cursor is null");
 
         if (!_started)
         {

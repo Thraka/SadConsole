@@ -138,7 +138,7 @@ public partial class REXPaintImage
             {
                 int version = reader.ReadInt32();
                 int layerCount = reader.ReadInt32();
-                REXPaintImage image = null;
+                REXPaintImage? image = null;
 
                 for (int currentLayer = 0; currentLayer < layerCount; currentLayer++)
                 {
@@ -154,7 +154,7 @@ public partial class REXPaintImage
                     }
                     else
                     {
-                        layer = image.Create();
+                        layer = image!.Create();
                     }
 
                     // Process cells (could probably be streamlined into index processing instead of x,y...
@@ -172,7 +172,7 @@ public partial class REXPaintImage
                     }
                 }
 
-                return image;
+                return image!;
             }
         }
     }

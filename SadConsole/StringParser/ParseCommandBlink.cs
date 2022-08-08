@@ -24,7 +24,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
     /// <param name="glyphString">The string that has been processed so far.</param>
     /// <param name="commandStack">The current commands for the string.</param>
     /// <param name="surface">The surface hosting the string.</param>
-    public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, ICellSurface surface)
+    public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, ICellSurface? surface)
     {
         string[] parametersArray = parameters.Split(':');
 
@@ -39,7 +39,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
         // Try sync with surface editor
         if (surface != null)
         {
-            IEnumerable<Effects.ICellEffect> effects = surface.Effects.GetEffects();
+            IEnumerable<Effects.ICellEffect>? effects = surface.Effects.GetEffects();
             if (effects != null)
             {
                 var existingBlinks = new List<Effects.ICellEffect>(effects);
@@ -80,7 +80,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
 
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
         glyphState.Effect = _blinkEffect;
 

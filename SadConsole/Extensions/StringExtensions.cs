@@ -71,7 +71,7 @@ public static class StringExtensions
     /// <param name="mirror">The mirror setting. If null, <see cref="ColoredString.IgnoreMirror"/> will be set.</param>
     /// <param name="decorators">The decorators setting. If null, <see cref="ColoredString.IgnoreDecorators"/> will be set.</param>
     /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-    public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[] decorators = null)
+    public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null)
     {
         ColoredString returnValue = new ColoredString(value);
 

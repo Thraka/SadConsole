@@ -11,6 +11,7 @@ namespace SadConsole;
 /// Animates a collection of frames.
 /// </summary>
 [DataContract]
+[JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class AnimatedScreenSurface : ScreenSurface
 {
     [DataMember(Name = "AnimationDuration")]
@@ -24,7 +25,7 @@ public class AnimatedScreenSurface : ScreenSurface
     /// <summary>
     /// Raised when the <see cref="AnimationState"/> changes.
     /// </summary>
-    public event EventHandler<AnimationStateChangedEventArgs> AnimationStateChanged;
+    public event EventHandler<AnimationStateChangedEventArgs>? AnimationStateChanged;
 
     /// <summary>
     /// The frames of animation.
@@ -126,7 +127,7 @@ public class AnimatedScreenSurface : ScreenSurface
     /// Gets the name of this animation.
     /// </summary>
     [DataMember]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets the current frame being animated.
@@ -185,7 +186,8 @@ public class AnimatedScreenSurface : ScreenSurface
     }
 
     [JsonConstructor]
-    private AnimatedScreenSurface(ICellSurface surface, IFont font = null, Point? fontSize = null) : base(surface, font, fontSize) { }
+    public AnimatedScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize) { }
+
     #endregion
 
 
@@ -424,7 +426,7 @@ public class AnimatedScreenSurface : ScreenSurface
     /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
     /// </remarks>
     public static AnimatedScreenSurface FromImage(string name, string filePath, Point frameLayout, float frameDuration,
-        Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont font = null, Action<ColoredGlyph> action = null,
+        Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyph>? action = null,
         TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
         TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
     {

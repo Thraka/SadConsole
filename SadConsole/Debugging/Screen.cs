@@ -1,4 +1,5 @@
-﻿#if DEBUG
+﻿#nullable disable
+#if DEBUG
 using System;
 using SadConsole.Input;
 using SadConsole.UI;

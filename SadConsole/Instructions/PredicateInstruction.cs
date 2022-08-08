@@ -13,7 +13,7 @@ public class PredicateInstruction : InstructionBase
     /// <summary>
     /// Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
     /// </summary>
-    public string ID { get; set; }
+    public string ID { get; set; } = string.Empty;
 
     /// <summary>
     /// Creates a new instruction with the specified callback.
@@ -22,7 +22,8 @@ public class PredicateInstruction : InstructionBase
     public PredicateInstruction(Func<bool> callback) =>
         _callback = callback;
 
-    private PredicateInstruction() { }
+    private PredicateInstruction() =>
+        _callback = null!;
 
     /// <inheritdoc />
     public override void Update(IScreenObject componentHost, TimeSpan delta)

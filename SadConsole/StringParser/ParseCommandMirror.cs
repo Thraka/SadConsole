@@ -46,7 +46,7 @@ public sealed class ParseCommandMirror : ParseCommandBase
 
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
         glyphState.Mirror = Mirror;
 

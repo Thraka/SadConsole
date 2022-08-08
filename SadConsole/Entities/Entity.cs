@@ -16,12 +16,12 @@ public class Entity : ScreenObject
     /// <summary>
     /// Raised when the <see cref="IsDirty"/> property changes value.
     /// </summary>
-    public event EventHandler IsDirtyChanged;
+    public event EventHandler? IsDirtyChanged;
 
     private ColoredGlyph _glyph;
 
     [DataMember(Name = "Effect")]
-    private ICellEffect _effect;
+    private ICellEffect? _effect;
 
     [DataMember(Name = "Appearance")]
     private ColoredGlyphState _effectState;
@@ -30,7 +30,7 @@ public class Entity : ScreenObject
     /// A friendly name of the game object.
     /// </summary>
     [DataMember]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The drawing layer this entity is drawn at
@@ -46,7 +46,7 @@ public class Entity : ScreenObject
         get => _glyph;
         protected set
         {
-            _glyph = value ?? throw new System.NullReferenceException();
+            _glyph = value ?? throw new System.NullReferenceException("Appearance cannot be null.");
             IsDirty = true;
 
             _effectState = new ColoredGlyphState(value);
@@ -69,7 +69,7 @@ public class Entity : ScreenObject
     /// <summary>
     /// An effect that can be applied to the <see cref="Appearance"/>.
     /// </summary>
-    public ICellEffect Effect
+    public ICellEffect? Effect
     {
         get => _effect;
         set
@@ -105,6 +105,7 @@ public class Entity : ScreenObject
     /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
     public Entity(Color foreground, Color background, int glyph, int zIndex)
     {
+        _glyph = null!; // Set in the Appearance prop
         Appearance = new ColoredGlyph(foreground, background, glyph);
         Children.IsLocked = true;
         ZIndex = zIndex;
@@ -117,6 +118,7 @@ public class Entity : ScreenObject
     /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
     public Entity(ref ColoredGlyph appearance, int zIndex)
     {
+        _glyph = null!; // Set in the Appearance prop
         Appearance = appearance;
         Children.IsLocked = true;
         ZIndex = zIndex;
@@ -132,6 +134,7 @@ public class Entity : ScreenObject
     [JsonConstructor]
     private Entity(ColoredGlyphState appearance, ICellEffect effect)
     {
+        _glyph = null!; // Set in the Appearance prop
         Appearance = new ColoredGlyph(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror, appearance.IsVisible, appearance.Decorators);
         Effect = effect;
     }

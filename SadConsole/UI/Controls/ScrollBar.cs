@@ -13,7 +13,7 @@ public class ScrollBar : ControlBase
     /// <summary>
     /// Raised when the <see cref="Value"/> property changes.
     /// </summary>
-    public event EventHandler ValueChanged;
+    public event EventHandler? ValueChanged;
 
     private int _maxValue = 1;
     private int _value = 0;
@@ -134,7 +134,7 @@ public class ScrollBar : ControlBase
     /// <inheritdoc/>
     public override bool ProcessMouse(Input.MouseScreenObjectState state)
     {
-        if (IsEnabled)
+        if (IsEnabled && Parent?.Host != null)
         {
             base.ProcessMouse(state);
 
@@ -142,7 +142,7 @@ public class ScrollBar : ControlBase
             Point mouseControlPosition = newState.MousePosition;
 
             // This becomes the active mouse subject when the bar is being dragged.
-            if (Parent?.Host?.CapturedControl == null)
+            if (Parent.Host.CapturedControl == null)
             {
                 if (newState.IsMouseOver)
                 {

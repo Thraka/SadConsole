@@ -17,7 +17,7 @@ public class Mouse
     private bool _rightPressedLastFrame;
     private bool _middlePressedLastFrame;
 
-    private IScreenObject _lastMouseScreenObject;
+    private IScreenObject? _lastMouseScreenObject;
 
     /// <summary>
     /// The pixel position of the mouse on the screen.

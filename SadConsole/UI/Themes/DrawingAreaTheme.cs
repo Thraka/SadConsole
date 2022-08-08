@@ -19,12 +19,12 @@ public class DrawingAreaTheme : ThemeBase
     /// <summary>
     /// The current appearance based on the control state.
     /// </summary>
-    public ColoredGlyph Appearance { get; protected set; }
+    public ColoredGlyph? Appearance { get; protected set; }
 
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is DrawingArea drawingSurface)) return;
+        if (control is not DrawingArea drawingSurface) return;
 
         RefreshTheme(control.FindThemeColors(), control);
 

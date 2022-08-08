@@ -22,7 +22,7 @@ public partial class ColoredString
     /// This method is obsolete. Use <see cref="Parser"/>.
     /// </summary>
     [Obsolete("This method is forwarding to Parser.Parse. Use Parser.Parse instead.")]
-    public static ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null) =>
+    public static ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null) =>
         Parser.Parse(value, surfaceIndex, surface, initialBehaviors);
 
     /// <summary>

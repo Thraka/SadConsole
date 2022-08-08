@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SadConsole.Instructions;
 
@@ -13,7 +14,7 @@ public class CodeInstruction : InstructionBase
     /// <summary>
     /// Friendly ID to help track what this code instruction was created from since it cannot be fully serialized.
     /// </summary>
-    public string ID { get; set; }
+    public string ID { get; set; } = string.Empty;
 
     /// <summary>
     /// Creates a new instruction with the specified callback.
@@ -22,7 +23,8 @@ public class CodeInstruction : InstructionBase
     public CodeInstruction(Func<IScreenObject, TimeSpan, bool> callback) =>
         _callback = callback;
 
-    private CodeInstruction() { }
+    private CodeInstruction() =>
+        _callback = null!;
 
     /// <inheritdoc />
     public override void Update(IScreenObject componentHost, TimeSpan delta)

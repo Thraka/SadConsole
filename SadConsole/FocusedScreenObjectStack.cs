@@ -8,12 +8,12 @@ namespace SadConsole;
 /// </summary>
 public class FocusedScreenObjectStack
 {
-    private IScreenObject _activeScreenObject;
+    private IScreenObject? _activeScreenObject;
 
     /// <summary>
     /// Gets the current active screen object.
     /// </summary>
-    public IScreenObject ScreenObject => _activeScreenObject;
+    public IScreenObject? ScreenObject => _activeScreenObject;
 
     /// <summary>
     /// The stack of screen objects for input processing.

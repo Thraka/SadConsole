@@ -85,7 +85,7 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     /// <summary>
     /// The parent object that this instance is a child of.
     /// </summary>
-    IScreenObject Parent { get; set; }
+    IScreenObject? Parent { get; set; }
 
     /// <summary>
     /// The position of the object on the screen.
@@ -124,7 +124,7 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     /// </summary>
     /// <typeparam name="TComponent">The component to find.</typeparam>
     /// <returns>The component if found, otherwise null.</returns>
-    TComponent GetSadComponent<TComponent>() where TComponent : class, IComponent;
+    TComponent? GetSadComponent<TComponent>() where TComponent : class, IComponent;
 
     /// <summary>
     /// Gets components of the specified types.
@@ -138,7 +138,7 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     /// </summary>
     /// <typeparam name="TComponent">The component to find.</typeparam>
     /// <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
-    bool HasSadComponent<TComponent>(out TComponent component) where TComponent : class, IComponent;
+    bool HasSadComponent<TComponent>(out TComponent? component) where TComponent : class, IComponent;
 
     /// <summary>
     /// Called by the engine to process the keyboard.

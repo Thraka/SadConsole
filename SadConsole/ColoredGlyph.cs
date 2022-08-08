@@ -14,7 +14,7 @@ public class ColoredGlyph
     /// <summary>
     /// An event that is raised when the <see cref="IsDirty"/> property is set to <see langword="true"/>.
     /// </summary>
-    public event EventHandler IsDirtySet;
+    public event EventHandler? IsDirtySet;
 
     private Color _foreground;
     private Color _background;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.UI.Themes;
@@ -14,14 +15,12 @@ public abstract class ControlBase
 {
     private Point _position;
     private bool _isEnabled = true;
-    private IContainer _parent;
+    private IContainer? _parent;
     [DataMember(Name = "CustomTheme")]
     private Themes.ThemeBase _activeTheme;
     [DataMember(Name = "ThemeColors")]
-    private Colors _themeColors;
+    private Colors? _themeColors;
     private bool _isDirty;
-    private int _width;
-    private int _height;
 
     /// <summary>
     /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
@@ -46,7 +45,7 @@ public abstract class ControlBase
     /// <summary>
     /// Raised when the <see cref="IsDirty"/> property changes.
     /// </summary>
-    public event EventHandler<EventArgs> IsDirtyChanged;
+    public event EventHandler<EventArgs>? IsDirtyChanged;
 
     /// <summary>
     /// <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
@@ -76,7 +75,7 @@ public abstract class ControlBase
     /// An alternate font used to render this control.
     /// </summary>
     [DataMember]
-    public IFont AlternateFont { get; set; }
+    public IFont? AlternateFont { get; set; }
 
     /// <summary>
     /// The cell data to render the control. Controlled by a theme.
@@ -126,7 +125,7 @@ public abstract class ControlBase
     /// <summary>
     /// A user-definable data object.
     /// </summary>
-    public object Tag { get; set; }
+    public object? Tag { get; set; }
 
     /// <summary>
     /// Indicates whether or not this control can be tabbed to.
@@ -160,7 +159,7 @@ public abstract class ControlBase
     /// Represents a name to identify a control by.
     /// </summary>
     [DataMember]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets whether or not this control will become focused when the mouse is clicked.
@@ -171,12 +170,12 @@ public abstract class ControlBase
     /// <summary>
     /// The width of the control.
     /// </summary>
-    public int Width => _width;
+    public int Width { get; protected set; }
 
     /// <summary>
     /// The height of the control.
     /// </summary>
-    public int Height => _height;
+    public int Height { get; protected set; }
 
     /// <summary>
     /// Gets or sets whether or not this control is focused.
@@ -229,22 +228,33 @@ public abstract class ControlBase
     /// <summary>
     /// The area this control covers.
     /// </summary>
-    public Rectangle Bounds => new Rectangle(_position.X, _position.Y, Width, Height);
+    public Rectangle Bounds => new(_position.X, _position.Y, Width, Height);
 
     /// <summary>
     /// Gets or sets the parent console of this control.
     /// </summary>
-    public IContainer Parent
+    public IContainer? Parent
     {
         get => _parent;
         set
         {
             if (_parent == value) return;
-            IContainer temp = _parent;
-            _parent = null;
-            temp?.Remove(this);
-            _parent = value;
-            _parent?.Add(this);
+
+            if (_parent == null)
+            {
+                _parent = value;
+                _parent!.Add(this);
+            }
+            else
+            {
+                IContainer temp = _parent;
+                _parent = null;
+                temp.Remove(this);
+
+                _parent = value;
+                _parent?.Add(this);
+
+            }    
 
             OnParentChanged();
         }
@@ -253,6 +263,7 @@ public abstract class ControlBase
     /// <summary>
     /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Parent"/>.
     /// </summary>
+    [AllowNull]
     public ThemeBase Theme
     {
         get => _activeTheme;
@@ -293,22 +304,22 @@ public abstract class ControlBase
     /// <summary>
     /// Raised when the mouse enters this control.
     /// </summary>
-    public event EventHandler<ControlMouseState> MouseEnter;
+    public event EventHandler<ControlMouseState>? MouseEnter;
 
     /// <summary>
     /// Raised when the mouse exits this control.
     /// </summary>
-    public event EventHandler<ControlMouseState> MouseExit;
+    public event EventHandler<ControlMouseState>? MouseExit;
 
     /// <summary>
     /// Raised when the mouse is moved over this control.
     /// </summary>
-    public event EventHandler<ControlMouseState> MouseMove;
+    public event EventHandler<ControlMouseState>? MouseMove;
 
     /// <summary>
     /// Raised when a mouse button is clicked while the mouse is over this control.
     /// </summary>
-    public event EventHandler<ControlMouseState> MouseButtonClicked;
+    public event EventHandler<ControlMouseState>? MouseButtonClicked;
 
     #region Constructors
     /// <inheritdoc />
@@ -317,8 +328,8 @@ public abstract class ControlBase
     /// </summary>
     protected ControlBase(int width, int height)
     {
-        _width = width;
-        _height = height;
+        Width = width;
+        Height = height;
         CanResize = true;
         IsDirty = true;
         TabStop = true;
@@ -329,8 +340,13 @@ public abstract class ControlBase
         UseMouse = true;
         UseKeyboard = true;
         MouseArea = new Rectangle(0, 0, width, height);
-        Theme = Library.Default.GetControlTheme(GetType());
-        if (Theme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+
+        // Set theme
+        Surface = null!;
+        _activeTheme = Library.Default.GetControlTheme(GetType());
+        if (_activeTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+        _activeTheme.Attached(this);
+        DetermineState();
     }
     #endregion
 
@@ -484,7 +500,7 @@ public abstract class ControlBase
             ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.MouseOver)
             : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.MouseOver);
 
-        State = IsFocused && Parent.Host.ParentConsole != null && Parent.Host.ParentConsole.IsFocused
+        State = IsFocused && Parent?.Host?.ParentConsole != null && Parent.Host.ParentConsole.IsFocused
             ? (ControlStates)Helpers.SetFlag((int)State, (int)ControlStates.Focused)
             : (ControlStates)Helpers.UnsetFlag((int)State, (int)ControlStates.Focused);
 
@@ -515,13 +531,13 @@ public abstract class ControlBase
     /// </summary>
     /// <returns>The found colors.</returns>
     public Colors FindThemeColors() =>
-        _themeColors ?? _parent?.Host.ThemeColors ?? Library.Default.Colors;
+        _themeColors ?? _parent?.Host?.ThemeColors ?? Library.Default.Colors;
 
     /// <summary>
     /// Sets the theme colors used by this control. When <see langword="null"/>, indicates this control should read the theme colors from the parent.
     /// </summary>
     /// <param name="value">The colors to use with this control.</param>
-    public void SetThemeColors(Colors value) =>
+    public void SetThemeColors(Colors? value) =>
         _themeColors = value;
 
     /// <summary>
@@ -538,7 +554,7 @@ public abstract class ControlBase
     /// When overriding this method, to perhaps restrict the requested size, make sure to do the following:
     ///
     /// - Check if the <see cref="CanResize"/> property allows resizing. If it doesn't, throw an <see cref="InvalidOperationException"/>.
-    /// - The <see cref="_width"/> and <see cref="_height"/> variables of the control are set to the values provided.
+    /// - The <see cref="Width"/> and <see cref="Height"/> variables of the control are set to the values provided.
     /// - The <see cref="MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
     /// - The <see cref="Theme"/>, if set, is reattached by calling <see cref="ThemeBase.Attached(ControlBase)"/>.
     /// - Set <see cref="IsDirty"/> to <see langword="true"/>.
@@ -549,8 +565,8 @@ public abstract class ControlBase
     {
         if (!CanResize) throw new InvalidOperationException("This control can't resize.");
 
-        _width = width;
-        _height = height;
+        Width = width;
+        Height = height;
         MouseArea = new Rectangle(0, 0, width, height);
         Theme?.Attached(this);
         IsDirty = true;

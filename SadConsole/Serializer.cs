@@ -24,6 +24,11 @@ public static class Serializer
     /// </summary>
     public class Contracts : DefaultContractResolver
     {
+        /// <summary>
+        /// Resolves <see cref="IFont"/> and <see cref="ColoredGlyph"/> with the appropriate converters.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
         protected override JsonContract CreateContract(Type objectType)
         {
             JsonContract contract = base.CreateContract(objectType);
@@ -49,7 +54,7 @@ public static class Serializer
 
 
     /// <summary>
-    /// The settings to use during <see cref="Save{T}(T, string, bool)"/> and <see cref="Load{T}(string, bool)"/>.
+    /// The settings to use during <see cref="Save{T}(T, string, bool, JsonSerializerSettings)"/> and <see cref="Load{T}(string, bool, JsonSerializerSettings)"/>.
     /// </summary>
     public static JsonSerializerSettings Settings
     {
@@ -75,7 +80,7 @@ public static class Serializer
     /// <param name="json">The json string to create an object from.</param>
     /// <returns>An object created from the <paramref name="json"/> parameter.</returns>
     public static T Deserialize<T>(string json) =>
-        (T)JsonConvert.DeserializeObject(json, typeof(T), _settings);
+        (T)JsonConvert.DeserializeObject(json, typeof(T), _settings)!;
 
 
     /// <summary>
@@ -86,7 +91,7 @@ public static class Serializer
     /// <param name="file">The file to save the object to.</param>
     /// <param name="compress">When true, uses GZIP compression on the json string saved to the <paramref name="file"/></param>
     /// <param name="settings">Optional settings to use during serialization. If <see langword="null"/>, uses the <see cref="Settings"/> property.</param>
-    public static void Save<T>(T instance, string file, bool compress, JsonSerializerSettings settings = null)
+    public static void Save<T>(T instance, string file, bool compress, JsonSerializerSettings? settings = null)
     {
         if (GameHost.Instance.FileExists(file))
             GameHost.Instance.FileDelete(file);
@@ -117,9 +122,9 @@ public static class Serializer
     /// <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
     /// <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="Settings"/> property.</param>
     /// <returns>A new object instance.</returns>
-    public static T Load<T>(string file, bool isCompressed, JsonSerializerSettings settings = null)
+    public static T Load<T>(string file, bool isCompressed, JsonSerializerSettings? settings = null)
     {
-        SadConsole.GameHost.SerializerPathHint = System.IO.Path.GetDirectoryName(file);
+        SadConsole.GameHost.SerializerPathHint = System.IO.Path.GetDirectoryName(file) ?? string.Empty;
 
         using (System.IO.Stream fileObject = GameHost.Instance.OpenStream(file))
         {
@@ -132,7 +137,7 @@ public static class Serializer
                         string value = sr.ReadToEnd();
 
                         //return (T)JsonConvert.DeserializeObject(value, typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                        return (T)JsonConvert.DeserializeObject(value, typeof(T), settings ?? _settings);
+                        return (T)JsonConvert.DeserializeObject(value, typeof(T), settings ?? _settings)!;
                     }
                 }
             }
@@ -141,7 +146,7 @@ public static class Serializer
                 using (var sr = new System.IO.StreamReader(fileObject))
                 {
                     //return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), new JsonSerializerSettings() { TraceWriter = LogWriter, TypeNameHandling = TypeNameHandling.All });
-                    return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), settings ?? _settings);
+                    return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), settings ?? _settings)!;
                 }
             }
         }
@@ -165,7 +170,7 @@ public static class Serializer
         /// <param name="level">The log level.</param>
         /// <param name="message">The message.</param>
         /// <param name="ex">The exception associated with the log event.</param>
-        public void Trace(TraceLevel level, string message, Exception ex)
+        public void Trace(TraceLevel level, string message, Exception? ex)
         {
             _levelFilter = level;
             Log.AppendLine($"{Enum.GetName(typeof(TraceLevel), level)} :: {message}");

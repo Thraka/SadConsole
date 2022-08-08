@@ -43,7 +43,9 @@ public class Sine : EasingBase
 
     }
 
-    private double SineEaseOut(double time, double startingValue, double currentValue, double duration) => currentValue * Math.Sin(time / duration * (Math.PI / 2)) + startingValue;
+    private static double SineEaseOut(double time, double startingValue, double currentValue, double duration) =>
+        currentValue * Math.Sin(time / duration * (Math.PI / 2)) + startingValue;
 
-    private double SineEaseIn(double time, double startingValue, double currentValue, double duration) => -currentValue * Math.Cos(time / duration * (Math.PI / 2)) + currentValue + startingValue;
+    private static double SineEaseIn(double time, double startingValue, double currentValue, double duration) =>
+        -currentValue * Math.Cos(time / duration * (Math.PI / 2)) + currentValue + startingValue;
 }

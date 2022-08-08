@@ -18,7 +18,7 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     [DataMember] private TimeSpan _timePerFrame;
     [DataMember] private TimeSpan _totalTime;
 
-    private Entity _entity;
+    private Entity? _entity;
 
     /// <summary>
     /// The frames of animation.
@@ -63,7 +63,7 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     /// <exception cref="InvalidCastException">This component was added to a type other than <see cref="Entity"/>.</exception>
     public override void OnAdded(IScreenObject host)
     {
-        if (!(host is Entity entity)) throw new InvalidCastException("Component can only be used on an entity.");
+        if (host is not Entity entity) throw new InvalidCastException("Component can only be used on an entity.");
 
         _entity = entity;
     }
@@ -104,7 +104,8 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
                 }
             }
 
-            _frames[_frameIndex].CopyAppearanceTo(_entity.Appearance, false);
+            // _entity is null forgiving because _isPlaying is the gate to determining null
+            _frames[_frameIndex].CopyAppearanceTo(_entity!.Appearance, false);
             _entity.Effect = _frames[_frameIndex].Effect;
         }
     }
@@ -116,6 +117,7 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     public void Start()
     {
         if (_frames.Length == 0) throw new InvalidOperationException("Animation was started but there aren't any frames to animate");
+        if (_entity == null) throw new Exception("Component must be added to an entity.");
 
         _isPlaying = true;
         _frames[_frameIndex].CopyAppearanceTo(_entity.Appearance, false);

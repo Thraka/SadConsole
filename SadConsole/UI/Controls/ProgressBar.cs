@@ -16,7 +16,7 @@ public class ProgressBar : ControlBase
     /// <summary>
     /// Called when the <see cref="Progress"/> property value changes.
     /// </summary>
-    public event EventHandler ProgressChanged;
+    public event EventHandler? ProgressChanged;
 
     /// <summary>
     /// The progress bar fill value. Between 0f and 1f.

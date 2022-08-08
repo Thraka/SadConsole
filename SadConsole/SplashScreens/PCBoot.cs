@@ -12,9 +12,9 @@ public class PCBoot : ScreenSurface
     private Instructions.InstructionSet _endAnimation;
     private Instructions.InstructionSet _startAnimation;
     private bool _isEnding = false;
-    private Instructions.AnimatedValue memoryCounter;
-    private Point memoryCursorPosition = (0, 0);
-    private Components.Cursor cursor;
+    private Instructions.AnimatedValue? _memoryCounter;
+    private Point _memoryCursorPosition = (0, 0);
+    private Components.Cursor _cursor;
 
     /// <summary>
     /// Creates a new instance of this spashscreen.
@@ -24,7 +24,7 @@ public class PCBoot : ScreenSurface
                                            GameHost.Instance.EmbeddedFont, ((IFont)GameHost.Instance.EmbeddedFont).GetFontSize(IFont.Sizes.One))
     {
 
-        cursor = new Components.Cursor(Surface) { DisableWordBreak = true, PrintAppearanceMatchesHost = false };
+        _cursor = new Components.Cursor(Surface) { DisableWordBreak = true, PrintAppearanceMatchesHost = false };
 
         _endAnimation = new Instructions.InstructionSet() { RemoveOnFinished = true }
             .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(0), Settings.ClearColor.SetAlpha(255)), System.TimeSpan.FromSeconds(1)))
@@ -36,7 +36,7 @@ public class PCBoot : ScreenSurface
             .Wait(System.TimeSpan.FromMilliseconds(0.500))
             .Code(() =>
             {
-                cursor
+                _cursor
                     .SetPrintAppearance(new ColoredGlyph(Color.AnsiBlueBright))
                     .Move(0, 0)
                     .Print($"{(char)222}{(char)219}")
@@ -53,26 +53,26 @@ public class PCBoot : ScreenSurface
                     .NewLine()
                     .NewLine()
                     ;
-                memoryCursorPosition = cursor.Position;
+                _memoryCursorPosition = _cursor.Position;
             })
             .Wait(System.TimeSpan.FromSeconds(1))
             .Code(() =>
             {
-                cursor
+                _cursor
                     .Print("80486SX CPU at 33Mhz")
                     .NewLine()
                     ;
-                memoryCursorPosition = cursor.Position;
+                _memoryCursorPosition = _cursor.Position;
             })
             .Wait(System.TimeSpan.FromSeconds(1))
             .Code(() =>
             {
-                cursor
+                _cursor
                     .NewLine()
                     .Print("Memory Test : ")
                     ;
-                memoryCursorPosition = cursor.Position;
-                cursor.Print("0k");
+                _memoryCursorPosition = _cursor.Position;
+                _cursor.Print("0k");
             })
             .Code(InstructMemoryCounterReset)
             .Code(InstructMemoryCounter)
@@ -80,11 +80,11 @@ public class PCBoot : ScreenSurface
             .Code(InstructMemoryCounterReset)
             .Code(InstructMemoryCounter)
             .Wait(System.TimeSpan.FromSeconds(1))
-            .Code(() => cursor.NewLine().NewLine().Print("Checks: ").SetPrintAppearance(new ColoredGlyph(Color.AnsiGreenBright)).Print("PASSED"))
+            .Code(() => _cursor.NewLine().NewLine().Print("Checks: ").SetPrintAppearance(new ColoredGlyph(Color.AnsiGreenBright)).Print("PASSED"))
             .Wait(System.TimeSpan.FromSeconds(1))
-            .Code(() => cursor.SetPrintAppearance(new ColoredGlyph(Color.AnsiWhite)).NewLine().NewLine().Print("Powered by SadConsole"))
+            .Code(() => _cursor.SetPrintAppearance(new ColoredGlyph(Color.AnsiWhite)).NewLine().NewLine().Print("Powered by SadConsole"))
             .Wait(System.TimeSpan.FromSeconds(0.4))
-            .Code(() => cursor.NewLine().Print("https://www.sadconsole.com"))
+            .Code(() => _cursor.NewLine().Print("https://www.sadconsole.com"))
             .Wait(System.TimeSpan.FromSeconds(2.0))
             .Instruct(_endAnimation)
             ;
@@ -94,20 +94,20 @@ public class PCBoot : ScreenSurface
 
     private bool InstructMemoryCounterReset(IScreenObject host, System.TimeSpan delta)
     {
-        memoryCounter = new Instructions.AnimatedValue(System.TimeSpan.FromSeconds(2), 0, 8192);
+        _memoryCounter = new Instructions.AnimatedValue(System.TimeSpan.FromSeconds(2), 0, 8192);
         return true;
     }
 
     private bool InstructMemoryCounter(IScreenObject host, System.TimeSpan delta)
     {
-        memoryCounter.Update(host, delta);
+        _memoryCounter!.Update(host, delta);
 
-        cursor
-            .Move(memoryCursorPosition)
-            .Print($"{(int)memoryCounter.Value}K OK".PadRight(10))
+        _cursor
+            .Move(_memoryCursorPosition)
+            .Print($"{(int)_memoryCounter.Value}K OK".PadRight(10))
             ;
 
-        return memoryCounter.IsFinished;
+        return _memoryCounter.IsFinished;
     }
 
     /// <summary>

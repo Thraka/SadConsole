@@ -106,7 +106,7 @@ public class ParseCommandStacks
     /// <param name="command">The command to remove</param>
     public void RemoveSafe(ParseCommandBase command)
     {
-        List<ParseCommandBase> commands = null;
+        List<ParseCommandBase>? commands = null;
 
         // Get the stack we need to remove from
         switch (command.CommandType)

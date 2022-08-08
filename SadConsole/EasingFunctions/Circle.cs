@@ -42,8 +42,10 @@ public class Circle : EasingBase
 
     }
 
-    private double CircleEaseOut(double time, double startingValue, double currentValue, double duration) => currentValue * Math.Sqrt(1 - (time = time / duration - 1) * time) + startingValue;
+    private static double CircleEaseOut(double time, double startingValue, double currentValue, double duration) =>
+        currentValue * Math.Sqrt(1 - (time = time / duration - 1) * time) + startingValue;
 
-    private double CircleEaseIn(double time, double startingValue, double currentValue, double duration) => -currentValue * (Math.Sqrt(1 - (time /= duration) * time) - 1) + startingValue;
+    private static double CircleEaseIn(double time, double startingValue, double currentValue, double duration) =>
+        -currentValue * (Math.Sqrt(1 - (time /= duration) * time) - 1) + startingValue;
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -10,7 +10,7 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public class TextBox : ControlBase
 {
-    private string _editingText;
+    private string _editingText = string.Empty;
     private bool _disableKeyboardEdit;
 
     /// <summary>
@@ -64,39 +64,34 @@ public class TextBox : ControlBase
     protected bool _allowDecimalPoint;
 
     /// <summary>
-    /// The current appearance of the control.
-    /// </summary>
-    protected ColoredGlyph _currentAppearance;
-
-    /// <summary>
     /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="true"/>, causing the textbox to accept keyboard input.
     /// </summary>
-    public event EventHandler EditModeEnter;
+    public event EventHandler? EditModeEnter;
 
     /// <summary>
     /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="false"/>.
     /// </summary>
-    public event EventHandler EditModeExit;
+    public event EventHandler? EditModeExit;
 
     /// <summary>
     /// Raised when the <see cref="EditingText"/> property changes while the textbox is being typed in.
     /// </summary>
-    public event EventHandler EditingTextChanged;
+    public event EventHandler? EditingTextChanged;
 
     /// <summary>
     /// Raised when the text has changed and the preview has accepted it.
     /// </summary>
-    public event EventHandler TextChanged;
+    public event EventHandler? TextChanged;
 
     /// <summary>
     /// Raised before the text has changed and allows the change to be cancelled.
     /// </summary>
-    public event EventHandler<TextChangedEventArgs> TextChangedPreview;
+    public event EventHandler<TextChangedEventArgs>? TextChangedPreview;
 
     /// <summary>
     /// Raised when a key is pressed on the textbox.
     /// </summary>
-    public event EventHandler<KeyPressEventArgs> KeyPressed;
+    public event EventHandler<KeyPressEventArgs>? KeyPressed;
 
     /// <summary>
     /// Disables mouse input.
@@ -538,10 +533,8 @@ public class TextBox : ControlBase
 
             DisableKeyboard = false;
 
-            if (!IsFocused)
-            {
+            if (!IsFocused && Parent?.Host != null)
                 Parent.Host.FocusedControl = this;
-            }
 
             IsDirty = true;
         }

@@ -41,7 +41,7 @@ public static class Update
     /// <param name="handler">The handler callback.</param>
     public static void RemoveUpdateHook(this IScreenObject screenObject, Action<IScreenObject, TimeSpan> handler)
     {
-        UpdateHook existingHook = null;
+        UpdateHook? existingHook = null;
 
         foreach (UpdateHook hook in screenObject.GetSadComponents<UpdateHook>())
         {

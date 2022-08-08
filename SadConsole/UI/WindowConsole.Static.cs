@@ -15,7 +15,7 @@ public partial class Window
     /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
     /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
     /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-    public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
+    public static void Prompt(string message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors? colors = null, Themes.ButtonTheme? buttonTheme = null) =>
         Prompt(new ColoredString(message), yesPrompt, noPrompt, resultCallback, colors, buttonTheme);
 
     /// <summary>
@@ -27,7 +27,7 @@ public partial class Window
     /// <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
     /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
     /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the from <see cref="Themes.Library"/> will be used.</param>
-    public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors colors = null, Themes.ButtonTheme buttonTheme = null)
+    public static void Prompt(ColoredString message, string yesPrompt, string noPrompt, Action<bool> resultCallback, Colors? colors = null, Themes.ButtonTheme? buttonTheme = null)
     {
         message.IgnoreBackground = true;
 
@@ -49,7 +49,7 @@ public partial class Window
             OnDraw = (ds, time) =>
             {
                 if (!ds.IsDirty) return;
-                ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance;
+                ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance!;
                 ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
                 ds.Surface.Print(2, 2, message);
                 ds.IsDirty = true;
@@ -91,7 +91,7 @@ public partial class Window
     /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
     /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
     /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-    public static void Message(string message, string closeButtonText, Action closedCallback = null, Colors colors = null, Themes.ButtonTheme buttonTheme = null) =>
+    public static void Message(string message, string closeButtonText, Action? closedCallback = null, Colors? colors = null, Themes.ButtonTheme? buttonTheme = null) =>
         Message(new ColoredString(message), closeButtonText, closedCallback, colors, buttonTheme);
 
     /// <summary>
@@ -102,7 +102,7 @@ public partial class Window
     /// <param name="closedCallback">A callback indicating the message was dismissed.</param>
     /// <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="Themes.Library"/> will be used.</param>
     /// <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="Themes.Library"/> will be used.</param>
-    public static void Message(ColoredString message, string closeButtonText, Action closedCallback = null, Colors colors = null, Themes.ButtonTheme buttonTheme = null)
+    public static void Message(ColoredString message, string closeButtonText, Action? closedCallback = null, Colors? colors = null, Themes.ButtonTheme? buttonTheme = null)
     {
         int width = message.ToString().Length + 4;
         int buttonWidth = closeButtonText.Length + 2;
@@ -132,7 +132,7 @@ public partial class Window
             OnDraw = (ds, time) =>
             {
                 if (!ds.IsDirty) return;
-                ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance;
+                ColoredGlyph appearance = ((Themes.DrawingAreaTheme)ds.Theme).Appearance!;
                 ds.Surface.Fill(appearance.Foreground, appearance.Background, null);
                 ds.Surface.Print(2, 2, message);
                 ds.IsDirty = true;

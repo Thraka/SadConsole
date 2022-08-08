@@ -41,7 +41,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Instance of the game host.
     /// </summary>
-    public static GameHost Instance { get; protected set; }
+    public static GameHost Instance { get; protected set; } = null!;
 
     /// <summary>
     /// Temp variable to indicate that the fonts being loaded are the embedded fonts.
@@ -51,27 +51,27 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Contains the path to a file being serialized or deserialized.
     /// </summary>
-    protected internal static string SerializerPathHint { get; set; }
+    protected internal static string SerializerPathHint { get; set; } = String.Empty;
 
     /// <summary>
     /// Raised when the game draws a frame to the screen.
     /// </summary>
-    public event EventHandler<GameHost> FrameRender;
+    public event EventHandler<GameHost>? FrameRender;
 
     /// <summary>
     /// Raised when the game updates prior to drawing a frame.
     /// </summary>
-    public event EventHandler<GameHost> FrameUpdate;
+    public event EventHandler<GameHost>? FrameUpdate;
 
     /// <summary>
     /// A callback to run before the <see cref="Run"/> method is called;
     /// </summary>
-    public Action OnStart;
+    public Action? OnStart;
 
     /// <summary>
     /// A callback to run after the <see cref="Run"/> method is called;
     /// </summary>
-    public Action OnEnd;
+    public Action? OnEnd;
 
     /// <summary>
     /// Draw calls registered for the next drawing frame.
@@ -134,10 +134,12 @@ public abstract partial class GameHost : IDisposable
     /// <returns>A new renderer.</returns>
     public virtual IRenderer GetRenderer(string name)
     {
-        if (_renderers.TryGetValue(name, out Type objType))
-            return (IRenderer)Activator.CreateInstance(objType);
+        if (_renderers.TryGetValue(name, out Type? objType))
+            return Activator.CreateInstance(objType) as IRenderer
+                ?? throw new NullReferenceException($"Renderer was found registered, but the system was unable to create an instance of it as an {nameof(IRenderer)}.");
 
-        return (IRenderer)Activator.CreateInstance(_renderers["default"]);
+        return Activator.CreateInstance(_renderers["default"]) as IRenderer
+            ?? throw new NullReferenceException("Unable to create the default renderer, it doesn't seem to be registered.");
     }
 
     /// <summary>
@@ -163,8 +165,9 @@ public abstract partial class GameHost : IDisposable
     /// <returns>A new renderer.</returns>
     public virtual IRenderStep GetRendererStep(string name)
     {
-        if (_rendererSteps.TryGetValue(name, out Type objType))
-            return (IRenderStep)Activator.CreateInstance(objType);
+        if (_rendererSteps.TryGetValue(name, out Type? objType))
+            return Activator.CreateInstance(objType) as IRenderStep
+                ?? throw new NullReferenceException($"Render step was found registered, but the system was unable to create an instance of it as an {nameof(IRenderStep)}.");
 
         throw new KeyNotFoundException("RenderStep not found.");
     }
@@ -287,7 +290,7 @@ public abstract partial class GameHost : IDisposable
 
         SadFont LoadFont(string fontName)
         {
-            using Stream stream = assembly.GetManifestResourceStream(fontName);
+            using Stream stream = assembly.GetManifestResourceStream(fontName)!;
             using StreamReader sr = new StreamReader(stream);
 
             SerializerPathHint = "";
@@ -299,8 +302,8 @@ public abstract partial class GameHost : IDisposable
                 new Newtonsoft.Json.JsonSerializerSettings()
                 {
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
-                    Converters = null
-                });
+                    Converters = null!
+                })!;
             LoadingEmbeddedFont = false;
 
             Fonts.Add(masterFont.Name, masterFont);
@@ -331,7 +334,7 @@ public abstract partial class GameHost : IDisposable
             //ColorExtensions.ColorMappings.Add
             var colorType = typeof(Color);
             foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
-                ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null));
+                ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null)!);
         }
     }
 

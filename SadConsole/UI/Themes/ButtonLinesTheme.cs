@@ -26,7 +26,7 @@ public class ButtonLinesTheme : ButtonTheme
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is Button button)) return;
+        if (control is not Button button) return;
         if (!button.IsDirty) return;
 
         RefreshTheme(control.FindThemeColors(), control);
@@ -50,7 +50,7 @@ public class ButtonLinesTheme : ButtonTheme
             middle -= 1;
 
         // Extended font draw
-        if (button.Parent.Host.ParentConsole.Font.IsSadExtended && UseExtended)
+        if (button!.Parent!.Host!.ParentConsole!.Font.IsSadExtended && UseExtended)
         {
             // Redraw the control
             button.Surface.Fill(appearance.Foreground, appearance.Background,

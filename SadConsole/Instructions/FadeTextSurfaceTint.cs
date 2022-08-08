@@ -9,7 +9,7 @@ namespace SadConsole.Instructions;
 [System.Diagnostics.DebuggerDisplay("Instruction: Fade tint")]
 public class FadeTextSurfaceTint : AnimatedValue
 {
-    private IScreenSurface _objectSurface;
+    private IScreenSurface? _objectSurface;
     private Gradient _colors;
 
     /// <summary>
@@ -29,7 +29,7 @@ public class FadeTextSurfaceTint : AnimatedValue
     /// <param name="duration">How long the fade takes.</param>
     public FadeTextSurfaceTint(IScreenSurface objectSurface, Gradient colors, TimeSpan duration) : base(duration, 0d, 1d)
     {
-        Colors = colors;
+        _colors = colors ?? throw new Exception($"{nameof(Colors)} can't be set to null");
         _objectSurface = objectSurface;
     }
 
@@ -40,7 +40,7 @@ public class FadeTextSurfaceTint : AnimatedValue
     /// <param name="duration">How long the fade takes.</param>
     public FadeTextSurfaceTint(Gradient colors, TimeSpan duration) : base(duration, 0d, 1d)
     {
-        Colors = colors;
+        _colors = colors ?? throw new Exception($"{nameof(Colors)} can't be set to null");
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class FadeTextSurfaceTint : AnimatedValue
     /// </remarks>
     public FadeTextSurfaceTint() : base(TimeSpan.FromSeconds(1), 0d, 1d)
     {
-        Colors = new Gradient(Color.White, Color.Transparent);
+        _colors = new Gradient(Color.White, Color.Transparent);
     }
 
     /// <inheritdoc />
@@ -64,9 +64,11 @@ public class FadeTextSurfaceTint : AnimatedValue
         {
             base.Update(componentHost, delta);
 
-            var target = _objectSurface ?? componentHost as IScreenSurface;
+            if (_objectSurface != null)
+                _objectSurface.Tint = Colors.Lerp((float)Value);
 
-            target.Tint = Colors.Lerp((float)Value);
+            else if (componentHost is IScreenSurface surface)
+                surface.Tint = Colors.Lerp((float)Value);
         }
     }
 }

@@ -51,17 +51,9 @@ public sealed class ParseCommandGradient : ParseCommandBase
             throw badCommandException;
     }
 
-    /// <summary>
-    /// Creates a new instance of this command.
-    /// </summary>
-    public ParseCommandGradient()
-    {
-
-    }
-
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
         if (CommandType == CommandTypes.Background)
             glyphState.Background = GradientString[Length - _counter].Foreground;

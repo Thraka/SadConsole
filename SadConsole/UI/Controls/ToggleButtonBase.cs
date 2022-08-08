@@ -15,7 +15,7 @@ public abstract class ToggleButtonBase : ButtonBase
     /// <summary>
     /// Raised when the selected state of the radio button is changed.
     /// </summary>
-    public event EventHandler IsSelectedChanged;
+    public event EventHandler? IsSelectedChanged;
 
     /// <summary>
     /// Gets or sets the selected state of the radio button.

@@ -8,7 +8,7 @@ namespace SadConsole.Input;
 /// </summary>
 public class Keyboard
 {
-    private IKeyboardState _state;
+    private IKeyboardState? _state;
 
     /// <summary>
     /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
@@ -83,7 +83,7 @@ public class Keyboard
     /// </summary>
     /// <param name="key">The key to check.</param>
     /// <returns>True when the key is not being pressed.</returns>
-    public bool IsKeyUp(Keys key) => !KeysDownInternal.Contains(AsciiKey.Get(key, _state)) && !KeysDownInternal.Contains(AsciiKey.Get(key, true, _state));
+    public bool IsKeyUp(Keys key) => !KeysDownInternal.Contains(AsciiKey.Get(key, _state!)) && !KeysDownInternal.Contains(AsciiKey.Get(key, true, _state!));
 
     /// <summary>
     /// Returns true if the key is not in the <see cref="KeysDown"/> collection.
@@ -97,7 +97,7 @@ public class Keyboard
     /// </summary>
     /// <param name="key">The key to check.</param>
     /// <returns>True when the key is being pressed.</returns>
-    public bool IsKeyDown(Keys key) => KeysDownInternal.Contains(AsciiKey.Get(key, _state)) || KeysDownInternal.Contains(AsciiKey.Get(key, true, _state));
+    public bool IsKeyDown(Keys key) => KeysDownInternal.Contains(AsciiKey.Get(key, _state!)) || KeysDownInternal.Contains(AsciiKey.Get(key, true, _state!));
 
     /// <summary>
     /// Returns true if the key is in the <see cref="KeysDown"/> collection.
@@ -111,7 +111,7 @@ public class Keyboard
     /// </summary>
     /// <param name="key">The key to check.</param>
     /// <returns>True when the key was released this update frame.</returns>
-    public bool IsKeyReleased(Keys key) => KeysReleasedInternal.Contains(AsciiKey.Get(key, _state)) || KeysReleasedInternal.Contains(AsciiKey.Get(key, true, _state));
+    public bool IsKeyReleased(Keys key) => KeysReleasedInternal.Contains(AsciiKey.Get(key, _state!)) || KeysReleasedInternal.Contains(AsciiKey.Get(key, true, _state!));
 
     /// <summary>
     /// Returns true when the key is in the <see cref="KeysReleased"/> collection.
@@ -125,7 +125,7 @@ public class Keyboard
     /// </summary>
     /// <param name="key">The key to check.</param>
     /// <returns>True when the key was considered first pressed.</returns>
-    public bool IsKeyPressed(Keys key) => KeysPressedInternal.Contains(AsciiKey.Get(key, _state)) || KeysPressedInternal.Contains(AsciiKey.Get(key, true, _state));
+    public bool IsKeyPressed(Keys key) => KeysPressedInternal.Contains(AsciiKey.Get(key, _state!)) || KeysPressedInternal.Contains(AsciiKey.Get(key, true, _state!));
 
     /// <summary>
     /// Returns true when the key is in the <see cref="KeysPressed"/> collection.

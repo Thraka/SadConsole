@@ -12,15 +12,24 @@ public sealed class ParseCommandDecorator : ParseCommandBase
     private int _counter;
 
     /// <summary>
-    /// The mirror mode.
+    /// The decorator created by the command settings.
     /// </summary>
-    public CellDecorator? Decorator = null;
+    public CellDecorator? Decorator { get; set; } = null;
 
-    public int Glyph;
+    /// <summary>
+    /// The glyph of the decorator.
+    /// </summary>
+    public int Glyph { get; set; }
 
-    public Color Color = Color.White;
+    /// <summary>
+    /// The color of the decorator.
+    /// </summary>
+    public Color Color { get; set; } = Color.White;
 
-    public Mirror Mirror;
+    /// <summary>
+    /// The mirror to apply to the decorator.
+    /// </summary>
+    public Mirror Mirror { get; set; } = Mirror.None;
 
     /// <summary>
     /// Creates a new instance of this command.
@@ -43,8 +52,11 @@ public sealed class ParseCommandDecorator : ParseCommandBase
             {
                 _counter = -1;
 
-                if (!Enum.TryParse(paramArray[1], out Mirror))
+                if (!Enum.TryParse(paramArray[1], out Mirror mirror))
                     throw badCommandException;
+
+                Mirror = mirror;
+                Glyph = glyph;
 
                 Color = Color.FromParser(paramArray[2], out _, out _, out _, out _, out _);
             }
@@ -55,13 +67,14 @@ public sealed class ParseCommandDecorator : ParseCommandBase
         // Is glyph:mirror:color:count
         else if (paramArray.Length == 4)
         {
-            int glyph;
-
-            if (!int.TryParse(paramArray[0], out glyph))
+            if (!int.TryParse(paramArray[0], out int glyph))
                 throw badCommandException;
 
-            if (!Enum.TryParse(paramArray[1], out Mirror))
+            if (!Enum.TryParse(paramArray[1], out Mirror mirror))
                 throw badCommandException;
+
+            Mirror = mirror;
+            Glyph = glyph;
 
             Color = Color.FromParser(paramArray[1], out _, out _, out _, out _, out _);
 
@@ -81,7 +94,7 @@ public sealed class ParseCommandDecorator : ParseCommandBase
 
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
         // Create decorator if needed
         if (!Decorator.HasValue) Decorator = new CellDecorator(Color, Glyph, Mirror);

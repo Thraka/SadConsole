@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using System.Linq;
 using Newtonsoft.Json;
 using SadRogue.Primitives;

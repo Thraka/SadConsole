@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.UI.Themes;
@@ -21,19 +22,19 @@ public class ListBox : CompositeControl
         /// <summary>
         /// The item selected.
         /// </summary>
-        public readonly object Item;
+        public readonly object? Item;
 
         /// <summary>
         /// Creates a new instance of this type with the specified item.
         /// </summary>
         /// <param name="item">The selected item from the list.</param>
-        public SelectedItemEventArgs(object item) =>
+        public SelectedItemEventArgs(object? item) =>
             Item = item;
     }
 
     [DataMember(Name = "SelectedIndex")]
     private int _selectedIndex = -1;
-    private object _selectedItem;
+    private object? _selectedItem;
     private DateTime _leftMouseLastClick = DateTime.Now;
 
     [DataMember]
@@ -48,12 +49,12 @@ public class ListBox : CompositeControl
     /// <summary>
     /// An event that triggers when the <see cref="SelectedItem"/> changes.
     /// </summary>
-    public event EventHandler<SelectedItemEventArgs> SelectedItemChanged;
+    public event EventHandler<SelectedItemEventArgs>? SelectedItemChanged;
 
     /// <summary>
     /// An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
     /// </summary>
-    public event EventHandler<SelectedItemEventArgs> SelectedItemExecuted;
+    public event EventHandler<SelectedItemEventArgs>? SelectedItemExecuted;
 
     /// <summary>
     /// The theme used by the listbox items.
@@ -138,7 +139,7 @@ public class ListBox : CompositeControl
     /// <summary>
     /// Gets or sets the selected item.
     /// </summary>
-    public object SelectedItem
+    public object? SelectedItem
     {
         get => _selectedItem;
         set
@@ -175,7 +176,7 @@ public class ListBox : CompositeControl
                 }
 
                 if (index == -1)
-                    throw new ArgumentOutOfRangeException("Item does not exist in collection.");
+                    throw new ArgumentOutOfRangeException(nameof(SelectedItem), "Item does not exist in collection.");
 
                 _selectedIndex = index;
                 _selectedItem = Items[index];
@@ -192,6 +193,8 @@ public class ListBox : CompositeControl
     /// <param name="height">The height of the listbox.</param>
     public ListBox(int width, int height) : base(width, height)
     {
+        if (ScrollBar == null) throw new NullReferenceException($"The theme for the current control didn't setup the {nameof(ScrollBar)} property.");
+
         Items = new ObservableCollection<object>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
 
@@ -206,17 +209,19 @@ public class ListBox : CompositeControl
     /// <param name="itemTheme">The theme to use with rendering the listbox items.</param>
     public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ItemTheme = itemTheme;
 
-    private void _scrollbar_ValueChanged(object sender, EventArgs e) => IsDirty = true;
+    private void _scrollbar_ValueChanged(object? sender, EventArgs e) => IsDirty = true;
 
     /// <summary>
     /// Invokes the <see cref="SelectedItemChanged"/> event.
     /// </summary>
-    protected virtual void OnSelectedItemChanged() => SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(_selectedItem));
+    protected virtual void OnSelectedItemChanged() =>
+        SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(_selectedItem));
 
     /// <summary>
     /// Invokes the <see cref="SelectedItemExecuted"/> event.
     /// </summary>
-    protected virtual void OnItemAction() => SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(_selectedItem));
+    protected virtual void OnItemAction() =>
+        SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(_selectedItem));
 
     /// <summary>
     /// Configures the associated <see cref="ScrollBar"/>.
@@ -224,6 +229,7 @@ public class ListBox : CompositeControl
     /// <param name="orientation">The orientation of the scrollbar.</param>
     /// <param name="sizeValue">The size of the scrollbar.</param>
     /// <param name="position">The position of the scrollbar.</param>
+    [MemberNotNull("ScrollBar")]
     public void SetupScrollBar(Orientation orientation, int sizeValue, Point position)
     {
         bool scrollBarExists = false;
@@ -289,7 +295,7 @@ public class ListBox : CompositeControl
             ScrollBar.Theme = null;
     }
 
-    private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
         {
@@ -305,7 +311,7 @@ public class ListBox : CompositeControl
             ScrollBar.Value = 0;
         }
 
-        if (SelectedItem != null && !Items.Contains(_selectedItem))
+        if (_selectedItem != null && !Items.Contains(_selectedItem))
         {
             SelectedItem = null;
         }
@@ -319,9 +325,9 @@ public class ListBox : CompositeControl
         //if (_hasFocus)
         if (info.IsKeyReleased(Keys.Up))
         {
-            int index = Items.IndexOf(_selectedItem);
             if (_selectedItem != null)
             {
+                int index = Items.IndexOf(_selectedItem);
                 if (index != 0)
                 {
                     SelectedItem = Items[index - 1];
@@ -336,9 +342,9 @@ public class ListBox : CompositeControl
         }
         else if (info.IsKeyReleased(Keys.Down))
         {
-            int index = Items.IndexOf(_selectedItem);
             if (_selectedItem != null)
             {
+                int index = Items.IndexOf(_selectedItem);
                 if (index != Items.Count - 1)
                 {
                     SelectedItem = Items[index + 1];
@@ -374,7 +380,7 @@ public class ListBox : CompositeControl
     {
         base.OnMouseIn(state);
 
-        if (!(Theme is ListBoxTheme theme)) return;
+        if (Theme is not ListBoxTheme theme) return;
 
         int rowOffset = ((ListBoxTheme)theme).DrawBorder ? 1 : 0;
         int rowOffsetReverse = ((ListBoxTheme)theme).DrawBorder ? 0 : 1;
@@ -417,7 +423,7 @@ public class ListBox : CompositeControl
     {
         base.OnLeftMouseClicked(state);
 
-        if (!(Theme is ListBoxTheme theme)) return;
+        if (Theme is not ListBoxTheme theme) return;
 
         DateTime click = DateTime.Now;
         bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
@@ -432,7 +438,7 @@ public class ListBox : CompositeControl
         if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
             mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
         {
-            object oldItem = _selectedItem;
+            object? oldItem = _selectedItem;
             bool noItem = false;
 
             if (IsScrollBarVisible)

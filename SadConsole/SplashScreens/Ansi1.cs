@@ -11,11 +11,15 @@ namespace SadConsole.SplashScreens;
 [System.Diagnostics.DebuggerDisplay("Splashscreen: Simple")]
 public class Ansi1 : ScreenSurface
 {
-    private static string _title = " Powered by SadConsole ";
     private Instructions.InstructionSet _endAnimation;
     private bool _isEnding = false;
     private ScreenSurface _ansiChild;
 
+    /// <summary>
+    /// Creates the ansi splash screen using the specified font and size.
+    /// </summary>
+    /// <param name="font">The font to use.</param>
+    /// <param name="fontSize">The font size to use.</param>
     public Ansi1(IFont font, IFont.Sizes fontSize) : base(GameHost.Instance.ScreenCellsX, GameHost.Instance.ScreenCellsY)
     {
         UsePixelPositioning = true;
@@ -68,7 +72,7 @@ public class Ansi1 : ScreenSurface
 
         // Read the ansi file
         System.Reflection.Assembly assembly = typeof(ScreenSurface).Assembly;
-        using Stream stream = assembly.GetManifestResourceStream("SadConsole.Resources.logo.ans");
+        using Stream stream = assembly.GetManifestResourceStream("SadConsole.Resources.logo.ans")!;
         using BinaryReader sr = new BinaryReader(stream);
 
         SadConsole.Ansi.Document document = Ansi.Document.FromBytes(sr.ReadBytes((int)stream.Length));
@@ -236,11 +240,14 @@ public class Ansi1 : ScreenSurface
     }
 
 
-
-    public Ansi1(IFont.Sizes fontSize) : this(GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
+    /// <summary>
+    /// Creates the ansi splash screen using the <see cref="GameHost.EmbeddedFont"/> and the specified font size.
+    /// </summary>
+    /// <param name="fontSize">The size of font to use.</param>
+    public Ansi1(IFont.Sizes fontSize) : this(GameHost.Instance.EmbeddedFont, fontSize) { }
 
     /// <summary>
-    /// A new instance of this class.
+    /// Creates the ansi splash screen using the <see cref="GameHost.EmbeddedFont"/> and a font size of <see cref="IFont.Sizes.One"/>.
     /// </summary>
     public Ansi1() : this(GameHost.Instance.EmbeddedFont, IFont.Sizes.One) { }
 

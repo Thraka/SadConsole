@@ -13,27 +13,27 @@ namespace SadConsole.Entities;
 public class Renderer : Components.UpdateComponent, Components.IComponent
 {
     /// <summary>
-    /// Indicatest that the entity renderer has been added to a parent object.
+    /// Indicates that the entity renderer has been added to a parent object.
     /// </summary>
     protected bool IsAttached;
 
-    private List<Entity> _entityHolding;
+    private List<Entity>? _entityHolding;
 
     /// <summary>
     /// The entities to process.
     /// </summary>
     [DataMember(Name = "Entities")]
-    protected List<Entity> _entities = new List<Entity>();
+    protected List<Entity> _entities = new();
 
     /// <summary>
     /// The entities currently visible.
     /// </summary>
-    protected List<Entity> _entitiesVisible = new List<Entity>();
+    protected List<Entity> _entitiesVisible = new();
 
     /// <summary>
     /// The parent screen hosting this component.
     /// </summary>
-    protected IScreenSurface _screen;
+    protected IScreenSurface? _screen;
 
     /// <summary>
     /// Cached rectangle for rendering.
@@ -48,7 +48,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// <summary>
     /// A cached copy of the <see cref="IScreenSurface.Font"/> of the hosting screen surface.
     /// </summary>
-    protected IFont _screenCachedFont;
+    protected IFont? _screenCachedFont;
 
     /// <summary>
     /// A cached copy of the <see cref="IScreenSurface.FontSize"/> of the hosting screen surface.
@@ -83,7 +83,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// <summary>
     /// Internal use only
     /// </summary>
-    public Renderers.IRenderStep RenderStep;
+    public Renderers.IRenderStep? RenderStep;
 
     /// <summary>
     /// Adds an entity to this manager.
@@ -176,7 +176,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         if (!IsAttached)
         {
-            _entityHolding.Remove(entity);
+            _entityHolding?.Remove(entity);
             return;
         }
 
@@ -205,7 +205,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     public override void OnAdded(IScreenObject host)
     {
         if (_screen != null) throw new Exception("Component has already been added to a host.");
-        if (!(host is IScreenSurface surface)) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
+        if (host is not IScreenSurface surface) throw new ArgumentException($"Must add this component to a type that implements {nameof(IScreenSurface)}");
 
         if (RenderStep != null)
         {
@@ -231,9 +231,13 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// <inheritdoc/>
     public override void OnRemoved(IScreenObject host)
     {
-        ((IScreenSurface)host).RenderSteps.Remove(RenderStep);
-        RenderStep?.Dispose();
-        RenderStep = null;
+        if (RenderStep != null)
+        {
+            ((IScreenSurface)host).RenderSteps.Remove(RenderStep);
+            RenderStep.Dispose();
+            RenderStep = null;
+        }
+
         _screen = null;
         _screenCachedFont = null;
         _screenCachedFontSize = Point.None;
@@ -264,7 +268,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     public override void Update(IScreenObject host, TimeSpan delta)
     {
         // View or font changed on parent surface, re-evaluate everything
-        if (_screenCachedFont != _screen.Font || _screenCachedFontSize != _screen.FontSize || _screenCachedView != _screen.Surface.View)
+        if (_screenCachedFont != _screen!.Font || _screenCachedFontSize != _screen.FontSize || _screenCachedView != _screen.Surface.View)
         {
             _screenCachedFont = _screen.Font;
             _screenCachedFontSize = _screen.FontSize;
@@ -307,33 +311,33 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     public Rectangle GetRenderRectangle(Point position, bool isPixel)
     {
         if (isPixel)
-            return new Rectangle(position.X - (_screen.Surface.ViewPosition.X * _screen.FontSize.X), position.Y - (_screen.Surface.ViewPosition.Y * _screen.FontSize.Y), _screen.FontSize.X, _screen.FontSize.Y);
+            return new Rectangle(position.X - (_screen!.Surface.ViewPosition.X * _screen.FontSize.X), position.Y - (_screen.Surface.ViewPosition.Y * _screen.FontSize.Y), _screen.FontSize.X, _screen.FontSize.Y);
         else
         {
-            Point renderPosition = position - _screen.Surface.View.Position;
+            Point renderPosition = position - _screen!.Surface.View.Position;
             return _screen.Font.GetRenderRect(renderPosition.X, renderPosition.Y, _screen.FontSize);
         }
     }
 
-    private void Entity_IsDirtyChanged(object sender, EventArgs e)
+    private void Entity_IsDirtyChanged(object? sender, EventArgs e)
     {
-        var entity = (Entity)sender;
+        var entity = (Entity)sender!;
 
         if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
             IsDirty |= entity.IsDirty;
     }
 
-    private void Entity_VisibleChanged(object sender, EventArgs e)
+    private void Entity_VisibleChanged(object? sender, EventArgs e)
     {
-        var entity = (Entity)sender;
+        var entity = (Entity)sender!;
 
         if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
             IsDirty = true;
     }
 
-    private void Entity_PositionChanged(object sender, ValueChangedEventArgs<SadRogue.Primitives.Point> e)
+    private void Entity_PositionChanged(object? sender, ValueChangedEventArgs<SadRogue.Primitives.Point> e)
     {
-        Entity entity = (Entity)sender;
+        Entity entity = (Entity)sender!;
 
         // Entity was previously (may no longer be) visible, we always redraw since it moved.
         if (IsEntityVisible(e.OldValue, entity.UsePixelPositioning))
@@ -395,12 +399,12 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         if (!IsAttached) return;
 
-        _offsetAreaPixels = _screen.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize).Expand(_screen.FontSize.X, _screen.FontSize.Y);
+        _offsetAreaPixels = _screen!.AbsoluteArea.WithPosition(_screen.Surface.ViewPosition * _screen.FontSize).Expand(_screen.FontSize.X, _screen.FontSize.Y);
     }
 
 
     private bool IsEntityVisible(Point position, bool isPixel) =>
-        isPixel ? _offsetAreaPixels.Contains(position) : _screen.Surface.View.Contains(position);
+        isPixel ? _offsetAreaPixels.Contains(position) : _screen!.Surface.View.Contains(position);
 
     private static int CompareEntity(Entity left, Entity right)
     {

@@ -10,12 +10,12 @@ public partial class ColoredString
     /// </summary>
     public class ColoredGlyphEffect : ColoredGlyph
     {
-        ICellEffect _effect;
+        ICellEffect? _effect;
 
         /// <summary>
         /// The effect of this cell.
         /// </summary>
-        public ICellEffect Effect
+        public ICellEffect? Effect
         {
             get => _effect;
             set
@@ -48,8 +48,15 @@ public partial class ColoredString
         /// <param name="glyph">The glyph.</param>
         /// <param name="effect">When provided, sets the <see cref="ColoredGlyphEffect.Effect"/>.</param>
         /// <returns></returns>
-        public static ColoredGlyphEffect FromColoredGlyph(ColoredGlyph glyph, ICellEffect effect = null) =>
-            new ColoredGlyphEffect() { Foreground = glyph.Foreground, Background = glyph.Background, Glyph = glyph.Glyph, Decorators = glyph.Decorators.ToArray(), Effect = effect };
+        public static ColoredGlyphEffect FromColoredGlyph(ColoredGlyph glyph, ICellEffect? effect = null) =>
+            new ColoredGlyphEffect()
+            {
+                Foreground = glyph.Foreground,
+                Background = glyph.Background,
+                Glyph = glyph.Glyph,
+                Decorators = glyph.Decorators.ToArray(),
+                Effect = effect
+            };
 
         /// <summary>
         /// Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.

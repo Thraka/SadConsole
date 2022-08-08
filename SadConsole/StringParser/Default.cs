@@ -13,7 +13,7 @@ public class Default : IParser
     /// <summary>
     /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
     /// </summary>
-    public Func<string, string, ColoredGlyphEffect[], ICellSurface, ParseCommandStacks, ParseCommandBase> CustomProcessor;
+    public Func<string, string, ColoredGlyphEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase>? CustomProcessor;
 
     /// <summary>
     /// Creates a colored string by parsing commands embedded in the string.
@@ -23,7 +23,7 @@ public class Default : IParser
     /// <param name="surface">The surface the string will be printed to.</param>
     /// <param name="initialBehaviors">Any initial defaults.</param>
     /// <returns>The finalized string.</returns>
-    public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface surface = null, ParseCommandStacks initialBehaviors = null)
+    public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null)
     {
         ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
         List<ColoredGlyphEffect> glyphs = new List<ColoredGlyphEffect>(value.Length);
@@ -66,7 +66,7 @@ public class Default : IParser
                         }
                         // Check for custom command
                         // Send the method the command name, the parameters, the current glyphs that have been created, the surface (if it's being actively printed), and the existing commands
-                        ParseCommandBase commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
+                        ParseCommandBase? commandObject = CustomProcessor?.Invoke(command, commandParams, existingGlyphs, surface, commandStacks);
 
                         // No custom command found, run build in ones
                         if (commandObject == null)
@@ -119,13 +119,17 @@ public class Default : IParser
                     }
 
                 }
+#if DEBUG
                 catch (Exception e1)
                 {
-#if DEBUG
                     // Helps track down parsing bugs
+                    System.Diagnostics.Debug.WriteLine(e1);
                     System.Diagnostics.Debugger.Break();
-#endif
                 }
+#else
+                catch () { }
+#endif
+
             }
 
             // If the string is associated with a surface, pull the glyph out and use its colors
@@ -143,9 +147,9 @@ public class Default : IParser
             if (fixedSurfaceIndex != -1)
             {
                 newGlyph = new ColoredGlyphEffect();
-                surface[i + surfaceIndex].CopyAppearanceTo(newGlyph);
+                surface![i + surfaceIndex].CopyAppearanceTo(newGlyph);
 
-                Effects.ICellEffect effect = surface.GetEffect(i + surfaceIndex);
+                Effects.ICellEffect? effect = surface.GetEffect(i + surfaceIndex);
 
                 // Get the glyph's character from the string
                 newGlyph.Glyph = value[i];

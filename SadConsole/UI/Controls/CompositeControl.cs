@@ -114,9 +114,9 @@ public abstract class CompositeControl : ControlBase, IContainer
         }
     }
 
-    Point IContainer.AbsolutePosition => this.AbsolutePosition;
+    Point IContainer.AbsolutePosition => AbsolutePosition;
 
-    ControlHost IContainer.Host => this.Parent?.Host;
+    ControlHost? IContainer.Host => Parent?.Host;
 
     void IContainer.Add(ControlBase control) =>
         AddControl(control);

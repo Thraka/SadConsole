@@ -12,12 +12,12 @@ public class SurfaceComponentFollowTarget : UpdateComponent
     /// <summary>
     /// Target to have the surface follow.
     /// </summary>
-    public IScreenObject Target { get; set; }
+    public IScreenObject? Target { get; set; }
 
     /// <inheritdoc/>
     public override void OnAdded(IScreenObject host)
     {
-        if (!(host is IScreenSurface))
+        if (host is not IScreenSurface)
             throw new ArgumentException($"{nameof(SurfaceComponentFollowTarget)} can only be added to an {nameof(IScreenSurface)}.");
     }
 

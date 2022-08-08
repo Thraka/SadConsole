@@ -11,7 +11,7 @@ namespace SadConsole.Effects;
 [System.Diagnostics.DebuggerDisplay("Effect: Set")]
 public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
 {
-    private LinkedListNode<ICellEffect> _currentEffectNode;
+    private LinkedListNode<ICellEffect>? _currentEffectNode;
 
     /// <summary>
     /// The list of effects to process.
@@ -71,7 +71,8 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
             if (!_inChainDelay)
             {
                 // Process the effect
-                _currentEffectNode.Value.Update(delta);
+                // Not null here because of the checks above
+                _currentEffectNode!.Value.Update(delta);
 
                 // If the effect finished, we move on to the next effect
                 if (_currentEffectNode.Value.IsFinished)

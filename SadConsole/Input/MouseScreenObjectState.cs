@@ -10,7 +10,7 @@ public class MouseScreenObjectState
     /// <summary>
     /// The screen object used to create the mouse state.
     /// </summary>
-    public readonly IScreenObject ScreenObject;
+    public readonly IScreenObject? ScreenObject;
 
     /// <summary>
     /// The mouse data.
@@ -20,7 +20,7 @@ public class MouseScreenObjectState
     /// <summary>
     /// The cell the mouse is over, from <see cref="IScreenObject"/>.
     /// </summary>
-    public readonly ColoredGlyph Cell;
+    public readonly ColoredGlyph? Cell;
 
     /// <summary>
     /// The position of the <see cref="Cell"/>.  
@@ -52,7 +52,7 @@ public class MouseScreenObjectState
     /// </summary>
     /// <param name="screenObject">The screen object to process with the mouse state.</param>
     /// <param name="mouseData">The current mouse state.</param>
-    public MouseScreenObjectState(IScreenObject screenObject, Mouse mouseData)
+    public MouseScreenObjectState(IScreenObject? screenObject, Mouse mouseData)
     {
         bool isNegative = false;
         Mouse = mouseData.Clone();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

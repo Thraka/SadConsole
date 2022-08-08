@@ -58,7 +58,7 @@ public class ButtonTheme : ThemeBase
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is Button button)) return;
+        if (control is not Button button) return;
         if (!button.IsDirty) return;
 
         RefreshTheme(control.FindThemeColors(), control);
@@ -75,7 +75,6 @@ public class ButtonTheme : ThemeBase
 
         if (ShowEnds && button.Width >= 3)
         {
-            var lines = control.State == ControlStates.Disabled ? appearance.Foreground : _colorsLastUsed.Lines;
             button.Surface.Print(1, middle, (button.Text).Align(button.TextAlignment, button.Width - 2));
             button.Surface.SetCellAppearance(0, middle, endGlyphAppearance);
             button.Surface[0, middle].Glyph = LeftEndGlyph;

@@ -50,7 +50,7 @@ public class ProgressBarTheme : ThemeBase
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
         if (!control.IsDirty) return;
-        if (!(control is ProgressBar progressbar)) return;
+        if (control is not ProgressBar progressbar) return;
 
         RefreshTheme(control.FindThemeColors(), control);
 
@@ -136,7 +136,7 @@ public class ProgressBarTheme : ThemeBase
     public override ThemeBase Clone() => new ProgressBarTheme()
     {
         ControlThemeState = ControlThemeState.Clone(),
-        Foreground = Foreground?.Clone(),
-        Background = Background?.Clone()
+        Foreground = Foreground.Clone(),
+        Background = Background.Clone()
     };
 }

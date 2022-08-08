@@ -11,17 +11,17 @@ public abstract class InstructionBase : UpdateComponent
     /// <summary>
     /// Raised when the instruction starts.
     /// </summary>
-    public event EventHandler Started;
+    public event EventHandler? Started;
 
     /// <summary>
     /// Raised when the instruction completes.
     /// </summary>
-    public event EventHandler Finished;
+    public event EventHandler? Finished;
 
     /// <summary>
     /// Raised when the instruction completes but is going to repeat.
     /// </summary>
-    public event EventHandler Repeating;
+    public event EventHandler? Repeating;
 
     /// <summary>
     /// When true, this instruction will automatically remove itself from the parent's <see cref="SadConsole.IScreenObject.SadComponents"/> collection.
@@ -51,9 +51,7 @@ public abstract class InstructionBase : UpdateComponent
     public virtual void Repeat()
     {
         if (RepeatCount > 0)
-        {
             RepeatCount--;
-        }
 
         Reset();
 
@@ -70,13 +68,10 @@ public abstract class InstructionBase : UpdateComponent
         if (IsFinished)
         {
             if (RepeatCount > 0 || RepeatCount == -1)
-            {
                 Repeat();
-            }
+
             else
-            {
                 OnFinished(componentHost);
-            }
         }
     }
 
@@ -88,9 +83,7 @@ public abstract class InstructionBase : UpdateComponent
         Finished?.Invoke(this, EventArgs.Empty);
 
         if (RemoveOnFinished)
-        {
             componentHost.SadComponents.Remove(this);
-        }
     }
 
     /// <summary>

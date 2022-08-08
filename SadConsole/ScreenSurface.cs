@@ -28,7 +28,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     [DataMember(Name = "Surface")]
     private ICellSurface _surface;
 
-    private Renderers.IRenderer _renderer;
+    private Renderers.IRenderer? _renderer;
 
     /// <inheritdoc/>
     public bool ForceRendererRefresh { get; set; }
@@ -37,7 +37,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     public virtual string DefaultRendererName { get; } = Renderers.Constants.RendererNames.Default;
 
     /// <inheritdoc/>
-    public Renderers.IRenderer Renderer
+    public Renderers.IRenderer? Renderer
     {
         get => _renderer;
         protected set
@@ -66,9 +66,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
 
             _surface = value ?? throw new NullReferenceException("Surface cannot be set to null.");
 
-            if (old != null)
-                old.IsDirtyChanged -= _isDirtyChangedEventHadler;
-
+            old.IsDirtyChanged -= _isDirtyChangedEventHadler;
             _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
 
             OnSurfaceChanged(old);
@@ -184,34 +182,13 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     /// <param name="surface">The surface to use as the source of cells.</param>
     /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
     /// <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
-    public ScreenSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0) : this(new CellSurface(surface, visibleWidth, visibleHeight))
+    public ScreenSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0) :
+        this(new CellSurface(surface, visibleWidth, visibleHeight))
     {
 
     }
 
-    /// <summary>
-    /// Creates a new screen object wrapping an existing surface.
-    /// </summary>
-    /// <param name="surface">The surface.</param>
-    /// <param name="font">The font to use with the surface.</param>
-    /// <param name="fontSize">The font size.</param>
-    [JsonConstructor]
-    public ScreenSurface(ICellSurface surface, IFont font = null, Point? fontSize = null)
-    {
-        Surface = surface;
-        Font = font ?? GameHost.Instance.DefaultFont;
-        FontSize = fontSize ?? Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
 
-        // Note, we keep the hardcoded "default" renderer because it requires no setup. If a
-        // derived class uses a different render, and that renderer needs the derived class
-        // already configured, ready to accept the new renderer, they should call
-        //      Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-        //
-        Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
-    }
 
     /// <summary>
     /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
@@ -221,13 +198,26 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     /// <param name="totalWidth">The total width of the surface in cells.</param>
     /// <param name="totalHeight">The total height of the surface in cells.</param>
     /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-    public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
+    public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[]? initialCells):
+        this(new CellSurface(viewWidth, viewHeight, totalWidth, totalHeight, initialCells), GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize))
     {
-        Surface = new CellSurface(viewWidth, viewHeight, totalWidth, totalHeight, initialCells);
-        Font = GameHost.Instance.DefaultFont;
-        FontSize = Font?.GetFontSize(GameHost.Instance.DefaultFontSize) ?? new Point(1, 1);
+    }
 
-        // See note in other ctor.
+    /// <summary>
+    /// Creates a new screen object wrapping an existing surface.
+    /// </summary>
+    /// <param name="surface">The surface.</param>
+    /// <param name="font">The font to use with the surface.</param>
+    /// <param name="fontSize">The font size.</param>
+    [JsonConstructor]
+    public ScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null)
+    {
+        _surface = surface;
+        _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+
+        _font = font ?? GameHost.Instance.DefaultFont;
+        FontSize = fontSize ?? _font.GetFontSize(GameHost.Instance.DefaultFontSize);
+
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
@@ -303,7 +293,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
         }
     }
 
-    private void _isDirtyChangedEventHadler(object sender, EventArgs e) =>
+    private void _isDirtyChangedEventHadler(object? sender, EventArgs e) =>
         OnIsDirtyChanged();
 
     /// <summary>

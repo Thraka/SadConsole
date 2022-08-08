@@ -75,7 +75,7 @@ public class ScrollBarTheme : ThemeBase
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is ScrollBar scrollbar))
+        if (control is not ScrollBar scrollbar)
         {
             return;
         }

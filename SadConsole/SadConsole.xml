@@ -1447,7 +1447,7 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.ApplyDefaultCursorEffect">
             <summary>
-            Resets the <see cref="P:SadConsole.Components.Cursor.CursorRenderCell"/> back to the default.
+            Resets the <see cref="P:SadConsole.Components.Cursor.CursorRenderEffect"/> back to the default.
             </summary>
         </member>
         <member name="M:SadConsole.Components.Cursor.RestartCursorEffect">
@@ -2311,6 +2311,11 @@
         <member name="M:SadConsole.Effects.CellEffectBase.Clone">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Effects.CodeEffect">
+            <summary>
+            Effect that runs code for the apply and update actions of an effect.
+            </summary>
+        </member>
         <member name="P:SadConsole.Effects.CodeEffect.Id">
             <summary>
             A user defined identifier of the effect.
@@ -2330,6 +2335,15 @@
             <summary>
             The amount of time this effect runs for in seconds.
             </summary>
+        </member>
+        <member name="M:SadConsole.Effects.CodeEffect.#ctor(System.String,System.Func{SadConsole.Effects.CodeEffect,SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState,System.Boolean},System.Action{SadConsole.Effects.CodeEffect,System.TimeSpan},System.Action{SadConsole.Effects.CodeEffect})">
+            <summary>
+            Creates a cell effect that runs custom code instead of hardcoded effect actions.
+            </summary>
+            <param name="id">A user-definable identifier.</param>
+            <param name="apply">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)"/>.</param>
+            <param name="update">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.Update(System.TimeSpan)"/>.</param>
+            <param name="restart">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.Restart"/>.</param>
         </member>
         <member name="M:SadConsole.Effects.CodeEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
             <inheritdoc />
@@ -2466,7 +2480,7 @@
             <summary>
             Gets a collection of effects associated with the manager.
             </summary>
-            <returns></returns>
+            <returns>Null if there aren't any effects.</returns>
         </member>
         <member name="M:SadConsole.Effects.EffectsManager.DropInvalidCells">
             <summary>
@@ -2922,7 +2936,7 @@
         </member>
         <member name="F:SadConsole.Entities.Renderer.IsAttached">
             <summary>
-            Indicatest that the entity renderer has been added to a parent object.
+            Indicates that the entity renderer has been added to a parent object.
             </summary>
         </member>
         <member name="F:SadConsole.Entities.Renderer._entities">
@@ -3632,6 +3646,11 @@
         <member name="M:SadConsole.GameHost.Dispose">
             <summary>
             Disposes this object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.GameHost._gameStartedAt">
+            <summary>
+            The date and time the game was started.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Fonts">
@@ -7601,6 +7620,22 @@
             <exception cref="T:System.InvalidOperationException">The character glyph index is valid but isn't included in this font.</exception>
             <exception cref="T:System.IndexOutOfRangeException">The character glyph index isn't in range. It must be between 33 and 126.</exception>
         </member>
+        <member name="M:SadConsole.Readers.TheDrawFont.GetSurface(System.Int32)">
+            <summary>
+            Generates a surface from the specified glyph using a white foreground and black background for the individual glyphs of the character.
+            </summary>
+            <param name="glyph">The glyph index.</param>
+            <returns>A surface of just the glyph. Width and height of the surface is based on the TheDraw's font.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.TheDrawFont.GetSurface(System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Generates a surface from the specified glyph using the specified foreground and background for the individual glyphs of the character.
+            </summary>
+            <param name="glyph">The glyph index.</param>
+            <param name="alternateForeground">Foreground color used to draw the glyph.</param>
+            <param name="alternateBackground">Background color used to draw the glyph.</param>
+            <returns>A surface of just the glyph. Width and height of the surface is based on the TheDraw's font.</returns>
+        </member>
         <member name="T:SadConsole.Renderers.Constants.RendererNames">
             <summary>
             Renderer names used by hosts and types.
@@ -8132,6 +8167,12 @@
             <param name="componentsMouse">The mouse collection.</param>
             <param name="componentsEmpty">The empty collection.</param>
         </member>
+        <member name="M:SadConsole.ScreenObject.GetEnumerator">
+            <summary>
+            Returns an enumerator for <see cref="P:SadConsole.ScreenObject.Children"/>.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
             Manages the parent and children relationship for <see cref="T:SadConsole.IScreenObject"/>.
@@ -8328,14 +8369,6 @@
             <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
             <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
-            <summary>
-            Creates a new screen object wrapping an existing surface.
-            </summary>
-            <param name="surface">The surface.</param>
-            <param name="font">The font to use with the surface.</param>
-            <param name="fontSize">The font size.</param>
-        </member>
         <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -8345,6 +8378,14 @@
             <param name="totalWidth">The total width of the surface in cells.</param>
             <param name="totalHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new screen object wrapping an existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
             <inheritdoc />
@@ -8480,9 +8521,16 @@
             Registers the default converters for SadConsole objects, when needed.
             </summary>
         </member>
+        <member name="M:SadConsole.Serializer.Contracts.CreateContract(System.Type)">
+            <summary>
+            Resolves <see cref="T:SadConsole.IFont"/> and <see cref="T:SadConsole.ColoredGlyph"/> with the appropriate converters.
+            </summary>
+            <param name="objectType"></param>
+            <returns></returns>
+        </member>
         <member name="P:SadConsole.Serializer.Settings">
             <summary>
-            The settings to use during <see cref="!:Save&lt;T&gt;(T, string, bool)"/> and <see cref="!:Load&lt;T&gt;(string, bool)"/>.
+            The settings to use during <see cref="M:SadConsole.Serializer.Save``1(``0,System.String,System.Boolean,Newtonsoft.Json.JsonSerializerSettings)"/> and <see cref="M:SadConsole.Serializer.Load``1(System.String,System.Boolean,Newtonsoft.Json.JsonSerializerSettings)"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Serializer.Serialize``1(``0)">
@@ -8747,9 +8795,22 @@
             A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
             </summary>
         </member>
+        <member name="M:SadConsole.SplashScreens.Ansi1.#ctor(SadConsole.IFont,SadConsole.IFont.Sizes)">
+            <summary>
+            Creates the ansi splash screen using the specified font and size.
+            </summary>
+            <param name="font">The font to use.</param>
+            <param name="fontSize">The font size to use.</param>
+        </member>
+        <member name="M:SadConsole.SplashScreens.Ansi1.#ctor(SadConsole.IFont.Sizes)">
+            <summary>
+            Creates the ansi splash screen using the <see cref="P:SadConsole.GameHost.EmbeddedFont"/> and the specified font size.
+            </summary>
+            <param name="fontSize">The size of font to use.</param>
+        </member>
         <member name="M:SadConsole.SplashScreens.Ansi1.#ctor">
             <summary>
-            A new instance of this class.
+            Creates the ansi splash screen using the <see cref="P:SadConsole.GameHost.EmbeddedFont"/> and a font size of <see cref="F:SadConsole.IFont.Sizes.One"/>.
             </summary>
         </member>
         <member name="M:SadConsole.SplashScreens.Ansi1.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -8835,6 +8896,16 @@
             <summary>
             Describes a parser
             </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+            <summary>
+            Generates a colored string from a string of characters.
+            </summary>
+            <param name="value">The characters to process.</param>
+            <param name="surfaceIndex">The index on the backing surface, if it applies.</param>
+            <param name="surface">The backing surface the parser is interacting with, if it applies.</param>
+            <param name="initialBehaviors">A set of known behaviors to apply to the parser.</param>
+            <returns></returns>
         </member>
         <member name="T:SadConsole.StringParser.CommandTypes">
             <summary>
@@ -8945,9 +9016,24 @@
             Sets the mirror of a glyph.
             </summary>
         </member>
-        <member name="F:SadConsole.StringParser.ParseCommandDecorator.Decorator">
+        <member name="P:SadConsole.StringParser.ParseCommandDecorator.Decorator">
             <summary>
-            The mirror mode.
+            The decorator created by the command settings.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.ParseCommandDecorator.Glyph">
+            <summary>
+            The glyph of the decorator.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.ParseCommandDecorator.Color">
+            <summary>
+            The color of the decorator.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.ParseCommandDecorator.Mirror">
+            <summary>
+            The mirror to apply to the decorator.
             </summary>
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.String)">
@@ -8969,22 +9055,22 @@
             Prints a glyph.
             </summary>
         </member>
-        <member name="F:SadConsole.StringParser.ParseCommandSetGlyph.Glyph">
+        <member name="P:SadConsole.StringParser.ParseCommandSetGlyph.Glyph">
             <summary>
             The glyph to set.
             </summary>
         </member>
-        <member name="F:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyph">
+        <member name="P:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyph">
             <summary>
             Uses a random glyph.
             </summary>
         </member>
-        <member name="F:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyphMin">
+        <member name="P:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyphMin">
             <summary>
             The minimum glyph to use with the random glyph.
             </summary>
         </member>
-        <member name="F:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyphMax">
+        <member name="P:SadConsole.StringParser.ParseCommandSetGlyph.RandomGlyphMax">
             <summary>
             The maximumglyph to use with the random glyph.
             </summary>
@@ -9018,11 +9104,6 @@
             Creates a new instance of this command.
             </summary>
             <param name="parameters">The string to parse for parameters.</param>
-        </member>
-        <member name="M:SadConsole.StringParser.ParseCommandGradient.#ctor">
-            <summary>
-            Creates a new instance of this command.
-            </summary>
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandGradient.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
@@ -10347,7 +10428,7 @@
              When overriding this method, to perhaps restrict the requested size, make sure to do the following:
             
              - Check if the <see cref="P:SadConsole.UI.Controls.ControlBase.CanResize"/> property allows resizing. If it doesn't, throw an <see cref="T:System.InvalidOperationException"/>.
-             - The <see cref="F:SadConsole.UI.Controls.ControlBase._width"/> and <see cref="F:SadConsole.UI.Controls.ControlBase._height"/> variables of the control are set to the values provided.
+             - The <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> variables of the control are set to the values provided.
              - The <see cref="P:SadConsole.UI.Controls.ControlBase.MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
              - The <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/>, if set, is reattached by calling <see cref="M:SadConsole.UI.Themes.ThemeBase.Attached(SadConsole.UI.Controls.ControlBase)"/>.
              - Set <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> to <see langword="true"/>.
@@ -11000,7 +11081,7 @@
             </summary>
             <param name="nextSelection">The selection button to be used as next.</param>
             <param name="setPreviousOnNext">Sets the PreviousSelection property on the <paramref name="nextSelection"/> instance to current selection button. Defaults to true.</param>
-            <returns></returns>
+            <returns>The button that was passed to the <paramref name="nextSelection"/> parameter.</returns>
         </member>
         <member name="M:SadConsole.UI.Controls.SelectionButton.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -11086,7 +11167,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.ResetSurface">
             <summary>
-            Resets 
+            Resets <see cref="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface"/> to a 1x1 surface.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
@@ -11144,11 +11225,6 @@
         <member name="F:SadConsole.UI.Controls.TextBox._allowDecimalPoint">
             <summary>
             Indicates that the input box (when numeric) will accept decimal points.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.TextBox._currentAppearance">
-            <summary>
-            The current appearance of the control.
             </summary>
         </member>
         <member name="E:SadConsole.UI.Controls.TextBox.EditModeEnter">

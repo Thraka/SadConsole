@@ -42,7 +42,7 @@ public static class Mouse
     /// <param name="handler">The handler callback.</param>
     public static void RemoveMouseHook(this IScreenObject screenObject, Func<IScreenObject, MouseScreenObjectState, bool> handler)
     {
-        MouseHook existingHook = null;
+        MouseHook? existingHook = null;
 
         foreach (MouseHook hook in screenObject.GetSadComponents<MouseHook>())
         {

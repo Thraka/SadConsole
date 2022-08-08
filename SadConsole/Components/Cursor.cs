@@ -17,14 +17,14 @@ namespace SadConsole.Components;
 public class Cursor : IComponent
 {
     private ColoredGlyphState _cursorCellOriginal;
-    private ICellEffect _cursorCellEffect;
+    private ICellEffect? _cursorCellEffect;
     private ColoredGlyph _cursorCell;
 
-    private ICellSurface _editor;
+    private ICellSurface? _editor;
     private Point _position = new Point();
     [DataMember]
     private bool _applyCursorEffect = true;
-    private Renderers.IRenderStep _cursorRenderStep;
+    private Renderers.IRenderStep? _cursorRenderStep;
 
     /// <summary>
     /// The default glyph used for a new cursor. Value 219.
@@ -34,7 +34,7 @@ public class Cursor : IComponent
     /// <summary>
     /// Raised when the keyboard is processing keys. Each key is sent to this event and can be cancelled
     /// </summary>
-    public event EventHandler<KeyboardHandledKeyEventArgs> KeyboardPreview;
+    public event EventHandler<KeyboardHandledKeyEventArgs>? KeyboardPreview;
 
     /// <summary>
     /// Cell used to render the cursor on the screen.
@@ -74,13 +74,13 @@ public class Cursor : IComponent
     /// This effect is applied to each cell printed by the cursor.
     /// </summary>
     [DataMember]
-    public ICellEffect PrintEffect { get; set; }
+    public ICellEffect? PrintEffect { get; set; }
 
     /// <summary>
     /// This is the cursor visible effect, like blinking.
     /// </summary>
     [DataMember]
-    public ICellEffect CursorRenderEffect
+    public ICellEffect? CursorRenderEffect
     {
         get => _cursorCellEffect;
         set
@@ -245,7 +245,10 @@ public class Cursor : IComponent
 
         PrintAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
-        CursorRenderCell = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph).ToState();
+        // CursorRenderCell property
+        _cursorCellOriginal = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph).ToState();
+        _cursorCell = new ColoredGlyph();
+        _cursorCellOriginal.RestoreState(ref _cursorCell);
 
         ApplyDefaultCursorEffect();
     }
@@ -258,7 +261,7 @@ public class Cursor : IComponent
         _editor = surface;
 
     /// <summary>
-    /// Resets the <see cref="CursorRenderCell"/> back to the default.
+    /// Resets the <see cref="CursorRenderEffect"/> back to the default.
     /// </summary>
     public Cursor ApplyDefaultCursorEffect()
     {
@@ -269,7 +272,7 @@ public class Cursor : IComponent
         {
             BlinkSpeed = System.TimeSpan.FromSeconds(0.35d)
         };
-        _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
+        CursorRenderEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
 
         return this;
     }
@@ -297,14 +300,9 @@ public class Cursor : IComponent
     /// <exception cref="Exception">Thrown when the cursor is not attached to any surface.</exception>
     public Cursor SetPrintAppearanceToHost()
     {
-        if (_editor != null)
-        {
-            PrintAppearance = new ColoredGlyph(_editor.DefaultForeground, _editor.DefaultBackground, 0);
-        }
-        else
-        {
-            throw new Exception("A host is not attached, cannot reset appearance.");
-        }
+        if (_editor == null) throw new Exception("A host is not attached, cannot reset appearance.");
+
+        PrintAppearance = new ColoredGlyph(_editor.DefaultForeground, _editor.DefaultBackground, 0);
 
         return this;
     }
@@ -345,6 +343,8 @@ public class Cursor : IComponent
 
     private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot print.");
+
         ColoredGlyph cell = _editor[_position.Y * _editor.Width + _position.X];
 
         if (!PrintOnlyCharacterData)
@@ -410,8 +410,10 @@ public class Cursor : IComponent
     /// <param name="template">The way the text will look when it is printed.</param>
     /// <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
     /// <returns>Returns this cursor object.</returns>
-    public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect templateEffect)
+    public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect? templateEffect)
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot print.");
+
         ColoredString coloredString;
 
         if (UseStringParser)
@@ -441,6 +443,8 @@ public class Cursor : IComponent
     /// <returns>Returns this cursor object.</returns>
     public Cursor Print(ColoredString text)
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot print.");
+
         if (text.Length == 0) return this;
 
         _cursorCellEffect?.Restart();
@@ -612,6 +616,8 @@ public class Cursor : IComponent
     /// <returns>The current cursor object.</returns>
     public Cursor LineFeed()
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot use line feed.");
+
         if (_position.Y == _editor.Height - 1)
         {
             if (AutomaticallyShiftRowsUp)
@@ -664,14 +670,7 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor Up(int amount)
     {
-        int newY = _position.Y - amount;
-
-        if (newY < 0)
-        {
-            newY = 0;
-        }
-
-        Position = new Point(_position.X, newY);
+        Position = new Point(_position.X, _position.Y - amount);
         return this;
     }
 
@@ -682,14 +681,7 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor Down(int amount)
     {
-        int newY = _position.Y + amount;
-
-        if (newY >= _editor.Height)
-        {
-            newY = _editor.Height - 1;
-        }
-
-        Position = new Point(_position.X, newY);
+        Position = new Point(_position.X, _position.Y + amount);
         return this;
     }
 
@@ -700,14 +692,7 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor Left(int amount)
     {
-        int newX = _position.X - amount;
-
-        if (newX < 0)
-        {
-            newX = 0;
-        }
-
-        Position = new Point(newX, _position.Y);
+        Position = new Point(_position.X - amount, _position.Y);
         return this;
     }
 
@@ -718,6 +703,8 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor LeftWrap(int amount)
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot move left.");
+
         int index = Point.ToIndex(_position.X, _position.Y, _editor.Width) - amount;
 
         if (index < 0)
@@ -737,14 +724,8 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor Right(int amount)
     {
-        int newX = _position.X + amount;
+        Position = new Point(_position.X + amount, _position.Y);
 
-        if (newX >= _editor.Width)
-        {
-            newX = _editor.Width - 1;
-        }
-
-        Position = new Point(newX, _position.Y);
         return this;
     }
 
@@ -755,6 +736,8 @@ public class Cursor : IComponent
     /// <returns>This cursor object.</returns>
     public Cursor RightWrap(int amount)
     {
+        if (_editor == null) throw new Exception("A host is not attached, cannot move right.");
+
         int index = Point.ToIndex(_position.X, _position.Y, _editor.Width) + amount;
 
         if (index > _editor.Count)
@@ -936,6 +919,8 @@ public class Cursor : IComponent
     {
         if (host is IScreenSurface surface)
             _editor = surface.Surface;
+        else
+            throw new ArgumentException($"Host must be a {nameof(IScreenSurface)}", nameof(host));
 
         if (!_editor.IsValidCell(_position.X, _position.Y))
             Position = (0, 0);

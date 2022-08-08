@@ -76,7 +76,7 @@ public partial class Console : ICellSurface
     }
 
     /// <inheritdoc/>
-    public IEnumerator<ColoredGlyph> GetEnumerator()
+    public new IEnumerator<ColoredGlyph> GetEnumerator()
     {
         return Surface.GetEnumerator();
     }

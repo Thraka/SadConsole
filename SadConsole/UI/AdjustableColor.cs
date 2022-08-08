@@ -14,7 +14,7 @@ public class AdjustableColor
     /// The name of the color.
     /// </summary>
     [DataMember]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// The color without brightness.

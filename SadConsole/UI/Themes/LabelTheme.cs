@@ -33,7 +33,7 @@ public class LabelTheme : ThemeBase
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
         if (!control.IsDirty) return;
-        if (!(control is Label label)) return;
+        if (control is not Label label) return;
 
         RefreshTheme(control.FindThemeColors(), control);
         ColoredGlyph appearance;
@@ -46,7 +46,7 @@ public class LabelTheme : ThemeBase
         label.Surface.Fill(label.TextColor ?? appearance.Foreground, appearance.Background, 0);
         label.Surface.Print(0, 0, label.DisplayText.Align(label.Alignment, label.Surface.Width));
 
-        IFont font = label.AlternateFont ?? label.Parent?.Host?.ParentConsole?.Font;
+        IFont? font = label.AlternateFont ?? label.Parent?.Host?.ParentConsole?.Font;
         Color color = label.TextColor ?? appearance.Foreground;
 
         if (font != null)

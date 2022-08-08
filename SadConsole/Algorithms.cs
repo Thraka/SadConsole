@@ -271,22 +271,22 @@ public static class Algorithms
         /// <summary>
         /// The west or left node.
         /// </summary>
-        public TNode West;
+        public TNode? West;
 
         /// <summary>
         /// The east or right node.
         /// </summary>
-        public TNode East;
+        public TNode? East;
 
         /// <summary>
         /// The north or up node.
         /// </summary>
-        public TNode North;
+        public TNode? North;
 
         /// <summary>
         /// The south or down node.
         /// </summary>
-        public TNode South;
+        public TNode? South;
 
         /// <summary>
         /// When <see langword="true"/> indicates the <see cref="West"/> connection is valid; otherwise <see langword="false"/>.
@@ -334,7 +334,6 @@ public static class Algorithms
         /// </summary>
         public NodeConnections()
         {
-
         }
     }
 }

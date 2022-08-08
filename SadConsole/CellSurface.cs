@@ -22,7 +22,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     private BoundedRectangle _viewArea;
 
     /// <inheritdoc />
-    public event EventHandler IsDirtyChanged;
+    public event EventHandler? IsDirtyChanged;
 
     /// <inheritdoc />
     [DataMember]
@@ -206,7 +206,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// <param name="totalWidth">The total width of the surface in cells.</param>
     /// <param name="totalHeight">The total height of the surface in cells.</param>
     /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-    public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[] initialCells)
+    public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[]? initialCells)
     {
         if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
         if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
@@ -271,7 +271,9 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     }
 
     [JsonConstructor]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private CellSurface()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         Effects = new Effects.EffectsManager(this);
     }

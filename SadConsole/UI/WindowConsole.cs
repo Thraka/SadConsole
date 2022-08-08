@@ -18,12 +18,12 @@ public partial class Window : Console
     /// <summary>
     /// Raised when the window is closed.
     /// </summary>
-    public event EventHandler Closed;
+    public event EventHandler? Closed;
 
     /// <summary>
     /// Raised when the window is shown.
     /// </summary>
-    public event EventHandler Shown;
+    public event EventHandler? Shown;
 
     /// <summary>
     /// The controls host holding all the controls.
@@ -174,7 +174,7 @@ public partial class Window : Console
     /// <param name="width">The width in cells of the surface.</param>
     /// <param name="height">The height in cells of the surface.</param>
     /// <param name="initialCells">The initial cells to seed the surface.</param>
-    public Window(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells) { }
+    public Window(int width, int height, ColoredGlyph[]? initialCells) : this(width, height, width, height, initialCells) { }
 
     /// <summary>
     /// Creates a new window with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
@@ -193,7 +193,7 @@ public partial class Window : Console
     /// <param name="bufferWidth">The total width of the window in cells.</param>
     /// <param name="bufferHeight">The total height of the window in cells.</param>
     /// <param name="initialCells">The cells to seed the window with. If <see langword="null"/>, creates the cells for you.</param>
-    public Window(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[] initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
+    public Window(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[]? initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
     {
         _isVisibleProcessing = true;
         IsVisible = false;
@@ -217,7 +217,7 @@ public partial class Window : Console
     /// <param name="surface">The surface.</param>
     /// <param name="font">The font to use with the surface.</param>
     /// <param name="fontSize">The font size.</param>
-    public Window(ICellSurface surface, IFont font = null, Point? fontSize = null) : base(surface, font, fontSize)
+    public Window(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize)
     {
         _isVisibleProcessing = true;
         IsVisible = false;
@@ -409,7 +409,7 @@ public partial class Window : Console
 
         if (Parent == null)
         {
-            Parent = GameHost.Instance.Screen;
+            Parent = GameHost.Instance.Screen ?? throw new NullReferenceException("Current screen is null. The game host screen must be set to an object.");
             AddedToParent = true;
         }
 

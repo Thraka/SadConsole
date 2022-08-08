@@ -49,7 +49,7 @@ public class EffectsManager
     /// </summary>
     /// <param name="cell">Cell to set the effect for.</param>
     /// <param name="effect">The effect to associate with the cell.</param>
-    public void SetEffect(ColoredGlyph cell, ICellEffect effect)
+    public void SetEffect(ColoredGlyph cell, ICellEffect? effect)
     {
         if (effect != null)
         {
@@ -97,7 +97,7 @@ public class EffectsManager
     /// </summary>
     /// <param name="cells">A list of cell indicies to change the effect on.</param>
     /// <param name="effect">The effect to associate with the cell.</param>
-    public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+    public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect? effect)
     {
         if (effect != null)
         {
@@ -144,14 +144,14 @@ public class EffectsManager
     /// Gets the effect of the specified cell.
     /// </summary>
     /// <returns>The effect.</returns>
-    public Effects.ICellEffect GetEffect(ColoredGlyph cell) =>
+    public Effects.ICellEffect? GetEffect(ColoredGlyph cell) =>
         _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
 
     /// <summary>
     /// Gets a collection of effects associated with the manager.
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<ICellEffect> GetEffects()
+    /// <returns>Null if there aren't any effects.</returns>
+    public IEnumerable<ICellEffect>? GetEffects()
     {
         if (_effects.Keys.Count == 0)
             return null;
@@ -242,7 +242,7 @@ public class EffectsManager
     /// <param name="cell">The cell index.</param>
     protected void ClearCellEffect(ColoredGlyph cell)
     {
-        if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData oldEffectData))
+        if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData? oldEffectData))
         {
             oldEffectData.RemoveCell(cell, oldEffectData.Effect.RestoreCellOnRemoved);
             _effectCells.Remove(cell);

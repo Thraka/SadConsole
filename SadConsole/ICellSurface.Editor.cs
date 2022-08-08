@@ -346,7 +346,7 @@ public static class CellSurfaceEditor
     /// <param name="x">The x location of the cell.</param>
     /// <param name="y">The y location of the cell.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, int x, int y, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, int x, int y, ICellEffect? effect)
     {
         if (!surface.IsValidCell(x, y, out int index))
             return;
@@ -361,7 +361,7 @@ public static class CellSurfaceEditor
     /// <param name="surface">The surface being edited.</param>
     /// <param name="index">Index of the cell.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, int index, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, int index, ICellEffect? effect)
     {
         if (!surface.IsValidCell(index))
             return;
@@ -376,7 +376,7 @@ public static class CellSurfaceEditor
     /// <param name="surface">The surface being edited.</param>
     /// <param name="cells">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, IEnumerable<Point> cells, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, IEnumerable<Point> cells, ICellEffect? effect)
     {
         var cellList = new List<int>(5);
 
@@ -393,7 +393,7 @@ public static class CellSurfaceEditor
     /// <param name="surface">The surface being edited.</param>
     /// <param name="cells">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, IEnumerable<int> cells, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, IEnumerable<int> cells, ICellEffect? effect)
     {
         List<ColoredGlyph> glyphs = new List<ColoredGlyph>(5);
 
@@ -410,7 +410,7 @@ public static class CellSurfaceEditor
     /// <param name="surface">The surface being edited.</param>
     /// <param name="cell">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, ColoredGlyph cell, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, ColoredGlyph cell, ICellEffect? effect)
     {
         surface.Effects.SetEffect(cell, effect);
         surface.IsDirty = true;
@@ -422,7 +422,7 @@ public static class CellSurfaceEditor
     /// <param name="surface">The surface being edited.</param>
     /// <param name="cells">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect effect)
+    public static void SetEffect(this ICellSurface surface, IEnumerable<ColoredGlyph> cells, ICellEffect? effect)
     {
         surface.Effects.SetEffect(cells, effect);
         surface.IsDirty = true;
@@ -436,7 +436,7 @@ public static class CellSurfaceEditor
     /// <param name="y">The y location of the cell.</param>
     /// <returns>The effect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ICellEffect GetEffect(this ICellSurface surface, int x, int y) =>
+    public static ICellEffect? GetEffect(this ICellSurface surface, int x, int y) =>
         surface.Effects.GetEffect(surface[x, y]);
 
     /// <summary>
@@ -446,7 +446,7 @@ public static class CellSurfaceEditor
     /// <param name="index">The index of the cell.</param>
     /// <returns>The effect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ICellEffect GetEffect(this ICellSurface surface, int index) =>
+    public static ICellEffect? GetEffect(this ICellSurface surface, int index) =>
         surface.Effects.GetEffect(surface[index]);
 
     /// <summary>
@@ -562,7 +562,7 @@ public static class CellSurfaceEditor
     /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
     /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SetDecorator(this ICellSurface surface, int x, int y, int count, params CellDecorator[] decorators) =>
+    public static void SetDecorator(this ICellSurface surface, int x, int y, int count, params CellDecorator[]? decorators) =>
         SetDecorator(surface, Point.ToIndex(x, y, surface.Width), count, decorators);
 
     /// <summary>
@@ -572,7 +572,7 @@ public static class CellSurfaceEditor
     /// <param name="index">The index of the cell to start applying.</param>
     /// <param name="count">The count of cells to use from the index (inclusive).</param>
     /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
-    public static void SetDecorator(this ICellSurface surface, int index, int count, params CellDecorator[] decorators)
+    public static void SetDecorator(this ICellSurface surface, int index, int count, params CellDecorator[]? decorators)
     {
         if (count <= 0) return;
         if (!surface.IsValidCell(index)) return;
@@ -911,7 +911,7 @@ public static class CellSurfaceEditor
     /// <param name="text">The string to display.</param>
     /// <param name="appearance">The appearance of the cell</param>
     /// <param name="effect">An optional effect to apply to the printed surface.</param>
-    public static void Print(this ICellSurface surface, int x, int y, string text, ColoredGlyph appearance, ICellEffect effect = null)
+    public static void Print(this ICellSurface surface, int x, int y, string text, ColoredGlyph appearance, ICellEffect? effect = null)
     {
         if (string.IsNullOrEmpty(text)) return;
         if (!surface.IsValidCell(x, y, out int index)) return;
@@ -1552,7 +1552,7 @@ public static class CellSurfaceEditor
 
         surface.TimesShiftedUp += amount;
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null;
+        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
 
         // Handle all the wrapped ones first
         if (wrap)
@@ -1635,7 +1635,7 @@ public static class CellSurfaceEditor
 
         surface.TimesShiftedDown += amount;
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null;
+        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
 
         // Handle all the wrapped ones first
         if (wrap)
@@ -1719,7 +1719,7 @@ public static class CellSurfaceEditor
 
         surface.TimesShiftedRight += amount;
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null;
+        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
 
         // Handle all the wrapped ones first
         if (wrap)
@@ -1804,7 +1804,7 @@ public static class CellSurfaceEditor
 
         surface.TimesShiftedLeft += amount;
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null;
+        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
 
         // Handle all the wrapped ones first
         if (wrap)
@@ -2287,7 +2287,7 @@ public static class CellSurfaceEditor
                 if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
                     throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
 
-                ColoredGlyph border = parameters.BorderGlyph;
+                ColoredGlyph border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
                 // Draw the major sides
                 DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top],
@@ -2353,7 +2353,7 @@ public static class CellSurfaceEditor
             else
             {
                 // Draw the major sides
-                ColoredGlyph border = parameters.BorderGlyph;
+                ColoredGlyph border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
                 DrawLine(surface, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
@@ -2383,7 +2383,7 @@ public static class CellSurfaceEditor
     /// <param name="fill">The fill style. If null, the box is not filled.</param>
     /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
     [Obsolete("Use the other DrawBox method overload")]
-    public static void DrawBox(this ICellSurface surface, Rectangle area, ColoredGlyph border, ColoredGlyph fill = null, int[] connectedLineStyle = null)
+    public static void DrawBox(this ICellSurface surface, Rectangle area, ColoredGlyph border, ColoredGlyph? fill = null, int[]? connectedLineStyle = null)
     {
         if (connectedLineStyle == null)
         {
@@ -2427,6 +2427,8 @@ public static class CellSurfaceEditor
     public static void DrawCircle(this ICellSurface surface, Rectangle area, ShapeParameters parameters)
     {
         var cells = new List<int>(area.Width * area.Height);
+
+        if (parameters.BorderGlyph == null) throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
         Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
         {
@@ -2502,7 +2504,7 @@ public static class CellSurfaceEditor
     /// <param name="outer">The appearance of the outer line of the ellipse.</param>
     /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
     [Obsolete("Use the other DrawCircle method overload")]
-    public static void DrawCircle(this ICellSurface surface, Rectangle area, ColoredGlyph outer, ColoredGlyph inner = null)
+    public static void DrawCircle(this ICellSurface surface, Rectangle area, ColoredGlyph outer, ColoredGlyph? inner = null)
     {
         var cells = new List<int>(area.Width * area.Height);
 

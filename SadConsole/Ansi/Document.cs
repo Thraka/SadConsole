@@ -38,9 +38,13 @@ public class Document : IDisposable
     /// <summary>
     /// A stream that points to the <see cref="AnsiBytes"/>.
     /// </summary>
-    public MemoryStream Stream { get; private set; }
+    public MemoryStream? Stream { get; private set; }
 
-    private Document() { }
+    private Document()
+    {
+        _ansiBytes = Array.Empty<byte>();
+        AnsiString = string.Empty;
+    }
 
     /// <summary>
     /// Creates a new document from the provided file name.
@@ -48,13 +52,12 @@ public class Document : IDisposable
     /// <param name="file">The file to load.</param>
     public Document(string file)
     {
-        using (Stream stream = SadConsole.GameHost.Instance.OpenStream(file))
-        using (var reader = new BinaryReader(stream))
-        {
-            AnsiBytes = reader.ReadBytes((int)stream.Length);
-        }
+        using Stream stream = SadConsole.GameHost.Instance.OpenStream(file);
+        using var reader = new BinaryReader(stream);
 
-        Stream = new MemoryStream(AnsiBytes);
+        _ansiBytes = reader.ReadBytes((int)stream.Length);
+        AnsiString = new string(_ansiBytes.Select(b => (char)b).ToArray());
+        Stream = new MemoryStream(_ansiBytes);
     }
 
     /// <inheritdoc />

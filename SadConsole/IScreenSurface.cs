@@ -54,7 +54,7 @@ public interface IScreenSurface : IScreenObject
     /// <summary>
     /// The renderer used to draw this surface.
     /// </summary>
-    IRenderer Renderer { get; }
+    IRenderer? Renderer { get; }
 
     /// <summary>
     /// The render steps to draw this object.

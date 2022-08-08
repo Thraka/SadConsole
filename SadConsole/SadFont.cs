@@ -119,8 +119,9 @@ public class SadFont : IFont
     /// <param name="image">The <see cref="ITexture"/> of the font.</param>
     /// <param name="name">A font identifier used for serialization of resources using this font.</param>
     /// <param name="glyphRectangles">Glyph mapping dictionary.</param>
-    public SadFont(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle> glyphRectangles = null)
+    public SadFont(int glyphWidth, int glyphHeight, int glyphPadding, int rows, int columns, int solidGlyphIndex, ITexture image, string name, Dictionary<int, Rectangle>? glyphRectangles = null)
     {
+        FilePath = string.Empty;
         Columns = columns;
         Rows = rows;
         GlyphWidth = glyphWidth;
@@ -139,7 +140,9 @@ public class SadFont : IFont
     }
 
     [Newtonsoft.Json.JsonConstructor]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private SadFont() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary>
     /// Gets the rendering rectangle for a glyph.
@@ -235,7 +238,7 @@ public class SadFont : IFont
     {
         if (FilePath.StartsWith("res:"))
         {
-            using (Stream fontStream = typeof(SadFont).Assembly.GetManifestResourceStream(FilePath.Substring(4)))
+            using (Stream fontStream = typeof(SadFont).Assembly.GetManifestResourceStream(FilePath.Substring(4))!)
                 Image = GameHost.Instance.GetTexture(fontStream);
         }
         else

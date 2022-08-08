@@ -41,8 +41,10 @@ public class Quad : EasingBase
 
     }
 
-    private double QuadEaseOut(double time, double startingValue, double currentValue, double duration) => -currentValue * (time /= duration) * (time - 2) + startingValue;
+    private static double QuadEaseOut(double time, double startingValue, double currentValue, double duration) =>
+        -currentValue * (time /= duration) * (time - 2) + startingValue;
 
-    private double QuadEaseIn(double time, double startingValue, double currentValue, double duration) => currentValue * (time /= duration) * time + startingValue;
+    private static double QuadEaseIn(double time, double startingValue, double currentValue, double duration) =>
+        currentValue * (time /= duration) * time + startingValue;
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

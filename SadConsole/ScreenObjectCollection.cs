@@ -25,7 +25,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <summary>
     /// Raised when the itmes in this collection are added, removed, or repositioned.
     /// </summary>
-    public event EventHandler CollectionChanged;
+    public event EventHandler? CollectionChanged;
 
     /// <summary>
     /// Internal list of objects.

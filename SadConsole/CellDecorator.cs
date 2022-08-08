@@ -74,7 +74,7 @@ public readonly struct CellDecorator : IEquatable<CellDecorator>
                left.Mirror != right.Mirror;
 
     /// <inheritdoc />
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {

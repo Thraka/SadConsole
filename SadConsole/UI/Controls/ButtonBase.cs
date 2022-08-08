@@ -15,13 +15,13 @@ public abstract class ButtonBase : ControlBase
     /// <summary>
     /// Raised when the button is clicked.
     /// </summary>
-    public event EventHandler Click;
+    public event EventHandler? Click;
 
     /// <summary>
     /// The display text of the button.
     /// </summary>
     [DataMember(Name = "Text")]
-    protected string _text;
+    protected string _text = string.Empty;
 
     /// <summary>
     /// The alignment of the <see cref="_text"/>.
@@ -35,7 +35,7 @@ public abstract class ButtonBase : ControlBase
     public string Text
     {
         get => _text;
-        set { _text = value; IsDirty = true; }
+        set { _text = value ?? string.Empty; IsDirty = true; }
     }
 
     /// <summary>

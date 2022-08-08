@@ -101,12 +101,12 @@ public sealed class ParseCommandRecolor : ParseCommandBase
 
     /// <inheritdoc />
     public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
-        ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+        ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
-        byte r = 0;
-        byte g = 0;
-        byte b = 0;
-        byte a = 0;
+        byte r;
+        byte g;
+        byte b;
+        byte a;
 
         if (Default)
         {

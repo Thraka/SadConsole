@@ -12,7 +12,7 @@ public class DrawingArea : ControlBase
     /// <summary>
     /// Called when the surface is redrawn.
     /// </summary>
-    public Action<DrawingArea, TimeSpan> OnDraw { get; set; }
+    public Action<DrawingArea, TimeSpan>? OnDraw { get; set; }
 
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.

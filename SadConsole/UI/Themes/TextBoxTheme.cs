@@ -12,7 +12,7 @@ public class TextBoxTheme : ThemeBase
 {
     private int _oldCaretPosition;
     private ControlStates _oldState;
-    private string _editingText;
+    private string _editingText = string.Empty;
 
     /// <summary>
     /// The style to use for the carrot.
@@ -50,7 +50,7 @@ public class TextBoxTheme : ThemeBase
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (!(control is TextBox textbox)) return;
+        if (control is not TextBox textbox) return;
 
         if (textbox.Surface.Effects.Count != 0)
         {

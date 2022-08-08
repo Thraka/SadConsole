@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
@@ -13,7 +14,7 @@ public abstract class ThemeBase
     /// <summary>
     /// The colors last used when <see cref="RefreshTheme(Colors, ControlBase)"/> was called.
     /// </summary>
-    protected Colors _colorsLastUsed;
+    protected Colors? _colorsLastUsed;
 
     /// <summary>
     /// Default theme state of the whole control.
@@ -53,6 +54,7 @@ public abstract class ThemeBase
     /// </summary>
     /// <param name="colors">The colors to create the theme with.</param>
     /// <param name="control">The control being drawn with the theme.</param>
+    [MemberNotNull("_colorsLastUsed")]
     public virtual void RefreshTheme(Colors colors, ControlBase control)
     {
         _colorsLastUsed = colors ?? control.FindThemeColors();
@@ -69,7 +71,7 @@ public abstract class ThemeBase
     protected Color GetOffColor(Color inColor, Color compareColor)
     {
         if (inColor == compareColor)
-            inColor = _colorsLastUsed.IsLightTheme ? compareColor.GetDark() : compareColor.GetBright();
+            inColor = _colorsLastUsed!.IsLightTheme ? compareColor.GetDark() : compareColor.GetBright();
 
         return NormalizeBlack(inColor);
     }

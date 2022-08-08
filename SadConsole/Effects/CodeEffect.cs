@@ -2,7 +2,10 @@
 
 namespace SadConsole.Effects;
 
-// Not sure if I should make this serailizable... 
+// Not sure if I should make this serailizable...
+/// <summary>
+/// Effect that runs code for the apply and update actions of an effect.
+/// </summary>
 public class CodeEffect : CellEffectBase
 {
     /// <summary>
@@ -13,7 +16,7 @@ public class CodeEffect : CellEffectBase
     /// <summary>
     /// An object associated with this effect.
     /// </summary>
-    public object Tag { get; set; }
+    public object? Tag { get; set; }
 
     /// <summary>
     /// When <see langword="true" />, uses the <see cref="Duration"/> timer to stop this effect; otherwise <see langword="false" />.
@@ -29,6 +32,13 @@ public class CodeEffect : CellEffectBase
     private readonly Action<CodeEffect, System.TimeSpan> _updateAction;
     private readonly Action<CodeEffect> _restartAction;
 
+    /// <summary>
+    /// Creates a cell effect that runs custom code instead of hardcoded effect actions.
+    /// </summary>
+    /// <param name="id">A user-definable identifier.</param>
+    /// <param name="apply">The code to run for <see cref="ICellEffect.ApplyToCell(ColoredGlyph, ColoredGlyphState)"/>.</param>
+    /// <param name="update">The code to run for <see cref="ICellEffect.Update(TimeSpan)"/>.</param>
+    /// <param name="restart">The code to run for <see cref="ICellEffect.Restart"/>.</param>
     public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, System.TimeSpan> update, Action<CodeEffect> restart) =>
         (Id, _applyAction, _updateAction, _restartAction) = (id, apply, update, restart);
 

@@ -40,7 +40,7 @@ public class Bounce : EasingBase
 
     }
 
-    private double BounceEaseOut(double time, double startingValue, double currentValue, double duration)
+    private static double BounceEaseOut(double time, double startingValue, double currentValue, double duration)
     {
         if ((time /= duration) < (1 / 2.75))
         {
@@ -60,6 +60,7 @@ public class Bounce : EasingBase
         }
     }
 
-    private double BounceEaseIn(double time, double startingValue, double currentValue, double duration) => currentValue - BounceEaseOut(duration - time, 0, currentValue, duration) + startingValue;
+    private static double BounceEaseIn(double time, double startingValue, double currentValue, double duration) =>
+        currentValue - BounceEaseOut(duration - time, 0, currentValue, duration) + startingValue;
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -16,7 +16,7 @@ public interface IContainer : IReadOnlyList<ControlBase>
     /// <summary>
     /// The host owning this container.
     /// </summary>
-    ControlHost Host { get; }
+    ControlHost? Host { get; }
 
     /// <summary>
     /// Adds a control to this container.

@@ -11,12 +11,12 @@ public class Timer : Components.UpdateComponent
     /// <summary>
     /// Called when the timer elapses.
     /// </summary>
-    public event EventHandler TimerElapsed;
+    public event EventHandler? TimerElapsed;
 
     /// <summary>
     /// Called when the timer restarts.
     /// </summary>
-    public event EventHandler TimerRestart;
+    public event EventHandler? TimerRestart;
 
     /// <summary>
     /// If true, the timer will restart when the time has elapsed.

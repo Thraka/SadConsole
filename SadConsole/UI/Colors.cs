@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI;
@@ -268,7 +269,7 @@ public partial class Colors
     /// </summary>
     public Colors()
     {
-        var colors = CreateAnsi();
+        Colors colors = CreateAnsi();
 
         colors.CopyTo(this);
     }

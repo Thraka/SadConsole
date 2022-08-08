@@ -9,7 +9,7 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public class Label : ControlBase
 {
-    private string _text;
+    private string _text = string.Empty;
 
     /// <summary>
     /// When <see langword="true"/>, shows an underline on the text.
@@ -39,11 +39,8 @@ public class Label : ControlBase
         get => _text;
         set
         {
-            if (value == null)
-                _text = "";
-            else
-                _text = value;
-
+            _text = value ?? string.Empty;
+            
             IsDirty = true;
         }
     }

@@ -8,16 +8,16 @@ public partial class ScreenSurface
 {
 
     /// <inheritdoc/>
-    public event EventHandler<MouseScreenObjectState> MouseButtonClicked;
+    public event EventHandler<MouseScreenObjectState>? MouseButtonClicked;
 
     /// <inheritdoc/>
-    public event EventHandler<MouseScreenObjectState> MouseMove;
+    public event EventHandler<MouseScreenObjectState>? MouseMove;
 
     /// <inheritdoc/>
-    public event EventHandler<MouseScreenObjectState> MouseExit;
+    public event EventHandler<MouseScreenObjectState>? MouseExit;
 
     /// <inheritdoc/>
-    public event EventHandler<MouseScreenObjectState> MouseEnter;
+    public event EventHandler<MouseScreenObjectState>? MouseEnter;
 
     /// <summary>
     /// Indicates that the mouse is currently over this console.

@@ -44,8 +44,14 @@ public class AnimatedValue : Wait
     /// <param name="startingValue">The starting value of the animation.</param>
     /// <param name="endingValue">The ending value of the animation.</param>
     /// <param name="easingFunction">The easing function used during animation. Defaults to <see cref="EasingFunctions.Linear"/>.</param>
-    public AnimatedValue(TimeSpan duration, double startingValue, double endingValue, EasingFunctions.EasingBase easingFunction = null) =>
-        Reset(duration, startingValue, endingValue, easingFunction);
+    public AnimatedValue(TimeSpan duration, double startingValue, double endingValue, EasingFunctions.EasingBase? easingFunction = null)
+    {
+        // Same code as Reset
+        Duration = duration;
+        EasingFunction = easingFunction ?? new EasingFunctions.Linear();
+        StartingValue = startingValue;
+        EndingValue = endingValue;
+    }
 
     /// <summary>
     /// Resets this object to new values.
@@ -54,7 +60,7 @@ public class AnimatedValue : Wait
     /// <param name="startingValue">The starting value of the animation.</param>
     /// <param name="endingValue">The ending value of the animation.</param>
     /// <param name="easingFunction">The easing function used during animation. Defaults to <see cref="EasingFunctions.Linear"/>.</param>
-    public void Reset(TimeSpan duration, double startingValue, double endingValue, EasingFunctions.EasingBase easingFunction = null)
+    public void Reset(TimeSpan duration, double startingValue, double endingValue, EasingFunctions.EasingBase? easingFunction = null)
     {
         Duration = duration;
         EasingFunction = easingFunction ?? new EasingFunctions.Linear();

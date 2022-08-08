@@ -26,12 +26,12 @@ public class PanelTheme : ThemeBase
     /// The current appearance based on the control state.
     /// </summary>
     [DataMember]
-    public ColoredGlyph Appearance { get; protected set; }
+    public ColoredGlyph? Appearance { get; protected set; }
 
     /// <inheritdoc />
     public override void UpdateAndDraw(ControlBase control, TimeSpan time)
     {
-        if (SkipDrawing || !(control is Panel))
+        if (SkipDrawing || control is not Panel)
             return;
 
         RefreshTheme(control.FindThemeColors(), control);

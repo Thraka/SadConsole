@@ -24,7 +24,7 @@ public class Panel : ControlBase, IContainer
     public ControlBase this[int index] => Controls[index];
 
     /// <inheritdoc/>
-    public ControlHost Host => Parent?.Host;
+    public ControlHost? Host => Parent?.Host;
 
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
@@ -55,9 +55,12 @@ public class Panel : ControlBase, IContainer
         control.IsDirtyChanged += Control_IsDirtyChanged;
     }
 
-    private void Control_IsDirtyChanged(object sender, EventArgs e)
+    private void Control_IsDirtyChanged(object? sender, EventArgs e)
     {
-        if (((ControlBase)sender).IsDirty) IsDirty = true;
+        if (sender == null) return;
+
+        if (((ControlBase)sender).IsDirty)
+            IsDirty = true;
     }
 
     /// <inheritdoc/>

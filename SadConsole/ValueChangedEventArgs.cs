@@ -10,12 +10,12 @@ public class ValueChangedEventArgs<T> : EventArgs
     /// <summary>
     /// The previous object.
     /// </summary>
-    public readonly T OldValue;
+    public readonly T? OldValue;
 
     /// <summary>
     /// The new object.
     /// </summary>
-    public readonly T NewValue;
+    public readonly T? NewValue;
 
     /// <summary>
     /// When <see langword="true"/>, indicates this value change can be cancelled; otherwise <see langword="false"/>.
@@ -44,6 +44,6 @@ public class ValueChangedEventArgs<T> : EventArgs
     /// <param name="newValue">The new value.</param>
     /// <param name="supportsCancel">When <see langword="true"/>, indicates this value change can be cancelled.</param>
     /// <param name="supportsHandled">When <see langword="true"/>, indicates this value change can be flagged as handled and stop further event handlers.</param>
-    public ValueChangedEventArgs(T oldValue, T newValue, bool supportsCancel = false, bool supportsHandled = false) =>
+    public ValueChangedEventArgs(T? oldValue, T? newValue, bool supportsCancel = false, bool supportsHandled = false) =>
         (OldValue, NewValue, SupportsCancel, SupportsHandled) = (oldValue, newValue, supportsCancel, supportsCancel);
 }

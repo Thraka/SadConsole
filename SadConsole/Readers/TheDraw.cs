@@ -35,7 +35,7 @@ public class TheDrawFont
     /// <summary>
     /// The title of the font.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The type of font.
@@ -99,12 +99,24 @@ public class TheDrawFont
         throw new IndexOutOfRangeException("Invalid glyph index. Must be 33 through 126.");
     }
 
-    public CellSurface GetSurface(int glyph)
+    /// <summary>
+    /// Generates a surface from the specified glyph using a white foreground and black background for the individual glyphs of the character.
+    /// </summary>
+    /// <param name="glyph">The glyph index.</param>
+    /// <returns>A surface of just the glyph. Width and height of the surface is based on the TheDraw's font.</returns>
+    public CellSurface? GetSurface(int glyph)
     {
         return GetSurface(glyph, Color.White, Color.Black);
     }
 
-    public CellSurface GetSurface(int glyph, Color alternateForeground, Color alternateBackground)
+    /// <summary>
+    /// Generates a surface from the specified glyph using the specified foreground and background for the individual glyphs of the character.
+    /// </summary>
+    /// <param name="glyph">The glyph index.</param>
+    /// <param name="alternateForeground">Foreground color used to draw the glyph.</param>
+    /// <param name="alternateBackground">Background color used to draw the glyph.</param>
+    /// <returns>A surface of just the glyph. Width and height of the surface is based on the TheDraw's font.</returns>
+    public CellSurface? GetSurface(int glyph, Color alternateForeground, Color alternateBackground)
     {
         int newGlyph = glyph - 33;
         if (newGlyph >= 0 && newGlyph < 94)

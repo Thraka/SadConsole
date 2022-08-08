@@ -12,12 +12,12 @@ public class SelectionButton : Button
     /// <summary>
     /// The selection button to focus when the UP key is pressed or the SelectPrevious() method is called.
     /// </summary>
-    public SelectionButton PreviousSelection { get; set; }
+    public SelectionButton? PreviousSelection { get; set; }
 
     /// <summary>
     /// The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
     /// </summary>
-    public SelectionButton NextSelection { get; set; }
+    public SelectionButton? NextSelection { get; set; }
 
 
     /// <summary>
@@ -34,7 +34,7 @@ public class SelectionButton : Button
     /// </summary>
     /// <param name="nextSelection">The selection button to be used as next.</param>
     /// <param name="setPreviousOnNext">Sets the PreviousSelection property on the <paramref name="nextSelection"/> instance to current selection button. Defaults to true.</param>
-    /// <returns></returns>
+    /// <returns>The button that was passed to the <paramref name="nextSelection"/> parameter.</returns>
     public SelectionButton SetNextSelection(ref SelectionButton nextSelection, bool setPreviousOnNext = true)
     {
         NextSelection = nextSelection;
@@ -72,7 +72,7 @@ public class SelectionButton : Button
     /// Selects the previous selection button.
     /// </summary>
     /// <returns>Returns the previous selection button.</returns>
-    public SelectionButton SelectPrevious()
+    public SelectionButton? SelectPrevious()
     {
         if (PreviousSelection == null)
             return null;
@@ -89,7 +89,7 @@ public class SelectionButton : Button
     /// Selects the next selection button.
     /// </summary>
     /// <returns>Returns the next selection button.</returns>
-    public SelectionButton SelectNext()
+    public SelectionButton? SelectNext()
     {
         if (NextSelection == null)
             return null;

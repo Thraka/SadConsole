@@ -15,11 +15,11 @@ public class ShapeParameters
     public bool IgnoreBorderBackground { get; set; }
     public bool IgnoreBorderGlyph { get; set; }
     public bool IgnoreBorderMirror { get; set; }
-    public ColoredGlyph FillGlyph { get; set; }
+    public ColoredGlyph? FillGlyph { get; set; }
 
-    public int[] BoxBorderStyle { get; set; }
-    public ColoredGlyph[] BoxBorderStyleGlyphs { get; set; }
-    public ColoredGlyph BorderGlyph { get; set; }
+    public int[]? BoxBorderStyle { get; set; }
+    public ColoredGlyph[]? BoxBorderStyleGlyphs { get; set; }
+    public ColoredGlyph? BorderGlyph { get; set; }
 
     /// <summary>
     /// 
@@ -38,9 +38,9 @@ public class ShapeParameters
     /// <param name="ignoreFillMirror"></param>
     /// <param name="boxBorderStyle"></param>
     /// <param name="boxBorderStyleGlyphs"></param>
-    public ShapeParameters(bool hasBorder, ColoredGlyph borderGlyph, bool ignoreBorderForeground, bool ignoreBorderBackground, bool ignoreBorderGlyph, bool ignoreBorderMirror,
-                           bool hasFill, ColoredGlyph fillGlyph, bool ignoreFillForeground, bool ignoreFillBackground, bool ignoreFillGlyph, bool ignoreFillMirror,
-                           int[] boxBorderStyle, ColoredGlyph[] boxBorderStyleGlyphs)
+    public ShapeParameters(bool hasBorder, ColoredGlyph? borderGlyph, bool ignoreBorderForeground, bool ignoreBorderBackground, bool ignoreBorderGlyph, bool ignoreBorderMirror,
+                           bool hasFill, ColoredGlyph? fillGlyph, bool ignoreFillForeground, bool ignoreFillBackground, bool ignoreFillGlyph, bool ignoreFillMirror,
+                           int[]? boxBorderStyle, ColoredGlyph[]? boxBorderStyleGlyphs)
     {
         HasBorder = hasBorder;
         BorderGlyph = borderGlyph;

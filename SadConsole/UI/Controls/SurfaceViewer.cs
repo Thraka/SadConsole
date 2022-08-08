@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -64,10 +65,6 @@ public class SurfaceViewer : CompositeControl
     /// </summary>
     public DrawingArea SurfaceControl;
 
-    private void _surface_IsDirtyChanged(object sender, EventArgs e)
-    {
-        IsDirty = _surface.IsDirty;
-    }
 
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
@@ -75,7 +72,7 @@ public class SurfaceViewer : CompositeControl
     /// <param name="width">Width of the control.</param>
     /// <param name="height">Height of the control.</param>
     /// <param name="surface">The surface to view.</param>
-    public SurfaceViewer(int width, int height, ICellSurface surface = null) : base(width, height)
+    public SurfaceViewer(int width, int height, ICellSurface? surface = null) : base(width, height)
     {
         UseMouse = false;
         UseKeyboard = false;
@@ -101,14 +98,16 @@ public class SurfaceViewer : CompositeControl
     /// Sets the surface for the view.
     /// </summary>
     /// <param name="surface"></param>
-    public void SetSurface(ICellSurface surface)
+    [MemberNotNull("_surface")]
+    public void SetSurface(ICellSurface? surface)
     {
-        if (_surface == surface) return;
         if (surface == null)
         {
             ResetSurface();
             return;
         }
+
+        if (_surface == surface) return;
 
         if (_surface != null)
             _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
@@ -125,8 +124,9 @@ public class SurfaceViewer : CompositeControl
     }
 
     /// <summary>
-    /// Resets 
+    /// Resets <see cref="ChildSurface"/> to a 1x1 surface.
     /// </summary>
+    [MemberNotNull("_surface")]
     public void ResetSurface()
     {
         if (_surface != null)
@@ -192,10 +192,13 @@ public class SurfaceViewer : CompositeControl
         return false;
     }
 
-    private void VerticalScroller_ValueChanged(object sender, EventArgs e) =>
+    private void _surface_IsDirtyChanged(object? sender, EventArgs e) =>
+        IsDirty = _surface.IsDirty;
+
+    private void VerticalScroller_ValueChanged(object? sender, EventArgs e) =>
         _surface.ViewPosition = (_surface.ViewPosition.X, VerticalScroller.Value);
 
-    private void HorizontalScroller_ValueChanged(object sender, EventArgs e) =>
+    private void HorizontalScroller_ValueChanged(object? sender, EventArgs e) =>
         _surface.ViewPosition = (HorizontalScroller.Value, _surface.ViewPosition.Y);
 
     private class FauxDrawingTheme : Themes.DrawingAreaTheme
