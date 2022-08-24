@@ -97,14 +97,24 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     public int ViewWidth
     {
         get => _viewArea.Area.Width;
-        set { _viewArea.SetArea(_viewArea.Area.WithWidth(value)); IsDirty = true; }
+        set
+        {
+            if (value == _viewArea.Area.Width) return;
+            _viewArea.SetArea(_viewArea.Area.WithWidth(value));
+            IsDirty = true;
+        }
     }
 
     /// <inheritdoc />
     public int ViewHeight
     {
         get => _viewArea.Area.Height;
-        set { _viewArea.SetArea(_viewArea.Area.WithHeight(value)); IsDirty = true; }
+        set
+        {
+            if (value == _viewArea.Area.Height) return;
+            _viewArea.SetArea(_viewArea.Area.WithHeight(value));
+            IsDirty = true;
+        }
     }
 
     /// <inheritdoc />
@@ -129,6 +139,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         get => _viewArea.Area.Position;
         set
         {
+            if (value == _viewArea.Area.Position) return;
             _viewArea.SetArea(_viewArea.Area.WithPosition(value));
             IsDirty = true;
         }
