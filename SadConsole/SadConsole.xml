@@ -1045,36 +1045,31 @@
             Restores this state to the specified cell.
             </summary>
         </member>
-        <member name="T:SadConsole.ColoredString">
-            <summary>
-            Represents a string that has foreground and background colors for each character in the string.
-            </summary>
-        </member>
-        <member name="T:SadConsole.ColoredString.ColoredGlyphEffect">
+        <member name="T:SadConsole.ColoredGlyphAndEffect">
             <summary>
             A <see cref="T:SadConsole.ColoredGlyph"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect">
+        <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
             <summary>
             The effect of this cell.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.Clone">
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
             <summary>
-            Creates a copy of this <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.
+            Creates a copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.
             </summary>
-            <returns>A copy of this <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.</returns>
+            <returns>A copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.</returns>
         </member>
-        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
             <summary>
-            Creates a new <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
+            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
             </summary>
             <param name="glyph">The glyph.</param>
-            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredString.ColoredGlyphEffect.Effect"/>.</param>
+            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.CopyAppearanceTo(SadConsole.ColoredString.ColoredGlyphEffect,System.Boolean)">
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceTo(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
             <summary>
             Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
@@ -1084,7 +1079,7 @@
             decorator array reference is moved directly.
             </param>
         </member>
-        <member name="M:SadConsole.ColoredString.ColoredGlyphEffect.CopyAppearanceFrom(SadConsole.ColoredString.ColoredGlyphEffect,System.Boolean)">
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceFrom(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
             <summary>
             Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
@@ -1094,11 +1089,16 @@
             decorator array reference is moved directly.
             </param>
         </member>
+        <member name="T:SadConsole.ColoredString">
+            <summary>
+            Represents a string that has foreground and background colors for each character in the string.
+            </summary>
+        </member>
         <member name="P:SadConsole.ColoredString.Item(System.Int32)">
             <summary>
-            Gets a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> from the string.
+            Gets a <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from the string.
             </summary>
-            <param name="index">The index in the string of the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/>.</param>
+            <param name="index">The index in the string of the <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.</param>
             <returns>The colored glyph representing the character in the string.</returns>
         </member>
         <member name="P:SadConsole.ColoredString.String">
@@ -1108,7 +1108,7 @@
         </member>
         <member name="P:SadConsole.ColoredString.Length">
             <summary>
-            The total number of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> characters in the string.
+            The total number of <see cref="T:SadConsole.ColoredGlyphAndEffect"/> characters in the string.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredString.IgnoreGlyph">
@@ -1168,16 +1168,16 @@
             <param name="mirror">The mirror for each character.</param>
             <param name="decorators">The decorators to apply to each character.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredString.ColoredGlyphEffect)">
+        <member name="M:SadConsole.ColoredString.#ctor(System.String,SadConsole.ColoredGlyphAndEffect)">
             <summary>
             Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.
             </summary>
             <param name="value">The backing string.</param>
             <param name="appearance">The appearance to use for each character.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredString.ColoredGlyphEffect[])">
+        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyphAndEffect[])">
             <summary>
-            Combines a <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> array into a <see cref="T:SadConsole.ColoredString"/>.
+            Combines a <see cref="T:SadConsole.ColoredGlyphAndEffect"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
         </member>
@@ -1205,7 +1205,7 @@
             Returns a new <see cref="T:SadConsole.ColoredString"/> object using a substring of this instance.
             </summary>
             <param name="index">The index to copy the contents from.</param>
-            <param name="count">The count of <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects to copy.</param>
+            <param name="count">The count of <see cref="T:SadConsole.ColoredGlyphAndEffect"/> objects to copy.</param>
             <returns>A new <see cref="T:SadConsole.ColoredString"/> object.</returns>
         </member>
         <member name="M:SadConsole.ColoredString.SetEffect(SadConsole.Effects.ICellEffect)">
@@ -1252,13 +1252,13 @@
         </member>
         <member name="M:SadConsole.ColoredString.GetEnumerator">
             <summary>
-            Gets an enumerator for the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects in this string.
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyphAndEffect"/> objects in this string.
             </summary>
             <returns>The enumerator in the string.</returns>
         </member>
         <member name="M:SadConsole.ColoredString.System#Collections#IEnumerable#GetEnumerator">
             <summary>
-            Gets an enumerator for the <see cref="T:SadConsole.ColoredString.ColoredGlyphEffect"/> objects in this string.
+            Gets an enumerator for the <see cref="T:SadConsole.ColoredGlyphAndEffect"/> objects in this string.
             </summary>
             <returns>The enumerator in the string.</returns>
         </member>
@@ -8962,7 +8962,7 @@
             Type of command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBase.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <summary>
             Builds a glyph.
             </summary>
@@ -8993,7 +8993,7 @@
             <param name="commandStack">The current commands for the string.</param>
             <param name="surface">The surface hosting the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBlink.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandBlink.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandClearEffect">
@@ -9008,7 +9008,7 @@
             <param name="parameters">The string to parse for parameters.</param>
             <param name="commandStack">The current commands for the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandClearEffect.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandClearEffect.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandDecorator">
@@ -9047,7 +9047,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandDecorator.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandDecorator.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandSetGlyph">
@@ -9081,7 +9081,7 @@
             </summary>
             <param name="parameters">The string to parse for parameters.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandSetGlyph.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandSetGlyph.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandGradient">
@@ -9105,7 +9105,7 @@
             </summary>
             <param name="parameters">The string to parse for parameters.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandGradient.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandGradient.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandMirror">
@@ -9129,7 +9129,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandMirror.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandMirror.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandRecolor">
@@ -9193,7 +9193,7 @@
             Creates a new instance of this command.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandRecolor.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandRecolor.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandStacks">
@@ -9271,7 +9271,7 @@
             <param name="parameters">The string to parse for parameters.</param>
             <param name="stacks">The current commands for the string.</param>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredString.ColoredGlyphEffect@,SadConsole.ColoredString.ColoredGlyphEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+        <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">

@@ -59,6 +59,6 @@ public abstract class ParseCommandBase
     /// <param name="stringIndex">Where in the original string this glyph is from.</param>
     /// <param name="processedString">The entire string being processed.</param>
     /// <param name="commandStack">The state of commands.</param>
-    public abstract void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
+    public abstract void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex,
         ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack);
 }

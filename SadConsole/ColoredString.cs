@@ -13,17 +13,17 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffect>
+public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
 {
     [DataMember(Name = "Glyphs")]
-    private ColoredGlyphEffect[] _characters = System.Array.Empty<ColoredGlyphEffect>();
+    private ColoredGlyphAndEffect[] _characters = System.Array.Empty<ColoredGlyphAndEffect>();
 
     /// <summary>
-    /// Gets a <see cref="ColoredGlyphEffect"/> from the string.
+    /// Gets a <see cref="ColoredGlyphAndEffect"/> from the string.
     /// </summary>
-    /// <param name="index">The index in the string of the <see cref="ColoredGlyphEffect"/>.</param>
+    /// <param name="index">The index in the string of the <see cref="ColoredGlyphAndEffect"/>.</param>
     /// <returns>The colored glyph representing the character in the string.</returns>
-    public ColoredGlyphEffect this[int index]
+    public ColoredGlyphAndEffect this[int index]
     {
         get => _characters[index];
         set => _characters[index] = value;
@@ -54,7 +54,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
         set
         {
             if (string.IsNullOrEmpty(value))
-                _characters = System.Array.Empty<ColoredGlyphEffect>();
+                _characters = System.Array.Empty<ColoredGlyphAndEffect>();
 
             else
             {
@@ -72,7 +72,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
                             _characters[i + oldLength] = _characters[oldLength - 1].Clone();
                     else
                         for (int i = 0; i < value.Length - oldLength; i++)
-                            _characters[i + oldLength] = new ColoredGlyphEffect();
+                            _characters[i + oldLength] = new ColoredGlyphAndEffect();
 
                 }
 
@@ -85,7 +85,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     }
 
     /// <summary>
-    /// The total number of <see cref="ColoredGlyphEffect"/> characters in the string.
+    /// The total number of <see cref="ColoredGlyphAndEffect"/> characters in the string.
     /// </summary>
     public int Length => _characters.Length;
 
@@ -136,10 +136,10 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// <param name="capacity">The number of blank characters.</param>
     public ColoredString(int capacity)
     {
-        _characters = new ColoredGlyphEffect[capacity];
+        _characters = new ColoredGlyphAndEffect[capacity];
         for (int i = 0; i < capacity; i++)
         {
-            _characters[i] = new ColoredGlyphEffect() { GlyphCharacter = ' ' };
+            _characters[i] = new ColoredGlyphAndEffect() { GlyphCharacter = ' ' };
         }
     }
 
@@ -176,13 +176,13 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// </summary>
     /// <param name="value">The backing string.</param>
     /// <param name="appearance">The appearance to use for each character.</param>
-    public ColoredString(string value, ColoredGlyphEffect appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
+    public ColoredString(string value, ColoredGlyphAndEffect appearance) : this(value, appearance.Foreground, appearance.Background, appearance.Mirror) { }
 
     /// <summary>
-    /// Combines a <see cref="ColoredGlyphEffect"/> array into a <see cref="ColoredString"/>.
+    /// Combines a <see cref="ColoredGlyphAndEffect"/> array into a <see cref="ColoredString"/>.
     /// </summary>
     /// <param name="glyphs">The glyphs to combine.</param>
-    public ColoredString(params ColoredGlyphEffect[] glyphs) => _characters = glyphs.ToArray();
+    public ColoredString(params ColoredGlyphAndEffect[] glyphs) => _characters = glyphs.ToArray();
 
     /// <summary>
     /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
@@ -190,9 +190,9 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// <param name="glyphs">The glyphs to combine.</param>
     public ColoredString(params ColoredGlyph[] glyphs)
     {
-        _characters = new ColoredGlyphEffect[glyphs.Length];
+        _characters = new ColoredGlyphAndEffect[glyphs.Length];
         for (int i = 0; i < glyphs.Length; i++)
-            _characters[i] = ColoredGlyphEffect.FromColoredGlyph(glyphs[i]);
+            _characters[i] = ColoredGlyphAndEffect.FromColoredGlyph(glyphs[i]);
     }
 
     /// <summary>
@@ -228,7 +228,7 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     /// Returns a new <see cref="ColoredString"/> object using a substring of this instance.
     /// </summary>
     /// <param name="index">The index to copy the contents from.</param>
-    /// <param name="count">The count of <see cref="ColoredGlyphEffect"/> objects to copy.</param>
+    /// <param name="count">The count of <see cref="ColoredGlyphAndEffect"/> objects to copy.</param>
     /// <returns>A new <see cref="ColoredString"/> object.</returns>
     public ColoredString SubString(int index, int count)
     {
@@ -327,16 +327,16 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
     public override string ToString() => String;
 
     /// <summary>
-    /// Gets an enumerator for the <see cref="ColoredGlyphEffect"/> objects in this string.
+    /// Gets an enumerator for the <see cref="ColoredGlyphAndEffect"/> objects in this string.
     /// </summary>
     /// <returns>The enumerator in the string.</returns>
-    public IEnumerator<ColoredGlyphEffect> GetEnumerator() => ((IEnumerable<ColoredGlyphEffect>)_characters).GetEnumerator();
+    public IEnumerator<ColoredGlyphAndEffect> GetEnumerator() => ((IEnumerable<ColoredGlyphAndEffect>)_characters).GetEnumerator();
 
     /// <summary>
-    /// Gets an enumerator for the <see cref="ColoredGlyphEffect"/> objects in this string.
+    /// Gets an enumerator for the <see cref="ColoredGlyphAndEffect"/> objects in this string.
     /// </summary>
     /// <returns>The enumerator in the string.</returns>
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyphEffect>)_characters).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ColoredGlyphAndEffect>)_characters).GetEnumerator();
 
     /// <summary>
     /// Creates a new colored string from the specified gradient and text.
@@ -396,16 +396,16 @@ public partial class ColoredString : IEnumerable<ColoredString.ColoredGlyphEffec
         for (int i = 0; i < string1.Length; i++)
             returnString._characters[i] = string1._characters[i].Clone();
 
-        ColoredGlyphEffect templateCharacter;
+        ColoredGlyphAndEffect templateCharacter;
 
         if (string1.Length != 0)
             templateCharacter = string1[string1.Length - 1];
         else
-            templateCharacter = new ColoredGlyphEffect();
+            templateCharacter = new ColoredGlyphAndEffect();
 
         for (int i = 0; i < string2.Length; i++)
         {
-            ColoredGlyphEffect newChar = templateCharacter.Clone();
+            ColoredGlyphAndEffect newChar = templateCharacter.Clone();
             newChar.GlyphCharacter = string2[i];
             returnString._characters[i + string1.Length] = newChar;
         }

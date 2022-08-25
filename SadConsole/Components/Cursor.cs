@@ -341,7 +341,7 @@ public class Cursor : IComponent
         return this;
     }
 
-    private void PrintGlyph(ColoredString.ColoredGlyphEffect glyph, ColoredString settings)
+    private void PrintGlyph(ColoredGlyphAndEffect glyph, ColoredString settings)
     {
         if (_editor == null) throw new Exception("A host is not attached, cannot print.");
 
@@ -455,8 +455,8 @@ public class Cursor : IComponent
         if (!DisableWordBreak && text.String.Length != 1)
         {
             // Prep
-            ColoredString.ColoredGlyphEffect glyph;
-            ColoredString.ColoredGlyphEffect spaceGlyph = text[0].Clone();
+            ColoredGlyphAndEffect glyph;
+            ColoredGlyphAndEffect spaceGlyph = text[0].Clone();
 
             spaceGlyph.GlyphCharacter = ' ';
             string stringText = text.String.TrimEnd(' ');
@@ -565,7 +565,7 @@ public class Cursor : IComponent
             int count = text.Length;
             for (int i = 0; i < count; i++)
             {
-                ColoredString.ColoredGlyphEffect glyph = text[i];
+                ColoredGlyphAndEffect glyph = text[i];
                 // Check if the previous print moved us down a line (from print at end of the line) and move use back for the \r
                 if (movedLines)
                 {

@@ -13,7 +13,7 @@ public class Default : IParser
     /// <summary>
     /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
     /// </summary>
-    public Func<string, string, ColoredGlyphEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase>? CustomProcessor;
+    public Func<string, string, ColoredGlyphAndEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase>? CustomProcessor;
 
     /// <summary>
     /// Creates a colored string by parsing commands embedded in the string.
@@ -26,11 +26,11 @@ public class Default : IParser
     public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null)
     {
         ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
-        List<ColoredGlyphEffect> glyphs = new List<ColoredGlyphEffect>(value.Length);
+        List<ColoredGlyphAndEffect> glyphs = new List<ColoredGlyphAndEffect>(value.Length);
 
         for (int i = 0; i < value.Length; i++)
         {
-            ColoredGlyphEffect[] existingGlyphs = glyphs.ToArray();
+            ColoredGlyphAndEffect[] existingGlyphs = glyphs.ToArray();
 
             // Check for an escaped `[ sequence and ignore the escape character `
             if (value[i] == '`' && i + 1 < value.Length && value[i + 1] == '[')
@@ -141,12 +141,12 @@ public class Default : IParser
                 // If the index is within range of the surface, use it, otherwise -1
                 fixedSurfaceIndex = i + surfaceIndex < surface.Count ? i + surfaceIndex : -1;
 
-            ColoredGlyphEffect newGlyph;
+            ColoredGlyphAndEffect newGlyph;
 
             // If surface index is in range, copy the surface colors to the new glyph
             if (fixedSurfaceIndex != -1)
             {
-                newGlyph = new ColoredGlyphEffect();
+                newGlyph = new ColoredGlyphAndEffect();
                 surface![i + surfaceIndex].CopyAppearanceTo(newGlyph);
 
                 Effects.ICellEffect? effect = surface.GetEffect(i + surfaceIndex);
@@ -158,7 +158,7 @@ public class Default : IParser
             else
             {
                 // Create new noncolored glyph.
-                newGlyph = new ColoredGlyphEffect()
+                newGlyph = new ColoredGlyphAndEffect()
                 {
                     Glyph = value[i]
                 };

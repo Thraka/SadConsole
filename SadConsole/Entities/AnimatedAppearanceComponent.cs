@@ -11,7 +11,7 @@ namespace SadConsole.Entities;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class AnimatedAppearanceComponent : Components.UpdateComponent
 {
-    [DataMember] private ColoredString.ColoredGlyphEffect[] _frames = Array.Empty<ColoredString.ColoredGlyphEffect>();
+    [DataMember] private ColoredGlyphAndEffect[] _frames = Array.Empty<ColoredGlyphAndEffect>();
     [DataMember] private int _frameIndex;
     [DataMember] private bool _isPlaying;
     [DataMember] private TimeSpan _animationTime;
@@ -23,12 +23,12 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     /// <summary>
     /// The frames of animation.
     /// </summary>
-    public ColoredString.ColoredGlyphEffect[] Frames
+    public ColoredGlyphAndEffect[] Frames
     {
         get => _frames;
         set
         {
-            _frames = value ?? Array.Empty<ColoredString.ColoredGlyphEffect>();
+            _frames = value ?? Array.Empty<ColoredGlyphAndEffect>();
             _frameIndex = 0;
             AnimationTime = _animationTime;
         }
@@ -146,6 +146,6 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     [System.Runtime.Serialization.OnDeserialized]
     private void AfterDeserialized(System.Runtime.Serialization.StreamingContext context)
     {
-        if (_frames == null || _frames.Length == 0) _frames = Array.Empty<ColoredString.ColoredGlyphEffect>();
+        if (_frames == null || _frames.Length == 0) _frames = Array.Empty<ColoredGlyphAndEffect>();
     }
 }

@@ -60,7 +60,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
         // Failed, look within this parse for existing
         if (_blinkEffect == null)
         {
-            foreach (ColoredString.ColoredGlyphEffect item in glyphString)
+            foreach (ColoredGlyphAndEffect item in glyphString)
             {
                 if (item.Effect != null && item.Effect is CustomBlinkEffect)
                 {
@@ -79,7 +79,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
     }
 
     /// <inheritdoc />
-    public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex,
+    public override void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex,
         ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
         glyphState.Effect = _blinkEffect;
