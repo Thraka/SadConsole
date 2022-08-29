@@ -35,12 +35,19 @@ namespace FeatureDemo.CustomConsoles
                 CloneOnAdd = true
             };
 
-            player = new Entity(Color.Yellow, Color.Black, 1, 100)
+            player = new Entity(new Entity.SingleCell(Color.Yellow, Color.Black, 1), 100)
             {
                 //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
                 Position = new Point(0, 0),
                 UsePixelPositioning = usePixelPositioning,
             };
+
+            player = new Entity(AnimatedScreenSurface.CreateStatic(3, 3, 3, 0.5d, Color.Black), 0);
+
+
+            // Setup this console to accept keyboard input.
+            UseKeyboard = true;
+            IsVisible = false;
 
             // If we're allowing smooth movements, add the component
             if (useSmoothMovements)
@@ -57,30 +64,42 @@ namespace FeatureDemo.CustomConsoles
             SadComponents.Add(entityManager);
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
             entityManager.Add(player);
-
+            return;
             //Children.Add(player);
             others = new List<Entity>();
             for (int i = 0; i < 1000; i++)
             {
-                var item = new Entity(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60), 0)
+                Entity item;
+                if (Game.Instance.Random.Next(0, 500) < 450)
                 {
-                    Position = GetRandomPosition(),
-                    UsePixelPositioning = usePixelPositioning,
-                };
+                    item = new Entity(new Entity.SingleCell(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60)), 0)
+                    {
+                        Position = GetRandomPosition(),
+                        UsePixelPositioning = usePixelPositioning,
+                    };
+                }
+                else
+                {
+                    item = new Entity(AnimatedScreenSurface.CreateStatic(3, 3, 3, 0.5d, Color.Black), 0)
+                    {
+                        Position = GetRandomPosition(),
+                        UsePixelPositioning = usePixelPositioning,
+                    };
+                    item.AppearanceSurface.Center = (1, 1);
+                }
 
                 if (useSmoothMovements)
                     item.SadComponents.Add(new SadConsole.Components.SmoothMove(FontSize, new TimeSpan(0, 0, 0, 0, 300)));
 
-                if (Game.Instance.Random.Next(0, 500) < 50)
-                    item.Effect = fadeEffect;
+                if (item.IsSingleCell)
+                    if (Game.Instance.Random.Next(0, 500) < 50)
+                        item.AppearanceSingle.Effect = fadeEffect;
 
                 entityManager.Add(item);
                 others.Add(item);
             }
 
-            // Setup this console to accept keyboard input.
-            UseKeyboard = true;
-            IsVisible = false;
+            Surface.Print(3, 10, "Entity count: " + others.Count);
         }
 
         private Point GetRandomPosition()

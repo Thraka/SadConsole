@@ -20,7 +20,7 @@ namespace FeatureDemo.CustomConsoles
         public EntityZoneConsole()
             : base(80, 23, 160, 46)
         {
-            player = new Entity(Color.Yellow, Color.Black, 1, 100)
+            player = new Entity(new Entity.SingleCell(Color.Yellow, Color.Black, 1), 100)
             {
                 //Position = new Point(Surface.BufferWidth / 2, Surface.BufferHeight / 2)
                 Position = new Point(0, 0)

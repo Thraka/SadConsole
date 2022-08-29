@@ -173,6 +173,11 @@
             The total number of frames.
             </summary>
         </member>
+        <member name="P:SadConsole.AnimatedScreenSurface.PositionedArea">
+            <summary>
+            The area this surface covers after being centered.
+            </summary>
+        </member>
         <member name="P:SadConsole.AnimatedScreenSurface.Center">
             <summary>
             Center of the animation used in positioning.
@@ -988,6 +993,50 @@
         <member name="M:SadConsole.ColoredGlyph.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.ColoredGlyphAndEffect">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyph"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
+            <summary>
+            The effect of this cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
+            <summary>
+            Creates a copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.
+            </summary>
+            <returns>A copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.</returns>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceTo(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
+            <summary>
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
+            </summary>
+            <param name="cell">The target cell to copy to.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceFrom(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
+            <summary>
+            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
+            </summary>
+            <param name="cell">The target cell to copy from.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
         <member name="T:SadConsole.ColoredGlyphState">
             <summary>
             A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
@@ -1044,50 +1093,6 @@
             <summary>
             Restores this state to the specified cell.
             </summary>
-        </member>
-        <member name="T:SadConsole.ColoredGlyphAndEffect">
-            <summary>
-            A <see cref="T:SadConsole.ColoredGlyph"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
-            <summary>
-            The effect of this cell.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
-            <summary>
-            Creates a copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.
-            </summary>
-            <returns>A copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.</returns>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
-            </summary>
-            <param name="glyph">The glyph.</param>
-            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceTo(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
-            <summary>
-            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
-            </summary>
-            <param name="cell">The target cell to copy to.</param>
-            <param name="deepCopy">
-            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
-            decorator array reference is moved directly.
-            </param>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceFrom(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
-            <summary>
-            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
-            </summary>
-            <param name="cell">The target cell to copy from.</param>
-            <param name="deepCopy">
-            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
-            decorator array reference is moved directly.
-            </param>
         </member>
         <member name="T:SadConsole.ColoredString">
             <summary>
@@ -2754,7 +2759,7 @@
         </member>
         <member name="T:SadConsole.Entities.AnimatedAppearanceComponent">
             <summary>
-            A component for <see cref="T:SadConsole.Entities.Entity"/> that animates the <see cref="P:SadConsole.Entities.Entity.Appearance"/> and <see cref="P:SadConsole.Entities.Entity.Effect"/> properties.
+            A component for <see cref="T:SadConsole.Entities.Entity"/> that animates the <see cref="!:Entity.Appearance"/> and <see cref="!:Entity.Effect"/> properties.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.AnimatedAppearanceComponent.Frames">
@@ -2828,19 +2833,9 @@
             The drawing layer this entity is drawn at
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Entity.Appearance">
-            <summary>
-            Represents what the entity looks like.
-            </summary>
-        </member>
         <member name="P:SadConsole.Entities.Entity.IsDirty">
             <summary>
             Indidcates this entity's visual appearance has changed.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Entity.Effect">
-            <summary>
-            An effect that can be applied to the <see cref="P:SadConsole.Entities.Entity.Appearance"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
@@ -2848,27 +2843,49 @@
             Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the entity as if it is pixels and not cells.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,System.Int32)">
+        <member name="P:SadConsole.Entities.Entity.AppearanceSingle">
             <summary>
-            Creates a new entity with the specified foreground, background, and glyph.
+            The appearance of the entity when <see cref="P:SadConsole.Entities.Entity.IsSingleCell"/> is <see langword="true"/>.
             </summary>
-            <param name="foreground">The foreground color of the entity.</param>
-            <param name="background">The background color of the entity.</param>
-            <param name="glyph">The glyph color of the entity.</param>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.AppearanceSurface">
+            <summary>
+            The appearance of the entity when <see cref="P:SadConsole.Entities.Entity.IsSingleCell"/> is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.IsSingleCell">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenSurface,System.Int32)">
+            <summary>
+            Creates a new entity as a surface.
+            </summary>
+            <param name="appearance">The surface appearance to use for the entity.</param>
             <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph@,System.Int32)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.Entities.Entity.SingleCell,System.Int32)">
             <summary>
-            Creates a new entity, references the provided glyph as the appearance.
+            Creates a new entity as a single cell.
             </summary>
-            <param name="appearance">The appearance of the entity.</param>
-            <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+            <param name="appearance">The single cell appearance to use for the entity.</param>
+            <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph,System.Int32)">
             <summary>
             Creates a new entity, copying the provided appearance to this entity.
             </summary>
             <param name="appearance">The appearance of the entity.</param>
+            <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,System.Int32)">
+            <summary>
+            Creates a new entity, copying the provided appearance to this entity.
+            </summary>
+            <param name="foreground">The foreground color of the entity.</param>
+            <param name="background">The background color of the entity.</param>
+            <param name="glyph">The glyph color of the entity.</param>
             <param name="zIndex">The rendering order. Lower values are under higher values.</param>
         </member>
         <member name="M:SadConsole.Entities.Entity.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
@@ -2906,6 +2923,41 @@
             </summary>
             <param name="file">The source file.</param>
             <returns>The entity.</returns>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.SingleCell.IsDirty">
+            <summary>
+            When <see langword="true"/>, indicates that this cell is dirty and needs to be redrawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.SingleCell.Appearance">
+            <summary>
+            Represents what the entity looks like.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.SingleCell.Effect">
+            <summary>
+            An effect that can be applied to the <see cref="P:SadConsole.Entities.Entity.SingleCell.Appearance"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.SingleCell.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
+            <summary>
+            Creates a new entity with the specified foreground, background, and glyph.
+            </summary>
+            <param name="foreground">The foreground color of the entity.</param>
+            <param name="background">The background color of the entity.</param>
+            <param name="glyph">The glyph color of the entity.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.SingleCell.#ctor(SadConsole.ColoredGlyph)">
+            <summary>
+            Creates a new entity, references the provided glyph as the appearance.
+            </summary>
+            <param name="appearance">The appearance of the entity.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.SingleCell.Update(System.TimeSpan)">
+            <summary>
+            If an effect is applied to the cell, updates the effect.
+            </summary>
+            <param name="delta"></param>
         </member>
         <member name="T:SadConsole.Entities.Entity.EntityMovedEventArgs">
             <summary>
@@ -3063,11 +3115,19 @@
             </summary>
             <param name="entity">The entity.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.SetEntityVisibility(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibility(SadConsole.Entities.Entity)">
+            <summary>
+            Updates the visibility state of an entity.
+            </summary>
+            <param name="entity">The entity to check.</param>
+            <returns>Returns <see langword="true"/> when this entity is considered visible; othwerise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity)">
             <summary>
             Detects a visibility state change of an entity and changes its internal list position.
             </summary>
-            <param name="entity"></param>
+            <param name="entity">The entity to check.</param>
             <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">

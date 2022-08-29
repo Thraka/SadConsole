@@ -102,7 +102,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
 
         _entities.Add(entity);
 
-        SetEntityVisibility(entity);
+        CalculateEntityVisibilityProtected(entity);
 
         entity.PositionChanged += Entity_PositionChanged;
         entity.VisibleChanged += Entity_VisibleChanged;
@@ -131,7 +131,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
             {
                 _entities.Add(entity);
 
-                SetEntityVisibility(entity);
+                CalculateEntityVisibilityProtected(entity);
 
                 OnEntityAdded(entity);
                 OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
@@ -283,7 +283,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
                 if (DoEntityUpdate)
                     Entities[i].Update(delta);
 
-                SetEntityVisibility(Entities[i]);
+                CalculateEntityVisibilityProtected(Entities[i]);
             }
 
             return;
@@ -297,7 +297,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
                 entity.Update(delta);
 
             // Short out if IsDirty has already been marked
-            if (!IsDirty && entity.Appearance.IsDirty && IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+            if (!IsDirty && entity.IsDirty && IsEntityVisible(entity.Position, entity))
                 IsDirty = true;
         }
     }
@@ -323,7 +323,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         var entity = (Entity)sender!;
 
-        if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+        if (IsEntityVisible(entity.Position, entity))
             IsDirty |= entity.IsDirty;
     }
 
@@ -331,7 +331,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         var entity = (Entity)sender!;
 
-        if (IsEntityVisible(entity.Position, entity.UsePixelPositioning))
+        if (IsEntityVisible(entity.Position, entity))
             IsDirty = true;
     }
 
@@ -339,11 +339,13 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         Entity entity = (Entity)sender!;
 
-        // Entity was previously (may no longer be) visible, we always redraw since it moved.
-        if (IsEntityVisible(e.OldValue, entity.UsePixelPositioning))
+        // If the previous position of the entity was visible,
+        // always mark as dirty as it moved while being visble.
+        if (IsEntityVisible(e.OldValue, entity))
             IsDirty = true;
 
-        SetEntityVisibility(entity);
+        // Entity moved, make sure its in the correct visible/non-visible list
+        CalculateEntityVisibilityProtected(entity);
         OnEntityChangedPosition(entity, e);
     }
 
@@ -367,26 +369,41 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     protected virtual void OnEntityRemoved(Entity entity) { }
 
     /// <summary>
+    /// Updates the visibility state of an entity.
+    /// </summary>
+    /// <param name="entity">The entity to check.</param>
+    /// <returns>Returns <see langword="true"/> when this entity is considered visible; othwerise <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentException"></exception>
+    public bool CalculateEntityVisibility(Entity entity)
+    {
+        if (!_entities.Contains(entity)) throw new ArgumentException("Entity is not part of the renderer.");
+
+        return CalculateEntityVisibilityProtected(entity);
+    }
+
+    /// <summary>
     /// Detects a visibility state change of an entity and changes its internal list position.
     /// </summary>
-    /// <param name="entity"></param>
+    /// <param name="entity">The entity to check.</param>
     /// <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
-    protected bool SetEntityVisibility(Entity entity)
+    protected bool CalculateEntityVisibilityProtected(Entity entity)
     {
-        bool isVisible = IsEntityVisible(entity.Position, entity.UsePixelPositioning);
+        bool isVisible = IsEntityVisible(entity.Position, entity);
         bool contains = _entitiesVisible.Contains(entity);
 
+        // Entity is currently in the list it should be, so return.
         if (isVisible == contains) return isVisible;
 
         IsDirty = true;
 
-        // became visible
+        // Move entity to visible list
         if (isVisible)
         {
             _entitiesVisible.Add(entity);
             _entitiesVisible.Sort(CompareEntity);
         }
         else
+            // Move entity out of visible list
             _entitiesVisible.Remove(entity);
 
         return isVisible;
@@ -403,8 +420,13 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     }
 
 
-    private bool IsEntityVisible(Point position, bool isPixel) =>
-        isPixel ? _offsetAreaPixels.Contains(position) : _screen!.Surface.View.Contains(position);
+    private bool IsEntityVisible(Point position, Entity entity)
+    {
+        if (entity.IsSingleCell)
+            return entity.UsePixelPositioning ? _offsetAreaPixels.Contains(position) : _screen!.Surface.View.Contains(position);
+        else
+            return entity.UsePixelPositioning ? _offsetAreaPixels.Intersects(entity.AppearanceSurface.AbsoluteArea) : _screen!.Surface.View.Intersects(entity.AppearanceSurface.PositionedArea);
+    }
 
     private static int CompareEntity(Entity left, Entity right)
     {

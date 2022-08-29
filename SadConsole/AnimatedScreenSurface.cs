@@ -12,11 +12,12 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class AnimatedScreenSurface : ScreenSurface
+public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
 {
     [DataMember(Name = "AnimationDuration")]
     private float _animatedTime;
     private AnimationState _state;
+    private Point _center;
     [DataMember(Name = "Width")]
     private int _width;
     [DataMember(Name = "Height")]
@@ -61,10 +62,23 @@ public class AnimatedScreenSurface : ScreenSurface
     public int FrameCount => FramesList.Count;
 
     /// <summary>
+    /// The area this surface covers after being centered.
+    /// </summary>
+    public Rectangle PositionedArea => Surface.View.WithPosition(Position - Center);
+
+    /// <summary>
     /// Center of the animation used in positioning.
     /// </summary>
     [DataMember]
-    public Point Center { get; set; }
+    public Point Center
+    {
+        get => _center;
+        set
+        {
+            _center = value;
+            UpdateAbsolutePosition();
+        }
+    }
 
     /// <summary>
     /// Indicates whether or not this animation will repeat once it has finished animating.

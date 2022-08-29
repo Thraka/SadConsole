@@ -84,29 +84,31 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     public override void Update(IScreenObject host, TimeSpan delta)
     {
         if (!_isPlaying) return;
-
-        _totalTime += delta;
-
-        if (_totalTime >= _timePerFrame)
+        if (_entity!.IsSingleCell)
         {
-            _totalTime -= _timePerFrame;
+            _totalTime += delta;
 
-            _frameIndex++;
-
-            if (_frameIndex >= _frames.Length)
+            if (_totalTime >= _timePerFrame)
             {
-                _frameIndex = 0;
+                _totalTime -= _timePerFrame;
 
-                if (!IsRepeatable)
+                _frameIndex++;
+
+                if (_frameIndex >= _frames.Length)
                 {
-                    Stop();
-                    return;
-                }
-            }
+                    _frameIndex = 0;
 
-            // _entity is null forgiving because _isPlaying is the gate to determining null
-            _frames[_frameIndex].CopyAppearanceTo(_entity!.Appearance, false);
-            _entity.Effect = _frames[_frameIndex].Effect;
+                    if (!IsRepeatable)
+                    {
+                        Stop();
+                        return;
+                    }
+                }
+
+                // _entity is null forgiving because IsSingleCell is the gate to determining null
+                _frames[_frameIndex].CopyAppearanceTo(_entity.AppearanceSingle!.Appearance, false);
+                _entity.AppearanceSingle.Effect = _frames[_frameIndex].Effect;
+            }
         }
     }
 
@@ -118,10 +120,12 @@ public class AnimatedAppearanceComponent : Components.UpdateComponent
     {
         if (_frames.Length == 0) throw new InvalidOperationException("Animation was started but there aren't any frames to animate");
         if (_entity == null) throw new Exception("Component must be added to an entity.");
-
-        _isPlaying = true;
-        _frames[_frameIndex].CopyAppearanceTo(_entity.Appearance, false);
-        _entity.Effect = _frames[_frameIndex].Effect;
+        if (_entity!.IsSingleCell)
+        {
+            _isPlaying = true;
+            _frames[_frameIndex].CopyAppearanceTo(_entity.AppearanceSingle!.Appearance, false);
+            _entity.AppearanceSingle.Effect = _frames[_frameIndex].Effect;
+        }
     }
 
     /// <summary>
