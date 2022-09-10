@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
@@ -16,7 +17,7 @@ public class Entity : ScreenObject
 {
     // TODO Change this to where Position/Center/Absolute values all come from this object instead of the AnimatedScreenSurface
     private SingleCell? _appearanceSingleCell;
-    private AnimatedScreenSurface? _appearanceSurface;
+    private Animated? _appearanceSurface;
     private bool _isSingleCell;
     private bool _usePixelPositioning;
 
@@ -52,10 +53,9 @@ public class Entity : ScreenObject
         
         set
         {
-            if (_appearanceSingleCell != null)
+            if (IsSingleCell)
                 _appearanceSingleCell.IsDirty = value;
-
-            if (_appearanceSurface != null)
+            else
                 _appearanceSurface.IsDirty = value;
 
             OnIsDirtyChanged();
@@ -67,14 +67,10 @@ public class Entity : ScreenObject
     /// </summary>
     public bool UsePixelPositioning
     {
-        get => IsSingleCell ? _usePixelPositioning : AppearanceSurface!.UsePixelPositioning;
+        get => _usePixelPositioning;
         set
         {
-            if (IsSingleCell)
-                _usePixelPositioning = value;
-            else
-                AppearanceSurface!.UsePixelPositioning = value;
-
+            _usePixelPositioning = value;
             UpdateAbsolutePosition();
         }
     }
@@ -96,7 +92,7 @@ public class Entity : ScreenObject
     /// <summary>
     /// The appearance of the entity when <see cref="IsSingleCell"/> is <see langword="false"/>.
     /// </summary>
-    public AnimatedScreenSurface? AppearanceSurface
+    public Animated? AppearanceSurface
     {
         get => _appearanceSurface;
         set
@@ -128,13 +124,25 @@ public class Entity : ScreenObject
     }
 
     /// <summary>
-    /// Creates a new entity as a surface.
+    /// Creates a new entity as an animated surface.
+    /// </summary>
+    /// <param name="appearance">The surface appearance to use for the entity.</param>
+    /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+    public Entity(Animated appearance, int zIndex)
+    {
+        _appearanceSurface = appearance;
+        Children.IsLocked = true;
+        ZIndex = zIndex;
+    }
+
+    /// <summary>
+    /// Creates a new entity as an animated surface.
     /// </summary>
     /// <param name="appearance">The surface appearance to use for the entity.</param>
     /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
     public Entity(AnimatedScreenSurface appearance, int zIndex)
     {
-        _appearanceSurface = appearance;
+        _appearanceSurface = new Animated(appearance);
         Children.IsLocked = true;
         ZIndex = zIndex;
     }
@@ -170,7 +178,7 @@ public class Entity : ScreenObject
     public Entity(Color foreground, Color background, int glyph, int zIndex) : this(new SingleCell(foreground, background, glyph), zIndex) { }
 
     [JsonConstructor]
-    private Entity(SingleCell appearanceSingleCell, AnimatedScreenSurface appearanceSurface, bool isSingleCell)
+    private Entity(SingleCell? appearanceSingleCell, Animated? appearanceSurface, bool isSingleCell)
     {
         _appearanceSingleCell = appearanceSingleCell;
         _appearanceSurface = appearanceSurface;
@@ -199,16 +207,7 @@ public class Entity : ScreenObject
     /// <inheritdoc />
     public override void UpdateAbsolutePosition()
     {
-        if (IsSingleCell)
-            AbsolutePosition = Position;
-        else
-        {
-            _appearanceSurface.Position = Position;
-            _appearanceSurface.UpdateAbsolutePosition();
-
-            if (UsePixelPositioning)
-            AbsolutePosition = _appearanceSurface.AbsolutePosition;
-        }
+        AbsolutePosition = Position;
     }
 
     /// <summary>
@@ -245,6 +244,9 @@ public class Entity : ScreenObject
     /// <returns>The entity.</returns>
     public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
 
+    /// <summary>
+    /// An entity that is a single cell.
+    /// </summary>
     public class SingleCell
     {
         private ColoredGlyph _glyph;
@@ -353,6 +355,59 @@ public class Entity : ScreenObject
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// An entity that is a an animated surface.
+    /// </summary>
+    public class Animated
+    {
+        private AnimatedScreenSurface _surface;
+
+        /// <summary>
+        /// The animation associated with this animated entity.
+        /// </summary>
+        public AnimatedScreenSurface Animation
+        {
+            get => _surface;
+        }
+
+        /// <summary>
+        /// Represents the collision rectangle for this animated surface which is the size of the animation frame.
+        /// </summary>
+        public Rectangle DefaultCollisionRectangle
+        {
+            get => new Rectangle(0, 0, _surface.CurrentFrame.ViewWidth, _surface.CurrentFrame.ViewHeight);
+        }
+
+        /// <summary>
+        /// A collision rectangle that you can specify.
+        /// </summary>
+        /// <remarks>
+        /// This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.
+        /// </remarks>
+        public Rectangle CustomCollisionRectangle { get; set; }
+
+        /// <summary>
+        /// When <see langword="true"/>, indicates that this animation is dirty and needs to be redrawn.
+        /// </summary>
+        public bool IsDirty { get => _surface.IsDirty; set => _surface.IsDirty = value; }
+
+        /// <summary>
+        /// Creates a new instance of this type from an animated screen surface.
+        /// </summary>
+        /// <param name="surface">The animation to use.</param>
+        public Animated(AnimatedScreenSurface surface)
+        {
+            _surface = surface;
+        }
+
+        /// <summary>
+        /// Updates the <see cref="Animation"/>.
+        /// </summary>
+        /// <param name="delta">The time that has elapsed since this method was last called.</param>
+        public void Update(TimeSpan delta) =>
+            _surface.Update(delta);
     }
 
     /// <summary>

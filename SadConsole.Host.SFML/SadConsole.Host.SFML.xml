@@ -120,11 +120,19 @@
         <member name="P:SadConsole.Host.GameTexture.Size">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture)">
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32)">
+            <summary>
+            Creates a new game texture with the specified width and height.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture,System.Boolean)">
             <summary>
             Wraps a texture. Doesn't dispose it when this object is disposed!
             </summary>
             <param name="texture">The texture to wrap</param>
+            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
             <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
         </member>
         <member name="M:SadConsole.Host.GameTexture.Dispose">
@@ -497,6 +505,11 @@
             <remarks>
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
         </member>
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
             <summary>

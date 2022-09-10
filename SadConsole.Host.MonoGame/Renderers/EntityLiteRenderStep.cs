@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 using Color = Microsoft.Xna.Framework.Color;
+using XnaPoint = Microsoft.Xna.Framework.Point;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadRectangle = SadRogue.Primitives.Rectangle;
 using SadConsole.Host.MonoGame;
@@ -87,12 +88,11 @@ namespace SadConsole.Renderers
                     if (!item.IsVisible) continue;
 
                     renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToMonoRectangle();
+                    item.IsDirty = false;
 
-                    //TODO: Port to SFML
                     if (item.IsSingleCell)
                     {
                         cell = item.AppearanceSingle.Appearance;
-
                         cell.IsDirty = false;
 
                         if (cell.Background != SadRogue.Primitives.Color.Transparent)
@@ -107,20 +107,25 @@ namespace SadConsole.Renderers
                     }
                     else
                     {
-                        for (int y = 0; y < item.AppearanceSurface.Surface.View.Height; y++)
+                        // Offset the top-left render rectangle by the center point of the animation.
+                        XnaPoint surfaceStartPosition = new XnaPoint(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
+
+                        for (int y = 0; y < item.AppearanceSurface.Animation.CurrentFrame.View.Height; y++)
                         {
-                            int index = ((y + item.AppearanceSurface.Surface.ViewPosition.Y) * item.AppearanceSurface.Surface.Width) + item.AppearanceSurface.Surface.ViewPosition.X;
+                            // local index of cell of surface we want to draw
+                            int index = ((y + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.Y) * item.AppearanceSurface.Animation.CurrentFrame.Width) + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.X;
 
-                            for (int x = 0; x < item.AppearanceSurface.Surface.View.Width; x++)
+                            for (int x = 0; x < item.AppearanceSurface.Animation.CurrentFrame.View.Width; x++)
                             {
-                                renderRect = _entityManager.GetRenderRectangle(item.AppearanceSurface.PositionedArea.Position + new SadRogue.Primitives.Point(x, y), item.UsePixelPositioning).ToMonoRectangle();
+                                // Move the render rect by the x,y of the current cell being drawn'
+                                renderRect = new XnaRectangle(surfaceStartPosition.X + (x * renderRect.Width), surfaceStartPosition.Y + (y * renderRect.Height), renderRect.Width, renderRect.Height);
 
-                                cell = item.AppearanceSurface.Surface[index];
+                                cell = item.AppearanceSurface.Animation.CurrentFrame[index];
                                 cell.IsDirty = false;
 
                                 if (cell.IsVisible)
                                 {
-                                    if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != item.AppearanceSurface.Surface.DefaultBackground)
+                                    if (cell.Background != SadRogue.Primitives.Color.Transparent)
                                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                                     if (cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)

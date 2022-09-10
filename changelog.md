@@ -1,6 +1,25 @@
-## v9.2.2 (01/XX/2022)
+## v10.0.0 (09/XX/2022)
 
+- Target .NET 6 exclusively. Core library is nullable aware.
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
+- [Core] Splash screen printing wasn't being shown because of cursor changes.
+- [Core] `IFont` now defines glyph definitions.
+- [Core] Various `SadFont` properties and methods are now settable/callable.
+- [Core] Extensions methods added to hosts to allow manipulation of font textures.
+- [Core] `Settings.CreateStartingConsole` setting added to avoid creating the `StartingConsole`.
+- [Core] Cursor now has the property `DisablePrintAutomaticLineFeed` which, when true, prevents the cursor from moving to the next line if printing a character at the end of the current line.
+- [Core] `Ansi.AnsiWriter` handles sauce now by ignoring the rest of a document once character 26 (CTRL-Z) is encountered.
+- [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
+- [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
+- [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
+- [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a single cell entity or animated surface entity.
+- [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
+- [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
+- [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
+- [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
+
+TODO: SurfaceViewer example doesn't redraw while mousedown and clicking. It does actually do the drawing but the visual isn't
+      updated until the mouse enters/exits the original (big) view control, it suddenly starts working.
 
 ## v9.2.1 (01/04/2022)
 

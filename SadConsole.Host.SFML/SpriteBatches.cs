@@ -155,7 +155,7 @@ namespace SFML.Graphics
                     //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
                 }
 
-                if (foreground != Color.Transparent)
+                if (foreground != Color.Transparent && foreground != background)
                 {
                     // Foreground
                     verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;

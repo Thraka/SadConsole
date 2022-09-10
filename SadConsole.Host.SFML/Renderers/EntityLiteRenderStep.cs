@@ -3,6 +3,8 @@ using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadConsole.Host;
 using SadRogue.Primitives;
+using System.Net;
+using System.Numerics;
 
 namespace SadConsole.Renderers
 {
@@ -69,22 +71,51 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
 
                 ColoredGlyph cell;
-                IntRect renderRect;
+                Rectangle renderRect;
 
                 Entities.Entity item;
+
                 for (int i = 0; i < _entityManager.EntitiesVisible.Count; i++)
                 {
                     item = _entityManager.EntitiesVisible[i];
 
                     if (!item.IsVisible) continue;
 
-                    renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning).ToIntRect();
+                    renderRect = _entityManager.GetRenderRectangle(item.Position, item.UsePixelPositioning);
+                    item.IsDirty = false;
 
-                    cell = item.Appearance;
+                    if (item.IsSingleCell)
+                    {
+                        cell = item.AppearanceSingle.Appearance;
+                        cell.IsDirty = false;
 
-                    cell.IsDirty = false;
+                        Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, screenObject.Font);
+                    }
+                    else
+                    {
+                        // Offset the top-left render rectangle by the center point of the animation.
+                        var surfaceStartPosition = new Point(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, screenObject.Font);
+                        for (int y = 0; y < item.AppearanceSurface.Animation.CurrentFrame.View.Height; y++)
+                        {
+                            // local index of cell of surface we want to draw
+                            int index = ((y + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.Y) * item.AppearanceSurface.Animation.CurrentFrame.Width) + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.X;
+
+                            for (int x = 0; x < item.AppearanceSurface.Animation.CurrentFrame.View.Width; x++)
+                            {
+                                // Move the render rect by the x,y of the current cell being drawn'
+                                renderRect = new Rectangle(surfaceStartPosition.X + (x * renderRect.Width), surfaceStartPosition.Y + (y * renderRect.Height), renderRect.Width, renderRect.Height);
+
+                                cell = item.AppearanceSurface.Animation.CurrentFrame[index];
+                                cell.IsDirty = false;
+
+                                if (cell.IsVisible)
+                                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, screenObject.Font);
+
+                                index++;
+                            }
+                        }
+                    }
                 }
 
                 Host.Global.SharedSpriteBatch.End();

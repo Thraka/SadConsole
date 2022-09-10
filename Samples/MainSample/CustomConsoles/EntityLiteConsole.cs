@@ -43,6 +43,7 @@ namespace FeatureDemo.CustomConsoles
             };
 
             player = new Entity(AnimatedScreenSurface.CreateStatic(3, 3, 3, 0.5d, Color.Black), 0);
+            player.AppearanceSurface.Animation.Center = (1, 1);
 
 
             // Setup this console to accept keyboard input.
@@ -64,7 +65,7 @@ namespace FeatureDemo.CustomConsoles
             SadComponents.Add(entityManager);
             //player.Components.Add(new SadConsole.Components.EntityViewSync());
             entityManager.Add(player);
-            return;
+            
             //Children.Add(player);
             others = new List<Entity>();
             for (int i = 0; i < 1000; i++)
@@ -85,7 +86,7 @@ namespace FeatureDemo.CustomConsoles
                         Position = GetRandomPosition(),
                         UsePixelPositioning = usePixelPositioning,
                     };
-                    item.AppearanceSurface.Center = (1, 1);
+                    item.AppearanceSurface.Animation.Center = (1, 1);
                 }
 
                 if (useSmoothMovements)

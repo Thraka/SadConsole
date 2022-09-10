@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
@@ -423,10 +424,24 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     private bool IsEntityVisible(Point position, Entity entity)
     {
         if (entity.IsSingleCell)
-            return entity.UsePixelPositioning ? _offsetAreaPixels.Contains(position) : _screen!.Surface.View.Contains(position);
+            return entity.UsePixelPositioning
+                    ? _offsetAreaPixels.Contains(position)
+                    : _screen!.Surface.View.Contains(position);
         else
-            return entity.UsePixelPositioning ? _offsetAreaPixels.Intersects(entity.AppearanceSurface.AbsoluteArea) : _screen!.Surface.View.Intersects(entity.AppearanceSurface.PositionedArea);
+            return entity.UsePixelPositioning
+                    ? _offsetAreaPixels.Intersects(GetAnimatedAreaOffsetByCenterPixel(entity))
+                    : _screen!.Surface.View.Intersects(new Rectangle()
+                                                        .WithPosition(entity.Position - entity.AppearanceSurface!.Animation.Center)
+                                                        .WithSize(entity.AppearanceSurface.Animation.CurrentFrame.ViewWidth * _screenCachedFontSize.X,
+                                                                  entity.AppearanceSurface.Animation.CurrentFrame.Height * _screenCachedFontSize.Y));
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private Rectangle GetAnimatedAreaOffsetByCenterPixel(Entity entity) =>
+        new Rectangle(entity.Position.X - (entity.AppearanceSurface!.Animation.Center.X * _screenCachedFontSize.X),
+                      entity.Position.Y - (entity.AppearanceSurface.Animation.Center.Y * _screenCachedFontSize.Y),
+                      entity.AppearanceSurface.Animation.CurrentFrame.ViewWidth * _screenCachedFontSize.X,
+                      entity.AppearanceSurface.Animation.CurrentFrame.Height * _screenCachedFontSize.Y);
 
     private static int CompareEntity(Entity left, Entity right)
     {

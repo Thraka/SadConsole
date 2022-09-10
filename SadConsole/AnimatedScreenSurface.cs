@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -60,11 +61,6 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// The total number of frames.
     /// </summary>
     public int FrameCount => FramesList.Count;
-
-    /// <summary>
-    /// The area this surface covers after being centered.
-    /// </summary>
-    public Rectangle PositionedArea => Surface.View.WithPosition(Position - Center);
 
     /// <summary>
     /// Center of the animation used in positioning.
@@ -178,6 +174,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         Name = name;
         _width = width;
         _height = height;
+        QuietSurfaceHandling = true;
     }
 
     /// <summary>
@@ -197,6 +194,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         _height = height;
         UseMouse = false;
         UseKeyboard = false;
+        QuietSurfaceHandling = true;
     }
 
     [JsonConstructor]

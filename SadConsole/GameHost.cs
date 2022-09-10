@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using Newtonsoft.Json;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
@@ -205,7 +207,16 @@ public abstract partial class GameHost : IDisposable
                 TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All
             };
 
-            IFont masterFont = SadConsole.Serializer.Load<IFont>(font, false, settings);
+            IFont masterFont;
+
+            try
+            {
+                masterFont = SadConsole.Serializer.Load<IFont>(font, false, settings);
+            }
+            catch (JsonSerializationException j)
+            {
+                throw new JsonSerializationException("Unable to load font. You either have a malformed json file, or you're missing the $type declaration as the first entry of the json content:\n \"$type\": \"SadConsole.SadFont, SadConsole\",", j);
+            }
 
             if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
                 GameHost.Instance.Fonts.Remove(masterFont.Name);

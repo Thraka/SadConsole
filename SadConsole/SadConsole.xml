@@ -173,11 +173,6 @@
             The total number of frames.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.PositionedArea">
-            <summary>
-            The area this surface covers after being centered.
-            </summary>
-        </member>
         <member name="P:SadConsole.AnimatedScreenSurface.Center">
             <summary>
             Center of the animation used in positioning.
@@ -2858,9 +2853,16 @@
             
             </summary>
         </member>
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.Entities.Entity.Animated,System.Int32)">
+            <summary>
+            Creates a new entity as an animated surface.
+            </summary>
+            <param name="appearance">The surface appearance to use for the entity.</param>
+            <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+        </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenSurface,System.Int32)">
             <summary>
-            Creates a new entity as a surface.
+            Creates a new entity as an animated surface.
             </summary>
             <param name="appearance">The surface appearance to use for the entity.</param>
             <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
@@ -2924,6 +2926,11 @@
             <param name="file">The source file.</param>
             <returns>The entity.</returns>
         </member>
+        <member name="T:SadConsole.Entities.Entity.SingleCell">
+            <summary>
+            An entity that is a single cell.
+            </summary>
+        </member>
         <member name="P:SadConsole.Entities.Entity.SingleCell.IsDirty">
             <summary>
             When <see langword="true"/>, indicates that this cell is dirty and needs to be redrawn.
@@ -2958,6 +2965,46 @@
             If an effect is applied to the cell, updates the effect.
             </summary>
             <param name="delta"></param>
+        </member>
+        <member name="T:SadConsole.Entities.Entity.Animated">
+            <summary>
+            An entity that is a an animated surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.Animation">
+            <summary>
+            The animation associated with this animated entity.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.DefaultCollisionRectangle">
+            <summary>
+            Represents the collision rectangle for this animated surface which is the size of the animation frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.CustomCollisionRectangle">
+            <summary>
+            A collision rectangle that you can specify.
+            </summary>
+            <remarks>
+            This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.IsDirty">
+            <summary>
+            When <see langword="true"/>, indicates that this animation is dirty and needs to be redrawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenSurface)">
+            <summary>
+            Creates a new instance of this type from an animated screen surface.
+            </summary>
+            <param name="surface">The animation to use.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Animated.Update(System.TimeSpan)">
+            <summary>
+            Updates the <see cref="P:SadConsole.Entities.Entity.Animated.Animation"/>.
+            </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
         </member>
         <member name="T:SadConsole.Entities.Entity.EntityMovedEventArgs">
             <summary>
@@ -8362,6 +8409,11 @@
         </member>
         <member name="P:SadConsole.ScreenSurface.Renderer">
             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenSurface.QuietSurfaceHandling">
+            <summary>
+            When <see langword="true"/>, prevents the <see cref="P:SadConsole.ScreenSurface.Surface"/> property from raising events and virtual methods when the surface changes.
+            </summary>
         </member>
         <member name="P:SadConsole.ScreenSurface.RenderSteps">
             <inheritdoc/>

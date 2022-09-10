@@ -4,6 +4,39 @@
         <name>SadConsole.Host.MonoGame</name>
     </assembly>
     <members>
+        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
+            <summary>
+            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="surface">The surface to draw on.</param>
+            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
+            <summary>
+            Saves a texture to a png file.
+            </summary>
+            <param name="target">The texture.</param>
+            <param name="path">The path to a png file.</param>
+        </member>
         <member name="T:SadConsole.Components.DrawImage">
             <summary>
             Draws an image on top of a console.
@@ -163,11 +196,19 @@
             </summary>
             <param name="stream">The stream containing the texture data.</param>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D)">
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32)">
             <summary>
-            Wraps an existing texture. The texture must be manually disposed. You cannot dispose the texture through this object.
+            Creates a new game texture with the specified width and height.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,System.Boolean)">
+            <summary>
+            Wraps an existing texture.
             </summary>
             <param name="texture">The texture being wrapped by this object.</param>
+            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.Dispose">
             <summary>
@@ -300,6 +341,13 @@
             <param name="additionalWidth">Additional pixel width to add to the resize.</param>
             <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         </member>
+        <member name="M:SadConsole.Host.Game.RecreateRenderOutput(System.Int32,System.Int32)">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
+        </member>
         <member name="M:SadConsole.Host.Game.ResetRendering">
             <summary>
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
@@ -336,6 +384,76 @@
             <summary>
             The blend state used when drawing surfaces to the screen.
             </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.GraphicsProfile">
+            <summary>
+            The MonoGame graphics profile to target.
+            </summary>
+        </member>
+        <member name="T:SadConsole.FontEditing.ExtensionsFontHost">
+            <summary>
+            Extension methods to handle editing <see cref="T:SadConsole.SadFont"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.SadFont)">
+            <summary>
+            Converts the font's backing texture into a render target, if it isn't one.
+            </summary>
+            <param name="font">The font being edited.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_AddRows(SadConsole.SadFont,System.Int32)">
+            <summary>
+            Adds the specified number of rows to the font. Creates a new backing texture object that is a render target. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="count">The number of rows.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.SadFont,System.Int32,System.Int32)">
+            <summary>
+            Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndexFrom">The source glyph index.</param>
+            <param name="glyphIndexTo">The target glyph index.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.SadFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Erases a glyph in the font by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The glyph index to erase.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.SadFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Sets the pixels of a font glyph by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to update.</param>
+            <param name="pixels">The pixels to set on the glyph.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
+            <summary>
+            
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to get.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <returns>The pixels of the glyph.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Clone(SadConsole.SadFont,System.String)">
+            <summary>
+            Clones a font by getting the pixels of the old font and generating a new one.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="newName">The name to apply when creating the cloned font.</param>
+            <returns>A new font.</returns>
         </member>
         <member name="T:SadConsole.Game">
             <summary>
@@ -630,6 +748,11 @@
             This renderer caches the entire drawing of the surface's cells, including the tint of the object.
             </remarks>
         </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
         <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
             <summary>
             Quick access to backing texture.
@@ -774,39 +897,6 @@
             <summary>
             Does nothing.
             </summary>
-        </member>
-        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
-            <summary>
-            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
-            <summary>
-            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
-            </summary>
-            <param name="image">The texture to process.</param>
-            <param name="font">The font used with the cell surface.</param>
-            <param name="fontSize">The size of the font.</param>
-            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
-            <summary>
-            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
-            </summary>
-            <param name="image">The texture to process.</param>
-            <param name="surface">The surface to draw on.</param>
-            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
-            <param name="font">The font used with the cell surface.</param>
-            <param name="fontSize">The size of the font.</param>
-            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
-            <summary>
-            Saves a texture to a png file.
-            </summary>
-            <param name="target">The texture.</param>
-            <param name="path">The path to a png file.</param>
         </member>
     </members>
 </doc>
