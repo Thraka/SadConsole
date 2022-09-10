@@ -28,6 +28,8 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     [DataMember(Name = "Surface")]
     private ICellSurface _surface;
 
+    private bool _quietSurface;
+
     private Renderers.IRenderer? _renderer;
 
     /// <inheritdoc/>
@@ -51,6 +53,26 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
         }
     }
 
+    /// <summary>
+    /// When <see langword="true"/>, prevents the <see cref="Surface"/> property from raising events and virtual methods when the surface changes.
+    /// </summary>
+    public bool QuietSurfaceHandling
+    {
+        get => _quietSurface;
+        set
+        {
+            _quietSurface = value;
+
+            if (_surface != null)
+            {
+                if (value)
+                    _surface.IsDirtyChanged -= _isDirtyChangedEventHadler;
+                else
+                    _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+            }
+        }
+    }
+
     /// <inheritdoc/>
     public SortedSet<IRenderStep> RenderSteps { get; } = new SortedSet<IRenderStep>(new RenderStepComparer());
 
@@ -66,11 +88,14 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
 
             _surface = value ?? throw new NullReferenceException("Surface cannot be set to null.");
 
-            old.IsDirtyChanged -= _isDirtyChangedEventHadler;
-            _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+            if (!_quietSurface)
+            {
+                old.IsDirtyChanged -= _isDirtyChangedEventHadler;
+                _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
 
-            OnSurfaceChanged(old);
-            CallOnHostUpdated();
+                OnSurfaceChanged(old);
+                CallOnHostUpdated();
+            }
         }
     }
 
