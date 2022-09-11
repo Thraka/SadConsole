@@ -317,6 +317,9 @@ public class ListBox : CompositeControl
         }
 
         IsDirty = true;
+
+        // Update right away so theme/scrollbars are updated.
+        Update(TimeSpan.Zero);
     }
 
     /// <inheritdoc />

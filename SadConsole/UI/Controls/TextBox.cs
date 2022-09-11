@@ -288,16 +288,8 @@ public class TextBox : ControlBase
     /// </summary>
     protected void ValidateCursorPosition()
     {
-        if (MaxLength != 0 && EditingText.Length == MaxLength)
-        {
-            if (_caretPos > EditingText.Length)
-                _caretPos = EditingText.Length - 1;
-        }
-        else if (_caretPos > EditingText.Length)
-        {
+        if (_caretPos > EditingText.Length)
             _caretPos = EditingText.Length;
-        }
-
 
         // Test to see if caret is off edge of box
         if (_caretPos >= Width)

@@ -306,7 +306,14 @@ public class ScrollBar : ControlBase
         else if (CurrentSliderPosition == SliderBarSize - 1)
             _value = _maxValue;
         else
+        {
             _value = (int)((float)Maximum / (float)SliderBarSize * (float)CurrentSliderPosition);
+
+            if (_value == 0)
+                _value++;
+            else if (_value == _maxValue)
+                _value--;
+        }
 
         if (oldValue != _value)
             ValueChanged?.Invoke(this, EventArgs.Empty);
@@ -314,7 +321,7 @@ public class ScrollBar : ControlBase
 
     private void SetSliderPositionFromValue()
     {
-        if (SliderBarSize == 0) return;
+        if (SliderBarSize <= 0) return;
 
         // Check for start vs end
         if (_value == 0)
@@ -322,7 +329,15 @@ public class ScrollBar : ControlBase
         else if (_value == _maxValue)
             CurrentSliderPosition = SliderBarSize - 1;
         else
+        {
             CurrentSliderPosition = (int)(((float)SliderBarSize / (float)Maximum) * (float)_value);
+
+            // Ensure that if the math goes to or past the end points, reserved for 0 and max values, it's pulled back to the middle
+            if (CurrentSliderPosition <= 0)
+                CurrentSliderPosition = 1;
+            else if (CurrentSliderPosition >= SliderBarSize - 1)
+                CurrentSliderPosition = SliderBarSize - 2;
+        }
 
         IsDirty = true;
     }

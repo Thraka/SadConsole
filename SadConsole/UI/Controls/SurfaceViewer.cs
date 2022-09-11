@@ -121,6 +121,8 @@ public class SurfaceViewer : CompositeControl
         SurfaceControl.Surface = _surface;
         _surface.IsDirty = true;
         _surface.IsDirtyChanged += _surface_IsDirtyChanged;
+
+        Update(TimeSpan.Zero);
     }
 
     /// <summary>
@@ -192,8 +194,13 @@ public class SurfaceViewer : CompositeControl
         return false;
     }
 
-    private void _surface_IsDirtyChanged(object? sender, EventArgs e) =>
+    private void _surface_IsDirtyChanged(object? sender, EventArgs e)
+    {
         IsDirty = _surface.IsDirty;
+
+        VerticalScroller.Value = _surface.ViewPosition.Y;
+        HorizontalScroller.Value = _surface.ViewPosition.X;
+    }
 
     private void VerticalScroller_ValueChanged(object? sender, EventArgs e) =>
         _surface.ViewPosition = (_surface.ViewPosition.X, VerticalScroller.Value);
