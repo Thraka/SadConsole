@@ -255,22 +255,6 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Draws a single glyph on the console at the specified location.
-    /// </summary>
-    /// <param name="surface">The surface being edited.</param>
-    /// <param name="x">X location of the text.</param>
-    /// <param name="y">Y location of the text.</param>
-    /// <param name="glyph">The glyph to display.</param>
-    public static void SetGlyph(this ICellSurface surface, int x, int y, ColoredGlyph glyph)
-    {
-        if (glyph == null) return;
-        if (!surface.IsValidCell(x, y, out int index)) return;
-
-        glyph.CopyAppearanceTo(surface[index]);
-        surface.IsDirty = true;
-    }
-
-    /// <summary>
     /// Gets the glyph of a specified cell.
     /// </summary>
     /// <param name="surface">The surface being edited.</param>
