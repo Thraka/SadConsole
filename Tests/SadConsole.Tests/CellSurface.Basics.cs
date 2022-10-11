@@ -95,6 +95,10 @@ namespace SadConsole.Tests
             surface1.SetGlyph(0, 0, newGlyph);
 
             Assert.IsTrue(newGlyph == surface1[0, 0].Glyph);
+
+            surface1.SetGlyph(0, 0, new ColoredGlyph(Color.Coral, Color.Chocolate, newGlyph) { IsVisible = false });
+
+            Assert.IsFalse(surface1[0, 0].IsVisible);
         }
 
         [TestMethod]

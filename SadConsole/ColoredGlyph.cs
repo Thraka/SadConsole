@@ -188,6 +188,7 @@ namespace SadConsole
             cell.Background = Background;
             cell.Glyph = Glyph;
             cell.Mirror = Mirror;
+            cell.IsVisible = IsVisible;
             if (deepCopy)
                 cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
             else
