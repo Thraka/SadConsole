@@ -261,41 +261,32 @@ public class EffectsManager
     public void UpdateEffects(TimeSpan delta)
     {
         List<ICellEffect> effectsToRemove = new List<ICellEffect>();
-        List<ColoredGlyphWithState> cellsToRemove = new List<ColoredGlyphWithState>();
 
         foreach (ColoredGlyphEffectData effectData in _effects.Values)
         {
-            effectData.Effect.Update(delta);
-
-            foreach (ColoredGlyphWithState cellState in effectData.CellsStates)
+            if (!effectData.Effect.IsFinished)
             {
-                if (effectData.Effect.ApplyToCell(cellState.Cell, cellState.State))
-                    _backingSurface.IsDirty = true;
+                effectData.Effect.Update(delta);
 
+                foreach (ColoredGlyphWithState cellState in effectData.CellsStates)
+                {
+                    if (effectData.Effect.ApplyToCell(cellState.Cell, cellState.State))
+                        _backingSurface.IsDirty = true;
+                }
+
+                // If effect just finished
                 if (effectData.Effect.IsFinished && effectData.Effect.RemoveOnFinished)
-                    cellsToRemove.Add(cellState);
+                    effectsToRemove.Add(effectData.Effect);
             }
 
-            int count = cellsToRemove.Count;
-            for (int i = 0; i < count; i++)
-            {
-                effectData.RemoveCell(cellsToRemove[i].Cell, effectData.Effect.RestoreCellOnRemoved & effectData.Effect.IsFinished);
-                _effectCells.Remove(cellsToRemove[i].Cell);
-                _backingSurface.IsDirty = true;
-            }
-
-            cellsToRemove.Clear();
-
-            if (effectData.CellsStates.Count == 0)
+            else if (effectData.Effect.RemoveOnFinished)
                 effectsToRemove.Add(effectData.Effect);
         }
 
-        int count2 = effectsToRemove.Count;
-        for (int i = 0; i < count2; i++)
-        {
-            ICellEffect effect = effectsToRemove[i];
-            _effects.Remove(effect);
-        }
+        int count = effectsToRemove.Count;
+
+        for (int i = 0; i < count; i++)
+            Remove(effectsToRemove[i]);
     }
     #endregion
 
