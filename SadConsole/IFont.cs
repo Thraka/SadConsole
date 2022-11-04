@@ -138,12 +138,12 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
         Two = 3,
 
         /// <summary>
-        /// Two times the size of the font. (Original Width and Height * 3.0)
+        /// Three times the size of the font. (Original Width and Height * 3.0)
         /// </summary>
         Three = 4,
 
         /// <summary>
-        /// Two times the size of the font. (Original Width and Height * 4.0)
+        /// Four times the size of the font. (Original Width and Height * 4.0)
         /// </summary>
         Four = 5
     }
