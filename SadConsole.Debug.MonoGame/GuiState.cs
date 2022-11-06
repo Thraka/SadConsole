@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
-using Myra.Graphics2D.UI;
 
 namespace SadConsole.Debug.MonoGame
 {
@@ -10,7 +9,7 @@ namespace SadConsole.Debug.MonoGame
     {
         public static event EventHandler ShowSadConsoleRenderingChanged;
 
-        public static Widget GuiFinalOutputWindow;
+        public static FinalOutputWindow GuiFinalOutputWindow;
 
 
         public static bool ShowSurfacePreview = true;

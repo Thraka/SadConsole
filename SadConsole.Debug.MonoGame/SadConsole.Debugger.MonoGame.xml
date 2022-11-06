@@ -16,31 +16,80 @@
             <param name="obj">The object to check.</param>
             <returns>A string respresenting the object.</returns>
         </member>
-        <member name="T:SadConsole.MyraUI.Page">
+        <member name="T:SadConsole.ImGuiSystem.ImGuiObjectCollection">
             <summary>
-            Wraps a Myra UI Project xmml file.
+            A collection of <see cref="T:SadConsole.ImGuiSystem.ImGuiObjectBase"/> objects that can be added to a ImGui renderer.
             </summary>
         </member>
-        <member name="P:SadConsole.MyraUI.Page.InternalAssetManager">
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.#ctor">
             <summary>
-            A reusable asset manager which uses the <see cref="T:Myra.Assets.FileAssetResolver"/> (set to the current directory) first, and then falls back to the <see cref="T:Myra.Assets.ResourceAssetResolver"/> based on this assembly.
+            
             </summary>
         </member>
-        <member name="P:SadConsole.MyraUI.Page.Root">
+        <!-- Badly formed XML comment ignored for member "T:SadConsole.ImGuiSystem.ImGuiRenderer" -->
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsMouseCapture">
             <summary>
-            The root widget representing this page.
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.MyraUI.Page.#ctor(System.String,Myra.Assets.AssetManager)">
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsKeyboardCapture">
             <summary>
-            Loads a Myra UI Project xmml file.
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
             </summary>
-            <param name="myraXmlFile">The file to load.</param>
-            <param name="assetManager">The asset manager that will resolve and load the file.</param>
         </member>
-        <member name="M:SadConsole.MyraUI.Page.OnPageLoaded(Myra.Graphics2D.UI.Styles.Stylesheet)">
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.HideRequested">
             <summary>
-            Method is run after the Myra UI is loaded and the <see cref="P:SadConsole.MyraUI.Page.Root"/> property is set.
+            When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RebuildFontAtlas">
+            <summary>
+            Creates a texture and loads the font data from ImGui. Should be called when the <see cref="T:Microsoft.Xna.Framework.Graphics.GraphicsDevice" /> is initialized but before any rendering is done
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:ImGuiNET.ImGui.Image(System.IntPtr,System.Numerics.Vector2)" />. That pointer is then used by ImGui to let us know what texture to draw
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(System.IntPtr)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BeforeLayout(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Sets up ImGui for a new frame, should be called at frame start
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.AfterLayout">
+            <summary>
+            Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.SetupInput">
+            <summary>
+            Maps ImGui keys to XNA keys. We use this later on to tell ImGui what keys were pressed
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateEffect(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Updates the <see cref="T:Microsoft.Xna.Framework.Graphics.Effect" /> to the current matrices and texture
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateInput">
+            <summary>
+            Sends XNA input state to ImGui
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(ImGuiNET.ImDrawDataPtr)">
+            <summary>
+            Gets the geometry as set up by ImGui and sends it to the graphics device
             </summary>
         </member>
         <member name="T:System.Numerics.ExtensionsColorNumerics">
