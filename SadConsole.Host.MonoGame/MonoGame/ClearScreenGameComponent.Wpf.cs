@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Framework.WpfInterop;
 using SadRogue.Primitives;
+using MonoGame.Framework.WpfInterop;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Host
 {
@@ -9,7 +9,7 @@ namespace SadConsole.Host
     {
         public class ClearScreenGameComponent : WpfDrawableGameComponent
         {
-            internal ClearScreenGameComponent(WpfGame game) : base(game) => DrawOrder = 0;
+            internal ClearScreenGameComponent(Game game) : base(game) => DrawOrder = 0;
 
             public override void Draw(GameTime gameTime)
             {

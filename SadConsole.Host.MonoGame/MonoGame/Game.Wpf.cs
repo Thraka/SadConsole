@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.WpfInterop;
 using MonoGame.Framework.WpfInterop.Input;
-
 
 namespace SadConsole.Host
 {
@@ -14,10 +14,14 @@ namespace SadConsole.Host
     public sealed partial class Game : WpfGame
     {
         public WpfKeyboard Keyboard;
-        public WpfMouse Mouse;
+        public WpfMouseCustom Mouse;
         public RenderTarget2D WpfRenderTarget;
 
-        public event EventHandler SadConsoleStarted;
+        /// <summary>
+        /// This event handler is similar to the startup area of a normal SadConsole app, where you usually call Game.Instance.OnStart = ...
+        /// Do all of your sadconsole basic settings and event hooks here.
+        /// </summary>
+        public event EventHandler SadConsolePreInit;
 
         private bool _initFirstSize = false;
         private bool _initMain = false;
@@ -76,7 +80,7 @@ namespace SadConsole.Host
             // wpf and keyboard need reference to the host control in order to receive input
             // this means every WpfGame control will have it's own keyboard & mouse manager which will only react if the mouse is in the control
             Keyboard = new WpfKeyboard(this);
-            Mouse = new WpfMouse(this);
+            Mouse = new WpfMouseCustom(this);
 
             // must be called after the WpfGraphicsDeviceService instance was created
             base.Initialize();
@@ -84,9 +88,6 @@ namespace SadConsole.Host
             Global.GraphicsDevice = GraphicsDevice;
 
             _initMain = true;
-
-            if (_initMain && _initFirstSize)
-                SadConsoleStarted?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -100,7 +101,6 @@ namespace SadConsole.Host
             if (!_initFirstSize)
             {
                 _initFirstSize = true;
-                SadConsole.Game.Instance.MonoGameInit((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height, (string)GetValue(FontPathProperty));
 
                 // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
                 SadConsoleComponent = new SadConsoleGameComponent(this);
@@ -112,13 +112,14 @@ namespace SadConsole.Host
                 Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
 
                 if (_initMain && _initFirstSize)
-                    SadConsoleStarted?.Invoke(this, EventArgs.Empty);
+                    SadConsolePreInit?.Invoke(this, EventArgs.Empty);
+
+                SadConsole.Game.Instance.MonoGameInit((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height, (string)GetValue(FontPathProperty));
             }
 
             ResetRendering();
             WindowResized?.Invoke(this, EventArgs.Empty);
         }
-
 
         /// <summary>
         /// Resets the <see cref="Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.

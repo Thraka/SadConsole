@@ -55,12 +55,17 @@ namespace SadConsole
 
             if (fontSize.X > pixelWidth || fontSize.Y > pixelHeight) throw new Exception("WPF control is too small for the font.");
 
-            //StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
-            StartingConsole = new Console(pixelWidth / fontSize.X, pixelHeight / fontSize.Y);
-            StartingConsole.IsFocused = true;
-            Screen = StartingConsole;
+            if (Settings.CreateStartingConsole)
+            {
+                StartingConsole = new Console(pixelWidth / fontSize.X, pixelHeight / fontSize.Y);
+                //StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+                StartingConsole.IsFocused = true;
+                Screen = StartingConsole;
+            }
+            else
+                Screen = new ScreenObject() { IsFocused = true };
 
-            StartingConsole.FillWithRandomGarbage(StartingConsole.Font);
+
 
             OnStart?.Invoke();
             SplashScreens.SplashScreenManager.CheckRun();

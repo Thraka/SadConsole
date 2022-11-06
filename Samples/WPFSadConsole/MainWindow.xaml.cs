@@ -25,23 +25,35 @@ namespace WPFSadConsole
     {
         public MainWindow()
         {
-            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
-
             InitializeComponent();
         }
 
-        private void Game_SadConsoleStarted(object sender, EventArgs e)
+        private void Game_SadConsolePreInit(object sender, EventArgs e)
+        {
+            SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
+            //SadConsole.Settings.CreateStartingConsole = false;
+
+            SadConsole.Game.Instance.OnStart = Init;
+            SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
+        }
+
+        private void Init()
         {
             SadConsole.Game.Instance.StartingConsole.DrawBox(new SadRogue.Primitives.Rectangle(2, 1, 28, 3),
-                                                             ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick,
-                                                                new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan),
-                                                                new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan)
-                                                             ));
+                                                    ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick,
+                                                    new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan),
+                                                    new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan)
+                                                    ));
 
             SadConsole.Game.Instance.StartingConsole.Print(4, 2, "Welcome to SadConsole WPF");
 
 
             lstScreenObjects.Items.Add(SadConsole.Game.Instance.StartingConsole.ToString());
+        }
+
+        private void Instance_FrameUpdate(object? sender, GameHost e)
+        {
+            
         }
 
 

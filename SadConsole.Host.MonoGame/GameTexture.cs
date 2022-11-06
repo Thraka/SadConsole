@@ -336,7 +336,7 @@ namespace SadConsole.Host
 
             SadConsole.Host.Global.SharedSpriteBatch.Draw(_texture, resized.Bounds, MonoColor.White);
             SadConsole.Host.Global.SharedSpriteBatch.End();
-            SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(null);
+            SadConsole.Host.Global.ResetGraphicsDevice();
 
             return resized;
         }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#if WPF
+using MonoGame.Framework.WpfInterop;
+#endif
 
 namespace SadConsole.Host
 {
@@ -12,10 +15,26 @@ namespace SadConsole.Host
 
         public static GraphicsDevice GraphicsDevice { get; set; }
 
-        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
-
         public static SpriteBatch SharedSpriteBatch { get; set; }
 
         public static RenderTarget2D RenderOutput { get; set; }
+
+#if WPF
+
+        public static RenderTarget2D GraphicsDeviceWpfControl { get; set; }
+
+        public static WpfGraphicsDeviceService GraphicsDeviceManager { get; set; }
+
+        public static void ResetGraphicsDevice() =>
+            GraphicsDevice.SetRenderTarget(GraphicsDeviceWpfControl);
+
+#else
+
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
+
+        public static void ResetGraphicsDevice() =>
+            GraphicsDevice.SetRenderTarget(null);
+#endif
+
     }
 }

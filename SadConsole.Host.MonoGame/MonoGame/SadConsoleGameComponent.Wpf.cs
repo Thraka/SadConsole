@@ -28,6 +28,7 @@ namespace SadConsole.Host
                     ((SadConsole.Host.Game)Game).ResetRenderingNextFrame = false;
                     ((SadConsole.Host.Game)Game).ResetRendering();
                 }
+
                 if (SadConsole.Settings.DoDraw)
                 {
                     Host.Game game = (Host.Game)Game;

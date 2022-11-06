@@ -298,9 +298,10 @@
             A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
             </summary>
         </member>
-        <member name="T:SadConsole.Host.Game.FPSCounterComponent">
+        <member name="E:SadConsole.Host.Game.SadConsolePreInit">
             <summary>
-            A component to draw how many frames per second the engine is performing at.
+            This event handler is similar to the startup area of a normal SadConsole app, where you usually call Game.Instance.OnStart = ...
+            Do all of your sadconsole basic settings and event hooks here.
             </summary>
         </member>
         <member name="F:SadConsole.Host.Game.SadConsoleComponent">
@@ -330,23 +331,6 @@
         </member>
         <member name="M:SadConsole.Host.Game.Initialize">
             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Host.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
-            </summary>
-            <param name="fontSize">The size of the font to base the final values on.</param>
-            <param name="width">The count of glyphs along the X-axis.</param>
-            <param name="height">The count of glyphs along the Y-axis.</param>
-            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
-            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
-        </member>
-        <member name="M:SadConsole.Host.Game.RecreateRenderOutput(System.Int32,System.Int32)">
-            <summary>
-            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
-            </summary>
-            <param name="width">The width of the render output.</param>
-            <param name="height">The height of the render output.</param>
         </member>
         <member name="M:SadConsole.Host.Game.ResetRendering">
             <summary>
@@ -460,21 +444,6 @@
             The MonoGame implementation of the SadConsole Game Host.
             </summary>
         </member>
-        <member name="F:SadConsole.Game._preFullScreenWidth">
-            <summary>
-            Temporary variable to store the screen width before going full screen.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Game._preFullScreenHeight">
-            <summary>
-            Temporary variable to store the screen height before going full screen.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Game._handleResizeNone">
-            <summary>
-            Temporary variable to store the state of the <see cref="F:SadConsole.Settings.ResizeMode"/> when it's set to None, before going full screen.
-            </summary>
-        </member>
         <member name="P:SadConsole.Game.UseTitleContainer">
             <summary>
             When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
@@ -490,28 +459,11 @@
             Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.#ctor">
-            <summary>
-            Creates an instance of the class.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action{SadConsole.Host.Game})">
-            <summary>
-            Creates a new game and assigns it to the <see cref="P:SadConsole.Game.MonoGameInstance"/> property.
-            </summary>
-            <param name="cellCountX"></param>
-            <param name="cellCountY"></param>
-            <param name="font"></param>
-            <param name="monogameCtorCallback"></param>
-        </member>
-        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.Host.Game)">
+        <member name="M:SadConsole.Game.MonoGameInit(System.Int32,System.Int32,System.String)">
             <summary>
             Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.Host.Game.ResetRendering"/>.
             </summary>
             <param name="game">The game instance.</param>
-        </member>
-        <member name="M:SadConsole.Game.Run">
-            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.String)">
             <inheritdoc/>
@@ -533,11 +485,6 @@
             <param name="mode">Unused by monogame.</param>
             <param name="access">Unused by monogame.</param>
             <returns>The stream.</returns>
-        </member>
-        <member name="M:SadConsole.Game.ToggleFullScreen">
-            <summary>
-            Toggles between windowed and fullscreen rendering for SadConsole.
-            </summary>
         </member>
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
             <inheritdoc/>

@@ -11,7 +11,11 @@ namespace SadConsole.Host
 
         public Keyboard()
         {
+#if WPF
+            _keyboard = SadConsole.Game.Instance.MonoGameInstance.Keyboard.GetState();
+#else
             _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+#endif
         }
 
         public bool CapsLock => _keyboard.CapsLock;

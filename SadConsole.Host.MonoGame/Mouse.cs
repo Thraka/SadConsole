@@ -9,7 +9,11 @@ namespace SadConsole.Host
 
         public Mouse()
         {
+#if WPF
+            _mouse = SadConsole.Game.Instance.MonoGameInstance.Mouse.GetState();
+#else
             _mouse = Microsoft.Xna.Framework.Input.Mouse.GetState();
+#endif
         }
 
         public bool IsLeftButtonDown => _mouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;

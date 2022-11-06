@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SadConsole.Host"
+        xmlns:local="clr-namespace:SadConsole.Host;assembly=SadConsole.Host.MonoGame"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="900" SizeChanged="Window_SizeChanged" >
     <Grid>
@@ -16,6 +16,6 @@
             <ListBox x:Name="lstScreenObjects" Height="300" />
             <Button Click="Button_Click" Content="Click" />
         </StackPanel>
-        <local:Game Grid.Column="1" Margin="4" x:Name="WpfMonoGameControl" SadConsoleStarted="Game_SadConsoleStarted" WindowResized="Game_WindowResized"  />
+        <local:Game Grid.Column="1" Margin="4" x:Name="WpfMonoGameControl" SadConsolePreInit="Game_SadConsolePreInit" WindowResized="Game_WindowResized" />
     </Grid>
 </Window>
