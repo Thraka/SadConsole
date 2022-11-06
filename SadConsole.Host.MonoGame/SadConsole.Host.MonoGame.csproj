@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>9.2.2</Version>
+    <Version>10.0.0-alpha1</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -25,7 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>Fix mirror on glyphs.</PackageReleaseNotes>
+    <PackageReleaseNotes>...</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -33,6 +33,7 @@
     <DefineConstants Condition="$(TargetFramework.StartsWith('net6.0-windows')) == true">$(DefineConstants);WPF</DefineConstants>
   </PropertyGroup>
 
+  <!-- WPF MonoGame Interop + DirectX-->
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-windows')) == true">
     <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
@@ -40,6 +41,8 @@
     <Compile Remove="**\*.Mono.cs" />
     <None Include="**\*.Mono.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
+
+  <!-- Standard MonoGame + OpenGL -->
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-windows')) != true">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
 
@@ -49,7 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.2" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
     <PackageReference Include="TheSadRogue.Primitives" Version="1.4.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>

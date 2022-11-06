@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>9.2.1</Version>
+    <Version>10.0.0-alpha1</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -25,13 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>
-      - 9.2.1 specifically fixes API documentation generation.
-      - Added two cursor keyboard handlers: ClassicConsoleKeyboardHandler and C64KeyboardHandler.
-      - Added a new MoveViewPortKeyboardHandler component that uses the keyboard to scroll a view port.
-      - New surface.PrintFadingText extension method that prints text that fades into the background.
-      - Other little fixes.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>...</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -40,7 +34,8 @@
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
+    
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
