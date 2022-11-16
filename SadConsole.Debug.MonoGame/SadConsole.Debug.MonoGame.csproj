@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.78.0" />
+    <PackageReference Include="ImGui.NET" Version="1.88.0" />
     <!--
     <Reference Include="ImGui.NET">
       <HintPath>..\..\ImGui.NET\bin\Debug\ImGui.NET\netstandard2.0\ImGui.NET.dll</HintPath>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using SadConsole.Renderers;
+using SadConsole.Renderers.Constants;
 
 namespace SadConsole.Debug.MonoGame
 {
@@ -43,15 +45,18 @@ namespace SadConsole.Debug.MonoGame
 
         public int PositionX;
         public int PositionY;
-        public int Width;
-        public int Height;
 
-        public Vector4 Tint;
+        public bool IsVisible;
+        public bool IsEnabled;
 
         public bool IsScreenSurface;
+        public bool IsWindow;
 
         public int ComponentsSelectedItem;
         public string[] Components;
+
+        public ScreenSurfaceState SurfaceState = new ScreenSurfaceState();
+        public WindowConsoleState WindowState = new WindowConsoleState();
 
         public static ScreenObjectState Create(IScreenObject obj)
         {
@@ -64,7 +69,6 @@ namespace SadConsole.Debug.MonoGame
 
             
             state.Refresh();
-            state.RefreshComponents();
             return state;
         }
 
@@ -73,15 +77,16 @@ namespace SadConsole.Debug.MonoGame
             PositionX = Object.Position.X;
             PositionY = Object.Position.Y;
 
-            if (Object is IScreenSurface surface)
-            {
-                IsScreenSurface = true;
-                Width = surface.Surface.Width;
-                Height = surface.Surface.Height;
-                Tint = surface.Tint.ToVector4();
-            }
-            else
-                IsScreenSurface = false;
+            IsVisible = Object.IsVisible;
+            IsEnabled = Object.IsEnabled;
+
+            IsScreenSurface = Object is IScreenSurface;
+            IsWindow = Object is UI.Window;
+
+            RefreshComponents();
+
+            if (IsScreenSurface) SurfaceState.Refresh(Object as IScreenSurface);
+            if (IsWindow) WindowState.Refresh(Object as UI.Window);
         }
 
         public void RefreshComponents()
@@ -93,6 +98,66 @@ namespace SadConsole.Debug.MonoGame
                 Components = new string[Object.SadComponents.Count];
                 for (int i = 0; i < Components.Length; i++)
                     Components[i] = Object.SadComponents[i].GetDebuggerDisplayValue();
+            }
+        }
+
+        public class ScreenSurfaceState
+        {
+            public Vector4 Tint;
+            public Vector4 View;
+            public int Width;
+            public int Height;
+
+            public int RenderStepSelectedItem;
+            public string[] RenderStepsNames;
+            public IRenderStepTexture[] RenderSteps;
+
+            public void Refresh(IScreenSurface surface)
+            {
+                Tint = surface.Tint.ToVector4();
+                Width = surface.Surface.Width;
+                Height = surface.Surface.Height;
+
+                RefreshRendersteps(surface);
+            }
+
+            private void RefreshRendersteps(IScreenSurface surface)
+            {
+                RenderStepsNames = Array.Empty<string>();
+                RenderSteps = Array.Empty<IRenderStepTexture>();
+
+                if (surface.RenderSteps.Count != 0)
+                {
+                    List<string> names = new List<string>();
+                    List<IRenderStepTexture> steps = new List<IRenderStepTexture>();
+
+                    names.Add("Final");
+                    steps.Add(null);
+
+                    foreach (var step in surface.RenderSteps)
+                    {
+                        if (step is IRenderStepTexture stepTexture)
+                        {
+                            names.Add(step.GetDebuggerDisplayValue());
+                            steps.Add(stepTexture);
+                        }
+                    }
+
+                    RenderStepsNames = names.ToArray();
+                    RenderSteps = steps.ToArray();
+
+                    return;
+                }
+            }
+        }
+
+        public class WindowConsoleState
+        {
+            public int TitleAlignment;
+
+            public void Refresh(UI.Window console)
+            {
+                TitleAlignment = (int)console.TitleAlignment;
             }
         }
     }

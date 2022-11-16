@@ -9,7 +9,7 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.MonoGame
 {
-    class GuiScreenObjects : ImGuiObjectBase
+    class ScreenObjectsPanel : ImGuiObjectBase
     {
         private float f = 0.0f;
         private bool _toggle_screenObj_doDraw;
@@ -20,6 +20,10 @@ namespace SadConsole.Debug.MonoGame
         private byte[] _textBuffer = new byte[100];
         private bool _pauseForEdit;
 
+        private ImGuiHelpers _guiHelpers = new ImGuiHelpers();
+        private ScreenObjectDetailsPanel _guiDetails = new ScreenObjectDetailsPanel();
+        private ComponentsPanel _guiComponents = new ComponentsPanel();
+
         public override void BuildUI(ImGuiRenderer renderer)
         {
             if (_pauseForEdit)
@@ -27,7 +31,7 @@ namespace SadConsole.Debug.MonoGame
                 _pauseForEdit = false;
                 System.Diagnostics.Debugger.Break();
             }
-            
+
             ImGui.Begin("Screen objects");
             {
                 // Screen objects list
@@ -39,7 +43,7 @@ namespace SadConsole.Debug.MonoGame
                         ImGui.EndMenuBar();
                     }
 
-                    //ImGui.LabelText("Items", "");
+                    // TODO: Tighten this logic up
                     foreach (ScreenObjectState item in GuiState.ScreenObjectUniques.Values)
                         item.Found = false;
 
@@ -61,53 +65,18 @@ namespace SadConsole.Debug.MonoGame
                 if (GuiState._selectedScreenObjectState != null)
                 {
                     ImGui.SameLine();
-                    ImGuiObjects.ScreenObjectPanel.Begin("selected_object_panel", GuiState._selectedScreenObjectState);
-                    ImGuiObjects.ScreenObjectPanel.End();
+                    _guiDetails.BuildUI(renderer, GuiState._selectedScreenObjectState);
+                    _guiComponents.BuildUI(renderer, GuiState._selectedScreenObjectState);
                 }
 
                 ImGui.Separator();
-
-                if (GuiState._selectedScreenObject != null)
-                {
-                    if (ImGui.Checkbox("Do draw", ref _toggle_screenObj_doDraw))
-                    {
-                        GuiState._selectedScreenObject.IsVisible = _toggle_screenObj_doDraw;
-                    }
-                    if (ImGui.Button("Fill with random garbage"))
-                    {
-                        if (GuiState._selectedScreenObject is ScreenSurface surface) surface.Surface.FillWithRandomGarbage(surface.Font);
-                    }
-                }
-
-                ImGui.Separator();
-
-                if (ImGui.Button("ImGui samples window")) show_test_window = !show_test_window;
-                if (ImGui.Button("ImGui Metrics")) show_metrics_window = !show_metrics_window;
-                if (ImGui.Button("Break and edit window")) _pauseForEdit = true;
 
                 //ImGui.Image(_imGuiTexture, new Num.Vector2(300, 150), Num.Vector2.Zero, Num.Vector2.One, Num.Vector4.One, Num.Vector4.One); // Here, the previously loaded texture is used
             }
 
-            // 2. Show another simple window, this time using an explicit Begin/End pair
-            if (show_another_window)
-            {
-                ImGui.SetNextWindowSize(new Vector2(200, 100), ImGuiCond.FirstUseEver);
-                ImGui.Begin("Another Window", ref show_another_window);
-                ImGui.Text("Hello");
-                ImGui.End();
-            }
+            _guiHelpers.BuildUI(renderer);
 
-            // 3. Show the ImGui test window. Most of the sample code is in ImGui.ShowTestWindow()
-            if (show_test_window)
-            {
-                ImGui.SetNextWindowPos(new Vector2(650, 20), ImGuiCond.FirstUseEver);
-                ImGui.ShowDemoWindow(ref show_test_window);
-            }
 
-            if (show_metrics_window)
-            {
-                ImGui.ShowMetricsWindow(ref show_metrics_window);
-            }
             ImGui.End();
         }
 
@@ -129,7 +98,7 @@ namespace SadConsole.Debug.MonoGame
                 state = ScreenObjectState.Create(obj);
                 GuiState.ScreenObjectUniques[obj] = state;
             }
-            
+
             if (GuiState._selectedScreenObject == obj)
                 treeFlags |= ImGuiTreeNodeFlags.Selected;
 
@@ -138,16 +107,15 @@ namespace SadConsole.Debug.MonoGame
                 treeFlags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
                 ImGui.TreeNodeEx(state.Identifier.ToString(), treeFlags, obj.ToString());
 
-                if (ImGui.BeginDragDropSource(ImGuiDragDropFlags.None))
-                {
-                    ImGui.SetDragDropPayload("SCREEN_OBJ", new IntPtr(state.Identifier), sizeof(int));
-                    ImGui.EndDragDropSource();
-                }
-                else if (ImGui.BeginDragDropTarget())
-                {
-                    var stuff = ImGui.AcceptDragDropPayload("SCREEN_OBJ");
-                }
-                else if (ImGui.IsItemClicked())
+                //if (ImGui.BeginDragDropSource(ImGuiDragDropFlags.None))
+                //{
+                //    ImGui.SetDragDropPayload("SCREEN_OBJ", new IntPtr(state.Identifier), sizeof(int));
+                //    ImGui.EndDragDropSource();
+                //}
+                //else if (ImGui.BeginDragDropTarget())
+                //    ImGui.AcceptDragDropPayload("SCREEN_OBJ");
+                //else
+                if (ImGui.IsItemClicked())
                     SetScreenObject(obj, state);
             }
             else
@@ -173,8 +141,8 @@ namespace SadConsole.Debug.MonoGame
             GuiState._selectedScreenObjectState = state;
             _toggle_screenObj_doDraw = obj.IsVisible;
         }
-        
 
-        
+
+
     }
 }
