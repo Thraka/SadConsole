@@ -5,40 +5,43 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 using SadConsole.ImGuiSystem;
+using SadConsole.UI;
 
-namespace SadConsole.Editor.GuiParts
+namespace SadConsole.Editor.GuiParts;
+
+public class GuiNewFileWindow: ImGuiWindow
 {
-    public class GuiNewFileWindow: ImGuiWindow
+    private int _documentSelectedIndex = -1;
+    private string _documentName = "";
+    public Model.Document Document;
+
+    public GuiNewFileWindow()
     {
-        private int _documentSelectedIndex;
-        private string _documentName = "";
-        public Model.Document Document = new Model.Document() { DocumentType = Model.Document.Types.Surface, Settings = new Model.DocumentSurfaceSettings() };
+        Title = "New file";
+    }
 
-        public GuiNewFileWindow()
+    public override void BuildUI(ImGuiRenderer renderer)
+    {
+        if (IsOpen)
         {
-            Title = "New file";
-        }
-
-        public override void BuildUI(ImGuiRenderer renderer)
-        {
-            if (IsOpen)
+            ImGui.OpenPopup(Title);
+            
+            ImGuiExt.CenterNextWindow();
+            ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, -1));
+            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
-                ImGui.OpenPopup(Title);
-                
-                ImGuiExt.CenterNextWindow();
-                ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, -1));
-                if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
+                ImGui.Text("Document Type:");
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                if (ImGui.ListBox("##Document Type", ref _documentSelectedIndex, new[] { "Surface", "Scene", "Animation" }, 3))
                 {
-                    ImGui.Text("Document Type:");
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-                    if (ImGui.ListBox("##Document Type", ref _documentSelectedIndex, new[] { "Surface", "Scene", "Animation" }, 3))
+                    Document = _documentSelectedIndex switch
                     {
-                        Document = _documentSelectedIndex switch
-                        {
-                            _ => new Model.Document() { DocumentType = Model.Document.Types.Surface, Settings = new Model.DocumentSurfaceSettings() },
-                        };
-                    }
+                        _ => new Model.SurfaceDocument(),
+                    };
+                }
 
+                if (Document != null)
+                {
                     ImGui.Separator();
 
                     ImGui.Text("Name");
@@ -46,27 +49,33 @@ namespace SadConsole.Editor.GuiParts
 
                     ImGui.Separator();
 
-                    Document.Settings.BuildUINew(renderer);
+                    Document.BuildUINew(renderer);
+                }
+                ImGui.Separator();
 
-                    ImGui.Separator();
+                if (ImGui.Button("Cancel")) { DialogResult = false; IsOpen = false; }
 
-                    if (ImGui.Button("Cancel")) { DialogResult = false; IsOpen = false; }
+                // Right-align button
+                float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
+                ImGui.SameLine(ImGui.GetWindowWidth() - pos);
 
-                    // Right-align button
-                    float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
-                    ImGui.SameLine(ImGui.GetWindowWidth() - pos);
+                if (Document == null)
+                {
+                    ImGui.BeginDisabled();
+                    ImGui.Button("Create");
+                    ImGui.EndDisabled();
+                }
+                else
                     if (ImGui.Button("Create")) { DialogResult = true; IsOpen = false; }
 
-
-                    ImGui.EndPopup();
-                }
+                ImGui.EndPopup();
             }
-            else
-            {
-                OnClosed();
-                ImGuiCore.GuiComponents.Remove(this);
-            }
-                
         }
+        else
+        {
+            OnClosed();
+            ImGuiCore.GuiComponents.Remove(this);
+        }
+            
     }
 }

@@ -29,7 +29,7 @@ namespace SadConsole.Editor.GuiParts
                     }
                     if (ImGui.MenuItem("Close", "c"))
                     {
-
+                        
                     }
 
                     ImGui.EndMenu();
@@ -39,7 +39,7 @@ namespace SadConsole.Editor.GuiParts
                 {
                     //if (ImGui.MenuItem("Show SadConsole game", "s", ref GuiState.ShowSadConsoleRendering, true))
                     //    GuiState.RaiseShowSadConsoleRenderingChanged();
-
+                    
                     ImGui.MenuItem("Show demo", "s", ref _showDemoWindow);
 
                     //ImGui.MenuItem("Show surface preview", "p", ref GuiState.ShowSurfacePreview, true);

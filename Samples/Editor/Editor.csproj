@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
