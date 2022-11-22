@@ -10,20 +10,22 @@ public class Keyboard
 {
     private IKeyboardState? _state;
 
+    private List<AsciiKey> KeysPressedInternal { get; }
+
+    private List<AsciiKey> KeysDownInternal { get; }
+
+    private List<AsciiKey> KeysReleasedInternal { get; }
+
     /// <summary>
     /// A collection of keys registered as pressed which behaves like a command prompt when holding down keys. 
     /// Uses the <see cref="RepeatDelay"/> and <see cref="InitialRepeatDelay"/> settings.
     /// </summary>
     public ReadOnlyCollection<AsciiKey> KeysPressed => KeysPressedInternal.AsReadOnly();
 
-    private List<AsciiKey> KeysPressedInternal { get; }
-
     /// <summary>
     /// A collection of keys currently held down.
     /// </summary>
     public ReadOnlyCollection<AsciiKey> KeysDown => KeysDownInternal.AsReadOnly();
-
-    private List<AsciiKey> KeysDownInternal { get; }
 
     // List that parallels KeysDownInternal of unmapped virtual keys.  Always use AddKeyDown and RemoveKeyDownAt to
     // modify both these lists so they stay parallel.
@@ -33,8 +35,6 @@ public class Keyboard
     /// A collection of keys that were just released this frame.
     /// </summary>
     public ReadOnlyCollection<AsciiKey> KeysReleased => KeysReleasedInternal.AsReadOnly();
-
-    private List<AsciiKey> KeysReleasedInternal { get; }
 
     /// <summary>
     /// <see langword="true"/> when the <see cref="KeysDown"/> collection has at least one key; otherwise <see langword="false"/>.
@@ -187,13 +187,10 @@ public class Keyboard
             unmappedVirtualKey = unmappedVirtualKeys[i];
             bool firstPressed = false;
 
-            AsciiKey key = new AsciiKey();
-            AsciiKey keyOppositeShift = new AsciiKey();
-            int activeKeyIndex = -1;
+            AsciiKey key = AsciiKey.Get(unmappedVirtualKey, shiftPressed, _state);
+            AsciiKey keyOppositeShift = AsciiKey.Get(unmappedVirtualKey, !shiftPressed, _state);
 
-            // These keys will be mapped since Fill does the mapping automatically
-            key.Fill(unmappedVirtualKey, shiftPressed, _state);
-            keyOppositeShift.Fill(unmappedVirtualKey, !shiftPressed, _state);
+            int activeKeyIndex = -1;
 
             if (KeysDownInternal.Contains(key))
             {

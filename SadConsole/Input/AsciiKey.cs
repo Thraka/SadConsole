@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using ncases = System.Tuple<char, SadConsole.Input.Keys>;
-using scases = System.Tuple<char, char>;
 
 namespace SadConsole.Input;
 
@@ -9,55 +7,108 @@ namespace SadConsole.Input;
 /// </summary>
 public struct AsciiKey
 {
-    private const int CapOffset = 'A' - (int)Keys.A;
-    private const int LowerOffset = 'a' - (int)Keys.A;
+    /// <summary>
+    /// A link between two characters, one unshifted and the other shifted.
+    /// </summary>
+    /// <param name="Unshifted">The character when unshifted.</param>
+    /// <param name="Shifted">The character when shifted.</param>
+    public readonly record struct ShiftedCharacterMapping(char Unshifted, char Shifted);
 
+    /// <summary>
+    /// Associates a numeric keypad character with a funcational key.
+    /// </summary>
+    /// <param name="NumberPadCharacter">The number pad character.</param>
+    /// <param name="NonNumlockKey">The key the character maps to.</param>
+    /// <remarks>Used when the <see cref="Keys.NumLock"/> is active.</remarks>
+    public readonly record struct NumericKeyMapping(char NumberPadCharacter, Keys NonNumlockKey);
 
-    // It will be nice when we can use modern Tuples here.
-    private static readonly Dictionary<Keys, scases> shiftKeyMappings = new Dictionary<Keys, scases>
+    /// <summary>
+    /// List of <see cref="Keys"/> to consider as shifted when capslock is on.
+    /// </summary>
+    public static readonly List<Keys> CapsLockedKeys = new List<Keys>()
     {
-        {Keys.OemComma, new scases(',', '<')},
-        {Keys.OemMinus, new scases('-', '_')},
-        {Keys.OemOpenBrackets, new scases('[', '{')},
-        {Keys.OemCloseBrackets, new scases(']', '}')},
-        {Keys.OemPeriod, new scases('.', '>')},
-        {Keys.OemBackslash, new scases('\\', '|')},
-        {Keys.OemPipe, new scases('\\', '|')},
-        {Keys.OemPlus, new scases('=', '+')},
-        {Keys.OemQuestion, new scases('/', '?')},
-        {Keys.OemQuotes, new scases('\'', '"')},
-        {Keys.OemSemicolon, new scases(';', ':')},
-        {Keys.OemTilde, new scases('`', '~')},
-        {Keys.Space, new scases(' ', ' ')},
-        {Keys.Divide, new scases('/', '/')},
-        {Keys.Multiply, new scases('*', '*')},
-        {Keys.Subtract, new scases('-', '-')},
-        {Keys.Add, new scases('+', '+')},
-        {Keys.D0, new scases('0', ')')},
-        {Keys.D1, new scases('1', '!')},
-        {Keys.D2, new scases('2', '@')},
-        {Keys.D3, new scases('3', '#')},
-        {Keys.D4, new scases('4', '$')},
-        {Keys.D5, new scases('5', '%')},
-        {Keys.D6, new scases('6', '^')},
-        {Keys.D7, new scases('7', '&')},
-        {Keys.D8, new scases('8', '*')},
-        {Keys.D9, new scases('9', '(')},
+        Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.H, Keys.I, Keys.J, Keys.K, Keys.L, Keys.M,
+        Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y, Keys.Z,
     };
 
-    private static readonly Dictionary<Keys, ncases> s_numKeyMappings = new Dictionary<Keys, ncases>
+    /// <summary>
+    /// A dictionary that is keyed off of a <see cref="Keys"/> and associates that key with a character in a shifted and unshifted state.
+    /// </summary>
+    public static readonly Dictionary<Keys, ShiftedCharacterMapping> ShiftKeyMappings = new Dictionary<Keys, ShiftedCharacterMapping>
     {
-        {Keys.Decimal, new ncases('.', Keys.Delete)},
-        {Keys.NumPad0, new ncases('0', Keys.Insert)},
-        {Keys.NumPad1, new ncases('1', Keys.End)},
-        {Keys.NumPad2, new ncases('2', Keys.Down)},
-        {Keys.NumPad3, new ncases('3', Keys.PageDown)},
-        {Keys.NumPad4, new ncases('4', Keys.Left)},
-        {Keys.NumPad5, new ncases('5', Keys.D5)},
-        {Keys.NumPad6, new ncases('6', Keys.Right)},
-        {Keys.NumPad7, new ncases('7', Keys.Home)},
-        {Keys.NumPad8, new ncases('8', Keys.Up)},
-        {Keys.NumPad9, new ncases('9', Keys.PageUp)},
+        {Keys.OemComma, new ShiftedCharacterMapping(',', '<')},
+        {Keys.OemMinus, new ShiftedCharacterMapping('-', '_')},
+        {Keys.OemOpenBrackets, new ShiftedCharacterMapping('[', '{')},
+        {Keys.OemCloseBrackets, new ShiftedCharacterMapping(']', '}')},
+        {Keys.OemPeriod, new ShiftedCharacterMapping('.', '>')},
+        {Keys.OemBackslash, new ShiftedCharacterMapping('\\', '|')},
+        {Keys.OemPipe, new ShiftedCharacterMapping('\\', '|')},
+        {Keys.OemPlus, new ShiftedCharacterMapping('=', '+')},
+        {Keys.OemQuestion, new ShiftedCharacterMapping('/', '?')},
+        {Keys.OemQuotes, new ShiftedCharacterMapping('\'', '"')},
+        {Keys.OemSemicolon, new ShiftedCharacterMapping(';', ':')},
+        {Keys.OemTilde, new ShiftedCharacterMapping('`', '~')},
+        {Keys.Space, new ShiftedCharacterMapping(' ', ' ')},
+        {Keys.Divide, new ShiftedCharacterMapping('/', '/')},
+        {Keys.Multiply, new ShiftedCharacterMapping('*', '*')},
+        {Keys.Subtract, new ShiftedCharacterMapping('-', '-')},
+        {Keys.Add, new ShiftedCharacterMapping('+', '+')},
+
+        {Keys.D0, new ShiftedCharacterMapping('0', ')')},
+        {Keys.D1, new ShiftedCharacterMapping('1', '!')},
+        {Keys.D2, new ShiftedCharacterMapping('2', '@')},
+        {Keys.D3, new ShiftedCharacterMapping('3', '#')},
+        {Keys.D4, new ShiftedCharacterMapping('4', '$')},
+        {Keys.D5, new ShiftedCharacterMapping('5', '%')},
+        {Keys.D6, new ShiftedCharacterMapping('6', '^')},
+        {Keys.D7, new ShiftedCharacterMapping('7', '&')},
+        {Keys.D8, new ShiftedCharacterMapping('8', '*')},
+        {Keys.D9, new ShiftedCharacterMapping('9', '(')},
+
+        {Keys.A, new ShiftedCharacterMapping('a', 'A')},
+        {Keys.B, new ShiftedCharacterMapping('b', 'B')},
+        {Keys.C, new ShiftedCharacterMapping('c', 'C')},
+        {Keys.D, new ShiftedCharacterMapping('d', 'D')},
+        {Keys.E, new ShiftedCharacterMapping('e', 'E')},
+        {Keys.F, new ShiftedCharacterMapping('f', 'F')},
+        {Keys.G, new ShiftedCharacterMapping('g', 'G')},
+        {Keys.H, new ShiftedCharacterMapping('h', 'H')},
+        {Keys.I, new ShiftedCharacterMapping('i', 'I')},
+        {Keys.J, new ShiftedCharacterMapping('j', 'J')},
+        {Keys.K, new ShiftedCharacterMapping('k', 'K')},
+        {Keys.L, new ShiftedCharacterMapping('l', 'L')},
+        {Keys.M, new ShiftedCharacterMapping('m', 'M')},
+        {Keys.N, new ShiftedCharacterMapping('n', 'N')},
+        {Keys.O, new ShiftedCharacterMapping('o', 'O')},
+        {Keys.P, new ShiftedCharacterMapping('p', 'P')},
+        {Keys.Q, new ShiftedCharacterMapping('q', 'Q')},
+        {Keys.R, new ShiftedCharacterMapping('r', 'R')},
+        {Keys.S, new ShiftedCharacterMapping('s', 'S')},
+        {Keys.T, new ShiftedCharacterMapping('t', 'T')},
+        {Keys.U, new ShiftedCharacterMapping('u', 'U')},
+        {Keys.V, new ShiftedCharacterMapping('v', 'V')},
+        {Keys.W, new ShiftedCharacterMapping('w', 'W')},
+        {Keys.X, new ShiftedCharacterMapping('x', 'X')},
+        {Keys.Y, new ShiftedCharacterMapping('y', 'Y')},
+        {Keys.Z, new ShiftedCharacterMapping('z', 'Z')},
+    };
+
+    /// <summary>
+    /// Dictionary that maps <see cref="Keys"/> usually triggered by the numberpad with a character and non-numpad key.
+    /// </summary>
+    public static readonly Dictionary<Keys, NumericKeyMapping> NumberKeyMappings = new Dictionary<Keys, NumericKeyMapping>
+    {
+        {Keys.Decimal, new NumericKeyMapping('.', Keys.Delete)},
+        {Keys.NumPad0, new NumericKeyMapping('0', Keys.Insert)},
+        {Keys.NumPad1, new NumericKeyMapping('1', Keys.End)},
+        {Keys.NumPad2, new NumericKeyMapping('2', Keys.Down)},
+        {Keys.NumPad3, new NumericKeyMapping('3', Keys.PageDown)},
+        {Keys.NumPad4, new NumericKeyMapping('4', Keys.Left)},
+        {Keys.NumPad5, new NumericKeyMapping('5', Keys.D5)},
+        {Keys.NumPad6, new NumericKeyMapping('6', Keys.Right)},
+        {Keys.NumPad7, new NumericKeyMapping('7', Keys.Home)},
+        {Keys.NumPad8, new NumericKeyMapping('8', Keys.Up)},
+        {Keys.NumPad9, new NumericKeyMapping('9', Keys.PageUp)},
     };
 
     /// <summary>
@@ -81,61 +132,53 @@ public struct AsciiKey
     public bool PostInitialDelay;
 
     /// <summary>
-    ///  Does any necessary remapping for virtual keys.
+    /// If numlock is off, tries to remap the key to the non numlock state.
     /// </summary>
-    /// <param name="key"> The key to be remapped. </param>
+    /// <param name="key"> The key to be remapped.</param>
     /// <param name="state">Keyboar state to read numlock.</param>
-    /// <returns> The remapped key. </returns>
-    public static Keys RemapVirtualKeys(Keys key, IKeyboardState state)
+    /// <returns>The remapped key.</returns>
+    public static Keys RemapNumlockKey(Keys key, IKeyboardState state)
     {
         bool numLock = state.NumLock;
         if (numLock)
-        {
             return key;
-        }
 
-        if (s_numKeyMappings.ContainsKey(key))
-        {
-            return s_numKeyMappings[key].Item2;
-        }
+        if (NumberKeyMappings.ContainsKey(key))
+            return NumberKeyMappings[key].NonNumlockKey;
 
         return key;
     }
 
     /// <summary>
-    /// Fills out the fields based on the MonoGame/XNA key.
+    /// Fills out the fields based on the key.
     /// </summary>
     /// <param name="key">The key.</param>
-    /// <param name="shiftPressed">Helps identify which <see cref="Character"/> to use while the key is pressed. For example, if <see cref="Keys.A"/> is used the <see cref="Character"/> field will be either 'A' if <paramref name="shiftPressed"/> is true or 'a' if false.</param>
-    /// <param name="state">Keyboar state to read from.</param>
+    /// <param name="shiftPressed">Helps identify which <see cref="Character"/> to use while the key is pressed.</param>
+    /// <param name="state">Keyboard state to read from.</param>
     public void Fill(Keys key, bool shiftPressed, IKeyboardState state)
     {
         Key = key;
-        bool numLock = state.NumLock;
 
-        if (key >= Keys.A && key <= Keys.Z)
+        if (state.CapsLock && CapsLockedKeys.Contains(key))
         {
-            bool capsLock = state.CapsLock;
-            Character = (char)(Key + (shiftPressed || capsLock ? CapOffset : LowerOffset));
-            return;
-        }
+            ShiftedCharacterMapping shiftedKey = ShiftKeyMappings[Key];
 
-        if (shiftKeyMappings.ContainsKey(Key))
+            // If the caps lock is on, and the shift key is on, it's inverted to unshifted
+            Character = state.CapsLock & !shiftPressed ? shiftedKey.Shifted : shiftedKey.Unshifted;
+        }
+        else if (ShiftKeyMappings.ContainsKey(Key))
         {
-            scases casesCur = shiftKeyMappings[Key];
-            Character = shiftPressed ? casesCur.Item2 : casesCur.Item1;
-            return;
+            ShiftedCharacterMapping shiftedKey = ShiftKeyMappings[Key];
+            Character = shiftPressed ? shiftedKey.Shifted : shiftedKey.Unshifted;
         }
-
-        if (s_numKeyMappings.ContainsKey(Key))
+        else if (NumberKeyMappings.ContainsKey(Key))
         {
-            ncases casesCur = s_numKeyMappings[Key];
-            Character = numLock ? casesCur.Item1 : (char)0;
-            Key = RemapVirtualKeys(Key, state);
-            return;
+            NumericKeyMapping casesCur = NumberKeyMappings[Key];
+            Character = state.NumLock ? casesCur.NumberPadCharacter : (char)0;
+            Key = RemapNumlockKey(Key, state);
         }
-
-        Character = (char)0;
+        else
+            Character = (char)0;
     }
 
     /// <summary>
@@ -174,9 +217,7 @@ public struct AsciiKey
     public static bool operator ==(AsciiKey left, AsciiKey right)
     {
         if (left.Character == (char)0 && left.Character == right.Character)
-        {
             return left.Key == right.Key;
-        }
 
         return left.Character == right.Character;
     }
