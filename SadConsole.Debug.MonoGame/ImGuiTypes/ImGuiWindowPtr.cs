@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ImGuiNET;
 
 namespace SadConsole.Debug.MonoGame.ImGuiTypes;
+
 internal struct ImGuiWindowPtr
 {
     public unsafe ImGuiStyle* NativePtr { get; }

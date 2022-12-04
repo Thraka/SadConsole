@@ -8,11 +8,12 @@ using ImGuiNET;
 using SadConsole.Ansi;
 using SadConsole.Editor.Model;
 using SadConsole.ImGuiSystem;
+using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Tools;
-internal class Pencil : ITool
+internal class Fill : ITool
 {
-    public string Name => "Pencil";
+    public string Name => "Fill";
 
     private ColoredGlyph _tip = CommonToolSettings.Tip;
 
@@ -23,7 +24,7 @@ internal class Pencil : ITool
         {
             ImGui.BeginTooltip();
             ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25.0f);
-            ImGui.TextUnformatted("Draw glyphs on the surface.\n\nUse the left-mouse button to draw.\n\nThe right-mouse button changes the current pencil tip to the foreground, background, and glyph, that is under the cursor.");
+            ImGui.TextUnformatted("Fills an area of the surface.\n\nUse the left-mouse button to fill.\n\nThe right-mouse button changes the current fill tip to the foreground, background, and glyph, that is under the cursor.");
             ImGui.PopTextWrapPos();
             ImGui.EndTooltip();
         }
@@ -107,9 +108,48 @@ internal class Pencil : ITool
     {
         if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
-            surface.Surface[hoveredCellPosition].Clear();
-            _tip.CopyAppearanceTo(surface.Surface[hoveredCellPosition]);
-            surface.IsDirty = true;
+            ColoredGlyph cellToMatch = new ColoredGlyph();
+            ColoredGlyph currentFillCell = _tip;
+
+            surface.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
+
+            Func<ColoredGlyph, bool> isTargetCell = (c) =>
+            {
+                if (c.Glyph == 0 && cellToMatch.Glyph == 0)
+                    return c.Background == cellToMatch.Background;
+
+                return c.Foreground == cellToMatch.Foreground &&
+                       c.Background == cellToMatch.Background &&
+                       c.Glyph == cellToMatch.Glyph &&
+                       c.Mirror == cellToMatch.Mirror;
+            };
+
+            Action<ColoredGlyph> fillCell = (c) =>
+            {
+                currentFillCell.CopyAppearanceTo(c);
+                //console.TextSurface.SetEffect(c, _currentFillCell.Effect);
+            };
+
+            System.Collections.Generic.List<ColoredGlyph> cells = new System.Collections.Generic.List<ColoredGlyph>(surface.Surface);
+
+            Func<ColoredGlyph, SadConsole.Algorithms.NodeConnections<ColoredGlyph>> getConnectedCells = (c) =>
+            {
+                Algorithms.NodeConnections<ColoredGlyph> connections = new Algorithms.NodeConnections<ColoredGlyph>();
+
+                var position = Point.FromIndex(cells.IndexOf(c), surface.Surface.Width);
+
+                connections.West = surface.Surface.IsValidCell(position.X - 1, position.Y) ? surface.Surface[position.X - 1, position.Y] : null;
+                connections.East = surface.Surface.IsValidCell(position.X + 1, position.Y) ? surface.Surface[position.X + 1, position.Y] : null;
+                connections.North = surface.Surface.IsValidCell(position.X, position.Y - 1) ? surface.Surface[position.X, position.Y - 1] : null;
+                connections.South = surface.Surface.IsValidCell(position.X, position.Y + 1) ? surface.Surface[position.X, position.Y + 1] : null;
+
+                return connections;
+            };
+
+            if (!isTargetCell(currentFillCell))
+                SadConsole.Algorithms.FloodFill<ColoredGlyph>(surface.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
+
+            surface.Surface.IsDirty = true;
         }
         else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {

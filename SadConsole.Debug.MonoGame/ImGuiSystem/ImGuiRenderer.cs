@@ -4,6 +4,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -80,6 +81,7 @@ namespace SadConsole.ImGuiSystem
             };
 
             SetupInput();
+            RebuildFontAtlas();
         }
 
         #region ImGuiRenderer
@@ -91,6 +93,7 @@ namespace SadConsole.ImGuiSystem
         {
             // Get font texture from ImGui
             ImGuiIOPtr io = ImGui.GetIO();
+
             io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
 
             // Copy the data to a managed array
@@ -253,6 +256,8 @@ namespace SadConsole.ImGuiSystem
         /// </summary>
         protected virtual void UpdateInput()
         {
+            if (!_game.IsActive) return;
+
             ImGuiIOPtr io = ImGui.GetIO();
 
             WantsMouseCapture = io.WantCaptureMouse;
@@ -271,7 +276,7 @@ namespace SadConsole.ImGuiSystem
 
             io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
-
+            
             io.MousePos = new System.Numerics.Vector2(mouse.X, mouse.Y);
 
             io.MouseDown[0] = mouse.LeftButton == ButtonState.Pressed;
@@ -419,6 +424,15 @@ namespace SadConsole.ImGuiSystem
                 vtxOffset += cmdList.VtxBuffer.Size;
                 idxOffset += cmdList.IdxBuffer.Size;
             }
+        }
+
+        public ImFontPtr AddFontTTF(string file, float size) =>
+            ImGui.GetIO().Fonts.AddFontFromFileTTF(file, size);
+
+        public unsafe void SetDefaultFont(ImFontPtr value)
+        {
+            ImGui.GetIO().NativePtr->FontDefault = value;
+            RebuildFontAtlas();
         }
 
         #endregion Internals

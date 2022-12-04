@@ -30,6 +30,7 @@ namespace SadConsole.Editor
         private static void Main(string[] args)
         {
             Settings.WindowTitle = "Feature Demo (MonoGame)";
+            Settings.CreateStartingConsole = false;
 
             SadConsole.Game.Create(130, 50); //, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
@@ -44,13 +45,6 @@ namespace SadConsole.Editor
         {
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
-
-            // Splash screens show up at the start of the game.
-            //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.PCBoot());
-
-
-            //Game.Instance.Screen = MainConsole;
-            //Game.Instance.DestroyDefaultStartingConsole();
 
             ImGuiCore.Start();
         }

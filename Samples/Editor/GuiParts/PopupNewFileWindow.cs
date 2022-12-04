@@ -9,13 +9,13 @@ using SadConsole.UI;
 
 namespace SadConsole.Editor.GuiParts;
 
-public class GuiNewFileWindow: ImGuiWindow
+public class PopupNewFileWindow: ImGuiWindow
 {
     private int _documentSelectedIndex = -1;
     private string _documentName = "";
     public Model.Document Document;
 
-    public GuiNewFileWindow()
+    public PopupNewFileWindow()
     {
         Title = "New file";
     }
@@ -44,11 +44,6 @@ public class GuiNewFileWindow: ImGuiWindow
                 {
                     ImGui.Separator();
 
-                    ImGui.Text("Name");
-                    ImGui.InputText("##name", ref Document.Name, 50);
-
-                    ImGui.Separator();
-
                     Document.BuildUINew(renderer);
                 }
                 ImGui.Separator();
@@ -66,7 +61,14 @@ public class GuiNewFileWindow: ImGuiWindow
                     ImGui.EndDisabled();
                 }
                 else
-                    if (ImGui.Button("Create")) { DialogResult = true; IsOpen = false; }
+                {
+                    if (ImGui.Button("Create"))
+                    {
+                        Document.Create();
+                        DialogResult = true;
+                        IsOpen = false;
+                    }
+                }
 
                 ImGui.EndPopup();
             }

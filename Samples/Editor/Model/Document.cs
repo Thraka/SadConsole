@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using SadConsole.ImGuiSystem;
 
@@ -11,6 +12,8 @@ namespace SadConsole.Editor.Model
     {
         private static int _id;
         private string _uniqueIdentifier = GenerateCharacterId();
+
+        public DocumentOptions Options = new DocumentOptions();
 
         public string UniqueIdentifier => _uniqueIdentifier;
 

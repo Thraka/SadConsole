@@ -13,5 +13,5 @@ public interface ITool
 
     void BuildSettingsPanel(ImGuiRenderer renderer);
 
-    void MouseOver(ImGuiRenderer renderer);
+    void MouseOver(IScreenSurface surface, SadRogue.Primitives.Point hoveredCellPosition, ImGuiRenderer renderer);
 }

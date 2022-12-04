@@ -11,9 +11,8 @@ namespace SadConsole.ImGuiSystem
     {
         private readonly Microsoft.Xna.Framework.Game _game;
         private GraphicsDeviceManager _graphics;
+
         public ImGuiRenderer ImGuiRenderer;
-        public float fontSize = 14f;
-        public string Font = "";
 
         public event EventHandler HostClosed;
 
@@ -34,10 +33,13 @@ namespace SadConsole.ImGuiSystem
             _game = game;
 
             ImGuiRenderer = new ImGuiRenderer(_game);
-            ImGuiRenderer.RebuildFontAtlas();
+            //ImGuiRenderer.RebuildFontAtlas();
 
-            ImGuiIOPtr io = ImGui.GetIO();
-            io.ConfigFlags = io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            if (enableDocking)
+            {
+                ImGuiIOPtr io = ImGui.GetIO();
+                io.ConfigFlags = io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            }
         }
 
         public override void Draw(GameTime gameTime)

@@ -30,8 +30,8 @@ namespace SadConsole.Debug.MonoGame
         public static void BasicInit()
         {
             _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            //_imGui.Font = "Roboto-Regular.ttf";
+            //_imGui.fontSize = 14f;
 
             Game.Instance.MonoGameInstance.Components.Add(_imGui);
             SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
@@ -58,8 +58,8 @@ namespace SadConsole.Debug.MonoGame
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
             _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            //_imGui.Font = "Roboto-Regular.ttf";
+            //_imGui.fontSize = 14f;
             //ImGui.Theme = coolTheme;
             _imGui.HostClosed += _imGui_HostClosed;
             

@@ -5,6 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>SadConsole.Editor</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
     <Folder Include="Res\REXPaint\" />
     <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
     <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
@@ -39,6 +39,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Fonts\DejaVuSansMono-msdf.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="JetBrains Mono SemiBold Nerd Font Complete.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Roboto-Regular.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

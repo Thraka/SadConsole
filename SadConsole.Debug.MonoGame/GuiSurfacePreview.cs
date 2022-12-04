@@ -55,7 +55,7 @@ namespace SadConsole.Debug.MonoGame
                             }
 
                             // Render the target texture
-                            ImGuiExt.DrawTextureChild("output_preview_surface1", true, _zoom ? ImGuiExt.Zoom2x : ImGuiExt.ZoomNormal, targetTexture, renderer);
+                            ImGuiExt.DrawTextureChild("output_preview_surface1", true, _zoom ? ImGuiExt.Zoom2x : ImGuiExt.ZoomNormal, targetTexture, renderer, out var isActive, out var isHovered);
 
                             // Peek the cell if the target type is the final
                             if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)

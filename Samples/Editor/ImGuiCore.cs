@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImGuiNET;
 using SadConsole;
 using SadConsole.Editor.GuiParts;
 using SadConsole.ImGuiSystem;
@@ -30,8 +31,11 @@ public static partial class ImGuiCore
 
     public static GuiTopBar GuiTopBar;
     public static GuiDockspace GuiDockspace;
-    public static GuiSidePane GuiSidePane;
-    public static GuiDocumentsHost GuiDocumentsHost;
+    public static WindowActiveDocuments GuiSidePane;
+    public static WindowDocumentsHost GuiDocumentsHost;
+    public static WindowTools GuiToolsWindow;
+
+    private static DebuggingTools _debuggingTools;
 
     /// <summary>
     /// Initializes the debugger.
@@ -39,8 +43,8 @@ public static partial class ImGuiCore
     public static void BasicInit()
     {
         _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-        _imGui.Font = "Roboto-Regular.ttf";
-        _imGui.fontSize = 14f;
+        //_imGui.Font = "Roboto-Regular.ttf";
+        //_imGui.fontSize = 14f;
 
         Game.Instance.MonoGameInstance.Components.Add(_imGui);
         SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
@@ -66,7 +70,10 @@ public static partial class ImGuiCore
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
         _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-        _imGui.ImGuiRenderer.RebuildFontAtlas();
+
+        var value = _imGui.ImGuiRenderer.AddFontTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 16f);
+        _imGui.ImGuiRenderer.SetDefaultFont(value);
+
         _imGui.HostClosed += _imGui_HostClosed;
 
         //var ptr = ImGuiNET.ImGui.GetIO().Fonts.AddFontFromFileTTF(@"C:\Windows\Fonts\ARIAL.TTF", 13);
@@ -79,6 +86,8 @@ public static partial class ImGuiCore
         GuiDockspace = new();
         GuiSidePane = new();
         GuiDocumentsHost = new();
+        GuiToolsWindow = new();
+        _debuggingTools = new();
 
         ResetUIList();
 
@@ -91,21 +100,25 @@ public static partial class ImGuiCore
         //ImGuiNET.ImGui.
 
         // Test code
-        State.OpenDocuments = State.OpenDocuments.Append(Model.SurfaceDocument.FromSettings(80, 25, SadRogue.Primitives.Color.White, SadRogue.Primitives.Color.Black)).ToArray();
+        var doc = Model.SurfaceDocument.FromSettings(280, 225, SadRogue.Primitives.Color.White, SadRogue.Primitives.Color.Black);
+        State.OpenDocuments = State.OpenDocuments.Append(doc).ToArray();
+        ((Model.SurfaceDocument)State.OpenDocuments[0]).Surface.Surface.View = new SadRogue.Primitives.Rectangle(0, 0, 10, 10);
     }
 
     public static void ResetUIList()
     {
         _imGui.UIComponents.Clear();
         _imGui.UIComponents.Add(GuiTopBar);
-        //_imGui.UIComponents.Add(GuiDockspace);
-        _imGui.UIComponents.Add(GuiDocumentsHost);
+        _imGui.UIComponents.Add(GuiDockspace);
         _imGui.UIComponents.Add(GuiSidePane);
+        _imGui.UIComponents.Add(GuiToolsWindow);
+        _imGui.UIComponents.Add(GuiDocumentsHost);
+        _imGui.UIComponents.Add(_debuggingTools);
     }
 
     public static void ShowCreateDocument()
     {
-        GuiNewFileWindow window = new GuiNewFileWindow();
+        PopupNewFileWindow window = new PopupNewFileWindow();
         window.IsOpen = true;
         ImGuiCore.GuiComponents.Add(window);
         window.Closed += (s, e) =>
