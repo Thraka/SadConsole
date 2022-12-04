@@ -9,6 +9,11 @@ namespace SadConsole.SplashScreens;
 public class SplashScreenManager : ScreenObject
 {
     /// <summary>
+    /// Raised when all splash screens have finished.
+    /// </summary>
+    public static event EventHandler? SplashScreenFinished;
+
+    /// <summary>
     /// Checks if any splash screens have been added with <see cref="GameHost.SetSplashScreens(ScreenSurface[])"/>, if so, starts them.
     /// </summary>
     public static void CheckRun()
@@ -25,7 +30,7 @@ public class SplashScreenManager : ScreenObject
     /// <summary>
     /// Creates a new instance of this type.
     /// </summary>
-    public SplashScreenManager()
+    internal SplashScreenManager()
     {
         _activeScreen = GameHost.Instance._splashScreens.Dequeue();
         Children.Add(_activeScreen);
@@ -52,6 +57,7 @@ public class SplashScreenManager : ScreenObject
             else
             {
                 GameHost.Instance.RestoreGlobalState();
+                SplashScreenFinished?.Invoke(this, EventArgs.Empty);
             }
         }
     }
