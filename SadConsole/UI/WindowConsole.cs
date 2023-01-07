@@ -203,6 +203,7 @@ public partial class Window : Console
         Controls = new ControlHost();
         SadComponents.Add(Controls);
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
+        RenderSteps.Sort(new Renderers.RenderStepComparer());
         //Renderer = GameHost.Instance.GetRenderer("window");
 
         // todo: Perhaps a new design with windows.
@@ -227,6 +228,7 @@ public partial class Window : Console
         Controls = new ControlHost();
         SadComponents.Add(Controls);
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
+        RenderSteps.Sort(new Renderers.RenderStepComparer());
         DrawBorder();
     }
 

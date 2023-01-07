@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
 using SadConsole.Input;
+using SadConsole.Renderers;
 using SadRogue.Primitives;
 
 namespace SadConsole.Components;
@@ -901,6 +902,7 @@ public class Cursor : IComponent
         _cursorRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Cursor);
         _cursorRenderStep.SetData(this);
         surface.RenderSteps.Add(_cursorRenderStep);
+        surface.RenderSteps.Sort(new RenderStepComparer());
     }
 
     void IComponent.OnRemoved(IScreenObject host)

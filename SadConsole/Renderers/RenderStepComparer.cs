@@ -14,6 +14,9 @@ public class RenderStepComparer : IComparer<Renderers.IRenderStep>
         if (x == null && y != null) return 1;
         if (x != null && y == null) return -1;
 
+        if (x == y || x.SortOrder == y.SortOrder)
+            return 0;
+
         if (x!.SortOrder < y!.SortOrder)
             return -1;
 

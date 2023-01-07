@@ -59,7 +59,7 @@ public interface IScreenSurface : IScreenObject
     /// <summary>
     /// The render steps to draw this object.
     /// </summary>
-    SortedSet<IRenderStep> RenderSteps { get; }
+    List<IRenderStep> RenderSteps { get; }
 
     /// <summary>
     /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.

@@ -217,6 +217,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
         RenderStep.SetData(this);
         surface.RenderSteps.Add(RenderStep);
+        surface.RenderSteps.Sort(new Renderers.RenderStepComparer());
         _screen = surface;
         IsAttached = true;
 

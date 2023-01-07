@@ -74,7 +74,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     }
 
     /// <inheritdoc/>
-    public SortedSet<IRenderStep> RenderSteps { get; } = new SortedSet<IRenderStep>(new RenderStepComparer());
+    public List<IRenderStep> RenderSteps { get; } = new List<IRenderStep>();
 
     /// <summary>
     /// The surface this screen object represents.
@@ -247,6 +247,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
+        RenderSteps.Sort(new RenderStepComparer());
     }
 
     /// <inheritdoc />
