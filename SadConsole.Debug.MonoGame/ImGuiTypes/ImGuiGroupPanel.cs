@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
-using ImGuiNET;
-using ImRect = ImGuiNET.Internal.ImRect;
+using ImGuiNET.Internal;
 using ImGuiInternal = ImGuiNET.Internal.ImGui;
 
 namespace ImGuiNET;
