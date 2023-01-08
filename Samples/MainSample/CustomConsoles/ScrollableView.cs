@@ -45,11 +45,12 @@ namespace FeatureDemo.CustomConsoles
             }
 
             // Create viewer controls and attach them to the surface
-            SadConsole.UI.Controls.SurfaceViewer viewer = new SadConsole.UI.Controls.SurfaceViewer(15, 15);
+            SadConsole.UI.Controls.SurfaceViewer viewer = new SadConsole.UI.Controls.SurfaceViewer(15, 15, _sharedSurface);
             viewer.ScrollBarMode = SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes.AsNeeded;
-            viewer.SetSurface(_sharedSurface);
             viewer.Position = (2, 1);
             viewer.MouseMove += Viewer_MouseMove;
+            viewer.HorizontalScroller.Value = 5;
+            viewer.VerticalScroller.Value = 5;
             Controls.Add(viewer);
 
             viewer = new SadConsole.UI.Controls.SurfaceViewer(20, 10);
@@ -75,6 +76,17 @@ namespace FeatureDemo.CustomConsoles
 
             // Setup mouse palette
             mouseColors = new Palette(new[] { Color.AnsiBlue, Color.AnsiCyan, Color.AnsiGreen, Color.AnsiGreenBright, Color.AnsiRed, Color.AnsiRedBright });
+
+            var button = new SadConsole.UI.Controls.Button(10)
+            {
+                Text = "move"
+            };
+
+            button.Click += (s, e) =>
+            {
+                ((SadConsole.UI.Controls.SurfaceViewer)Controls[1]).ChildSurface.ViewPosition = (10, 10);
+            };
+            Controls.Add(button);
         }
 
         private void Viewer_MouseMove(object sender, SadConsole.UI.Controls.ControlBase.ControlMouseState e)

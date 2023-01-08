@@ -114,7 +114,7 @@ namespace FeatureDemo.CustomConsoles
 
             var input = new TextBox(10)
             {
-                Position = new Point(51, 9)
+                Position = new Point(51, 9), MaxLength = 5
             };
             Controls.Add(input);
 

@@ -32,7 +32,7 @@ namespace FeatureDemo
 
         private static void Main(string[] args)
         {
-            //SadConsole.Settings.UnlimitedFPS = true;
+            SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
             SadConsole.Settings.CreateStartingConsole = false;
@@ -42,7 +42,6 @@ namespace FeatureDemo
 #elif SFML
             Settings.WindowTitle = "Feature Demo (SFML)";
 #endif
-
             SadConsole.Game.Create(80, 25);//, "Res/Fonts/C64.font");
             SadConsole.Game.Instance.OnStart = Init;
             SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
@@ -52,6 +51,7 @@ namespace FeatureDemo
 
         private static void Instance_FrameUpdate(object sender, GameHost e)
         {
+            
             // Called each logic update.
             //if (!_characterWindow.IsVisible)
             {

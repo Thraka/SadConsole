@@ -30,7 +30,8 @@ namespace FeatureDemo.Windows
             : base(20, 20)
         {
             Center();
-            _picker = new CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, SadConsole.UI.Themes.Library.Default.Colors.ControlBackgroundNormal, SadConsole.UI.Themes.Library.Default.Colors.Yellow);
+            var tempFont = (SadFont)Game.Instance.DefaultFont;
+            _picker = new CharacterPicker(SadConsole.UI.Themes.Library.Default.Colors.White, SadConsole.UI.Themes.Library.Default.Colors.ControlBackgroundNormal, SadConsole.UI.Themes.Library.Default.Colors.OrangeDark, tempFont, 16, 16);
             _picker.Position = new Point(2, 1);
             _picker.SelectedCharacter = character;
             _picker.UseFullClick = false;

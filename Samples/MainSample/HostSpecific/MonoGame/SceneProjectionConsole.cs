@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ScrollingConsole = SadConsole.ScrollingConsole;
+using SadConsole;
 
 namespace FeatureDemo.CustomConsoles
 {
     // TODO: Something in here causes a lot of GC when this is toggled on.
-    internal class SceneProjectionConsole : ScrollingConsole
+    internal class SceneProjectionConsole : ScreenSurface
     {
         private readonly RenderTarget2D _renderTexture;
         private Vector3 _boxPosition;

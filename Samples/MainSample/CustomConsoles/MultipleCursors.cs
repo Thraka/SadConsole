@@ -1,4 +1,5 @@
 ﻿using SadConsole;
+using SadConsole.Effects;
 using SadConsole.Input;
 using SadRogue.Primitives;
 

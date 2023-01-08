@@ -197,7 +197,7 @@ namespace FeatureDemo.CustomConsoles
                     };
                 }
 
-                if (!s_surface.Positions().Contains(_start))
+                if (!s_surface.Positions().ToEnumerable().Contains(_start))
                     ChangeSide();
 
                 _end = GetOppositePoint(_start);
