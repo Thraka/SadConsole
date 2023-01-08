@@ -1,4 +1,4 @@
-## v10.0.0 (09/XX/2022)
+## v10.0.0 (01/XX/2023)
 
 - Target .NET 6 exclusively. Core library is nullable aware.
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
@@ -13,13 +13,21 @@
 - [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
 - [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
 - [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a single cell entity or animated surface entity.
+- [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
+- [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
+- [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
+- [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
+- [Core] `Surface.RenderSteps` is now a `List` and you must call `RenderSteps.Sort(new SadConsole.Renderers.RenderStepComparer())` when the collection is changed.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 
-TODO: SurfaceViewer example doesn't redraw while mousedown and clicking. It does actually do the drawing but the visual isn't
-      updated until the mouse enters/exits the original (big) view control, it suddenly starts working.
+### Host changes
+
+- [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
+- [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
+- [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
 
 ## v9.2.1 (01/04/2022)
 
@@ -46,7 +54,7 @@ TODO: SurfaceViewer example doesn't redraw while mousedown and clicking. It does
   - Print clears the effect over the glyphs printed.
   - Print that uses the string processor now processes the string and then sets the appropriate overloaded settings. For example, the overload that sets the foreground and background colors will process the string and then set the foreground and background of the entire string. This is a change from previous behavior which set the colors at the start of the string processor and allowed the processor to override the overload.
 
-## Host changes
+### Host changes
 
 - [MonoGame] Added DrawCallManager to allow injecting custom sprite batch rendering during final scene composition.
 - [MonoGame/SFML] Fixed a bug that caused all surfaces to redraw all cells 100% of the time even if nothing changed. Should bring 300%-400% fps increase in surfaces that aren't changing content.
@@ -54,7 +62,7 @@ TODO: SurfaceViewer example doesn't redraw while mousedown and clicking. It does
 - [MonoGame/SFML] The game host now has a `FrameNumber` property that incremenets each frame cycle.
 - [SFML] Fixed `Settings.UnlimitedFPS`. This now works.
 
-## Other changes
+### Other changes
 
 - [Core] Fixed bug that caused redraws every frame even if nothing had changed.
 - [Core] Cursor didn't respect `Cursor.UseStringParser` because of how `ColoredString` was always using the string parser. This is fixed now.

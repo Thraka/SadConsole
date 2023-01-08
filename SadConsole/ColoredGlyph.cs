@@ -21,6 +21,7 @@ public class ColoredGlyph
     private Mirror _mirror;
     private int _glyph;
     private bool _isDirty;
+    private bool _isVisible = true;
     private CellDecorator[] _decorators = Array.Empty<CellDecorator>();
 
     /// <summary>
@@ -80,7 +81,11 @@ public class ColoredGlyph
     /// <summary>
     /// <see langword="true"/> when this cell should be drawn; otherwise, <see langword="false"/>.
     /// </summary>
-    public bool IsVisible { get; set; } = true;
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set { _isVisible = value; IsDirty = true; }
+    }
 
     /// <summary>
     /// <see langword="true"/> when this cell needs to be redrawn; otherwise, <see langword="false"/>.

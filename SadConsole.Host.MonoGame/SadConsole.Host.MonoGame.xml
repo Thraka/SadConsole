@@ -739,6 +739,53 @@
         <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
+        <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.SurfaceRenderStep">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/> object.

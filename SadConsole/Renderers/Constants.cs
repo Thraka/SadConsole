@@ -22,6 +22,11 @@ public static class RenderStepNames
     public const string Surface = "surface";
 
     /// <summary>
+    /// The render step for a <see cref="IScreenSurface"/> where individual cells are only rendered if they're dirty.
+    /// </summary>
+    public const string SurfaceDirtyCells = "surface_dirtycells";
+
+    /// <summary>
     /// The render step for a <see cref="UI.ControlHost"/>.
     /// </summary>
     public const string ControlHost = "controlhost";
