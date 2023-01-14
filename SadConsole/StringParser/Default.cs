@@ -127,7 +127,7 @@ public class Default : IParser
                     System.Diagnostics.Debugger.Break();
                 }
 #else
-                catch () { }
+                catch (Exception _) { }
 #endif
 
             }
