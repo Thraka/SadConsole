@@ -132,48 +132,46 @@ public partial class REXPaintImage
     /// <returns>The RexPaint image.</returns>
     public static REXPaintImage Load(Stream stream)
     {
-        using (var deflatedStream = new GZipStream(stream, CompressionMode.Decompress))
+        using GZipStream deflatedStream = new(stream, CompressionMode.Decompress);
+        using BufferedStream bufferedStream = new(deflatedStream);
+        using BinaryReader reader = new(bufferedStream);
+
+        int version = reader.ReadInt32();
+        int layerCount = reader.ReadInt32();
+        REXPaintImage? image = null;
+
+        for (int currentLayer = 0; currentLayer < layerCount; currentLayer++)
         {
-            using (var reader = new BinaryReader(deflatedStream))
+            int width = reader.ReadInt32();
+            int height = reader.ReadInt32();
+
+            Layer layer;
+
+            if (currentLayer == 0)
             {
-                int version = reader.ReadInt32();
-                int layerCount = reader.ReadInt32();
-                REXPaintImage? image = null;
+                image = new REXPaintImage(width, height) { Version = version };
+                layer = image._layers[0];
+            }
+            else
+            {
+                layer = image!.Create();
+            }
 
-                for (int currentLayer = 0; currentLayer < layerCount; currentLayer++)
+            // Process cells (could probably be streamlined into index processing instead of x,y...
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
                 {
-                    int width = reader.ReadInt32();
-                    int height = reader.ReadInt32();
 
-                    Layer layer;
+                    var cell = new Cell(reader.ReadInt32(),                                                  // character
+                                        new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte()),  // foreground
+                                        new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())); // background
 
-                    if (currentLayer == 0)
-                    {
-                        image = new REXPaintImage(width, height) { Version = version };
-                        layer = image._layers[0];
-                    }
-                    else
-                    {
-                        layer = image!.Create();
-                    }
-
-                    // Process cells (could probably be streamlined into index processing instead of x,y...
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-
-                            var cell = new Cell(reader.ReadInt32(),                                                  // character
-                                                new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte()),  // foreground
-                                                new Color(reader.ReadByte(), reader.ReadByte(), reader.ReadByte())); // background
-
-                            layer[x, y] = cell;
-                        }
-                    }
+                    layer[x, y] = cell;
                 }
-
-                return image!;
             }
         }
+
+        return image!;
     }
 }
