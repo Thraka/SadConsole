@@ -25,7 +25,7 @@ public partial class CellSurface
             .Combinate(new[] { true, false });
     #endregion
 
-    #region Shift Surface Vertically Both Directions
+    #region Shift Surface Vertically One Direction
     [TestMethod]
     [BetterDynamicData(nameof(ShiftInputs))]
     public void ShiftConsoleDown(int shiftAmount, bool wrap)
@@ -113,6 +113,95 @@ public partial class CellSurface
     }
     #endregion
 
+    #region Shift Surface Horizontally One Direction
+    [TestMethod]
+    [BetterDynamicData(nameof(ShiftInputs))]
+    public void ShiftConsoleRight(int shiftAmount, bool wrap)
+    {
+        // Create test surface
+        var surface = CreateShiftableCellSurfaceForEntireSurface();
+
+        // Shift with some helpful before/after output
+        PrintSurfaceGlyphs(surface, "Before:");
+        surface.ShiftRight(shiftAmount, wrap);
+        PrintSurfaceGlyphs(surface, "After:");
+
+        // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+        // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+        if (shiftAmount != surface.Width)
+            Assert.IsTrue(surface.IsDirty);
+
+        // Verify shift result
+        AssertHasShiftedHorizontally(surface, shiftAmount, wrap);
+    }
+
+    [TestMethod]
+    [BetterDynamicData(nameof(ShiftInputs))]
+    public void ShiftConsoleLeft(int shiftAmount, bool wrap)
+    {
+        // Create test surface
+        var surface = CreateShiftableCellSurfaceForEntireSurface();
+
+        // Shift with some helpful before/after output
+        PrintSurfaceGlyphs(surface, "Before:");
+        surface.ShiftLeft(shiftAmount, wrap);
+        PrintSurfaceGlyphs(surface, "After:");
+
+        // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+        // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+        if (shiftAmount != surface.Width)
+            Assert.IsTrue(surface.IsDirty);
+
+        // Verify shift result
+        AssertHasShiftedHorizontally(surface, -shiftAmount, wrap);
+    }
+
+    #endregion
+
+    #region Shift Surface Horizontally Both Directions
+    [TestMethod]
+    [BetterDynamicData(nameof(ShiftInputsWithNeg))]
+    public void ShiftConsoleRightBothDirs(int shiftAmount, bool wrap)
+    {
+        // Create test surface
+        var surface = CreateShiftableCellSurfaceForEntireSurface();
+
+        // Shift with some helpful before/after output
+        PrintSurfaceGlyphs(surface, "Before:");
+        surface.ShiftRight(shiftAmount, wrap);
+        PrintSurfaceGlyphs(surface, "After:");
+
+        // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+        // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+        if (Math.Abs(shiftAmount) != surface.Width)
+            Assert.IsTrue(surface.IsDirty);
+
+        // Verify shift result
+        AssertHasShiftedHorizontally(surface, shiftAmount, wrap);
+    }
+
+    [TestMethod]
+    [BetterDynamicData(nameof(ShiftInputsWithNeg))]
+    public void ShiftConsoleLeftBothDirs(int shiftAmount, bool wrap)
+    {
+        // Create test surface
+        var surface = CreateShiftableCellSurfaceForEntireSurface();
+
+        // Shift with some helpful before/after output
+        PrintSurfaceGlyphs(surface, "Before:");
+        surface.ShiftLeft(shiftAmount, wrap);
+        PrintSurfaceGlyphs(surface, "After:");
+
+        // Verify IsDirty is set if cells changed.  If nothing changed, the implementation doesn't _have_ to set
+        // IsDirty to be correct, but setting it harms nothing but efficiency; so we just won't check it
+        if (Math.Abs(shiftAmount) != surface.Width)
+            Assert.IsTrue(surface.IsDirty);
+
+        // Verify shift result
+        AssertHasShiftedHorizontally(surface, -shiftAmount, wrap);
+    }
+    #endregion
+
     #region Shift Test Helpers
     private static SadConsole.CellSurface CreateShiftableCellSurfaceForEntireSurface()
     {
@@ -149,7 +238,7 @@ public partial class CellSurface
     }
 
     // Checks that a surface has been shifted as specified, assuming the cells were generated via GetShiftCellFor.
-    // Positive values check for shift down, negative values ShiftUp
+    // Positive values check for shift down, negative values shift up
     private static void AssertHasShiftedVertically(ICellSurface surface, int shiftAmount, bool wrap)
     {
         // Generate blank glyph appropriate for the surface we're checking
@@ -167,6 +256,29 @@ public partial class CellSurface
             int oldY = y - shiftAmount;
             if (wrap) oldY = WrapAround(oldY, surface.Height);
             var expectedGlyph = oldY >= 0 && oldY < surface.Height || wrap ? GetShiftCellForEntireSurface(Point.ToIndex(x, oldY, surface.Width)) : blankGlyph;
+            Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
+        }
+    }
+
+    // Checks that a surface has been shifted as specified, assuming the cells were generated via GetShiftCellFor.
+    // Positive values check for shift right, negative values shift left
+    private static void AssertHasShiftedHorizontally(ICellSurface surface, int shiftAmount, bool wrap)
+    {
+        // Generate blank glyph appropriate for the surface we're checking
+        ColoredGlyph blankGlyph = new ColoredGlyph
+        {
+            Glyph = surface.DefaultGlyph,
+            Background = surface.DefaultBackground,
+            Foreground = surface.DefaultForeground,
+            Decorators = Array.Empty<CellDecorator>(),
+            Mirror = Mirror.None
+        };
+
+        foreach (var (x, y) in surface.Positions())
+        {
+            int oldX = x - shiftAmount;
+            if (wrap) oldX = WrapAround(oldX, surface.Width);
+            var expectedGlyph = oldX >= 0 && oldX < surface.Width || wrap ? GetShiftCellForEntireSurface(Point.ToIndex(oldX, y, surface.Width)) : blankGlyph;
             Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
         }
     }
