@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -15,6 +16,7 @@ namespace SadConsole;
 /// A generic object processed by SadConsole. Provides parent/child, components, and position.
 /// </summary>
 [DataContract]
+[JsonObject(memberSerialization: MemberSerialization.OptIn)]
 public class ScreenObject : IScreenObject
 {
     [DataMember(Name = "Children")]

@@ -14,6 +14,7 @@ namespace SadConsole;
 /// An object that renders a <see cref="ICellSurface"/>.
 /// </summary>
 [DataContract]
+[JsonObject(memberSerialization: MemberSerialization.OptIn)]
 public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
 {
     [DataMember(Name = "Font")]
