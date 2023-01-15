@@ -489,6 +489,126 @@
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.Game.ConfigurationFontLoader">
+            <summary>
+            Settings for loading fonts at the start of a game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="T:SadConsole.Game.Configuration">
+            <summary>
+            An object used during the creation of the game to configure SadConsole and MonoGame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.#ctor">
+            <summary>
+            Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.ConfigureFonts(System.Action{SadConsole.Game.ConfigurationFontLoader})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="fontLoader">A method that provides the <see cref="T:SadConsole.Game.ConfigurationFontLoader"/> object to load fonts.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen``1">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen(System.Func{SadConsole.Game,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnStart(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole is initialized but before the game loop has started.
+            </summary>
+            <param name="onStartCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnEnd(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole the game loop has ended.
+            </summary>
+            <param name="onEndCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameUpdateEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameRenderEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseUnlimitedFPS">
+            <summary>
+            Sets the <see cref="F:SadConsole.Settings.UnlimitedFPS"/> setting to <see langword="true"/>.
+            </summary>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.ShowMonoGameFPS">
+            <summary>
+            Adds a MonoGame game component that renders the frames per-second of the game.
+            </summary>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.WithMonoGameCtor(System.Action{SadConsole.Host.Game})">
+            <summary>
+            The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
+            </summary>
+            <param name="monogameCtorCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.WithMonoGameInit(System.Action{SadConsole.Host.Game})">
+            <summary>
+            Internal only. Called by the MonoGame game to finish configuring SadConsole.
+            </summary>
+            <param name="monogameInitCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
         <member name="T:SadConsole.Readers.TextureToSurfaceReader">
             <summary>
             Reads a texture to a cached surface. Used for animation.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -37,10 +38,11 @@ namespace SadConsole.Host
         /// </summary>
         public event EventHandler WindowResized;
 
-        internal Game(Action<Game> ctorCallback, Action<Game> initCallback)
+        /// <summary>
+        /// Creates the new MonoGame game object.
+        /// </summary>
+        internal Game()
         {
-            _initCallback = initCallback;
-
             Global.GraphicsDeviceManager = new GraphicsDeviceManager(this)
             {
                 GraphicsProfile = Settings.GraphicsProfile
@@ -50,7 +52,7 @@ namespace SadConsole.Host
             
             Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
 
-            ctorCallback?.Invoke(this);
+            SadConsole.Game.Instance._configuration.MonoGameCtorCallback?.Invoke(this);
         }
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)
@@ -127,7 +129,7 @@ namespace SadConsole.Host
 
             Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
 
-            _initCallback?.Invoke(this);
+            SadConsole.Game.Instance._configuration.MonoGameInitCallback?.Invoke(this);
 
             ResetRendering();
 

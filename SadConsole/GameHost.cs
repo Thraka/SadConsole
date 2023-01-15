@@ -295,7 +295,7 @@ public abstract partial class GameHost : IDisposable
     /// <remarks>
     /// If <paramref name="defaultFont"/> is <see langword="null"/>, the <see cref="EmbeddedFont"/> or <see cref="EmbeddedFontExtended"/> font is set based on the value of <see cref="Settings.UseDefaultExtendedFont"/>.
     /// </remarks>
-    protected void LoadDefaultFonts(string defaultFont)
+    protected void LoadDefaultFonts(string? defaultFont)
     {
         // Load the embedded fonts.
         System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;

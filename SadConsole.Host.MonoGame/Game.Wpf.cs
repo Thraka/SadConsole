@@ -7,7 +7,7 @@ namespace SadConsole
     /// <summary>
     /// The MonoGame implementation of the SadConsole Game Host.
     /// </summary>
-    public class Game : GameHost
+    public partial class Game : GameHost
     {
         /// <summary>
         /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitalContainer</code> when creating a stream to read a file.

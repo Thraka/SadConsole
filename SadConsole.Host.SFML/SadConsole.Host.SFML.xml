@@ -4,18 +4,6 @@
         <name>SadConsole.Host.SFML</name>
     </assembly>
     <members>
-        <member name="T:SadConsole.Components.FpsRenderer">
-            <summary>
-            Draws an image on top of a console.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Components.FpsRenderer.Render(SadConsole.IScreenObject,System.TimeSpan)">
-            <summary>
-            Draws the image.
-            </summary>
-            <param name="host">The host of the component.</param>
-            <param name="delta">Unused.</param>
-        </member>
         <member name="T:SadConsole.Components.DrawImage">
             <summary>
             Draws an image on top of a console.
@@ -77,6 +65,18 @@
             <summary>
             Positions by the font of the host in cells.
             </summary>
+        </member>
+        <member name="T:SadConsole.Components.FpsRenderer">
+            <summary>
+            Draws an image on top of a console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.FpsRenderer.Render(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Draws the image.
+            </summary>
+            <param name="host">The host of the component.</param>
+            <param name="delta">Unused.</param>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCell">
             <summary>
@@ -238,12 +238,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
+            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
+            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
@@ -266,6 +266,11 @@
             The SadConsole game object.
             </summary>
         </member>
+        <member name="F:SadConsole.Game._configuration">
+            <summary>
+            The configuration used in creating the game object.
+            </summary>
+        </member>
         <member name="F:SadConsole.Game._keyboard">
             <summary>
             The keyboard translation object.
@@ -278,7 +283,7 @@
         </member>
         <member name="P:SadConsole.Game.Instance">
             <summary>
-            Static instance to the game after the <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/> method has been called.
+            Static instance to the game after the <see cref="!:Create(int, int, string, RenderWindow)"/> method has been called.
             </summary>
         </member>
         <member name="M:SadConsole.Game.#ctor">
@@ -286,16 +291,35 @@
             Creates the game instance.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)">
+        <member name="M:SadConsole.Game.Create">
             <summary>
-            Create's a new SadConsole game.
+            Creates a new game with default configuration, an 80x25 console.
             </summary>
-            <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
-            <param name="cellCountY">How many cells high the window should be based on the font used.</param>
-            <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
-            <param name="window">A optional window object; otherwise the window is created for you.</param>
         </member>
-        <member name="M:SadConsole.Game.Initialize(SFML.Graphics.RenderWindow)">
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.Action)">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Uses the default IBM 8x16 font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action)">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="font">The font file to load.</param>
+            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(SadConsole.Game.Configuration)">
+            <summary>
+            Creates a new game and assigns it to the <see cref="!:MonoGameInstance"/> property.
+            </summary>
+            <param name="configuration">The settings used in creating the game.</param>
+        </member>
+        <member name="M:SadConsole.Game.Initialize">
             <summary>
             Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="P:SadConsole.GameHost.ScreenCellsX"/>, <see cref="P:SadConsole.GameHost.ScreenCellsY"/>, and the <see cref="P:SadConsole.GameHost.DefaultFontSize"/>.
             </summary>
@@ -337,6 +361,113 @@
             <summary>
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
+        </member>
+        <member name="T:SadConsole.Game.ConfigurationFontLoader">
+            <summary>
+            Settings for loading fonts at the start of a game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="T:SadConsole.Game.Configuration">
+            <summary>
+            An object used during the creation of the game to configure SadConsole and MonoGame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.#ctor">
+            <summary>
+            Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.ConfigureFonts(System.Action{SadConsole.Game.ConfigurationFontLoader})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="fontLoader">A method that provides the <see cref="T:SadConsole.Game.ConfigurationFontLoader"/> object to load fonts.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen``1">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen(System.Func{SadConsole.Game,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnStart(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole is initialized but before the game loop has started.
+            </summary>
+            <param name="onStartCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnEnd(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole the game loop has ended.
+            </summary>
+            <param name="onEndCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameUpdateEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameRenderEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseUnlimitedFPS">
+            <summary>
+            Sets the <see cref="F:SadConsole.Settings.UnlimitedFPS"/> setting to <see langword="true"/>.
+            </summary>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetRenderWindow(SFML.Graphics.RenderWindow)">
+            <summary>
+            Sets the rendering window to use by SFML, when you don't want a window created for you.
+            </summary>
+            <param name="renderWindow">The window to render to.</param>
+            <returns>The configuration object.</returns>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
