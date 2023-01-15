@@ -1164,7 +1164,8 @@ public static class CellSurfaceEditor
     /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
     /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
     /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
-    public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+    public static void ShiftRowRightUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount,
+                                              bool wrap)
     {
         if (wrap)
         {
@@ -1183,9 +1184,17 @@ public static class CellSurfaceEditor
                 ShiftRowLeftUnchecked(surface, row, startingX, count, count - amount, true);
                 return;
             }
+        }
 
+        ShiftRowRightUncheckedReuseArray(surface, null, row, startingX, count, amount, wrap);
+    }
+
+    private static void ShiftRowRightUncheckedReuseArray(ICellSurface surface, ColoredGlyphAppearance[]? tempArray, int row, int startingX, int count, int amount, bool wrap)
+    {
+        if (wrap)
+        {
             // Temporary array size of shift value
-            var tempArray = new ColoredGlyphAppearance[amount];
+            tempArray ??= new ColoredGlyphAppearance[amount];
             // Offset for tempArray
             int tempArrayOffset = count - amount;
 
@@ -1224,7 +1233,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the left.
+    /// Internal use. Doesn't do any checks on valid values. Shifts the specified row from an X position, by the specified amount, to the left.
     /// </summary>
     /// <param name="surface">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1232,7 +1241,8 @@ public static class CellSurfaceEditor
     /// <param name="count">The number of cells to shift starting from <paramref name="startingX"/>.</param>
     /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
     /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
-    public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount, bool wrap)
+    public static void ShiftRowLeftUnchecked(this ICellSurface surface, int row, int startingX, int count, int amount,
+                                             bool wrap)
     {
         if (wrap)
         {
@@ -1251,9 +1261,17 @@ public static class CellSurfaceEditor
                 ShiftRowRightUnchecked(surface, row, startingX, count, count - amount, true);
                 return;
             }
+        }
 
+        ShiftRowLeftUncheckedReuseArray(surface, null, row, startingX, count, amount, wrap);
+    }
+
+    private static void ShiftRowLeftUncheckedReuseArray(ICellSurface surface, ColoredGlyphAppearance[]? tempArray, int row, int startingX, int count, int amount, bool wrap)
+    {
+        if (wrap)
+        {
             // Temporary array size of shift value
-            var tempArray = new ColoredGlyphAppearance[amount];
+            tempArray ??= new ColoredGlyphAppearance[amount];
 
             // Shift each cell to its proper location, using temporary storage as needed.
             for (int i = 0; i < count; i++)
@@ -1375,7 +1393,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, down.
+    /// Internal use. Doesn't do any checks on valid values. Shifts the specified row from a Y position, by the specified amount, down.
     /// </summary>
     /// <param name="surface">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1383,7 +1401,8 @@ public static class CellSurfaceEditor
     /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
     /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
     /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
-    public static void ShiftColumnDownUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+    public static void ShiftColumnDownUnchecked(this ICellSurface surface, int col, int startingY, int count,
+                                                int amount, bool wrap)
     {
         if (wrap)
         {
@@ -1393,18 +1412,26 @@ public static class CellSurfaceEditor
             // If count was a multiple of width, everything will end up back where it started so we're done
             if (amount == 0) return;
 
-            // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+            // Any wrapping shift-down by n is equivalent to a shift-up by count - n.  Because we have to
             // allocate a temporary array the size of the value we're shifting during the algorithm,
             // we'll optimize it by making sure that value is as small as possible.  The largest shift
-            // value we will actually process will then be width / 2.
+            // value we will actually process will then be count / 2.
             if (count - amount < amount)
             {
                 ShiftColumnUpUnchecked(surface, col, startingY, count, count - amount, true);
                 return;
             }
+        }
 
+        ShiftColumnDownUncheckedReuseArray(surface, null, col, startingY, count, amount, wrap);
+    }
+
+    private static void ShiftColumnDownUncheckedReuseArray(ICellSurface surface, ColoredGlyphAppearance[]? tempArray, int col, int startingY, int count, int amount, bool wrap)
+    {
+        if (wrap)
+        {
             // Temporary array size of shift value
-            var tempArray = new ColoredGlyphAppearance[amount];
+            tempArray ??= new ColoredGlyphAppearance[amount];
             // Offset for tempArray
             int tempArrayOffset = count - amount;
 
@@ -1443,7 +1470,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from a Y position, by the specfied amount, up.
+    /// Internal use. Doesn't do any checks on valid values. Shifts the specified row from a Y position, by the specified amount, up.
     /// </summary>
     /// <param name="surface">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1451,7 +1478,8 @@ public static class CellSurfaceEditor
     /// <param name="count">The number of cells to shift starting from <paramref name="startingY"/>.</param>
     /// <param name="amount">The amount to shift by. A negative value shifts left and a positive value shifts right.</param>
     /// <param name="wrap">When <see langword="true" />, wraps the glyph data from one side to another, otherwise clears the glyphs left behind.</param>
-    public static void ShiftColumnUpUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount, bool wrap)
+    public static void ShiftColumnUpUnchecked(this ICellSurface surface, int col, int startingY, int count, int amount,
+                                              bool wrap)
     {
         if (wrap)
         {
@@ -1470,9 +1498,17 @@ public static class CellSurfaceEditor
                 ShiftColumnDownUnchecked(surface, col, startingY, count, count - amount, true);
                 return;
             }
+        }
 
+        ShiftColumnUpUncheckedReuseArray(surface, null, col, startingY, count, amount, wrap);
+    }
+
+    private static void ShiftColumnUpUncheckedReuseArray(ICellSurface surface, ColoredGlyphAppearance[]? tempArray, int col, int startingY, int count, int amount, bool wrap)
+    {
+        if (wrap)
+        {
             // Temporary array size of shift value
-            var tempArray = new ColoredGlyphAppearance[amount];
+            tempArray ??= new ColoredGlyphAppearance[amount];
 
             // Shift each cell to its proper location, using temporary storage as needed.
             for (int i = 0; i < count; i++)
@@ -1524,9 +1560,7 @@ public static class CellSurfaceEditor
     public static void ShiftUp(this ICellSurface surface, int amount, bool wrap = false)
     {
         if (amount == 0)
-        {
             return;
-        }
 
         if (amount < 0)
         {
@@ -1535,59 +1569,42 @@ public static class CellSurfaceEditor
         }
 
         surface.TimesShiftedUp += amount;
+        ShiftUpUnchecked(surface, amount, wrap);
+    }
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
-
-        // Handle all the wrapped ones first
+    private static void ShiftUpUnchecked(ICellSurface surface, int amount, bool wrap = false)
+    {
+        int count = surface.Height;
         if (wrap)
         {
-            wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
+            // Simplify wrap to minimum needed number
+            amount %= count;
 
-            for (int y = 0; y < amount; y++)
+            // If count was a multiple of height, everything will end up back where it started so we're done
+            if (amount == 0) return;
+
+            ColoredGlyphAppearance[]? tempArray;
+
+            // Any wrapping shift-up by n is equivalent to a shift-down by height - n.  Because we have to
+            // allocate a temporary array the size of the value we're shifting during the algorithm,
+            // we'll optimize it by making sure that value is as small as possible.  The largest shift
+            // value we will actually process will then be height / 2.
+            if (count - amount < amount)
             {
+                amount = count - amount;
+                tempArray = new ColoredGlyphAppearance[amount];
                 for (int x = 0; x < surface.Width; x++)
-                {
-                    var tempCell = new ColoredGlyph();
-                    surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
-
-                    wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (surface.Height - amount + y) * surface.Width + x));
-                }
+                    ShiftColumnDownUncheckedReuseArray(surface, tempArray, x, 0, count, amount, true);
+                return;
             }
-        }
 
-        for (int y = amount; y < surface.Height; y++)
-        {
+            tempArray = new ColoredGlyphAppearance[amount];
             for (int x = 0; x < surface.Width; x++)
-            {
-                ColoredGlyph destination = surface[(y - amount) * surface.Width + x];
-                ColoredGlyph source = surface[y * surface.Width + x];
-                destination.CopyAppearanceFrom(source, false);
-            }
-        }
-
-
-        if (!wrap)
-        {
-            for (int y = surface.Height - amount; y < surface.Height; y++)
-            {
-                for (int x = 0; x < surface.Width; x++)
-                {
-                    Clear(surface, x, y);
-                }
-            }
+                ShiftColumnUpUncheckedReuseArray(surface, tempArray, x, 0, count, amount, true);
         }
         else
-        {
-            Tuple<ColoredGlyph, int> cellTuple;
-            for (int i = 0; i < wrappedCells.Count; i++)
-            {
-                cellTuple = wrappedCells[i];
-                ColoredGlyph destination = surface[cellTuple.Item2];
-                destination.CopyAppearanceFrom(cellTuple.Item1, false);
-            }
-        }
-
-        surface.IsDirty = true;
+            for (int x = 0; x < surface.Width; x++)
+                ShiftColumnUpUncheckedReuseArray(surface, null, x, 0, count, amount, false);
     }
 
     /// <summary>
@@ -1607,9 +1624,7 @@ public static class CellSurfaceEditor
     public static void ShiftDown(this ICellSurface surface, int amount, bool wrap = false)
     {
         if (amount == 0)
-        {
             return;
-        }
 
         if (amount < 0)
         {
@@ -1618,60 +1633,42 @@ public static class CellSurfaceEditor
         }
 
         surface.TimesShiftedDown += amount;
+        ShiftDownUnchecked(surface, amount, wrap);
+    }
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
-
-        // Handle all the wrapped ones first
+    private static void ShiftDownUnchecked(ICellSurface surface, int amount, bool wrap = false)
+    {
+        int count = surface.Height;
         if (wrap)
         {
-            wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
+            // Simplify wrap to minimum needed number
+            amount %= count;
 
-            for (int y = surface.Height - amount; y < surface.Height; y++)
+            // If count was a multiple of height, everything will end up back where it started so we're done
+            if (amount == 0) return;
+
+            ColoredGlyphAppearance[]? tempArray;
+
+            // Any wrapping shift-up by n is equivalent to a shift-down by height - n.  Because we have to
+            // allocate a temporary array the size of the value we're shifting during the algorithm,
+            // we'll optimize it by making sure that value is as small as possible.  The largest shift
+            // value we will actually process will then be height / 2.
+            if (count - amount < amount)
             {
+                amount = count - amount;
+                tempArray = new ColoredGlyphAppearance[amount];
                 for (int x = 0; x < surface.Width; x++)
-                {
-                    var tempCell = new ColoredGlyph();
-                    surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
-
-                    wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, (amount - (surface.Height - y)) * surface.Width + x));
-                }
+                    ShiftColumnUpUncheckedReuseArray(surface, tempArray, x, 0, count, amount, true);
+                return;
             }
-        }
 
-        for (int y = (surface.Height - 1) - amount; y >= 0; y--)
-        {
+            tempArray = new ColoredGlyphAppearance[amount];
             for (int x = 0; x < surface.Width; x++)
-            {
-                ColoredGlyph destination = surface[(y + amount) * surface.Width + x];
-                ColoredGlyph source = surface[y * surface.Width + x];
-
-                destination.CopyAppearanceFrom(source, false);
-            }
-        }
-
-        if (!wrap)
-        {
-            for (int y = 0; y < amount; y++)
-            {
-                for (int x = 0; x < surface.Width; x++)
-                {
-                    Clear(surface, x, y);
-
-                }
-            }
+                ShiftColumnDownUncheckedReuseArray(surface, tempArray, x, 0, count, amount, true);
         }
         else
-        {
-            Tuple<ColoredGlyph, int> cellTuple;
-            for (int i = 0; i < wrappedCells.Count; i++)
-            {
-                cellTuple = wrappedCells[i];
-                ColoredGlyph destination = surface[cellTuple.Item2];
-                destination.CopyAppearanceFrom(cellTuple.Item1, false);
-            }
-        }
-
-        surface.IsDirty = true;
+            for (int x = 0; x < surface.Width; x++)
+                ShiftColumnDownUncheckedReuseArray(surface, null, x, 0, count, amount, false);
     }
 
     /// <summary>
@@ -1691,9 +1688,7 @@ public static class CellSurfaceEditor
     public static void ShiftRight(this ICellSurface surface, int amount, bool wrap = false)
     {
         if (amount == 0)
-        {
             return;
-        }
 
         if (amount < 0)
         {
@@ -1702,61 +1697,42 @@ public static class CellSurfaceEditor
         }
 
         surface.TimesShiftedRight += amount;
+        ShiftRightUnchecked(surface, amount, wrap);
+    }
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
-
-        // Handle all the wrapped ones first
+    private static void ShiftRightUnchecked(ICellSurface surface, int amount, bool wrap = false)
+    {
+        int count = surface.Width;
         if (wrap)
         {
-            wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
+            // Simplify wrap to minimum needed number
+            amount %= count;
 
-            for (int x = surface.Width - amount; x < surface.Width; x++)
+            // If count was a multiple of height, everything will end up back where it started so we're done
+            if (amount == 0) return;
+
+            ColoredGlyphAppearance[]? tempArray;
+
+            // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+            // allocate a temporary array the size of the value we're shifting during the algorithm,
+            // we'll optimize it by making sure that value is as small as possible.  The largest shift
+            // value we will actually process will then be width / 2.
+            if (count - amount < amount)
             {
+                amount = count - amount;
+                tempArray = new ColoredGlyphAppearance[amount];
                 for (int y = 0; y < surface.Height; y++)
-                {
-                    var tempCell = new ColoredGlyph();
-                    surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
-
-                    wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.Width + amount - (surface.Width - x)));
-                }
+                    ShiftRowLeftUncheckedReuseArray(surface, tempArray, y, 0, count, amount, true);
+                return;
             }
-        }
 
-
-        for (int x = surface.Width - 1 - amount; x >= 0; x--)
-        {
+            tempArray = new ColoredGlyphAppearance[amount];
             for (int y = 0; y < surface.Height; y++)
-            {
-                ColoredGlyph destination = surface[y * surface.Width + (x + amount)];
-                ColoredGlyph source = surface[y * surface.Width + x];
-
-                destination.CopyAppearanceFrom(source, false);
-            }
-        }
-
-        if (!wrap)
-        {
-            for (int x = 0; x < amount; x++)
-            {
-                for (int y = 0; y < surface.Height; y++)
-                {
-                    Clear(surface, x, y);
-
-                }
-            }
+                ShiftRowRightUncheckedReuseArray(surface, tempArray, y, 0, count, amount, true);
         }
         else
-        {
-            Tuple<ColoredGlyph, int> cellTuple;
-            for (int i = 0; i < wrappedCells.Count; i++)
-            {
-                cellTuple = wrappedCells[i];
-                ColoredGlyph destination = surface[cellTuple.Item2];
-                destination.CopyAppearanceFrom(cellTuple.Item1, false);
-            }
-        }
-
-        surface.IsDirty = true;
+            for (int y = 0; y < surface.Height; y++)
+                ShiftRowRightUncheckedReuseArray(surface, null, y, 0, count, amount, false);
     }
 
     /// <summary>
@@ -1776,9 +1752,7 @@ public static class CellSurfaceEditor
     public static void ShiftLeft(this ICellSurface surface, int amount, bool wrap = false)
     {
         if (amount == 0)
-        {
             return;
-        }
 
         if (amount < 0)
         {
@@ -1787,59 +1761,42 @@ public static class CellSurfaceEditor
         }
 
         surface.TimesShiftedLeft += amount;
+        ShiftLeftUnchecked(surface, amount, wrap);
+    }
 
-        List<Tuple<ColoredGlyph, int>> wrappedCells = null!;
-
-        // Handle all the wrapped ones first
+    private static void ShiftLeftUnchecked(ICellSurface surface, int amount, bool wrap = false)
+    {
+        int count = surface.Width;
         if (wrap)
         {
-            wrappedCells = new List<Tuple<ColoredGlyph, int>>(surface.Height * amount);
+            // Simplify wrap to minimum needed number
+            amount %= count;
 
-            for (int x = 0; x < amount; x++)
+            // If count was a multiple of height, everything will end up back where it started so we're done
+            if (amount == 0) return;
+
+            ColoredGlyphAppearance[]? tempArray;
+
+            // Any wrapping shift-right by n is equivalent to a shift-left by width - n.  Because we have to
+            // allocate a temporary array the size of the value we're shifting during the algorithm,
+            // we'll optimize it by making sure that value is as small as possible.  The largest shift
+            // value we will actually process will then be width / 2.
+            if (count - amount < amount)
             {
+                amount = count - amount;
+                tempArray = new ColoredGlyphAppearance[amount];
                 for (int y = 0; y < surface.Height; y++)
-                {
-                    var tempCell = new ColoredGlyph();
-                    surface[y * surface.Width + x].CopyAppearanceTo(tempCell);
-
-                    wrappedCells.Add(new Tuple<ColoredGlyph, int>(tempCell, y * surface.Width + (surface.Width - amount + x)));
-                }
+                    ShiftRowRightUncheckedReuseArray(surface, tempArray, y, 0, count, amount, true);
+                return;
             }
-        }
 
-        for (int x = amount; x < surface.Width; x++)
-        {
+            tempArray = new ColoredGlyphAppearance[amount];
             for (int y = 0; y < surface.Height; y++)
-            {
-                ColoredGlyph destination = surface[y * surface.Width + (x - amount)];
-                ColoredGlyph source = surface[y * surface.Width + x];
-
-                destination.CopyAppearanceFrom(source, false);
-            }
-        }
-
-        if (!wrap)
-        {
-            for (int x = surface.Width - amount; x < surface.Width; x++)
-            {
-                for (int y = 0; y < surface.Height; y++)
-                {
-                    Clear(surface, x, y);
-                }
-            }
+                ShiftRowLeftUncheckedReuseArray(surface, tempArray, y, 0, count, amount, true);
         }
         else
-        {
-            Tuple<ColoredGlyph, int> cellTuple;
-            for (int i = 0; i < wrappedCells.Count; i++)
-            {
-                cellTuple = wrappedCells[i];
-                ColoredGlyph destination = surface[cellTuple.Item2];
-                destination.CopyAppearanceFrom(cellTuple.Item1, false);
-            }
-        }
-
-        surface.IsDirty = true;
+            for (int y = 0; y < surface.Height; y++)
+                ShiftRowLeftUncheckedReuseArray(surface, null, y, 0, count, amount, false);
     }
 
     /// <summary>
