@@ -94,6 +94,9 @@ namespace SadConsole.Tests
             // fully new values.
             Assert.IsTrue(ShiftInputsRow.Any(v => v.shift % 2 == 1));
             Assert.IsTrue(ShiftInputsCol.Any(v => v.shift % 2 == 1));
+
+            // Necessary to ensure our color indexing will work properly (both here and in ShiftConsole)
+            Assert.IsTrue(SurfaceWidth * SurfaceHeight <= 255);
         }
         #endregion
 
@@ -285,7 +288,7 @@ namespace SadConsole.Tests
 
             // Number it with first cell in row glyph 1, second glyph 2, etc.
             for (int x = 0; x < surface.Width; x++)
-                surface[x, ShiftRow].CopyAppearanceFrom(GetShiftCellFor(x));
+                surface[x, ShiftRow].CopyAppearanceFrom(GetShiftCellForSingleRowCol(x));
 
             // Set IsDirty to false because we want to test that certain functions set it to true, and we're not
             // actually rendering it so it won't matter
@@ -301,7 +304,7 @@ namespace SadConsole.Tests
 
             // Number it with first cell in col glyph 1, second glyph 2, etc.
             for (int y = 0; y < surface.Height; y++)
-                surface[ShiftCol, y].CopyAppearanceFrom(GetShiftCellFor(y));
+                surface[ShiftCol, y].CopyAppearanceFrom(GetShiftCellForSingleRowCol(y));
 
             // Set IsDirty to false because we want to test that certain functions set it to true, and we're not
             // actually rendering it so it won't matter
@@ -312,7 +315,7 @@ namespace SadConsole.Tests
 
         // Computes a ColoredGlyph with unique values for its appearance-related fields, given an ID. This ID
         // should be either the X-value or the Y-value for a position on a surface.
-        private static ColoredGlyph GetShiftCellFor(int positionId)
+        private static ColoredGlyph GetShiftCellForSingleRowCol(int positionId)
         {
             int id = positionId + 1;
             var colorId = new Color(id, id, id);
@@ -359,14 +362,14 @@ namespace SadConsole.Tests
                     int oldX = x - shiftAmount;
 
                     if (wrap) oldX = WrapAround(oldX - startingX, count) + startingX;
-                    var expectedGlyph = oldX >= startingX && oldX < startingX + count || wrap ? GetShiftCellFor(oldX) : blankGlyph;
+                    var expectedGlyph = oldX >= startingX && oldX < startingX + count || wrap ? GetShiftCellForSingleRowCol(oldX) : blankGlyph;
 
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
                 }
                 // Value should not have changed.
                 else
                 {
-                    var expectedGlyph = y == ShiftRow ? GetShiftCellFor(x) : blankGlyph;
+                    var expectedGlyph = y == ShiftRow ? GetShiftCellForSingleRowCol(x) : blankGlyph;
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
                 }
             }
@@ -394,14 +397,14 @@ namespace SadConsole.Tests
                     int oldY = y - shiftAmount;
 
                     if (wrap) oldY = WrapAround(oldY - startingY, count) + startingY;
-                    var expectedGlyph = oldY >= startingY && oldY < startingY + count || wrap ? GetShiftCellFor(oldY) : blankGlyph;
+                    var expectedGlyph = oldY >= startingY && oldY < startingY + count || wrap ? GetShiftCellForSingleRowCol(oldY) : blankGlyph;
 
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
                 }
                 // Value should not have changed.
                 else
                 {
-                    var expectedGlyph = x == ShiftCol ? GetShiftCellFor(y) : blankGlyph;
+                    var expectedGlyph = x == ShiftCol ? GetShiftCellForSingleRowCol(y) : blankGlyph;
                     Assert.IsTrue(CheckAppearancesEqual(expectedGlyph, surface[x, y]));
                 }
             }

@@ -1655,8 +1655,8 @@ public static class CellSurfaceEditor
             {
                 for (int x = 0; x < surface.Width; x++)
                 {
-                    ColoredGlyph source = surface[y * surface.Width + x];
-                    source.Clear();
+                    Clear(surface, x, y);
+
                 }
             }
         }
