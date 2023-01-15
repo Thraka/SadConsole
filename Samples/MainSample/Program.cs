@@ -23,7 +23,6 @@ namespace FeatureDemo
     internal class Program
     {
         private static Windows.CharacterViewer _characterWindow;
-        private static Container MainConsole;
 
         public static int MainWidth = 80;
         public static int MainHeight = 23;
@@ -32,21 +31,29 @@ namespace FeatureDemo
 
         private static void Main(string[] args)
         {
-            SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
-            SadConsole.Settings.CreateStartingConsole = false;
+
+            Game.Configuration configuration = new Game.Configuration()
+                .ConfigureFonts(loader => loader.UseBuiltinFontExtended())
+                .SetScreenSize(80, 25)
+                .SetStartingScreen<Container>()
+                .OnStart(Init)
+                .UseFrameUpdateEvent(Instance_FrameUpdate)
+                ;
 
 #if MONOGAME
             Settings.WindowTitle = "Feature Demo (MonoGame)";
+            configuration
+                .ShowMonoGameFPS()
+                .UseUnlimitedFPS();
 #elif SFML
             Settings.WindowTitle = "Feature Demo (SFML)";
+            configuration.UseUnlimitedFPS();
 #endif
-            SadConsole.Game.Create(80, 25);//, "Res/Fonts/C64.font");
-            SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
+            Game.Create(configuration);
+            Game.Instance.Run();
+            Game.Instance.Dispose();
         }
 
         private static void Instance_FrameUpdate(object sender, GameHost e)
@@ -59,10 +66,17 @@ namespace FeatureDemo
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
                 // in the Initialize method above.
                 if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F1))
-                    MainConsole.MoveNextConsole();
+                    ((Container)Game.Instance.Screen).MoveNextConsole();
 
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F2))
                     _characterWindow.Show(true);
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F3))
+                {
+#if MONOGAME
+                    SadConsole.Host.Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
+                    SadConsole.Game.Instance.MonoGameInstance.IsFixedTimeStep = true;
+#endif
+                }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F10))
                 {
                     SadConsole.Debug.Screen.Show();
@@ -87,10 +101,6 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
-#if MONOGAME
-            if (Settings.UnlimitedFPS)
-              SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
-#endif
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
 
@@ -101,11 +111,8 @@ namespace FeatureDemo
             _characterWindow = new Windows.CharacterViewer(0);
 
             // The demo screen 
-            MainConsole = new Container();
-            
-            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
-            // We don't want to use that for the sample project so we'll remove and then destroy it.
-            Game.Instance.Screen = MainConsole;
+            //Game.Instance.Screen = new Container();
+
             //return;
             //SadConsole.Settings.ClearColor = Color.White;
 

@@ -71,10 +71,12 @@ internal class DirtyCellsRenderer : ScreenSurface
     public override void Update(TimeSpan delta)
     {
         base.Update(delta);
+        if (childSurface != null)
+        {
+            var point = new Point(SadConsole.Game.Instance.Random.Next(0, childSurface.Surface.Width), SadConsole.Game.Instance.Random.Next(0, childSurface.Surface.Height));
 
-        var point = new Point(SadConsole.Game.Instance.Random.Next(0, childSurface.Surface.Width), SadConsole.Game.Instance.Random.Next(0, childSurface.Surface.Height));
-
-        childSurface.Surface[point].Background = Color.DarkOrange.GetRandomColor(SadConsole.Game.Instance.Random);
-        childSurface.IsDirty = true;
+            childSurface.Surface[point].Background = Color.DarkOrange.GetRandomColor(SadConsole.Game.Instance.Random);
+            childSurface.IsDirty = true;
+        }
     }
 }
