@@ -251,6 +251,9 @@ public partial class CellSurface
             Mirror = Mirror.None
         };
 
+        Assert.AreEqual(Math.Abs(shiftAmount), shiftAmount > 0 ? surface.TimesShiftedDown : surface.TimesShiftedUp);
+        Assert.AreEqual(0, shiftAmount > 0 ? surface.TimesShiftedUp : surface.TimesShiftedDown);
+
         foreach (var (x, y) in surface.Positions())
         {
             int oldY = y - shiftAmount;
@@ -273,6 +276,9 @@ public partial class CellSurface
             Decorators = Array.Empty<CellDecorator>(),
             Mirror = Mirror.None
         };
+
+        Assert.AreEqual(Math.Abs(shiftAmount), shiftAmount > 0 ? surface.TimesShiftedRight : surface.TimesShiftedLeft);
+        Assert.AreEqual(0, shiftAmount > 0 ? surface.TimesShiftedLeft : surface.TimesShiftedRight);
 
         foreach (var (x, y) in surface.Positions())
         {
