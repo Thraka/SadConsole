@@ -67,47 +67,47 @@ public class ScreenSurfaceShift
     }
     #endregion
 
-    // #region Horizontal Shifts
-    // [Benchmark]
-    // public ICellSurface ShiftRightOne()
-    // {
-    //     _surface.ShiftRight(1, Wrap);
-    //     return _surface;
-    // }
-    //
-    // [Benchmark]
-    // public ICellSurface ShiftRightHalf()
-    // {
-    //     _surface.ShiftRight(_surface.Width / 2, Wrap);
-    //     return _surface;
-    // }
-    //
-    // [Benchmark]
-    // public ICellSurface ShiftRightWidthMinusOne()
-    // {
-    //     _surface.ShiftRight(_surface.Width - 1, Wrap);
-    //     return _surface;
-    // }
-    //
-    // [Benchmark]
-    // public ICellSurface ShiftLeftOne()
-    // {
-    //     _surface.ShiftLeft(1, Wrap);
-    //     return _surface;
-    // }
-    //
-    // [Benchmark]
-    // public ICellSurface ShiftLeftHalf()
-    // {
-    //     _surface.ShiftLeft(_surface.Width / 2, Wrap);
-    //     return _surface;
-    // }
-    //
-    // [Benchmark]
-    // public ICellSurface ShiftLeftWidthMinusOne()
-    // {
-    //     _surface.ShiftLeft(_surface.Width - 1, Wrap);
-    //     return _surface;
-    // }
-    // #endregion
+    #region Horizontal Shifts
+    [Benchmark]
+    public ICellSurface ShiftRightOne()
+    {
+        _surface.ShiftRight(1, Wrap);
+        return _surface;
+    }
+
+    [Benchmark]
+    public ICellSurface ShiftRightHalf()
+    {
+        _surface.ShiftRight(_surface.Width / 2, Wrap);
+        return _surface;
+    }
+
+    [Benchmark]
+    public ICellSurface ShiftRightWidthMinusOne()
+    {
+        _surface.ShiftRight(_surface.Width - 1, Wrap);
+        return _surface;
+    }
+
+    [Benchmark]
+    public ICellSurface ShiftLeftOne()
+    {
+        _surface.ShiftLeft(1, Wrap);
+        return _surface;
+    }
+
+    [Benchmark]
+    public ICellSurface ShiftLeftHalf()
+    {
+        _surface.ShiftLeft(_surface.Width / 2, Wrap);
+        return _surface;
+    }
+
+    [Benchmark]
+    public ICellSurface ShiftLeftWidthMinusOne()
+    {
+        _surface.ShiftLeft(_surface.Width - 1, Wrap);
+        return _surface;
+    }
+    #endregion
 }
