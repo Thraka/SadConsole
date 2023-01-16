@@ -106,7 +106,7 @@ public class Ansi1 : ScreenSurface
         madeWithString.SetEffect(fadeEffect);
         madeWithString.SetBackground(fillColor);
         madeWithString.SetForeground(fadeEffect.DestinationForeground.Stops[0].Color);
-        var drawMadeWith = new Instructions.DrawString(madeWithString) { TotalTimeToPrint = 0.4f };
+        var drawMadeWith = new Instructions.DrawString(madeWithString) { TotalTimeToPrint = TimeSpan.FromSeconds(0.4d) };
         drawMadeWith.Position = textMadeWithPosition;
 
         // Draw SadConsole string
@@ -125,7 +125,7 @@ public class Ansi1 : ScreenSurface
         sadConsoleString.SetEffect(fadeEffect2);
         sadConsoleString.SetBackground(fillColor);
         sadConsoleString.SetForeground(fadeEffect2.DestinationForeground.Stops[0].Color);
-        var drawSadConsole = new Instructions.DrawString(sadConsoleString) { TotalTimeToPrint = 0.3f };
+        var drawSadConsole = new Instructions.DrawString(sadConsoleString) { TotalTimeToPrint = TimeSpan.FromSeconds(0.3d) };
         drawSadConsole.Position = textSadConsolePosition;
 
         // Tear drop animation

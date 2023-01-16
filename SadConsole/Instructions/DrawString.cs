@@ -22,9 +22,9 @@ public class DrawString : InstructionBase
     }
 
     /// <summary>
-    /// Gets or sets the total time to take to write the string. Use zero for instant.
+    /// Gets or sets the total time to take to write the string. Use <see cref="TimeSpan.Zero"/> for no duration.
     /// </summary>
-    public float TotalTimeToPrint { get; set; }
+    public TimeSpan TotalTimeToPrint { get; set; }
 
     /// <summary>
     /// Gets or sets the position on the console to write the text.
@@ -36,8 +36,8 @@ public class DrawString : InstructionBase
     /// </summary>
     public Components.Cursor? Cursor { get; set; }
 
-    private double _timeElapsed = 0d;
-    private double _timePerCharacter = 0d;
+    private TimeSpan _timeElapsed;
+    private TimeSpan _timePerCharacter;
     private string _textCopy = string.Empty;
     private short _textIndex;
     private bool _started = false;
@@ -46,19 +46,25 @@ public class DrawString : InstructionBase
     /// <summary>
     /// Creates a new instance of the object with the specified text.
     /// </summary>
-    /// <param name="text"></param>
-    public DrawString(ColoredString text)
+    /// <param name="text">The text to print.</param>
+    /// <param name="duration">The time to print the entire text.</param>
+    public DrawString(ColoredString text, TimeSpan duration)
     {
-        if (text == null) throw new ArgumentNullException(nameof(text));
-
         _text = text;
+        TotalTimeToPrint = duration;
     }
+
+    /// <summary>
+    /// Creates a new instance of the object with the specified text. Prints the text in one second.
+    /// </summary>
+    /// <param name="text"></param>
+    public DrawString(ColoredString text): this(text, TimeSpan.FromSeconds(1)) { }
         
 
     /// <summary>
     /// Creates a new instance of the object. <see cref="Text"/> must be set manually.
     /// </summary>
-    public DrawString() : this(new ColoredString()) { }
+    public DrawString() : this(new ColoredString(), TimeSpan.FromSeconds(1)) { }
 
     /// <inheritdoc />
     public override void Update(IScreenObject componentHost, TimeSpan delta)
@@ -90,14 +96,14 @@ public class DrawString : InstructionBase
 
             _tempLocation = Position;
 
-            if (TotalTimeToPrint > 0f)
+            if (TotalTimeToPrint > TimeSpan.Zero)
             {
                 _timePerCharacter = TotalTimeToPrint / _textCopy.Length;
             }
         }
 
 
-        if (TotalTimeToPrint == 0f)
+        if (TotalTimeToPrint == TimeSpan.Zero)
         {
             cursor.Position = Position;
             cursor.Print(Text);
@@ -105,12 +111,12 @@ public class DrawString : InstructionBase
         }
         else
         {
-            _timeElapsed += delta.TotalSeconds;
+            _timeElapsed += delta;
             if (_timeElapsed >= _timePerCharacter)
             {
                 int charCount = (int)(_timeElapsed / _timePerCharacter);
                 int charsLeft = _textCopy.Length - _textIndex;
-                _timeElapsed = 0d;
+                _timeElapsed = TimeSpan.FromTicks(_timeElapsed.Ticks - _timePerCharacter.Ticks * charCount);
 
                 cursor.Position = _tempLocation;
 
