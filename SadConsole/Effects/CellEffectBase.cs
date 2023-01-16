@@ -46,6 +46,10 @@ public abstract class CellEffectBase : ICellEffect
     [DataMember]
     public bool RestoreCellOnRemoved { get; set; }
 
+    /// <inheritdoc />
+    [DataMember]
+    public bool RunEffectOnApply { get; set; }
+
     /// <summary>
     /// Creates a new instance of the effect.
     /// </summary>

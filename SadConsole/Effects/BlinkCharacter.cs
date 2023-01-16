@@ -124,6 +124,7 @@ public class BlinkGlyph : CellEffectBase
         CloneOnAdd = CloneOnAdd,
         RemoveOnFinished = RemoveOnFinished,
         RestoreCellOnRemoved = RestoreCellOnRemoved,
+        RunEffectOnApply = RunEffectOnApply,
         _timeElapsed = _timeElapsed,
     };
 

@@ -214,6 +214,7 @@ public class Fade : CellEffectBase
         CloneOnAdd = CloneOnAdd,
         RemoveOnFinished = RemoveOnFinished,
         RestoreCellOnRemoved = RestoreCellOnRemoved,
+        RunEffectOnApply = RunEffectOnApply,
         _timeElapsed = _timeElapsed,
 
     };

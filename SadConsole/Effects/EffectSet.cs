@@ -139,6 +139,7 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
             CloneOnAdd = CloneOnAdd,
             RemoveOnFinished = RemoveOnFinished,
             RestoreCellOnRemoved = RestoreCellOnRemoved,
+            RunEffectOnApply = RunEffectOnApply,
             _timeElapsed = _timeElapsed,
         };
 

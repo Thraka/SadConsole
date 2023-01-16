@@ -31,6 +31,11 @@ public interface ICellEffect// : System.IEquatable<ICellEffect>
     bool RestoreCellOnRemoved { get; set; }
 
     /// <summary>
+    /// When <see langword="true"/>, indicates that the <see cref="EffectsManager"/> should run one update frame on this effect when it's first added to the manager.
+    /// </summary>
+    bool RunEffectOnApply { get; set; }
+
+    /// <summary>
     /// Applies the state of the effect to a cell.
     /// </summary>
     /// <param name="cell">The surface cell using this effect.</param>

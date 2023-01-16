@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SadConsole.Ansi;
 
 namespace SadConsole.Effects;
 
@@ -60,6 +61,8 @@ public class EffectsManager
                 effect = effect.Clone();
                 workingEffect = new ColoredGlyphEffectData(effect);
                 _effects.Add(workingEffect.Effect, workingEffect);
+                if (workingEffect.Effect.RunEffectOnApply)
+                    workingEffect.Effect.Update(TimeSpan.Zero);
             }
             else
             {
@@ -67,6 +70,8 @@ public class EffectsManager
                 if (GetKnownEffect(effect, out workingEffect) == false)
                 {
                     _effects.Add(workingEffect.Effect, workingEffect);
+                    if (workingEffect.Effect.RunEffectOnApply)
+                        workingEffect.Effect.Update(TimeSpan.Zero);
                 }
                 else
                 {
@@ -83,7 +88,9 @@ public class EffectsManager
 
             // Add the cell to the effects by cell key and to list of known cells for the effect
             _effectCells.Add(cell, workingEffect);
-            workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
+            ColoredGlyphWithState state = new(cell);
+            workingEffect.CellsStates.Add(state);
+            workingEffect.Effect.ApplyToCell(state.Cell, state.State);
         }
         else
         {
@@ -108,6 +115,8 @@ public class EffectsManager
                 effect = effect.Clone();
                 workingEffect = new ColoredGlyphEffectData(effect);
                 _effects.Add(workingEffect.Effect, workingEffect);
+                if (workingEffect.Effect.RunEffectOnApply)
+                    workingEffect.Effect.Update(TimeSpan.Zero);
             }
             else
             {
@@ -115,6 +124,8 @@ public class EffectsManager
                 if (GetKnownEffect(effect, out workingEffect) == false)
                 {
                     _effects.Add(workingEffect.Effect, workingEffect);
+                    if (workingEffect.Effect.RunEffectOnApply)
+                        workingEffect.Effect.Update(TimeSpan.Zero);
                 }
             }
 
@@ -127,7 +138,9 @@ public class EffectsManager
 
                     // Add the cell to the effects by cell key and to list of known cells for the effect
                     _effectCells.Add(cell, workingEffect);
-                    workingEffect.CellsStates.Add(new ColoredGlyphWithState(cell));
+                    ColoredGlyphWithState state = new(cell);
+                    workingEffect.CellsStates.Add(state);
+                    workingEffect.Effect.ApplyToCell(state.Cell, state.State);
                 }
             }
         }
