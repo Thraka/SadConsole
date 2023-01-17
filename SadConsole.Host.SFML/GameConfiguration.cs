@@ -9,47 +9,6 @@ namespace SadConsole;
 
 public sealed partial class Game
 {
-    /// <summary>
-    /// Settings for loading fonts at the start of a game.
-    /// </summary>
-    public class ConfigurationFontLoader
-    {
-        internal string[] CustomFonts = Array.Empty<string>();
-        internal string? AlternativeDefaultFont;
-        internal bool UseExtendedFont;
-
-        /// <summary>
-        /// Sets the default font to the SadConsole standard font, an IBM 8x16 font.
-        /// </summary>
-        public void UseBuiltinFont()
-        {
-            UseExtendedFont = false;
-            AlternativeDefaultFont = null;
-        }
-
-        /// <summary>
-        /// Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
-        /// </summary>
-        public void UseBuiltinFontExtended()
-        {
-            UseExtendedFont = true;
-            AlternativeDefaultFont = null;
-        }
-
-        /// <summary>
-        /// Sets the default font in SadConsole to the specified font file.
-        /// </summary>
-        /// <param name="fontFile"></param>
-        public void UseCustomFont(string fontFile) =>
-            AlternativeDefaultFont = fontFile;
-
-        /// <summary>
-        /// Loads the provided font files into SadConsole.
-        /// </summary>
-        /// <param name="fontFiles">An array of font files to load.</param>
-        public void AddExtraFonts(params string[] fontFiles) =>
-            CustomFonts = fontFiles;
-    }
 
     /// <summary>
     /// An object used during the creation of the game to configure SadConsole and MonoGame.
@@ -60,6 +19,8 @@ public sealed partial class Game
 
         internal Action<ConfigurationFontLoader> FontLoader { get; set; }
         internal Func<Game, IScreenObject> GenerateStartingObject { get; set; }
+
+        internal bool FocusStartingObject { get; set; } = true;
 
         internal int ScreenSizeWidth { get; set; }
         internal int ScreenSizeHeight { get; set; }
@@ -108,7 +69,7 @@ public sealed partial class Game
         public Configuration SetStartingScreen<TRootObject>() where TRootObject : IScreenObject, new()
         {
             Settings.CreateStartingConsole = false;
-            GenerateStartingObject = _ => new TRootObject() { IsFocused = true };
+            GenerateStartingObject = _ => new TRootObject();
             return this;
         }
 
@@ -121,6 +82,17 @@ public sealed partial class Game
         {
             Settings.CreateStartingConsole = false;
             GenerateStartingObject = creator;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the starting screen's <see cref="IScreenObject.IsFocused"/> property to the provided value, when it's created.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>The configuration object.</returns>
+        public Configuration IsStartingScreenFocused(bool value)
+        {
+            FocusStartingObject = value;
             return this;
         }
 
@@ -200,5 +172,47 @@ public sealed partial class Game
             TargetWindow = renderWindow;
             return this;
         }
+    }
+
+    /// <summary>
+    /// Settings for loading fonts at the start of a game.
+    /// </summary>
+    public class ConfigurationFontLoader
+    {
+        internal string[] CustomFonts = Array.Empty<string>();
+        internal string? AlternativeDefaultFont;
+        internal bool UseExtendedFont;
+
+        /// <summary>
+        /// Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+        /// </summary>
+        public void UseBuiltinFont()
+        {
+            UseExtendedFont = false;
+            AlternativeDefaultFont = null;
+        }
+
+        /// <summary>
+        /// Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+        /// </summary>
+        public void UseBuiltinFontExtended()
+        {
+            UseExtendedFont = true;
+            AlternativeDefaultFont = null;
+        }
+
+        /// <summary>
+        /// Sets the default font in SadConsole to the specified font file.
+        /// </summary>
+        /// <param name="fontFile"></param>
+        public void UseCustomFont(string fontFile) =>
+            AlternativeDefaultFont = fontFile;
+
+        /// <summary>
+        /// Loads the provided font files into SadConsole.
+        /// </summary>
+        /// <param name="fontFiles">An array of font files to load.</param>
+        public void AddExtraFonts(params string[] fontFiles) =>
+            CustomFonts = fontFiles;
     }
 }

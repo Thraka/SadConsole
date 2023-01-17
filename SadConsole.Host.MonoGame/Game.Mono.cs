@@ -159,19 +159,19 @@ public sealed partial class Game : GameHost
         // Setup default starting console, otherwise, use the config starting object.
         if (Settings.CreateStartingConsole)
         {
-            StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
+            Screen = StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
             StartingConsole.IsFocused = true;
-            Screen = StartingConsole;
         }
         else
         {
             try
             {
                 Screen = _configuration.GenerateStartingObject(this);
+                Screen.IsFocused = _configuration.FocusStartingObject;
             }
             catch (NullReferenceException e)
             {
-                throw new NullReferenceException("'Settings.CreateStartingConsole' is false; configuration 'SetStartingScreen' method must return a valid object.");
+                throw new NullReferenceException("'Settings.CreateStartingConsole' is false; configuration 'SetStartingScreen' method must return a valid object.", e);
             }
         }
 

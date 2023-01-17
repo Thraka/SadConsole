@@ -187,12 +187,14 @@ public sealed partial class Game : GameHost
             try
             {
                 Screen = _configuration.GenerateStartingObject(this);
+                Screen.IsFocused = _configuration.FocusStartingObject;
             }
             catch (NullReferenceException e)
             {
                 throw new NullReferenceException("'Settings.CreateStartingConsole' is false; configuration 'SetStartingScreen' method must return a valid object.");
             }
         }
+
 
         // Kill off config instance
         _configuration = null;
