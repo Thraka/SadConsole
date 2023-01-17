@@ -128,7 +128,7 @@ namespace SadConsole.Renderers
                                     if (cell.Background != SadRogue.Primitives.Color.Transparent)
                                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
-                                    if (cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                                    if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
                                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
                                     for (int d = 0; d < cell.Decorators.Length; d++)
