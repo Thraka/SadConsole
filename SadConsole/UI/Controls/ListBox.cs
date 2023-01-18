@@ -79,7 +79,7 @@ public class ListBox : CompositeControl
     /// <summary>
     /// Used in rendering.
     /// </summary>
-    public int RelativeIndexMouseOver { get; private set; }
+    public int ItemIndexMouseOver { get; private set; }
 
     /// <summary>
     /// The total items visible in the listbox.
@@ -385,32 +385,9 @@ public class ListBox : CompositeControl
 
         if (Theme is not ListBoxTheme theme) return;
 
-        int rowOffset = ((ListBoxTheme)theme).DrawBorder ? 1 : 0;
-        int rowOffsetReverse = ((ListBoxTheme)theme).DrawBorder ? 0 : 1;
-        int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)theme).DrawBorder ? 1 : 0;
+        (_, int itemIndex) = GetItemAndIndexUnderMouse(state);
 
-        Point mouseControlPosition = state.MousePosition;
-
-        if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
-            mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
-        {
-            if (IsScrollBarVisible)
-            {
-                RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
-            }
-            else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
-            {
-                RelativeIndexMouseOver = mouseControlPosition.Y - rowOffset;
-            }
-            else
-            {
-                RelativeIndexMouseOver = -1;
-            }
-        }
-        else
-        {
-            RelativeIndexMouseOver = -1;
-        }
+        ItemIndexMouseOver = itemIndex;
 
         if (state.OriginalMouseState.Mouse.ScrollWheelValueChange != 0)
         {
@@ -432,39 +409,55 @@ public class ListBox : CompositeControl
         bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
         _leftMouseLastClick = click;
 
-        int rowOffset = ((ListBoxTheme)theme).DrawBorder ? 1 : 0;
-        int rowOffsetReverse = ((ListBoxTheme)theme).DrawBorder ? 0 : 1;
-        int columnOffsetEnd = IsScrollBarVisible || !((ListBoxTheme)theme).DrawBorder ? 1 : 0;
+        (object? item, _) = GetItemAndIndexUnderMouse(state);
+
+        object? oldItem = _selectedItem;
+        bool sameObject;
+
+        if (CompareByReference)
+            sameObject = object.ReferenceEquals(oldItem, item);
+        else
+            sameObject = object.Equals(oldItem, item);
+
+        if (!sameObject)
+            SelectedItem = item;
+
+        if (item != null && (SingleClickItemExecute || (doubleClicked && sameObject)))
+        {
+            _leftMouseLastClick = DateTime.MinValue;
+            OnItemAction();
+        }
+    }
+
+    /// <summary>
+    /// Returns the item under the mouse, and its array position.
+    /// </summary>
+    /// <param name="state">The mouse state.</param>
+    /// <returns>A tuple containing the item and the item's array position.</returns> 
+    /// <exception cref="Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
+    public (object? item, int itemIndex) GetItemAndIndexUnderMouse(ControlMouseState state)
+    {
+        if (Theme is not ListBoxTheme theme) throw new Exception($"{nameof(ListBox)} must use a theme based on {nameof(ListBoxTheme)}");
+
+        int rowOffset = theme.DrawBorder ? 1 : 0;
+        int rowOffsetReverse = theme.DrawBorder ? 0 : 1;
+        int columnOffsetEnd = IsScrollBarVisible || !theme.DrawBorder ? 1 : 0;
+
+        int itemIndex = -1;
 
         Point mouseControlPosition = state.MousePosition;
 
         if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
             mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
         {
-            object? oldItem = _selectedItem;
-            bool noItem = false;
-
             if (IsScrollBarVisible)
-            {
-                _selectedIndex = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
-                SelectedItem = Items[_selectedIndex];
-            }
-            else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
-            {
-                _selectedIndex = mouseControlPosition.Y - rowOffset;
-                SelectedItem = Items[_selectedIndex];
-            }
-            else
-            {
-                noItem = true;
-            }
+                itemIndex = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
 
-            if (!noItem && (SingleClickItemExecute || (doubleClicked && oldItem == SelectedItem)))
-            {
-                _leftMouseLastClick = DateTime.MinValue;
-                OnItemAction();
-            }
+            else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
+                itemIndex = mouseControlPosition.Y - rowOffset;
         }
+
+        return (itemIndex == -1 ? null : Items[itemIndex], itemIndex);
     }
 
     [OnSerializing]

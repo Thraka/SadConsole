@@ -143,7 +143,7 @@ public class ListBoxTheme : ThemeBase
             {
                 ControlStates state = 0;
 
-                if (listbox.State.HasFlag(ControlStates.MouseOver) && listbox.RelativeIndexMouseOver == itemIndexRelative)
+                if (listbox.State.HasFlag(ControlStates.MouseOver) && listbox.ItemIndexMouseOver == itemIndexRelative)
                     state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.MouseOver);
 
                 if (listbox.State.HasFlag(ControlStates.MouseLeftButtonDown))
