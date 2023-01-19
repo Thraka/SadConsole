@@ -236,7 +236,7 @@ public static class Screen
                 return;
             }
 
-            cell.CopyAppearanceTo(this[Width - 3, Height - 3]);
+            cell.CopyAppearanceTo(Surface[Width - 3, Height - 3]);
 
             IsDirty = true;
         }

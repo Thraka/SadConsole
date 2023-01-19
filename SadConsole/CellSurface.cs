@@ -44,6 +44,12 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     [DataMember]
     public bool UsePrintProcessor { get; set; }
 
+    /// <summary>
+    /// Returns this object.
+    /// </summary>
+    [IgnoreDataMember]
+    public ICellSurface Surface => this;
+
     /// <inheritdoc />
     [IgnoreDataMember]
     public Effects.EffectsManager Effects { get; protected set; }

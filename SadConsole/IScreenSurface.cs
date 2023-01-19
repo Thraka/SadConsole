@@ -9,7 +9,7 @@ namespace SadConsole;
 /// <summary>
 /// A screen object that has mouse input, surface, and render information.
 /// </summary>
-public interface IScreenSurface : IScreenObject
+public interface IScreenSurface : IScreenObject, ISurface
 {
     /// <summary>
     /// Raised when the a mouse button is clicked on this console.
@@ -95,11 +95,6 @@ public interface IScreenSurface : IScreenObject
     /// Indicates the surface has changed and needs to be rendered.
     /// </summary>
     bool IsDirty { get; set; }
-
-    /// <summary>
-    /// The surface the screen object represents.
-    /// </summary>
-    ICellSurface Surface { get; set; }
 
     /// <summary>
     /// A tint used in rendering.

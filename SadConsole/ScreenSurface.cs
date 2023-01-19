@@ -170,6 +170,33 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     public int HeightPixels => Surface.View.Height * FontSize.Y;
 
     /// <summary>
+    /// The total width of the console.
+    /// </summary>
+    public int Width => Surface.Width;
+
+
+    /// <summary>
+    /// The total height of the console.
+    /// </summary>
+    public int Height => Surface.Height;
+
+    /// <summary>
+    /// Gets or sets the visible width of the surface in cells.
+    /// </summary>
+    public int ViewWidth { get => Surface.ViewWidth; set => Surface.ViewWidth = value; }
+
+    /// <summary>
+    /// Gets or sets the visible height of the surface in cells.
+    /// </summary>
+    public int ViewHeight { get => Surface.ViewHeight; set => Surface.ViewHeight = value; }
+
+    /// <summary>
+    /// The position of the view within the console.
+    /// </summary>
+    public Point ViewPosition { get => Surface.ViewPosition; set => Surface.ViewPosition = value; }
+
+
+    /// <summary>
     /// Creates a new screen object that can render a surface.
     /// </summary>
     /// <param name="width">The width in cells of the surface.</param>
@@ -249,6 +276,36 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
         RenderSteps.Sort(new RenderStepComparer());
+    }
+
+    /// <summary>
+    /// Resizes the surface to the specified width and height.
+    /// </summary>
+    /// <param name="width">The viewable width of the surface.</param>
+    /// <param name="height">The viewable height of the surface.</param>
+    /// <param name="bufferWidth">The maximum width of the surface.</param>
+    /// <param name="bufferHeight">The maximum height of the surface.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public void Resize(int width, int height, int bufferWidth, int bufferHeight, bool clear)
+    {
+        if (Surface is ICellSurfaceResize surface)
+            surface.Resize(width, height, bufferWidth, bufferHeight, clear);
+        else
+            throw new Exception("Surface doesn't support resize.");
+    }
+
+    /// <summary>
+    /// Resizes the surface and view to the specified width and height.
+    /// </summary>
+    /// <param name="width">The viewable width of the surface.</param>
+    /// <param name="height">The viewable height of the surface.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public void Resize(int width, int height, bool clear)
+    {
+        if (Surface is ICellSurfaceResize surface)
+            surface.Resize(width, height, clear);
+        else
+            throw new Exception("Surface doesn't support resize.");
     }
 
     /// <inheritdoc />

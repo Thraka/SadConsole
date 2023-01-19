@@ -7,7 +7,7 @@ namespace SadConsole;
 /// <summary>
 /// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
 /// </summary>
-public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<ColoredGlyph>, IEnumerable<ColoredGlyph>
+public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<ColoredGlyph>, IEnumerable<ColoredGlyph>, ISurface
 {
     /// <summary>
     /// An event that is raised when <see cref="IsDirty"/> changes.
