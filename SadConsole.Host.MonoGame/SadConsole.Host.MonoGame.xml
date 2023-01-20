@@ -354,6 +354,56 @@
             </summary>
             <param name="gameTime"></param>
         </member>
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the MonoGame host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
+            <summary>
+            When <see langword="true"/>, prevents the keyboard and mouse logic from running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDevice">
+            <summary>
+            The graphics device created by MonoGame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SharedSpriteBatch">
+            <summary>
+            A sprite batch used by all of SadConsole to render objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutput">
+            <summary>
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on to this output texture to compose the final scene.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateLoopGameTime">
+            <summary>
+            Reference to the game timer used in the MonoGame update loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderLoopGameTime">
+            <summary>
+            Reference to the game timer used in the MonoGame render loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDeviceWpfControl">
+            <summary>
+            The WPF control used in drawing the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDeviceManager">
+            <summary>
+            A WPF-specific graphics device service.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResetGraphicsDevice">
+            <summary>
+            Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to the <see cref="P:SadConsole.Host.Global.GraphicsDeviceWpfControl"/> control.
+            </summary>
+        </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
             <summary>
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
@@ -489,33 +539,6 @@
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Game.ConfigurationFontLoader">
-            <summary>
-            Settings for loading fonts at the start of a game.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
-            <summary>
-            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
-            <summary>
-            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
-            <summary>
-            Sets the default font in SadConsole to the specified font file.
-            </summary>
-            <param name="fontFile"></param>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
-            <summary>
-            Loads the provided font files into SadConsole.
-            </summary>
-            <param name="fontFiles">An array of font files to load.</param>
-        </member>
         <member name="T:SadConsole.Game.Configuration">
             <summary>
             An object used during the creation of the game to configure SadConsole and MonoGame.
@@ -545,6 +568,12 @@
             Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
             </summary>
             <param name="creator">A method that returns an object as the starting screen.</param>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.IsStartingScreenFocused(System.Boolean)">
+            <summary>
+            Sets the starting screen's <see cref="P:SadConsole.IScreenObject.IsFocused"/> property to the provided value, when it's created.
+            </summary>
+            <param name="value"></param>
             <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
@@ -608,6 +637,33 @@
             </summary>
             <param name="monogameInitCallback">A method.</param>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="T:SadConsole.Game.ConfigurationFontLoader">
+            <summary>
+            Settings for loading fonts at the start of a game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
         </member>
         <member name="T:SadConsole.Readers.TextureToSurfaceReader">
             <summary>

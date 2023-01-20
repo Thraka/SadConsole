@@ -23,7 +23,7 @@ namespace SadConsole.Host
                 : base(game)
             {
                 surface = new Console(30, 1);
-                surface.DefaultBackground = Color.Black;
+                surface.Surface.DefaultBackground = Color.Black;
                 surface.Clear();
                 DrawOrder = 8;
                 Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
