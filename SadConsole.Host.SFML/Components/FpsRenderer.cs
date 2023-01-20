@@ -19,7 +19,7 @@ namespace SadConsole.Components
         public FpsRenderer()
         {
             surface = new Console(30, 1);
-            surface.DefaultBackground = Color.Black;
+            surface.Surface.DefaultBackground = Color.Black;
             surface.Clear();
             SortOrder = 8;
         }
