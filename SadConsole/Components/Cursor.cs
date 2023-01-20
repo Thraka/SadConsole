@@ -6,6 +6,7 @@ using SadConsole.Effects;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SadConsole.Components;
 
@@ -747,6 +748,150 @@ public class Cursor : IComponent
         }
 
         _position = Point.FromIndex(index, _editor.Width);
+
+        return this;
+    }
+
+    private ColoredGlyphAndEffect CreateEmptyGlyph(int glyph = 0)
+    {
+        ColoredGlyphAndEffect glyphObj;
+
+        if (PrintAppearanceMatchesHost)
+        {
+            glyphObj = new ColoredGlyphAndEffect()
+            {
+                Foreground = _editor!.DefaultForeground,
+                Background = _editor!.DefaultBackground,
+            };
+        }
+        else
+            glyphObj = ColoredGlyphAndEffect.FromColoredGlyph(PrintAppearance);
+
+        if (UsePrintEffect)
+            glyphObj.Effect = PrintEffect;
+
+        return glyphObj;
+    }
+
+    /// <summary>
+    /// Clears the cell at the position of the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cell. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor Erase(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        CreateEmptyGlyph(glyph).CopyAppearanceTo(_editor[_position]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells in the same column as the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseColumn(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int y = 0; y < _editor.Height; y++)
+            glyphObj.CopyAppearanceTo(_editor[_position.X, y]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells in the same row as the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseRow(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int x = 0; x < _editor.Width; x++)
+            glyphObj.CopyAppearanceTo(_editor[x, _position.Y]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells above the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseUp(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int y = _position.Y - 1; y >= 0; y--)
+            glyphObj.CopyAppearanceTo(_editor[_position.X, y]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells below the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseDown(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int y = _position.Y + 1; y < _editor.Height; y++)
+            glyphObj.CopyAppearanceTo(_editor[_position.X, y]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells to the left of the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseLeft(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int x = _position.X - 1; x >= 0; x--)
+            glyphObj.CopyAppearanceTo(_editor[x, _position.Y]);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Clears the cells to the right of the cursor.
+    /// </summary>
+    /// <param name="glyph">The glyph to set on the erased cells. Defaults to glyph index 0.</param>
+    /// <returns>The cursor object.</returns>
+    /// <exception cref="Exception">Thrown when a host isn't attached to the cursor.</exception>
+    public Cursor EraseRight(int glyph = 0)
+    {
+        if (_editor == null) throw new Exception("A host isn't attached to this cursor.");
+
+        ColoredGlyphAndEffect glyphObj = CreateEmptyGlyph(glyph);
+
+        for (int x = _position.X + 1; x < _editor.Width; x++)
+            glyphObj.CopyAppearanceTo(_editor[x, _position.Y]);
 
         return this;
     }
