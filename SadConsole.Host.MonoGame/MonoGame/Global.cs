@@ -19,6 +19,10 @@ namespace SadConsole.Host
 
         public static RenderTarget2D RenderOutput { get; set; }
 
+        public static GameTime UpdateLoopGameTime { get; internal set; }
+
+        public static GameTime RenderLoopGameTime { get; internal set; }
+
 #if WPF
 
         public static RenderTarget2D GraphicsDeviceWpfControl { get; set; }

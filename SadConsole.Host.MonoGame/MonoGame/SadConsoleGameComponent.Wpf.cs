@@ -34,6 +34,7 @@ namespace SadConsole.Host
                     Host.Game game = (Host.Game)Game;
 
                     SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
+                    Global.RenderLoopGameTime = gameTime;
 
                     // Clear draw calls for next run
                     SadConsole.Game.Instance.DrawCalls.Clear();
@@ -78,6 +79,7 @@ namespace SadConsole.Host
                     var game = (Game)Game;
 
                     SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
+                    Global.UpdateLoopGameTime = gameTime;
 
                     if (Game.IsActive)
                     {
