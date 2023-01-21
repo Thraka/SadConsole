@@ -13,7 +13,7 @@ public class Default : IParser
     /// <summary>
     /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
     /// </summary>
-    public Func<string, string, ColoredGlyphAndEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase>? CustomProcessor;
+    public Func<string, string, ColoredGlyphAndEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase?>? CustomProcessor;
 
     /// <summary>
     /// Creates a colored string by parsing commands embedded in the string.
