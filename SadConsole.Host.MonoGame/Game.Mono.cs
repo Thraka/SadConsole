@@ -123,6 +123,7 @@ public sealed partial class Game : GameHost
 
         // Configure the fonts
         _configuration.RunFontConfig();
+        SadConsole.Settings.UseDefaultExtendedFont = _configuration.FontLoaderData.UseExtendedFont;
         LoadDefaultFonts(_configuration.FontLoaderData.AlternativeDefaultFont);
 
         foreach (var font in _configuration.FontLoaderData.CustomFonts)
