@@ -93,47 +93,65 @@ public class ScrollBarTheme : ThemeBase
 
         if (scrollbar.Orientation == Orientation.Horizontal)
         {
-            scrollbar.Surface.SetCellAppearance(0, 0, appearance);
-            scrollbar.Surface.SetGlyph(0, 0, StartButtonVerticalGlyph);
+            for (int y = 0; y < scrollbar.Height; y++)
+            {
+                scrollbar.Surface.SetCellAppearance(0, y, appearance);
+                scrollbar.Surface.SetGlyph(0, y, StartButtonVerticalGlyph);
 
-            scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, 0, appearance);
-            scrollbar.Surface.SetGlyph(scrollbar.Width - 1, 0, EndButtonVerticalGlyph);
+                scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, y, appearance);
+                scrollbar.Surface.SetGlyph(scrollbar.Width - 1, y, EndButtonVerticalGlyph);
+            }
 
             if (scrollbar.SliderBarSize != 0)
             {
                 for (int i = 1; i <= scrollbar.SliderBarSize; i++)
                 {
-                    scrollbar.Surface.SetCellAppearance(i, 0, appearance);
-                    scrollbar.Surface.SetGlyph(i, 0, BarGlyph);
+                    for (int y = 0; y < scrollbar.Height; y++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(i, y, appearance);
+                        scrollbar.Surface.SetGlyph(i, y, BarGlyph);
+                    }
                 }
 
                 if (scrollbar.IsEnabled)
                 {
-                    scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, 0, appearance);
-                    scrollbar.Surface.SetGlyph(1 + scrollbar.CurrentSliderPosition, 0, SliderGlyph);
+                    for (int y = 0; y < scrollbar.Height; y++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, y, appearance);
+                        scrollbar.Surface.SetGlyph(1 + scrollbar.CurrentSliderPosition, y, SliderGlyph);
+                    }
                 }
             }
         }
         else
         {
-            scrollbar.Surface.SetCellAppearance(0, 0, appearance);
-            scrollbar.Surface.SetGlyph(0, 0, StartButtonHorizontalGlyph);
+            for (int x = 0; x < scrollbar.Width; x++)
+            {
+                scrollbar.Surface.SetCellAppearance(x, 0, appearance);
+                scrollbar.Surface.SetGlyph(x, 0, StartButtonHorizontalGlyph);
 
-            scrollbar.Surface.SetCellAppearance(0, scrollbar.Height - 1, appearance);
-            scrollbar.Surface.SetGlyph(0, scrollbar.Height - 1, EndButtonHorizontalGlyph);
+                scrollbar.Surface.SetCellAppearance(x, scrollbar.Height - 1, appearance);
+                scrollbar.Surface.SetGlyph(x, scrollbar.Height - 1, EndButtonHorizontalGlyph);
+            }
 
             if (scrollbar.SliderBarSize != 0)
             {
                 for (int i = 0; i < scrollbar.SliderBarSize; i++)
                 {
-                    scrollbar.Surface.SetCellAppearance(0, i + 1, appearance);
-                    scrollbar.Surface.SetGlyph(0, i + 1, BarGlyph);
+                    for (int x = 0; x < scrollbar.Width; x++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(x, i + 1, appearance);
+                        scrollbar.Surface.SetGlyph(x, i + 1, BarGlyph);
+                    }
                 }
 
                 if (scrollbar.IsEnabled)
                 {
-                    scrollbar.Surface.SetCellAppearance(0, 1 + scrollbar.CurrentSliderPosition, appearance);
-                    scrollbar.Surface.SetGlyph(0, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
+                    for (int x = 0; x < scrollbar.Width; x++)
+                    {
+                        scrollbar.Surface.SetCellAppearance(x, 1 + scrollbar.CurrentSliderPosition, appearance);
+                        scrollbar.Surface.SetGlyph(x, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
+                    }
                 }
             }
         }
