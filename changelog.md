@@ -1,5 +1,12 @@
 ## v10.0.0 (01/XX/2023)
 
+Major changes (possibly breaking)
+
+- [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
+- [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
+
+Normal changes
+
 - Target .NET 6 exclusively. Core library is nullable aware.
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
 - [Core] Splash screen printing wasn't being shown because of cursor changes.
@@ -12,12 +19,17 @@
 - [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
 - [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
 - [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
-- [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a single cell entity or animated surface entity.
+- [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a **single cell** entity or **animated surface** entity.
 - [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
 - [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
 - [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
 - [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
 - [Core] `Surface.RenderSteps` is now a `List` and you must call `RenderSteps.Sort(new SadConsole.Renderers.RenderStepComparer())` when the collection is changed.
+- [Core] `Instructions.DrawString` uses `System.TimeSpan` now, and is more accurate.
+- [Core] Effects have a `RunEffectOnApply` property that will run the `effect.Update` method once, with a duration of zero, when the effect is added to a manager.
+- [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
+- [Core] Surface shifting is much more performant (Thanks Chris3606)
+- [Core] `Cursor` has some new methods for erasing: `Erase`, `EraseUp`, `EraseDown`, `EraseLeft`, `EraseRight`, `EraseColumn`, `EraseRow`.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
@@ -28,6 +40,7 @@
 - [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
 - [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
 - [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
+- [MonoGame\SFML] New `Game.Configuration` object used for creating a SadConsole game.
 
 ## v9.2.1 (01/04/2022)
 

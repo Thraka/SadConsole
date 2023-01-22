@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFSadConsole", "Samples\WP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debug UI", "Debug UI", "{FCE56F64-3D2E-4E11-A5C2-55B2A7EC6B23}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "templates\template_code\SadConsole.Examples.Demo.CSharp\Examples.csproj", "{80088519-A827-473C-A643-E77493A27C09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80088519-A827-473C-A643-E77493A27C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80088519-A827-473C-A643-E77493A27C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80088519-A827-473C-A643-E77493A27C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80088519-A827-473C-A643-E77493A27C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{3D40BD49-A118-4655-8452-8CFAE677847A} = {FCE56F64-3D2E-4E11-A5C2-55B2A7EC6B23}
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822} = {74E9C40F-4F2F-42DB-9734-803A7653D876}
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
+		{80088519-A827-473C-A643-E77493A27C09} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}

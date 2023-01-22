@@ -49,7 +49,7 @@ namespace FeatureDemo
                 .UseUnlimitedFPS();
 #elif SFML
             Settings.WindowTitle = "Feature Demo (SFML)";
-            configuration.UseUnlimitedFPS();
+            //configuration.UseUnlimitedFPS();
 #endif
             Game.Create(configuration);
             Game.Instance.Run();

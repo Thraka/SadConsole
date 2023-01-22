@@ -284,7 +284,7 @@ namespace ThemeEditor
         }
 
         string GetThemePartString(Color color, string part) =>
-            $"[c:r f:{color.ToParser()}:2][c:sg 301]m[c:sg 302]m[c:r f:{DefaultForeground.ToParser()}] {part}";
+            $"[c:r f:{color.ToParser()}:2][c:sg 301]m[c:sg 302]m[c:r f:{Surface.DefaultForeground.ToParser()}] {part}";
 
         private void UpdateColors()
         {

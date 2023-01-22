@@ -16,8 +16,7 @@ namespace BasicTerminal
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
 
-            SadConsole.Game.Create(80, 25);
-            SadConsole.Game.Instance.OnStart = Init;
+            SadConsole.Game.Create(80, 25, Init);
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }
@@ -49,6 +48,8 @@ namespace BasicTerminal
             // Move the cursor's processing to AFTER our basic processor
             ((Console)GameHost.Instance.Screen).Cursor.SortOrder = 1;
             ((Console)GameHost.Instance.Screen).SortComponents();
+
+            
         }
     }
 }

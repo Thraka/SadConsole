@@ -193,14 +193,14 @@ namespace FeatureDemo.CustomConsoles
 
             for (int i = 0; i < 34 * 3; i++)
             {
-                basicSurface[startSet1 + i].Mirror = Mirror.Vertical;
-                basicSurface[startSet1 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.PurpleDark;
+                basicSurface.Surface[startSet1 + i].Mirror = Mirror.Vertical;
+                basicSurface.Surface[startSet1 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.PurpleDark;
 
-                basicSurface[startSet2 + i].Mirror = Mirror.Horizontal;
-                basicSurface[startSet2 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.OrangeDark;
+                basicSurface.Surface[startSet2 + i].Mirror = Mirror.Horizontal;
+                basicSurface.Surface[startSet2 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.OrangeDark;
 
-                basicSurface[startSet3 + i].Mirror = Mirror.Horizontal | Mirror.Vertical;
-                basicSurface[startSet3 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.GreenDark;
+                basicSurface.Surface[startSet3 + i].Mirror = Mirror.Horizontal | Mirror.Vertical;
+                basicSurface.Surface[startSet3 + i].Background = SadConsole.UI.Themes.Library.Default.Colors.GreenDark;
             }
         }
     }

@@ -32,8 +32,13 @@ namespace SadConsole.Editor
             Settings.WindowTitle = "Feature Demo (MonoGame)";
             Settings.CreateStartingConsole = false;
 
-            SadConsole.Game.Create(130, 50); //, "Res/Fonts/C64.font");
-            SadConsole.Game.Instance.OnStart = Init;
+            Game.Configuration config =
+                new Game.Configuration()
+                    .SetScreenSize(130, 50)
+                    .OnStart(Init)
+                    .SetStartingScreen<ScreenObject>();
+
+            SadConsole.Game.Create(config);
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }

@@ -41,7 +41,7 @@ namespace FeatureDemo.CustomConsoles
             Font = GameHost.Instance.LoadFont("Res/Fonts/empty_font.font");
             FontSize = (110, 110);
 
-            DefaultBackground = Color.DarkCyan;
+            Surface.DefaultBackground = Color.DarkCyan;
             Surface.Clear();
 
             Children.Add(new OversizedFont());

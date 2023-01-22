@@ -86,9 +86,9 @@ namespace BasicTerminal
             if (!(host is Console)) throw new System.ArgumentException("Component can only be added to a console");
             _console = (Console)host;
 
-            _console.DefaultGlyph = ' ';
-            _console.DefaultBackground = Color.Black;
-            _console.DefaultForeground = Color.White;
+            _console.Surface.DefaultGlyph = ' ';
+            _console.Surface.DefaultBackground = Color.Black;
+            _console.Surface.DefaultForeground = Color.White;
             _console.Clear();
 
             _console.Cursor.Move(0, 0).Print("READY.").NewLine();

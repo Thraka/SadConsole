@@ -244,12 +244,12 @@ namespace SadConsole.UI.Windows
                     var colors = Controls.GetThemeColors();
 
                     if (_selectedAnsiColorIconPrevious != Point.None)
-                        this[_selectedAnsiColorIconPrevious.X, _selectedAnsiColorIconPrevious.Y].Glyph = 0;
+                        Surface[_selectedAnsiColorIconPrevious.X, _selectedAnsiColorIconPrevious.Y].Glyph = 0;
 
                     if (_selectedAnsiColorIcon != Point.None)
                     {
-                        this[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Glyph = 16;
-                        this[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Foreground = colors.Title;
+                        Surface[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Glyph = 16;
+                        Surface[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Foreground = colors.Title;
                     }
                 }
 

@@ -80,7 +80,7 @@ namespace SadConsole
                 .Instruct(
                     new SadConsole.Instructions.DrawString(text)
                     {
-                        TotalTimeToPrint = (float)time.TotalSeconds,
+                        TotalTimeToPrint = time,
                         Position = (1, 1),
                     })
                 .Wait(time * 2) // delay long enough to let the effects finish before erasing

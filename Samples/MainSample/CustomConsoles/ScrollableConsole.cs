@@ -3,6 +3,7 @@ using SadConsole;
 using SadConsole.UI;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using SadConsole.UI.Controls;
 
 namespace FeatureDemo.CustomConsoles
 {
@@ -47,7 +48,7 @@ namespace FeatureDemo.CustomConsoles
         private void ScrollBar_ValueChanged(object sender, EventArgs e)
         {
             //Display viewable content based on our scroll offset.
-            View = new Rectangle(0, _scrollBar.Value, Width, ViewHeight);
+            Surface.View = new Rectangle(0, _scrollBar.Value, Width, ViewHeight);
         }
 
         public override void Update(TimeSpan delta)
@@ -57,7 +58,7 @@ namespace FeatureDemo.CustomConsoles
 
             //If cursor position exceeds our displayable content viewport, 
             //move the ScrollOffset automatically to display new content.
-            if (TimesShiftedUp != 0 | Cursor.Position.Y >= ViewHeight + ScrollOffset)
+            if (Surface.TimesShiftedUp != 0 | Cursor.Position.Y >= ViewHeight + ScrollOffset)
             {
                 //Scollbar has to be enabled to read previous content.
                 _scrollBar.IsEnabled = true;
@@ -68,7 +69,7 @@ namespace FeatureDemo.CustomConsoles
                 {
                     //Automatically calculate our content viewport by scrolling the cursor
                     //Based on how much content is inaccessible.
-                    ScrollOffset += TimesShiftedUp != 0 ? TimesShiftedUp : 1;
+                    ScrollOffset += Surface.TimesShiftedUp != 0 ? Surface.TimesShiftedUp : 1;
                 }
                 _scrollBar.Maximum = (Height + ScrollOffset) - Height;
 
@@ -76,7 +77,7 @@ namespace FeatureDemo.CustomConsoles
                 _scrollBar.Value = ScrollOffset;
 
                 // Reset the shift amount.
-                TimesShiftedUp = 0;
+                Surface.TimesShiftedUp = 0;
             }
         }
     }

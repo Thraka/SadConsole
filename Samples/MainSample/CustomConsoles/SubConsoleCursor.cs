@@ -27,9 +27,9 @@ namespace FeatureDemo.CustomConsoles
 
             // Setup sub view
             subView.Position = new Point(4, 4);
-            subView.DefaultBackground = Color.Black;
+            subView.Surface.DefaultBackground = Color.Black;
             subView.MouseMove += (s, e) => { if (e.Mouse.LeftButtonDown) e.Cell.Background = Color.Red; };
-            subView.IsDirtyChanged += (s, e) => mainView.IsDirty = subView.IsDirty;
+            subView.Surface.IsDirtyChanged += (s, e) => mainView.IsDirty = subView.IsDirty;
             subView.Clear();
             subView.Cursor.IsVisible = true;
             subView.Cursor

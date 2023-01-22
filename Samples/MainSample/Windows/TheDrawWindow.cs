@@ -23,7 +23,7 @@ namespace FeatureDemo.Windows
 
             Cursor.PrintAppearanceMatchesHost = false;
             Cursor.DisableWordBreak = true;
-            Cursor.SetPrintAppearance(colors.Title, DefaultBackground);
+            Cursor.SetPrintAppearance(colors.Title, Surface.DefaultBackground);
 
             FileDirectoryListbox fileListBox = new FileDirectoryListbox(18, Height - 5);
             fileListBox.FileFilter = "*.tdf";

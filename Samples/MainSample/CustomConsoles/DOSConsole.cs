@@ -34,7 +34,7 @@ namespace FeatureDemo.CustomConsoles
             Cursor.Position = new Point(0, 24);
             Cursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
             _keyboardHandlerObject.CursorLastY = 24;
-            TimesShiftedUp = 0;
+            Surface.TimesShiftedUp = 0;
 
             // Assign our custom handler method from our handler object to this consoles keyboard handler.
             // We could have overridden the ProcessKeyboard method, but I wanted to demonstrate how you
