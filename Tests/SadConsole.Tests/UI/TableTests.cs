@@ -4,669 +4,668 @@ using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 using System.Linq;
 
-namespace SadConsole.Tests.UI
+namespace SadConsole.Tests.UI;
+
+/// <summary>
+/// Tests the code structure of the table, that is accessible to the users
+/// </summary>
+[TestClass]
+public class TableUsageTests : TableTestsBase
 {
-    /// <summary>
-    /// Tests the code structure of the table, that is accessible to the users
-    /// </summary>
-    [TestClass]
-    public class TableUsageTests : TableTestsBase
+    public TableUsageTests()
+        : base(60, 40, 10, 4)
+    { }
+
+    [TestMethod]
+    public void CellsIndexer_CreatesNewCell()
     {
-        public TableUsageTests()
-            : base(60, 40, 10, 4)
-        { }
+        Assert.AreEqual(Table.Cells.Count, 0);
+        Assert.AreNotEqual(Table.Cells[0, 0], null);
+        Assert.AreEqual(Table.Cells.Count, 1);
+    }
 
-        [TestMethod]
-        public void CellsIndexer_CreatesNewCell()
-        {
-            Assert.AreEqual(Table.Cells.Count, 0);
-            Assert.AreNotEqual(Table.Cells[0, 0], null);
-            Assert.AreEqual(Table.Cells.Count, 1);
-        }
+    [TestMethod]
+    public void Cells_GetCell_CreatesNewCell()
+    {
+        Assert.AreEqual(Table.Cells.Count, 0);
+        Assert.AreNotEqual(Table.Cells.GetCell(0, 0), null);
+        Assert.AreEqual(Table.Cells.Count, 1);
+    }
 
-        [TestMethod]
-        public void Cells_GetCell_CreatesNewCell()
+    [TestMethod]
+    public void Cells_Cell_SetLayout()
+    {
+        var settings = new Table.Cell.Options(Table)
         {
-            Assert.AreEqual(Table.Cells.Count, 0);
-            Assert.AreNotEqual(Table.Cells.GetCell(0, 0), null);
-            Assert.AreEqual(Table.Cells.Count, 1);
-        }
+            Interactable = false
+        };
+        Table.Cells[0, 0].SetLayout(Color.Green, Color.Black, settings);
+        Assert.AreEqual(Table.Cells.Row(0).Foreground, Color.Green);
+        Assert.AreEqual(Table.Cells.Column(0).Background, Color.Black);
+        Assert.AreEqual(Table.Cells.Row(0).Settings, settings);
+        Assert.AreEqual(Table.Cells.Column(0).Settings, settings);
+    }
 
-        [TestMethod]
-        public void Cells_Cell_SetLayout()
+    [TestMethod]
+    public void ResizeCell_SetsLayout()
+    {
+        Table.Cells[0, 0].Resize();
+        Assert.AreEqual(Table.Cells.Row(0).Size, Table.DefaultCellSize.Y);
+        Assert.AreEqual(Table.Cells.Column(0).Size, Table.DefaultCellSize.X);
+
+        Table.Cells[0, 0].Resize(2, 4);
+        Assert.AreEqual(Table.Cells.Row(0).Size, 2);
+        Assert.AreEqual(Table.Cells.Column(0).Size, 4);
+
+        Table.Cells[0, 0].Resize(rowSize: 8);
+        Assert.AreEqual(Table.Cells.Row(0).Size, 8);
+        Assert.AreEqual(Table.Cells.Column(0).Size, 4);
+
+        Table.Cells[0, 0].Resize(columnSize: 5);
+        Assert.AreEqual(Table.Cells.Row(0).Size, 8);
+        Assert.AreEqual(Table.Cells.Column(0).Size, 5);
+    }
+
+    [TestMethod]
+    public void Cells_Range_ReturnsCorrectCells()
+    {
+        // 0 based, 0 -> 4 = 5 indexes
+        Table.Cell[] cells = Table.Cells.Range(0, 0, 4, 4).ToArray();
+        Assert.AreEqual(cells.Length, 25);
+        int y = 0, x = 0;
+        foreach (Table.Cell cell in cells)
         {
-            var settings = new Table.Cell.Options(Table)
+            Assert.AreEqual(cell.Row, y);
+            Assert.AreEqual(cell.Column, x);
+            if (y == 4)
             {
-                Interactable = false
-            };
-            Table.Cells[0, 0].SetLayout(Color.Green, Color.Black, settings);
-            Assert.AreEqual(Table.Cells.Row(0).Foreground, Color.Green);
-            Assert.AreEqual(Table.Cells.Column(0).Background, Color.Black);
-            Assert.AreEqual(Table.Cells.Row(0).Settings, settings);
-            Assert.AreEqual(Table.Cells.Column(0).Settings, settings);
-        }
-
-        [TestMethod]
-        public void ResizeCell_SetsLayout()
-        {
-            Table.Cells[0, 0].Resize();
-            Assert.AreEqual(Table.Cells.Row(0).Size, Table.DefaultCellSize.Y);
-            Assert.AreEqual(Table.Cells.Column(0).Size, Table.DefaultCellSize.X);
-
-            Table.Cells[0, 0].Resize(2, 4);
-            Assert.AreEqual(Table.Cells.Row(0).Size, 2);
-            Assert.AreEqual(Table.Cells.Column(0).Size, 4);
-
-            Table.Cells[0, 0].Resize(rowSize: 8);
-            Assert.AreEqual(Table.Cells.Row(0).Size, 8);
-            Assert.AreEqual(Table.Cells.Column(0).Size, 4);
-
-            Table.Cells[0, 0].Resize(columnSize: 5);
-            Assert.AreEqual(Table.Cells.Row(0).Size, 8);
-            Assert.AreEqual(Table.Cells.Column(0).Size, 5);
-        }
-
-        [TestMethod]
-        public void Cells_Range_ReturnsCorrectCells()
-        {
-            // 0 based, 0 -> 4 = 5 indexes
-            Table.Cell[] cells = Table.Cells.Range(0, 0, 4, 4).ToArray();
-            Assert.AreEqual(cells.Length, 25);
-            int y = 0, x = 0;
-            foreach (Table.Cell cell in cells)
-            {
-                Assert.AreEqual(cell.Row, y);
-                Assert.AreEqual(cell.Column, x);
-                if (y == 4)
-                {
-                    y = 0;
-                    x++;
-                }
-                else
-                {
-                    y++;
-                }
+                y = 0;
+                x++;
             }
-        }
-
-        [TestMethod]
-        public void Cells_Range_ForEach_AppliesActionToAll()
-        {
-            Table.Cell[] cells = Table.Cells.Range(0, 0, 4, 4).ToArray();
-            cells.ForEach((cell) => cell.Text = "Hello!");
-            Assert.IsTrue(cells.All(a => a.Text == "Hello!"));
-        }
-
-        [TestMethod]
-        public void Cells_Select_Deselect_Cell_Correct()
-        {
-            Assert.AreEqual(Table.SelectedCell, null);
-            Table.Cells[0, 0].Select();
-            Assert.AreEqual(Table.SelectedCell, Table.Cells[0, 0]);
-            Table.Cells[0, 0].Deselect();
-            Assert.AreEqual(Table.SelectedCell, null);
-        }
-
-        [TestMethod]
-        public void Cells_Width_Height_Correct()
-        {
-            Table.Cells.Row(0).Size = 11;
-            Assert.AreEqual(Table.Cells[0, 0].Height, 11);
-
-            Table.Cells.Column(0).Size = 6;
-            Assert.AreEqual(Table.Cells[0, 0].Width, 6);
-        }
-
-        [TestMethod]
-        public void Cells_Layout_Settings_SetCorrectly()
-        {
-            Cells.Layout layout = Table.Cells.Row(0);
-            layout.Settings.Selectable = false;
-            Assert.AreEqual(Table.Cells[0, 0].Settings.Selectable, false);
-        }
-
-        [TestMethod]
-        public void Cells_Layout_GetMultiple_Correct()
-        {
-            Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
-            Assert.AreEqual(rowLayouts.Count(), 3);
-            Cells.Layout.RangeEnumerable columnLayouts = Table.Cells.Column(0, 1, 2);
-            Assert.AreEqual(columnLayouts.Count(), 3);
-        }
-
-        [TestMethod]
-        public void Cells_Layout_SetLayout_Multiple_AppliedToAll()
-        {
-            var settings = new Table.Cell.Options(Table)
+            else
             {
-                Interactable = false
-            };
-            Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
-            rowLayouts.SetLayout(3, Color.White, Color.Orange, settings);
-            foreach (Cells.Layout layout in rowLayouts)
-            {
-                Assert.AreEqual(layout.Size, 3);
-                Assert.AreEqual(layout.Foreground, Color.White);
-                Assert.AreEqual(layout.Background, Color.Orange);
-                Assert.AreEqual(layout.Settings, settings);
+                y++;
             }
-        }
-
-        [TestMethod]
-        public void Can_Enumerate_Cells()
-        {
-            Table.Cells[0, 0].Text = "Hello 1";
-            Table.Cells[1, 0].Text = "Hello 2";
-            int count = 0;
-            foreach (Table.Cell cell in Table.Cells)
-                count++;
-            Assert.AreEqual(count, 2);
-        }
-
-        [TestMethod]
-        public void Can_Enumerate_LayoutRange()
-        {
-            Cells.Layout.RangeEnumerable layouts = Table.Cells.Row(0, 1);
-            int count = 0;
-            foreach (Cells.Layout layout in layouts)
-                count++;
-            Assert.AreEqual(count, 2);
-        }
-
-        [TestMethod]
-        public void Total_Count_IsCorrect()
-        {
-            Table.Cells[0, 0].Text = "Col / Row 1";
-            Table.Cells[1, 0].Text = "Row 2";
-            Table.Cells[2, 0].Text = "Row 3";
-            Table.Cells[0, 1].Text = "Column 2";
-            Assert.AreEqual(Table.Cells.TotalColumns, 2);
-            Assert.AreEqual(Table.Cells.TotalRows, 3);
-        }
-
-        [TestMethod]
-        public void Cells_Remove_Correct()
-        {
-            Table.Cells[0, 0].Text = "Hello";
-            Table.Cells[1, 0].Text = "Hello";
-            Assert.AreEqual(Table.Cells.Count, 2);
-            Table.Cells.Remove(0, 0);
-            Assert.AreEqual(Table.Cells.Count, 1);
-            Table.Cells[1, 0].Remove();
-            Assert.AreEqual(Table.Cells.Count, 0);
-        }
-
-        [TestMethod]
-        public void Cells_Clear_Correct()
-        {
-            Table.Cells.Row(0).Size = 4;
-            Table.Cells[0, 0].Text = "Hello";
-            Table.Cells[0, 1].Text = "Hello";
-
-            Assert.AreEqual(Table.Cells.Count, 2);
-
-            Table.Cells.Clear(false);
-            Assert.AreEqual(Table.Cells.Count, 0);
-            Assert.AreEqual(Table.Cells.Row(0).Size, 4);
-            Assert.AreEqual(Table.Cells.Row(0).Size, 4);
-
-            Table.Cells.Clear(true);
-
-            Assert.AreEqual(Table.Cells.Row(0).Size, Table.DefaultCellSize.Y);
-        }
-
-        [TestMethod]
-        public void Cells_Different_Cell_NotEquals()
-        {
-            Table.Cell cellA = Table.Cells[0, 0];
-            cellA.Text = "Hello";
-
-            Table.Cell cellB = Table.Cells[0, 1];
-            cellB.Text = "Hello";
-
-            Assert.AreNotEqual(cellA, cellB);
-
-            cellB = null;
-
-            Assert.AreNotEqual(cellA, cellB);
-        }
-
-        [TestMethod]
-        public void Cells_Cell_CopyAppearanceFrom_Correct()
-        {
-            Table.Cell cellA = Table.Cells[0, 0];
-            cellA.Background = Color.Brown;
-            cellA.Settings.UseFakeLayout = true;
-
-            Table.Cell cellB = Table.Cells[0, 1];
-            cellB.CopyAppearanceFrom(cellA);
-
-            Assert.AreEqual(cellB.Background, Color.Brown);
-            Assert.AreEqual(cellB.Settings.UseFakeLayout, true);
-
-            cellA.Settings.Selectable = false;
-            cellB.CopyAppearanceFrom(cellA);
-
-            Assert.AreEqual(cellB.Settings.UseFakeLayout, true);
-            Assert.AreEqual(cellB.Settings.Selectable, false);
-
-            // Settings is not initialized here, copy it over, everything should be default again
-            Table.Cell cellC = Table.Cells[0, 2];
-            cellB.CopyAppearanceFrom(cellC);
-
-            Assert.AreEqual(cellB.Settings.UseFakeLayout, false);
-            Assert.AreEqual(cellB.Settings.Selectable, true);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Vertical_Scrolling_EqualSizes_Correct()
-        {
-            const int extraRowsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
-
-            int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
-            for (int row = 0; row < rows; row++)
-            {
-                Table.Cells[row, 0].Text = "Row " + row;
-            }
-
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-            Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, extraRowsOffScreen);
-            Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
-
-            // Increment
-            int totalHeight = 0;
-            int maximum = Table.VerticalScrollBar.Maximum;
-            for (int i = 0; i < maximum; i++)
-            {
-                totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
-                totalHeight = totalHeight < 0 ? 0 : totalHeight;
-                Table.VerticalScrollBar.Value += 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-                Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            }
-
-            // Decrement
-            for (int i = maximum; i > 0; i--)
-            {
-                totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
-                totalHeight = totalHeight < 0 ? 0 : totalHeight;
-                Table.VerticalScrollBar.Value -= 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-                Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            }
-
-            Assert.AreEqual(Table.StartRenderYPos, 0);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Horizontal_Scrolling_EqualSizes_Correct()
-        {
-            const int extraColumnsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
-
-            int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
-            for (int column = 0; column < columns; column++)
-            {
-                Table.Cells[0, column].Text = "Column " + column;
-            }
-
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-            Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, extraColumnsOffScreen);
-            Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
-
-            // Increment
-            int totalWidth = 0;
-            int maximum = Table.HorizontalScrollBar.Maximum;
-            for (int i = 0; i < maximum; i++)
-            {
-                totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
-                totalWidth = totalWidth < 0 ? 0 : totalWidth;
-                Table.HorizontalScrollBar.Value += 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-                Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            }
-
-            // Decrement
-            for (int i = maximum; i > 0; i--)
-            {
-                totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
-                totalWidth = totalWidth < 0 ? 0 : totalWidth;
-                Table.HorizontalScrollBar.Value -= 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-                Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            }
-
-            Assert.AreEqual(Table.StartRenderXPos, 0);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Vertical_Scrolling_DifferentSizes_Correct()
-        {
-            const int extraRowsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
-
-            int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
-            for (int row = 0; row < rows; row++)
-            {
-                Table.Cells[row, 0].Text = "Row " + row;
-            }
-
-            // Resize columns
-            Table.Cells[1, 0].Resize(rowSize: 4);
-            Table.Cells[2, 0].Resize(rowSize: 8);
-            Table.Cells[3, 0].Resize(rowSize: 1);
-
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
-            Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
-
-            // Increment
-            int totalHeight = 0;
-            for (int i = 0; i < maximum; i++)
-            {
-                totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
-                totalHeight = totalHeight < 0 ? 0 : totalHeight;
-                Table.VerticalScrollBar.Value += 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-                Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            }
-
-            // Decrement
-            for (int i = maximum; i > 0; i--)
-            {
-                totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
-                totalHeight = totalHeight < 0 ? 0 : totalHeight;
-                Table.VerticalScrollBar.Value -= 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-                Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            }
-
-            Assert.AreEqual(Table.StartRenderYPos, 0);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Horizontal_Scrolling_DifferentSizes_Correct()
-        {
-            const int extraColumnsOffScreen = 5;
-            Table.SetupScrollBar(SadConsole.Orientation.Horizontal, 5, new Point(0, 0));
-
-            int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
-            for (int column = 0; column < columns; column++)
-            {
-                Table.Cells[0, column].Text = "Column " + column;
-            }
-
-            // Resize columns
-            Table.Cells[0, 1].Resize(columnSize: 4);
-            Table.Cells[0, 2].Resize(columnSize: 8);
-            Table.Cells[0, 3].Resize(columnSize: 1);
-
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
-            Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
-
-            // Increment
-            int totalWidth = 0;
-            for (int i = 0; i < maximum; i++)
-            {
-                totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
-                totalWidth = totalWidth < 0 ? 0 : totalWidth;
-                Table.HorizontalScrollBar.Value += 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-                Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            }
-
-            for (int i = maximum; i > 0; i--)
-            {
-                totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
-                totalWidth = totalWidth < 0 ? 0 : totalWidth;
-                Table.HorizontalScrollBar.Value -= 1;
-                Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-                Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-                Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            }
-
-            Assert.AreEqual(Table.StartRenderXPos, 0);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Horizontal_ChangeScrollMaximum_OnResize_Correct()
-        {
-            const int extraColumnsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
-
-            int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
-            for (int column = 0; column < columns; column++)
-            {
-                Table.Cells[0, column].Text = "Column " + column;
-            }
-
-            // Resize columns
-            Table.Cells[0, 1].Resize(columnSize: 4);
-            Table.Cells[0, 2].Resize(columnSize: 8);
-            Table.Cells[0, 3].Resize(columnSize: 1);
-
-            Table.HorizontalScrollBar.Value = 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
-            Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-            Assert.AreEqual(Table.HorizontalScrollBar.Value, 1);
-
-            // Resize existing cell
-            Table.Cells[0, 1].Resize(columnSize: 9);
-            Table.Cells[0, 2].Resize(columnSize: 16);
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-            Assert.AreNotEqual(Table.HorizontalScrollBar.Maximum, maximum);
-
-            // Update max
-            maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_Vertical_ChangeScrollMaximum_OnResize_Correct()
-        {
-            const int extraRowsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
-
-            int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
-            for (int row = 0; row < rows; row++)
-            {
-                Table.Cells[row, 0].Text = "Row " + row;
-            }
-
-            // Resize columns
-            Table.Cells[1, 0].Resize(rowSize: 4);
-            Table.Cells[2, 0].Resize(rowSize: 8);
-            Table.Cells[3, 0].Resize(rowSize: 1);
-
-            Table.VerticalScrollBar.Value = 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
-            Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-            Assert.AreEqual(Table.VerticalScrollBar.Value, 1);
-
-            // Resize existing cell
-            Table.Cells[1, 0].Resize(rowSize: 9);
-            Table.Cells[2, 0].Resize(rowSize: 16);
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-            Assert.AreNotEqual(Table.VerticalScrollBar.Maximum, maximum);
-
-            // Update max
-            maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_ScrollToSelectedItem_Vertical_Works()
-        {
-            const int extraRowsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
-
-            int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
-            for (int row = 0; row < rows; row++)
-            {
-                Table.Cells[row, 0].Text = "Row " + row;
-            }
-
-            // Resize columns
-            Table.Cells[1, 0].Resize(rowSize: 4);
-            Table.Cells[2, 0].Resize(rowSize: 8);
-            Table.Cells[3, 0].Resize(rowSize: 1);
-
-            Table.VerticalScrollBar.Value = 0;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            Table.Cells.Select(rows - 1, 0);
-            Table.ScrollToSelectedItem();
-
-            Assert.AreNotEqual(Table.VerticalScrollBar.Value, 0);
-        }
-
-        [TestMethod]
-        public void Table_ScrollBar_ScrollToSelectedItem_Horizontal_Works()
-        {
-            const int extraColumnsOffScreen = 5;
-            Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
-
-            int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
-            for (int col = 0; col < columns; col++)
-            {
-                Table.Cells[0, col].Text = "Col " + col;
-            }
-
-            // Resize columns
-            Table.Cells[0, 1].Resize(columnSize: 4);
-            Table.Cells[0, 2].Resize(columnSize: 8);
-            Table.Cells[0, 3].Resize(columnSize: 1);
-
-            Table.HorizontalScrollBar.Value = 0;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
-
-            Table.Cells.Select(0, columns - 1);
-            Table.ScrollToSelectedItem();
-
-            Assert.AreNotEqual(Table.HorizontalScrollBar.Value, 0);
         }
     }
 
-    public abstract class TableTestsBase
+    [TestMethod]
+    public void Cells_Range_ForEach_AppliesActionToAll()
     {
-        protected Table Table { get; set; }
-        protected readonly int Width, Height, CellWidth, CellHeight;
+        Table.Cell[] cells = Table.Cells.Range(0, 0, 4, 4).ToArray();
+        cells.ForEach((cell) => cell.Text = "Hello!");
+        Assert.IsTrue(cells.All(a => a.Text == "Hello!"));
+    }
 
-        protected TableTestsBase(int width, int height, int cellWidth, int cellHeight)
+    [TestMethod]
+    public void Cells_Select_Deselect_Cell_Correct()
+    {
+        Assert.AreEqual(Table.SelectedCell, null);
+        Table.Cells[0, 0].Select();
+        Assert.AreEqual(Table.SelectedCell, Table.Cells[0, 0]);
+        Table.Cells[0, 0].Deselect();
+        Assert.AreEqual(Table.SelectedCell, null);
+    }
+
+    [TestMethod]
+    public void Cells_Width_Height_Correct()
+    {
+        Table.Cells.Row(0).Size = 11;
+        Assert.AreEqual(Table.Cells[0, 0].Height, 11);
+
+        Table.Cells.Column(0).Size = 6;
+        Assert.AreEqual(Table.Cells[0, 0].Width, 6);
+    }
+
+    [TestMethod]
+    public void Cells_Layout_Settings_SetCorrectly()
+    {
+        Cells.Layout layout = Table.Cells.Row(0);
+        layout.Settings.Selectable = false;
+        Assert.AreEqual(Table.Cells[0, 0].Settings.Selectable, false);
+    }
+
+    [TestMethod]
+    public void Cells_Layout_GetMultiple_Correct()
+    {
+        Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
+        Assert.AreEqual(rowLayouts.Count(), 3);
+        Cells.Layout.RangeEnumerable columnLayouts = Table.Cells.Column(0, 1, 2);
+        Assert.AreEqual(columnLayouts.Count(), 3);
+    }
+
+    [TestMethod]
+    public void Cells_Layout_SetLayout_Multiple_AppliedToAll()
+    {
+        var settings = new Table.Cell.Options(Table)
         {
-            Width = width;
-            Height = height;
-            CellWidth = cellWidth;
-            CellHeight = cellHeight;
+            Interactable = false
+        };
+        Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
+        rowLayouts.SetLayout(3, Color.White, Color.Orange, settings);
+        foreach (Cells.Layout layout in rowLayouts)
+        {
+            Assert.AreEqual(layout.Size, 3);
+            Assert.AreEqual(layout.Foreground, Color.White);
+            Assert.AreEqual(layout.Background, Color.Orange);
+            Assert.AreEqual(layout.Settings, settings);
+        }
+    }
 
-            Library.Default.SetControlTheme(typeof(Table), new TableTheme(new ScrollBarTheme()));
+    [TestMethod]
+    public void Can_Enumerate_Cells()
+    {
+        Table.Cells[0, 0].Text = "Hello 1";
+        Table.Cells[1, 0].Text = "Hello 2";
+        int count = 0;
+        foreach (Table.Cell cell in Table.Cells)
+            count++;
+        Assert.AreEqual(count, 2);
+    }
+
+    [TestMethod]
+    public void Can_Enumerate_LayoutRange()
+    {
+        Cells.Layout.RangeEnumerable layouts = Table.Cells.Row(0, 1);
+        int count = 0;
+        foreach (Cells.Layout layout in layouts)
+            count++;
+        Assert.AreEqual(count, 2);
+    }
+
+    [TestMethod]
+    public void Total_Count_IsCorrect()
+    {
+        Table.Cells[0, 0].Text = "Col / Row 1";
+        Table.Cells[1, 0].Text = "Row 2";
+        Table.Cells[2, 0].Text = "Row 3";
+        Table.Cells[0, 1].Text = "Column 2";
+        Assert.AreEqual(Table.Cells.TotalColumns, 2);
+        Assert.AreEqual(Table.Cells.TotalRows, 3);
+    }
+
+    [TestMethod]
+    public void Cells_Remove_Correct()
+    {
+        Table.Cells[0, 0].Text = "Hello";
+        Table.Cells[1, 0].Text = "Hello";
+        Assert.AreEqual(Table.Cells.Count, 2);
+        Table.Cells.Remove(0, 0);
+        Assert.AreEqual(Table.Cells.Count, 1);
+        Table.Cells[1, 0].Remove();
+        Assert.AreEqual(Table.Cells.Count, 0);
+    }
+
+    [TestMethod]
+    public void Cells_Clear_Correct()
+    {
+        Table.Cells.Row(0).Size = 4;
+        Table.Cells[0, 0].Text = "Hello";
+        Table.Cells[0, 1].Text = "Hello";
+
+        Assert.AreEqual(Table.Cells.Count, 2);
+
+        Table.Cells.Clear(false);
+        Assert.AreEqual(Table.Cells.Count, 0);
+        Assert.AreEqual(Table.Cells.Row(0).Size, 4);
+        Assert.AreEqual(Table.Cells.Row(0).Size, 4);
+
+        Table.Cells.Clear(true);
+
+        Assert.AreEqual(Table.Cells.Row(0).Size, Table.DefaultCellSize.Y);
+    }
+
+    [TestMethod]
+    public void Cells_Different_Cell_NotEquals()
+    {
+        Table.Cell cellA = Table.Cells[0, 0];
+        cellA.Text = "Hello";
+
+        Table.Cell cellB = Table.Cells[0, 1];
+        cellB.Text = "Hello";
+
+        Assert.AreNotEqual(cellA, cellB);
+
+        cellB = null;
+
+        Assert.AreNotEqual(cellA, cellB);
+    }
+
+    [TestMethod]
+    public void Cells_Cell_CopyAppearanceFrom_Correct()
+    {
+        Table.Cell cellA = Table.Cells[0, 0];
+        cellA.Background = Color.Brown;
+        cellA.Settings.UseFakeLayout = true;
+
+        Table.Cell cellB = Table.Cells[0, 1];
+        cellB.CopyAppearanceFrom(cellA);
+
+        Assert.AreEqual(cellB.Background, Color.Brown);
+        Assert.AreEqual(cellB.Settings.UseFakeLayout, true);
+
+        cellA.Settings.Selectable = false;
+        cellB.CopyAppearanceFrom(cellA);
+
+        Assert.AreEqual(cellB.Settings.UseFakeLayout, true);
+        Assert.AreEqual(cellB.Settings.Selectable, false);
+
+        // Settings is not initialized here, copy it over, everything should be default again
+        Table.Cell cellC = Table.Cells[0, 2];
+        cellB.CopyAppearanceFrom(cellC);
+
+        Assert.AreEqual(cellB.Settings.UseFakeLayout, false);
+        Assert.AreEqual(cellB.Settings.Selectable, true);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Vertical_Scrolling_EqualSizes_Correct()
+    {
+        const int extraRowsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
+
+        int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
+        for (int row = 0; row < rows; row++)
+        {
+            Table.Cells[row, 0].Text = "Row " + row;
         }
 
-        [TestInitialize]
-        public virtual void Setup()
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
+        Assert.AreEqual(Table.VerticalScrollBar.Maximum, extraRowsOffScreen);
+        Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
+
+        // Increment
+        int totalHeight = 0;
+        int maximum = Table.VerticalScrollBar.Maximum;
+        for (int i = 0; i < maximum; i++)
         {
-            Table = new Table(Width, Height, CellWidth, CellHeight);
+            totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
+            totalHeight = totalHeight < 0 ? 0 : totalHeight;
+            Table.VerticalScrollBar.Value += 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderYPos, totalHeight);
+            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
         }
 
-        protected static int GetLastVisibleCellSize(Table table, Orientation orientation, bool increment)
+        // Decrement
+        for (int i = maximum; i > 0; i--)
         {
-            var type = orientation == Orientation.Vertical ?
-                Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-            var isRowType = type == Cells.Layout.LayoutType.Row;
-            var cellGroups = table.Cells.GroupBy(a => isRowType ? a.Row : a.Column);
-            var orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
-                cellGroups.OrderByDescending(a => a.Key);
+            totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
+            totalHeight = totalHeight < 0 ? 0 : totalHeight;
+            Table.VerticalScrollBar.Value -= 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderYPos, totalHeight);
+            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        }
 
-            foreach (var group in orderedCells)
+        Assert.AreEqual(Table.StartRenderYPos, 0);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Horizontal_Scrolling_EqualSizes_Correct()
+    {
+        const int extraColumnsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
+
+        int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
+        for (int column = 0; column < columns; column++)
+        {
+            Table.Cells[0, column].Text = "Column " + column;
+        }
+
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
+        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, extraColumnsOffScreen);
+        Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
+
+        // Increment
+        int totalWidth = 0;
+        int maximum = Table.HorizontalScrollBar.Maximum;
+        for (int i = 0; i < maximum; i++)
+        {
+            totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
+            totalWidth = totalWidth < 0 ? 0 : totalWidth;
+            Table.HorizontalScrollBar.Value += 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderXPos, totalWidth);
+            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        }
+
+        // Decrement
+        for (int i = maximum; i > 0; i--)
+        {
+            totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
+            totalWidth = totalWidth < 0 ? 0 : totalWidth;
+            Table.HorizontalScrollBar.Value -= 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderXPos, totalWidth);
+            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        }
+
+        Assert.AreEqual(Table.StartRenderXPos, 0);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Vertical_Scrolling_DifferentSizes_Correct()
+    {
+        const int extraRowsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
+
+        int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
+        for (int row = 0; row < rows; row++)
+        {
+            Table.Cells[row, 0].Text = "Row " + row;
+        }
+
+        // Resize columns
+        Table.Cells[1, 0].Resize(rowSize: 4);
+        Table.Cells[2, 0].Resize(rowSize: 8);
+        Table.Cells[3, 0].Resize(rowSize: 1);
+
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
+        Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
+        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
+
+        // Increment
+        int totalHeight = 0;
+        for (int i = 0; i < maximum; i++)
+        {
+            totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
+            totalHeight = totalHeight < 0 ? 0 : totalHeight;
+            Table.VerticalScrollBar.Value += 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderYPos, totalHeight);
+            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        }
+
+        // Decrement
+        for (int i = maximum; i > 0; i--)
+        {
+            totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
+            totalHeight = totalHeight < 0 ? 0 : totalHeight;
+            Table.VerticalScrollBar.Value -= 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderYPos, totalHeight);
+            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        }
+
+        Assert.AreEqual(Table.StartRenderYPos, 0);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Horizontal_Scrolling_DifferentSizes_Correct()
+    {
+        const int extraColumnsOffScreen = 5;
+        Table.SetupScrollBar(SadConsole.Orientation.Horizontal, 5, new Point(0, 0));
+
+        int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
+        for (int column = 0; column < columns; column++)
+        {
+            Table.Cells[0, column].Text = "Column " + column;
+        }
+
+        // Resize columns
+        Table.Cells[0, 1].Resize(columnSize: 4);
+        Table.Cells[0, 2].Resize(columnSize: 8);
+        Table.Cells[0, 3].Resize(columnSize: 1);
+
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
+        Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
+        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
+
+        // Increment
+        int totalWidth = 0;
+        for (int i = 0; i < maximum; i++)
+        {
+            totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
+            totalWidth = totalWidth < 0 ? 0 : totalWidth;
+            Table.HorizontalScrollBar.Value += 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderXPos, totalWidth);
+            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        }
+
+        for (int i = maximum; i > 0; i--)
+        {
+            totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
+            totalWidth = totalWidth < 0 ? 0 : totalWidth;
+            Table.HorizontalScrollBar.Value -= 1;
+            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Assert.AreEqual(Table.StartRenderXPos, totalWidth);
+            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        }
+
+        Assert.AreEqual(Table.StartRenderXPos, 0);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Horizontal_ChangeScrollMaximum_OnResize_Correct()
+    {
+        const int extraColumnsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
+
+        int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
+        for (int column = 0; column < columns; column++)
+        {
+            Table.Cells[0, column].Text = "Column " + column;
+        }
+
+        // Resize columns
+        Table.Cells[0, 1].Resize(columnSize: 4);
+        Table.Cells[0, 2].Resize(columnSize: 8);
+        Table.Cells[0, 3].Resize(columnSize: 1);
+
+        Table.HorizontalScrollBar.Value = 1;
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
+        Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
+        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.HorizontalScrollBar.Value, 1);
+
+        // Resize existing cell
+        Table.Cells[0, 1].Resize(columnSize: 9);
+        Table.Cells[0, 2].Resize(columnSize: 16);
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Assert.AreNotEqual(Table.HorizontalScrollBar.Maximum, maximum);
+
+        // Update max
+        maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
+        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_Vertical_ChangeScrollMaximum_OnResize_Correct()
+    {
+        const int extraRowsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
+
+        int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
+        for (int row = 0; row < rows; row++)
+        {
+            Table.Cells[row, 0].Text = "Row " + row;
+        }
+
+        // Resize columns
+        Table.Cells[1, 0].Resize(rowSize: 4);
+        Table.Cells[2, 0].Resize(rowSize: 8);
+        Table.Cells[3, 0].Resize(rowSize: 1);
+
+        Table.VerticalScrollBar.Value = 1;
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
+        Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
+        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.VerticalScrollBar.Value, 1);
+
+        // Resize existing cell
+        Table.Cells[1, 0].Resize(rowSize: 9);
+        Table.Cells[2, 0].Resize(rowSize: 16);
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Assert.AreNotEqual(Table.VerticalScrollBar.Maximum, maximum);
+
+        // Update max
+        maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
+        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_ScrollToSelectedItem_Vertical_Works()
+    {
+        const int extraRowsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Vertical, 5, new Point(0, 0));
+
+        int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
+        for (int row = 0; row < rows; row++)
+        {
+            Table.Cells[row, 0].Text = "Row " + row;
+        }
+
+        // Resize columns
+        Table.Cells[1, 0].Resize(rowSize: 4);
+        Table.Cells[2, 0].Resize(rowSize: 8);
+        Table.Cells[3, 0].Resize(rowSize: 1);
+
+        Table.VerticalScrollBar.Value = 0;
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        Table.Cells.Select(rows - 1, 0);
+        Table.ScrollToSelectedItem();
+
+        Assert.AreNotEqual(Table.VerticalScrollBar.Value, 0);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBar_ScrollToSelectedItem_Horizontal_Works()
+    {
+        const int extraColumnsOffScreen = 5;
+        Table.SetupScrollBar(Orientation.Horizontal, 5, new Point(0, 0));
+
+        int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
+        for (int col = 0; col < columns; col++)
+        {
+            Table.Cells[0, col].Text = "Col " + col;
+        }
+
+        // Resize columns
+        Table.Cells[0, 1].Resize(columnSize: 4);
+        Table.Cells[0, 2].Resize(columnSize: 8);
+        Table.Cells[0, 3].Resize(columnSize: 1);
+
+        Table.HorizontalScrollBar.Value = 0;
+        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+
+        Table.Cells.Select(0, columns - 1);
+        Table.ScrollToSelectedItem();
+
+        Assert.AreNotEqual(Table.HorizontalScrollBar.Value, 0);
+    }
+}
+
+public abstract class TableTestsBase
+{
+    protected Table Table { get; set; }
+    protected readonly int Width, Height, CellWidth, CellHeight;
+
+    protected TableTestsBase(int width, int height, int cellWidth, int cellHeight)
+    {
+        Width = width;
+        Height = height;
+        CellWidth = cellWidth;
+        CellHeight = cellHeight;
+
+        Library.Default.SetControlTheme(typeof(Table), new TableTheme(new ScrollBarTheme()));
+    }
+
+    [TestInitialize]
+    public virtual void Setup()
+    {
+        Table = new Table(Width, Height, CellWidth, CellHeight);
+    }
+
+    protected static int GetLastVisibleCellSize(Table table, Orientation orientation, bool increment)
+    {
+        var type = orientation == Orientation.Vertical ?
+            Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+        var isRowType = type == Cells.Layout.LayoutType.Row;
+        var cellGroups = table.Cells.GroupBy(a => isRowType ? a.Row : a.Column);
+        var orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
+            cellGroups.OrderByDescending(a => a.Key);
+
+        foreach (var group in orderedCells)
+        {
+            foreach (var cell in group)
             {
-                foreach (var cell in group)
+                var partialOverlap = false;
+                var indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
+                if (!increment)
                 {
-                    var partialOverlap = false;
-                    var indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
-                    if (!increment)
+                    // Check if cell position is the last cell on screen
+                    if (indexSizeCell >= (isRowType ? table.Height : table.Width))
+                        break;
+                }
+                else
+                {
+                    // Check if cell position is the next off-screen
+                    // >= because it assumes the cell starts at Height, and thats off screen
+                    var isPositionOfScreen = isRowType ? indexSizeCell >= table.Height : indexSizeCell >= table.Width;
+                    if (!isPositionOfScreen)
                     {
-                        // Check if cell position is the last cell on screen
-                        if (indexSizeCell >= (isRowType ? table.Height : table.Width))
-                            break;
-                    }
-                    else
-                    {
-                        // Check if cell position is the next off-screen
-                        // >= because it assumes the cell starts at Height, and thats off screen
-                        var isPositionOfScreen = isRowType ? indexSizeCell >= table.Height : indexSizeCell >= table.Width;
-                        if (!isPositionOfScreen)
+                        // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
+                        // which means its not off screen
+                        var realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+                        if (realCellPosition > (isRowType ? table.Height : table.Width))
                         {
-                            // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
-                            // which means its not off screen
-                            var realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
-                            if (realCellPosition > (isRowType ? table.Height : table.Width))
-                            {
-                                partialOverlap = true;
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            partialOverlap = true;
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
-
-                    var size = table.Cells.GetSizeOrDefault(indexSizeCell, type);
-                    if (partialOverlap)
-                    {
-                        var overlapAmount = indexSizeCell + size - (isRowType ? table.Height : table.Width);
-                        size -= overlapAmount;
-                    }
-                    return increment ? size : -size;
                 }
-            }
-            var defaultSize = type == Cells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
-            return increment ? defaultSize : -defaultSize;
-        }
 
-        protected static int GetMaximumScrollBarItems(Table table, Orientation orientation)
-        {
-            var indexes = orientation == Orientation.Vertical ?
-                table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
-            var orderedIndex = indexes.OrderBy(a => a.Key);
-
-            var layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-            var maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
-            var totalSize = 0;
-            var items = 0;
-            foreach (var index in orderedIndex)
-            {
-                var size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
-                totalSize += size;
-
-                if (totalSize > maxSize)
+                var size = table.Cells.GetSizeOrDefault(indexSizeCell, type);
+                if (partialOverlap)
                 {
-                    items++;
+                    var overlapAmount = indexSizeCell + size - (isRowType ? table.Height : table.Width);
+                    size -= overlapAmount;
                 }
+                return increment ? size : -size;
             }
-            return items;
         }
+        var defaultSize = type == Cells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
+        return increment ? defaultSize : -defaultSize;
+    }
+
+    protected static int GetMaximumScrollBarItems(Table table, Orientation orientation)
+    {
+        var indexes = orientation == Orientation.Vertical ?
+            table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
+        var orderedIndex = indexes.OrderBy(a => a.Key);
+
+        var layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+        var maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
+        var totalSize = 0;
+        var items = 0;
+        foreach (var index in orderedIndex)
+        {
+            var size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
+            totalSize += size;
+
+            if (totalSize > maxSize)
+            {
+                items++;
+            }
+        }
+        return items;
     }
 }
