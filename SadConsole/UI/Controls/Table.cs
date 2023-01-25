@@ -1,9 +1,9 @@
-﻿using SadConsole.UI.Themes;
-using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls
 {
@@ -22,7 +22,7 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public new bool UseMouse
         {
-            get { return _useMouse; }
+            get => _useMouse;
             set
             {
                 _useMouse = value;
@@ -46,10 +46,10 @@ namespace SadConsole.UI.Controls
         /// </summary>
         public Cell SelectedCell
         {
-            get { return _selectedCell; }
+            get => _selectedCell;
             internal set
             {
-                var prev = _selectedCell;
+                Cell prev = _selectedCell;
                 _selectedCell = value;
                 if (prev != _selectedCell)
                 {
@@ -150,10 +150,10 @@ namespace SadConsole.UI.Controls
         private void ScrollBar_ValueChanged(object sender, EventArgs e)
         {
             var scrollBar = (ScrollBar)sender;
-            var previousScrollValue = scrollBar.Orientation == Orientation.Vertical ? _previousScrollValueVertical : _previousScrollValueHorizontal;
-            var increment = previousScrollValue < scrollBar.Value;
+            int previousScrollValue = scrollBar.Orientation == Orientation.Vertical ? _previousScrollValueVertical : _previousScrollValueHorizontal;
+            bool increment = previousScrollValue < scrollBar.Value;
 
-            var diff = Math.Abs(scrollBar.Value - previousScrollValue);
+            int diff = Math.Abs(scrollBar.Value - previousScrollValue);
             for (int i = 0; i < diff; i++)
             {
                 SetScrollAmount(scrollBar.Orientation, increment);
@@ -206,7 +206,7 @@ namespace SadConsole.UI.Controls
         /// Configures the associated <see cref="VerticalScrollBar"/>.
         /// </summary>
         /// <param name="orientation">The orientation of the scrollbar.</param>
-        /// <param name="sizeValue">The size of the scrollbar.</param>
+        /// <param name="size"></param>
         /// <param name="position">The position of the scrollbar.</param>
         public void SetupScrollBar(Orientation orientation, int size, Point position)
         {
@@ -214,7 +214,7 @@ namespace SadConsole.UI.Controls
             int value = 0;
             int max = 0;
 
-            var existingScrollBar = orientation == Orientation.Vertical ? VerticalScrollBar : HorizontalScrollBar;
+            ScrollBar existingScrollBar = orientation == Orientation.Vertical ? VerticalScrollBar : HorizontalScrollBar;
             if (existingScrollBar != null)
             {
                 existingScrollBar.ValueChanged -= ScrollBar_ValueChanged;
@@ -271,23 +271,23 @@ namespace SadConsole.UI.Controls
             if (!AutoScrollOnCellSelection) return;
             if (IsVerticalScrollBarVisible || IsHorizontalScrollBarVisible)
             {
-                var scrollBars = new[] { VerticalScrollBar, HorizontalScrollBar };
-                foreach (var scrollBar in scrollBars)
+                ScrollBar[] scrollBars = new[] { VerticalScrollBar, HorizontalScrollBar };
+                foreach (ScrollBar scrollBar in scrollBars)
                 {
                     if (scrollBar == null) continue;
 
-                    var orientation = scrollBar.Orientation;
+                    Orientation orientation = scrollBar.Orientation;
                     int selectedIndex = SelectedCell != null ? (orientation == Orientation.Vertical ? SelectedCell.Row : SelectedCell.Column) : 0;
 
-                    var isRowType = orientation == Orientation.Vertical;
-                    var indexes = Cells
+                    bool isRowType = orientation == Orientation.Vertical;
+                    IOrderedEnumerable<int> indexes = Cells
                         .GroupBy(a => isRowType ? a.Row : a.Column)
                         .Select(a => a.Key)
                         .OrderBy(a => a);
                     int totalIndexSize = 0;
-                    foreach (var index in indexes)
+                    foreach (int index in indexes)
                     {
-                        var cellSize = Cells.GetSizeOrDefault(index, isRowType ?
+                        int cellSize = Cells.GetSizeOrDefault(index, isRowType ?
                             Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column);
                         totalIndexSize += cellSize;
 
@@ -295,17 +295,14 @@ namespace SadConsole.UI.Controls
                             break;
                     }
 
-                    var maxIndexSize = orientation == Orientation.Vertical ? GetMaxRowsBasedOnRowSizes() : GetMaxColumnsBasedOnColumnSizes();
-                    var max = orientation == Orientation.Vertical ? VisibleRowsMax : VisibleColumnsMax;
-                    var total = orientation == Orientation.Vertical ? VisibleRowsTotal : VisibleColumnsTotal;
-                    var defaultIndexSize = orientation == Orientation.Vertical ? DefaultCellSize.Y : DefaultCellSize.X;
+                    int maxIndexSize = orientation == Orientation.Vertical ? GetMaxRowsBasedOnRowSizes() : GetMaxColumnsBasedOnColumnSizes();
+                    int max = orientation == Orientation.Vertical ? VisibleRowsMax : VisibleColumnsMax;
+                    int total = orientation == Orientation.Vertical ? VisibleRowsTotal : VisibleColumnsTotal;
+                    int defaultIndexSize = orientation == Orientation.Vertical ? DefaultCellSize.Y : DefaultCellSize.X;
 
-                    if (totalIndexSize < max)
-                        scrollBar.Value = 0;
-                    else if (totalIndexSize > maxIndexSize - total)
-                        scrollBar.Value = scrollBar.Maximum;
-                    else
-                        scrollBar.Value = (totalIndexSize - total) / defaultIndexSize;
+                    scrollBar.Value = totalIndexSize < max
+                        ? 0
+                        : totalIndexSize > maxIndexSize - total ? scrollBar.Maximum : (totalIndexSize - total) / defaultIndexSize;
                 }
             }
         }
@@ -324,9 +321,9 @@ namespace SadConsole.UI.Controls
 
             Cells.AdjustCellPositionsAfterResize();
 
-            var amountVertical = IsVerticalScrollBarVisible ? VerticalScrollBar.Value : 0;
-            var amountHorizontal = IsHorizontalScrollBarVisible ? HorizontalScrollBar.Value : 0;
-            var max = amountVertical > amountHorizontal ? amountVertical : amountHorizontal;
+            int amountVertical = IsVerticalScrollBarVisible ? VerticalScrollBar.Value : 0;
+            int amountHorizontal = IsHorizontalScrollBarVisible ? HorizontalScrollBar.Value : 0;
+            int max = amountVertical > amountHorizontal ? amountVertical : amountHorizontal;
 
             for (int i = 0; i < max; i++)
             {
@@ -348,7 +345,7 @@ namespace SadConsole.UI.Controls
         internal int StartRenderXPos { get; private set; }
         private void SetScrollAmount(Orientation orientation, bool increment)
         {
-            var scrollPos = GetNextScrollPos(increment, orientation);
+            int scrollPos = GetNextScrollPos(increment, orientation);
 
             if (orientation == Orientation.Vertical)
                 StartRenderYPos += scrollPos;
@@ -361,19 +358,19 @@ namespace SadConsole.UI.Controls
 
         internal int GetNextScrollPos(bool increment, Orientation orientation)
         {
-            var type = orientation == Orientation.Vertical ?
+            Cells.Layout.LayoutType type = orientation == Orientation.Vertical ?
                 Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-            var isRowType = type == Cells.Layout.LayoutType.Row;
-            var cellGroups = Cells.GroupBy(a => isRowType ? a.Row : a.Column);
-            var orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
+            bool isRowType = type == Cells.Layout.LayoutType.Row;
+            IEnumerable<IGrouping<int, Cell>> cellGroups = Cells.GroupBy(a => isRowType ? a.Row : a.Column);
+            IOrderedEnumerable<IGrouping<int, Cell>> orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
                 cellGroups.OrderByDescending(a => a.Key);
 
-            foreach (var group in orderedCells)
+            foreach (IGrouping<int, Cell> group in orderedCells)
             {
-                foreach (var cell in group)
+                foreach (Cell cell in group)
                 {
-                    var partialOverlap = false;
-                    var indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
+                    bool partialOverlap = false;
+                    int indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
                     if (!increment)
                     {
                         // Check if cell position is the last cell on screen
@@ -384,12 +381,12 @@ namespace SadConsole.UI.Controls
                     {
                         // Check if cell position is the next off-screen
                         // >= because it assumes the cell starts at Height, and thats off screen
-                        var isPositionOfScreen = isRowType ? indexSizeCell >= Height : indexSizeCell >= Width;
+                        bool isPositionOfScreen = isRowType ? indexSizeCell >= Height : indexSizeCell >= Width;
                         if (!isPositionOfScreen)
                         {
                             // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                             // which means its not off screen
-                            var realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+                            int realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
                             if (realCellPosition > (isRowType ? Height : Width))
                             {
                                 partialOverlap = true;
@@ -402,16 +399,16 @@ namespace SadConsole.UI.Controls
                     }
 
                     // Get size of current cell
-                    var layoutDict = isRowType ? Cells._rowLayout : Cells._columnLayout;
-                    var defaultSize = isRowType ? DefaultCellSize.Y : DefaultCellSize.X;
+                    Dictionary<int, Cells.Layout> layoutDict = isRowType ? Cells._rowLayout : Cells._columnLayout;
+                    int defaultSize = isRowType ? DefaultCellSize.Y : DefaultCellSize.X;
                     int offScreenIndex = isRowType ? cell.Row : cell.Column;
-                    var cellSize = layoutDict.TryGetValue(offScreenIndex, out var layout) ?
+                    int cellSize = layoutDict.TryGetValue(offScreenIndex, out Cells.Layout layout) ?
                         layout.Size : defaultSize;
 
                     // Calculate the overlap amount
                     if (partialOverlap)
                     {
-                        var overlapAmount = indexSizeCell + cellSize - (isRowType ? Height : Width);
+                        int overlapAmount = indexSizeCell + cellSize - (isRowType ? Height : Width);
                         cellSize -= overlapAmount;
                     }
 
@@ -419,7 +416,7 @@ namespace SadConsole.UI.Controls
                 }
             }
 
-            var defaultCellSize = (isRowType ? DefaultCellSize.Y : DefaultCellSize.X);
+            int defaultCellSize = isRowType ? DefaultCellSize.Y : DefaultCellSize.X;
             return increment ? defaultCellSize : -defaultCellSize;
         }
 
@@ -451,14 +448,14 @@ namespace SadConsole.UI.Controls
             base.OnMouseIn(state);
 
             // Handle mouse hovering over cell
-            var mousePosCellIndex = GetCellIndexByMousePosition(state.MousePosition);
+            Point? mousePosCellIndex = GetCellIndexByMousePosition(state.MousePosition);
             Point? currentPosition = CurrentMouseCell == null ? (Point?)null : (CurrentMouseCell.Column, CurrentMouseCell.Row);
 
             if (!Equals(mousePosCellIndex, currentPosition))
             {
                 if (mousePosCellIndex != null)
                 {
-                    var cell = Cells.GetIfExists(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X);
+                    Cell cell = Cells.GetIfExists(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X);
                     if (cell == null && DrawFakeCells)
                     {
                         cell = new Cell(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, this, string.Empty)
@@ -573,9 +570,9 @@ namespace SadConsole.UI.Controls
             {
                 for (int row = 0; row < Height; row++)
                 {
-                    var rowValue = row + (IsVerticalScrollBarVisible ? VerticalScrollBar.Value : 0);
-                    var colValue = col + (IsHorizontalScrollBarVisible ? HorizontalScrollBar.Value : 0);
-                    var position = Cells.GetCellPosition(rowValue, colValue, out int rowSize, out int columnSize,
+                    int rowValue = row + (IsVerticalScrollBarVisible ? VerticalScrollBar.Value : 0);
+                    int colValue = col + (IsHorizontalScrollBarVisible ? HorizontalScrollBar.Value : 0);
+                    Point position = Cells.GetCellPosition(rowValue, colValue, out int rowSize, out int columnSize,
                         IsVerticalScrollBarVisible ? StartRenderYPos : 0, IsHorizontalScrollBarVisible ? StartRenderXPos : 0);
                     if (IsMouseWithinCell(mousePosition, position.Y, position.X, columnSize, rowSize))
                         return (colValue, rowValue);
@@ -586,8 +583,8 @@ namespace SadConsole.UI.Controls
 
         private static bool IsMouseWithinCell(Point mousePosition, int row, int column, int width, int height)
         {
-            var maxX = column + width;
-            var maxY = row + height;
+            int maxX = column + width;
+            int maxY = row + height;
             return mousePosition.X >= column && mousePosition.X < maxX &&
                 mousePosition.Y >= row && mousePosition.Y < maxY;
         }
@@ -620,35 +617,32 @@ namespace SadConsole.UI.Controls
             internal Point Position { get; set; }
             public int Row { get; }
             public int Column { get; }
-            public int Height { get { return Table.Cells.GetSizeOrDefault(Row, Cells.Layout.LayoutType.Row); } }
-            public int Width { get { return Table.Cells.GetSizeOrDefault(Column, Cells.Layout.LayoutType.Column); } }
+            public int Height => Table.Cells.GetSizeOrDefault(Row, Cells.Layout.LayoutType.Row);
+            public int Width => Table.Cells.GetSizeOrDefault(Column, Cells.Layout.LayoutType.Column);
 
             private Color _foreground;
             public Color Foreground
             {
-                get { return _foreground; }
-                set { SetFieldValue(this, Foreground, ref _foreground, value, false); }
+                get => _foreground;
+                set => SetFieldValue(this, Foreground, ref _foreground, value, false);
             }
 
             private Color _background;
             public Color Background
             {
-                get { return _background; }
-                set { SetFieldValue(this, Background, ref _background, value, false); }
+                get => _background;
+                set => SetFieldValue(this, Background, ref _background, value, false);
             }
 
             private string _text;
             public string Text
             {
-                get { return _text; }
-                set { SetFieldValue(this, Text, ref _text, value, false); }
+                get => _text;
+                set => SetFieldValue(this, Text, ref _text, value, false);
             }
 
             private Options _settings;
-            public Options Settings
-            {
-                get { return _settings ??= new Options(this); }
-            }
+            public Options Settings => _settings ??= new Options(this);
 
             private readonly bool _addToTableIfModified;
             internal readonly Table Table;
@@ -665,10 +659,10 @@ namespace SadConsole.UI.Controls
                 Column = col;
 
                 // Set cell layout options
-                table.Cells._columnLayout.TryGetValue(col, out var columnLayout);
-                table.Cells._rowLayout.TryGetValue(row, out var rowLayout);
-                var layoutOptions = new[] { columnLayout, rowLayout };
-                foreach (var option in layoutOptions)
+                _ = table.Cells._columnLayout.TryGetValue(col, out Cells.Layout columnLayout);
+                _ = table.Cells._rowLayout.TryGetValue(row, out Cells.Layout rowLayout);
+                Cells.Layout[] layoutOptions = new[] { columnLayout, rowLayout };
+                foreach (Cells.Layout option in layoutOptions)
                 {
                     if (option == null) continue;
                     if (option.Foreground != null)
@@ -686,18 +680,13 @@ namespace SadConsole.UI.Controls
                     Table.Cells[Row, Column] = this;
             }
 
-            internal bool IsSettingsInitialized
-            {
-                get { return _settings != null; }
-            }
+            internal bool IsSettingsInitialized => _settings != null;
 
             public static bool operator ==(Cell a, Cell b)
             {
-                var refEqualNullA = a is null;
-                var refEqualNullB = b is null;
-                if (refEqualNullA && refEqualNullB) return true;
-                if (refEqualNullA || refEqualNullB) return false;
-                return a.Equals(b);
+                bool refEqualNullA = a is null;
+                bool refEqualNullB = b is null;
+                return (refEqualNullA && refEqualNullB) || (!refEqualNullA && !refEqualNullB && a.Equals(b));
             }
             public static bool operator !=(Cell a, Cell b)
             {
@@ -706,14 +695,12 @@ namespace SadConsole.UI.Controls
 
             public bool Equals(Cell cell)
             {
-                if (cell == null) return false;
-                return cell.Column == Column && cell.Row == Row;
+                return cell != null && cell.Column == Column && cell.Row == Row;
             }
 
             public override bool Equals(object obj)
             {
-                if (!(obj is Cell cell)) return false;
-                return Equals(cell);
+                return obj is Cell cell && Equals(cell);
             }
 
             public override int GetHashCode()
@@ -764,64 +751,64 @@ namespace SadConsole.UI.Controls
                 private HorizontalAlign _horizontalAlignment;
                 public HorizontalAlign HorizontalAlignment
                 {
-                    get { return _horizontalAlignment; }
-                    set { SetFieldValue(_cell, HorizontalAlignment, ref _horizontalAlignment, value, _usedForLayout); }
+                    get => _horizontalAlignment;
+                    set => SetFieldValue(_cell, HorizontalAlignment, ref _horizontalAlignment, value, _usedForLayout);
                 }
 
                 private VerticalAlign _verticalAlignment;
                 public VerticalAlign VerticalAlignment
                 {
-                    get { return _verticalAlignment; }
-                    set { SetFieldValue(_cell, VerticalAlignment, ref _verticalAlignment, value, _usedForLayout); }
+                    get => _verticalAlignment;
+                    set => SetFieldValue(_cell, VerticalAlignment, ref _verticalAlignment, value, _usedForLayout);
                 }
 
                 private bool _useFakeLayout = false;
                 public bool UseFakeLayout
                 {
-                    get { return _useFakeLayout; }
-                    set { SetFieldValue(_cell, UseFakeLayout, ref _useFakeLayout, value, _usedForLayout); }
+                    get => _useFakeLayout;
+                    set => SetFieldValue(_cell, UseFakeLayout, ref _useFakeLayout, value, _usedForLayout);
                 }
 
                 private int? _maxCharactersPerLine;
                 public int? MaxCharactersPerLine
                 {
-                    get { return _maxCharactersPerLine; }
-                    set { SetFieldValue(_cell, MaxCharactersPerLine, ref _maxCharactersPerLine, value, _usedForLayout); }
+                    get => _maxCharactersPerLine;
+                    set => SetFieldValue(_cell, MaxCharactersPerLine, ref _maxCharactersPerLine, value, _usedForLayout);
                 }
 
                 private bool _interactable = true;
                 public bool Interactable
                 {
-                    get { return _interactable; }
-                    set { SetFieldValue(_cell, Interactable, ref _interactable, value, _usedForLayout); }
+                    get => _interactable;
+                    set => SetFieldValue(_cell, Interactable, ref _interactable, value, _usedForLayout);
                 }
 
                 private bool _selectable = true;
                 public bool Selectable
                 {
-                    get { return _selectable; }
-                    set { SetFieldValue(_cell, Selectable, ref _selectable, value, _usedForLayout); }
+                    get => _selectable;
+                    set => SetFieldValue(_cell, Selectable, ref _selectable, value, _usedForLayout);
                 }
 
                 private bool _isVisible = true;
                 public bool IsVisible
                 {
-                    get { return _isVisible; }
-                    set { SetFieldValue(_cell, IsVisible, ref _isVisible, value, _usedForLayout); }
+                    get => _isVisible;
+                    set => SetFieldValue(_cell, IsVisible, ref _isVisible, value, _usedForLayout);
                 }
 
                 private Cells.Layout.Mode _selectionMode;
                 public Cells.Layout.Mode SelectionMode
                 {
-                    get { return _selectionMode; }
-                    set { SetFieldValue(_cell, SelectionMode, ref _selectionMode, value, _usedForLayout); }
+                    get => _selectionMode;
+                    set => SetFieldValue(_cell, SelectionMode, ref _selectionMode, value, _usedForLayout);
                 }
 
                 private Cells.Layout.Mode _hoverMode;
                 public Cells.Layout.Mode HoverMode
                 {
-                    get { return _hoverMode; }
-                    set { SetFieldValue(_cell, HoverMode, ref _hoverMode, value, _usedForLayout); }
+                    get => _hoverMode;
+                    set => SetFieldValue(_cell, HoverMode, ref _hoverMode, value, _usedForLayout);
                 }
 
                 private readonly bool _usedForLayout;
@@ -858,11 +845,9 @@ namespace SadConsole.UI.Controls
 
                 public static bool operator ==(Options a, Options b)
                 {
-                    var refEqualNullA = a is null;
-                    var refEqualNullB = b is null;
-                    if (refEqualNullA && refEqualNullB) return true;
-                    if (refEqualNullA || refEqualNullB) return false;
-                    return a.Equals(b);
+                    bool refEqualNullA = a is null;
+                    bool refEqualNullB = b is null;
+                    return (refEqualNullA && refEqualNullB) || (!refEqualNullA && !refEqualNullB && a.Equals(b));
                 }
                 public static bool operator !=(Options a, Options b)
                 {
@@ -871,8 +856,8 @@ namespace SadConsole.UI.Controls
 
                 public bool Equals(Options other)
                 {
-                    if (other == null) return false;
-                    return other.HorizontalAlignment == HorizontalAlignment &&
+                    return other != null
+&& other.HorizontalAlignment == HorizontalAlignment &&
                         other.VerticalAlignment == VerticalAlignment &&
                         other.MaxCharactersPerLine == MaxCharactersPerLine &&
                         other.IsVisible == IsVisible &&
@@ -885,8 +870,7 @@ namespace SadConsole.UI.Controls
 
                 public override bool Equals(object obj)
                 {
-                    if (!(obj is Options to)) return false;
-                    return Equals(to);
+                    return obj is Options to && Equals(to);
                 }
 
                 public override int GetHashCode()
@@ -930,24 +914,24 @@ namespace SadConsole.UI.Controls
 
         public Table.Cell this[int row, int col]
         {
-            get { return GetOrCreateCell(row, col); }
-            internal set { SetCell(row, col, value); }
+            get => GetOrCreateCell(row, col);
+            internal set => SetCell(row, col, value);
         }
 
         /// <summary>
         /// The rows the table currently holds.
         /// </summary>
-        public int TotalRows { get { return _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Row) + 1; } }
+        public int TotalRows => _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Row) + 1;
 
         /// <summary>
         /// The columns the table currently holds.
         /// </summary>
-        public int TotalColumns { get { return _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Column) + 1; } }
+        public int TotalColumns => _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Column) + 1;
 
         /// <summary>
         /// The amount of cells currently in the table.
         /// </summary>
-        public int Count { get { return _cells.Count; } }
+        public int Count => _cells.Count;
 
         internal Cells(Table table)
         {
@@ -962,7 +946,7 @@ namespace SadConsole.UI.Controls
         /// <returns></returns>
         public Layout Column(int column)
         {
-            _columnLayout.TryGetValue(column, out Layout layout);
+            _ = _columnLayout.TryGetValue(column, out Layout layout);
             layout ??= _columnLayout[column] = new Layout(_table, Layout.LayoutType.Column);
             return layout;
         }
@@ -974,7 +958,7 @@ namespace SadConsole.UI.Controls
         /// <returns></returns>
         public Layout Row(int row)
         {
-            _rowLayout.TryGetValue(row, out Layout layout);
+            _ = _rowLayout.TryGetValue(row, out Layout layout);
             layout ??= _rowLayout[row] = new Layout(_table, Layout.LayoutType.Row);
             return layout;
         }
@@ -994,7 +978,7 @@ namespace SadConsole.UI.Controls
         /// Sets the specified cell as the selected cell if it exists.
         /// </summary>
         /// <param name="row"></param>
-        /// <param name="col"></param>
+        /// <param name="column"></param>
         public void Select(int row, int column)
         {
             // Set existing cell, or a fake one if it does not yet exists, but modifying this fake cell with add it to the table
@@ -1020,8 +1004,8 @@ namespace SadConsole.UI.Controls
         /// <param name="column"></param>
         public void Remove(int row, int column)
         {
-            var prev = _cells.Count;
-            _cells.Remove((row, column));
+            int prev = _cells.Count;
+            _ = _cells.Remove((row, column));
             if (prev != _cells.Count)
             {
                 AdjustCellPositionsAfterResize();
@@ -1052,6 +1036,10 @@ namespace SadConsole.UI.Controls
         /// </summary>
         /// <param name="row"></param>
         /// <param name="col"></param>
+        /// <param name="rowSize"></param>
+        /// <param name="columnSize"></param>
+        /// <param name="verticalScrollBarValue"></param>
+        /// <param name="horizontalScrollbarValue"></param>
         /// <returns></returns>
         internal Point GetCellPosition(int row, int col, out int rowSize, out int columnSize, int verticalScrollBarValue = 0, int horizontalScrollbarValue = 0)
         {
@@ -1063,7 +1051,6 @@ namespace SadConsole.UI.Controls
         /// <summary>
         /// Get the size of the column or row or the default if no layout exists, without allocating a new layout object.
         /// </summary>
-        /// <param name="column"></param>
         /// <returns></returns>
         internal int GetSizeOrDefault(int index, Layout.LayoutType type)
         {
@@ -1077,9 +1064,7 @@ namespace SadConsole.UI.Controls
 
         internal Table.Cell GetIfExists(int row, int col)
         {
-            if (_cells.TryGetValue((row, col), out Table.Cell cell))
-                return cell;
-            return null;
+            return _cells.TryGetValue((row, col), out Table.Cell cell) ? cell : null;
         }
 
         private Table.Cell GetOrCreateCell(int row, int col)
@@ -1126,13 +1111,13 @@ namespace SadConsole.UI.Controls
 
         internal int GetIndexAtCellPosition(int pos, Layout.LayoutType type, out int indexPos)
         {
-            var total = type == Layout.LayoutType.Row ? _table.Cells.TotalRows : _table.Cells.TotalColumns;
-            var layoutDict = type == Layout.LayoutType.Row ? _rowLayout : _columnLayout;
-            var defaultSize = type == Layout.LayoutType.Row ? _table.DefaultCellSize.Y : _table.DefaultCellSize.X;
+            int total = type == Layout.LayoutType.Row ? _table.Cells.TotalRows : _table.Cells.TotalColumns;
+            Dictionary<int, Layout> layoutDict = type == Layout.LayoutType.Row ? _rowLayout : _columnLayout;
+            int defaultSize = type == Layout.LayoutType.Row ? _table.DefaultCellSize.Y : _table.DefaultCellSize.X;
             int totalSize = 0;
             for (int i = 0; i < total; i++)
             {
-                var indexSize = layoutDict.TryGetValue(i, out Layout layout) ? layout.Size : defaultSize;
+                int indexSize = layoutDict.TryGetValue(i, out Layout layout) ? layout.Size : defaultSize;
                 totalSize += indexSize;
                 if (pos < totalSize)
                 {
@@ -1163,7 +1148,7 @@ namespace SadConsole.UI.Controls
 
         internal void AdjustCellPositionsAfterResize()
         {
-            foreach (var cell in _cells)
+            foreach (KeyValuePair<Point, Table.Cell> cell in _cells)
                 cell.Value.Position = GetCellPosition(cell.Value.Row, cell.Value.Column, out _, out _,
                     _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0, _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
             _table._checkScrollBarVisibility = true;
@@ -1186,7 +1171,7 @@ namespace SadConsole.UI.Controls
             private int _size;
             public int Size
             {
-                get { return _size; }
+                get => _size;
                 set
                 {
                     if (_size != value)
@@ -1205,7 +1190,7 @@ namespace SadConsole.UI.Controls
             private Table.Cell.Options _settings;
             public Table.Cell.Options Settings
             {
-                get { return _settings ??= new Table.Cell.Options(_table); }
+                get => _settings ??= new Table.Cell.Options(_table);
                 set
                 {
                     if (value == null) return;
@@ -1216,7 +1201,7 @@ namespace SadConsole.UI.Controls
             /// <summary>
             /// True if the Settings property has been accessed before.
             /// </summary>
-            internal bool HasCustomSettings { get { return _settings != null; } }
+            internal bool HasCustomSettings => _settings != null;
 
             private readonly Table _table;
 
@@ -1229,13 +1214,13 @@ namespace SadConsole.UI.Controls
             /// <summary>
             /// Set a default layout to be used for each new cell
             /// </summary>
-            /// <param name="width"></param>
-            /// <param name="height"></param>
+            /// <param name="size"></param>
             /// <param name="foreground"></param>
             /// <param name="background"></param>
+            /// <param name="settings"></param>
             public void SetLayout(int? size = null, Color? foreground = null, Color? background = null, Table.Cell.Options settings = null)
             {
-                var prevSize = _size;
+                int prevSize = _size;
                 SetLayoutInternal(size, foreground, background, settings);
                 if (prevSize != _size)
                 {
@@ -1289,7 +1274,7 @@ namespace SadConsole.UI.Controls
 
                 public void SetLayout(int? size = null, Color? foreground = null, Color? background = null, Table.Cell.Options settings = null)
                 {
-                    foreach (var layout in _layouts)
+                    foreach (Layout layout in _layouts)
                         layout.SetLayout(size, foreground, background, settings);
                 }
 

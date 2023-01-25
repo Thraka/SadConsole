@@ -1,7 +1,7 @@
-﻿using SadConsole.UI.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SadConsole.UI.Controls;
 
 namespace SadConsole.UI.Themes
 {
@@ -19,7 +19,7 @@ namespace SadConsole.UI.Themes
 
         public override void Attached(ControlBase control)
         {
-            if (!(control is  Table))
+            if (!(control is Table))
                 throw new Exception("Added TableTheme to a control that isn't a Table.");
 
             base.Attached(control);
@@ -31,8 +31,8 @@ namespace SadConsole.UI.Themes
 
             if (!(control is Table table)) return;
 
-            var scrollBars = new[] { table.VerticalScrollBar, table.HorizontalScrollBar };
-            foreach (var scrollBar in scrollBars)
+            ScrollBar[] scrollBars = new[] { table.VerticalScrollBar, table.HorizontalScrollBar };
+            foreach (ScrollBar scrollBar in scrollBars)
             {
                 if (scrollBar != null)
                 {
@@ -46,6 +46,7 @@ namespace SadConsole.UI.Themes
         /// Shows the scroll bar when there are too many items to display; otherwise, hides it.
         /// </summary>
         /// <param name="table">Reference to the listbox being processed.</param>
+        /// <param name="scrollBar"></param>
         private static bool ShowHideScrollBar(Table table, ScrollBar scrollBar)
         {
             // process the scroll bar
@@ -64,17 +65,17 @@ namespace SadConsole.UI.Themes
 
         private static int GetScrollBarItems(Table table, Orientation orientation)
         {
-            var indexes = orientation == Orientation.Vertical ?
+            IEnumerable<IGrouping<int, Table.Cell>> indexes = orientation == Orientation.Vertical ?
                 table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
-            var orderedIndex = indexes.OrderBy(a => a.Key);
+            IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
 
-            var layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-            var maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
-            var totalSize = 0;
-            var items = 0;
-            foreach (var index in orderedIndex)
+            Cells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+            int maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
+            int totalSize = 0;
+            int items = 0;
+            foreach (IGrouping<int, Table.Cell> index in orderedIndex)
             {
-                var size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
+                int size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
                 totalSize += size;
 
                 if (totalSize > maxSize)
@@ -89,10 +90,10 @@ namespace SadConsole.UI.Themes
         {
             if (scrollBar != null)
             {
-                var total = scrollBar.Orientation == Orientation.Vertical ?
+                int total = scrollBar.Orientation == Orientation.Vertical ?
                     (maxRowsHeight >= table.Height ? table.Height : maxRowsHeight) :
                     (maxColumnsWidth >= table.Width ? table.Width : maxColumnsWidth);
-                var max = scrollBar.Orientation == Orientation.Vertical ? table.Height : table.Width;
+                int max = scrollBar.Orientation == Orientation.Vertical ? table.Height : table.Width;
 
                 if (scrollBar.Orientation == Orientation.Vertical)
                 {
@@ -133,10 +134,10 @@ namespace SadConsole.UI.Themes
             RefreshTheme(control.FindThemeColors(), control);
 
             // Draw the basic table surface foreground and background, and clear the glyphs
-            control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
+            _ = control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
 
-            var maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
-            var maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
+            int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
+            int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
 
             if (table.DrawFakeCells && maxColumnsWidth < table.Width)
                 maxColumnsWidth = table.Width;
@@ -145,20 +146,20 @@ namespace SadConsole.UI.Themes
 
             SetScrollBarVisibility(table, maxRowsHeight, maxColumnsWidth);
 
-            var columns = maxColumnsWidth;
-            var rows = maxRowsHeight;
-            var rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out int _);
+            int columns = maxColumnsWidth;
+            int rows = maxRowsHeight;
+            int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
             int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
             for (int row = 0; row < rows; row++)
             {
-                var colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out int _);
+                int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
                 int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
                 int fullRowSize = 0;
                 for (int col = 0; col < columns; col++)
                 {
-                    var verticalScrollBarValue = (table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0);
-                    var horizontalScrollBarValue = (table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0);
-                    var cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
+                    int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
+                    int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
+                    SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
                         verticalScrollBarValue, horizontalScrollBarValue);
 
                     col += columnSize - 1;
@@ -170,8 +171,8 @@ namespace SadConsole.UI.Themes
                         continue;
                     }
 
-                    var cell = table.Cells.GetIfExists(rowIndex, colIndex);
-                    var fakeCellCreated = cell == null;
+                    Table.Cell cell = table.Cells.GetIfExists(rowIndex, colIndex);
+                    bool fakeCellCreated = cell == null;
                     cell ??= new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
                     {
                         Position = cellPosition
@@ -209,7 +210,7 @@ namespace SadConsole.UI.Themes
 
             if ((!cell.IsSettingsInitialized || cell.Settings.Selectable) && table.SelectedCell != null)
             {
-                var selectionMode = !cell.IsSettingsInitialized ? default : cell.Settings.SelectionMode;
+                Cells.Layout.Mode selectionMode = !cell.IsSettingsInitialized ? default : cell.Settings.SelectionMode;
                 switch (selectionMode)
                 {
                     case Cells.Layout.Mode.Single:
@@ -226,7 +227,7 @@ namespace SadConsole.UI.Themes
                 }
             }
 
-            var hoverMode = !cell.IsSettingsInitialized ? default : cell.Settings.HoverMode;
+            Cells.Layout.Mode hoverMode = !cell.IsSettingsInitialized ? default : cell.Settings.HoverMode;
             switch (hoverMode)
             {
                 case Cells.Layout.Mode.Single:
@@ -246,8 +247,8 @@ namespace SadConsole.UI.Themes
 
         private static void AdjustControlSurface(Table table, Table.Cell cell, ColoredGlyph customStateAppearance)
         {
-            var width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-            var height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+            int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
+            int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -265,8 +266,8 @@ namespace SadConsole.UI.Themes
 
         private static void HideVisualCell(Table table, Table.Cell cell)
         {
-            var width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-            var height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+            int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
+            int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -285,21 +286,21 @@ namespace SadConsole.UI.Themes
         {
             if (string.IsNullOrWhiteSpace(cell.Text) || (cell.IsSettingsInitialized && !cell.Settings.IsVisible)) return;
 
-            var width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-            var height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+            int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
+            int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
 
             // Handle alignments
-            var vAlign = cell.IsSettingsInitialized ? cell.Settings.VerticalAlignment : default;
-            var hAlign = cell.IsSettingsInitialized ? cell.Settings.HorizontalAlignment : default;
+            Table.Cell.Options.VerticalAlign vAlign = cell.IsSettingsInitialized ? cell.Settings.VerticalAlignment : default;
+            Table.Cell.Options.HorizontalAlign hAlign = cell.IsSettingsInitialized ? cell.Settings.HorizontalAlignment : default;
             GetTotalCellSize(cell, width, height, out int totalWidth, out int totalHeight);
 
             // Set the amount of characters to split on for wrapping
-            var maxCharsPerLine = cell.IsSettingsInitialized ? (cell.Settings.MaxCharactersPerLine ?? width) : width;
+            int maxCharsPerLine = cell.IsSettingsInitialized ? (cell.Settings.MaxCharactersPerLine ?? width) : width;
             if (maxCharsPerLine > width)
                 maxCharsPerLine = width;
 
             // Split the character array into parts based on cell width
-            var splittedTextArray = WordWrap(cell.Text, maxCharsPerLine).ToArray();
+            string[] splittedTextArray = WordWrap(cell.Text, maxCharsPerLine).ToArray();
             for (int y = 0; y < height; y++)
             {
                 // Don't go out of bounds of the cell height
@@ -308,12 +309,12 @@ namespace SadConsole.UI.Themes
 
                 // Print each array to the correct y index
                 // Remove spaces in the front on the newline
-                var textArr = splittedTextArray[y].SkipWhile(a => a == ' ').ToArray();
-                var startPosX = GetHorizontalAlignment(hAlign, totalWidth, textArr);
-                var startPosY = GetVerticalAlignment(vAlign, totalHeight, splittedTextArray);
+                char[] textArr = splittedTextArray[y].SkipWhile(a => a == ' ').ToArray();
+                int startPosX = GetHorizontalAlignment(hAlign, totalWidth, textArr);
+                int startPosY = GetVerticalAlignment(vAlign, totalHeight, splittedTextArray);
 
                 int index = 0;
-                foreach (var character in textArr)
+                foreach (char character in textArr)
                 {
                     table.Surface.SetGlyph(startPosX + cell.Position.X + index++, startPosY + cell.Position.Y + y, character);
                 }
@@ -354,7 +355,7 @@ namespace SadConsole.UI.Themes
                         line = string.Empty;
                     }
                     availableLength = maxCharsPerLine;
-                    for (var count = 0; count < word.Length; count++)
+                    for (int count = 0; count < word.Length; count++)
                     {
                         char ch = word.ElementAt(count);
 
@@ -376,14 +377,14 @@ namespace SadConsole.UI.Themes
                 if ((wordLength + 1) <= availableLength)
                 {
                     line += word + " ";
-                    availableLength -= (wordLength + 1);
+                    availableLength -= wordLength + 1;
                 }
                 else
                 {
                     availableLength = maxCharsPerLine;
                     yield return line;
                     line = word + " ";
-                    availableLength -= (wordLength + 1);
+                    availableLength -= wordLength + 1;
                 }
             }
 
@@ -439,16 +440,19 @@ namespace SadConsole.UI.Themes
 
         private static IEnumerable<IEnumerable<T>> Split<T>(T[] array, int size)
         {
-            for (var i = 0; i < (float)array.Length / size; i++)
+            for (int i = 0; i < (float)array.Length / size; i++)
             {
                 yield return array.Skip(i * size).Take(size);
             }
         }
 
         /// <inheritdoc />
-        public override ThemeBase Clone() => new TableTheme((ScrollBarTheme)ScrollBarTheme.Clone())
+        public override ThemeBase Clone()
         {
-            ControlThemeState = ControlThemeState.Clone(),
-        };
+            return new TableTheme((ScrollBarTheme)ScrollBarTheme.Clone())
+            {
+                ControlThemeState = ControlThemeState.Clone(),
+            };
+        }
     }
 }
