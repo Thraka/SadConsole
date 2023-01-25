@@ -10,9 +10,9 @@ namespace SadConsole.Tests.UI;
 /// Tests the code structure of the table, that is accessible to the users
 /// </summary>
 [TestClass]
-public class TableUsageTests : TableTestsBase
+public class TableTests : TableTestsBase
 {
-    public TableUsageTests()
+    public TableTests()
         : base(60, 40, 10, 4)
     { }
 
