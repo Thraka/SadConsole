@@ -2,11 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 
-[assembly:InternalsVisibleTo("SadConsole.Tests")]
 namespace SadConsole.UI.Controls;
 
 /// <summary>
