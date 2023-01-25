@@ -7,13 +7,34 @@ using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls
 {
+    /// <summary>
+    /// A scrollable table control.
+    /// </summary>
     public class Table : CompositeControl
     {
+        /// <summary>
+        /// The cells collection used to modify the table cells
+        /// </summary>
         public Cells Cells { get; }
+        /// <summary>
+        /// The default foreground color used for the table foreground and newly created cells
+        /// </summary>
         public Color DefaultForeground { get; set; }
+        /// <summary>
+        /// The default background color used for the table background and newly created cells
+        /// </summary>
         public Color DefaultBackground { get; set; }
+        /// <summary>
+        /// The default size a cell gets when it is newly created
+        /// </summary>
         public Point DefaultCellSize { get; set; }
+        /// <summary>
+        /// The default visual hovering mode when hovering over cells
+        /// </summary>
         public Cells.Layout.Mode DefaultHoverMode { get; set; }
+        /// <summary>
+        /// The default visual selection mode when selecting a cell
+        /// </summary>
         public Cells.Layout.Mode DefaultSelectionMode { get; set; }
 
         private bool _useMouse = true;
@@ -168,6 +189,11 @@ namespace SadConsole.UI.Controls
             IsDirty = true;
         }
 
+        /// <summary>
+        /// Creates a new table with the default SadConsole colors, and cell size of (1 width, 1 height)
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public Table(int width, int height) : base(width, height)
         {
             Cells = new Cells(this);
@@ -176,15 +202,28 @@ namespace SadConsole.UI.Controls
             DefaultCellSize = new Point(1, 1);
         }
 
+        /// <summary>
+        /// Creates a new table with custom cell width and cell height params; Uses the default SadConsole colors
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="cellWidth"></param>
+        /// <param name="cellHeight"></param>
         public Table(int width, int height, int cellWidth, int cellHeight = 1)
             : this(width, height)
         {
-            if (cellWidth < 1 || cellHeight < 1)
-                throw new Exception("Cell width/height cannot be smaller than 1.");
-
             DefaultCellSize = new Point(cellWidth, cellHeight);
         }
 
+        /// <summary>
+        /// Creates a new table with extra params to set the base default values of the table
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="cellWidth"></param>
+        /// <param name="defaultForeground"></param>
+        /// <param name="defaultBackground"></param>
+        /// <param name="cellHeight"></param>
         public Table(int width, int height, int cellWidth, Color defaultForeground, Color defaultBackground, int cellHeight = 1)
             : this(width, height, cellWidth, cellHeight)
         {
@@ -421,7 +460,7 @@ namespace SadConsole.UI.Controls
         }
 
         /// <summary>
-        /// Sets the scrollbar's theme to the current theme's <see cref="ListBoxTheme.ScrollBarTheme"/>.
+        /// Sets the scrollbar's theme to the current theme's <see cref="TableTheme.ScrollBarTheme"/>.
         /// </summary>
         protected override void OnThemeChanged()
         {
@@ -443,6 +482,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseIn(ControlMouseState state)
         {
             base.OnMouseIn(state);
@@ -502,6 +542,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnLeftMouseClicked(ControlMouseState state)
         {
             base.OnLeftMouseClicked(state);
@@ -542,6 +583,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnRightMouseClicked(ControlMouseState state)
         {
             base.OnRightMouseClicked(state);
@@ -552,6 +594,7 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseExit(ControlMouseState state)
         {
             base.OnMouseExit(state);
@@ -590,8 +633,14 @@ namespace SadConsole.UI.Controls
         }
 
         #region Event Args
+        /// <summary>
+        /// Cell args for a table event
+        /// </summary>
         public class CellEventArgs : EventArgs
         {
+            /// <summary>
+            /// The cell that triggered this event
+            /// </summary>
             public readonly Cell Cell;
 
             internal CellEventArgs(Cell cell)
@@ -600,8 +649,12 @@ namespace SadConsole.UI.Controls
             }
         }
 
+        /// <inheritdoc/>
         public sealed class CellChangedEventArgs : CellEventArgs
         {
+            /// <summary>
+            /// The original cell before the event was triggered
+            /// </summary>
             public readonly Cell PreviousCell;
 
             internal CellChangedEventArgs(Cell previousCell, Cell cell)
@@ -612,15 +665,33 @@ namespace SadConsole.UI.Controls
         }
         #endregion
 
+        /// <summary>
+        /// A basic cell used in the Table control
+        /// </summary>
         public sealed class Cell : IEquatable<Cell>
         {
             internal Point Position { get; set; }
+            /// <summary>
+            /// The row this cell is part of
+            /// </summary>
             public int Row { get; }
+            /// <summary>
+            /// The column this cell is part of
+            /// </summary>
             public int Column { get; }
-            public int Height => Table.Cells.GetSizeOrDefault(Row, Cells.Layout.LayoutType.Row);
-            public int Width => Table.Cells.GetSizeOrDefault(Column, Cells.Layout.LayoutType.Column);
+            /// <summary>
+            /// The height of the row this cell is part of
+            /// </summary>
+            public int Height => _table.Cells.GetSizeOrDefault(Row, Cells.Layout.LayoutType.Row);
+            /// <summary>
+            /// The width of the column this cell is part of
+            /// </summary>
+            public int Width => _table.Cells.GetSizeOrDefault(Column, Cells.Layout.LayoutType.Column);
 
             private Color _foreground;
+            /// <summary>
+            /// The foreground color used by the cell
+            /// </summary>
             public Color Foreground
             {
                 get => _foreground;
@@ -628,6 +699,9 @@ namespace SadConsole.UI.Controls
             }
 
             private Color _background;
+            /// <summary>
+            /// The background color used by the cell
+            /// </summary>
             public Color Background
             {
                 get => _background;
@@ -635,6 +709,9 @@ namespace SadConsole.UI.Controls
             }
 
             private string _text;
+            /// <summary>
+            /// The text shown within the cell
+            /// </summary>
             public string Text
             {
                 get => _text;
@@ -642,14 +719,17 @@ namespace SadConsole.UI.Controls
             }
 
             private Options _settings;
+            /// <summary>
+            /// The setting options used by the cell to define its layout
+            /// </summary>
             public Options Settings => _settings ??= new Options(this);
 
             private readonly bool _addToTableIfModified;
-            internal readonly Table Table;
+            internal readonly Table _table;
 
             internal Cell(int row, int col, Table table, string text, bool addToTableIfModified = true)
             {
-                Table = table;
+                _table = table;
                 _text = text;
                 _foreground = table.DefaultForeground;
                 _background = table.DefaultBackground;
@@ -676,33 +756,35 @@ namespace SadConsole.UI.Controls
 
             internal void AddToTableIfNotExists()
             {
-                if (_addToTableIfModified && Table.Cells.GetIfExists(Row, Column) == null)
-                    Table.Cells[Row, Column] = this;
+                if (_addToTableIfModified && _table.Cells.GetIfExists(Row, Column) == null)
+                    _table.Cells[Row, Column] = this;
             }
 
             internal bool IsSettingsInitialized => _settings != null;
 
+            /// <inheritdoc/>
             public static bool operator ==(Cell a, Cell b)
             {
                 bool refEqualNullA = a is null;
                 bool refEqualNullB = b is null;
                 return (refEqualNullA && refEqualNullB) || (!refEqualNullA && !refEqualNullB && a.Equals(b));
             }
+            /// <inheritdoc/>
             public static bool operator !=(Cell a, Cell b)
             {
                 return !(a == b);
             }
-
+            /// <inheritdoc/>
             public bool Equals(Cell cell)
             {
                 return cell != null && cell.Column == Column && cell.Row == Row;
             }
-
+            /// <inheritdoc/>
             public override bool Equals(object obj)
             {
                 return obj is Cell cell && Equals(cell);
             }
-
+            /// <inheritdoc/>
             public override int GetHashCode()
             {
                 return HashCode.Combine(Column, Row);
@@ -742,13 +824,19 @@ namespace SadConsole.UI.Controls
                     field = newValue;
                     if (usedForLayout) return;
                     cell.AddToTableIfNotExists();
-                    cell.Table.IsDirty = true;
+                    cell._table.IsDirty = true;
                 }
             }
 
+            /// <summary>
+            /// A collection of settings that are used by <see cref="Table.Cell"/>
+            /// </summary>
             public class Options : IEquatable<Options>
             {
                 private HorizontalAlign _horizontalAlignment;
+                /// <summary>
+                /// The horizontal text alignment setting; Default: left
+                /// </summary>
                 public HorizontalAlign HorizontalAlignment
                 {
                     get => _horizontalAlignment;
@@ -756,6 +844,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private VerticalAlign _verticalAlignment;
+                /// <summary>
+                /// The vertical text alignment setting; Default: left
+                /// </summary>
                 public VerticalAlign VerticalAlignment
                 {
                     get => _verticalAlignment;
@@ -763,6 +854,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private bool _useFakeLayout = false;
+                /// <summary>
+                /// Defines if the cell should also trigger the fake layout event if the option is enabled on the table; Default: false
+                /// </summary>
                 public bool UseFakeLayout
                 {
                     get => _useFakeLayout;
@@ -770,6 +864,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private int? _maxCharactersPerLine;
+                /// <summary>
+                /// The maximum characters this cell can show per line; Default: cell width
+                /// </summary>
                 public int? MaxCharactersPerLine
                 {
                     get => _maxCharactersPerLine;
@@ -777,6 +874,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private bool _interactable = true;
+                /// <summary>
+                /// Defines if the cell can interact with mouse events; Default: true
+                /// </summary>
                 public bool Interactable
                 {
                     get => _interactable;
@@ -784,6 +884,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private bool _selectable = true;
+                /// <summary>
+                /// Defines if the cell can be selected by the mouse; Default: true
+                /// </summary>
                 public bool Selectable
                 {
                     get => _selectable;
@@ -791,6 +894,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private bool _isVisible = true;
+                /// <summary>
+                /// Defines if the cell should be rendered to the surface; Default: true
+                /// </summary>
                 public bool IsVisible
                 {
                     get => _isVisible;
@@ -798,6 +904,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private Cells.Layout.Mode _selectionMode;
+                /// <summary>
+                /// Defines the selection visual mode when the cell is selected; Default: single
+                /// </summary>
                 public Cells.Layout.Mode SelectionMode
                 {
                     get => _selectionMode;
@@ -805,6 +914,9 @@ namespace SadConsole.UI.Controls
                 }
 
                 private Cells.Layout.Mode _hoverMode;
+                /// <summary>
+                /// Defines the hover visual mode when the cell is hovered over by the mouse; Default: single
+                /// </summary>
                 public Cells.Layout.Mode HoverMode
                 {
                     get => _hoverMode;
@@ -818,10 +930,14 @@ namespace SadConsole.UI.Controls
                 {
                     _usedForLayout = false;
                     _cell = cell;
-                    _hoverMode = _cell.Table.DefaultHoverMode;
-                    _selectionMode = _cell.Table.DefaultSelectionMode;
+                    _hoverMode = _cell._table.DefaultHoverMode;
+                    _selectionMode = _cell._table.DefaultSelectionMode;
                 }
 
+                /// <summary>
+                /// Creates new options based on the default values of the table
+                /// </summary>
+                /// <param name="table"></param>
                 public Options(Table table)
                 {
                     _usedForLayout = true;
@@ -829,31 +945,57 @@ namespace SadConsole.UI.Controls
                     _selectionMode = table.DefaultSelectionMode;
                 }
 
+                /// <summary>
+                /// Alignment enum for the horizontal axis
+                /// </summary>
                 public enum HorizontalAlign
                 {
+                    /// <summary>
+                    /// Text will be aligned to the left side of the cell
+                    /// </summary>
                     Left = 0,
+                    /// <summary>
+                    /// Text will be aligned within the center of the cell
+                    /// </summary>
                     Center,
+                    /// <summary>
+                    /// Text will be aligned to the right side of the cell
+                    /// </summary>
                     Right
                 }
 
+                /// <summary>
+                /// Alignment enum for the vertical axis
+                /// </summary>
                 public enum VerticalAlign
                 {
+                    /// <summary>
+                    /// Text will be aligned to the top of the cell
+                    /// </summary>
                     Top = 0,
+                    /// <summary>
+                    /// Text will be aligned in the center of the cell
+                    /// </summary>
                     Center,
+                    /// <summary>
+                    /// Text will be aligned to the bottom of the cell
+                    /// </summary>
                     Bottom
                 }
 
+                /// <inheritdoc/>
                 public static bool operator ==(Options a, Options b)
                 {
                     bool refEqualNullA = a is null;
                     bool refEqualNullB = b is null;
                     return (refEqualNullA && refEqualNullB) || (!refEqualNullA && !refEqualNullB && a.Equals(b));
                 }
+                /// <inheritdoc/>
                 public static bool operator !=(Options a, Options b)
                 {
                     return !(a == b);
                 }
-
+                /// <inheritdoc/>
                 public bool Equals(Options other)
                 {
                     return other != null
@@ -867,12 +1009,12 @@ namespace SadConsole.UI.Controls
                         other.Interactable == Interactable &&
                         other.UseFakeLayout == UseFakeLayout;
                 }
-
+                /// <inheritdoc/>
                 public override bool Equals(object obj)
                 {
                     return obj is Options to && Equals(to);
                 }
-
+                /// <inheritdoc/>
                 public override int GetHashCode()
                 {
                     return HashCode.Combine(new object[]
@@ -905,6 +1047,9 @@ namespace SadConsole.UI.Controls
         }
     }
 
+    /// <summary>
+    /// A collection class that contains all the cells of the <see cref="Table"/> and methods to modify them.
+    /// </summary>
     public sealed class Cells : IEnumerable<Table.Cell>
     {
         private readonly Table _table;
@@ -912,6 +1057,12 @@ namespace SadConsole.UI.Controls
         internal readonly Dictionary<int, Layout> _columnLayout = new Dictionary<int, Layout>();
         internal readonly Dictionary<int, Layout> _rowLayout = new Dictionary<int, Layout>();
 
+        /// <summary>
+        /// Gets or creates a new cell on the specified row and column
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
         public Table.Cell this[int row, int col]
         {
             get => GetOrCreateCell(row, col);
@@ -1154,7 +1305,7 @@ namespace SadConsole.UI.Controls
             _table._checkScrollBarVisibility = true;
             _table.IsDirty = true;
         }
-
+        /// <inheritdoc/>
         public IEnumerator<Table.Cell> GetEnumerator()
         {
             return _cells.Values.GetEnumerator();
@@ -1166,9 +1317,15 @@ namespace SadConsole.UI.Controls
         }
         #endregion
 
+        /// <summary>
+        /// Defines the layout for a row or a column defined in <see cref="Table.Cells"/>
+        /// </summary>
         public class Layout
         {
             private int _size;
+            /// <summary>
+            /// The size of the row or column
+            /// </summary>
             public int Size
             {
                 get => _size;
@@ -1184,10 +1341,19 @@ namespace SadConsole.UI.Controls
                 }
             }
 
+            /// <summary>
+            /// The foreground color used by the row or column
+            /// </summary>
             public Color? Foreground { get; set; }
+            /// <summary>
+            /// The background color used by the row or column
+            /// </summary>
             public Color? Background { get; set; }
 
             private Table.Cell.Options _settings;
+            /// <summary>
+            /// The setting options used by the row or column
+            /// </summary>
             public Table.Cell.Options Settings
             {
                 get => _settings ??= new Table.Cell.Options(_table);
@@ -1255,14 +1421,32 @@ namespace SadConsole.UI.Controls
                 Row
             }
 
+            /// <summary>
+            /// Defines several visual modes
+            /// </summary>
             public enum Mode
             {
+                /// <summary>
+                /// Only a single cell will be visualized
+                /// </summary>
                 Single = 0,
+                /// <summary>
+                /// Nothing will be visualized
+                /// </summary>
                 None,
+                /// <summary>
+                /// The entire row of the cell will be visualized
+                /// </summary>
                 EntireRow,
+                /// <summary>
+                /// The entire column of the cell will be visualized
+                /// </summary>
                 EntireColumn
             }
 
+            /// <summary>
+            /// An enumerable range that contains the layouts of all the rows and columns defined by the size of the range method within <see cref="Table.Cells"/>
+            /// </summary>
             public class RangeEnumerable : IEnumerable<Layout>
             {
                 private readonly IEnumerable<Layout> _layouts;
@@ -1272,12 +1456,20 @@ namespace SadConsole.UI.Controls
                     _layouts = layouts;
                 }
 
+                /// <summary>
+                /// Sets the layout of all the columns and rows for the given params
+                /// </summary>
+                /// <param name="size"></param>
+                /// <param name="foreground"></param>
+                /// <param name="background"></param>
+                /// <param name="settings"></param>
                 public void SetLayout(int? size = null, Color? foreground = null, Color? background = null, Table.Cell.Options settings = null)
                 {
                     foreach (Layout layout in _layouts)
                         layout.SetLayout(size, foreground, background, settings);
                 }
 
+                /// <inheritdoc/>
                 public IEnumerator<Layout> GetEnumerator()
                 {
                     return _layouts.GetEnumerator();

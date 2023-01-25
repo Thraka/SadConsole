@@ -5,18 +5,26 @@ using SadConsole.UI.Controls;
 
 namespace SadConsole.UI.Themes
 {
+    /// <summary>
+    /// The theme for a Table control.
+    /// </summary>
     public class TableTheme : ThemeBase
     {
         /// <summary>
         /// The appearance of the scrollbar used by the table control.
         /// </summary>
-        public ScrollBarTheme ScrollBarTheme { get; set; }
+        public ScrollBarTheme ScrollBarTheme { get; private set; }
 
+        /// <summary>
+        /// Creates a new theme used by the <see cref="Table"/>.
+        /// </summary>
+        /// <param name="scrollBarTheme"></param>
         public TableTheme(ScrollBarTheme scrollBarTheme)
         {
             ScrollBarTheme = scrollBarTheme;
         }
 
+        /// <inheritdoc/>
         public override void Attached(ControlBase control)
         {
             if (!(control is Table))
@@ -25,6 +33,7 @@ namespace SadConsole.UI.Themes
             base.Attached(control);
         }
 
+        /// <inheritdoc/>
         public override void RefreshTheme(Colors colors, ControlBase control)
         {
             base.RefreshTheme(colors, control);
@@ -40,6 +49,84 @@ namespace SadConsole.UI.Themes
                     ScrollBarTheme?.RefreshTheme(_colorsLastUsed, scrollBar);
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+        {
+            if (!(control is Table table) || !table.IsDirty)
+                return;
+
+            RefreshTheme(control.FindThemeColors(), control);
+
+            // Draw the basic table surface foreground and background, and clear the glyphs
+            _ = control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
+
+            int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
+            int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
+
+            if (table.DrawFakeCells && maxColumnsWidth < table.Width)
+                maxColumnsWidth = table.Width;
+            if (table.DrawFakeCells && maxRowsHeight < table.Height)
+                maxRowsHeight = table.Height;
+
+            SetScrollBarVisibility(table, maxRowsHeight, maxColumnsWidth);
+
+            int columns = maxColumnsWidth;
+            int rows = maxRowsHeight;
+            int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
+            int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
+            for (int row = 0; row < rows; row++)
+            {
+                int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
+                int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
+                int fullRowSize = 0;
+                for (int col = 0; col < columns; col++)
+                {
+                    int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
+                    int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
+                    SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
+                        verticalScrollBarValue, horizontalScrollBarValue);
+
+                    col += columnSize - 1;
+
+                    // Don't attempt to render off-screen rows/columns
+                    if (cellPosition.X > table.Width || cellPosition.Y > table.Height)
+                    {
+                        colIndex++;
+                        continue;
+                    }
+
+                    Table.Cell cell = table.Cells.GetIfExists(rowIndex, colIndex);
+                    bool fakeCellCreated = cell == null;
+                    cell ??= new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
+                    {
+                        Position = cellPosition
+                    };
+
+                    if (!table.DrawFakeCells && fakeCellCreated)
+                    {
+                        HideVisualCell(table, cell);
+
+                        colIndex++;
+                        continue;
+                    }
+
+                    // This method raises an event that the user can use to modify the cell layout
+                    if (fakeCellCreated || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
+                        table.DrawFakeCell(cell);
+
+                    AdjustControlSurface(table, cell, GetCustomStateAppearance(table, cell));
+                    PrintText(table, cell);
+
+                    colIndex++;
+                }
+
+                row += fullRowSize - 1;
+                rowIndex++;
+            }
+
+            control.IsDirty = false;
         }
 
         /// <summary>
@@ -123,84 +210,6 @@ namespace SadConsole.UI.Themes
                     SetScrollBarPropertiesOnTable(table, table.HorizontalScrollBar, maxRowsHeight, maxColumnsWidth);
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public override void UpdateAndDraw(ControlBase control, TimeSpan time)
-        {
-            if (!(control is Table table) || !table.IsDirty)
-                return;
-
-            RefreshTheme(control.FindThemeColors(), control);
-
-            // Draw the basic table surface foreground and background, and clear the glyphs
-            _ = control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
-
-            int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
-            int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
-
-            if (table.DrawFakeCells && maxColumnsWidth < table.Width)
-                maxColumnsWidth = table.Width;
-            if (table.DrawFakeCells && maxRowsHeight < table.Height)
-                maxRowsHeight = table.Height;
-
-            SetScrollBarVisibility(table, maxRowsHeight, maxColumnsWidth);
-
-            int columns = maxColumnsWidth;
-            int rows = maxRowsHeight;
-            int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
-            int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
-            for (int row = 0; row < rows; row++)
-            {
-                int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
-                int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
-                int fullRowSize = 0;
-                for (int col = 0; col < columns; col++)
-                {
-                    int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
-                    int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
-                    SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
-                        verticalScrollBarValue, horizontalScrollBarValue);
-
-                    col += columnSize - 1;
-
-                    // Don't attempt to render off-screen rows/columns
-                    if (cellPosition.X > table.Width || cellPosition.Y > table.Height)
-                    {
-                        colIndex++;
-                        continue;
-                    }
-
-                    Table.Cell cell = table.Cells.GetIfExists(rowIndex, colIndex);
-                    bool fakeCellCreated = cell == null;
-                    cell ??= new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
-                    {
-                        Position = cellPosition
-                    };
-
-                    if (!table.DrawFakeCells && fakeCellCreated)
-                    {
-                        HideVisualCell(table, cell);
-
-                        colIndex++;
-                        continue;
-                    }
-
-                    // This method raises an event that the user can use to modify the cell layout
-                    if (fakeCellCreated || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
-                        table.DrawFakeCell(cell);
-
-                    AdjustControlSurface(table, cell, GetCustomStateAppearance(table, cell));
-                    PrintText(table, cell);
-
-                    colIndex++;
-                }
-
-                row += fullRowSize - 1;
-                rowIndex++;
-            }
-
-            control.IsDirty = false;
         }
 
         private ColoredGlyph GetCustomStateAppearance(Table table, Table.Cell cell)
@@ -436,14 +445,6 @@ namespace SadConsole.UI.Themes
                     break;
             }
             return position;
-        }
-
-        private static IEnumerable<IEnumerable<T>> Split<T>(T[] array, int size)
-        {
-            for (int i = 0; i < (float)array.Length / size; i++)
-            {
-                yield return array.Skip(i * size).Take(size);
-            }
         }
 
         /// <inheritdoc />
