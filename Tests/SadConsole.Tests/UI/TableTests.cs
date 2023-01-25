@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
-using System.Linq;
 
 namespace SadConsole.Tests.UI;
 
@@ -593,19 +593,19 @@ public abstract class TableTestsBase
 
     protected static int GetLastVisibleCellSize(Table table, Orientation orientation, bool increment)
     {
-        var type = orientation == Orientation.Vertical ?
+        Cells.Layout.LayoutType type = orientation == Orientation.Vertical ?
             Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-        var isRowType = type == Cells.Layout.LayoutType.Row;
-        var cellGroups = table.Cells.GroupBy(a => isRowType ? a.Row : a.Column);
-        var orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
+        bool isRowType = type == Cells.Layout.LayoutType.Row;
+        System.Collections.Generic.IEnumerable<IGrouping<int, Table.Cell>> cellGroups = table.Cells.GroupBy(a => isRowType ? a.Row : a.Column);
+        IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
             cellGroups.OrderByDescending(a => a.Key);
 
-        foreach (var group in orderedCells)
+        foreach (IGrouping<int, Table.Cell> group in orderedCells)
         {
-            foreach (var cell in group)
+            foreach (Table.Cell cell in group)
             {
-                var partialOverlap = false;
-                var indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
+                bool partialOverlap = false;
+                int indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
                 if (!increment)
                 {
                     // Check if cell position is the last cell on screen
@@ -616,12 +616,12 @@ public abstract class TableTestsBase
                 {
                     // Check if cell position is the next off-screen
                     // >= because it assumes the cell starts at Height, and thats off screen
-                    var isPositionOfScreen = isRowType ? indexSizeCell >= table.Height : indexSizeCell >= table.Width;
+                    bool isPositionOfScreen = isRowType ? indexSizeCell >= table.Height : indexSizeCell >= table.Width;
                     if (!isPositionOfScreen)
                     {
                         // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                         // which means its not off screen
-                        var realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+                        int realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
                         if (realCellPosition > (isRowType ? table.Height : table.Width))
                         {
                             partialOverlap = true;
@@ -633,32 +633,32 @@ public abstract class TableTestsBase
                     }
                 }
 
-                var size = table.Cells.GetSizeOrDefault(indexSizeCell, type);
+                int size = table.Cells.GetSizeOrDefault(indexSizeCell, type);
                 if (partialOverlap)
                 {
-                    var overlapAmount = indexSizeCell + size - (isRowType ? table.Height : table.Width);
+                    int overlapAmount = indexSizeCell + size - (isRowType ? table.Height : table.Width);
                     size -= overlapAmount;
                 }
                 return increment ? size : -size;
             }
         }
-        var defaultSize = type == Cells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
+        int defaultSize = type == Cells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
         return increment ? defaultSize : -defaultSize;
     }
 
     protected static int GetMaximumScrollBarItems(Table table, Orientation orientation)
     {
-        var indexes = orientation == Orientation.Vertical ?
+        System.Collections.Generic.IEnumerable<IGrouping<int, Table.Cell>> indexes = orientation == Orientation.Vertical ?
             table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
-        var orderedIndex = indexes.OrderBy(a => a.Key);
+        IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
 
-        var layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-        var maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
-        var totalSize = 0;
-        var items = 0;
-        foreach (var index in orderedIndex)
+        Cells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+        int maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
+        int totalSize = 0;
+        int items = 0;
+        foreach (IGrouping<int, Table.Cell> index in orderedIndex)
         {
-            var size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
+            int size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
             totalSize += size;
 
             if (totalSize > maxSize)
