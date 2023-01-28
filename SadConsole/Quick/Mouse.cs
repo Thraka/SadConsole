@@ -14,25 +14,29 @@ public static class Mouse
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void WithMouse(this IScreenObject screenObject, Func<IScreenObject, MouseScreenObjectState, bool> handler)
+    public static IScreenObject WithMouse(this IScreenObject screenObject, Func<IScreenObject, MouseScreenObjectState, bool> handler)
     {
         foreach (MouseHook hook in screenObject.GetSadComponents<MouseHook>())
         {
             if (hook.Callback == handler)
-                return;
+                return screenObject;
         }
 
         screenObject.SadComponents.Add(new MouseHook(handler));
+
+        return screenObject;
     }
 
     /// <summary>
     /// Removes all of the mouse hooks added with <see cref="WithMouse(IScreenObject, Func{IScreenObject, MouseScreenObjectState, bool})"/>.
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
-    public static void RemoveMouseHooks(this IScreenObject screenObject)
+    public static IScreenObject RemoveMouseHooks(this IScreenObject screenObject)
     {
         foreach (MouseHook hook in screenObject.GetSadComponents<MouseHook>().ToArray())
             screenObject.SadComponents.Remove(hook);
+
+        return screenObject;
     }
 
     /// <summary>
@@ -40,7 +44,7 @@ public static class Mouse
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void RemoveMouseHook(this IScreenObject screenObject, Func<IScreenObject, MouseScreenObjectState, bool> handler)
+    public static IScreenObject RemoveMouseHook(this IScreenObject screenObject, Func<IScreenObject, MouseScreenObjectState, bool> handler)
     {
         MouseHook? existingHook = null;
 
@@ -55,6 +59,8 @@ public static class Mouse
 
         if (existingHook != null)
             screenObject.SadComponents.Remove(existingHook);
+
+        return screenObject;
     }
 
     private class MouseHook : Components.MouseConsoleComponent

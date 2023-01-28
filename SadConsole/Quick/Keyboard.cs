@@ -13,25 +13,29 @@ public static class Keyboard
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void WithKeyboard(this IScreenObject screenObject, Func<IScreenObject, Input.Keyboard, bool> handler)
+    public static IScreenObject WithKeyboard(this IScreenObject screenObject, Func<IScreenObject, Input.Keyboard, bool> handler)
     {
         foreach (KeyboardHook hook in screenObject.GetSadComponents<KeyboardHook>())
         {
             if (hook.Method == handler)
-                return;
+                return screenObject;
         }
 
         screenObject.SadComponents.Add(new KeyboardHook(handler));
+
+        return screenObject;
     }
 
     /// <summary>
     /// Removes all of the keyboard hooks added with <see cref="WithKeyboard(IScreenObject, Func{IScreenObject, Input.Keyboard, bool})"/>.
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
-    public static void RemoveKeyboardHooks(this IScreenObject screenObject)
+    public static IScreenObject RemoveKeyboardHooks(this IScreenObject screenObject)
     {
         foreach (KeyboardHook hook in screenObject.GetSadComponents<KeyboardHook>().ToArray())
             screenObject.SadComponents.Remove(hook);
+
+        return screenObject;
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public static class Keyboard
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void RemoveKeyboardHook(this IScreenObject screenObject, Func<IScreenObject, Input.Keyboard, bool> handler)
+    public static IScreenObject RemoveKeyboardHook(this IScreenObject screenObject, Func<IScreenObject, Input.Keyboard, bool> handler)
     {
         KeyboardHook? existingHook = null;
 
@@ -54,6 +58,8 @@ public static class Keyboard
 
         if (existingHook != null)
             screenObject.SadComponents.Remove(existingHook);
+
+        return screenObject;
     }
 
     private class KeyboardHook : Components.KeyboardConsoleComponent
