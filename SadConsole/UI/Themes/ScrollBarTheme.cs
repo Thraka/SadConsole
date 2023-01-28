@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -88,78 +89,114 @@ public class ScrollBarTheme : ThemeBase
         RefreshTheme(control.FindThemeColors(), control);
 
         ColoredGlyph appearance = ControlThemeState.GetStateAppearance(scrollbar.State);
-
         scrollbar.Surface.Clear();
 
-        if (scrollbar.Orientation == Orientation.Horizontal)
+        IFont? font = scrollbar.AlternateFont ?? scrollbar.Parent?.Host?.ParentConsole?.Font;
+
+        if (font != null)
         {
-            for (int y = 0; y < scrollbar.Height; y++)
+            if (scrollbar.Orientation == Orientation.Horizontal)
             {
-                scrollbar.Surface.SetCellAppearance(0, y, appearance);
-                scrollbar.Surface.SetGlyph(0, y, StartButtonVerticalGlyph);
+                // Handle the arrows
+                if (font.IsSadExtended && scrollbar.Height == 2)
+                {
+                    GlyphDefinition glyph = font.GetGlyphDefinition("ui-arrow-left+top");
+                    scrollbar.Surface.SetGlyph(0, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                    glyph = font.GetGlyphDefinition("ui-arrow-left+bottom");
+                    scrollbar.Surface.SetGlyph(0, 1, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
 
-                scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, y, appearance);
-                scrollbar.Surface.SetGlyph(scrollbar.Width - 1, y, EndButtonVerticalGlyph);
-            }
-
-            if (scrollbar.SliderBarSize != 0)
-            {
-                for (int i = 1; i <= scrollbar.SliderBarSize; i++)
+                    glyph = font.GetGlyphDefinition("ui-arrow-right+top");
+                    scrollbar.Surface.SetGlyph(scrollbar.Width - 1, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                    glyph = font.GetGlyphDefinition("ui-arrow-right+bottom");
+                    scrollbar.Surface.SetGlyph(scrollbar.Width - 1, 1, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                }
+                else
                 {
                     for (int y = 0; y < scrollbar.Height; y++)
                     {
-                        scrollbar.Surface.SetCellAppearance(i, y, appearance);
-                        scrollbar.Surface.SetGlyph(i, y, BarGlyph);
+                        scrollbar.Surface.SetCellAppearance(0, y, appearance);
+                        scrollbar.Surface.SetGlyph(0, y, StartButtonVerticalGlyph);
+
+                        scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, y, appearance);
+                        scrollbar.Surface.SetGlyph(scrollbar.Width - 1, y, EndButtonVerticalGlyph);
                     }
                 }
 
-                if (scrollbar.IsEnabled)
+                if (scrollbar.SliderBarSize != 0)
                 {
-                    for (int y = 0; y < scrollbar.Height; y++)
+                    for (int i = 1; i <= scrollbar.SliderBarSize; i++)
                     {
-                        scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, y, appearance);
-                        scrollbar.Surface.SetGlyph(1 + scrollbar.CurrentSliderPosition, y, SliderGlyph);
+                        for (int y = 0; y < scrollbar.Height; y++)
+                        {
+                            scrollbar.Surface.SetCellAppearance(i, y, appearance);
+                            scrollbar.Surface.SetGlyph(i, y, BarGlyph);
+                        }
+                    }
+
+                    if (scrollbar.IsEnabled)
+                    {
+                        for (int y = 0; y < scrollbar.Height; y++)
+                        {
+                            scrollbar.Surface.SetCellAppearance(1 + scrollbar.CurrentSliderPosition, y, appearance);
+                            scrollbar.Surface.SetGlyph(1 + scrollbar.CurrentSliderPosition, y, SliderGlyph);
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            for (int x = 0; x < scrollbar.Width; x++)
+            else
             {
-                scrollbar.Surface.SetCellAppearance(x, 0, appearance);
-                scrollbar.Surface.SetGlyph(x, 0, StartButtonHorizontalGlyph);
+                // Handle the arrows
+                if (font.IsSadExtended && scrollbar.Width == 2)
+                {
+                    GlyphDefinition glyph = font.GetGlyphDefinition("ui-arrow-up+left");
+                    scrollbar.Surface.SetGlyph(0, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                    glyph = font.GetGlyphDefinition("ui-arrow-up+right");
+                    scrollbar.Surface.SetGlyph(1, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
 
-                scrollbar.Surface.SetCellAppearance(x, scrollbar.Height - 1, appearance);
-                scrollbar.Surface.SetGlyph(x, scrollbar.Height - 1, EndButtonHorizontalGlyph);
-            }
-
-            if (scrollbar.SliderBarSize != 0)
-            {
-                for (int i = 0; i < scrollbar.SliderBarSize; i++)
+                    glyph = font.GetGlyphDefinition("ui-arrow-down+left");
+                    scrollbar.Surface.SetGlyph(0, scrollbar.Height - 1, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                    glyph = font.GetGlyphDefinition("ui-arrow-down+right");
+                    scrollbar.Surface.SetGlyph(1, scrollbar.Height - 1, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
+                }
+                else
                 {
                     for (int x = 0; x < scrollbar.Width; x++)
                     {
-                        scrollbar.Surface.SetCellAppearance(x, i + 1, appearance);
-                        scrollbar.Surface.SetGlyph(x, i + 1, BarGlyph);
+                        scrollbar.Surface.SetCellAppearance(x, 0, appearance);
+                        scrollbar.Surface.SetGlyph(x, 0, StartButtonHorizontalGlyph);
+
+                        scrollbar.Surface.SetCellAppearance(x, scrollbar.Height - 1, appearance);
+                        scrollbar.Surface.SetGlyph(x, scrollbar.Height - 1, EndButtonHorizontalGlyph);
                     }
                 }
 
-                if (scrollbar.IsEnabled)
+                if (scrollbar.SliderBarSize != 0)
                 {
-                    for (int x = 0; x < scrollbar.Width; x++)
+                    for (int i = 0; i < scrollbar.SliderBarSize; i++)
                     {
-                        scrollbar.Surface.SetCellAppearance(x, 1 + scrollbar.CurrentSliderPosition, appearance);
-                        scrollbar.Surface.SetGlyph(x, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
+                        for (int x = 0; x < scrollbar.Width; x++)
+                        {
+                            scrollbar.Surface.SetCellAppearance(x, i + 1, appearance);
+                            scrollbar.Surface.SetGlyph(x, i + 1, BarGlyph);
+                        }
+                    }
+
+                    if (scrollbar.IsEnabled)
+                    {
+                        for (int x = 0; x < scrollbar.Width; x++)
+                        {
+                            scrollbar.Surface.SetCellAppearance(x, 1 + scrollbar.CurrentSliderPosition, appearance);
+                            scrollbar.Surface.SetGlyph(x, 1 + scrollbar.CurrentSliderPosition, SliderGlyph);
+                        }
                     }
                 }
             }
-        }
 
-        if (scrollbar.IsSliding)
-            scrollbar.MouseArea = new Rectangle(-2, -2, scrollbar.Width + 4, scrollbar.Height + 4);
-        else
-            scrollbar.MouseArea = new Rectangle(0, 0, scrollbar.Width, scrollbar.Height);
+            if (scrollbar.IsSliding)
+                scrollbar.MouseArea = new Rectangle(-2, -2, scrollbar.Width + 4, scrollbar.Height + 4);
+            else
+                scrollbar.MouseArea = new Rectangle(0, 0, scrollbar.Width, scrollbar.Height);
+        }
 
         scrollbar.IsDirty = false;
     }

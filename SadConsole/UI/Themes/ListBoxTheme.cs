@@ -119,7 +119,7 @@ public class ListBoxTheme : ThemeBase
             startingRow = 1;
             columnOffset = 1;
             columnEnd = listbox.Width - 2;
-            listbox.Surface.DrawBox(new Rectangle(0, 0, listbox.Width, listbox.Height), new ColoredGlyph(borderAppearance.Foreground, borderAppearance.Background, 0), null, BorderLineStyle);
+            listbox.Surface.DrawBox(new Rectangle(0, 0, listbox.Width, listbox.Height), ShapeParameters.CreateStyledBox(BorderLineStyle, new ColoredGlyph(borderAppearance.Foreground, borderAppearance.Background, 0)));
         }
         else
         {
