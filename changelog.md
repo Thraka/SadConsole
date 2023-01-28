@@ -30,7 +30,10 @@ Normal changes
 - [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
 - [Core] Surface shifting is much more performant (Thanks Chris3606)
 - [Core] `Cursor` has some new methods for erasing: `Erase`, `EraseUp`, `EraseDown`, `EraseLeft`, `EraseRight`, `EraseColumn`, `EraseRow`.
+- [Core] Mouse state object now tracks *ButtonDownDuration times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
+- [Core] Rename RexPaint ToLayersComponent to ToCellSurface.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
+- [UI] Scroll bar supports a thickness other than 1.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
