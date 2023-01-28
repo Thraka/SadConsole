@@ -23,5 +23,6 @@ static class GameSettings
             new DemoMultipleCursors(),
             new DemoEntitySurface(),
             new DemoKeyboardHandlers(),
+            new DemoShapes()
         };
 }
