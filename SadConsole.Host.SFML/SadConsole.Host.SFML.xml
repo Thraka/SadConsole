@@ -362,33 +362,6 @@
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
         </member>
-        <member name="T:SadConsole.Game.ConfigurationFontLoader">
-            <summary>
-            Settings for loading fonts at the start of a game.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
-            <summary>
-            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
-            <summary>
-            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
-            <summary>
-            Sets the default font in SadConsole to the specified font file.
-            </summary>
-            <param name="fontFile"></param>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
-            <summary>
-            Loads the provided font files into SadConsole.
-            </summary>
-            <param name="fontFiles">An array of font files to load.</param>
-        </member>
         <member name="T:SadConsole.Game.Configuration">
             <summary>
             An object used during the creation of the game to configure SadConsole and MonoGame.
@@ -418,6 +391,13 @@
             Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
             </summary>
             <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.IsStartingScreenFocused(System.Boolean)">
+            <summary>
+            Sets the starting screen's <see cref="P:SadConsole.IScreenObject.IsFocused"/> property to the provided value, when it's created.
+            </summary>
+            <param name="value"></param>
             <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
@@ -468,6 +448,33 @@
             </summary>
             <param name="renderWindow">The window to render to.</param>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="T:SadConsole.Game.ConfigurationFontLoader">
+            <summary>
+            Settings for loading fonts at the start of a game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>

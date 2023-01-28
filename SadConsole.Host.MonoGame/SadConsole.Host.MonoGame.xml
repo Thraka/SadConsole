@@ -4,39 +4,6 @@
         <name>SadConsole.Host.MonoGame</name>
     </assembly>
     <members>
-        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
-            <summary>
-            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
-            <summary>
-            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
-            </summary>
-            <param name="image">The texture to process.</param>
-            <param name="font">The font used with the cell surface.</param>
-            <param name="fontSize">The size of the font.</param>
-            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
-            <summary>
-            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
-            </summary>
-            <param name="image">The texture to process.</param>
-            <param name="surface">The surface to draw on.</param>
-            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
-            <param name="font">The font used with the cell surface.</param>
-            <param name="fontSize">The size of the font.</param>
-            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
-            <summary>
-            Saves a texture to a png file.
-            </summary>
-            <param name="target">The texture.</param>
-            <param name="path">The path to a png file.</param>
-        </member>
         <member name="T:SadConsole.Components.DrawImage">
             <summary>
             Draws an image on top of a console.
@@ -157,12 +124,309 @@
             Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Host.MonoGame.Extensions.ToMonoGame(SadConsole.Mirror)">
+        <member name="M:SadConsole.Extensions.ToMonoGame(SadConsole.Mirror)">
             <summary>
             Converts a <see cref="T:SadConsole.Mirror"/> type to a MonoGame <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
             </summary>
             <param name="mirror">The value to convert.</param>
             <returns>The MonoGame equivalent.</returns>
+        </member>
+        <member name="T:SadConsole.FontEditing.ExtensionsFontHost">
+            <summary>
+            Extension methods to handle editing <see cref="T:SadConsole.SadFont"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.SadFont)">
+            <summary>
+            Converts the font's backing texture into a render target, if it isn't one.
+            </summary>
+            <param name="font">The font being edited.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_AddRows(SadConsole.SadFont,System.Int32)">
+            <summary>
+            Adds the specified number of rows to the font. Creates a new backing texture object that is a render target. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="count">The number of rows.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.SadFont,System.Int32,System.Int32)">
+            <summary>
+            Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndexFrom">The source glyph index.</param>
+            <param name="glyphIndexTo">The target glyph index.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.SadFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Erases a glyph in the font by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The glyph index to erase.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.SadFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Sets the pixels of a font glyph by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to update.</param>
+            <param name="pixels">The pixels to set on the glyph.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
+            <summary>
+            
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to get.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <returns>The pixels of the glyph.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Clone(SadConsole.SadFont,System.String)">
+            <summary>
+            Clones a font by getting the pixels of the old font and generating a new one.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="newName">The name to apply when creating the cloned font.</param>
+            <returns>A new font.</returns>
+        </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The MonoGame implementation of the SadConsole Game Host.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._configuration">
+            <summary>
+            The configuration used in creating the game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenWidth">
+            <summary>
+            Temporary variable to store the screen width before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenHeight">
+            <summary>
+            Temporary variable to store the screen height before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._handleResizeNone">
+            <summary>
+            Temporary variable to store the state of the <see cref="F:SadConsole.Settings.ResizeMode"/> when it's set to None, before going full screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.UseTitleContainer">
+            <summary>
+            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.MonoGameInstance">
+            <summary>
+            The <see cref="T:Microsoft.Xna.Framework.Game"/> instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create">
+            <summary>
+            Creates a new game with default configuration, an 80x25 console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.Action)">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Uses the default IBM 8x16 font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action)">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="font">The font file to load.</param>
+            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(SadConsole.Game.Configuration)">
+            <summary>
+            Creates a new game and assigns it to the <see cref="P:SadConsole.Game.MonoGameInstance"/> property.
+            </summary>
+            <param name="configuration">The settings used in creating the game.</param>
+        </member>
+        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.Host.Game)">
+            <summary>
+            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.Host.Game.ResetRendering"/>.
+            </summary>
+            <param name="game">The game instance.</param>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            Opens a read-only stream with MonoGame.
+            </summary>
+            <param name="file">The file to open.</param>
+            <param name="mode">Unused by monogame.</param>
+            <param name="access">Unused by monogame.</param>
+            <returns>The stream.</returns>
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and fullscreen rendering for SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Game.Configuration">
+            <summary>
+            An object used during the creation of the game to configure SadConsole and MonoGame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.#ctor">
+            <summary>
+            Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.ConfigureFonts(System.Action{SadConsole.Game.ConfigurationFontLoader})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="fontLoader">A method that provides the <see cref="T:SadConsole.Game.ConfigurationFontLoader"/> object to load fonts.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen``1">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetStartingScreen(System.Func{SadConsole.Game,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.IsStartingScreenFocused(System.Boolean)">
+            <summary>
+            Sets the starting screen's <see cref="P:SadConsole.IScreenObject.IsFocused"/> property to the provided value, when it's created.
+            </summary>
+            <param name="value"></param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnStart(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole is initialized but before the game loop has started.
+            </summary>
+            <param name="onStartCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.OnEnd(System.Action)">
+            <summary>
+            Sets a method to run after SadConsole the game loop has ended.
+            </summary>
+            <param name="onEndCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameUpdateEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseFrameRenderEvent(System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.UseUnlimitedFPS">
+            <summary>
+            Sets the <see cref="F:SadConsole.Settings.UnlimitedFPS"/> setting to <see langword="true"/>.
+            </summary>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.ShowMonoGameFPS">
+            <summary>
+            Adds a MonoGame game component that renders the frames per-second of the game.
+            </summary>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.WithMonoGameCtor(System.Action{SadConsole.Host.Game})">
+            <summary>
+            The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
+            </summary>
+            <param name="monogameCtorCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.WithMonoGameInit(System.Action{SadConsole.Host.Game})">
+            <summary>
+            Internal only. Called by the MonoGame game to finish configuring SadConsole.
+            </summary>
+            <param name="monogameInitCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="T:SadConsole.Game.ConfigurationFontLoader">
+            <summary>
+            Settings for loading fonts at the start of a game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
         </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
@@ -298,10 +562,9 @@
             A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
             </summary>
         </member>
-        <member name="E:SadConsole.Host.Game.SadConsolePreInit">
+        <member name="T:SadConsole.Host.Game.FPSCounterComponent">
             <summary>
-            This event handler is similar to the startup area of a normal SadConsole app, where you usually call Game.Instance.OnStart = ...
-            Do all of your sadconsole basic settings and event hooks here.
+            A component to draw how many frames per second the engine is performing at.
             </summary>
         </member>
         <member name="F:SadConsole.Host.Game.SadConsoleComponent">
@@ -329,8 +592,30 @@
             Raised when the window is resized and the render area has been calculated.
             </summary>
         </member>
+        <member name="M:SadConsole.Host.Game.#ctor">
+            <summary>
+            Creates the new MonoGame game object.
+            </summary>
+        </member>
         <member name="M:SadConsole.Host.Game.Initialize">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+            <param name="fontSize">The size of the font to base the final values on.</param>
+            <param name="width">The count of glyphs along the X-axis.</param>
+            <param name="height">The count of glyphs along the Y-axis.</param>
+            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="M:SadConsole.Host.Game.RecreateRenderOutput(System.Int32,System.Int32)">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
         </member>
         <member name="M:SadConsole.Host.Game.ResetRendering">
             <summary>
@@ -389,19 +674,14 @@
             Reference to the game timer used in the MonoGame render loop.
             </summary>
         </member>
-        <member name="P:SadConsole.Host.Global.GraphicsDeviceWpfControl">
-            <summary>
-            The WPF control used in drawing the screen.
-            </summary>
-        </member>
         <member name="P:SadConsole.Host.Global.GraphicsDeviceManager">
             <summary>
-            A WPF-specific graphics device service.
+            The graphics device manager created by MonoGame.
             </summary>
         </member>
         <member name="M:SadConsole.Host.Global.ResetGraphicsDevice">
             <summary>
-            Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to the <see cref="P:SadConsole.Host.Global.GraphicsDeviceWpfControl"/> control.
+            Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to <see langword="null"/>, targeting the app window.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
@@ -423,247 +703,6 @@
             <summary>
             The MonoGame graphics profile to target.
             </summary>
-        </member>
-        <member name="T:SadConsole.FontEditing.ExtensionsFontHost">
-            <summary>
-            Extension methods to handle editing <see cref="T:SadConsole.SadFont"/> objects.
-            </summary>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.SadFont)">
-            <summary>
-            Converts the font's backing texture into a render target, if it isn't one.
-            </summary>
-            <param name="font">The font being edited.</param>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_AddRows(SadConsole.SadFont,System.Int32)">
-            <summary>
-            Adds the specified number of rows to the font. Creates a new backing texture object that is a render target. Is hardware accelerated.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="count">The number of rows.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.SadFont,System.Int32,System.Int32)">
-            <summary>
-            Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="glyphIndexFrom">The source glyph index.</param>
-            <param name="glyphIndexTo">The target glyph index.</param>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.SadFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
-            <summary>
-            Erases a glyph in the font by index.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="glyphIndex">The glyph index to erase.</param>
-            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
-            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.SadFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
-            <summary>
-            Sets the pixels of a font glyph by index.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="glyphIndex">The index of the glyph to update.</param>
-            <param name="pixels">The pixels to set on the glyph.</param>
-            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
-            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
-            <summary>
-            
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="glyphIndex">The index of the glyph to get.</param>
-            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
-            <returns>The pixels of the glyph.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Clone(SadConsole.SadFont,System.String)">
-            <summary>
-            Clones a font by getting the pixels of the old font and generating a new one.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="newName">The name to apply when creating the cloned font.</param>
-            <returns>A new font.</returns>
-        </member>
-        <member name="T:SadConsole.Game">
-            <summary>
-            The MonoGame implementation of the SadConsole Game Host.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Game.UseTitleContainer">
-            <summary>
-            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Game.MonoGameInstance">
-            <summary>
-            The <see cref="T:Microsoft.Xna.Framework.Game"/> instance.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Game.Instance">
-            <summary>
-            Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.MonoGameInit(System.Int32,System.Int32,System.String)">
-            <summary>
-            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.Host.Game.ResetRendering"/>.
-            </summary>
-            <param name="game">The game instance.</param>
-        </member>
-        <member name="M:SadConsole.Game.GetTexture(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.GetKeyboardState">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.GetMouseState">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
-            <summary>
-            Opens a read-only stream with MonoGame.
-            </summary>
-            <param name="file">The file to open.</param>
-            <param name="mode">Unused by monogame.</param>
-            <param name="access">Unused by monogame.</param>
-            <returns>The stream.</returns>
-        </member>
-        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.Game.Configuration">
-            <summary>
-            An object used during the creation of the game to configure SadConsole and MonoGame.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.#ctor">
-            <summary>
-            Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.ConfigureFonts(System.Action{SadConsole.Game.ConfigurationFontLoader})">
-            <summary>
-            Configures which default font to use during game startup, as well as which other fonts to load for the game.
-            </summary>
-            <param name="fontLoader">A method that provides the <see cref="T:SadConsole.Game.ConfigurationFontLoader"/> object to load fonts.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetStartingScreen``1">
-            <summary>
-            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
-            </summary>
-            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetStartingScreen(System.Func{SadConsole.Game,SadConsole.IScreenObject})">
-            <summary>
-            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
-            </summary>
-            <param name="creator">A method that returns an object as the starting screen.</param>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.IsStartingScreenFocused(System.Boolean)">
-            <summary>
-            Sets the starting screen's <see cref="P:SadConsole.IScreenObject.IsFocused"/> property to the provided value, when it's created.
-            </summary>
-            <param name="value"></param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
-            <summary>
-            Sets the initial screen size of the window, in cells.
-            </summary>
-            <param name="width">The cell count along the x-axis.</param>
-            <param name="height">The cell count along the y-axis.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.OnStart(System.Action)">
-            <summary>
-            Sets a method to run after SadConsole is initialized but before the game loop has started.
-            </summary>
-            <param name="onStartCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.OnEnd(System.Action)">
-            <summary>
-            Sets a method to run after SadConsole the game loop has ended.
-            </summary>
-            <param name="onEndCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseFrameUpdateEvent(System.EventHandler{SadConsole.GameHost})">
-            <summary>
-            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
-            </summary>
-            <param name="instance_FrameUpdate">The event handler</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseFrameRenderEvent(System.EventHandler{SadConsole.GameHost})">
-            <summary>
-            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
-            </summary>
-            <param name="instance_FrameRender">The event handler</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseUnlimitedFPS">
-            <summary>
-            Sets the <see cref="F:SadConsole.Settings.UnlimitedFPS"/> setting to <see langword="true"/>.
-            </summary>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.ShowMonoGameFPS">
-            <summary>
-            Adds a MonoGame game component that renders the frames per-second of the game.
-            </summary>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.WithMonoGameCtor(System.Action{SadConsole.Host.Game})">
-            <summary>
-            The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
-            </summary>
-            <param name="monogameCtorCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.WithMonoGameInit(System.Action{SadConsole.Host.Game})">
-            <summary>
-            Internal only. Called by the MonoGame game to finish configuring SadConsole.
-            </summary>
-            <param name="monogameInitCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="T:SadConsole.Game.ConfigurationFontLoader">
-            <summary>
-            Settings for loading fonts at the start of a game.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
-            <summary>
-            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
-            <summary>
-            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
-            <summary>
-            Sets the default font in SadConsole to the specified font file.
-            </summary>
-            <param name="fontFile"></param>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
-            <summary>
-            Loads the provided font files into SadConsole.
-            </summary>
-            <param name="fontFiles">An array of font files to load.</param>
         </member>
         <member name="T:SadConsole.Readers.TextureToSurfaceReader">
             <summary>
@@ -1067,6 +1106,39 @@
             <summary>
             Does nothing.
             </summary>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
+            <summary>
+            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="surface">The surface to draw on.</param>
+            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
+            <summary>
+            Saves a texture to a png file.
+            </summary>
+            <param name="target">The texture.</param>
+            <param name="path">The path to a png file.</param>
         </member>
     </members>
 </doc>

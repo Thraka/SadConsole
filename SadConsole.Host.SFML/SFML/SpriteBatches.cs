@@ -51,6 +51,12 @@ namespace SFML.Graphics
                 _maxIndex = _lastDrawCall.Verticies.Length - 200;
             }
 
+            // Change rects to correct rendering size
+            screenRect.Width += screenRect.Left;
+            screenRect.Height += screenRect.Top;
+            textCoords.Width += textCoords.Left;
+            textCoords.Height += textCoords.Top;
+
             fixed (Vertex* verts = _lastDrawCall.Verticies)
             {
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
@@ -104,6 +110,14 @@ namespace SFML.Graphics
             var glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
             var background = cell.Background.ToSFMLColor();
             var foreground = cell.Foreground.ToSFMLColor();
+
+            // Change rects to correct rendering size
+            screenRect.Width += screenRect.Left;
+            screenRect.Height += screenRect.Top;
+            glyphRect.Width += glyphRect.Left;
+            glyphRect.Height += glyphRect.Top;
+            solidRect.Width += solidRect.Left;
+            solidRect.Height += solidRect.Top;
 
             if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
             {
@@ -194,6 +208,11 @@ namespace SFML.Graphics
                     for (int d = 0; d < cell.Decorators.Length; d++)
                     {
                         glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
+
+                        // Change rects to correct rendering size;
+                        glyphRect.Width += glyphRect.Left;
+                        glyphRect.Height += glyphRect.Top;
+
                         foreground = cell.Decorators[d].Color.ToSFMLColor();
 
                         if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
@@ -266,6 +285,14 @@ namespace SFML.Graphics
 
             var glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
             var background = cell.Background.ToSFMLColor();
+
+            // Change rects to correct rendering size
+            screenRect.Width += screenRect.Left;
+            screenRect.Height += screenRect.Top;
+            glyphRect.Width += glyphRect.Left;
+            glyphRect.Height += glyphRect.Top;
+            solidRect.Width += solidRect.Left;
+            solidRect.Height += solidRect.Top;
 
             fixed (Vertex* verts = _lastDrawCall.Verticies)
             {

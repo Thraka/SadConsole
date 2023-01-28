@@ -7,7 +7,6 @@ using SadRogue.Primitives;
 using Color = Microsoft.Xna.Framework.Color;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadRectangle = SadRogue.Primitives.Rectangle;
-using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
