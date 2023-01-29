@@ -9,6 +9,11 @@ namespace SadConsole.Instructions;
 public class AnimatedValue : Wait
 {
     /// <summary>
+    /// Raised when the instruction is running and the value changes during <see cref="Update(IScreenObject, TimeSpan)"/>.
+    /// </summary>
+    public event EventHandler<double> ValueChanged;
+
+    /// <summary>
     /// The easing function assigned to animate the value.
     /// </summary>
     protected EasingFunctions.EasingBase EasingFunction;
@@ -83,7 +88,10 @@ public class AnimatedValue : Wait
     public override void Update(IScreenObject console, TimeSpan delta)
     {
         if (!IsFinished)
+        {
             base.Update(console, delta);
+            ValueChanged?.Invoke(this, Value);
+        }
     }
 
     private double GetValueForDuration(double time)
