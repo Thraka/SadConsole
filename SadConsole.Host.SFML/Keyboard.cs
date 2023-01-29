@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 using SFML.Graphics;
+using SadConsole.Input;
 
 namespace SadConsole.Host
 {
