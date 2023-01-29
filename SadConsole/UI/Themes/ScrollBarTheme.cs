@@ -54,10 +54,10 @@ public class ScrollBarTheme : ThemeBase
     public ScrollBarTheme()
     {
         //TODO add states for ends. Bar should use base state.
-        StartButtonVerticalGlyph = 17;
-        EndButtonVerticalGlyph = 16;
-        StartButtonHorizontalGlyph = 30;
-        EndButtonHorizontalGlyph = 31;
+        StartButtonVerticalGlyph = 30;
+        EndButtonVerticalGlyph = 31;
+        StartButtonHorizontalGlyph = 17;
+        EndButtonHorizontalGlyph = 16;
         SliderGlyph = 219;
         BarGlyph = 176;
     }
@@ -115,10 +115,10 @@ public class ScrollBarTheme : ThemeBase
                     for (int y = 0; y < scrollbar.Height; y++)
                     {
                         scrollbar.Surface.SetCellAppearance(0, y, appearance);
-                        scrollbar.Surface.SetGlyph(0, y, StartButtonVerticalGlyph);
+                        scrollbar.Surface.SetGlyph(0, y, StartButtonHorizontalGlyph);
 
                         scrollbar.Surface.SetCellAppearance(scrollbar.Width - 1, y, appearance);
-                        scrollbar.Surface.SetGlyph(scrollbar.Width - 1, y, EndButtonVerticalGlyph);
+                        scrollbar.Surface.SetGlyph(scrollbar.Width - 1, y, EndButtonHorizontalGlyph);
                     }
                 }
 
@@ -163,10 +163,10 @@ public class ScrollBarTheme : ThemeBase
                     for (int x = 0; x < scrollbar.Width; x++)
                     {
                         scrollbar.Surface.SetCellAppearance(x, 0, appearance);
-                        scrollbar.Surface.SetGlyph(x, 0, StartButtonHorizontalGlyph);
+                        scrollbar.Surface.SetGlyph(x, 0, StartButtonVerticalGlyph);
 
                         scrollbar.Surface.SetCellAppearance(x, scrollbar.Height - 1, appearance);
-                        scrollbar.Surface.SetGlyph(x, scrollbar.Height - 1, EndButtonHorizontalGlyph);
+                        scrollbar.Surface.SetGlyph(x, scrollbar.Height - 1, EndButtonVerticalGlyph);
                     }
                 }
 
