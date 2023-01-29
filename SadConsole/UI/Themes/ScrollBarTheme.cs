@@ -13,6 +13,15 @@ namespace SadConsole.UI.Themes;
 public class ScrollBarTheme : ThemeBase
 {
     /// <summary>
+    /// When <see langword="true"/>, indicates that the start and end glyph buttons sohuld use the extended SadConsole font characters if available.
+    /// </summary>
+    /// <remarks>
+    /// This only affects scrollbars that have a width of two when vertical, and a height of two when horizontal.
+    /// </remarks>
+    [DataMember]
+    public bool UseExtended { get; set; }
+
+    /// <summary>
     /// The theme part fot the start button.
     /// </summary>
     [DataMember]
@@ -60,6 +69,7 @@ public class ScrollBarTheme : ThemeBase
         EndButtonHorizontalGlyph = 16;
         SliderGlyph = 219;
         BarGlyph = 176;
+        UseExtended = true;
     }
 
     /// <inheritdoc />
@@ -98,7 +108,7 @@ public class ScrollBarTheme : ThemeBase
             if (scrollbar.Orientation == Orientation.Horizontal)
             {
                 // Handle the arrows
-                if (font.IsSadExtended && scrollbar.Height == 2)
+                if (font.IsSadExtended && UseExtended && scrollbar.Height == 2)
                 {
                     GlyphDefinition glyph = font.GetGlyphDefinition("ui-arrow-left+top");
                     scrollbar.Surface.SetGlyph(0, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
@@ -146,7 +156,7 @@ public class ScrollBarTheme : ThemeBase
             else
             {
                 // Handle the arrows
-                if (font.IsSadExtended && scrollbar.Width == 2)
+                if (font.IsSadExtended && UseExtended && scrollbar.Width == 2)
                 {
                     GlyphDefinition glyph = font.GetGlyphDefinition("ui-arrow-up+left");
                     scrollbar.Surface.SetGlyph(0, 0, glyph.Glyph, appearance.Foreground, appearance.Background, glyph.Mirror);
