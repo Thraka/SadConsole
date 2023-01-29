@@ -7,10 +7,10 @@ internal class DemoStringParsing : IDemo
     public string Title => "String Parser";
 
     public string Description => "SadConsole has a proprietary string-based command parsing system. The string parser uses a simple syntax and supports commands like:\r\n\r\n" +
-                                 "- Recolor\r\n" +
-                                 "- Gradient\r\n" +
-                                 "- Mirror\r\n" +
-                                 "- Blink\r\n";
+                                 "[c:r f:violet]*[c:u] Recolor\r\n" +
+                                 "[c:r f:violet]*[c:u] Gradient\r\n" +
+                                 "[c:r f:violet]*[c:u] Mirror\r\n" +
+                                 "[c:r f:violet]*[c:u] Blink\r\n";
 
 
 

@@ -50,6 +50,7 @@ class RootScene : ScreenObject
         _demoObject = demoSurface;
         Children.Add(_demoObject);
         _demoObject.IsFocused = true;
+        demo.PostCreateDemoScreen(demoSurface);
 
         // Remove old description component
         var component = _demoDescriptionsScreen.GetSadComponent<LineCharacterFade>();

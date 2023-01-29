@@ -14,17 +14,17 @@ internal class DemoShapes : IDemo
     public string CodeFile => "DemoShapes.cs";
 
     public IScreenSurface CreateDemoScreen() =>
-        new DemoShapesSurface();
+        new ShapesSurface();
 
     public override string ToString() =>
         Title;
 }
 
-class DemoShapesSurface : ScreenSurface
+class ShapesSurface : ScreenSurface
 {
     private readonly ScreenSurface _mouseCursor;
 
-    public DemoShapesSurface() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
+    public ShapesSurface() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
         UseKeyboard = false;
         UseMouse = true;

@@ -6,5 +6,6 @@ internal interface IDemo
     string Description { get; }
     string CodeFile { get; }
 
+    void PostCreateDemoScreen(IScreenSurface demoScreen) { }
     IScreenSurface CreateDemoScreen();
 }
