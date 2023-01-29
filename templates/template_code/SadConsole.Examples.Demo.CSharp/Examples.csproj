@@ -16,7 +16,7 @@
 
   <PropertyGroup>
     <!-- Choose whcih game host you want to use, monogame or sfml. -->
-    <GameHost>monogame</GameHost>
+    <GameHost>sfml</GameHost>
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
