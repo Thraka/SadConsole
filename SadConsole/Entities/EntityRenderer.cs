@@ -321,6 +321,12 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         }
     }
 
+    /// <summary>
+    /// Sorts the <see cref="EntitiesVisible"/> collection according to the <see cref="Entity.ZIndex"/> value.
+    /// </summary>
+    public void SortVisibleEntites() =>
+        _entitiesVisible.Sort(CompareEntity);
+
     private void Entity_IsDirtyChanged(object? sender, EventArgs e)
     {
         var entity = (Entity)sender!;
