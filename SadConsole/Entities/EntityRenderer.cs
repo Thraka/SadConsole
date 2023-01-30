@@ -103,7 +103,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
 
         _entities.Add(entity);
 
-        CalculateEntityVisibilityProtected(entity);
+        CalculateEntityVisibilityProtected(entity, false);
 
         entity.PositionChanged += Entity_PositionChanged;
         entity.VisibleChanged += Entity_VisibleChanged;
@@ -132,7 +132,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
             {
                 _entities.Add(entity);
 
-                CalculateEntityVisibilityProtected(entity);
+                CalculateEntityVisibilityProtected(entity, true);
 
                 OnEntityAdded(entity);
                 OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
@@ -285,9 +285,10 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
                 if (DoEntityUpdate)
                     Entities[i].Update(delta);
 
-                CalculateEntityVisibilityProtected(Entities[i]);
+                CalculateEntityVisibilityProtected(Entities[i], true);
             }
 
+            _entitiesVisible.Sort(CompareEntity);
             return;
         }
 
@@ -353,7 +354,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
             IsDirty = true;
 
         // Entity moved, make sure its in the correct visible/non-visible list
-        CalculateEntityVisibilityProtected(entity);
+        CalculateEntityVisibilityProtected(entity, false);
         OnEntityChangedPosition(entity, e);
     }
 
@@ -386,15 +387,16 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         if (!_entities.Contains(entity)) throw new ArgumentException("Entity is not part of the renderer.");
 
-        return CalculateEntityVisibilityProtected(entity);
+        return CalculateEntityVisibilityProtected(entity, false);
     }
-
+    
     /// <summary>
     /// Detects a visibility state change of an entity and changes its internal list position.
     /// </summary>
     /// <param name="entity">The entity to check.</param>
+    /// <param name="skipSort">If <see langword="true"/>, skips sorting the visibile.</param>
     /// <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
-    protected bool CalculateEntityVisibilityProtected(Entity entity)
+    protected bool CalculateEntityVisibilityProtected(Entity entity, bool skipSort)
     {
         bool isVisible = IsEntityVisible(entity.Position, entity);
         bool contains = _entitiesVisible.Contains(entity);
@@ -408,7 +410,9 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         if (isVisible)
         {
             _entitiesVisible.Add(entity);
-            _entitiesVisible.Sort(CompareEntity);
+
+            if (!skipSort)
+                _entitiesVisible.Sort(CompareEntity);
         }
         else
             // Move entity out of visible list
