@@ -1182,6 +1182,8 @@ public sealed class Cells : IEnumerable<Table.Cell>
             _rowLayout.Clear();
             _columnLayout.Clear();
         }
+        MaxRow = 0;
+        MaxColumn = 0;
         _cells.Clear();
         _table.IsDirty = true;
     }
