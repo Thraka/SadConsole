@@ -76,13 +76,20 @@ public class TableTheme : ThemeBase
         int rows = maxRowsHeight;
         int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
         int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
+        bool offScreenY = false;
         for (int row = 0; row < rows; row++)
         {
+            if (offScreenY) break;
+
             int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
             int fullRowSize = 0;
+
+            bool offScreenX = false;
             for (int col = 0; col < columns; col++)
             {
+                if (offScreenX) break;
+
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
                 int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
                 SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
@@ -93,6 +100,11 @@ public class TableTheme : ThemeBase
                 // Don't attempt to render off-screen rows/columns
                 if (cellPosition.X > table.Width || cellPosition.Y > table.Height)
                 {
+                    if (cellPosition.Y > table.Height)
+                        offScreenY = true;
+                    if (cellPosition.X > table.Width)
+                        offScreenX = true;
+
                     colIndex++;
                     continue;
                 }
