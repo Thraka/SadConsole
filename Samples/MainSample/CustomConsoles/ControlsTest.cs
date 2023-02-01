@@ -173,16 +173,16 @@ namespace FeatureDemo.CustomConsoles
             };
             table.Cells.Row(1).SetLayout(settings: headerOptions);
             table.Cells.Column(0).SetLayout(settings: headerOptions);
-            table.Cells[0, 1].Text = "Table";
+            table.Cells[0, 1].Value = "Table";
             table.Cells[0, 1].Foreground = Color.Magenta;
             table.Cells[0, 1].Settings.Interactable = false;
-            table.Cells[1, 1].Text = "A";
-            table.Cells[1, 2].Text = "B";
+            table.Cells[1, 1].Value = "A";
+            table.Cells[1, 2].Value = "B";
 
             for (int row = 1; row < 9; row++)
             {
                 if (row == 1) continue;
-                table.Cells[row, 0].Text = (row-1).ToString();
+                table.Cells[row, 0].Value = (row-1).ToString();
             }
 
             for (int x=0; x < 3; x++)
@@ -192,7 +192,7 @@ namespace FeatureDemo.CustomConsoles
                     if (x == 0 || y == 1) continue;
                     table.Cells[y, x].Background = Color.Lerp(Color.Gray, Color.Black, 0.65f);
                     table.Cells[y, x].Foreground = Color.Yellow;
-                    table.Cells[y, x].Text = (x == 1 ? "A" : "B") + (y -1);
+                    table.Cells[y, x].Value = (x == 1 ? "A" : "B") + (y -1);
                 }
             }
 

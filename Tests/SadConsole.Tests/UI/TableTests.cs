@@ -93,8 +93,8 @@ public class TableTests : TableTestsBase
     public void Cells_Range_ForEach_AppliesActionToAll()
     {
         Table.Cell[] cells = Table.Cells.Range(0, 0, 4, 4).ToArray();
-        cells.ForEach((cell) => cell.Text = "Hello!");
-        Assert.IsTrue(cells.All(a => a.Text == "Hello!"));
+        cells.ForEach((cell) => cell.Value = "Hello!");
+        Assert.IsTrue(cells.All(a => a.StringValue == "Hello!"));
     }
 
     [TestMethod]
@@ -155,8 +155,8 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Can_Enumerate_Cells()
     {
-        Table.Cells[0, 0].Text = "Hello 1";
-        Table.Cells[1, 0].Text = "Hello 2";
+        Table.Cells[0, 0].Value = "Hello 1";
+        Table.Cells[1, 0].Value = "Hello 2";
         int count = 0;
         foreach (Table.Cell cell in Table.Cells)
             count++;
@@ -176,10 +176,10 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Total_Count_IsCorrect()
     {
-        Table.Cells[0, 0].Text = "Col / Row 1";
-        Table.Cells[1, 0].Text = "Row 2";
-        Table.Cells[2, 0].Text = "Row 3";
-        Table.Cells[0, 1].Text = "Column 2";
+        Table.Cells[0, 0].Value = "Col / Row 1";
+        Table.Cells[1, 0].Value = "Row 2";
+        Table.Cells[2, 0].Value = "Row 3";
+        Table.Cells[0, 1].Value = "Column 2";
         Assert.AreEqual(Table.Cells.TotalColumns, 2);
         Assert.AreEqual(Table.Cells.TotalRows, 3);
     }
@@ -187,8 +187,8 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Cells_Remove_Correct()
     {
-        Table.Cells[0, 0].Text = "Hello";
-        Table.Cells[1, 0].Text = "Hello";
+        Table.Cells[0, 0].Value = "Hello";
+        Table.Cells[1, 0].Value = "Hello";
         Assert.AreEqual(Table.Cells.Count, 2);
         Table.Cells.Remove(0, 0);
         Assert.AreEqual(Table.Cells.Count, 1);
@@ -200,8 +200,8 @@ public class TableTests : TableTestsBase
     public void Cells_Clear_Correct()
     {
         Table.Cells.Row(0).Size = 4;
-        Table.Cells[0, 0].Text = "Hello";
-        Table.Cells[0, 1].Text = "Hello";
+        Table.Cells[0, 0].Value = "Hello";
+        Table.Cells[0, 1].Value = "Hello";
 
         Assert.AreEqual(Table.Cells.Count, 2);
 
@@ -219,10 +219,10 @@ public class TableTests : TableTestsBase
     public void Cells_Different_Cell_NotEquals()
     {
         Table.Cell cellA = Table.Cells[0, 0];
-        cellA.Text = "Hello";
+        cellA.Value = "Hello";
 
         Table.Cell cellB = Table.Cells[0, 1];
-        cellB.Text = "Hello";
+        cellB.Value = "Hello";
 
         Assert.AreNotEqual(cellA, cellB);
 
@@ -267,7 +267,7 @@ public class TableTests : TableTestsBase
         int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
         for (int row = 0; row < rows; row++)
         {
-            Table.Cells[row, 0].Text = "Row " + row;
+            Table.Cells[row, 0].Value = "Row " + row;
         }
 
         Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
@@ -311,7 +311,7 @@ public class TableTests : TableTestsBase
         int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
         for (int column = 0; column < columns; column++)
         {
-            Table.Cells[0, column].Text = "Column " + column;
+            Table.Cells[0, column].Value = "Column " + column;
         }
 
         Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
@@ -355,7 +355,7 @@ public class TableTests : TableTestsBase
         int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
         for (int row = 0; row < rows; row++)
         {
-            Table.Cells[row, 0].Text = "Row " + row;
+            Table.Cells[row, 0].Value = "Row " + row;
         }
 
         // Resize columns
@@ -405,7 +405,7 @@ public class TableTests : TableTestsBase
         int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
         for (int column = 0; column < columns; column++)
         {
-            Table.Cells[0, column].Text = "Column " + column;
+            Table.Cells[0, column].Value = "Column " + column;
         }
 
         // Resize columns
@@ -454,7 +454,7 @@ public class TableTests : TableTestsBase
         int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
         for (int column = 0; column < columns; column++)
         {
-            Table.Cells[0, column].Text = "Column " + column;
+            Table.Cells[0, column].Value = "Column " + column;
         }
 
         // Resize columns
@@ -490,7 +490,7 @@ public class TableTests : TableTestsBase
         int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
         for (int row = 0; row < rows; row++)
         {
-            Table.Cells[row, 0].Text = "Row " + row;
+            Table.Cells[row, 0].Value = "Row " + row;
         }
 
         // Resize columns
@@ -526,7 +526,7 @@ public class TableTests : TableTestsBase
         int rows = (Table.Height / Table.DefaultCellSize.Y) + extraRowsOffScreen;
         for (int row = 0; row < rows; row++)
         {
-            Table.Cells[row, 0].Text = "Row " + row;
+            Table.Cells[row, 0].Value = "Row " + row;
         }
 
         // Resize columns
@@ -552,7 +552,7 @@ public class TableTests : TableTestsBase
         int columns = (Table.Width / Table.DefaultCellSize.X) + extraColumnsOffScreen;
         for (int col = 0; col < columns; col++)
         {
-            Table.Cells[0, col].Text = "Col " + col;
+            Table.Cells[0, col].Value = "Col " + col;
         }
 
         // Resize columns

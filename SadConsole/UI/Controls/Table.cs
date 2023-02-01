@@ -709,14 +709,22 @@ public class Table : CompositeControl
             set => SetFieldValue(this, Background, ref _background, value, false);
         }
 
-        private string _text;
         /// <summary>
-        /// The text shown within the cell
+        /// The text shown within the cell, empty string when no value.
         /// </summary>
-        public string Text
+        public string StringValue
         {
-            get => _text;
-            set => SetFieldValue(this, Text, ref _text, value, false);
+            get => _value?.ToString() ?? string.Empty;
+        }
+
+        private object? _value;
+        /// <summary>
+        /// The value of the cell, .ToString() method is shown as the text result within the cell.
+        /// </summary>
+        public object? Value
+        {
+            get => _value;
+            set => SetFieldValue(this, Value, ref _value, value, false);
         }
 
         private Options? _settings;
@@ -728,10 +736,10 @@ public class Table : CompositeControl
         private readonly bool _addToTableIfModified;
         internal readonly Table _table;
 
-        internal Cell(int row, int col, Table table, string text, bool addToTableIfModified = true)
+        internal Cell(int row, int col, Table table, object value, bool addToTableIfModified = true)
         {
             _table = table;
-            _text = text;
+            _value = value;
             _foreground = table.DefaultForeground;
             _background = table.DefaultBackground;
             _addToTableIfModified = addToTableIfModified;
@@ -796,7 +804,7 @@ public class Table : CompositeControl
         /// <param name="cell"></param>
         public void CopyAppearanceFrom(Cell cell)
         {
-            Text = cell.Text;
+            Value = cell.Value;
             Foreground = cell.Foreground;
             Background = cell.Background;
             if (_settings != cell._settings)

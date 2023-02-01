@@ -11660,9 +11660,14 @@
             The background color used by the cell
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Text">
+        <member name="P:SadConsole.UI.Controls.Table.Cell.StringValue">
             <summary>
-            The text shown within the cell
+            The text shown within the cell, empty string when no value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Value">
+            <summary>
+            The value of the cell, .ToString() method is shown as the text result within the cell.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.Table.Cell.Settings">

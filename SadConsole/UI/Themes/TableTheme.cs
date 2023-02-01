@@ -293,7 +293,7 @@ public class TableTheme : ThemeBase
 
     private static void PrintText(Table table, Table.Cell cell)
     {
-        if (string.IsNullOrWhiteSpace(cell.Text) || (cell.IsSettingsInitialized && !cell.Settings.IsVisible)) return;
+        if (string.IsNullOrWhiteSpace(cell.StringValue) || (cell.IsSettingsInitialized && !cell.Settings.IsVisible)) return;
 
         int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
         int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
@@ -309,7 +309,7 @@ public class TableTheme : ThemeBase
             maxCharsPerLine = width;
 
         // Split the character array into parts based on cell width
-        string[] splittedTextArray = WordWrap(cell.Text, maxCharsPerLine).ToArray();
+        string[] splittedTextArray = WordWrap(cell.StringValue, maxCharsPerLine).ToArray();
         for (int y = 0; y < height; y++)
         {
             // Don't go out of bounds of the cell height
