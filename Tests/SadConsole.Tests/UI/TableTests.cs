@@ -180,8 +180,8 @@ public class TableTests : TableTestsBase
         Table.Cells[1, 0].Value = "Row 2";
         Table.Cells[2, 0].Value = "Row 3";
         Table.Cells[0, 1].Value = "Column 2";
-        Assert.AreEqual(Table.Cells.TotalColumns, 2);
-        Assert.AreEqual(Table.Cells.TotalRows, 3);
+        Assert.AreEqual(Table.Cells.MaxColumn, 1);
+        Assert.AreEqual(Table.Cells.MaxRow, 2);
     }
 
     [TestMethod]

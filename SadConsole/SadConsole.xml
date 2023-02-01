@@ -11831,14 +11831,14 @@
             <param name="col"></param>
             <returns></returns>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.TotalRows">
+        <member name="P:SadConsole.UI.Controls.Cells.MaxRow">
             <summary>
-            The rows the table currently holds.
+            The maximum row in the table.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.TotalColumns">
+        <member name="P:SadConsole.UI.Controls.Cells.MaxColumn">
             <summary>
-            The columns the table currently holds.
+            The maximum column in the table.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.Cells.Count">
