@@ -804,7 +804,6 @@ public class Table : CompositeControl
         /// <param name="cell"></param>
         public void CopyAppearanceFrom(Cell cell)
         {
-            Value = cell.Value;
             Foreground = cell.Foreground;
             Background = cell.Background;
             if (_settings != cell._settings)

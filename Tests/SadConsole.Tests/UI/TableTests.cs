@@ -237,10 +237,14 @@ public class TableTests : TableTestsBase
         Table.Cell cellA = Table.Cells[0, 0];
         cellA.Background = Color.Brown;
         cellA.Settings.UseFakeLayout = true;
+        cellA.Value = "Not Hello World!";
 
         Table.Cell cellB = Table.Cells[0, 1];
+        cellB.Value = "Hello World!";
         cellB.CopyAppearanceFrom(cellA);
 
+        Assert.AreEqual(cellA.Value, "Not Hello World!");
+        Assert.AreEqual(cellB.Value, "Hello World!");
         Assert.AreEqual(cellB.Background, Color.Brown);
         Assert.AreEqual(cellB.Settings.UseFakeLayout, true);
 
