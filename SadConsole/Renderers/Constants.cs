@@ -27,6 +27,11 @@ public static class RenderStepNames
     public const string SurfaceDirtyCells = "surface_dirtycells";
 
     /// <summary>
+    /// The render step for a <see cref="IScreenSurface"/> where multiple layers are exposed through a property.
+    /// </summary>
+    public const string SurfaceLayered = "surface_layered";
+
+    /// <summary>
     /// The render step for a <see cref="UI.ControlHost"/>.
     /// </summary>
     public const string ControlHost = "controlhost";

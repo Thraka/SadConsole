@@ -15,7 +15,7 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
+public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, ISurfaceSettable
 {
     [DataMember(Name = "Font")]
     [JsonConverter(typeof(SerializedTypes.FontJsonConverter))]
