@@ -1958,7 +1958,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Clears an area of obj.Surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+    /// Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="area">The area to clear.</param>
@@ -1985,6 +1985,31 @@ public static class CellSurfaceEditor
                 result[resultIndex] = cell;
                 resultIndex++;
             }
+        }
+
+        obj.Surface.Effects.SetEffect(result, null);
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="cellPositions">The cells to clear.</param>
+    public static void Clear(this ISurface obj, IEnumerable<Point> cellPositions)
+    {
+        List<ColoredGlyph> result = new List<ColoredGlyph>(5);
+        ColoredGlyph cell;
+
+        foreach (Point position in cellPositions)
+        {
+            cell = obj.Surface[position.X, position.Y];
+            cell.Clear();
+            cell.Foreground = obj.Surface.DefaultForeground;
+            cell.Background = obj.Surface.DefaultBackground;
+            cell.Glyph = obj.Surface.DefaultGlyph;
+
+            result.Add(cell);
         }
 
         obj.Surface.Effects.SetEffect(result, null);
