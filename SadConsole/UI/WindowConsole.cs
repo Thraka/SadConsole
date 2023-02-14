@@ -342,7 +342,7 @@ public partial class Window : Console
     /// <param name="info">Keyboard state.</param>
     public override bool ProcessKeyboard(Keyboard info)
     {
-        if (CloseOnEscKey && info.IsKeyReleased(Keys.Escape))
+        if (CloseOnEscKey && info.IsKeyPressed(Keys.Escape))
         {
             Hide();
             return true;
