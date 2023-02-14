@@ -647,7 +647,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -655,11 +655,11 @@ public static class CellSurfaceEditor
             {
                 obj.Surface[index].Glyph = text[charIndex];
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
             PrintNoCheck(obj, index, ColoredString.Parser.Parse(text, index, obj.Surface));
@@ -682,7 +682,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -691,11 +691,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Glyph = text[charIndex];
                 obj.Surface[index].Foreground = foreground;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -722,7 +722,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -732,11 +732,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Background = background;
                 obj.Surface[index].Foreground = foreground;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -766,7 +766,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -778,11 +778,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Foreground = foreground;
                 obj.Surface[index].Mirror = mirror;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -814,7 +814,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -827,11 +827,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Mirror = mirror;
                 obj.Surface[index].Decorators = decorators;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -861,7 +861,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int total = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -870,11 +870,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Glyph = text[charIndex];
                 obj.Surface[index].Mirror = mirror;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -902,7 +902,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -911,11 +911,11 @@ public static class CellSurfaceEditor
                 ColoredGlyph cell = obj.Surface[index];
                 appearance.CopyAppearanceTo(cell, false);
                 cell.Glyph = text[charIndex];
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, effect);
+            SetEffect(obj, effectIndices, effect);
         }
         else
         {
@@ -1073,7 +1073,7 @@ public static class CellSurfaceEditor
     #region Shift Rows
 
     /// <summary>
-    /// Shifts the entire row by the specfied amount.
+    /// Shifts the entire row by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1089,7 +1089,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount.
+    /// Shifts the specified row from an X position, by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1114,7 +1114,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount, to the right.
+    /// Shifts the specified row from an X position, by the specified amount, to the right.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1135,7 +1135,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount, to the left.
+    /// Shifts the specified row from an X position, by the specified amount, to the left.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1156,7 +1156,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+    /// Internal use. Doesn't do any checks on valid values. Shifts the specified row from an X position, by the specified amount, to the right.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1310,7 +1310,7 @@ public static class CellSurfaceEditor
     #region Shift Columns
 
     /// <summary>
-    /// Shifts the entire column by the specfied amount.
+    /// Shifts the entire column by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1326,7 +1326,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount.
+    /// Shifts the specified row from an X position, by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1351,7 +1351,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from n Y position, by the specfied amount, down.
+    /// Shifts the specified row from n Y position, by the specified amount, down.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1372,7 +1372,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from n Y position, by the specfied amount, up.
+    /// Shifts the specified row from n Y position, by the specified amount, up.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -2457,13 +2457,13 @@ public static class CellSurfaceEditor
                     continue;
 
                 // Get all valid positions and indexes around this point
-                bool[] valids = pos.GetValidDirections(area);
+                bool[] validDirs = pos.GetValidDirections(area);
                 int[] posIndexes = pos.GetDirectionIndexes(area, obj.Surface.Width);
                 bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
                 for (int i = 1; i < 9; i++)
                 {
-                    if (!valids[i])
+                    if (!validDirs[i])
                         continue;
 
                     if (lineStyle.Contains(obj.Surface[posIndexes[i]].Glyph))
