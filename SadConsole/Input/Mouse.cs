@@ -197,7 +197,7 @@ public class Mouse
         MiddleButtonDown = false;
         ScrollWheelValue = 0;
         ScrollWheelValueChange = 0;
-        ScreenPosition = new Point(0, 0);
+        ScreenPosition = Point.Zero;
 
         LeftButtonDownDuration = TimeSpan.Zero;
         RightButtonDownDuration = TimeSpan.Zero;

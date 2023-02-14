@@ -496,7 +496,7 @@ public class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void UpdateAbsolutePosition()
     {
-        AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
+        AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)

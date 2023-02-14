@@ -331,9 +331,9 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     public override void UpdateAbsolutePosition()
     {
         if (UsePixelPositioning)
-            AbsolutePosition = Position - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
+            AbsolutePosition = Position - (FontSize * Center) + (Parent?.AbsolutePosition ?? Point.Zero);
         else
-            AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? new Point(0, 0));
+            AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? Point.Zero);
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)

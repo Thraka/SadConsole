@@ -114,7 +114,7 @@ public abstract class ControlBase
     /// <summary>
     /// Gets the position of this control based on the control's <see cref="Position"/> and the position of the <see cref="Parent"/>.
     /// </summary>
-    public Point AbsolutePosition => Position + (Parent != null ? Parent.AbsolutePosition : new Point(0, 0));
+    public Point AbsolutePosition => Position + (Parent != null ? Parent.AbsolutePosition : Point.Zero);
 
     /// <summary>
     /// Indicates whether or not this control is visible.
