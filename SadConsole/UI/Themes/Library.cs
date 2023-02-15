@@ -91,6 +91,7 @@ public class Library
         SetControlTheme(typeof(Label), new LabelTheme());
         SetControlTheme(typeof(Panel), new PanelTheme());
         SetControlTheme(typeof(SurfaceViewer), new SurfaceViewerTheme());
+        SetControlTheme(typeof(ComboBox), new ComboBoxTheme());
     }
 
     /// <summary>
