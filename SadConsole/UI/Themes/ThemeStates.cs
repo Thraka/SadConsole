@@ -29,7 +29,7 @@ public class ThemeStates
     public ColoredGlyph Focused { get; set; } = new ColoredGlyph();
 
     /// <summary>
-    /// The appearence of the control when it is in a selected state.
+    /// The appearance of the control when it is in a selected state.
     /// </summary>
     [DataMember]
     public ColoredGlyph Selected { get; set; } = new ColoredGlyph();
@@ -103,7 +103,7 @@ public class ThemeStates
     }
 
     /// <summary>
-    /// Gets an apperance defined by this theme from the <paramref name="state" /> parameter.
+    /// Gets an appearance defined by this theme from the <paramref name="state" /> parameter.
     /// </summary>
     /// <param name="state">The state to check.</param>
     /// <returns>A cell appearance.</returns>
@@ -117,6 +117,25 @@ public class ThemeStates
 
         if (Helpers.HasFlag((int)state, (int)ControlStates.MouseOver))
             return MouseOver;
+
+        if (Helpers.HasFlag((int)state, (int)ControlStates.Focused))
+            return Focused;
+
+        if (Helpers.HasFlag((int)state, (int)ControlStates.Selected))
+            return Selected;
+
+        return Normal;
+    }
+
+    /// <summary>
+    /// Gets an appearance defined by this theme from the <paramref name="state" /> parameter. Treats mouse related states as normal.
+    /// </summary>
+    /// <param name="state">The state to check.</param>
+    /// <returns>A cell appearance.</returns>
+    public ColoredGlyph GetStateAppearanceNoMouse(ControlStates state)
+    {
+        if (Helpers.HasFlag((int)state, (int)ControlStates.Disabled))
+            return Disabled;
 
         if (Helpers.HasFlag((int)state, (int)ControlStates.Focused))
             return Focused;

@@ -2020,6 +2020,15 @@ public static class CellSurfaceEditor
     /// Fills the console. Clears cell decorators and effects.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
+    /// <param name="iconAppearance">The appearance that is copied to every cell.</param>
+    /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
+    public static ColoredGlyph[] Fill(this ISurface obj, ColoredGlyph iconAppearance) =>
+        Fill(obj, iconAppearance.Foreground, iconAppearance.Background, iconAppearance.Glyph, iconAppearance.Mirror);
+
+    /// <summary>
+    /// Fills the console. Clears cell decorators and effects.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
     /// <param name="foreground">Foreground to apply. If null, skips.</param>
     /// <param name="background">Foreground to apply. If null, skips.</param>
     /// <param name="glyph">Glyph to apply. If null, skips.</param>

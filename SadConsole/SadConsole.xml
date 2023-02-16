@@ -4887,6 +4887,14 @@
             <param name="obj">The surface being edited.</param>
             <param name="cellPositions">The cells to clear.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ISurface,SadConsole.ColoredGlyph)">
+            <summary>
+            Fills the console. Clears cell decorators and effects.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="iconAppearance">The appearance that is copied to every cell.</param>
+            <returns>The array of all cells in this console, starting from the top left corner.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ISurface,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
             <summary>
             Fills the console. Clears cell decorators and effects.
@@ -12506,6 +12514,60 @@
             Reloads the theme values based on the colors provided.
             </summary>
             <param name="colors">The colors to create the theme with.</param>
+        </member>
+        <member name="T:SadConsole.UI.Themes.ToggleSwitchTheme">
+            <summary>
+            A toggle switch theme used with a checkbox.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.OnGlyph">
+            <summary>
+            The on glyph of the switch.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.BackgroundGlyph">
+            <summary>
+            The background glyph of the switch.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.OnGlyphColor">
+            <summary>
+            An optional color of the <see cref="P:SadConsole.UI.Themes.ToggleSwitchTheme.OnGlyph"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.OffGlyphColor">
+            <summary>
+            An optional color of the <see cref="P:SadConsole.UI.Themes.ToggleSwitchTheme.OnGlyph"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.SwitchThemeState">
+            <summary>
+            The theme state used for the switch.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ToggleSwitchTheme.SwitchOrientation">
+            <summary>
+            The orientation of the toggle switch relative to the text.
+            </summary>
+            <remarks>
+            Valid values are <see cref="F:SadConsole.HorizontalAlignment.Left"/> and <see cref="F:SadConsole.HorizontalAlignment.Right"/>.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ToggleSwitchTheme.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new toggle switch theme.
+            </summary>
+            <param name="onGlyph">The toggle switch on icon. Defaults to 251'√'.</param>
+            <param name="offGlyph">The toggle switch off icon. Defaults to 0.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ToggleSwitchTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ToggleSwitchTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ToggleSwitchTheme.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Window">
             <summary>
