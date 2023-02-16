@@ -256,6 +256,7 @@ public abstract class ControlBase
 
             }    
 
+            IsDirty = true;
             OnParentChanged();
         }
     }
@@ -693,7 +694,7 @@ public abstract class ControlBase
             Control = control;
             MousePosition = mousePosition;
             OriginalMouseState = originalMouseState;
-            IsMouseOver = control.MouseArea.Contains(MousePosition);
+            IsMouseOver = originalMouseState.IsOnScreenObject && control.MouseArea.Contains(MousePosition);
         }
 
 

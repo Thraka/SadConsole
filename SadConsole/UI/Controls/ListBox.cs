@@ -47,9 +47,14 @@ public class ListBox : CompositeControl
     private int _serializedScrollSizeValue;
 
     /// <summary>
-    /// An event that triggers when the <see cref="SelectedItem"/> changes.
+    /// An event that triggers when the <see cref="SelectedItem"/> property changes.
     /// </summary>
     public event EventHandler<SelectedItemEventArgs>? SelectedItemChanged;
+
+    /// <summary>
+    /// An event that triggers when the <see cref="SelectedItem"/> property is reselected by the mouse.
+    /// </summary>
+    public event EventHandler<SelectedItemEventArgs>? SelectedItemReselected;
 
     /// <summary>
     /// An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
@@ -278,7 +283,7 @@ public class ListBox : CompositeControl
             else if (SelectedIndex > Items.Count - VisibleItemsTotal)
                 ScrollBar.Value = ScrollBar.Maximum;
             else
-                ScrollBar.Value = _selectedIndex - VisibleItemsTotal;
+                ScrollBar.Value = _selectedIndex - VisibleItemsTotal + 1;
         }
     }
 
@@ -411,6 +416,8 @@ public class ListBox : CompositeControl
 
         (object? item, _) = GetItemAndIndexUnderMouse(state);
 
+        if (item == null) return;
+
         object? oldItem = _selectedItem;
         bool sameObject;
 
@@ -421,6 +428,8 @@ public class ListBox : CompositeControl
 
         if (!sameObject)
             SelectedItem = item;
+        else if (!SingleClickItemExecute)
+            SelectedItemReselected?.Invoke(this, new SelectedItemEventArgs(item));
 
         if (item != null && (SingleClickItemExecute || (doubleClicked && sameObject)))
         {

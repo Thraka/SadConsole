@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -61,7 +62,7 @@ public class ListBoxTheme : ThemeBase
     /// <param name="listbox"></param>
     protected void SetupScrollBar(ListBox listbox)
     {
-        if (DrawBorder && listbox.Height < 5)
+        if (DrawBorder && listbox.Height < 4)
         {
             DrawBorder = false;
             _reconfigureSrollBar = false;

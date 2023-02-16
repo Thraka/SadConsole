@@ -20,7 +20,7 @@ public class ScrollBar : ControlBase
     private int _valueStep = 1;
 
     /// <summary>
-    /// Indicates if the scroll bar is horizontal or veritcal.
+    /// Indicates if the scroll bar is horizontal or vertical.
     /// </summary>
     public Orientation Orientation { get; private set; }
 
@@ -85,7 +85,7 @@ public class ScrollBar : ControlBase
     public int Minimum => 0;
 
     /// <summary>
-    /// Gets or sets the amount of values to add or substract to the <see cref="Value"/> when the up or down arrows are used.
+    /// Gets or sets the amount of values to add or subtract to the <see cref="Value"/> when the up or down arrows are used.
     /// </summary>
     [DataMember]
     public int Step
@@ -151,8 +151,13 @@ public class ScrollBar : ControlBase
         {
             base.ProcessMouse(state);
 
-            var newState = new ControlMouseState(this, state);
-            Point mouseControlPosition = newState.MousePosition;
+            // The mouse processing here is highly customized to the fact that the scroll bar should allow mouse processing
+            // when it's dragging and while the mouse is outside the (and even over some other) surface. This code transforms
+            // the mouse data to be based on the position of the mouse on the parent host surface, then based on the mouse area
+            // of this control.
+            var newState = new ControlMouseState(this, new Input.MouseScreenObjectState(Parent.Host.ParentConsole, state.Mouse));
+            Point mouseControlPosition = newState.OriginalMouseState.SurfaceCellPosition - AbsolutePosition;
+            newState.IsMouseOver = MouseArea.Contains(mouseControlPosition);
 
             // This becomes the active mouse subject when the bar is being dragged.
             if (Parent.Host.CapturedControl == null)
@@ -209,7 +214,7 @@ public class ScrollBar : ControlBase
                         Parent.Host.FocusedControl = this;
                     }
 
-                    // Need to set a flag signalling that we've locked in a drag.
+                    // Need to set a flag signaling that we've locked in a drag.
                     // When the mouse button is let go, clear the flag.
                     if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown && state.Mouse.LeftButtonDownDuration == TimeSpan.Zero)
                     {

@@ -70,7 +70,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     }
 
     /// <summary>
-    /// Adds a child control to this control. <see cref="IContainer.Add(ControlBase)"/> does't work on the <see cref="CompositeControl"/>.
+    /// Adds a child control to this control. <see cref="IContainer.Add(ControlBase)"/> doesn't work on the <see cref="CompositeControl"/>.
     /// </summary>
     /// <param name="control">The control to add.</param>
     protected void AddControl(ControlBase control)
@@ -84,7 +84,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     }
 
     /// <summary>
-    /// Removes a child control from this control. <see cref="IContainer.Remove(ControlBase)"/> does't work on the <see cref="CompositeControl"/>.
+    /// Removes a child control from this control. <see cref="IContainer.Remove(ControlBase)"/> doesn't work on the <see cref="CompositeControl"/>.
     /// </summary>
     /// <param name="control">The control to remove.</param>
     protected void RemoveControl(ControlBase control)
