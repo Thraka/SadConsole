@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.Serialization;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Runtime.Serialization;
 using SadConsole.UI.Themes;
 using SadConsole.Quick;
+using System.Linq;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
@@ -12,28 +12,30 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public class ComboBox : CheckBox
 {
-    private int _dropDownheight;
     private ScreenSurface _dropDownContainer;
     private ListBox _listBox;
 
-    public ListBoxItemTheme Theme_ListBoxItemTheme;
-
-    public ComboBox(int width, int dropdownHeight, Object[] items) : base(width, 1)
+    /// <summary>
+    /// Creates a new instance of the combobox control.
+    /// </summary>
+    /// <param name="width">The width of the control.</param>
+    /// <param name="dropdownWidth">The width of the dropdown container.</param>
+    /// <param name="dropdownHeight">The height of the dropdown container.</param>
+    /// <param name="items">The items to seed the dropdown with.</param>
+    public ComboBox(int width, int dropdownWidth, int dropdownHeight, object[] items) : base(width, 1)
     {
-        //DropDownHeight = dropdownHeight;
-
-        _dropDownContainer = new ScreenSurface(width, dropdownHeight);
-        _listBox = new ListBox(width, dropdownHeight);
+        _dropDownContainer = new ScreenSurface(dropdownWidth, dropdownHeight);
+        _listBox = new ListBox(dropdownWidth, dropdownHeight);
         
         ControlHost listboxHost = new ControlHost();
         _dropDownContainer.SadComponents.Add(listboxHost);
         listboxHost.Add(_listBox);
 
-        foreach (var item in items)
+        foreach (object item in items)
             _listBox.Items.Add(item);
 
         _listBox.SelectedItemChanged += _listBox_SelectedItemChanged;
-        _listBox.MouseButtonClicked += _listBox_MouseButtonClicked;
+        _listBox.SelectedItemReselected += _listBox_SelectedItemChanged;
         _listBox.SelectedIndex = 0;
 
         // Setup popup container console to watch the mouse
@@ -61,11 +63,26 @@ public class ComboBox : CheckBox
         });
     }
 
-    private void _listBox_MouseButtonClicked(object? sender, ControlMouseState e)
+    /// <summary>
+    /// Sets the items in the dropdown listbox.
+    /// </summary>
+    /// <param name="items">The items to set.</param>
+    public void SetItems(params object[] items)
     {
-        //if (_listBox.MouseArea.Contains(e.MousePosition))
-        //    IsSelected = false;
+        _listBox.Items.Clear();
+
+        foreach (object item in items)
+            _listBox.Items.Add(item);
+
+        IsDirty = true;
     }
+
+    /// <summary>
+    /// Gets an array of items from the dropdown listbox.
+    /// </summary>
+    /// <returns></returns>
+    public object[] GetItems() =>
+        _listBox.Items.ToArray();
 
     private void _listBox_SelectedItemChanged(object? sender, ListBox.SelectedItemEventArgs e)
     {
@@ -73,11 +90,9 @@ public class ComboBox : CheckBox
         IsSelected = false;
     }
 
-    public void Theme_SetDropDownHeight(int height)
-    {
-        //_dropDownContainer.Resize(Width, )
-    }
-
+    /// <summary>
+    /// When <see cref="ToggleButtonBase.IsSelected"/> is <see langword="true"/>, displays the popup container. When <see langword="false"/>, hides the popup container.
+    /// </summary>
     protected override void OnIsSelected()
     {
         base.OnIsSelected();
@@ -86,8 +101,44 @@ public class ComboBox : CheckBox
         {
             if (IsSelected)
             {
+                ComboBoxTheme theme = (ComboBoxTheme)Theme;
+                _listBox.Theme = ((ComboBoxTheme)Theme).ListBoxTheme;
                 _dropDownContainer.Parent = Parent.Host.ParentConsole;
-                _dropDownContainer.Position = AbsolutePosition + (0, 1);
+
+                Point position = AbsolutePosition;
+
+                switch (theme.PopupHorizontal)
+                {
+                    case HorizontalAlignment.Left:
+                        position -= theme.PopupInnerAligned ? (0, 0) : (_dropDownContainer.Width, 0);
+                        break;
+                    case HorizontalAlignment.Center:
+                        position -= (_dropDownContainer.Width / 2 - Width / 2, 0);
+                        break;
+                    case HorizontalAlignment.Right:
+                        position += theme.PopupInnerAligned ? (Width - _dropDownContainer.Width, 0) : (Width, 0);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (theme.PopupVertical)
+                {
+                    case VerticalAlignment.Top:
+                        position -= (0, _dropDownContainer.Height);
+                        break;
+                    case VerticalAlignment.Center:
+                        position -= (0, _dropDownContainer.Height / 2);
+                        break;
+                    case VerticalAlignment.Bottom:
+                        position += (0, 1);
+                        break;
+                    default:
+                        break;
+                }
+
+                _listBox.ScrollToSelectedItem();
+                _dropDownContainer.Position = position;
                 _dropDownContainer.IsVisible = true;
                 _dropDownContainer.IsExclusiveMouse = true;
                 GameHost.Instance.FocusedScreenObjects.Push(_dropDownContainer);

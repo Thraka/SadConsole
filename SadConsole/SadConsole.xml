@@ -1778,6 +1778,94 @@
         <member name="M:SadConsole.Components.KeyboardConsoleComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.LayeredSurface">
+            <summary>
+            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.LayeredSurface.IsAttached">
+            <summary>
+            Indicates that the entity renderer has been added to a parent object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.LayeredSurface._screen">
+            <summary>
+            The parent screen hosting this component.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.LayeredSurface._screenCachedView">
+            <summary>
+            A cached copy of the <see cref="P:SadConsole.ICellSurface.View"/> of the hosting screen surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.LayeredSurface._layers">
+            <summary>
+            The entities to process.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.LayeredSurface.RenderStep">
+            <summary>
+            Internal use only
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.LayeredSurface.View">
+            <summary>
+            The visible portion of the surface layers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Add(SadConsole.ICellSurface)">
+            <summary>
+            Adds a layer to this component.
+            </summary>
+            <param name="layer">The layer to add.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.AddRange(System.Collections.Generic.IEnumerable{SadConsole.ICellSurface})">
+            <summary>
+            Adds a collection if layers to this component.
+            </summary>
+            <param name="layers">The layers to add.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Replace(SadConsole.ICellSurface,SadConsole.ICellSurface)">
+            <summary>
+            Replaces a layer with a new instance.
+            </summary>
+            <param name="oldLayer">The layer to remove.</param>
+            <param name="newLayer">The layer to add.</param>
+            <exception cref="T:System.ArgumentException">
+            <para>Thrown when the old layer doesn't exist in this collection.</para>
+            <para>- or -</para>
+            <para>Thrown when the new layer already exists in this collection.</para>
+            <para>- or -</para>
+            <para>Thrown when the new layer isn't the same size as the other layers.</para>
+            </exception>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Remove(SadConsole.ICellSurface)">
+            <summary>
+            Removes a layer from this component.
+            </summary>
+            <param name="layer">The layer to remove.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.RemoveAll">
+            <summary>
+            Removes all layers from this component.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Create">
+            <summary>
+            Adds a new layer. The layer is based on the first layer's width and height.
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.LogicComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> and <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -3125,6 +3213,11 @@
             <param name="isPixel">Indicates the entity is pixel positioned.</param>
             <returns></returns>
         </member>
+        <member name="M:SadConsole.Entities.Renderer.SortVisibleEntites">
+            <summary>
+            Sorts the <see cref="P:SadConsole.Entities.Renderer.EntitiesVisible"/> collection according to the <see cref="P:SadConsole.Entities.Entity.ZIndex"/> value.
+            </summary>
+        </member>
         <member name="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <summary>
             Called when an entity changes position.
@@ -3152,11 +3245,12 @@
             <returns>Returns <see langword="true"/> when this entity is considered visible; othwerise <see langword="false"/>.</returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)">
             <summary>
             Detects a visibility state change of an entity and changes its internal list position.
             </summary>
             <param name="entity">The entity to check.</param>
+            <param name="skipSort">If <see langword="true"/>, skips sorting the visibile.</param>
             <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
@@ -4534,7 +4628,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftRow(SadConsole.ISurface,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the entire row by the specfied amount.
+            Shifts the entire row by the specified amount.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="row">The row to shift.</param>
@@ -4543,7 +4637,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftRow(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from an X position, by the specfied amount.
+            Shifts the specified row from an X position, by the specified amount.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="row">The row to shift.</param>
@@ -4555,7 +4649,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftRowRight(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from an X position, by the specfied amount, to the right.
+            Shifts the specified row from an X position, by the specified amount, to the right.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="row">The row to shift.</param>
@@ -4567,7 +4661,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftRowLeft(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from an X position, by the specfied amount, to the left.
+            Shifts the specified row from an X position, by the specified amount, to the left.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="row">The row to shift.</param>
@@ -4579,7 +4673,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftRowRightUnchecked(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+            Internal use. Doesn't do any checks on valid values. Shifts the specified row from an X position, by the specified amount, to the right.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="row">The row to shift.</param>
@@ -4601,7 +4695,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftColumn(SadConsole.ISurface,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the entire column by the specfied amount.
+            Shifts the entire column by the specified amount.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="col">The column to shift.</param>
@@ -4610,7 +4704,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftColumn(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from an X position, by the specfied amount.
+            Shifts the specified row from an X position, by the specified amount.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="col">The column to shift.</param>
@@ -4622,7 +4716,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnDown(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from n Y position, by the specfied amount, down.
+            Shifts the specified row from n Y position, by the specified amount, down.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="col">The column to shift.</param>
@@ -4634,7 +4728,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ShiftColumnUp(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Shifts the spefied row from n Y position, by the specfied amount, up.
+            Shifts the specified row from n Y position, by the specified amount, up.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="col">The column to shift.</param>
@@ -4781,10 +4875,17 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ISurface,SadRogue.Primitives.Rectangle)">
             <summary>
-            Clears an area of obj.Surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+            Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="area">The area to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ISurface,System.Collections.Generic.IEnumerable{SadRogue.Primitives.Point})">
+            <summary>
+            Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="cellPositions">The cells to clear.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ISurface,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{System.Int32},System.Nullable{SadConsole.Mirror})">
             <summary>
@@ -6478,6 +6579,11 @@
             An function that applies an <see cref="T:SadConsole.EasingFunctions.EasingBase"/> function between two values.
             </summary>
         </member>
+        <member name="E:SadConsole.Instructions.AnimatedValue.ValueChanged">
+            <summary>
+            Raised when the instruction is running and the value changes during <see cref="M:SadConsole.Instructions.AnimatedValue.Update(SadConsole.IScreenObject,System.TimeSpan)"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Instructions.AnimatedValue.EasingFunction">
             <summary>
             The easing function assigned to animate the value.
@@ -7134,6 +7240,16 @@
         <member name="P:SadConsole.ISurface.Surface">
             <summary>
             The surface.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ISurfaceSettable">
+            <summary>
+            An interface that provides a Surface property which can be set.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ISurfaceSettable.Surface">
+            <summary>
+            Sets the surface.
             </summary>
         </member>
         <member name="T:SadConsole.ITexture">
@@ -7804,6 +7920,11 @@
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.SurfaceDirtyCells">
             <summary>
             The render step for a <see cref="T:SadConsole.IScreenSurface"/> where individual cells are only rendered if they're dirty.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.SurfaceLayered">
+            <summary>
+            The render step for a <see cref="T:SadConsole.IScreenSurface"/> where multiple layers are exposed through a property.
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.ControlHost">
@@ -10291,6 +10412,37 @@
             Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
             </summary>
         </member>
+        <member name="T:SadConsole.UI.Controls.ComboBox">
+            <summary>
+            Represents a button that can be toggled on/off within a group of other buttons.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.#ctor(System.Int32,System.Int32,System.Int32,System.Object[])">
+            <summary>
+            Creates a new instance of the combobox control.
+            </summary>
+            <param name="width">The width of the control.</param>
+            <param name="dropdownWidth">The width of the dropdown container.</param>
+            <param name="dropdownHeight">The height of the dropdown container.</param>
+            <param name="items">The items to seed the dropdown with.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.SetItems(System.Object[])">
+            <summary>
+            Sets the items in the dropdown listbox.
+            </summary>
+            <param name="items">The items to set.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.GetItems">
+            <summary>
+            Gets an array of items from the dropdown listbox.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.OnIsSelected">
+            <summary>
+            When <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is <see langword="true"/>, displays the popup container. When <see langword="false"/>, hides the popup container.
+            </summary>
+        </member>
         <member name="T:SadConsole.UI.Controls.CompositeControl">
             <summary>
             Base class for controls that host and render other controls.
@@ -10334,13 +10486,13 @@
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)">
             <summary>
-            Adds a child control to this control. <see cref="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)"/> does't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            Adds a child control to this control. <see cref="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)"/> doesn't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
             </summary>
             <param name="control">The control to add.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)">
             <summary>
-            Removes a child control from this control. <see cref="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)"/> does't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            Removes a child control from this control. <see cref="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)"/> doesn't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
             </summary>
             <param name="control">The control to remove.</param>
         </member>
@@ -10883,7 +11035,12 @@
         </member>
         <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemChanged">
             <summary>
-            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> changes.
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemReselected">
+            <summary>
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> property is reselected by the mouse.
             </summary>
         </member>
         <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted">
@@ -11206,7 +11363,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ScrollBar.Orientation">
             <summary>
-            Indicates if the scroll bar is horizontal or veritcal.
+            Indicates if the scroll bar is horizontal or vertical.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ScrollBar.SliderBarSize">
@@ -11241,7 +11398,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ScrollBar.Step">
             <summary>
-            Gets or sets the amount of values to add or substract to the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> when the up or down arrows are used.
+            Gets or sets the amount of values to add or subtract to the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> when the up or down arrows are used.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.#ctor(SadConsole.Orientation,System.Int32)">
@@ -11785,6 +11942,60 @@
         <member name="M:SadConsole.UI.Themes.CheckBoxTheme.Clone">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.UI.Themes.ComboBoxTheme">
+            <summary>
+            The theme of a combobox control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.ListBoxTheme">
+            <summary>
+            The theme to use with the popup listbox control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.PopupInnerAligned">
+            <summary>
+            When <see langword="true"/>, uses the <see cref="P:SadConsole.UI.Themes.ComboBoxTheme.PopupHorizontal"/> value from the interior of the control. When <see langword="false"/>, it's used from the outside of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.PopupHorizontal">
+            <summary>
+            Sets the horizontal orientation of the of the dropdown popup.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.PopupVertical">
+            <summary>
+            Sets the vertical orientation of the of the dropdown popup.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.CollapsedButtonGlyph">
+            <summary>
+            The glyph to use on the control when it's collapsed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.ExpandedButtonGlyph">
+            <summary>
+            The glyph to use on the control when it's expanded.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ComboBoxTheme.IconThemeState">
+            <summary>
+            The theme state used with the icon of the combobox.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ComboBoxTheme.#ctor">
+            <summary>
+            Creates a new combobox theme.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ComboBoxTheme.RefreshTheme(SadConsole.UI.Colors,SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ComboBoxTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Themes.ComboBoxTheme.Clone">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.UI.Themes.DrawingAreaTheme">
             <summary>
             A basic theme for a drawing surface that simply fills the surface based on the state.
@@ -12074,6 +12285,14 @@
             <summary>
             The theme of the slider control.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.ScrollBarTheme.UseExtended">
+            <summary>
+            When <see langword="true"/>, indicates that the start and end glyph buttons sohuld use the extended SadConsole font characters if available.
+            </summary>
+            <remarks>
+            This only affects scrollbars that have a width of two when vertical, and a height of two when horizontal.
+            </remarks>
         </member>
         <member name="F:SadConsole.UI.Themes.ScrollBarTheme.StartButtonVerticalGlyph">
             <summary>
