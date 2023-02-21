@@ -275,7 +275,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
-        RenderSteps.Sort(new RenderStepComparer());
+        RenderSteps.Sort(RenderStepComparer.Instance);
     }
 
     /// <summary>

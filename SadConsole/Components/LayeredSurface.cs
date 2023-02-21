@@ -194,7 +194,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent
         RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered);
         RenderStep.SetData(this);
         surface.RenderSteps.Add(RenderStep);
-        surface.RenderSteps.Sort(new Renderers.RenderStepComparer());
+        surface.RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
         _screen = surface;
 
         Add(surface.Surface);

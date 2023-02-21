@@ -7,6 +7,8 @@ namespace SadConsole.Renderers;
 /// </summary>
 public class RenderStepComparer : IComparer<Renderers.IRenderStep>
 {
+    public static RenderStepComparer Instance { get; } = new RenderStepComparer();
+
     /// <inheritdoc/>
     public int Compare(IRenderStep? x, IRenderStep? y)
     {

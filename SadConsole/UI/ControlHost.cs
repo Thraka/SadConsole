@@ -176,7 +176,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         _controlsRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
         _controlsRenderStep.SetData(this);
         surface.RenderSteps.Add(_controlsRenderStep);
-        surface.RenderSteps.Sort(new Renderers.RenderStepComparer());
+        surface.RenderSteps.Sort(RenderStepComparer.Instance);
         surface.UseKeyboard = true;
         surface.UseMouse = true;
         surface.FocusOnMouseClick = true;

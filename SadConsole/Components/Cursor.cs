@@ -1047,7 +1047,7 @@ public class Cursor : IComponent
         _cursorRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Cursor);
         _cursorRenderStep.SetData(this);
         surface.RenderSteps.Add(_cursorRenderStep);
-        surface.RenderSteps.Sort(new RenderStepComparer());
+        surface.RenderSteps.Sort(RenderStepComparer.Instance);
     }
 
     void IComponent.OnRemoved(IScreenObject host)
