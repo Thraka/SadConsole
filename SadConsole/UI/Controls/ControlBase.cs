@@ -242,18 +242,23 @@ public abstract class ControlBase
 
             if (_parent == null)
             {
-                _parent = value;
-                _parent!.Add(this);
+                _parent = value!;
+
+                if (_parent.IsReadOnly == false)
+                    _parent.Add(this);
             }
             else
             {
                 IContainer temp = _parent;
                 _parent = null;
+                if (!temp.IsReadOnly)
                 temp.Remove(this);
 
                 _parent = value;
                 _parent?.Add(this);
 
+                if (_parent != null && !_parent.IsReadOnly)
+                    _parent.Add(this);
             }    
 
             IsDirty = true;

@@ -21,10 +21,24 @@ public class Panel : ControlBase, IContainer
     public int Count => Controls.Count;
 
     /// <inheritdoc/>
-    public ControlBase this[int index] => Controls[index];
+    public ControlBase this[int index]
+    {
+        get => Controls[index];
+        set
+        {
+            if (index < 0 || index >= Controls.Count)
+                throw new IndexOutOfRangeException();
+
+            RemoveAt(index);
+            Insert(index, value);
+        }
+    }
+    
 
     /// <inheritdoc/>
     public ControlHost? Host => Parent?.Host;
+
+    bool ICollection<ControlBase>.IsReadOnly => false;
 
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
@@ -45,6 +59,12 @@ public class Panel : ControlBase, IContainer
             control.Parent = this;
     }
 
+    /// <summary>
+    /// Removes all controls.
+    /// </summary>
+    public void Clear() =>
+        Controls.Clear();
+
     /// <inheritdoc/>
     public void Add(ControlBase control)
     {
@@ -53,14 +73,6 @@ public class Panel : ControlBase, IContainer
             control.Parent = this;
 
         control.IsDirtyChanged += Control_IsDirtyChanged;
-    }
-
-    private void Control_IsDirtyChanged(object? sender, EventArgs e)
-    {
-        if (sender == null) return;
-
-        if (((ControlBase)sender).IsDirty)
-            IsDirty = true;
     }
 
     /// <inheritdoc/>
@@ -77,9 +89,36 @@ public class Panel : ControlBase, IContainer
         return false;
     }
 
+    /// <summary>
+    /// Removes a control at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the control to remove.</param>
+    public void RemoveAt(int index) =>
+        Controls.RemoveAt(index);
+
+    /// <summary>
+    /// Returns the index of the specified control.
+    /// </summary>
+    /// <param name="control">The control to search for.</param>
+    /// <returns>The index of the control.</returns>
+    public int IndexOf(ControlBase control) =>
+        Controls.IndexOf(control);
+
+    /// <summary>
+    /// Inserts the control at the specified index.
+    /// </summary>
+    /// <param name="index">The index to insert at.</param>
+    /// <param name="control">The control to insert.</param>
+    public void Insert(int index, ControlBase control) =>
+        Controls.Insert(index, control);
+
     /// <inheritdoc/>
     public bool Contains(ControlBase control) =>
         Controls.Contains(control);
+
+    /// <inheritdoc/>
+    public void CopyTo(ControlBase[] array, int arrayIndex) =>
+        Controls.CopyTo(array, arrayIndex);
 
     /// <inheritdoc/>
     public override void Update(TimeSpan time)
@@ -164,6 +203,14 @@ public class Panel : ControlBase, IContainer
         }
 
         return false;
+    }
+
+    private void Control_IsDirtyChanged(object? sender, EventArgs e)
+    {
+        if (sender == null) return;
+
+        if (((ControlBase)sender).IsDirty)
+            IsDirty = true;
     }
 
     /// <summary>

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using SadConsole.Input;
-using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
@@ -70,7 +69,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     }
 
     /// <summary>
-    /// Adds a child control to this control. <see cref="IContainer.Add(ControlBase)"/> doesn't work on the <see cref="CompositeControl"/>.
+    /// Adds a child control to this control.
     /// </summary>
     /// <param name="control">The control to add.</param>
     protected void AddControl(ControlBase control)
@@ -84,7 +83,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     }
 
     /// <summary>
-    /// Removes a child control from this control. <see cref="IContainer.Remove(ControlBase)"/> doesn't work on the <see cref="CompositeControl"/>.
+    /// Removes a child control from this control.
     /// </summary>
     /// <param name="control">The control to remove.</param>
     protected void RemoveControl(ControlBase control)
@@ -105,7 +104,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     {
         base.Update(time);
 
-        var controls = Controls.ToArray();
+        ControlBase[] controls = Controls.ToArray();
 
         for (int i = 0; i < controls.Length; i++)
         {
@@ -114,15 +113,13 @@ public abstract class CompositeControl : ControlBase, IContainer
         }
     }
 
-    Point IContainer.AbsolutePosition => AbsolutePosition;
-
     ControlHost? IContainer.Host => Parent?.Host;
 
-    void IContainer.Add(ControlBase control) =>
-        AddControl(control);
+    #region IList
+    bool ICollection<ControlBase>.IsReadOnly => true;
 
-    bool IContainer.Contains(ControlBase control) =>
-        Controls.Contains(control);
+    void ICollection<ControlBase>.Add(ControlBase control) =>
+        AddControl(control);
 
     IEnumerator<ControlBase> IEnumerable<ControlBase>.GetEnumerator() =>
         Controls.GetEnumerator();
@@ -130,9 +127,31 @@ public abstract class CompositeControl : ControlBase, IContainer
     IEnumerator IEnumerable.GetEnumerator() =>
         Controls.GetEnumerator();
 
-    bool IContainer.Remove(ControlBase control)
+    bool ICollection<ControlBase>.Remove(ControlBase control) =>
+        throw new NotSupportedException();
+
+    ControlBase IList<ControlBase>.this[int index]
     {
-        return false;
+        get => Controls[index];
+        set => throw new NotSupportedException();
     }
 
+    int IList<ControlBase>.IndexOf(ControlBase item) =>
+        Controls.IndexOf(item);
+
+    void IList<ControlBase>.Insert(int index, ControlBase item) =>
+        throw new NotSupportedException();
+
+    void IList<ControlBase>.RemoveAt(int index) =>
+        throw new NotSupportedException();
+
+    void ICollection<ControlBase>.Clear() =>
+        throw new NotSupportedException();
+
+    bool ICollection<ControlBase>.Contains(ControlBase item) =>
+        Controls.Contains(item);
+
+    void ICollection<ControlBase>.CopyTo(ControlBase[] array, int arrayIndex) =>
+        throw new NotSupportedException();
+    #endregion
 }
