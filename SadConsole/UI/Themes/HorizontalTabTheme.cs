@@ -180,7 +180,6 @@ public class HorizontalTabControlTheme : ThemeBase
 			surface.SetGlyph(x + headerLength, y + 1, Glyphs.ThinLineVertical, Color.DarkGray);
 			// Button
 			tab.TabButton.Position = new(x, y + 1);
-			tab.TabButton.Resize(headerLength, 1);
 			nextX = x + headerLength + 1;
 		}
 		else // Current tab is to the left of the active tab
@@ -195,10 +194,11 @@ public class HorizontalTabControlTheme : ThemeBase
 			surface.SetGlyph(x, y + 1, Glyphs.ThinLineVertical, Color.DarkGray);
 			// Button
 			tab.TabButton.Position = new(x + 1, y + 1);
-			tab.TabButton.Resize(headerLength, 1);
 			nextX = x + headerLength;
 		}
 
+		tab.TabButton.Resize(headerLength, 1);
+		tab.TabButton.TextAlignment = tab.TextAlignment;
 		tab.TabButton.IsVisible = true;
 
 		return nextX;

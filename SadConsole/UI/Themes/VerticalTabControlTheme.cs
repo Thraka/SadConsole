@@ -160,9 +160,10 @@ public class VerticalTabControlTheme : ThemeBase
 		{
 			padding = headerLength - tab.Header.Length;
 		}
+
 		foreach (char letter in tab.Header)
 		{
-			surface.SetGlyph(x - 1, headerY, letter, Color.DarkOrange);
+			surface.SetGlyph(x - 1, headerY + padding, letter, Color.DarkOrange);
 			headerY++;
 		}
 
