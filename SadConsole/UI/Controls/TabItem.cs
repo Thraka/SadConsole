@@ -21,4 +21,6 @@ public class TabItem
 
 		((ButtonTheme)TabButton.Theme).ShowEnds = false;
 	}
+
+	public override string ToString() => Header;
 }
