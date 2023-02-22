@@ -71,7 +71,7 @@ public class VerticalTabControlTheme : ThemeBase
 					y = DrawActiveTabRight(tabs.Surface, x, y, tab);
 					if (tabs.EnforceConsolePosition) tab.Console.Position = tabs.AbsolutePosition.Translate(new Point(1, 1));
 				}
-				
+
 				if (tabs.UpdateConsoleViewRect) ((Console)tab.Console).View = new Rectangle(0, 0, tabs.Width - 4, tabs.Height - 2);
 			}
 			else
@@ -92,51 +92,74 @@ public class VerticalTabControlTheme : ThemeBase
 
 	int DrawActiveTabLeft(ICellSurface surface, int x, int y, TabItem tab)
 	{
+		int headerLength = tab.Header.Length > tab.TabSize ? tab.Header.Length : tab.TabSize;
+
 		// Line to the left
-		surface.DrawLine(new Point(x, y + 2), new Point(x, y + tab.Header.Length + 1), Glyphs.ThinLineVertical, Color.DarkOrange);
+		surface.DrawLine(new Point(x, y + 2), new Point(x, y + headerLength + 1), Glyphs.ThinLineVertical, Color.DarkOrange);
 		// Clear line to the right
-		surface.DrawLine(new Point(x + 2, y + 1), new Point(x + 2, y + tab.Header.Length + 2), 0);
+		surface.DrawLine(new Point(x + 2, y + 1), new Point(x + 2, y + headerLength + 2), 0);
 		// Top
 		surface.SetGlyph(x, y + 1, Glyphs.ThinTopLeftCorner, Color.DarkOrange);
 		surface.SetGlyph(x + 1, y + 1, Glyphs.ThinLineHorizontal, Color.DarkOrange);
 		surface.SetGlyph(x + 2, y + 1, Glyphs.ThinBottomRightCorner, Color.DarkOrange);
 		//	Bottom
-		surface.SetGlyph(x, y + tab.Header.Length + 2, Glyphs.ThinBottomLeftCorner, Color.DarkOrange);
-		surface.SetGlyph(x + 1, y + tab.Header.Length + 2, Glyphs.ThinLineHorizontal, Color.DarkOrange);
-		surface.SetGlyph(x + 2, y + tab.Header.Length + 2, Glyphs.ThinTopRightCorner, Color.DarkOrange);
+		surface.SetGlyph(x, y + headerLength + 2, Glyphs.ThinBottomLeftCorner, Color.DarkOrange);
+		surface.SetGlyph(x + 1, y + headerLength + 2, Glyphs.ThinLineHorizontal, Color.DarkOrange);
+		surface.SetGlyph(x + 2, y + headerLength + 2, Glyphs.ThinTopRightCorner, Color.DarkOrange);
 
 		// Header Text
 		int headerY = y + 2;
+		int padding = 0;
+		if (tab.TextAlignment == HorizontalAlignment.Center)
+		{
+			padding = (headerLength - tab.Header.Length) / 2;
+		}
+		else if (tab.TextAlignment == HorizontalAlignment.Right)
+		{
+			padding = headerLength - tab.Header.Length;
+		}
+
 		foreach (char letter in tab.Header)
 		{
-			surface.SetGlyph(x + 1, headerY, letter);
+			surface.SetGlyph(x + 1, headerY + padding, letter);
 			headerY++;
 		}
 
 		tab.TabButton.IsVisible = false;
 
-		int nextY = headerY + 1;
+		int nextY = y + headerLength + 3;
 
 		return nextY;
 	}
 
 	int DrawActiveTabRight(ICellSurface surface, int x, int y, TabItem tab)
 	{
+		int headerLength = tab.Header.Length > tab.TabSize ? tab.Header.Length : tab.TabSize;
+
 		// Line to the right
-		surface.DrawLine(new Point(x, y + 2), new Point(x, y + tab.Header.Length + 1), Glyphs.ThinLineVertical, Color.DarkOrange);
+		surface.DrawLine(new Point(x, y + 2), new Point(x, y + headerLength + 1), Glyphs.ThinLineVertical, Color.DarkOrange);
 		// Clear line to the left
-		surface.DrawLine(new Point(x - 2, y + 2), new Point(x - 2, y + tab.Header.Length + 1), 0);
+		surface.DrawLine(new Point(x - 2, y + 2), new Point(x - 2, y + headerLength + 1), 0);
 		// Top
 		surface.SetGlyph(x, y + 1, Glyphs.ThinTopRightCorner, Color.DarkOrange);
 		surface.SetGlyph(x - 1, y + 1, Glyphs.ThinLineHorizontal, Color.DarkOrange);
 		surface.SetGlyph(x - 2, y + 1, Glyphs.ThinBottomLeftCorner, Color.DarkOrange);
 		// Bottom
-		surface.SetGlyph(x, y + tab.Header.Length + 2, Glyphs.ThinBottomRightCorner, Color.DarkOrange);
-		surface.SetGlyph(x - 2, y + tab.Header.Length + 2, Glyphs.ThinTopLeftCorner, Color.DarkOrange);
-		surface.SetGlyph(x - 1, y + tab.Header.Length + 2, Glyphs.ThinLineHorizontal, Color.DarkOrange);
+		surface.SetGlyph(x, y + headerLength + 2, Glyphs.ThinBottomRightCorner, Color.DarkOrange);
+		surface.SetGlyph(x - 2, y + headerLength + 2, Glyphs.ThinTopLeftCorner, Color.DarkOrange);
+		surface.SetGlyph(x - 1, y + headerLength + 2, Glyphs.ThinLineHorizontal, Color.DarkOrange);
 
 		// Header Text
 		int headerY = y + 2;
+		int padding = 0;
+		if (tab.TextAlignment == HorizontalAlignment.Center)
+		{
+			padding = (headerLength - tab.Header.Length) / 2;
+		}
+		else if (tab.TextAlignment == HorizontalAlignment.Right)
+		{
+			padding = headerLength - tab.Header.Length;
+		}
 		foreach (char letter in tab.Header)
 		{
 			surface.SetGlyph(x - 1, headerY, letter, Color.DarkOrange);
@@ -145,62 +168,70 @@ public class VerticalTabControlTheme : ThemeBase
 
 		tab.TabButton.IsVisible = false;
 
-		int nextY = headerY + 1;
+		int nextY = y + headerLength + 3;
 
 		return nextY;
 	}
 
 	int DrawInactiveTabLeft(ICellSurface surface, int x, int y, TabItem tab, int currentIndex, int activeIndex)
 	{
+		int headerLength = tab.Header.Length > tab.TabSize ? tab.Header.Length : tab.TabSize;
+
 		int nextY = 0;
 		if (currentIndex > activeIndex)
 		{
-			surface.DrawLine(new Point(x, y), new Point(x, y + tab.Header.Length - 1), Glyphs.ThinLineVertical, Color.DarkGray);
-			surface.SetGlyph(x, y + tab.Header.Length, Glyphs.ThinBottomLeftCorner, Color.DarkGray);
-			surface.SetGlyph(x + 1, y + tab.Header.Length, Glyphs.ThinLineHorizontal, Color.DarkGray);
+			surface.DrawLine(new Point(x, y), new Point(x, y + headerLength - 1), Glyphs.ThinLineVertical, Color.DarkGray);
+			surface.SetGlyph(x, y + headerLength, Glyphs.ThinBottomLeftCorner, Color.DarkGray);
+			surface.SetGlyph(x + 1, y + headerLength, Glyphs.ThinLineHorizontal, Color.DarkGray);
 
-			nextY = y + tab.Header.Length + 1;
+			nextY = y + headerLength + 1;
 		}
 		else // Current tab is to the top of the active tab)
 		{
 			y += 2;
-			surface.DrawLine(new Point(x, y), new Point(x, y + tab.Header.Length - 1), Glyphs.ThinLineVertical, Color.DarkGray);
+			surface.DrawLine(new Point(x, y), new Point(x, y + headerLength - 1), Glyphs.ThinLineVertical, Color.DarkGray);
 			surface.SetGlyph(x, y - 1, Glyphs.ThinTopLeftCorner, Color.DarkGray);
 			surface.SetGlyph(x + 1, y - 1, Glyphs.ThinLineHorizontal, Color.DarkGray);
 
-			nextY = y + tab.Header.Length - 1;
+			nextY = y + headerLength - 1;
 		}
 
 		tab.TabButton.Position = new(x + 1, y);
 		tab.TabButton.IsVisible = true;
+		tab.TabButton.Resize(1, headerLength);
+		tab.TabButton.TextAlignment = tab.TextAlignment;
 
 		return nextY;
 	}
 
 	int DrawInactiveTabRight(ICellSurface surface, int x, int y, TabItem tab, int currentIndex, int activeIndex)
 	{
+		int headerLength = tab.Header.Length > tab.TabSize ? tab.Header.Length : tab.TabSize;
+
 		int nextY = 0;
 		if (currentIndex > activeIndex)
 		{
-			surface.DrawLine(new Point(x, y), new Point(x, y + tab.Header.Length - 1), Glyphs.ThinLineVertical, Color.DarkGray);
-			surface.SetGlyph(x, y + tab.Header.Length, Glyphs.ThinBottomRightCorner, Color.DarkGray);
-			surface.SetGlyph(x - 1, y + tab.Header.Length, Glyphs.ThinLineHorizontal, Color.DarkGray);
+			surface.DrawLine(new Point(x, y), new Point(x, y + headerLength - 1), Glyphs.ThinLineVertical, Color.DarkGray);
+			surface.SetGlyph(x, y + headerLength, Glyphs.ThinBottomRightCorner, Color.DarkGray);
+			surface.SetGlyph(x - 1, y + headerLength, Glyphs.ThinLineHorizontal, Color.DarkGray);
 
-			nextY = y + tab.Header.Length + 1;
+			nextY = y + headerLength + 1;
 		}
 		else // Current tab is to the top of the active tab)
 		{
 			y += 2;
-			surface.DrawLine(new Point(x, y), new Point(x, y + tab.Header.Length - 1), Glyphs.ThinLineVertical, Color.DarkGray);
+			surface.DrawLine(new Point(x, y), new Point(x, y + headerLength - 1), Glyphs.ThinLineVertical, Color.DarkGray);
 			surface.SetGlyph(x, y - 1, Glyphs.ThinTopRightCorner, Color.DarkGray);
 			surface.SetGlyph(x - 1, y - 1, Glyphs.ThinLineHorizontal, Color.DarkGray);
 
 
-			nextY = y + tab.Header.Length - 1;
+			nextY = y + headerLength - 1;
 		}
 
 		tab.TabButton.Position = new(x - 1, y);
 		tab.TabButton.IsVisible = true;
+		tab.TabButton.Resize(1, headerLength);
+		tab.TabButton.TextAlignment = tab.TextAlignment;
 
 		return nextY;
 	}
