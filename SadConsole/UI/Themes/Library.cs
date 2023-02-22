@@ -89,6 +89,7 @@ namespace SadConsole.UI.Themes
             SetControlTheme(typeof(Label), new LabelTheme());
             SetControlTheme(typeof(Panel), new PanelTheme());
             SetControlTheme(typeof(SurfaceViewer), new SurfaceViewerTheme());
+            SetControlTheme(typeof(TabControl), new HorizontalTabControlTheme());
         }
 
         /// <summary>
