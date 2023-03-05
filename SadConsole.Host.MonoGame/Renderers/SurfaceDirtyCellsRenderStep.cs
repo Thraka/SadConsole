@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 using Color = Microsoft.Xna.Framework.Color;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
-using SadRectangle = SadRogue.Primitives.Rectangle;
 
 namespace SadConsole.Renderers
 {
     /// <summary>
     /// Draws a <see cref="SadConsole.IScreenSurface"/> object.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Surface")]
+    [System.Diagnostics.DebuggerDisplay("Surface (Dirty)")]
     public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     {
         private Host.GameTexture _cachedTexture;
@@ -25,6 +22,9 @@ namespace SadConsole.Renderers
 
         /// <inheritdoc/>//
         public ITexture CachedTexture => _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.SurfaceDirtyCells;
 
         /// <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;

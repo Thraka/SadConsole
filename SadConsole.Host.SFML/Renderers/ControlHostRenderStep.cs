@@ -9,10 +9,14 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Draws a <see cref="UI.ControlHost"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Control host")]
     public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     {
         private UI.ControlHost _controlsHost;
         private GameTexture _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.ControlHost;
 
         /// <summary>
         /// The cached texture of the drawn controls layer.

@@ -1,8 +1,5 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
-using Color = Microsoft.Xna.Framework.Color;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace SadConsole.Renderers
@@ -14,6 +11,9 @@ namespace SadConsole.Renderers
     public class CursorRenderStep : IRenderStep
     {
         private Components.Cursor _cursor;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Cursor;
 
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Cursor;

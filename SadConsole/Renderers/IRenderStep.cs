@@ -8,6 +8,11 @@ namespace SadConsole.Renderers;
 public interface IRenderStep : IDisposable
 {
     /// <summary>
+    /// The name of the render step.
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
     /// Indicates priority related to other steps. Lowest runs first.
     /// </summary>
     uint SortOrder { get; set; }

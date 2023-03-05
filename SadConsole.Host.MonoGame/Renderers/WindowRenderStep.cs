@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SadRogue.Primitives;
-using Color = Microsoft.Xna.Framework.Color;
+﻿using SadRogue.Primitives;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace SadConsole.Renderers
@@ -13,6 +9,9 @@ namespace SadConsole.Renderers
     [System.Diagnostics.DebuggerDisplay("Window")]
     public class WindowRenderStep : IRenderStep
     {
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Window;
+
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
 

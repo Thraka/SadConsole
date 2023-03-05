@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
@@ -18,6 +16,9 @@ namespace SadConsole.Renderers
     {
         private SadConsole.UI.ControlHost _controlsHost;
         private Host.GameTexture _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.ControlHost;
 
         /// <summary>
         /// The cached texture of the drawn surface.
