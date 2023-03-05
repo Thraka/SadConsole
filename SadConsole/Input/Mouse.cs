@@ -36,7 +36,7 @@ public class Mouse
     public bool MiddleClicked { get; set; }
 
     /// <summary>
-    /// Inidcates the middle mouse button was double-clicked within one second.
+    /// Indicates the middle mouse button was double-clicked within one second.
     /// </summary>
     public bool MiddleDoubleClicked { get; set; }
 
@@ -56,7 +56,7 @@ public class Mouse
     public bool LeftClicked { get; set; }
 
     /// <summary>
-    /// Inidcates the left mouse button was double-clicked within one second.
+    /// Indicates the left mouse button was double-clicked within one second.
     /// </summary>
     public bool LeftDoubleClicked { get; set; }
 
@@ -76,7 +76,7 @@ public class Mouse
     public bool RightClicked { get; set; }
 
     /// <summary>
-    /// Indicates the right mouse buttion was double-clicked within one second.
+    /// Indicates the right mouse button was double-clicked within one second.
     /// </summary>
     public bool RightDoubleClicked { get; set; }
 
@@ -212,10 +212,12 @@ public class Mouse
     /// </summary>
     public virtual void Process()
     {
+        var state = new MouseScreenObjectState(null, this);
+
         // Check if last mouse was marked exclusive
         if (_lastMouseScreenObject != null && _lastMouseScreenObject.IsExclusiveMouse)
         {
-            var state = new MouseScreenObjectState(_lastMouseScreenObject, this);
+            state.Refresh(_lastMouseScreenObject, this);
 
             _lastMouseScreenObject.ProcessMouse(state);
         }
@@ -223,7 +225,7 @@ public class Mouse
         // Check if the focused input screen object wants exclusive mouse
         else if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null && GameHost.Instance.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
         {
-            var state = new MouseScreenObjectState(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
+            state.Refresh(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
 
             // if the last screen object to have the mouse is not our global, signal
             if (_lastMouseScreenObject != null && _lastMouseScreenObject != GameHost.Instance.FocusedScreenObjects.ScreenObject)
@@ -251,14 +253,12 @@ public class Mouse
 
             for (int i = 0; i < screenObjects.Count; i++)
             {
-                var state = new MouseScreenObjectState(screenObjects[i], this);
+                state.Refresh(screenObjects[i], this);
 
                 if (screenObjects[i].ProcessMouse(state))
                 {
                     if (_lastMouseScreenObject != null && _lastMouseScreenObject != screenObjects[i])
-                    {
                         _lastMouseScreenObject.LostMouse(state);
-                    }
 
                     foundMouseTarget = true;
                     _lastMouseScreenObject = screenObjects[i];
@@ -268,7 +268,8 @@ public class Mouse
 
             if (!foundMouseTarget)
             {
-                _lastMouseScreenObject?.LostMouse(new MouseScreenObjectState(null, this));
+                state.Refresh(null, this);
+                _lastMouseScreenObject?.LostMouse(state);
             }
         }
 
