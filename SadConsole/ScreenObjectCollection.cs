@@ -23,7 +23,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     where TScreenObject : class, IScreenObject
 {
     /// <summary>
-    /// Raised when the itmes in this collection are added, removed, or repositioned.
+    /// Raised when the items in this collection are added, removed, or repositioned.
     /// </summary>
     public event EventHandler? CollectionChanged;
 
@@ -58,14 +58,10 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         set
         {
             if (IsLocked)
-            {
                 throw new Exception("The collection is locked and cannot be modified.");
-            }
 
             if (objects[index] == value)
-            {
                 return;
-            }
 
             TScreenObject oldObject = objects[index];
             objects[index] = value;
@@ -91,9 +87,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     public void Clear()
     {
         if (IsLocked)
-        {
             throw new Exception("The collection is locked and cannot be modified.");
-        }
 
         objects.Clear();
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -115,9 +109,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     public bool IsTop(TScreenObject obj)
     {
         if (objects.Contains(obj))
-        {
             return objects.IndexOf(obj) == objects.Count - 1;
-        }
 
         return false;
     }
@@ -130,14 +122,10 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     public void Add(TScreenObject obj)
     {
         if (IsLocked)
-        {
             throw new Exception("The collection is locked and cannot be modified.");
-        }
 
         if (!objects.Contains(obj))
-        {
             objects.Add(obj);
-        }
 
         SetObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -152,14 +140,10 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     public void Insert(int index, TScreenObject obj)
     {
         if (IsLocked)
-        {
             throw new Exception("The collection is locked and cannot be modified.");
-        }
 
         if (!objects.Contains(obj))
-        {
             objects.Insert(index, obj);
-        }
 
         SetObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -173,17 +157,26 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     public void Remove(TScreenObject obj)
     {
         if (IsLocked)
-        {
             throw new Exception("The collection is locked and cannot be modified.");
-        }
 
         if (objects.Contains(obj))
-        {
             objects.Remove(obj);
-        }
 
         RemoveObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Sorts the collection based on <see cref="IScreenObject.SortOrder"/>.
+    /// </summary>
+    /// <param name="comparer">The comparer to use</param>
+    /// <exception cref="Exception">Thrown when the <see cref="IsLocked"/> property is set to true.</exception>
+    public void Sort(IComparer<IScreenObject> comparer)
+    {
+        if (IsLocked)
+            throw new Exception("The collection is locked and cannot be modified.");
+
+        objects.Sort(comparer);
     }
 
     /// <summary>

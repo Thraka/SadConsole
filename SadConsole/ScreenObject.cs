@@ -34,7 +34,7 @@ public class ScreenObject : IScreenObject
     private IScreenObject? _parentObject;
     private bool _isVisible = true;
     private bool _isEnabled = true;
-    private bool _isfocused;
+    private bool _isFocused;
 
 
     /// <inheritdoc/>
@@ -79,6 +79,12 @@ public class ScreenObject : IScreenObject
     /// A filtered list from <see cref="SadComponents"/> that is not set for update, render, mouse, or keyboard.
     /// </summary>
     protected List<IComponent> ComponentsEmpty;
+
+    /// <summary>
+    /// Indicates the sorting order this object should use when parented. Sorting is a manual operation on the <see cref="Children"/> collection.
+    /// </summary>
+    [DataMember]
+    public uint SortOrder { get; set; }
 
     /// <inheritdoc/>
     public ObservableCollection<IComponent> SadComponents { get; protected set; }
@@ -162,12 +168,12 @@ public class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public bool IsFocused
     {
-        get => _isfocused;
+        get => _isFocused;
         set
         {
-            if ((_isfocused && value) || (!_isfocused && !value)) return;
+            if ((_isFocused && value) || (!_isFocused && !value)) return;
 
-            _isfocused = value;
+            _isFocused = value;
 
             if (value)
             {

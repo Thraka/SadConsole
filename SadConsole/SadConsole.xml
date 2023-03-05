@@ -1813,6 +1813,23 @@
             The visible portion of the surface layers.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.LayeredSurface.Count">
+            <summary>
+            The numbers of layers.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.LayeredSurface.IsReadOnly">
+            <summary>
+            Always returns <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.LayeredSurface.Item(System.Int32)">
+            <summary>
+            Gets or sets a layer by index.
+            </summary>
+            <param name="index">The index of the layer to get or set.</param>
+            <returns>The layer.</returns>
+        </member>
         <member name="M:SadConsole.Components.LayeredSurface.Add(SadConsole.ICellSurface)">
             <summary>
             Adds a layer to this component.
@@ -1845,10 +1862,48 @@
             </summary>
             <param name="layer">The layer to remove.</param>
         </member>
-        <member name="M:SadConsole.Components.LayeredSurface.RemoveAll">
+        <member name="M:SadConsole.Components.LayeredSurface.IndexOf(SadConsole.ICellSurface)">
             <summary>
-            Removes all layers from this component.
+            Returns the index of the specified layer.
             </summary>
+            <param name="layer">The layer to search for.</param>
+            <returns>The index of the layer.</returns>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Insert(System.Int32,SadConsole.ICellSurface)">
+            <summary>
+            Inserts the layer at the specified index.
+            </summary>
+            <param name="index">The index to insert at.</param>
+            <param name="layer">The layer to insert.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.RemoveAt(System.Int32)">
+            <summary>
+            Removes a layer at the specified index.
+            </summary>
+            <param name="index">The index of the layer to remove.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Clear">
+            <summary>
+            Removes all layers.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Clear(SadConsole.ICellSurface)">
+            <summary>
+            Removes all layers and adds the <paramref name="initialLayer"/> parameter as the first layer.
+            </summary>
+            <param name="initialLayer">The new first layer.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Contains(SadConsole.ICellSurface)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.CopyTo(SadConsole.ICellSurface[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Components.LayeredSurface.Create">
             <summary>
@@ -2017,6 +2072,16 @@
             Called when the timer restarts.
             </summary>
         </member>
+        <member name="E:SadConsole.Components.Timer.TimerStart">
+            <summary>
+            Called when the timer starts.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Components.Timer.TimerStop">
+            <summary>
+            Called when the timer stops.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.Timer.Repeat">
             <summary>
             If true, the timer will restart when the time has elapsed.
@@ -2027,9 +2092,9 @@
             How many milliseconds to cause the timer to trigger.
             </summary>
         </member>
-        <member name="P:SadConsole.Components.Timer.IsPaused">
+        <member name="P:SadConsole.Components.Timer.IsRunning">
             <summary>
-            When true, the timer does not count time.
+            When <see langword="true"/>, indicates that the timer is running; otherwise <see langword="false"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Components.Timer.#ctor(System.TimeSpan)">
@@ -2047,7 +2112,17 @@
         </member>
         <member name="M:SadConsole.Components.Timer.Restart">
             <summary>
-            Restarts the timer; sets <see cref="P:SadConsole.Components.Timer.IsPaused"/> to false.
+            Restarts the timer; raises the <see cref="E:SadConsole.Components.Timer.TimerRestart"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Timer.Start">
+            <summary>
+            Starts the timer; raises the <see cref="E:SadConsole.Components.Timer.TimerStart"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Timer.Stop">
+            <summary>
+            Starts the timer; raises the <see cref="E:SadConsole.Components.Timer.TimerStop"/> event.
             </summary>
         </member>
         <member name="T:SadConsole.Components.UpdateComponent">
@@ -2880,7 +2955,7 @@
         </member>
         <member name="T:SadConsole.Entities.Entity">
             <summary>
-            A positionable and animated game object.
+            A positioned and animated game object.
             </summary>
         </member>
         <member name="E:SadConsole.Entities.Entity.IsDirtyChanged">
@@ -2900,7 +2975,7 @@
         </member>
         <member name="P:SadConsole.Entities.Entity.IsDirty">
             <summary>
-            Indidcates this entity's visual appearance has changed.
+            Indicates this entity's visual appearance has changed.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
@@ -3088,7 +3163,7 @@
         </member>
         <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.FromPosition">
             <summary>
-            The positiont the <see cref="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity"/> moved from.
+            The position the <see cref="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity"/> moved from.
             </summary>
         </member>
         <member name="M:SadConsole.Entities.Entity.EntityMovedEventArgs.#ctor(SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
@@ -3165,8 +3240,26 @@
         </member>
         <member name="P:SadConsole.Entities.Renderer.SkipExistsChecks">
             <summary>
-            When <see langword="true"/>, the <see cref="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)"/> won't check if the entitiy exists before doing its operation.
+            When <see langword="true"/>, the <see cref="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)"/> won't check if the entity exists before doing its operation.
             </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Renderer.Count">
+            <summary>
+            The number of entities in the renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Renderer.IsReadOnly">
+            <summary>
+            Always returns false.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Renderer.Item(System.Int32)">
+            <summary>
+            Gets an entity by index.
+            </summary>
+            <param name="index"></param>
+            <returns>The entity.</returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="F:SadConsole.Entities.Renderer.RenderStep">
             <summary>
@@ -3185,13 +3278,26 @@
             </summary>
             <param name="entities">The entities to add.</param>
         </member>
+        <member name="M:SadConsole.Entities.Renderer.AddEntity(SadConsole.Entities.Entity,System.Boolean)">
+            <summary>
+            Adds an entity to the collection, subscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})"/>.
+            </summary>
+            <param name="entity">The entity to remove.</param>
+            <param name="skipSort">When true, skips sorting when <see cref="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)"/> is called inside this method.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.RemoveEntity(SadConsole.Entities.Entity)">
+            <summary>
+            Adds an entity to the collection, unsubscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityRemoved(SadConsole.Entities.Entity)"/>.
+            </summary>
+            <param name="entity">The entity to remove.</param>
+        </member>
         <member name="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)">
             <summary>
             Removes an entity from this manager.
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.RemoveAll">
+        <member name="M:SadConsole.Entities.Renderer.Clear">
             <summary>
             Removes all entities from this renderer.
             </summary>
@@ -3213,7 +3319,7 @@
             <param name="isPixel">Indicates the entity is pixel positioned.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.SortVisibleEntites">
+        <member name="M:SadConsole.Entities.Renderer.SortVisibleEntities">
             <summary>
             Sorts the <see cref="P:SadConsole.Entities.Renderer.EntitiesVisible"/> collection according to the <see cref="P:SadConsole.Entities.Entity.ZIndex"/> value.
             </summary>
@@ -3242,7 +3348,7 @@
             Updates the visibility state of an entity.
             </summary>
             <param name="entity">The entity to check.</param>
-            <returns>Returns <see langword="true"/> when this entity is considered visible; othwerise <see langword="false"/>.</returns>
+            <returns>Returns <see langword="true"/> when this entity is considered visible; otherwise <see langword="false"/>.</returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
         <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)">
@@ -3250,13 +3356,25 @@
             Detects a visibility state change of an entity and changes its internal list position.
             </summary>
             <param name="entity">The entity to check.</param>
-            <param name="skipSort">If <see langword="true"/>, skips sorting the visibile.</param>
+            <param name="skipSort">If <see langword="true"/>, skips sorting the visible.</param>
             <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
             <summary>
             Updates the cached view area based on the parent surface.
             </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.IndexOf(SadConsole.Entities.Entity)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.Contains(SadConsole.Entities.Entity)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.CopyTo(SadConsole.Entities.Entity[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.Renderer.GetEnumerator">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.PointExtensions">
             <summary>
@@ -7015,6 +7133,11 @@
             Raised when the <see cref="P:SadConsole.IScreenObject.IsFocused"/> property is <see langword="true"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.IScreenObject.SortOrder">
+            <summary>
+            Indicates the sorting order this object should use when parented. Sorting is a manual operation on the <see cref="P:SadConsole.IScreenObject.Children"/> collection.
+            </summary>
+        </member>
         <member name="P:SadConsole.IScreenObject.FocusedMode">
             <summary>
             How the object should handle becoming active.
@@ -7388,6 +7511,64 @@
             <summary>
             Calculates the cell color based on the surrounding colors of the image.
             </summary>
+        </member>
+        <member name="T:SadConsole.LayeredScreenSurface">
+            <summary>
+            A basic console that can contain controls.
+            </summary>
+        </member>
+        <member name="P:SadConsole.LayeredScreenSurface.Layers">
+            <summary>
+            The controls host holding all the controls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new console.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+            <param name="initialCells">The initial cells to seed the surface.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The visible width of the console in cells.</param>
+            <param name="height">The visible height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+            <summary>
+            Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
+            </summary>
+            <param name="width">The width of the console in cells.</param>
+            <param name="height">The height of the console in cells.</param>
+            <param name="bufferWidth">The total width of the console in cells.</param>
+            <param name="bufferHeight">The total height of the console in cells.</param>
+            <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new console using the existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.ToString">
+            <summary>
+            Returns the value "Console (Controls)".
+            </summary>
+            <returns>The string "Console (Controls)".</returns>
         </member>
         <member name="T:SadConsole.Quick.Keyboard">
             <summary>
@@ -8049,6 +8230,11 @@
             A rendering step processed by an <see cref="T:SadConsole.Renderers.IRenderer"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.IRenderStep.Name">
+            <summary>
+            The name of the render step.
+            </summary>
+        </member>
         <member name="P:SadConsole.Renderers.IRenderStep.SortOrder">
             <summary>
             Indicates priority related to other steps. Lowest runs first.
@@ -8108,6 +8294,11 @@
         <member name="T:SadConsole.Renderers.RenderStepComparer">
             <summary>
             Compares <see cref="T:SadConsole.Renderers.IRenderStep"/> with the <see cref="P:SadConsole.Renderers.IRenderStep.SortOrder"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.RenderStepComparer.Instance">
+            <summary>
+            Shared instance of the <see cref="T:SadConsole.Renderers.RenderStepComparer"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.RenderStepComparer.Compare(SadConsole.Renderers.IRenderStep,SadConsole.Renderers.IRenderStep)">
@@ -8285,6 +8476,11 @@
         <member name="F:SadConsole.ScreenObject.ComponentsEmpty">
             <summary>
             A filtered list from <see cref="P:SadConsole.ScreenObject.SadComponents"/> that is not set for update, render, mouse, or keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObject.SortOrder">
+            <summary>
+            Indicates the sorting order this object should use when parented. Sorting is a manual operation on the <see cref="P:SadConsole.ScreenObject.Children"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.ScreenObject.SadComponents">
@@ -8470,7 +8666,7 @@
         </member>
         <member name="E:SadConsole.ScreenObjectCollection`1.CollectionChanged">
             <summary>
-            Raised when the itmes in this collection are added, removed, or repositioned.
+            Raised when the items in this collection are added, removed, or repositioned.
             </summary>
         </member>
         <member name="F:SadConsole.ScreenObjectCollection`1.objects">
@@ -8547,6 +8743,13 @@
             <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
             <param name="obj">The child object.</param>
         </member>
+        <member name="M:SadConsole.ScreenObjectCollection`1.Sort(System.Collections.Generic.IComparer{SadConsole.IScreenObject})">
+            <summary>
+            Sorts the collection based on <see cref="P:SadConsole.IScreenObject.SortOrder"/>.
+            </summary>
+            <param name="comparer">The comparer to use</param>
+            <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
+        </member>
         <member name="M:SadConsole.ScreenObjectCollection`1.MoveToTop(`0)">
             <summary>
             Moves the specified <paramref name="obj"/>  to the top of the collection.
@@ -8567,6 +8770,19 @@
         </member>
         <member name="M:SadConsole.ScreenObjectCollection`1.GetEnumerator">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.ScreenObjectComparer">
+            <summary>
+            Compares <see cref="T:SadConsole.IScreenObject"/> with the <see cref="P:SadConsole.IScreenObject.SortOrder"/> property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ScreenObjectComparer.Instance">
+            <summary>
+            Shared instance of the <see cref="T:SadConsole.ScreenObjectComparer"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectComparer.Compare(SadConsole.IScreenObject,SadConsole.IScreenObject)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.ScreenSurface">
             <summary>
@@ -10494,13 +10710,13 @@
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)">
             <summary>
-            Adds a child control to this control. <see cref="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)"/> doesn't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            Adds a child control to this control.
             </summary>
             <param name="control">The control to add.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)">
             <summary>
-            Removes a child control from this control. <see cref="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)"/> doesn't work on the <see cref="T:SadConsole.UI.Controls.CompositeControl"/>.
+            Removes a child control from this control.
             </summary>
             <param name="control">The control to remove.</param>
         </member>
@@ -10951,26 +11167,6 @@
             The host owning this container.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Add(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Adds a control to this container.
-            </summary>
-            <param name="control">The control.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Remove(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            Removes a control from this container.
-            </summary>
-            <param name="control">The control.</param>
-            <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
-        </member>
-        <member name="M:SadConsole.UI.Controls.IContainer.Contains(SadConsole.UI.Controls.ControlBase)">
-            <summary>
-            <see langword="true"/> when the control exists in the container; otherwise, <see langword="false"/>.
-            </summary>
-            <param name="control">The control to find.</param>
-            <returns>A value to indicate if this control is in this container.</returns>
-        </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
             A simple surface for drawing text that can be moved and sized like a control.
@@ -11197,13 +11393,41 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Clear">
+            <summary>
+            Removes all controls.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.Panel.Add(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.Remove(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.UI.Controls.Panel.RemoveAt(System.Int32)">
+            <summary>
+            Removes a control at the specified index.
+            </summary>
+            <param name="index">The index of the control to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.IndexOf(SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Returns the index of the specified control.
+            </summary>
+            <param name="control">The control to search for.</param>
+            <returns>The index of the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.Insert(System.Int32,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Inserts the control at the specified index.
+            </summary>
+            <param name="index">The index to insert at.</param>
+            <param name="control">The control to insert.</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.Panel.Contains(SadConsole.UI.Controls.ControlBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.CopyTo(SadConsole.UI.Controls.ControlBase[],System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.Update(System.TimeSpan)">
@@ -12459,7 +12683,7 @@
         </member>
         <member name="P:SadConsole.UI.Themes.ThemeStates.Selected">
             <summary>
-            The appearence of the control when it is in a selected state.
+            The appearance of the control when it is in a selected state.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Themes.ThemeStates.MouseOver">
@@ -12498,7 +12722,14 @@
         </member>
         <member name="M:SadConsole.UI.Themes.ThemeStates.GetStateAppearance(SadConsole.UI.Controls.ControlStates)">
             <summary>
-            Gets an apperance defined by this theme from the <paramref name="state" /> parameter.
+            Gets an appearance defined by this theme from the <paramref name="state" /> parameter.
+            </summary>
+            <param name="state">The state to check.</param>
+            <returns>A cell appearance.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.ThemeStates.GetStateAppearanceNoMouse(SadConsole.UI.Controls.ControlStates)">
+            <summary>
+            Gets an appearance defined by this theme from the <paramref name="state" /> parameter. Treats mouse related states as normal.
             </summary>
             <param name="state">The state to check.</param>
             <returns>A cell appearance.</returns>
@@ -12606,7 +12837,7 @@
         </member>
         <member name="P:SadConsole.UI.Window.BorderLineStyle">
             <summary>
-            The line sytle for the border.
+            The line style for the border.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Window.PreviousMouseInfo">
