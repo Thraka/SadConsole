@@ -7,6 +7,9 @@ namespace SadConsole.Renderers;
 /// </summary>
 public class RenderStepComparer : IComparer<Renderers.IRenderStep>
 {
+    /// <summary>
+    /// Shared instance of the <see cref="RenderStepComparer"/>.
+    /// </summary>
     public static RenderStepComparer Instance { get; } = new RenderStepComparer();
 
     /// <inheritdoc/>
@@ -16,7 +19,7 @@ public class RenderStepComparer : IComparer<Renderers.IRenderStep>
         if (x == null && y != null) return 1;
         if (x != null && y == null) return -1;
 
-        if (x == y || x.SortOrder == y.SortOrder)
+        if (x == y || x!.SortOrder == y!.SortOrder)
             return 0;
 
         if (x!.SortOrder < y!.SortOrder)
