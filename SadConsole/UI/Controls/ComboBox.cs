@@ -101,7 +101,11 @@ public class ComboBox : CheckBox
         {
             if (IsSelected)
             {
+                Colors colors = FindThemeColors();
                 ComboBoxTheme theme = (ComboBoxTheme)Theme;
+                _listBox.Parent!.Host!.ThemeColors = colors;
+                //_listBox.SetThemeColors(colors);
+                //_listBox.ScrollBar.SetThemeColors(colors);
                 _listBox.Theme = ((ComboBoxTheme)Theme).ListBoxTheme;
                 _dropDownContainer.Parent = Parent.Host.ParentConsole;
 

@@ -57,6 +57,16 @@ public class ListBoxTheme : ThemeBase
     }
 
     /// <summary>
+    /// Creates a new theme used by the <see cref="ListBox"/> with the default theme for the scroll bar.
+    /// </summary>
+
+    public ListBoxTheme()
+    {
+        ScrollBarTheme = (ScrollBarTheme)Library.Default.GetControlTheme(typeof(ScrollBar));
+        BorderTheme = new ThemeStates();
+    }
+
+    /// <summary>
     /// Sets up the scroll bar for the listbox.
     /// </summary>
     /// <param name="listbox"></param>

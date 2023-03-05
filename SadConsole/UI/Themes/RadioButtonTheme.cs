@@ -15,10 +15,15 @@ public class RadioButtonTheme : CheckBoxTheme
     /// <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ')'.</param>
     /// <param name="checkedGlyph">The checkbox checked icon. Defaults to 15'☼'.</param>
     /// <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
-    public RadioButtonTheme(int leftBracketGlyph = '(', int rightBracketGlyph = ')', int checkedGlyph = 15, int uncheckedGlyph = 0) : base(leftBracketGlyph, rightBracketGlyph, checkedGlyph, uncheckedGlyph)
+    public RadioButtonTheme(int leftBracketGlyph, int rightBracketGlyph, int checkedGlyph, int uncheckedGlyph) : base(leftBracketGlyph, rightBracketGlyph, checkedGlyph, uncheckedGlyph)
     {
 
     }
+
+    /// <summary>
+    /// Creates the default theme for this control, using ( ) for brackets and * for checked.
+    /// </summary>
+    public RadioButtonTheme(): base('(', ')', 15, 0) { }
 
     /// <inheritdoc />
     public override ThemeBase Clone() => new RadioButtonTheme()

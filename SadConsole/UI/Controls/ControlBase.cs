@@ -13,6 +13,8 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public abstract class ControlBase
 {
+    public Type ThemeType { get; set; }
+
     private Point _position;
     private bool _isEnabled = true;
     private IContainer? _parent;
@@ -252,10 +254,9 @@ public abstract class ControlBase
                 IContainer temp = _parent;
                 _parent = null;
                 if (!temp.IsReadOnly)
-                temp.Remove(this);
+                    temp.Remove(this);
 
                 _parent = value;
-                _parent?.Add(this);
 
                 if (_parent != null && !_parent.IsReadOnly)
                     _parent.Add(this);
@@ -543,8 +544,11 @@ public abstract class ControlBase
     /// Sets the theme colors used by this control. When <see langword="null"/>, indicates this control should read the theme colors from the parent.
     /// </summary>
     /// <param name="value">The colors to use with this control.</param>
-    public void SetThemeColors(Colors? value) =>
+    public void SetThemeColors(Colors? value)
+    {
         _themeColors = value;
+        IsDirty = true;
+    }
 
     /// <summary>
     /// When <see langword="true"/>, indicates the control has custom theme colors assigned to it; othwerise <see langword="false"/>.
