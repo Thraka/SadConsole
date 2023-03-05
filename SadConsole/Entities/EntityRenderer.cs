@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using SadConsole.Renderers;
 using SadRogue.Primitives;
 
 namespace SadConsole.Entities;
@@ -11,7 +13,7 @@ namespace SadConsole.Entities;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Entity host")]
-public class Renderer : Components.UpdateComponent, Components.IComponent
+public class Renderer : Components.UpdateComponent, Components.IComponent, IList<Entity>
 {
     /// <summary>
     /// Indicates that the entity renderer has been added to a parent object.
@@ -77,9 +79,27 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     public bool DoEntityUpdate { get; set; } = true;
 
     /// <summary>
-    /// When <see langword="true"/>, the <see cref="Add(Entity)"/> and <see cref="Remove(Entity)"/> won't check if the entitiy exists before doing its operation.
+    /// When <see langword="true"/>, the <see cref="Add(Entity)"/> and <see cref="Remove(Entity)"/> won't check if the entity exists before doing its operation.
     /// </summary>
     public bool SkipExistsChecks { get; set; } = false;
+
+    /// <summary>
+    /// The number of entities in the renderer.
+    /// </summary>
+    public int Count => _entities.Count;
+
+    /// <summary>
+    /// Always returns false.
+    /// </summary>
+    public bool IsReadOnly => false;
+
+    /// <summary>
+    /// Gets an entity by index.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns>The entity.</returns>
+    /// <exception cref="NotSupportedException"></exception>
+    public Entity this[int index] { get => _entities[index]; set => throw new NotSupportedException($"Use the Add method instead"); }
 
     /// <summary>
     /// Internal use only
@@ -99,18 +119,8 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
             return;
         }
 
-        if (SkipExistsChecks == false && _entities.Contains(entity)) return;
 
-        _entities.Add(entity);
-
-        CalculateEntityVisibilityProtected(entity, false);
-
-        entity.PositionChanged += Entity_PositionChanged;
-        entity.VisibleChanged += Entity_VisibleChanged;
-        entity.IsDirtyChanged += Entity_IsDirtyChanged;
-
-        OnEntityAdded(entity);
-        OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
+        AddEntity(entity, false);
     }
 
     /// <summary>
@@ -127,24 +137,51 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         }
 
         foreach (Entity entity in entities)
-        {
-            if (SkipExistsChecks || !_entities.Contains(entity))
-            {
-                _entities.Add(entity);
-
-                CalculateEntityVisibilityProtected(entity, true);
-
-                OnEntityAdded(entity);
-                OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
-
-                entity.PositionChanged += Entity_PositionChanged;
-                entity.VisibleChanged += Entity_VisibleChanged;
-                entity.IsDirtyChanged += Entity_IsDirtyChanged;
-            }
-        }
+            AddEntity(entity, true);
 
         _entitiesVisible.Sort(CompareEntity);
         IsDirty = true;
+    }
+
+    /// <summary>
+    /// Adds an entity to the collection, subscribes to events, and calls <see cref="OnEntityAdded(Entity)"/> and <see cref="OnEntityChangedPosition(Entity, ValueChangedEventArgs{Point})"/>.
+    /// </summary>
+    /// <param name="entity">The entity to remove.</param>
+    /// <param name="skipSort">When true, skips sorting when <see cref="CalculateEntityVisibilityProtected(Entity, bool)"/> is called inside this method.</param>
+    protected void AddEntity(Entity entity, bool skipSort)
+    {
+        if (!SkipExistsChecks && _entities.Contains(entity)) return;
+
+        _entities.Add(entity);
+
+        CalculateEntityVisibilityProtected(entity, skipSort);
+
+        entity.PositionChanged += Entity_PositionChanged;
+        entity.VisibleChanged += Entity_VisibleChanged;
+        entity.IsDirtyChanged += Entity_IsDirtyChanged;
+
+        OnEntityAdded(entity);
+        OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
+    }
+
+    /// <summary>
+    /// Adds an entity to the collection, unsubscribes to events, and calls <see cref="OnEntityRemoved(Entity)"/>.
+    /// </summary>
+    /// <param name="entity">The entity to remove.</param>
+    protected bool RemoveEntity(Entity entity)
+    {
+        if (!SkipExistsChecks && !_entities.Contains(entity)) return false;
+
+        entity.PositionChanged -= Entity_PositionChanged;
+        entity.VisibleChanged -= Entity_VisibleChanged;
+        entity.IsDirtyChanged -= Entity_IsDirtyChanged;
+
+        _entities.Remove(entity);
+        _entitiesVisible.Remove(entity);
+
+        OnEntityRemoved(entity);
+
+        return true;
     }
 
     private bool AddHolding(IEnumerable<Entity> entities)
@@ -161,8 +198,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     {
         if (IsAttached) return false;
 
-        if (_entityHolding == null)
-            _entityHolding = new List<Entity>();
+        _entityHolding ??= new List<Entity>();
 
         _entityHolding.Add(entity);
 
@@ -173,30 +209,21 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// Removes an entity from this manager.
     /// </summary>
     /// <param name="entity">The entity to remove.</param>
-    public void Remove(Entity entity)
+    public bool Remove(Entity entity)
     {
         if (!IsAttached)
         {
             _entityHolding?.Remove(entity);
-            return;
+            return true;
         }
 
-        if (SkipExistsChecks == false && !_entities.Contains(entity)) return;
-
-        entity.PositionChanged -= Entity_PositionChanged;
-        entity.VisibleChanged -= Entity_VisibleChanged;
-        entity.IsDirtyChanged -= Entity_IsDirtyChanged;
-
-        _entities.Remove(entity);
-        _entitiesVisible.Remove(entity);
-
-        OnEntityRemoved(entity);
+        return RemoveEntity(entity);
     }
 
     /// <summary>
     /// Removes all entities from this renderer.
     /// </summary>
-    public void RemoveAll()
+    public void Clear()
     {
         while (_entities.Count != 0)
             Remove(_entities[_entities.Count - 1]);
@@ -217,7 +244,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
         RenderStep.SetData(this);
         surface.RenderSteps.Add(RenderStep);
-        surface.RenderSteps.Sort(new Renderers.RenderStepComparer());
+        surface.RenderSteps.Sort(RenderStepComparer.Instance);
         _screen = surface;
         IsAttached = true;
 
@@ -252,7 +279,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         _entities = new List<Entity>();
         _entitiesVisible = new List<Entity>();
 
-        // Detatch events
+        // Detach events
         Entity entity;
         for (int i = 0; i < _entityHolding.Count; i++)
         {
@@ -325,7 +352,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// <summary>
     /// Sorts the <see cref="EntitiesVisible"/> collection according to the <see cref="Entity.ZIndex"/> value.
     /// </summary>
-    public void SortVisibleEntites() =>
+    public void SortVisibleEntities() =>
         _entitiesVisible.Sort(CompareEntity);
 
     private void Entity_IsDirtyChanged(object? sender, EventArgs e)
@@ -349,7 +376,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
         Entity entity = (Entity)sender!;
 
         // If the previous position of the entity was visible,
-        // always mark as dirty as it moved while being visble.
+        // always mark as dirty as it moved while being visible.
         if (IsEntityVisible(e.OldValue, entity))
             IsDirty = true;
 
@@ -381,7 +408,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// Updates the visibility state of an entity.
     /// </summary>
     /// <param name="entity">The entity to check.</param>
-    /// <returns>Returns <see langword="true"/> when this entity is considered visible; othwerise <see langword="false"/>.</returns>
+    /// <returns>Returns <see langword="true"/> when this entity is considered visible; otherwise <see langword="false"/>.</returns>
     /// <exception cref="ArgumentException"></exception>
     public bool CalculateEntityVisibility(Entity entity)
     {
@@ -394,7 +421,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
     /// Detects a visibility state change of an entity and changes its internal list position.
     /// </summary>
     /// <param name="entity">The entity to check.</param>
-    /// <param name="skipSort">If <see langword="true"/>, skips sorting the visibile.</param>
+    /// <param name="skipSort">If <see langword="true"/>, skips sorting the visible.</param>
     /// <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
     protected bool CalculateEntityVisibilityProtected(Entity entity, bool skipSort)
     {
@@ -475,4 +502,29 @@ public class Renderer : Components.UpdateComponent, Components.IComponent
 
         IsDirty = true;
     }
+
+    /// <inheritdoc/>
+    public int IndexOf(Entity item) =>
+        _entities.IndexOf(item);
+
+    void IList<Entity>.Insert(int index, Entity item) =>
+        throw new NotSupportedException();
+
+    void IList<Entity>.RemoveAt(int index) =>
+        throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public bool Contains(Entity item) =>
+        _entities.Contains(item);
+
+    /// <inheritdoc/>
+    public void CopyTo(Entity[] array, int arrayIndex) =>
+        _entities.CopyTo(array, arrayIndex);
+
+    /// <inheritdoc/>
+    public IEnumerator<Entity> GetEnumerator() =>
+        _entities.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() =>
+        _entities.GetEnumerator();
 }

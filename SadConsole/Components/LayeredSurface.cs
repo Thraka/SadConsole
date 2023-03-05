@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
-using SadConsole.Entities;
 using SadRogue.Primitives;
 
 namespace SadConsole.Components;
@@ -15,7 +12,7 @@ namespace SadConsole.Components;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Entity host")]
-public class LayeredSurface : Components.UpdateComponent, Components.IComponent
+public class LayeredSurface : Components.UpdateComponent, Components.IComponent, IList<ICellSurface>
 {
     /// <summary>
     /// Indicates that the entity renderer has been added to a parent object.
@@ -70,7 +67,30 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent
         }
     }
 
-    public IReadOnlyList<ICellSurface> Layers => _layers.AsReadOnly();
+    /// <summary>
+    /// The numbers of layers.
+    /// </summary>
+    public int Count => _layers.Count;
+
+    /// <summary>
+    /// Always returns <see langword="false"/>.
+    /// </summary>
+    public bool IsReadOnly => false;
+
+    /// <summary>
+    /// Gets or sets a layer by index.
+    /// </summary>
+    /// <param name="index">The index of the layer to get or set.</param>
+    /// <returns>The layer.</returns>
+    public ICellSurface this[int index]
+    {
+        get => _layers[index];
+        set
+        {
+            RemoveAt(index);
+            Insert(index, value);
+        }
+    }
 
     /// <summary>
     /// Adds a layer to this component.
@@ -133,17 +153,64 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent
     /// Removes a layer from this component.
     /// </summary>
     /// <param name="layer">The layer to remove.</param>
-    public void Remove(ICellSurface layer) =>
+    public bool Remove(ICellSurface layer) =>
         _layers.Remove(layer);
 
     /// <summary>
-    /// Removes all layers from this component.
+    /// Returns the index of the specified layer.
     /// </summary>
-    public void RemoveAll()
+    /// <param name="layer">The layer to search for.</param>
+    /// <returns>The index of the layer.</returns>
+    public int IndexOf(ICellSurface layer) =>
+        _layers.IndexOf(layer);
+
+    /// <summary>
+    /// Inserts the layer at the specified index.
+    /// </summary>
+    /// <param name="index">The index to insert at.</param>
+    /// <param name="layer">The layer to insert.</param>
+    public void Insert(int index, ICellSurface layer) =>
+        _layers.Insert(index, layer);
+
+    /// <summary>
+    /// Removes a layer at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the layer to remove.</param>
+    public void RemoveAt(int index) =>
+        _layers.RemoveAt(index);
+
+    /// <summary>
+    /// Removes all layers.
+    /// </summary>
+    public void Clear() =>
+        _layers.Clear();
+
+    /// <summary>
+    /// Removes all layers and adds the <paramref name="initialLayer"/> parameter as the first layer.
+    /// </summary>
+    /// <param name="initialLayer">The new first layer.</param>
+    public void Clear(ICellSurface initialLayer)
     {
-        while (_layers.Count != 0)
-            Remove(_layers[_layers.Count - 1]);
+        _layers.Clear();
+        Add(initialLayer);
     }
+
+    /// <inheritdoc/>
+    public bool Contains(ICellSurface layer) =>
+        _layers.Contains(layer);
+
+    /// <inheritdoc/>
+    public void CopyTo(ICellSurface[] array, int arrayIndex) =>
+        _layers.CopyTo(array, arrayIndex);
+
+
+    /// <inheritdoc/>
+    public IEnumerator<ICellSurface> GetEnumerator() =>
+        _layers.GetEnumerator();
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator() =>
+        _layers.GetEnumerator();
 
     /// <summary>
     /// Adds a new layer. The layer is based on the first layer's width and height.
@@ -236,8 +303,6 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent
             }
         }
     }
-
-
 
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
