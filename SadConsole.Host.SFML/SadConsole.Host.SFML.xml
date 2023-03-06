@@ -481,6 +481,9 @@
             Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.ControlHostRenderStep.BackingTexture">
             <summary>
             The cached texture of the drawn controls layer.
@@ -548,6 +551,9 @@
             Renders a cursor.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -585,6 +591,9 @@
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -620,10 +629,64 @@
             Finalizes the object for collection.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.LayeredSurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.LayeredSurface"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.LayeredSurface"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
             <summary>
             A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
@@ -718,6 +781,9 @@
         <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.CachedTexture">
             <inheritdoc/>//
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -765,6 +831,9 @@
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
             <inheritdoc/>//
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -804,6 +873,9 @@
             Renders a tint on top of where the output texture is drawn.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -831,6 +903,9 @@
             <summary>
             Renders the dimmed background screen when a window is modal.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.WindowRenderStep.SortOrder">
              <inheritdoc/>

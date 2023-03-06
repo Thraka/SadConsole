@@ -7,14 +7,8 @@ namespace SadConsole.Host
     {
         Microsoft.Xna.Framework.Input.MouseState _mouse;
 
-        public Mouse()
-        {
-#if WPF
-            _mouse = SadConsole.Game.Instance.MonoGameInstance.Mouse.GetState();
-#else
-            _mouse = Microsoft.Xna.Framework.Input.Mouse.GetState();
-#endif
-        }
+        public Mouse() =>
+            Refresh();
 
         public bool IsLeftButtonDown => _mouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
 
@@ -25,5 +19,13 @@ namespace SadConsole.Host
         public Point ScreenPosition => _mouse.Position.ToPoint();
 
         public int MouseWheel => _mouse.ScrollWheelValue;
+
+        public void Refresh() =>
+#if WPF
+            _mouse = SadConsole.Game.Instance.MonoGameInstance.Mouse.GetState();
+#else
+            _mouse = Microsoft.Xna.Framework.Input.Mouse.GetState();
+#endif
+
     }
 }

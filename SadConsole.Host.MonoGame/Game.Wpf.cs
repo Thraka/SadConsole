@@ -9,6 +9,9 @@ namespace SadConsole
     /// </summary>
     public partial class Game : GameHost
     {
+        private Host.Mouse _mouseState = new Host.Mouse();
+        private Host.Keyboard _keyboardState = new Host.Keyboard();
+
         /// <summary>
         /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
         /// </summary>
@@ -81,12 +84,18 @@ namespace SadConsole
             new Host.GameTexture(textureStream);
 
         /// <inheritdoc/>
-        public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
-            new Host.Keyboard();
+        public override SadConsole.Input.IKeyboardState GetKeyboardState()
+        {
+            _keyboardState.Refresh();
+            return _keyboardState;
+        }
 
         /// <inheritdoc/>
-        public override SadConsole.Input.IMouseState GetMouseState() =>
-            new Host.Mouse();
+        public override SadConsole.Input.IMouseState GetMouseState()
+        {
+            _mouseState.Refresh();
+            return _mouseState;
+        }
 
 
         /// <summary>

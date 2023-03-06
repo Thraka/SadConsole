@@ -323,7 +323,7 @@ public sealed partial class Game : GameHost
          File.Open(file, mode, access);
 
     /// <summary>
-    /// Toggles between windowed and fullscreen rendering for SadConsole.
+    /// Toggles between windowed and full screen rendering for SadConsole.
     /// </summary>
     public void ToggleFullScreen()
     {

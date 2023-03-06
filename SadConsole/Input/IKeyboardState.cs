@@ -34,4 +34,9 @@ public interface IKeyboardState
     /// </summary>
     /// <returns>The keys that are currently being pressed.</returns>
     public Keys[] GetPressedKeys();
+
+    /// <summary>
+    /// If applicable to the host implementation, refreshes the keyboard state.
+    /// </summary>
+    void Refresh();
 }

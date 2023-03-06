@@ -28,7 +28,12 @@ public interface IMouseState
     Point ScreenPosition { get; }
 
     /// <summary>
-    /// The value of the mousewheel.
+    /// The value of the mouse wheel.
     /// </summary>
     int MouseWheel { get; }
+
+    /// <summary>
+    /// If applicable to the host implementation, refreshes the mouse state.
+    /// </summary>
+    void Refresh();
 }
