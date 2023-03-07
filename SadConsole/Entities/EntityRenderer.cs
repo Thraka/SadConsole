@@ -119,7 +119,6 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
             return;
         }
 
-
         AddEntity(entity, false);
     }
 
@@ -140,7 +139,6 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
             AddEntity(entity, true);
 
         _entitiesVisible.Sort(CompareEntity);
-        IsDirty = true;
     }
 
     /// <summary>
@@ -163,7 +161,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
         OnEntityAdded(entity);
         OnEntityChangedPosition(entity, new ValueChangedEventArgs<Point>(Point.None, entity.Position));
     }
-
+    
     /// <summary>
     /// Adds an entity to the collection, unsubscribes to events, and calls <see cref="OnEntityRemoved(Entity)"/>.
     /// </summary>
@@ -177,7 +175,14 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
         entity.IsDirtyChanged -= Entity_IsDirtyChanged;
 
         _entities.Remove(entity);
-        _entitiesVisible.Remove(entity);
+
+        // If it's in the visible collection, flag redraw
+        int index = _entitiesVisible.IndexOf(entity);
+        if (index >= 0)
+        {
+            _entitiesVisible.RemoveAt(index);
+            IsDirty = true;
+        }
 
         OnEntityRemoved(entity);
 
@@ -188,8 +193,9 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
     {
         if (IsAttached) return false;
 
-        foreach (Entity item in entities)
-            AddHolding(item);
+        _entityHolding ??= new List<Entity>();
+
+        _entityHolding.AddRange(entities);
 
         return true;
     }
