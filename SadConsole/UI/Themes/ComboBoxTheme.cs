@@ -94,8 +94,11 @@ public class ComboBoxTheme : ThemeBase
         IconThemeState.MouseOver.Foreground = _colorsLastUsed.Lines;
         IconThemeState.MouseDown.Foreground = _colorsLastUsed.Lines;
         IconThemeState.Focused.Foreground = _colorsLastUsed.Lines;
-        //ListBoxTheme.RefreshTheme(themeColors, ((ComboBox)control).ListBoxControl);
-        //HeaderTheme.RefreshTheme(themeColors, ((ComboBox)control).HeaderControl);
+
+        IconThemeState.Normal.Background = ControlThemeState.Normal.Background;
+        IconThemeState.MouseOver.Background = ControlThemeState.MouseOver.Background;
+        IconThemeState.MouseDown.Background = ControlThemeState.MouseDown.Background;
+        IconThemeState.Focused.Background = ControlThemeState.Focused.Background;
     }
 
     /// <inheritdoc />

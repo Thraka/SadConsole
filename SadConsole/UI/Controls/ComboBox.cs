@@ -3,6 +3,8 @@ using SadConsole.UI.Themes;
 using SadConsole.Quick;
 using System.Linq;
 using SadRogue.Primitives;
+using static SadConsole.UI.Controls.ListBox;
+using System;
 
 namespace SadConsole.UI.Controls;
 
@@ -14,6 +16,29 @@ public class ComboBox : CheckBox
 {
     private ScreenSurface _dropDownContainer;
     private ListBox _listBox;
+
+    /// <summary>
+    /// An event that triggers when the <see cref="SelectedItem"/> property changes.
+    /// </summary>
+    public event EventHandler<SelectedItemEventArgs>? SelectedItemChanged;
+
+    /// <summary>
+    /// Gets or sets the index of the selected item.
+    /// </summary>
+    public int SelectedIndex
+    {
+        get => _listBox.SelectedIndex;
+        set => _listBox.SelectedIndex = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the selected item.
+    /// </summary>
+    public object? SelectedItem
+    {
+        get => _listBox.SelectedItem;
+        set => _listBox.SelectedItem = value;
+    }
 
     /// <summary>
     /// Creates a new instance of the combobox control.
@@ -35,7 +60,7 @@ public class ComboBox : CheckBox
             _listBox.Items.Add(item);
 
         _listBox.SelectedItemChanged += _listBox_SelectedItemChanged;
-        _listBox.SelectedItemReselected += _listBox_SelectedItemChanged;
+        _listBox.SelectedItemReselected += _listBox_SelectedItemReselected; ;
         _listBox.SelectedIndex = 0;
 
         // Setup popup container console to watch the mouse
@@ -63,6 +88,7 @@ public class ComboBox : CheckBox
         });
     }
 
+
     /// <summary>
     /// Sets the items in the dropdown listbox.
     /// </summary>
@@ -84,9 +110,16 @@ public class ComboBox : CheckBox
     public object[] GetItems() =>
         _listBox.Items.ToArray();
 
-    private void _listBox_SelectedItemChanged(object? sender, ListBox.SelectedItemEventArgs e)
+    private void _listBox_SelectedItemChanged(object? sender, SelectedItemEventArgs e)
     {
         Text = e.Item?.ToString() ?? string.Empty;
+        IsDirty = true;
+        IsSelected = false;
+        SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(SelectedItem));
+    }
+
+    private void _listBox_SelectedItemReselected(object? sender, SelectedItemEventArgs e)
+    {
         IsSelected = false;
     }
 
@@ -107,6 +140,8 @@ public class ComboBox : CheckBox
                 //_listBox.SetThemeColors(colors);
                 //_listBox.ScrollBar.SetThemeColors(colors);
                 _listBox.Theme = ((ComboBoxTheme)Theme).ListBoxTheme;
+                _dropDownContainer.Font = Parent.Host.ParentConsole.Font;
+                _dropDownContainer.FontSize = Parent.Host.ParentConsole.FontSize;
                 _dropDownContainer.Parent = Parent.Host.ParentConsole;
 
                 Point position = AbsolutePosition;

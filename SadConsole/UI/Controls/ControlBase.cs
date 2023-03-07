@@ -351,7 +351,7 @@ public abstract class ControlBase
         // Set theme
         Surface = null!;
         _activeTheme = Library.Default.GetControlTheme(GetType());
-        if (_activeTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+        if (_activeTheme == null) throw new NullReferenceException($"Theme unavailable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
         _activeTheme.Attached(this);
         DetermineState();
     }
