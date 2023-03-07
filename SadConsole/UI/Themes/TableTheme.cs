@@ -231,7 +231,7 @@ public class TableTheme : ThemeBase
 
         if ((!cell.IsSettingsInitialized || cell.Settings.Selectable) && table.SelectedCell != null)
         {
-            Cells.Layout.Mode selectionMode = !cell.IsSettingsInitialized ? default : cell.Settings.SelectionMode;
+            Cells.Layout.Mode selectionMode = !cell.IsSettingsInitialized ? table.DefaultSelectionMode : cell.Settings.SelectionMode;
             switch (selectionMode)
             {
                 case Cells.Layout.Mode.Single:
@@ -248,7 +248,7 @@ public class TableTheme : ThemeBase
             }
         }
 
-        Cells.Layout.Mode hoverMode = !cell.IsSettingsInitialized ? default : cell.Settings.HoverMode;
+        Cells.Layout.Mode hoverMode = !cell.IsSettingsInitialized ? table.DefaultHoverMode : cell.Settings.HoverMode;
         switch (hoverMode)
         {
             case Cells.Layout.Mode.Single:
