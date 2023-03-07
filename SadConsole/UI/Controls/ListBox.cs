@@ -62,11 +62,6 @@ public class ListBox : CompositeControl
     public event EventHandler<SelectedItemEventArgs>? SelectedItemExecuted;
 
     /// <summary>
-    /// The theme used by the listbox items.
-    /// </summary>
-    public ListBoxItemTheme ItemTheme { get; private set; }
-
-    /// <summary>
     /// Internal use only; used in rendering.
     /// </summary>
     public bool IsScrollBarVisible
@@ -202,8 +197,6 @@ public class ListBox : CompositeControl
 
         Items = new ObservableCollection<object>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
-
-        ItemTheme = new ListBoxItemTheme();
     }
 
     /// <summary>
@@ -212,7 +205,7 @@ public class ListBox : CompositeControl
     /// <param name="width">The width of the listbox.</param>
     /// <param name="height">The height of the listbox.</param>
     /// <param name="itemTheme">The theme to use with rendering the listbox items.</param>
-    public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ItemTheme = itemTheme;
+    public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ((ListBoxTheme)Theme).ItemTheme = itemTheme;
 
     private void _scrollbar_ValueChanged(object? sender, EventArgs e) => IsDirty = true;
 

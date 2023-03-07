@@ -91,7 +91,7 @@ namespace SadConsole.UI.Themes
 
 
         /// <inheritdoc/>
-        public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
+        public override void Draw(ControlBase control, Rectangle area, object item, ControlStates itemState)
         {
             ColoredGlyph appearance;
             string displayString;
