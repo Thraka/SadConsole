@@ -227,6 +227,12 @@ public class TextBox : ControlBase
         set { _allowDecimalPoint = value; Validate(); }
     }
 
+    /// <summary>
+    /// When <see langword="true"/>, the TAB key will save the text being edited, and allow a parent host to tab to the next control.
+    /// </summary>
+    [DataMember]
+    public bool CanTabMoveFocus { get; set; }
+
     #region Constructors
     /// <summary>
     /// Creates a new instance of the input box.
@@ -359,6 +365,25 @@ public class TextBox : ControlBase
                     return true;
                 }
 
+                if (CanTabMoveFocus && info.KeysPressed[i].Key == Keys.Tab)
+                {
+                    Text = EditingText;
+                    DisableKeyboard = true;
+                    return false;
+                }
+                else if (info.KeysPressed[i].Key == Keys.Enter)
+                {
+                    Text = EditingText;
+                    DisableKeyboard = true;
+                    return true;
+                }
+                else if (info.KeysPressed[i].Key == Keys.Escape)
+                {
+                    EditingText = "";
+                    DisableKeyboard = true;
+                    return true;
+                }
+
                 if (_isNumeric)
                 {
                     if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
@@ -368,18 +393,6 @@ public class TextBox : ControlBase
 
                         if (_caretPos == -1)
                             _caretPos = 0;
-                    }
-                    else if (info.KeysPressed[i].Key == Keys.Enter)
-                    {
-                        DisableKeyboard = true;
-                        Text = EditingText;
-                        return true;
-                    }
-                    else if (info.KeysPressed[i].Key == Keys.Escape)
-                    {
-                        EditingText = "";
-                        DisableKeyboard = true;
-                        return true;
                     }
 
                     else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
@@ -430,18 +443,6 @@ public class TextBox : ControlBase
                         }
                     }
 
-                    else if (info.KeysPressed[i].Key == Keys.Enter)
-                    {
-                        Text = EditingText;
-                        DisableKeyboard = true;
-                        return true;
-                    }
-                    else if (info.KeysPressed[i].Key == Keys.Escape)
-                    {
-                        EditingText = "";
-                        DisableKeyboard = true;
-                        return true;
-                    }
                     else if (info.KeysPressed[i].Key == Keys.Left)
                     {
                         _caretPos -= 1;
