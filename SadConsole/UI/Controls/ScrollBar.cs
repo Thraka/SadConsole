@@ -303,10 +303,28 @@ public class ScrollBar : ControlBase
     }
 
     /// <summary>
-    /// Not Used.
+    /// Uses the arrow keys to move the scroll bar value.
     /// </summary>
-    /// <param name="state"></param>
-    public override bool ProcessKeyboard(Input.Keyboard state) => false;
+    /// <param name="state">The state of the keyboard.</param>
+    /// <returns><see langword="true"/> when the keyboard was handled; otherwise, <see langword="false"/>.</returns>
+    public override bool ProcessKeyboard(Input.Keyboard state)
+    {
+        Input.Keys positiveKey = Orientation == Orientation.Vertical ? Input.Keys.Down : Input.Keys.Right;
+        Input.Keys negativeKey = Orientation == Orientation.Vertical ? Input.Keys.Up : Input.Keys.Left;
+
+        if (state.IsKeyPressed(positiveKey))
+        {
+            Value += _valueStep;
+            return true;
+        }
+        else if (state.IsKeyPressed(negativeKey))
+        {
+            Value -= _valueStep;
+            return true;
+        }
+
+        return false;
+    }
 
 
     private void SetValueFromSliderPosition()
