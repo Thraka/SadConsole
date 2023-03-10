@@ -641,7 +641,7 @@ public abstract class TableTestsBase
                 if (partialOverlap)
                 {
                     int overlapAmount = indexSizeCell + size - (isRowType ? table.Height : table.Width);
-                    size -= overlapAmount;
+                    size = overlapAmount;
                 }
                 return increment ? size : -size;
             }
