@@ -323,7 +323,6 @@ public class ListBox : CompositeControl
     /// <inheritdoc />
     public override bool ProcessKeyboard(Input.Keyboard info)
     {
-        //if (_hasFocus)
         if (info.IsKeyReleased(Keys.Up))
         {
             if (_selectedItem != null)
