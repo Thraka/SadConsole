@@ -340,9 +340,8 @@ public class Table : CompositeControl
                 int total = orientation == Orientation.Vertical ? VisibleRowsTotal : VisibleColumnsTotal;
                 int defaultIndexSize = orientation == Orientation.Vertical ? DefaultCellSize.Y : DefaultCellSize.X;
 
-                scrollBar.Value = totalIndexSize < max
-                    ? 0
-                    : totalIndexSize > maxIndexSize - total ? scrollBar.Maximum : (totalIndexSize - total) / defaultIndexSize;
+                var indexSize = (totalIndexSize - total) / defaultIndexSize;
+                scrollBar.Value = totalIndexSize < max ? 0 : indexSize > scrollBar.Maximum ? scrollBar.Maximum : indexSize;
             }
         }
     }
