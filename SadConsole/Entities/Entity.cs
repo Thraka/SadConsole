@@ -274,8 +274,6 @@ public class Entity : ScreenObject
             {
                 _glyph = value ?? throw new System.NullReferenceException("Appearance cannot be null.");
                 IsDirty = true;
-
-                _effectState = new ColoredGlyphState(value);
             }
         }
 
@@ -292,16 +290,18 @@ public class Entity : ScreenObject
                 {
                     if (_effect.RestoreCellOnRemoved)
                         _effectState.RestoreState(ref _glyph);
-                    else
-                        // If we keep what the effect did to the cell, then replace the state of the cell
-                        // with its latest.
-                        _effectState = new ColoredGlyphState(_glyph);
                 }
 
                 if (value == null)
+                {
+                    _effectState = default;
                     _effect = null;
+                }
                 else
+                {
+                    _effectState = new ColoredGlyphState(_glyph);
                     _effect = value.CloneOnAdd ? value.Clone() : value;
+                }
             }
         }
 
