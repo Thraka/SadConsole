@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 using Color = Microsoft.Xna.Framework.Color;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadRectangle = SadRogue.Primitives.Rectangle;
-using SadConsole.Host.MonoGame;
 
 namespace SadConsole.Renderers
 {
@@ -19,6 +16,9 @@ namespace SadConsole.Renderers
     {
         private SadConsole.UI.ControlHost _controlsHost;
         private Host.GameTexture _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.ControlHost;
 
         /// <summary>
         /// The cached texture of the drawn surface.

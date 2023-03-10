@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Input;
+using SadConsole.Renderers;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
@@ -15,7 +16,7 @@ namespace SadConsole.UI;
 /// Adds the ability for a host to contain and display controls from <see cref="SadConsole.UI.Controls"/>.
 /// </summary>
 [System.Diagnostics.DebuggerDisplay("UI host")]
-public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, IList<ControlBase>, IContainer
+public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 {
     /// <summary>
     /// Indicates priority to other components.
@@ -176,7 +177,7 @@ public class ControlHost : Components.IComponent, IEnumerable<ControlBase>, ILis
         _controlsRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
         _controlsRenderStep.SetData(this);
         surface.RenderSteps.Add(_controlsRenderStep);
-        surface.RenderSteps.Sort(new Renderers.RenderStepComparer());
+        surface.RenderSteps.Sort(RenderStepComparer.Instance);
         surface.UseKeyboard = true;
         surface.UseMouse = true;
         surface.FocusOnMouseClick = true;

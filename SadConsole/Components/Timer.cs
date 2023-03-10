@@ -19,6 +19,16 @@ public class Timer : Components.UpdateComponent
     public event EventHandler? TimerRestart;
 
     /// <summary>
+    /// Called when the timer starts.
+    /// </summary>
+    public event EventHandler? TimerStart;
+
+    /// <summary>
+    /// Called when the timer stops.
+    /// </summary>
+    public event EventHandler? TimerStop;
+
+    /// <summary>
     /// If true, the timer will restart when the time has elapsed.
     /// </summary>
     public bool Repeat { get; set; } = true;
@@ -29,9 +39,9 @@ public class Timer : Components.UpdateComponent
     public TimeSpan TimerAmount { get; set; }
 
     /// <summary>
-    /// When true, the timer does not count time.
+    /// When <see langword="true"/>, indicates that the timer is running; otherwise <see langword="false"/>.
     /// </summary>
-    public bool IsPaused { get; set; } = false;
+    public bool IsRunning { get; protected set; }
 
     private TimeSpan _countedTime;
 
@@ -49,32 +59,59 @@ public class Timer : Components.UpdateComponent
     /// <param name="delta">The time since the last frame update.</param>
     public override void Update(IScreenObject console, TimeSpan delta)
     {
-        if (!IsPaused)
+        if (IsRunning)
         {
             _countedTime += delta;
 
             if (_countedTime >= TimerAmount)
             {
-                IsPaused = true;
-
                 TimerElapsed?.Invoke(this, EventArgs.Empty);
 
-                if (Repeat)
-                {
+                if (IsRunning && Repeat)
                     Restart();
-                }
+                else if (IsRunning)
+                    Stop();
             }
         }
     }
 
     /// <summary>
-    /// Restarts the timer; sets <see cref="IsPaused"/> to false.
+    /// Restarts the timer; raises the <see cref="TimerRestart"/> event.
     /// </summary>
     public void Restart()
     {
-        _countedTime = TimeSpan.Zero;
-        IsPaused = false;
-        TimerRestart?.Invoke(this, EventArgs.Empty);
+        if (IsRunning)
+        {
+            _countedTime = TimeSpan.Zero;
+            IsRunning = true;
+            TimerRestart?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Starts the timer; raises the <see cref="TimerStart"/> event.
+    /// </summary>
+    public void Start()
+    {
+        if (!IsRunning)
+        {
+            _countedTime = TimeSpan.Zero;
+            IsRunning = true;
+            TimerStart?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /// <summary>
+    /// Starts the timer; raises the <see cref="TimerStop"/> event.
+    /// </summary>
+    public void Stop()
+    {
+        if (IsRunning)
+        {
+            _countedTime = TimeSpan.Zero;
+            IsRunning = false;
+            TimerStop?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
 

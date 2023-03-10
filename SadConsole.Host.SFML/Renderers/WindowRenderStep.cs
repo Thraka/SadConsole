@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 using SFML.Graphics;
 
 namespace SadConsole.Renderers
@@ -9,8 +6,12 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Renders the dimmed background screen when a window is modal.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Window")]
     public class WindowRenderStep : IRenderStep
     {
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Window;
+
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Window;
 

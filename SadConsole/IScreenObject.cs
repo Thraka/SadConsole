@@ -43,6 +43,11 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     event EventHandler Focused;
 
     /// <summary>
+    /// Indicates the sorting order this object should use when parented. Sorting is a manual operation on the <see cref="Children"/> collection.
+    /// </summary>
+    uint SortOrder { get; set; }
+
+    /// <summary>
     /// How the object should handle becoming active.
     /// </summary>
     FocusBehavior FocusedMode { get; set; }

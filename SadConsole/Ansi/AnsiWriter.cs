@@ -244,7 +244,7 @@ public class AnsiWriter
                     else if (data == "2")
                     {
                         _editor.Clear();
-                        Cursor.Position = new Point(0, 0);
+                        Cursor.Position = Point.Zero;
                     }
 
                     break;

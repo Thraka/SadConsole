@@ -93,12 +93,12 @@ public partial class REXPaintImage
     public void Remove(Layer layer) => _layers.Remove(layer);
 
     /// <summary>
-    /// Converts this REXPaint image to a collection of <see cref="CellSurface"/>.
+    /// Converts each layer in this REXPaint image to <see cref="CellSurface"/>.
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<CellSurface> ToLayersComponent()
+    /// <returns>An array of each converted layer.</returns>
+    public ICellSurface[] ToCellSurface()
     {
-        var layers = new CellSurface[LayerCount];
+        var layers = new ICellSurface[LayerCount];
         for (int i = 0; i < LayerCount; i++)
         {
             layers[i] = new CellSurface(Width, Height);

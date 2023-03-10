@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Linq;
 
 namespace SadConsole.Host
 {
@@ -9,14 +6,8 @@ namespace SadConsole.Host
     {
         Microsoft.Xna.Framework.Input.KeyboardState _keyboard;
 
-        public Keyboard()
-        {
-#if WPF
-            _keyboard = SadConsole.Game.Instance.MonoGameInstance.Keyboard.GetState();
-#else
-            _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
-#endif
-        }
+        public Keyboard() =>
+            Refresh();
 
         public bool CapsLock => _keyboard.CapsLock;
 
@@ -30,5 +21,12 @@ namespace SadConsole.Host
 
         public bool IsKeyUp(SadConsole.Input.Keys key) =>
             _keyboard.IsKeyUp((Microsoft.Xna.Framework.Input.Keys)key);
+
+        public void Refresh() =>
+#if WPF
+            _keyboard = SadConsole.Game.Instance.MonoGameInstance.Keyboard.GetState();
+#else
+            _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+#endif
     }
 }

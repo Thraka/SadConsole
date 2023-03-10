@@ -14,10 +14,10 @@ namespace FeatureDemo.CustomConsoles
             UseKeyboard = false;
 
             Surface.DrawLine(new Point(2, 2), new Point(Surface.ViewWidth - 4, 2), (int)'=', Color.Yellow);
-            Surface.DrawBox(new Rectangle(2, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='));
-            Surface.DrawBox(new Rectangle(9, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThin);
-            Surface.DrawBox(new Rectangle(16, 4, 6, 6), new ColoredGlyph(Color.Yellow, Color.Black, '='), connectedLineStyle: ICellSurface.ConnectedLineThick);
-            Surface.DrawBox(new Rectangle(23, 4, 6, 6), new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0), connectedLineStyle: ICellSurface.ConnectedLineThick);
+            Surface.DrawBox(new Rectangle(2, 4, 6, 6), ShapeParameters.CreateBorder(new ColoredGlyph(Color.Yellow, Color.Black, '=')));
+            Surface.DrawBox(new Rectangle(9, 4, 6, 6), ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThin, new ColoredGlyph(Color.Yellow, Color.Black, '=')));
+            Surface.DrawBox(new Rectangle(16, 4, 6, 6), ShapeParameters.CreateStyledBox(ICellSurface.ConnectedLineThick, new ColoredGlyph(Color.Yellow, Color.Black, '=')));
+            Surface.DrawBox(new Rectangle(23, 4, 6, 6), ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick, new ColoredGlyph(Color.Black, Color.Yellow, '='), new ColoredGlyph(Color.Black, Color.Yellow, 0)));
 
             Surface.DrawCircle(new Rectangle(2, 12, 16, 10), ShapeParameters.CreateBorder(new ColoredGlyph(Color.White, Color.Black, 176)));
             Surface.DrawCircle(new Rectangle(19, 12, 16, 10), ShapeParameters.CreateFilled(new ColoredGlyph(Color.White, Color.Black, 176), new ColoredGlyph(Color.Green, Color.Black, 178)));

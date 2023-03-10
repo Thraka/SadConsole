@@ -20,7 +20,7 @@ public class ScrollBar : ControlBase
     private int _valueStep = 1;
 
     /// <summary>
-    /// Indicates if the scroll bar is horizontal or veritcal.
+    /// Indicates if the scroll bar is horizontal or vertical.
     /// </summary>
     public Orientation Orientation { get; private set; }
 
@@ -85,7 +85,7 @@ public class ScrollBar : ControlBase
     public int Minimum => 0;
 
     /// <summary>
-    /// Gets or sets the amount of values to add or substract to the <see cref="Value"/> when the up or down arrows are used.
+    /// Gets or sets the amount of values to add or subtract to the <see cref="Value"/> when the up or down arrows are used.
     /// </summary>
     [DataMember]
     public int Step
@@ -98,16 +98,35 @@ public class ScrollBar : ControlBase
     /// Creates a new ScrollBar control.
     /// </summary>
     /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
-    /// <param name="size">The height or width of the control.</param>
-    /// <returns>The new control instance.</returns>
+    /// <param name="size">The height or width of the control, based on the <paramref name="orientation"/>, with a thickness of 0.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Size of the control must be 2 or more</exception>
     public ScrollBar(Orientation orientation, int size) : base(orientation == Orientation.Horizontal ? size : 1,
-                                                              orientation == Orientation.Vertical ? size : 1)
+                                                               orientation == Orientation.Vertical ? size : 1)
     {
         Orientation = orientation;
 
-        if (size < 2) throw new Exception("Slider bar size must be 2 or more");
+        if (size < 2) throw new ArgumentOutOfRangeException("Size of the control must be 2 or more");
 
         SliderBarSize = size - 2;
+
+        SetSliderPositionFromValue();
+    }
+
+    /// <summary>
+    /// Creates a new ScrollBar control with the specified width and height.
+    /// </summary>
+    /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
+    /// <param name="width">The width the control.</param>
+    /// <param name="height">The height of the control.</param>
+    /// <exception cref="ArgumentOutOfRangeException">With a horizontal scroll bar, width must be 2 or more. With a vertical scroll bar, height must be 2 or more.</exception>
+    public ScrollBar(Orientation orientation, int width, int height) : base(width, height)
+    {
+        if (orientation == Orientation.Horizontal && width < 2) throw new ArgumentOutOfRangeException(nameof(width), "With a horizontal scroll bar, width must be 2 or more.");
+        if (orientation == Orientation.Vertical && height < 2) throw new ArgumentOutOfRangeException(nameof(height), "With a vertical scroll bar, height must be 2 or more.");
+
+        Orientation = orientation;
+
+        SliderBarSize = orientation == Orientation.Horizontal ? width - 2 : height - 2;
 
         SetSliderPositionFromValue();
     }
@@ -115,18 +134,12 @@ public class ScrollBar : ControlBase
     /// <inheritdoc/>
     public override void Resize(int width, int height)
     {
-        if (Orientation == Orientation.Vertical)
-        {
-            if (height < 2) throw new Exception("Slider bar height must be 2 or more");
-            SliderBarSize = height - 2;
-            base.Resize(1, height);
-        }
-        else
-        {
-            if (width < 2) throw new Exception("Slider bar width must be 2 or more");
-            SliderBarSize = width - 2;
-            base.Resize(width, 1);
-        }
+        if (Orientation == Orientation.Horizontal && width < 2) throw new ArgumentOutOfRangeException(nameof(width), "With a horizontal scroll bar, width must be 2 or more.");
+        if (Orientation == Orientation.Vertical && height < 2) throw new ArgumentOutOfRangeException(nameof(height), "With a vertical scroll bar, height must be 2 or more.");
+
+        SliderBarSize = Orientation == Orientation.Horizontal ? width - 2 : height - 2;
+
+        base.Resize(width, height);
 
         SetSliderPositionFromValue();
     }
@@ -138,8 +151,13 @@ public class ScrollBar : ControlBase
         {
             base.ProcessMouse(state);
 
-            var newState = new ControlMouseState(this, state);
-            Point mouseControlPosition = newState.MousePosition;
+            // The mouse processing here is highly customized to the fact that the scroll bar should allow mouse processing
+            // when it's dragging and while the mouse is outside the (and even over some other) surface. This code transforms
+            // the mouse data to be based on the position of the mouse on the parent host surface, then based on the mouse area
+            // of this control.
+            var newState = new ControlMouseState(this, new Input.MouseScreenObjectState(Parent.Host.ParentConsole, state.Mouse));
+            Point mouseControlPosition = newState.OriginalMouseState.SurfaceCellPosition - AbsolutePosition;
+            newState.IsMouseOver = MouseArea.Contains(mouseControlPosition);
 
             // This becomes the active mouse subject when the bar is being dragged.
             if (Parent.Host.CapturedControl == null)
@@ -149,9 +167,9 @@ public class ScrollBar : ControlBase
                     if (state.Mouse.ScrollWheelValueChange != 0)
                     {
                         if (state.Mouse.ScrollWheelValueChange < 0)
-                            Value -= 1;
+                            Value -= Step;
                         else
-                            Value += 1;
+                            Value += Step;
 
                         return true;
                     }
@@ -196,32 +214,26 @@ public class ScrollBar : ControlBase
                         Parent.Host.FocusedControl = this;
                     }
 
-                    // Need to set a flag signalling that we've locked in a drag.
+                    // Need to set a flag signaling that we've locked in a drag.
                     // When the mouse button is let go, clear the flag.
-                    if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown)
+                    if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown && state.Mouse.LeftButtonDownDuration == TimeSpan.Zero)
                     {
                         if (Orientation == Orientation.Horizontal)
                         {
-                            if (mouseControlPosition.Y == 0)
+                            if (SliderBarSize > 1 && mouseControlPosition.X == CurrentSliderPosition + 1)
                             {
-                                if (SliderBarSize > 1 && mouseControlPosition.X == CurrentSliderPosition + 1)
-                                {
-                                    Parent.Host.CaptureControl(this);
-                                    IsSliding = true;
-                                    IsDirty = true;
-                                }
+                                Parent.Host.CaptureControl(this);
+                                IsSliding = true;
+                                IsDirty = true;
                             }
                         }
                         else
                         {
-                            if (mouseControlPosition.X == 0)
+                            if (SliderBarSize > 1 && mouseControlPosition.Y == CurrentSliderPosition + 1)
                             {
-                                if (SliderBarSize > 1 && mouseControlPosition.Y == CurrentSliderPosition + 1)
-                                {
-                                    Parent.Host.CaptureControl(this);
-                                    IsSliding = true;
-                                    IsDirty = true;
-                                }
+                                Parent.Host.CaptureControl(this);
+                                IsSliding = true;
+                                IsDirty = true;
                             }
                         }
 

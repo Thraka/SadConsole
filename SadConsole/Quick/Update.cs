@@ -13,25 +13,29 @@ public static class Update
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void WithUpdate(this IScreenObject screenObject, Action<IScreenObject, TimeSpan> handler)
+    public static IScreenObject WithUpdate(this IScreenObject screenObject, Action<IScreenObject, TimeSpan> handler)
     {
         foreach (UpdateHook hook in screenObject.GetSadComponents<UpdateHook>())
         {
             if (hook.Method == handler)
-                return;
+                return screenObject;
         }
 
         screenObject.SadComponents.Add(new UpdateHook(handler));
+
+        return screenObject;
     }
 
     /// <summary>
     /// Removes all of the keyboard hooks added with <see cref="WithUpdate(IScreenObject, Action{IScreenObject, TimeSpan})"/>.
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
-    public static void RemoveUpdateHooks(this IScreenObject screenObject)
+    public static IScreenObject RemoveUpdateHooks(this IScreenObject screenObject)
     {
         foreach (UpdateHook hook in screenObject.GetSadComponents<UpdateHook>().ToArray())
             screenObject.SadComponents.Remove(hook);
+
+        return screenObject;
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public static class Update
     /// </summary>
     /// <param name="screenObject">The object to use.</param>
     /// <param name="handler">The handler callback.</param>
-    public static void RemoveUpdateHook(this IScreenObject screenObject, Action<IScreenObject, TimeSpan> handler)
+    public static IScreenObject RemoveUpdateHook(this IScreenObject screenObject, Action<IScreenObject, TimeSpan> handler)
     {
         UpdateHook? existingHook = null;
 
@@ -54,6 +58,8 @@ public static class Update
 
         if (existingHook != null)
             screenObject.SadComponents.Remove(existingHook);
+
+        return screenObject;
     }
 
     private class UpdateHook : Components.UpdateComponent

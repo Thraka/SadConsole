@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SadRogue.Primitives;
 
 namespace SadConsole.Renderers
@@ -8,9 +6,13 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Renders a cursor.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Cursor")]
     public class CursorRenderStep : IRenderStep
     {
         private Components.Cursor _cursor;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Cursor;
 
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Cursor;

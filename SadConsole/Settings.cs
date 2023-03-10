@@ -67,7 +67,7 @@ public static class Settings
     /// <summary>
     /// When not set to (0,0) this property specifies the minimum size of the game window in pixels.
     /// </summary>
-    public static Point WindowMinimumSize { get; set; } = new Point(0, 0);
+    public static Point WindowMinimumSize { get; set; } = Point.Zero;
 
     /// <summary>
     /// When set to true, all loading and saving performed by SadConsole uses GZIP. <see cref="GameHost.LoadFont(string)"/> does not use this setting and always runs uncompressed.

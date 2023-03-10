@@ -110,14 +110,13 @@ public class ButtonLinesTheme : ButtonTheme
             button.Surface.Print(1, middle, button.Text.Align(button.TextAlignment, button.Width - 2), appearance);
 
             button.Surface.DrawBox(new Rectangle(0, 0, button.Width, button.Surface.Height),
-                                   new ColoredGlyph(topleftcolor, appearance.Background, 0),
-                                   null,
-                                   connectedLineStyle: focused ? ICellSurface.ConnectedLineThick : ICellSurface.ConnectedLineThin);
+                                   ShapeParameters.CreateStyledBox(focused ? ICellSurface.ConnectedLineThick : ICellSurface.ConnectedLineThin,
+                                                                   new ColoredGlyph(topleftcolor, appearance.Background, 0)));
 
             //SadConsole.Algorithms.Line(0, 0, button.Width - 1, 0, (x, y) => { return true; });
 
-            button.Surface.DrawLine(new Point(0, 0), new Point(button.Width - 1, 0), null, topleftcolor, appearance.Background);
-            button.Surface.DrawLine(new Point(0, 0), new Point(0, button.Surface.Height - 1), null, topleftcolor, appearance.Background);
+            button.Surface.DrawLine(Point.Zero, new Point(button.Width - 1, 0), null, topleftcolor, appearance.Background);
+            button.Surface.DrawLine(Point.Zero, new Point(0, button.Surface.Height - 1), null, topleftcolor, appearance.Background);
             button.Surface.DrawLine(new Point(button.Width - 1, 0), new Point(button.Width - 1, button.Surface.Height - 1), null, bottomrightcolor, appearance.Background);
             button.Surface.DrawLine(new Point(1, button.Surface.Height - 1), new Point(button.Width - 1, button.Surface.Height - 1), null, bottomrightcolor, appearance.Background);
         }

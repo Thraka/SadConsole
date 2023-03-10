@@ -15,7 +15,7 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
+public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, ISurfaceSettable
 {
     [DataMember(Name = "Font")]
     [JsonConverter(typeof(SerializedTypes.FontJsonConverter))]
@@ -275,7 +275,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
-        RenderSteps.Sort(new RenderStepComparer());
+        RenderSteps.Sort(RenderStepComparer.Instance);
     }
 
     /// <summary>
@@ -312,9 +312,9 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface
     public override void UpdateAbsolutePosition()
     {
         if (UsePixelPositioning)
-            AbsolutePosition = Position + (Parent?.AbsolutePosition ?? new Point(0, 0));
+            AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
         else
-            AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? new Point(0, 0));
+            AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)

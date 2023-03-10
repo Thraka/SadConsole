@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
     <Version>10.0.0-alpha1</Version>
@@ -9,8 +9,8 @@
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
-    <Description>A graphics hosting library for SadConsole. Targets MonoGame and .NET 6.</Description>
+    <AssemblyTitle>SadConsole</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsol that targets MonoGame.</Description>
     <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
@@ -30,21 +30,10 @@
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <DefineConstants Condition="$(TargetFramework.StartsWith('net6.0-windows')) == true">$(DefineConstants);WPF</DefineConstants>
   </PropertyGroup>
 
-  <!-- WPF MonoGame Interop + DirectX-->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-windows')) == true">
-    <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
-
-    <Compile Remove="**\*.Mono.cs" />
-    <None Include="**\*.Mono.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <!-- Standard MonoGame + OpenGL -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-windows')) != true">
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" PrivateAssets="all" />
 
     <Compile Remove="**\*.Wpf.cs" />
     <None Include="**\*.Wpf.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
@@ -53,8 +42,8 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.4.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

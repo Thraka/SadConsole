@@ -1,16 +1,14 @@
 ﻿using System;
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
-using SadConsole.Host;
 using SadRogue.Primitives;
-using System.Net;
-using System.Numerics;
 
 namespace SadConsole.Renderers
 {
     /// <summary>
     /// Draws the entities of a <see cref="Entities.Renderer"/>.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Entity lite")]
     public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     {
         private Entities.Renderer _entityManager;
@@ -23,6 +21,9 @@ namespace SadConsole.Renderers
 
         /// <inheritdoc/>
         public ITexture CachedTexture => _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.EntityRenderer;
 
         /// <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.EntityRenderer;

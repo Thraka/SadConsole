@@ -2,13 +2,13 @@
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadRogue.Primitives;
-using System.Collections.Generic;
 
 namespace SadConsole.Renderers
 {
     /// <summary>
     /// Draws a <see cref="SadConsole.IScreenSurface"/> object.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Surface (Dirty)")]
     public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     {
         private Host.GameTexture _cachedTexture;
@@ -20,6 +20,9 @@ namespace SadConsole.Renderers
 
         /// <inheritdoc/>//
         public ITexture CachedTexture => _cachedTexture;
+
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.SurfaceDirtyCells;
 
         /// <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;

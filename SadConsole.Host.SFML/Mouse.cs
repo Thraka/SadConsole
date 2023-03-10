@@ -44,5 +44,8 @@ namespace SadConsole.Host
         }
 
         public int MouseWheel => _mouseWheelValue;
+
+        public void Refresh() =>
+            throw new NotImplementedException("This method is not used by the host.");
     }
 }

@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using System.Diagnostics.CodeAnalysis;
+using SadRogue.Primitives;
 
 namespace SadConsole.Input;
 
@@ -10,53 +11,68 @@ public class MouseScreenObjectState
     /// <summary>
     /// The screen object used to create the mouse state.
     /// </summary>
-    public readonly IScreenObject? ScreenObject;
+    public IScreenObject? ScreenObject { get; private set; }
 
     /// <summary>
     /// The mouse data.
     /// </summary>
-    public readonly Mouse Mouse;
+    public Mouse Mouse { get; private set; }
 
     /// <summary>
     /// The cell the mouse is over, from <see cref="IScreenObject"/>.
     /// </summary>
-    public readonly ColoredGlyph? Cell;
+    public ColoredGlyph? Cell { get; set; }
 
     /// <summary>
     /// The position of the <see cref="Cell"/>.  
     /// </summary>
-    public readonly Point CellPosition;
+    public Point CellPosition { get; set; }
 
     /// <summary>
     /// The position of the mouse on the <see cref="IScreenObject"/>, based on the <see cref="WorldCellPosition"/> and the position of the <see cref="ScreenObject"/>.
     /// </summary>
-    public readonly Point SurfaceCellPosition;
+    public Point SurfaceCellPosition { get; set; }
 
     /// <summary>
     /// A cell-based location of the mouse based on the screen, not the screen object.
     /// </summary>
-    public readonly Point WorldCellPosition;
+    public Point WorldCellPosition { get; set; }
 
     /// <summary>
     /// The mouse position in pixels on the screen object.
     /// </summary>
-    public readonly Point SurfacePixelPosition;
+    public Point SurfacePixelPosition { get; set; }
 
     /// <summary>
     /// Indicates that the mouse is within the bounds of <see cref="ScreenObject"/>.
     /// </summary>
-    public readonly bool IsOnScreenObject;
+    public bool IsOnScreenObject { get; set; }
 
     /// <summary>
     /// Calculates a new <see cref="MouseScreenObjectState"/> based on an <see cref="IScreenObject"/> and <see cref="SadConsole.Input.Mouse"/> state.
     /// </summary>
     /// <param name="screenObject">The screen object to process with the mouse state.</param>
     /// <param name="mouseData">The current mouse state.</param>
-    public MouseScreenObjectState(IScreenObject? screenObject, Mouse mouseData)
+    public MouseScreenObjectState(IScreenObject? screenObject, Mouse mouseData) =>
+        Refresh(screenObject, mouseData);
+
+    /// <summary>
+    /// Refreshes the mouse data in this object based on the parameters provided.
+    /// </summary>
+    /// <param name="screenObject">The screen object to process with the mouse state.</param>
+    /// <param name="mouseData">The current mouse state.</param>
+    [MemberNotNull("Mouse")]
+    public void Refresh(IScreenObject? screenObject, Mouse mouseData)
     {
         bool isNegative = false;
-        Mouse = mouseData.Clone();
+        Mouse = mouseData;
         ScreenObject = screenObject;
+        Cell = null;
+        CellPosition = default;
+        SurfaceCellPosition = default;
+        WorldCellPosition = default;
+        SurfacePixelPosition = default;
+        IsOnScreenObject = false;
 
         if (screenObject != null && screenObject is IScreenSurface screenSurface)
         {
@@ -130,5 +146,5 @@ public class MouseScreenObjectState
     /// Creates a copy.
     /// </summary>
     /// <returns>A copy of this class instance.</returns>
-    public MouseScreenObjectState Clone() => new MouseScreenObjectState(this);
+    public MouseScreenObjectState DeepClone() => new MouseScreenObjectState(this);
 }

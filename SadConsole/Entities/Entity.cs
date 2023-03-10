@@ -9,7 +9,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Entities;
 
 /// <summary>
-/// A positionable and animated game object.
+/// A positioned and animated game object.
 /// </summary>
 //[JsonConverter(typeof(EntityJsonConverter))]
 [DataContract]
@@ -39,7 +39,7 @@ public class Entity : ScreenObject
     public int ZIndex { get; set; }
 
     /// <summary>
-    /// Indidcates this entity's visual appearance has changed.
+    /// Indicates this entity's visual appearance has changed.
     /// </summary>
     public bool IsDirty
     {
@@ -421,7 +421,7 @@ public class Entity : ScreenObject
         public readonly Entity Entity;
 
         /// <summary>
-        /// The positiont the <see cref="Entity"/> moved from.
+        /// The position the <see cref="Entity"/> moved from.
         /// </summary>
         public readonly Point FromPosition;
 

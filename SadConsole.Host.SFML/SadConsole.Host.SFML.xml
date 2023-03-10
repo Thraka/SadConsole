@@ -112,155 +112,6 @@
             <param name="font">The font to use when drawing the glyph.</param>
             <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
         </member>
-        <member name="T:SadConsole.Host.GameTexture">
-            <summary>
-            Wraps a <see cref="T:SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.GameTexture.Texture">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Host.GameTexture.Height">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Host.GameTexture.Width">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Host.GameTexture.Size">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32)">
-            <summary>
-            Creates a new game texture with the specified width and height.
-            </summary>
-            <param name="width">The width of the texture in pixels.</param>
-            <param name="height">The height of the texture in pixels.</param>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture,System.Boolean)">
-            <summary>
-            Wraps a texture. Doesn't dispose it when this object is disposed!
-            </summary>
-            <param name="texture">The texture to wrap</param>
-            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
-            <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.Dispose">
-            <summary>
-            Disposes the underlaying texture object and releases reference to it.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SFML.Graphics.Color)">
-            <summary>
-            Sets the color of a pixel in the texture.
-            </summary>
-            <param name="position">The position to set the color.</param>
-            <param name="color">The color to set.</param>
-            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SFML.Graphics.Color)">
-            <summary>
-            Sets the color of a pixel in the texture by index position.
-            </summary>
-            <param name="index">The position to set the color. Row-major ordered.</param>
-            <param name="color">The color to set.</param>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixels">
-            <summary>
-            Gets an array of colors. Row-major ordered.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixelsSFMLColor">
-            <summary>
-            Gets an array of colors. Row-major ordered.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Image)">
-            <summary>
-            Updates the texture with the image data.
-            </summary>
-            <param name="image">The image to copy to the texture.</param>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Color[])">
-            <summary>
-            Sets all pixels in the texture to the provided colors.
-            </summary>
-            <param name="colors">The colors to set every pixel to.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(System.Int32)">
-            <summary>
-            Gets a pixel color at the specified index.
-            </summary>
-            <param name="index">The position in the texture.</param>
-            <returns>The color of the position in the texture.</returns>
-            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(SadRogue.Primitives.Point)">
-            <summary>
-            Gets a pixel color at the specified position.
-            </summary>
-            <param name="position">The position in the texture.</param>
-            <returns>The color of the position in the texture.</returns>
-            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
-            <summary>
-            Gets a pixel in the texture by index. Row-major ordered.
-            </summary>
-            <param name="index">The index of the pixel.</param>
-            <returns>The color of the pixel.</returns>
-        </member>
-        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
-            <inheritdoc />
-        </member>
-        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
-            <summary>
-            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Settings.FPS">
-            <summary>
-            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Settings.WindowTitle">
-            <summary>
-            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
-            <summary>
-            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Settings.SFMLScreenBlendMode">
-            <summary>
-            The blend state used when drawing surfaces to the final texture and screen.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
-            <summary>
-            A shader used when drawing the final texture to the screen.
-            </summary>
-        </member>
         <member name="T:SadConsole.Game">
             <summary>
             The SadConsole game object.
@@ -481,6 +332,9 @@
             Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.ControlHostRenderStep.BackingTexture">
             <summary>
             The cached texture of the drawn controls layer.
@@ -548,6 +402,9 @@
             Renders a cursor.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -585,6 +442,9 @@
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -620,10 +480,64 @@
             Finalizes the object for collection.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.LayeredSurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.LayeredSurface"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.LayeredSurface"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
             <summary>
             A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
@@ -718,6 +632,9 @@
         <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.CachedTexture">
             <inheritdoc/>//
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -765,6 +682,9 @@
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
             <inheritdoc/>//
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
@@ -804,6 +724,9 @@
             Renders a tint on top of where the output texture is drawn.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -831,6 +754,9 @@
             <summary>
             Renders the dimmed background screen when a window is modal.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.WindowRenderStep.SortOrder">
              <inheritdoc/>

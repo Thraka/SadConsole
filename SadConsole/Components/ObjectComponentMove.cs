@@ -23,10 +23,10 @@ public class ObjectComponentMove : KeyboardConsoleComponent
         set
         {
             _amount = value;
-            _leftAmount = (new Point(0, 0) + Direction.Left) * value;
-            _rightAmount = (new Point(0, 0) + Direction.Right) * value;
-            _upAmount = (new Point(0, 0) + Direction.Up) * value;
-            _downAmount = (new Point(0, 0) + Direction.Down) * value;
+            _leftAmount = (Point.Zero + Direction.Left) * value;
+            _rightAmount = (Point.Zero + Direction.Right) * value;
+            _upAmount = (Point.Zero + Direction.Up) * value;
+            _downAmount = (Point.Zero + Direction.Down) * value;
         }
     }
 

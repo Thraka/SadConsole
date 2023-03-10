@@ -647,7 +647,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -655,11 +655,11 @@ public static class CellSurfaceEditor
             {
                 obj.Surface[index].Glyph = text[charIndex];
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
             PrintNoCheck(obj, index, ColoredString.Parser.Parse(text, index, obj.Surface));
@@ -682,7 +682,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -691,11 +691,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Glyph = text[charIndex];
                 obj.Surface[index].Foreground = foreground;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -722,7 +722,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -732,11 +732,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Background = background;
                 obj.Surface[index].Foreground = foreground;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -766,7 +766,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -778,11 +778,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Foreground = foreground;
                 obj.Surface[index].Mirror = mirror;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -814,7 +814,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -827,11 +827,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Mirror = mirror;
                 obj.Surface[index].Decorators = decorators;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -861,7 +861,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int total = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -870,11 +870,11 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Glyph = text[charIndex];
                 obj.Surface[index].Mirror = mirror;
 
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, null);
+            SetEffect(obj, effectIndices, null);
         }
         else
         {
@@ -902,7 +902,7 @@ public static class CellSurfaceEditor
 
         if (!obj.Surface.UsePrintProcessor)
         {
-            var effectIndicies = new List<int>(text.Length);
+            var effectIndices = new List<int>(text.Length);
             int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
             int charIndex = 0;
 
@@ -911,11 +911,11 @@ public static class CellSurfaceEditor
                 ColoredGlyph cell = obj.Surface[index];
                 appearance.CopyAppearanceTo(cell, false);
                 cell.Glyph = text[charIndex];
-                effectIndicies.Add(index);
+                effectIndices.Add(index);
                 charIndex++;
             }
 
-            SetEffect(obj, effectIndicies, effect);
+            SetEffect(obj, effectIndices, effect);
         }
         else
         {
@@ -1073,7 +1073,7 @@ public static class CellSurfaceEditor
     #region Shift Rows
 
     /// <summary>
-    /// Shifts the entire row by the specfied amount.
+    /// Shifts the entire row by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1089,7 +1089,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount.
+    /// Shifts the specified row from an X position, by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1114,7 +1114,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount, to the right.
+    /// Shifts the specified row from an X position, by the specified amount, to the right.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1135,7 +1135,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount, to the left.
+    /// Shifts the specified row from an X position, by the specified amount, to the left.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1156,7 +1156,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Internal use. Doesn't do any checks on valid values. Shifts the spefied row from an X position, by the specfied amount, to the right.
+    /// Internal use. Doesn't do any checks on valid values. Shifts the specified row from an X position, by the specified amount, to the right.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="row">The row to shift.</param>
@@ -1310,7 +1310,7 @@ public static class CellSurfaceEditor
     #region Shift Columns
 
     /// <summary>
-    /// Shifts the entire column by the specfied amount.
+    /// Shifts the entire column by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1326,7 +1326,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from an X position, by the specfied amount.
+    /// Shifts the specified row from an X position, by the specified amount.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1351,7 +1351,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from n Y position, by the specfied amount, down.
+    /// Shifts the specified row from n Y position, by the specified amount, down.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1372,7 +1372,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Shifts the spefied row from n Y position, by the specfied amount, up.
+    /// Shifts the specified row from n Y position, by the specified amount, up.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="col">The column to shift.</param>
@@ -1958,7 +1958,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Clears an area of obj.Surface. Character is reset to 0, the foreground and background is set to default, and mirror is set to none. Clears cell decorators.
+    /// Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="area">The area to clear.</param>
@@ -1990,6 +1990,40 @@ public static class CellSurfaceEditor
         obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
     }
+
+    /// <summary>
+    /// Clears an area of obj.Surface. Each cell is reset to its default state. Then, Glyph, foreground, and background, are reset to the surface's default values.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="cellPositions">The cells to clear.</param>
+    public static void Clear(this ISurface obj, IEnumerable<Point> cellPositions)
+    {
+        List<ColoredGlyph> result = new List<ColoredGlyph>(5);
+        ColoredGlyph cell;
+
+        foreach (Point position in cellPositions)
+        {
+            cell = obj.Surface[position.X, position.Y];
+            cell.Clear();
+            cell.Foreground = obj.Surface.DefaultForeground;
+            cell.Background = obj.Surface.DefaultBackground;
+            cell.Glyph = obj.Surface.DefaultGlyph;
+
+            result.Add(cell);
+        }
+
+        obj.Surface.Effects.SetEffect(result, null);
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Fills the console. Clears cell decorators and effects.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="iconAppearance">The appearance that is copied to every cell.</param>
+    /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
+    public static ColoredGlyph[] Fill(this ISurface obj, ColoredGlyph iconAppearance) =>
+        Fill(obj, iconAppearance.Foreground, iconAppearance.Background, iconAppearance.Glyph, iconAppearance.Mirror);
 
     /// <summary>
     /// Fills the console. Clears cell decorators and effects.
@@ -2316,50 +2350,6 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Draws a box.
-    /// </summary>
-    /// <param name="obj">The surface being edited.</param>
-    /// <param name="area">The area of the box.</param>
-    /// <param name="border">The border style.</param>
-    /// <param name="fill">The fill style. If null, the box is not filled.</param>
-    /// <param name="connectedLineStyle">The lien style of the border. If null, <paramref name="border"/> glyph is used.</param>
-    [Obsolete("Use the other DrawBox method overload")]
-    public static void DrawBox(this ISurface obj, Rectangle area, ColoredGlyph border, ColoredGlyph? fill = null, int[]? connectedLineStyle = null)
-    {
-        if (connectedLineStyle == null)
-        {
-            connectedLineStyle = Enumerable.Range(0, Enum.GetValues(typeof(ICellSurface.ConnectedLineIndex)).Length)
-                .Select(_ => border.Glyph).ToArray();
-        }
-
-        if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
-        {
-            throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
-        }
-
-        // Draw the major sides
-        DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top], border.Foreground, border.Background, border.Mirror);
-        DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom], border.Foreground, border.Background, border.Mirror);
-        DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left], border.Foreground, border.Background, border.Mirror);
-        DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right], border.Foreground, border.Background, border.Mirror);
-
-        // Tweak the corners
-        obj.Surface.SetGlyph(area.X, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopLeft]);
-        obj.Surface.SetGlyph(area.MaxExtentX, area.Y, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.TopRight]);
-        obj.Surface.SetGlyph(area.X, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomLeft]);
-        obj.Surface.SetGlyph(area.MaxExtentX, area.MaxExtentY, connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.BottomRight]);
-
-        // Fill
-        if (fill == null)
-        {
-            return;
-        }
-
-        area = area.Expand(-1, -1);
-        Fill(obj, area, fill.Foreground, fill.Background, fill.Glyph, fill.Mirror);
-    }
-
-    /// <summary>
     /// Draws an ellipse.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
@@ -2438,69 +2428,6 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Draws an ellipse.
-    /// </summary>
-    /// <param name="obj">The surface being edited.</param>
-    /// <param name="area">The area the ellipse </param>
-    /// <param name="outer">The appearance of the outer line of the ellipse.</param>
-    /// <param name="inner">The appearance of the inside of hte ellipse. If null, it will not be filled.</param>
-    [Obsolete("Use the other DrawCircle method overload")]
-    public static void DrawCircle(this ISurface obj, Rectangle area, ColoredGlyph outer, ColoredGlyph? inner = null)
-    {
-        var cells = new List<int>(area.Width * area.Height);
-
-        Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
-        {
-            if (obj.Surface.IsValidCell(x, y))
-            {
-                SetCellAppearance(obj, x, y, outer);
-                cells.Add(Point.ToIndex(x, y, obj.Surface.Width));
-            }
-        });
-
-        if (inner != null)
-        {
-            Func<int, bool> isTargetCell = c => !cells.Contains(c);
-            Action<int> fillCell = c =>
-            {
-                inner.CopyAppearanceTo(obj.Surface[c]);
-                cells.Add(c);
-            };
-            Func<int, Algorithms.NodeConnections<int>> getConnectedCells = c =>
-            {
-                var connections = new Algorithms.NodeConnections<int>();
-
-                (int x, int y) = Point.FromIndex(c, obj.Surface.Width);
-
-                if (IsValidCell(obj, x - 1, y))
-                {
-                    connections.West = Point.ToIndex(x - 1, y, obj.Surface.Width);
-                    connections.HasWest = true;
-                }
-                if (IsValidCell(obj, x + 1, y))
-                {
-                    connections.East = Point.ToIndex(x + 1, y, obj.Surface.Width);
-                    connections.HasEast = true;
-                }
-                if (IsValidCell(obj, x, y - 1))
-                {
-                    connections.North = Point.ToIndex(x, y - 1, obj.Surface.Width);
-                    connections.HasNorth = true;
-                }
-                if (IsValidCell(obj, x, y + 1))
-                {
-                    connections.South = Point.ToIndex(x, y + 1, obj.Surface.Width);
-                    connections.HasSouth = true;
-                }
-
-                return connections;
-            };
-
-            Algorithms.FloodFill(area.Center.ToIndex(obj.Surface.Width), isTargetCell, fillCell, getConnectedCells);
-        }
-    }
-
-    /// <summary>
     /// Connects all lines in a surface for both <see cref="ICellSurface.ConnectedLineThin"/> and <see cref="ICellSurface.ConnectedLineThick"/> styles.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
@@ -2539,13 +2466,13 @@ public static class CellSurfaceEditor
                     continue;
 
                 // Get all valid positions and indexes around this point
-                bool[] valids = pos.GetValidDirections(area);
+                bool[] validDirs = pos.GetValidDirections(area);
                 int[] posIndexes = pos.GetDirectionIndexes(area, obj.Surface.Width);
                 bool[] roads = new[] { false, false, false, false, false, false, false, false, false };
 
                 for (int i = 1; i < 9; i++)
                 {
-                    if (!valids[i])
+                    if (!validDirs[i])
                         continue;
 
                     if (lineStyle.Contains(obj.Surface[posIndexes[i]].Glyph))

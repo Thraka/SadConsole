@@ -65,7 +65,7 @@ public class CheckBoxTheme : ThemeBase
     /// <param name="rightBracketGlyph">The right bracket of the checkbox icon. Defaults to ']'.</param>
     /// <param name="checkedGlyph">The checkbox checked icon. Defaults to 251'√'.</param>
     /// <param name="uncheckedGlyph">The checkbox unchecked icon. Defaults to 0.</param>
-    public CheckBoxTheme(int leftBracketGlyph = '[', int rightBracketGlyph = ']', int checkedGlyph = 251, int uncheckedGlyph = 0)
+    public CheckBoxTheme(int leftBracketGlyph, int rightBracketGlyph, int checkedGlyph, int uncheckedGlyph)
     {
         BracketsThemeState = new ThemeStates();
         IconThemeState = new ThemeStates();
@@ -75,6 +75,11 @@ public class CheckBoxTheme : ThemeBase
         CheckedIconGlyph = checkedGlyph;
         UncheckedIconGlyph = uncheckedGlyph;
     }
+
+    /// <summary>
+    /// Creates the default theme for this control, using [ ] for brackets and a checkmark for checked.
+    /// </summary>
+    public CheckBoxTheme() : this('[', ']', 251, 0) { }
 
     /// <inheritdoc />
     public override void RefreshTheme(Colors themeColors, ControlBase control)

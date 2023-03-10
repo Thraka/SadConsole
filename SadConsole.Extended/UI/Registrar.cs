@@ -17,11 +17,11 @@
         /// <param name="library"></param>
         public static void Register(Themes.Library library)
         {
-            library.SetControlTheme(typeof(Controls.ColorBar), new Themes.ColorBar());
-            library.SetControlTheme(typeof(Controls.ColorPicker), new Themes.ColorPicker());
-            library.SetControlTheme(typeof(Controls.HueBar), new Themes.HueBar());
-            library.SetControlTheme(typeof(Controls.FileDirectoryListbox), new Themes.ListBoxTheme(new Themes.ScrollBarTheme()));
-            library.SetControlTheme(typeof(Controls.CharacterPicker), new Themes.CharacterPicker());
+            library.SetControlTheme(typeof(Controls.ColorBar), typeof(Themes.ColorBar));
+            library.SetControlTheme(typeof(Controls.ColorPicker), typeof(Themes.ColorPicker));
+            library.SetControlTheme(typeof(Controls.HueBar), typeof(Themes.HueBar));
+            library.SetControlTheme(typeof(Controls.FileDirectoryListbox), typeof(Themes.ListBoxTheme));
+            library.SetControlTheme(typeof(Controls.CharacterPicker), typeof(Themes.CharacterPicker));
         }
     }
 }

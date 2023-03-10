@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using SadConsole.Renderers;
-using SadRogue.Primitives;
+﻿using Microsoft.Xna.Framework;
 
 namespace SadConsole.Renderers
 {
@@ -13,6 +8,9 @@ namespace SadConsole.Renderers
     [System.Diagnostics.DebuggerDisplay("Output")]
     public class OutputSurfaceRenderStep : IRenderStep
     {
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Output;
+
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
 

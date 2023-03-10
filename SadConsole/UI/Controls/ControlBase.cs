@@ -13,6 +13,8 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public abstract class ControlBase
 {
+    public Type ThemeType { get; set; }
+
     private Point _position;
     private bool _isEnabled = true;
     private IContainer? _parent;
@@ -114,7 +116,7 @@ public abstract class ControlBase
     /// <summary>
     /// Gets the position of this control based on the control's <see cref="Position"/> and the position of the <see cref="Parent"/>.
     /// </summary>
-    public Point AbsolutePosition => Position + (Parent != null ? Parent.AbsolutePosition : new Point(0, 0));
+    public Point AbsolutePosition => Position + (Parent != null ? Parent.AbsolutePosition : Point.Zero);
 
     /// <summary>
     /// Indicates whether or not this control is visible.
@@ -242,20 +244,25 @@ public abstract class ControlBase
 
             if (_parent == null)
             {
-                _parent = value;
-                _parent!.Add(this);
+                _parent = value!;
+
+                if (_parent.IsReadOnly == false)
+                    _parent.Add(this);
             }
             else
             {
                 IContainer temp = _parent;
                 _parent = null;
-                temp.Remove(this);
+                if (!temp.IsReadOnly)
+                    temp.Remove(this);
 
                 _parent = value;
-                _parent?.Add(this);
 
+                if (_parent != null && !_parent.IsReadOnly)
+                    _parent.Add(this);
             }    
 
+            IsDirty = true;
             OnParentChanged();
         }
     }
@@ -344,7 +351,7 @@ public abstract class ControlBase
         // Set theme
         Surface = null!;
         _activeTheme = Library.Default.GetControlTheme(GetType());
-        if (_activeTheme == null) throw new NullReferenceException($"Theme unavalable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
+        if (_activeTheme == null) throw new NullReferenceException($"Theme unavailable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
         _activeTheme.Attached(this);
         DetermineState();
     }
@@ -537,8 +544,11 @@ public abstract class ControlBase
     /// Sets the theme colors used by this control. When <see langword="null"/>, indicates this control should read the theme colors from the parent.
     /// </summary>
     /// <param name="value">The colors to use with this control.</param>
-    public void SetThemeColors(Colors? value) =>
+    public void SetThemeColors(Colors? value)
+    {
         _themeColors = value;
+        IsDirty = true;
+    }
 
     /// <summary>
     /// When <see langword="true"/>, indicates the control has custom theme colors assigned to it; othwerise <see langword="false"/>.
@@ -693,7 +703,7 @@ public abstract class ControlBase
             Control = control;
             MousePosition = mousePosition;
             OriginalMouseState = originalMouseState;
-            IsMouseOver = control.MouseArea.Contains(MousePosition);
+            IsMouseOver = originalMouseState.IsOnScreenObject && control.MouseArea.Contains(MousePosition);
         }
 
 

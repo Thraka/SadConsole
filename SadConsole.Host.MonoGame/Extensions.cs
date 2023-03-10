@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SadConsole;
 
-namespace SadConsole.Host.MonoGame
+namespace SadConsole
 {
     public static class Extensions
     {

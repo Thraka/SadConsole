@@ -39,10 +39,8 @@ public abstract class ToggleButtonBase : ButtonBase
     /// <summary>
     /// Raises the <see cref="IsSelectedChanged"/> event.
     /// </summary>
-    protected virtual void OnIsSelected()
-    {
+    protected virtual void OnIsSelected() =>
         IsSelectedChanged?.Invoke(this, EventArgs.Empty);
-    }
 
     /// <summary>
     /// Creates an instance of the button control with the specified width and height.

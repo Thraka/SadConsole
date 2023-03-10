@@ -61,7 +61,7 @@ public partial class Window : Console
     public int TitleAreaLength { get; set; }
 
     /// <summary>
-    /// The line sytle for the border.
+    /// The line style for the border.
     /// </summary>
     [DataMember]
     public int[] BorderLineStyle
@@ -203,7 +203,7 @@ public partial class Window : Console
         Controls = new ControlHost();
         SadComponents.Add(Controls);
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
-        RenderSteps.Sort(new Renderers.RenderStepComparer());
+        RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
         //Renderer = GameHost.Instance.GetRenderer("window");
 
         // todo: Perhaps a new design with windows.
@@ -228,7 +228,7 @@ public partial class Window : Console
         Controls = new ControlHost();
         SadComponents.Add(Controls);
         RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
-        RenderSteps.Sort(new Renderers.RenderStepComparer());
+        RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
         DrawBorder();
     }
 
@@ -342,7 +342,7 @@ public partial class Window : Console
     /// <param name="info">Keyboard state.</param>
     public override bool ProcessKeyboard(Keyboard info)
     {
-        if (CloseOnEscKey && info.IsKeyReleased(Keys.Escape))
+        if (CloseOnEscKey && info.IsKeyPressed(Keys.Escape))
         {
             Hide();
             return true;

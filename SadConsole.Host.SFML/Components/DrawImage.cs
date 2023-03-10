@@ -34,7 +34,7 @@ namespace SadConsole.Components
         /// <remarks>
         /// The position the image is displayed is based on the hosting console's position. This property adjusts the position of the image by the specified amount.
         /// </remarks>
-        public Point PositionOffset { get; set; } = new Point(0, 0);
+        public Point PositionOffset { get; set; } = Point.Zero;
 
         private Host.GameTexture _image;
         private bool _isDisposed;

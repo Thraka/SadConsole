@@ -105,6 +105,7 @@ public sealed partial class Game : GameHost
 
         // Configure the fonts
         _configuration.RunFontConfig();
+        SadConsole.Settings.UseDefaultExtendedFont = _configuration.FontLoaderData.UseExtendedFont;
         LoadDefaultFonts(_configuration.FontLoaderData.AlternativeDefaultFont);
 
         foreach (var font in _configuration.FontLoaderData.CustomFonts)
@@ -164,6 +165,7 @@ public sealed partial class Game : GameHost
         SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceDirtyCells, typeof(Renderers.SurfaceDirtyCellsRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Tint, typeof(Renderers.TintSurfaceRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Window, typeof(Renderers.WindowRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered, typeof(Renderers.LayeredSurfaceRenderStep));
 
         // Load the mapped colors
         LoadMappedColors();
@@ -321,7 +323,7 @@ public sealed partial class Game : GameHost
          File.Open(file, mode, access);
 
     /// <summary>
-    /// Toggles between windowed and fullscreen rendering for SadConsole.
+    /// Toggles between windowed and full screen rendering for SadConsole.
     /// </summary>
     public void ToggleFullScreen()
     {

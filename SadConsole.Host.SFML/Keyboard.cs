@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Collections.Generic;
 using SFML.Graphics;
+using SadConsole.Input;
+using System;
 
 namespace SadConsole.Host
 {
@@ -67,5 +66,8 @@ namespace SadConsole.Host
 
         public bool IsKeyUp(SadConsole.Input.Keys key) =>
             !SFML.Window.Keyboard.IsKeyPressed(key.ToSFML());
+
+        public void Refresh() =>
+            throw new NotImplementedException("This method is not used by the host.");
     }
 }

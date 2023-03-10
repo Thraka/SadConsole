@@ -36,14 +36,19 @@ public class ButtonTheme : ThemeBase
     /// <summary>
     /// Creates a new button theme with the specified left and right brackets.
     /// </summary>
-    /// <param name="leftEndGlyph">Specified the left end. Defaults to '$lt;'.</param>
-    /// <param name="rightEndGlyph">Specified the right bracket. Defaults to '>'.</param>
+    /// <param name="leftEndGlyph">Specified the left bracket.</param>
+    /// <param name="rightEndGlyph">Specified the right bracket.</param>
     public ButtonTheme(int leftEndGlyph = '<', int rightEndGlyph = '>')
     {
         EndsThemeState = new ThemeStates();
         LeftEndGlyph = leftEndGlyph;
         RightEndGlyph = rightEndGlyph;
     }
+
+    /// <summary>
+    /// Creates a new button theme with the left and right brackets.
+    /// </summary>
+    public ButtonTheme(): this ('<', '>') { }
 
     /// <inheritdoc />
     public override void RefreshTheme(Colors colors, ControlBase control)

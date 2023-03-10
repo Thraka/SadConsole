@@ -11,8 +11,12 @@ namespace SadConsole.Renderers
     /// <summary>
     /// Renders a tint on top of where the output texture is drawn.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Tint")]
     public class TintSurfaceRenderStep : IRenderStep
     {
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Tint;
+
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Tint;
 

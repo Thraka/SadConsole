@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole.Renderers;
-using SadRogue.Primitives;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
-
-namespace SadConsole.Renderers
+﻿namespace SadConsole.Renderers
 {
     /// <summary>
     /// A render step that draws the <see cref="ScreenSurfaceRenderer._backingTexture"/> texture.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Output")]
     public class OutputSurfaceRenderStep : IRenderStep
     {
+        /// <inheritdoc/>
+        public string Name => Constants.RenderStepNames.Output;
+
         ///  <inheritdoc/>
         public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
 

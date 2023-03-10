@@ -9,10 +9,6 @@ namespace SadConsole.Input;
 /// </summary>
 public class Mouse
 {
-    private TimeSpan _leftLastClickedTime;
-    private TimeSpan _rightLastClickedTime;
-    private TimeSpan _middleLastClickedTime;
-
     private bool _leftPressedLastFrame;
     private bool _rightPressedLastFrame;
     private bool _middlePressedLastFrame;
@@ -30,12 +26,17 @@ public class Mouse
     public bool MiddleButtonDown { get; set; }
 
     /// <summary>
+    /// The amount of time the middle button has been held down.
+    /// </summary>
+    public TimeSpan MiddleButtonDownDuration { get; private set; }
+
+    /// <summary>
     /// Indicates the middle mouse button was clicked. (Held and then released)
     /// </summary>
     public bool MiddleClicked { get; set; }
 
     /// <summary>
-    /// Inidcates the middle mouse button was double-clicked within one second.
+    /// Indicates the middle mouse button was double-clicked within one second.
     /// </summary>
     public bool MiddleDoubleClicked { get; set; }
 
@@ -45,12 +46,17 @@ public class Mouse
     public bool LeftButtonDown { get; set; }
 
     /// <summary>
+    /// The amount of time the left button has been held down.
+    /// </summary>
+    public TimeSpan LeftButtonDownDuration { get; private set; }
+
+    /// <summary>
     /// Indicates the left mouse button was clicked. (Held and then released)
     /// </summary>
     public bool LeftClicked { get; set; }
 
     /// <summary>
-    /// Inidcates the left mouse button was double-clicked within one second.
+    /// Indicates the left mouse button was double-clicked within one second.
     /// </summary>
     public bool LeftDoubleClicked { get; set; }
 
@@ -60,12 +66,17 @@ public class Mouse
     public bool RightButtonDown { get; set; }
 
     /// <summary>
+    /// The amount of time the right button has been held down.
+    /// </summary>
+    public TimeSpan RightButtonDownDuration { get; private set; }
+
+    /// <summary>
     /// Indicates the right mouse button was clicked. (Held and then released)
     /// </summary>
     public bool RightClicked { get; set; }
 
     /// <summary>
-    /// Indicates the right mouse buttion was double-clicked within one second.
+    /// Indicates the right mouse button was double-clicked within one second.
     /// </summary>
     public bool RightDoubleClicked { get; set; }
 
@@ -106,17 +117,17 @@ public class Mouse
         if (!_leftPressedLastFrame && leftDown)
             _leftPressedLastFrame = true;
         else if (leftDown)
-            _leftLastClickedTime += elapsedSeconds;
+            LeftButtonDownDuration += elapsedSeconds;
 
         if (!_rightPressedLastFrame && rightDown)
             _rightPressedLastFrame = true;
         else if (rightDown)
-            _rightLastClickedTime += elapsedSeconds;
+            RightButtonDownDuration += elapsedSeconds;
 
         if (!_middlePressedLastFrame && middleDown)
             _middlePressedLastFrame = true;
         else if (middleDown)
-            _middleLastClickedTime += elapsedSeconds;
+            MiddleButtonDownDuration += elapsedSeconds;
 
         // Get the mouse button state change
         bool newLeftClicked = LeftButtonDown && !leftDown;
@@ -133,19 +144,19 @@ public class Mouse
         if (!newMiddleClicked)
             MiddleDoubleClicked = false;
 
-        if (LeftClicked && newLeftClicked && _leftLastClickedTime < Settings.Input.MouseDoubleClickTime)
+        if (LeftClicked && newLeftClicked && LeftButtonDownDuration < Settings.Input.MouseDoubleClickTime)
             LeftDoubleClicked = true;
 
-        if (RightClicked && newRightClicked && _rightLastClickedTime < Settings.Input.MouseDoubleClickTime)
+        if (RightClicked && newRightClicked && RightButtonDownDuration < Settings.Input.MouseDoubleClickTime)
             RightDoubleClicked = true;
 
-        if (MiddleClicked && newMiddleClicked && _middleLastClickedTime < Settings.Input.MouseDoubleClickTime)
+        if (MiddleClicked && newMiddleClicked && MiddleButtonDownDuration < Settings.Input.MouseDoubleClickTime)
             MiddleDoubleClicked = true;
 
         // Set state of click and mouse down
-        LeftClicked = newLeftClicked && _leftLastClickedTime < Settings.Input.MouseClickTime;
-        RightClicked = newRightClicked && _rightLastClickedTime < Settings.Input.MouseClickTime;
-        MiddleClicked = newMiddleClicked && _middleLastClickedTime < Settings.Input.MouseClickTime;
+        LeftClicked = newLeftClicked && LeftButtonDownDuration < Settings.Input.MouseClickTime;
+        RightClicked = newRightClicked && RightButtonDownDuration < Settings.Input.MouseClickTime;
+        MiddleClicked = newMiddleClicked && MiddleButtonDownDuration < Settings.Input.MouseClickTime;
         LeftButtonDown = leftDown;
         RightButtonDown = rightDown;
         MiddleButtonDown = middleDown;
@@ -154,19 +165,19 @@ public class Mouse
         if (_leftPressedLastFrame && !leftDown)
         {
             _leftPressedLastFrame = false;
-            _leftLastClickedTime = TimeSpan.Zero;
+            LeftButtonDownDuration = TimeSpan.Zero;
         }
 
         if (_rightPressedLastFrame && !rightDown)
         {
             _rightPressedLastFrame = false;
-            _rightLastClickedTime = TimeSpan.Zero;
+            RightButtonDownDuration = TimeSpan.Zero;
         }
 
         if (_middlePressedLastFrame && !middleDown)
         {
             _middlePressedLastFrame = false;
-            _middleLastClickedTime = TimeSpan.Zero;
+            MiddleButtonDownDuration = TimeSpan.Zero;
         }
     }
 
@@ -186,10 +197,14 @@ public class Mouse
         MiddleButtonDown = false;
         ScrollWheelValue = 0;
         ScrollWheelValueChange = 0;
-        ScreenPosition = new Point(0, 0);
+        ScreenPosition = Point.Zero;
 
-        _leftLastClickedTime = TimeSpan.Zero;
+        LeftButtonDownDuration = TimeSpan.Zero;
+        RightButtonDownDuration = TimeSpan.Zero;
+        MiddleButtonDownDuration = TimeSpan.Zero;
         _leftPressedLastFrame = false;
+        _rightPressedLastFrame = false;
+        _middlePressedLastFrame = false;
     }
 
     /// <summary>
@@ -197,10 +212,12 @@ public class Mouse
     /// </summary>
     public virtual void Process()
     {
+        var state = new MouseScreenObjectState(null, this);
+
         // Check if last mouse was marked exclusive
         if (_lastMouseScreenObject != null && _lastMouseScreenObject.IsExclusiveMouse)
         {
-            var state = new MouseScreenObjectState(_lastMouseScreenObject, this);
+            state.Refresh(_lastMouseScreenObject, this);
 
             _lastMouseScreenObject.ProcessMouse(state);
         }
@@ -208,7 +225,7 @@ public class Mouse
         // Check if the focused input screen object wants exclusive mouse
         else if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null && GameHost.Instance.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
         {
-            var state = new MouseScreenObjectState(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
+            state.Refresh(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
 
             // if the last screen object to have the mouse is not our global, signal
             if (_lastMouseScreenObject != null && _lastMouseScreenObject != GameHost.Instance.FocusedScreenObjects.ScreenObject)
@@ -236,14 +253,12 @@ public class Mouse
 
             for (int i = 0; i < screenObjects.Count; i++)
             {
-                var state = new MouseScreenObjectState(screenObjects[i], this);
+                state.Refresh(screenObjects[i], this);
 
                 if (screenObjects[i].ProcessMouse(state))
                 {
                     if (_lastMouseScreenObject != null && _lastMouseScreenObject != screenObjects[i])
-                    {
                         _lastMouseScreenObject.LostMouse(state);
-                    }
 
                     foundMouseTarget = true;
                     _lastMouseScreenObject = screenObjects[i];
@@ -253,7 +268,8 @@ public class Mouse
 
             if (!foundMouseTarget)
             {
-                _lastMouseScreenObject?.LostMouse(new MouseScreenObjectState(null, this));
+                state.Refresh(null, this);
+                _lastMouseScreenObject?.LostMouse(state);
             }
         }
 
@@ -305,6 +321,9 @@ public class Mouse
         MiddleClicked = MiddleClicked,
         MiddleDoubleClicked = MiddleDoubleClicked,
         ScrollWheelValue = ScrollWheelValue,
-        ScrollWheelValueChange = ScrollWheelValueChange
+        ScrollWheelValueChange = ScrollWheelValueChange,
+        LeftButtonDownDuration = LeftButtonDownDuration,
+        RightButtonDownDuration = RightButtonDownDuration,
+        MiddleButtonDownDuration = MiddleButtonDownDuration,
     };
 }

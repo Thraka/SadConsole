@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -43,15 +44,34 @@ public class ListBoxTheme : ThemeBase
     /// The appearance of the scrollbar used by the listbox control.
     /// </summary>
     [DataMember]
-    public ScrollBarTheme ScrollBarTheme;
+    public ScrollBarTheme ScrollBarTheme { get; set; }
+
+    /// <summary>
+    /// The appearance of the items displayed by the listbox control.
+    /// </summary>
+    [DataMember]
+    public ListBoxItemTheme ItemTheme { get; set; }
 
     /// <summary>
     /// Creates a new theme used by the <see cref="ListBox"/>.
     /// </summary>
     /// <param name="scrollBarTheme">The theme to use to draw the scroll bar.</param>
-    public ListBoxTheme(ScrollBarTheme scrollBarTheme)
+    /// <param name="itemTheme">The theme to use when drawing items.</param>
+    public ListBoxTheme(ScrollBarTheme scrollBarTheme, ListBoxItemTheme itemTheme)
     {
         ScrollBarTheme = scrollBarTheme;
+        ItemTheme = itemTheme;
+        BorderTheme = new ThemeStates();
+    }
+
+    /// <summary>
+    /// Creates a new theme used by the <see cref="ListBox"/> with the default theme for the scroll bar.
+    /// </summary>
+
+    public ListBoxTheme()
+    {
+        ScrollBarTheme = (ScrollBarTheme)Library.Default.GetControlTheme(typeof(ScrollBar));
+        ItemTheme = new ListBoxItemTheme();
         BorderTheme = new ThemeStates();
     }
 
@@ -61,7 +81,7 @@ public class ListBoxTheme : ThemeBase
     /// <param name="listbox"></param>
     protected void SetupScrollBar(ListBox listbox)
     {
-        if (DrawBorder && listbox.Height < 5)
+        if (DrawBorder && listbox.Height < 4)
         {
             DrawBorder = false;
             _reconfigureSrollBar = false;
@@ -119,7 +139,7 @@ public class ListBoxTheme : ThemeBase
             startingRow = 1;
             columnOffset = 1;
             columnEnd = listbox.Width - 2;
-            listbox.Surface.DrawBox(new Rectangle(0, 0, listbox.Width, listbox.Height), new ColoredGlyph(borderAppearance.Foreground, borderAppearance.Background, 0), null, BorderLineStyle);
+            listbox.Surface.DrawBox(new Rectangle(0, 0, listbox.Width, listbox.Height), ShapeParameters.CreateStyledBox(BorderLineStyle, new ColoredGlyph(borderAppearance.Foreground, borderAppearance.Background, 0)));
         }
         else
         {
@@ -158,7 +178,7 @@ public class ListBoxTheme : ThemeBase
                 if (itemIndexRelative == listbox.SelectedIndex)
                     state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.Selected);
 
-                listbox.ItemTheme.Draw(listbox, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
+                ItemTheme.Draw(listbox, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), listbox.Items[itemIndexRelative], state);
             }
         }
 
@@ -188,11 +208,12 @@ public class ListBoxTheme : ThemeBase
 
         ControlThemeState.SetForeground(ControlThemeState.Normal.Foreground);
         ControlThemeState.SetBackground(ControlThemeState.Normal.Background);
-        listbox.ItemTheme.RefreshTheme(_colorsLastUsed);
+        ItemTheme.RefreshTheme(_colorsLastUsed);
 
         listbox.ScrollBar.Theme = ScrollBarTheme;
 
-        ScrollBarTheme?.RefreshTheme(_colorsLastUsed, listbox.ScrollBar);
+        ScrollBarTheme.RefreshTheme(_colorsLastUsed, listbox.ScrollBar);
+        ItemTheme.RefreshTheme(_colorsLastUsed);
 
         BorderTheme.RefreshTheme(_colorsLastUsed);
         BorderTheme.SetForeground(_colorsLastUsed.Lines);
@@ -200,7 +221,7 @@ public class ListBoxTheme : ThemeBase
     }
 
     /// <inheritdoc />
-    public override ThemeBase Clone() => new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone())
+    public override ThemeBase Clone() => new ListBoxTheme((ScrollBarTheme)ScrollBarTheme.Clone(), ItemTheme.Clone())
     {
         ControlThemeState = ControlThemeState.Clone(),
         BorderTheme = BorderTheme.Clone(),
@@ -257,11 +278,11 @@ public class ListBoxItemTheme : ThemeStates
     /// <summary>
     /// Draws the <paramref name="item"/> in the specified <paramref name="area"/> of the listbox.
     /// </summary>
-    /// <param name="control">The listbox that contains the item.</param>
+    /// <param name="control">The control containing a surface to draw on.</param>
     /// <param name="area">The area to draw the item.</param>
     /// <param name="item">The item object.</param>
     /// <param name="itemState">The state of the item.</param>
-    public virtual void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
+    public virtual void Draw(ControlBase control, Rectangle area, object item, ControlStates itemState)
     {
         if (item is ValueTuple<ColoredString, object> colValue)
             item = colValue.Item1;
@@ -325,7 +346,7 @@ public class ListBoxItemTheme : ThemeStates
 [DataContract]
 public class ListBoxItemColorTheme : ListBoxItemTheme
 {
-    // TODO: Change ValueTyple to specific types
+    // TODO: Change ValueTuple to specific types
 
     /// <summary>
     /// When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
@@ -333,7 +354,7 @@ public class ListBoxItemColorTheme : ListBoxItemTheme
     public bool UseSingleCharacterForBox { get; set; } = false;
 
     /// <inheritdoc />
-    public override void Draw(ListBox control, Rectangle area, object item, ControlStates itemState)
+    public override void Draw(ControlBase control, Rectangle area, object item, ControlStates itemState)
     {
         if (item is Color || item is ValueTuple<Color, string> || item is ValueTuple<Color, Color, string>)
         {

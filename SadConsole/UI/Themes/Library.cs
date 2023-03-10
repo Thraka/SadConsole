@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using SadConsole.Renderers;
+using System.Xml.Linq;
 using SadConsole.UI.Controls;
 
 namespace SadConsole.UI.Themes;
@@ -15,7 +17,7 @@ public class Library
     private static Library _libraryInstance;
 
     [DataMember(Name = "ControlThemes")]
-    private Dictionary<System.Type, ThemeBase> _controlThemes;
+    private Dictionary<Type, Type> _controlThemes;
 
     private Colors _colors;
 
@@ -79,19 +81,20 @@ public class Library
     /// </summary>
     public void ApplyDefaults()
     {
-        SetControlTheme(typeof(ScrollBar), new ScrollBarTheme());
-        SetControlTheme(typeof(CheckBox), new CheckBoxTheme());
-        SetControlTheme(typeof(ListBox), new ListBoxTheme(new ScrollBarTheme()));
-        SetControlTheme(typeof(ProgressBar), new ProgressBarTheme());
-        SetControlTheme(typeof(RadioButton), new RadioButtonTheme());
-        SetControlTheme(typeof(TextBox), new TextBoxTheme());
-        SetControlTheme(typeof(SelectionButton), new ButtonTheme());
-        SetControlTheme(typeof(DrawingArea), new DrawingAreaTheme());
-        SetControlTheme(typeof(Button), new ButtonTheme());
-        SetControlTheme(typeof(Label), new LabelTheme());
-        SetControlTheme(typeof(Panel), new PanelTheme());
-        SetControlTheme(typeof(SurfaceViewer), new SurfaceViewerTheme());
-        SetControlTheme(typeof(Table), new TableTheme(new ScrollBarTheme()));
+        SetControlTheme(typeof(Button), typeof(ButtonTheme));
+        SetControlTheme(typeof(CheckBox), typeof(CheckBoxTheme));
+        SetControlTheme(typeof(ComboBox), typeof(ComboBoxTheme));
+        SetControlTheme(typeof(DrawingArea), typeof(DrawingAreaTheme));
+        SetControlTheme(typeof(ScrollBar), typeof(ScrollBarTheme));
+        SetControlTheme(typeof(Label), typeof(LabelTheme));
+        SetControlTheme(typeof(ListBox), typeof(ListBoxTheme));
+        SetControlTheme(typeof(Panel), typeof(PanelTheme));
+        SetControlTheme(typeof(ProgressBar), typeof(ProgressBarTheme));
+        SetControlTheme(typeof(RadioButton), typeof(RadioButtonTheme));
+        SetControlTheme(typeof(SelectionButton), typeof(ButtonTheme));
+        SetControlTheme(typeof(SurfaceViewer), typeof(SurfaceViewerTheme));
+        SetControlTheme(typeof(TextBox), typeof(TextBoxTheme));
+        SetControlTheme(typeof(Table), typeof(TableTheme));
     }
 
     /// <summary>
@@ -102,7 +105,7 @@ public class Library
         _colors = Colors.CreateAnsi();
         _colors.IsLibrary = true;
 
-        _controlThemes = new Dictionary<Type, ThemeBase>(15);
+        _controlThemes = new Dictionary<Type, Type>(13);
     }
 
     /// <summary>
@@ -112,10 +115,11 @@ public class Library
     /// <returns>A theme that is associated with the control.</returns>
     public ThemeBase GetControlTheme(Type control)
     {
-        if (_controlThemes.ContainsKey(control))
-            return _controlThemes[control].Clone();
+        if (_controlThemes.TryGetValue(control, out Type? objType))
+            return Activator.CreateInstance(objType) as ThemeBase
+                ?? throw new NullReferenceException($"Theme was found registered, but the system was unable to create an instance of it as an {nameof(ThemeBase)}.");
 
-        throw new System.Exception("Control does not have an associated theme.");
+        throw new KeyNotFoundException($"Theme not found. If this is a new control, register the theme with the {nameof(Library)}.{nameof(SetControlTheme)} method.");
     }
 
     /// <summary>
@@ -124,7 +128,7 @@ public class Library
     /// <param name="control">The control type to register a theme.</param>
     /// <param name="theme">The theme to associate with the control.</param>
     /// <returns>A theme that is associated with the control.</returns>
-    public void SetControlTheme(Type control, ThemeBase theme)
+    public void SetControlTheme(Type control, Type theme)
     {
         if (null == control) throw new ArgumentNullException(nameof(control), "Cannot use a null control type");
         _controlThemes[control] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a control to null");
