@@ -92,6 +92,14 @@ public class TableTheme : ThemeBase
 
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
                 int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
+
+                // Keep header row at the top of the table
+                if (row == 0 && table.Cells.HeaderRow && verticalScrollBarValue > 0)
+                {
+                    rowIndex = 0;
+                    verticalScrollBarValue = 0;
+                }
+
                 SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
                     verticalScrollBarValue, horizontalScrollBarValue);
 
@@ -133,6 +141,10 @@ public class TableTheme : ThemeBase
 
                 colIndex++;
             }
+
+            // Make sure the next rows are properly handled if header row is enabled
+            if (row == 0 && table.Cells.HeaderRow && table.StartRenderYPos > 0)
+                rowIndex = rowIndexPos;
 
             row += fullRowSize - 1;
             rowIndex++;

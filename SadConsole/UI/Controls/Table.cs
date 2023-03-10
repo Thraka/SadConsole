@@ -1085,6 +1085,21 @@ public sealed class Cells : IEnumerable<Table.Cell>
     /// </summary>
     public int MaxColumn { get; private set; }
 
+    private bool _headerRow;
+    /// <summary>
+    /// True if row 0 should be the header of the table, and remain at the top when vertical scrolling.
+    /// </summary>
+    public bool HeaderRow
+    {
+        get { return _headerRow; }
+        set
+        {
+            _headerRow = value;
+            _table._checkScrollBarVisibility = true;
+            _table.IsDirty = true;
+        }
+    }
+
     /// <summary>
     /// The amount of cells currently in the table.
     /// </summary>
