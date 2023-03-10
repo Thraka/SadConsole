@@ -35,7 +35,7 @@ public class TextBoxTheme : ThemeBase
     {
         base.RefreshTheme(themeColors, control);
 
-        bool isFocsuedSameAsBack = ControlThemeState.Focused.Background == _colorsLastUsed.ControlHostBackground;
+        bool isFocusedSameAsBack = ControlThemeState.Focused.Background == _colorsLastUsed.ControlHostBackground;
 
         ControlThemeState.Normal.Background = GetOffColor(ControlThemeState.Normal.Background, _colorsLastUsed.ControlHostBackground);
         ControlThemeState.MouseOver.Background = GetOffColor(ControlThemeState.MouseOver.Background, _colorsLastUsed.ControlHostBackground);
@@ -43,8 +43,11 @@ public class TextBoxTheme : ThemeBase
         ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, _colorsLastUsed.ControlHostBackground);
 
         // Further alter the color to indicate focus
-        if (isFocsuedSameAsBack)
+        if (isFocusedSameAsBack)
             ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, ControlThemeState.Focused.Background);
+
+        // If the focused background color is the same as the non-focused, alter it so it stands out
+        ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, ControlThemeState.Normal.Background);
     }
 
     /// <inheritdoc />

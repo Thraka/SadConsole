@@ -90,6 +90,9 @@ public class ComboBoxTheme : ThemeBase
         ControlThemeState.MouseDown.Background = GetOffColor(ControlThemeState.MouseDown.Background, _colorsLastUsed.ControlHostBackground);
         ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, _colorsLastUsed.ControlHostBackground);
 
+        // If the focused background color is the same as the non-focused, alter it so it stands out
+        ControlThemeState.Focused.Background = GetOffColor(ControlThemeState.Focused.Background, ControlThemeState.Normal.Background);
+
         IconThemeState.Normal.Foreground = _colorsLastUsed.Lines;
         IconThemeState.MouseOver.Foreground = _colorsLastUsed.Lines;
         IconThemeState.MouseDown.Foreground = _colorsLastUsed.Lines;
