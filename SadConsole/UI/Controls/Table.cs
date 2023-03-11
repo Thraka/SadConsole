@@ -1115,7 +1115,7 @@ public sealed class Cells : IEnumerable<Table.Cell>
     public Layout Column(int column)
     {
         _ = _columnLayout.TryGetValue(column, out Layout? layout);
-        layout ??= _columnLayout[column] = new Layout(_table, Layout.LayoutType.Column);
+        layout ??= _columnLayout[column] = new Layout(_table, column, Layout.LayoutType.Column);
         return layout;
     }
 
@@ -1127,7 +1127,7 @@ public sealed class Cells : IEnumerable<Table.Cell>
     public Layout Row(int row)
     {
         _ = _rowLayout.TryGetValue(row, out Layout? layout);
-        layout ??= _rowLayout[row] = new Layout(_table, Layout.LayoutType.Row);
+        layout ??= _rowLayout[row] = new Layout(_table, row, Layout.LayoutType.Row);
         return layout;
     }
 
@@ -1412,11 +1412,26 @@ public sealed class Cells : IEnumerable<Table.Cell>
         internal bool HasCustomSettings => _settings != null;
 
         private readonly Table _table;
+        private readonly LayoutType _layoutType;
+        private readonly int _index;
 
-        internal Layout(Table table, LayoutType type)
+        internal Layout(Table table, int index, LayoutType type)
         {
             _table = table;
+            _layoutType = type;
+            _index = index;
             Size = type == LayoutType.Column ? table.DefaultCellSize.X : table.DefaultCellSize.Y;
+        }
+
+
+        /// <summary>
+        /// Removes this entire layout from the table.
+        /// </summary>
+        public void Remove()
+        {
+            var layoutDict = _layoutType == LayoutType.Row ? _table.Cells._rowLayout : _table.Cells._columnLayout;
+            layoutDict.Remove(_index);
+            _table.IsDirty = true;
         }
 
         /// <summary>
