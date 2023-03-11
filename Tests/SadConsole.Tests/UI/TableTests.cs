@@ -586,7 +586,7 @@ public abstract class TableTestsBase
         CellWidth = cellWidth;
         CellHeight = cellHeight;
 
-        Library.Default.SetControlTheme(typeof(Table), new TableTheme(new ScrollBarTheme()));
+        Library.Default.SetControlTheme(typeof(Table), typeof(TableTheme));
     }
 
     [TestInitialize]
