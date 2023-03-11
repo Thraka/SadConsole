@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Themes;
 
@@ -100,7 +101,7 @@ public class TableTheme : ThemeBase
                     verticalScrollBarValue = 0;
                 }
 
-                SadRogue.Primitives.Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
+                Point cellPosition = table.Cells.GetCellPosition(rowIndex, colIndex, out fullRowSize, out int columnSize,
                     verticalScrollBarValue, horizontalScrollBarValue);
 
                 col += columnSize - 1;
@@ -118,22 +119,24 @@ public class TableTheme : ThemeBase
                 }
 
                 Table.Cell? cell = table.Cells.GetIfExists(rowIndex, colIndex);
-                bool fakeCellCreated = cell == null;
-                cell ??= new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
+                if (cell == null && table.DrawFakeCells)
                 {
-                    Position = cellPosition
-                };
+                    cell = new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
+                    {
+                        Position = cellPosition
+                    };
+                }
 
-                if (!table.DrawFakeCells && fakeCellCreated)
+                if (cell == null)
                 {
-                    HideVisualCell(table, cell);
+                    HideVisualCell(table, colIndex, rowIndex, cellPosition);
 
                     colIndex++;
                     continue;
                 }
 
                 // This method raises an event that the user can use to modify the cell layout
-                if (fakeCellCreated || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
+                if (table.DrawFakeCells || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
                     table.DrawFakeCell(cell);
 
                 AdjustControlSurface(table, cell, GetCustomStateAppearance(table, cell));
@@ -297,17 +300,21 @@ public class TableTheme : ThemeBase
         }
     }
 
-    private static void HideVisualCell(Table table, Table.Cell cell)
+    private static void HideVisualCell(Table table, int column, int row, Point position)
     {
-        int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-        int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+        int width = table.Cells.GetSizeOrDefault(column, Cells.Layout.LayoutType.Column);
+        int height = table.Cells.GetSizeOrDefault(row, Cells.Layout.LayoutType.Row);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                int colIndex = cell.Position.X + x;
-                int rowIndex = cell.Position.Y + y;
-                if (!table.Surface.IsValidCell(colIndex, rowIndex)) continue;
+                int colIndex = position.X + x;
+                int rowIndex = position.Y + y;
+                if (!table.Surface.IsValidCell(colIndex, rowIndex))
+                {
+                    continue;
+                }
+
                 table.Surface[colIndex, rowIndex].IsVisible = true;
                 table.Surface.SetForeground(colIndex, rowIndex, table.DefaultForeground);
                 table.Surface.SetBackground(colIndex, rowIndex, table.DefaultBackground);
