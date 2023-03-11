@@ -508,12 +508,12 @@ public class Table : CompositeControl
                     IsDirty = true;
                 CurrentMouseCell = cell;
 
-                if (CurrentMouseCell != null && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
+                if (CurrentMouseCell != null && CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                     OnCellEnter?.Invoke(this, new CellEventArgs(CurrentMouseCell));
             }
             else
             {
-                if (CurrentMouseCell != null && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
+                if (CurrentMouseCell != null && CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                 {
                     OnCellExit?.Invoke(this, new CellEventArgs(CurrentMouseCell));
                     CurrentMouseCell = null;
@@ -549,8 +549,7 @@ public class Table : CompositeControl
 
         if (CurrentMouseCell != null)
         {
-            if (SelectedCell != CurrentMouseCell && (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable &&
-                CurrentMouseCell.Settings.IsVisible && CurrentMouseCell.Settings.Selectable)))
+            if (SelectedCell != CurrentMouseCell && CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable && CurrentMouseCell.Settings.Selectable)))
             {
                 SelectedCell = CurrentMouseCell;
                 ScrollToSelectedItem();
@@ -561,7 +560,7 @@ public class Table : CompositeControl
                 SelectedCell = null;
             }
 
-            if (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable && CurrentMouseCell.Settings.IsVisible))
+            if (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                 OnCellLeftClick?.Invoke(this, new CellEventArgs(CurrentMouseCell));
 
             DateTime click = DateTime.Now;
@@ -573,7 +572,7 @@ public class Table : CompositeControl
             {
                 _leftMouseLastClick = DateTime.MinValue;
                 _leftMouseLastClickPosition = null;
-                if (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable && CurrentMouseCell.Settings.IsVisible))
+                if (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                     OnCellDoubleClick?.Invoke(this, new CellEventArgs(CurrentMouseCell));
             }
         }
@@ -588,7 +587,7 @@ public class Table : CompositeControl
     {
         base.OnRightMouseClicked(state);
 
-        if (CurrentMouseCell != null && (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable && CurrentMouseCell.Settings.IsVisible)))
+        if (CurrentMouseCell != null && (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable)))
         {
             OnCellRightClick?.Invoke(this, new CellEventArgs(CurrentMouseCell));
         }
@@ -601,7 +600,7 @@ public class Table : CompositeControl
 
         if (CurrentMouseCell != null)
         {
-            if (!CurrentMouseCell.IsSettingsInitialized || (CurrentMouseCell.Settings.Interactable && CurrentMouseCell.Settings.IsVisible))
+            if (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                 OnCellExit?.Invoke(this, new CellEventArgs(CurrentMouseCell));
             CurrentMouseCell = null;
         }
@@ -724,6 +723,17 @@ public class Table : CompositeControl
         {
             get => _value;
             set => SetFieldValue(this, Value, ref _value, value, false);
+        }
+
+        private bool _isVisible = true;
+        /// <summary>
+        /// Set to false if the cell should not be rendered within the table (default IsVisible sadconsole behaviour),
+        /// If an entire row or column IsVislbe is set to false in the layout, it will skip this row/column entirely (differs from default behaviour)
+        /// </summary>
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => SetFieldValue(this, IsVisible, ref _isVisible, value, false);
         }
 
         private Options? _settings;
@@ -899,16 +909,6 @@ public class Table : CompositeControl
                 set => SetFieldValue(_cell, Selectable, ref _selectable, value, _usedForLayout);
             }
 
-            private bool _isVisible = true;
-            /// <summary>
-            /// Defines if the cell should be rendered to the surface; Default: true
-            /// </summary>
-            public bool IsVisible
-            {
-                get => _isVisible;
-                set => SetFieldValue(_cell, IsVisible, ref _isVisible, value, _usedForLayout);
-            }
-
             private Cells.Layout.Mode _selectionMode;
             /// <summary>
             /// Defines the selection visual mode when the cell is selected; Default: single
@@ -1007,7 +1007,6 @@ public class Table : CompositeControl
 && other.HorizontalAlignment == HorizontalAlignment &&
                     other.VerticalAlignment == VerticalAlignment &&
                     other.MaxCharactersPerLine == MaxCharactersPerLine &&
-                    other.IsVisible == IsVisible &&
                     other.Selectable == Selectable &&
                     other.SelectionMode == SelectionMode &&
                     other.HoverMode == HoverMode &&
@@ -1027,7 +1026,6 @@ public class Table : CompositeControl
                     HorizontalAlignment,
                     VerticalAlignment,
                     MaxCharactersPerLine,
-                    IsVisible,
                     Selectable,
                     SelectionMode,
                     HoverMode,
@@ -1041,7 +1039,6 @@ public class Table : CompositeControl
                 HorizontalAlignment = settings.HorizontalAlignment;
                 VerticalAlignment = settings.VerticalAlignment;
                 MaxCharactersPerLine = settings.MaxCharactersPerLine;
-                IsVisible = settings.IsVisible;
                 Selectable = settings.Selectable;
                 SelectionMode = settings.SelectionMode;
                 HoverMode = settings.HoverMode;
@@ -1251,8 +1248,10 @@ public sealed class Cells : IEnumerable<Table.Cell>
             };
 
             _cells[(row, col)] = cell;
-            if (MaxRow < row) MaxRow = row;
-            if (MaxColumn < col) MaxColumn = col;
+            if (MaxRow < row)
+                MaxRow = row;
+            if (MaxColumn < col)
+                MaxColumn = col;
             _table._checkScrollBarVisibility = true;
         }
         return cell;
@@ -1273,12 +1272,19 @@ public sealed class Cells : IEnumerable<Table.Cell>
 
         indexSize = layoutDict.TryGetValue(startIndex, out Layout? layout) ? layout.Size : defaultSize;
 
+        // If entire row or column is hidden then skip it
+        if (layout != null && !layout.IsVisible)
+            indexSize = 0;
+
         while (startIndex < index)
         {
             controlIndex += indexSize;
             startIndex++;
 
             indexSize = layoutDict.TryGetValue(startIndex, out layout) ? layout.Size : defaultSize;
+            // If entire row or column is hidden then skip it
+            if (layout != null && !layout.IsVisible)
+                indexSize = 0;
         }
         return controlIndex;
     }
@@ -1292,6 +1298,8 @@ public sealed class Cells : IEnumerable<Table.Cell>
         for (int i = 0; i < total; i++)
         {
             int indexSize = layoutDict.TryGetValue(i, out Layout? layout) ? layout.Size : defaultSize;
+            if (layout != null && !layout.IsVisible)
+                indexSize = 0;
             totalSize += indexSize;
             if (pos < totalSize)
             {
@@ -1318,8 +1326,10 @@ public sealed class Cells : IEnumerable<Table.Cell>
         }
 
         _cells[(row, col)] = cell;
-        if (MaxRow < row) MaxRow = row;
-        if (MaxColumn < col) MaxColumn = col;
+        if (MaxRow < row)
+            MaxRow = row;
+        if (MaxColumn < col)
+            MaxColumn = col;
         _table._checkScrollBarVisibility = true;
         _table.IsDirty = true;
     }
@@ -1376,6 +1386,11 @@ public sealed class Cells : IEnumerable<Table.Cell>
         /// The background color used by the row or column
         /// </summary>
         public Color? Background { get; set; }
+
+        /// <summary>
+        /// Setting this to false will skip the entire layout for rendering (differs from SadConsole default behaviour of IsVisible)
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
 
         private Table.Cell.Options? _settings;
         /// <summary>

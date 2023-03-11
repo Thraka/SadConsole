@@ -80,10 +80,14 @@ public class TableTheme : ThemeBase
         bool offScreenY = false;
         for (int row = 0; row <= rows; row++)
         {
+            // Check if entire row is !IsVisible, then skip this row index entirely
+            var entireRowNotVisible = IsEntireRowOrColumnNotVisible(rowIndex, table, Cells.Layout.LayoutType.Row);
+
             int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
             int fullRowSize = 0;
 
+            bool headerRow = false;
             for (int col = 0; col <= columns; col++)
             {
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
@@ -92,6 +96,7 @@ public class TableTheme : ThemeBase
                 // Keep header row at the top of the table
                 if (row == 0 && table.Cells.HeaderRow && verticalScrollBarValue > 0)
                 {
+                    headerRow = true;
                     rowIndex = 0;
                     verticalScrollBarValue = 0;
                 }
@@ -100,6 +105,15 @@ public class TableTheme : ThemeBase
                     verticalScrollBarValue, horizontalScrollBarValue);
 
                 col += columnSize - 1;
+
+                // Check if entire column is !IsVisible, then skip this column index entirely
+                var entireRowOrColumnNotVisible = entireRowNotVisible ||
+                    IsEntireRowOrColumnNotVisible(colIndex, table, Cells.Layout.LayoutType.Column);
+                if (!headerRow && entireRowOrColumnNotVisible)
+                {
+                    colIndex++;
+                    continue;
+                }
 
                 // Don't attempt to render off-screen rows/columns
                 if (cellPosition.X > table.Width || cellPosition.Y > table.Height)
@@ -135,23 +149,31 @@ public class TableTheme : ThemeBase
                 if (table.DrawFakeCells || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
                     table.DrawFakeCell(cell);
 
-                AdjustControlSurface(table, cell, GetCustomStateAppearance(table, cell));
+                AdjustControlSurface(table, cell, GetCustomStateAppearance(table, cell), !entireRowOrColumnNotVisible);
                 PrintText(table, cell);
 
                 colIndex++;
             }
 
-            if (offScreenY) break;
-
             // Make sure the next rows are properly handled if header row is enabled
             if (row == 0 && table.Cells.HeaderRow && table.StartRenderYPos > 0)
                 rowIndex = rowIndexPos;
+
+            if (offScreenY) break;
 
             row += fullRowSize - 1;
             rowIndex++;
         }
 
         control.IsDirty = false;
+    }
+
+    private static bool IsEntireRowOrColumnNotVisible(int index, Table table, Cells.Layout.LayoutType type)
+    {
+        var layoutDict = type == Cells.Layout.LayoutType.Row ? table.Cells._rowLayout : table.Cells._columnLayout;
+        if (layoutDict.TryGetValue(index, out var layout))
+            return layout != null && !layout.IsVisible;
+        return false;
     }
 
     /// <summary>
@@ -188,6 +210,9 @@ public class TableTheme : ThemeBase
         foreach (IGrouping<int, Table.Cell> index in orderedIndex)
         {
             int size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
+            if (IsEntireRowOrColumnNotVisible(index.Key, table, layoutType))
+                continue;
+
             totalSize += size;
 
             if (totalSize > maxSize)
@@ -239,7 +264,7 @@ public class TableTheme : ThemeBase
 
     private ColoredGlyph? GetCustomStateAppearance(Table table, Table.Cell cell)
     {
-        if (cell.IsSettingsInitialized && (!cell.Settings.IsVisible || !cell.Settings.Interactable))
+        if (!cell.IsVisible || (cell.IsSettingsInitialized && !cell.Settings.Interactable))
             return null;
 
         if ((!cell.IsSettingsInitialized || cell.Settings.Selectable) && table.SelectedCell != null)
@@ -279,7 +304,7 @@ public class TableTheme : ThemeBase
         return null;
     }
 
-    private static void AdjustControlSurface(Table table, Table.Cell cell, ColoredGlyph? customStateAppearance)
+    private static void AdjustControlSurface(Table table, Table.Cell cell, ColoredGlyph? customStateAppearance, bool adjustVisibility)
     {
         int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
         int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
@@ -290,8 +315,8 @@ public class TableTheme : ThemeBase
                 int colIndex = cell.Position.X + x;
                 int rowIndex = cell.Position.Y + y;
                 if (!table.Surface.IsValidCell(colIndex, rowIndex)) continue;
-                if (cell.IsSettingsInitialized)
-                    table.Surface[colIndex, rowIndex].IsVisible = cell.Settings.IsVisible;
+                if (adjustVisibility)
+                    table.Surface[colIndex, rowIndex].IsVisible = cell.IsVisible;
                 table.Surface.SetForeground(colIndex, rowIndex, customStateAppearance != null ? customStateAppearance.Foreground : cell.Foreground);
                 table.Surface.SetBackground(colIndex, rowIndex, customStateAppearance != null ? customStateAppearance.Background : cell.Background);
             }
@@ -322,7 +347,7 @@ public class TableTheme : ThemeBase
 
     private static void PrintText(Table table, Table.Cell cell)
     {
-        if (string.IsNullOrWhiteSpace(cell.StringValue) || (cell.IsSettingsInitialized && !cell.Settings.IsVisible)) return;
+        if (string.IsNullOrWhiteSpace(cell.StringValue) || !cell.IsVisible) return;
 
         int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
         int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
