@@ -78,13 +78,13 @@ public class TableTheme : ThemeBase
         int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
         int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
         bool offScreenY = false;
-        for (int row = 0; row < rows; row++)
+        for (int row = 0; row <= rows; row++)
         {
             int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
             int fullRowSize = 0;
 
-            for (int col = 0; col < columns; col++)
+            for (int col = 0; col <= columns; col++)
             {
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
                 int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
