@@ -80,17 +80,12 @@ public class TableTheme : ThemeBase
         bool offScreenY = false;
         for (int row = 0; row < rows; row++)
         {
-            if (offScreenY) break;
-
             int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
             int fullRowSize = 0;
 
-            bool offScreenX = false;
             for (int col = 0; col < columns; col++)
             {
-                if (offScreenX) break;
-
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
                 int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
 
@@ -110,12 +105,13 @@ public class TableTheme : ThemeBase
                 if (cellPosition.X > table.Width || cellPosition.Y > table.Height)
                 {
                     if (cellPosition.Y > table.Height)
+                    {
                         offScreenY = true;
-                    if (cellPosition.X > table.Width)
-                        offScreenX = true;
+                        break;
+                    }
 
-                    colIndex++;
-                    continue;
+                    if (cellPosition.X > table.Width)
+                        break;
                 }
 
                 Table.Cell? cell = table.Cells.GetIfExists(rowIndex, colIndex);
@@ -144,6 +140,8 @@ public class TableTheme : ThemeBase
 
                 colIndex++;
             }
+
+            if (offScreenY) break;
 
             // Make sure the next rows are properly handled if header row is enabled
             if (row == 0 && table.Cells.HeaderRow && table.StartRenderYPos > 0)
