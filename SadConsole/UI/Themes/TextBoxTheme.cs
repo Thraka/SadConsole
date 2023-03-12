@@ -79,7 +79,7 @@ public class TextBoxTheme : ThemeBase
                 appearance.Foreground = NumberBoxInvalidNumberForeground ?? _colorsLastUsed.Red;
         }
 
-        if (textbox.IsFocused && !textbox.DisableKeyboard)
+        if (textbox.IsFocused && (textbox.Parent?.Host?.ParentConsole?.IsFocused).GetValueOrDefault(false) && !textbox.DisableKeyboard)
         {
             // TextBox was just focused
             if (textbox.State.HasFlag(ControlStates.Focused) && !_oldState.HasFlag(ControlStates.Focused))
