@@ -39,7 +39,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The splashs screens to show on game startup.
     /// </summary>
-    protected internal Queue<ScreenSurface> _splashScreens { get; set; } = new Queue<ScreenSurface>();
+    protected internal Queue<IScreenSurface> _splashScreens { get; set; } = new Queue<IScreenSurface>();
 
     /// <summary>
     /// Instance of the game host.
@@ -191,8 +191,8 @@ public abstract partial class GameHost : IDisposable
     /// The splash screens the game should sequentially show on startup.
     /// </summary>
     /// <param name="surfaces">The splash screens to show.</param>
-    public void SetSplashScreens(params ScreenSurface[] surfaces) =>
-        _splashScreens = new Queue<ScreenSurface>(surfaces);
+    public void SetSplashScreens(params IScreenSurface[] surfaces) =>
+        _splashScreens = new Queue<IScreenSurface>(surfaces);
 
     /// <summary>
     /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.

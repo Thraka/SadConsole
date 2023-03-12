@@ -11,7 +11,10 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public partial class TextBox : ControlBase
 {
-    private StringBuilder? _cachedBuilder;
+    /// <summary>
+    /// String builder used while processing text in the <see cref="ProcessKeyboard(Keyboard)"/> method.
+    /// </summary>
+    protected StringBuilder? _cachedBuilder;
 
     /// <summary>
     /// Mask input with a certain character.
@@ -178,7 +181,7 @@ public partial class TextBox : ControlBase
 
             IsDirty = true;
 
-            if (info.IsKeyReleased(Keys.Tab))
+            if (info.IsKeyReleased(Keys.Tab) || info.IsKeyDown(Keys.Tab))
                 return false;
 
             for (int i = 0; i < info.KeysPressed.Count; i++)

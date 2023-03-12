@@ -11,8 +11,6 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public partial class NumberBox : TextBox
 {
-    private StringBuilder? _cachedBuilder;
-
     /// <summary>
     /// Indicates that the input box (when numeric) will accept decimal points.
     /// </summary>
@@ -142,7 +140,7 @@ public partial class NumberBox : TextBox
 
             IsDirty = true;
 
-            if (info.IsKeyReleased(Keys.Tab))
+            if (info.IsKeyReleased(Keys.Tab) || info.IsKeyDown(Keys.Tab))
                 return false;
 
             for (int i = 0; i < info.KeysPressed.Count; i++)
@@ -167,9 +165,9 @@ public partial class NumberBox : TextBox
                     _caretPos += 1;
                 }
 
-                else if (char.IsDigit(info.KeysPressed[i].Character)
-                         || (_allowDecimalPoint && info.KeysPressed[i].Character == '.' && !_text.Contains('.'))
-                         || MaxLength != 0 && newText.Length < MaxLength)
+                else if ((char.IsDigit(info.KeysPressed[i].Character)
+                         || (_allowDecimalPoint && info.KeysPressed[i].Character == '.' && !_text.Contains('.')))
+                         && MaxLength != 0 && newText.Length < MaxLength)
                 {
                     //if ((_allowDecimalPoint && info.KeysPressed[i].Character != '.') )
                     //{
