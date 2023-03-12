@@ -19,6 +19,7 @@ public sealed partial class Game
 
         internal Action<ConfigurationFontLoader> FontLoader { get; set; }
         internal Func<Game, IScreenObject> GenerateStartingObject { get; set; }
+        internal Func<Game, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
         internal bool FocusStartingObject { get; set; } = true;
 
@@ -32,6 +33,7 @@ public sealed partial class Game
         internal EventHandler<GameHost> event_FrameRender { get; private set; }
 
         internal RenderWindow TargetWindow { get; set; }
+
 
         /// <summary>
         /// Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
@@ -163,13 +165,25 @@ public sealed partial class Game
         }
 
         /// <summary>
-        /// Sets the rendering window to use by SFML, when you don't want a window created for you.
+        /// Sets the startup splash screen to the specified object.
         /// </summary>
-        /// <param name="renderWindow">The window to render to.</param>
+        /// <typeparam name="TSplashScreen">A parameterless <see cref="IScreenSurface"/> object.</typeparam>
         /// <returns>The configuration object.</returns>
-        public Configuration SetRenderWindow(RenderWindow renderWindow)
+        public Configuration SetSplashScreen<TSplashScreen>() where TSplashScreen : IScreenSurface, new()
         {
-            TargetWindow = renderWindow;
+            Settings.CreateStartingConsole = false;
+            GenerateSplashScreen = _ => new IScreenSurface[] { new TSplashScreen() };
+            return this;
+        }
+
+        /// <summary>
+        /// A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
+        /// </summary>
+        /// <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
+        public Configuration SetSplashScreen(Func<Game, ScreenSurface[]> creator)
+        {
+            Settings.CreateStartingConsole = false;
+            GenerateSplashScreen = creator;
             return this;
         }
     }

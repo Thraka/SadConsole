@@ -17,6 +17,7 @@ public sealed partial class Game
 
         internal Action<ConfigurationFontLoader> FontLoader { get; set; }
         internal Func<Game, IScreenObject> GenerateStartingObject { get; set; }
+        internal Func<Game, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
         internal bool FocusStartingObject { get; set; } = true;
 
@@ -191,6 +192,30 @@ public sealed partial class Game
         internal Configuration WithMonoGameInit(Action<Host.Game> monogameInitCallback)
         {
             MonoGameInitCallback = monogameInitCallback;
+            return this;
+        }
+
+
+        /// <summary>
+        /// Sets the startup splash screen to the specified object.
+        /// </summary>
+        /// <typeparam name="TSplashScreen">A parameterless <see cref="IScreenSurface"/> object.</typeparam>
+        /// <returns>The configuration object.</returns>
+        public Configuration SetSplashScreen<TSplashScreen>() where TSplashScreen : IScreenSurface, new()
+        {
+            Settings.CreateStartingConsole = false;
+            GenerateSplashScreen = _ => new IScreenSurface[] { new TSplashScreen() };
+            return this;
+        }
+
+        /// <summary>
+        /// A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
+        /// </summary>
+        /// <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
+        public Configuration SetSplashScreen(Func<Game, ScreenSurface[]> creator)
+        {
+            Settings.CreateStartingConsole = false;
+            GenerateSplashScreen = creator;
             return this;
         }
     }

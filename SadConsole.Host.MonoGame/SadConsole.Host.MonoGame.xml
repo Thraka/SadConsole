@@ -223,7 +223,7 @@
         </member>
         <member name="P:SadConsole.Game.UseTitleContainer">
             <summary>
-            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
+            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
             </summary>
         </member>
         <member name="P:SadConsole.Game.MonoGameInstance">
@@ -296,7 +296,7 @@
         </member>
         <member name="M:SadConsole.Game.ToggleFullScreen">
             <summary>
-            Toggles between windowed and fullscreen rendering for SadConsole.
+            Toggles between windowed and full screen rendering for SadConsole.
             </summary>
         </member>
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
@@ -400,6 +400,19 @@
             </summary>
             <param name="monogameInitCallback">A method.</param>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen``1">
+            <summary>
+            Sets the startup splash screen to the specified object.
+            </summary>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen(System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
+            <summary>
+            A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
         </member>
         <member name="T:SadConsole.Game.ConfigurationFontLoader">
             <summary>

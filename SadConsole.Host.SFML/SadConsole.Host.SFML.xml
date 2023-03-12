@@ -202,7 +202,7 @@
         </member>
         <member name="M:SadConsole.Game.ToggleFullScreen">
             <summary>
-            Toggles between windowed and fullscreen rendering for SadConsole.
+            Toggles between windowed and full screen rendering for SadConsole.
             </summary>
         </member>
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">

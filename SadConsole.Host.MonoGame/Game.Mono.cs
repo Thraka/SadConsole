@@ -183,6 +183,10 @@ public sealed partial class Game : GameHost
         if (_configuration.UseUnlimitedFPSVisual)
             Instance.MonoGameInstance.Components.Add(new Host.Game.FPSCounterComponent(Instance.MonoGameInstance));
 
+        // Set splash screens from config
+        if (_configuration.GenerateSplashScreen != null)
+            SetSplashScreens(_configuration.GenerateSplashScreen(this));
+
         // Kill off config instance
         _configuration = null;
 

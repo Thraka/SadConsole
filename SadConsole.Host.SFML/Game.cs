@@ -197,6 +197,9 @@ public sealed partial class Game : GameHost
             }
         }
 
+        // Set splash screens from config
+        if (_configuration.GenerateSplashScreen != null)
+            SetSplashScreens(_configuration.GenerateSplashScreen(this));
 
         // Kill off config instance
         _configuration = null;
