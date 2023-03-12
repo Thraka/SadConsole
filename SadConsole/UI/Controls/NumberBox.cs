@@ -46,6 +46,18 @@ public partial class NumberBox : TextBox
     [DataMember]
     public int NumberMinimum { get; set; }
 
+    /// <summary>
+    /// The default value to use when the current value is invalid and <see cref="AllowDecimal"/> is <see langword="false"/>.
+    /// </summary>
+    [DataMember]
+    public long DefaultValue { get; set; }
+
+    /// <summary>
+    /// The default value to use when the current value is invalid and <see cref="AllowDecimal"/> is <see langword="true"/>.
+    /// </summary>
+    [DataMember]
+    public double DefaultDecimalValue { get; set; }
+
     private bool UseMinMax => NumberMaximum != 0 || NumberMinimum != 0;
 
     /// <summary>
@@ -91,18 +103,18 @@ public partial class NumberBox : TextBox
         if (AllowDecimal && _text.Contains('.'))
         {
             if (!double.TryParse(_text, out double value))
-                value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : 0) : 0;
+                value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : DefaultDecimalValue) : DefaultDecimalValue;
             else
-                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : value;
+                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultDecimalValue;
 
             Text = value.ToString();
         }
         else
         {
             if (!long.TryParse(_text, out long value))
-                value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : 0) : 0;
+                value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : DefaultValue) : DefaultValue;
             else
-                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : value;
+                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultValue;
 
             Text = value.ToString();
         }
