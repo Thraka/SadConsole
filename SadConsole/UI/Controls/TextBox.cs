@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text;
 using SadConsole.Input;
 
 namespace SadConsole.UI.Controls;
@@ -8,31 +9,14 @@ namespace SadConsole.UI.Controls;
 /// InputBox control that allows text input.
 /// </summary>
 [DataContract]
-public class TextBox : ControlBase
+public partial class TextBox : ControlBase
 {
-    private string _editingText = string.Empty;
-    private bool _disableKeyboardEdit;
+    private StringBuilder? _cachedBuilder;
 
     /// <summary>
     /// Mask input with a certain character.
     /// </summary>
     public char? Mask { get; set; }
-
-    /// <summary>
-    /// Indicates the caret is visible.
-    /// </summary>
-    public bool IsCaretVisible = false;
-
-    /// <summary>
-    /// A list of valid number characters
-    /// </summary>
-    protected static char[] _validNumbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
-    /// <summary>
-    /// The alignment of the text.
-    /// </summary>
-    [DataMember(Name = "TextAlignment")]
-    protected HorizontalAlignment _alignment = HorizontalAlignment.Left;
 
     /// <summary>
     /// When editing the text box, this allows the text to scroll to the right so you can see what you are typing.
@@ -42,41 +26,13 @@ public class TextBox : ControlBase
     /// <summary>
     /// The location of the caret.
     /// </summary>
-    [DataMember(Name = "CaretPosition")]
-    private int _caretPos;
+    protected int _caretPos;
 
     /// <summary>
     /// The text value of the input box.
     /// </summary>
     [DataMember(Name = "Text")]
     protected string _text = "";
-
-    /// <summary>
-    /// Indicates the input box is numeric only.
-    /// </summary>
-    [DataMember(Name = "IsNumeric")]
-    protected bool _isNumeric;
-
-    /// <summary>
-    /// Indicates that the input box (when numeric) will accept decimal points.
-    /// </summary>
-    [DataMember(Name = "AllowDecimalPoint")]
-    protected bool _allowDecimalPoint;
-
-    /// <summary>
-    /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="true"/>, causing the textbox to accept keyboard input.
-    /// </summary>
-    public event EventHandler? EditModeEnter;
-
-    /// <summary>
-    /// Raised when the <see cref="DisableKeyboard"/> property changes to <see langword="false"/>.
-    /// </summary>
-    public event EventHandler? EditModeExit;
-
-    /// <summary>
-    /// Raised when the <see cref="EditingText"/> property changes while the textbox is being typed in.
-    /// </summary>
-    public event EventHandler? EditingTextChanged;
 
     /// <summary>
     /// Raised when the text has changed and the preview has accepted it.
@@ -86,7 +42,7 @@ public class TextBox : ControlBase
     /// <summary>
     /// Raised before the text has changed and allows the change to be cancelled.
     /// </summary>
-    public event EventHandler<TextChangedEventArgs>? TextChangedPreview;
+    public event EventHandler<ValueChangedEventArgs<string>>? TextChangedPreview;
 
     /// <summary>
     /// Raised when a key is pressed on the textbox.
@@ -97,70 +53,13 @@ public class TextBox : ControlBase
     /// Disables mouse input.
     /// </summary>
     [DataMember(Name = "DisableMouseInput")]
-    public bool DisableMouse;
+    public bool DisableMouse { get; set; }
 
     /// <summary>
     /// Disables the keyboard which turns off keyboard input and hides the cursor.
     /// </summary>
     [DataMember(Name = "DisableKeyboardInput")]
-    public bool DisableKeyboard
-    {
-        get => _disableKeyboardEdit;
-        set
-        {
-            _disableKeyboardEdit = value;
-
-            if (!_disableKeyboardEdit)
-                _caretPos = Text.Length;
-
-            if (value)
-                EditModeExit?.Invoke(this, EventArgs.Empty);
-            else
-                EditModeEnter?.Invoke(this, EventArgs.Empty);
-        }
-
-    }
-
-    /// <summary>
-    /// A temp holder for the text as it's being edited.
-    /// </summary>
-    public string EditingText
-    {
-        get => _editingText;
-        protected set
-        {
-            var oldText = _editingText;
-            _editingText = value;
-
-            if (MaxLength != 0)
-            {
-                if (_editingText.Length >= MaxLength)
-                {
-                    _editingText = _editingText.Substring(0, MaxLength);
-                }
-            }
-
-            ValidateCursorPosition();
-            IsDirty = true;
-
-            if (_editingText != oldText)
-                EditingTextChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    /// <summary>
-    /// The alignment of the caret.
-    /// </summary>
-    public HorizontalAlignment TextAlignment
-    {
-        get => _alignment;
-        set
-        {
-            _alignment = value;
-            DetermineState();
-            IsDirty = true;
-        }
-    }
+    public bool DisableKeyboard { get; set; }
 
     /// <summary>
     /// How big the text can be. Setting this to 0 will make it unlimited.
@@ -179,7 +78,7 @@ public class TextBox : ControlBase
             _caretPos = value;
             DetermineState();
             IsDirty = true;
-            ValidateCursorPosition();
+            ValidateCursorPosition(_text);
         }
     }
 
@@ -193,45 +92,20 @@ public class TextBox : ControlBase
         {
             if (value != _text)
             {
-                var args = new TextChangedEventArgs(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
+                var args = new ValueChangedEventArgs<string>(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
 
                 TextChangedPreview?.Invoke(this, args);
 
-                _text = args.NewValue ?? "";
-                _text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
+                if (!args.IsCancelled)
+                {
+                    _text = args.NewValue ?? "";
+                    _text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
 
-                Validate();
-                EditingText = _text;
-                _caretPos = Text.Length;
-
-                TextChanged?.Invoke(this, EventArgs.Empty);
+                    TextChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
     }
-
-    /// <summary>
-    /// Gets or sets whether or not this input box only allows numeric input.
-    /// </summary>
-    public bool IsNumeric
-    {
-        get => _isNumeric;
-        set { _isNumeric = value; Validate(); }
-    }
-
-    /// <summary>
-    /// Gets or sets whether or not this input box should restrict numeric input should allow a decimal point.
-    /// </summary>
-    public bool AllowDecimal
-    {
-        get => _allowDecimalPoint;
-        set { _allowDecimalPoint = value; Validate(); }
-    }
-
-    /// <summary>
-    /// When <see langword="true"/>, the TAB key will save the text being edited, and allow a parent host to tab to the next control.
-    /// </summary>
-    [DataMember]
-    public bool CanTabMoveFocus { get; set; }
 
     #region Constructors
     /// <summary>
@@ -251,55 +125,16 @@ public class TextBox : ControlBase
     }
 
     /// <summary>
-    /// Validates that the value of the input box conforms to the settings of this control and sets the dirty flag to true.
-    /// </summary>
-    protected void Validate()
-    {
-        if (_isNumeric)
-        {
-            if (_allowDecimalPoint)
-            {
-                if (_text != null & double.TryParse(_text, out double value))
-                {
-                    _text = value.ToString();
-                }
-                else
-                {
-                    _text = "0.0";
-                }
-
-                if (!_text.Contains("."))
-                {
-                    _text = _text + ".0";
-                }
-            }
-            else
-            {
-                if (_text != null & int.TryParse(_text, out int value))
-                {
-                    _text = value.ToString();
-                }
-                else
-                {
-                    _text = "0";
-                }
-            }
-        }
-        DetermineState();
-        IsDirty = true;
-    }
-
-    /// <summary>
     /// Correctly positions the cursor within the text.
     /// </summary>
-    protected void ValidateCursorPosition()
+    protected void ValidateCursorPosition(string text)
     {
-        if (_caretPos > EditingText.Length)
-            _caretPos = EditingText.Length;
+        if (_caretPos > text.Length)
+            _caretPos = text.Length;
 
         // Test to see if caret is off edge of box
         if (_caretPos >= Width)
-            LeftDrawOffset = EditingText.Length - Width + 1;
+            LeftDrawOffset = _caretPos - Width + 1;
         else
             LeftDrawOffset = 0;
 
@@ -314,7 +149,12 @@ public class TextBox : ControlBase
     }
 
 
-    private bool TriggerKeyPressEvent(Input.AsciiKey key)
+    /// <summary>
+    /// Raises the <see cref="KeyPressed"/> event and returns <see langword="true"/> if the keypress was cancelled.
+    /// </summary>
+    /// <param name="key">The key to use with the event.</param>
+    /// <returns><see langword="true"/> to indicate that the keypress should be considered cancelled.</returns>
+    protected bool CheckKeyPressCancel(Input.AsciiKey key)
     {
         if (KeyPressed == null)
             return false;
@@ -325,7 +165,6 @@ public class TextBox : ControlBase
         return args.IsCancelled;
     }
 
-
     /// <summary>
     /// Called when the control should process keyboard information.
     /// </summary>
@@ -333,162 +172,82 @@ public class TextBox : ControlBase
     /// <returns>True if the keyboard was handled by this control.</returns>
     public override bool ProcessKeyboard(Input.Keyboard info)
     {
-        if (DisableKeyboard)
+        if (!DisableKeyboard)
         {
-            for (int i = 0; i < info.KeysPressed.Count; i++)
-            {
-                if (info.KeysPressed[i].Key == Keys.Enter)
-                {
-                    if (TriggerKeyPressEvent(info.KeysPressed[i]))
-                        return true;
-
-                    IsDirty = true;
-                    DisableKeyboard = false;
-                    Text = EditingText;
-                    ValidateCursorPosition();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        else
-        {
-            var newText = new System.Text.StringBuilder(EditingText, Width - 1);
+            StringBuilder newText = _cachedBuilder?.Clear().Append(_text) ?? (_cachedBuilder = new StringBuilder(_text));
 
             IsDirty = true;
 
+            if (info.IsKeyReleased(Keys.Tab))
+                return false;
+
             for (int i = 0; i < info.KeysPressed.Count; i++)
             {
-                if (TriggerKeyPressEvent(info.KeysPressed[i]))
-                {
+                if (CheckKeyPressCancel(info.KeysPressed[i]))
                     return true;
-                }
 
-                if (CanTabMoveFocus && info.KeysPressed[i].Key == Keys.Tab)
+                if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
                 {
-                    Text = EditingText;
-                    DisableKeyboard = true;
-                    return false;
-                }
-                else if (info.KeysPressed[i].Key == Keys.Enter)
-                {
-                    Text = EditingText;
-                    DisableKeyboard = true;
-                    return true;
-                }
-                else if (info.KeysPressed[i].Key == Keys.Escape)
-                {
-                    EditingText = "";
-                    DisableKeyboard = true;
-                    return true;
-                }
-
-                if (_isNumeric)
-                {
-                    if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0)
-                    {
+                    if (_caretPos == newText.Length)
                         newText.Remove(newText.Length - 1, 1);
-                        _caretPos -= 1;
+                    else
+                        newText.Remove(_caretPos - 1, 1);
 
-                        if (_caretPos == -1)
-                            _caretPos = 0;
-                    }
-
-                    else if (char.IsDigit(info.KeysPressed[i].Character) || (_allowDecimalPoint && info.KeysPressed[i].Character == '.'))
-                    {
-                        newText.Append(info.KeysPressed[i].Character);
-                        _caretPos += 1;
-                    }
+                    _caretPos = Math.Clamp(_caretPos - 1, 0, newText.Length);
+                    ValidateCursorPosition(newText.ToString());
+                }
+                else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                {
+                    newText.Insert(_caretPos, ' ');
+                    _caretPos = Math.Clamp(_caretPos + 1, 0, newText.Length);
+                    ValidateCursorPosition(newText.ToString());
                 }
 
-                else
+                else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
                 {
-                    if (info.KeysPressed[i].Key == Keys.Back && newText.Length != 0 && _caretPos != 0)
-                    {
-                        if (_caretPos == newText.Length)
-                        {
-                            newText.Remove(newText.Length - 1, 1);
-                        }
-                        else
-                        {
-                            newText.Remove(_caretPos - 1, 1);
-                        }
+                    newText.Remove(_caretPos, 1);
 
-                        _caretPos -= 1;
+                    _caretPos = Math.Clamp(_caretPos, 0, newText.Length);
+                    ValidateCursorPosition(newText.ToString());
+                }
 
-                        if (_caretPos == -1)
-                        {
-                            _caretPos = 0;
-                        }
-                    }
-                    else if (info.KeysPressed[i].Key == Keys.Space && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-                    {
-                        newText.Insert(_caretPos, ' ');
-                        _caretPos++;
+                else if (info.KeysPressed[i].Key == Keys.Left)
+                {
+                    _caretPos = Math.Clamp(_caretPos - 1, 0, newText.Length);
+                    ValidateCursorPosition(newText.ToString());
+                }
+                else if (info.KeysPressed[i].Key == Keys.Right)
+                {
+                    _caretPos = Math.Clamp(_caretPos + 1, 0, newText.Length);
+                    ValidateCursorPosition(newText.ToString());
+                }
 
-                        if (_caretPos > newText.Length)
-                        {
-                            _caretPos = newText.Length;
-                        }
-                    }
+                else if (info.KeysPressed[i].Key == Keys.Home)
+                {
+                    _caretPos = 0;
+                    ValidateCursorPosition(newText.ToString());
+                }
 
-                    else if (info.KeysPressed[i].Key == Keys.Delete && _caretPos != newText.Length)
-                    {
-                        newText.Remove(_caretPos, 1);
+                else if (info.KeysPressed[i].Key == Keys.End)
+                {
+                    _caretPos = newText.Length;
+                    ValidateCursorPosition(newText.ToString());
+                }
 
-                        if (_caretPos > newText.Length)
-                        {
-                            _caretPos = newText.Length;
-                        }
-                    }
-
-                    else if (info.KeysPressed[i].Key == Keys.Left)
-                    {
-                        _caretPos -= 1;
-
-                        if (_caretPos == -1)
-                        {
-                            _caretPos = 0;
-                        }
-                    }
-                    else if (info.KeysPressed[i].Key == Keys.Right)
-                    {
-                        _caretPos += 1;
-
-                        if (_caretPos > newText.Length)
-                        {
-                            _caretPos = newText.Length;
-                        }
-                    }
-
-                    else if (info.KeysPressed[i].Key == Keys.Home)
-                    {
-                        _caretPos = 0;
-                    }
-
-                    else if (info.KeysPressed[i].Key == Keys.End)
-                    {
-                        _caretPos = newText.Length;
-                    }
-
-                    else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
-                    {
-                        newText.Insert(_caretPos, info.KeysPressed[i].Character);
-                        _caretPos++;
-                        LeftDrawOffset -= 1;
-
-                        if (_caretPos > newText.Length)
-                        {
-                            _caretPos = newText.Length;
-                        }
-                    }
+                else if (info.KeysPressed[i].Character != 0 && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength)))
+                {
+                    newText.Insert(_caretPos, info.KeysPressed[i].Character);
+                    _caretPos++;
+                    ValidateCursorPosition(newText.ToString());
                 }
             }
 
-            EditingText = newText.ToString();
+            Text = newText.ToString();
+
             return true;
         }
+
+        return false;
     }
 
     /// <summary>
@@ -497,9 +256,6 @@ public class TextBox : ControlBase
     public override void FocusLost()
     {
         base.FocusLost();
-        DisableKeyboard = true;
-        Text = EditingText;
-        EditingText = "";
         IsDirty = true;
     }
 
@@ -509,8 +265,7 @@ public class TextBox : ControlBase
     public override void Focused()
     {
         base.Focused();
-        DisableKeyboard = true;
-        EditingText = _text;
+        ValidateCursorPosition(_text);
         IsDirty = true;
     }
 
@@ -523,8 +278,6 @@ public class TextBox : ControlBase
         if (!DisableMouse)
         {
             base.OnLeftMouseClicked(state);
-
-            DisableKeyboard = false;
 
             if (!IsFocused && Parent?.Host != null)
                 Parent.Host.FocusedControl = this;
@@ -539,56 +292,5 @@ public class TextBox : ControlBase
         Text = _text;
         DetermineState();
         IsDirty = true;
-    }
-
-    /// <summary>
-    /// Event arguments that indicate the change in text for a textbox control.
-    /// </summary>
-    public class TextChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The original text value.
-        /// </summary>
-        public readonly string OldValue;
-
-        /// <summary>
-        /// The new text of the textbox.
-        /// </summary>
-        public string NewValue { get; set; }
-
-        /// <summary>
-        /// Creates a new event args object.
-        /// </summary>
-        /// <param name="oldValue">The original value of the text.</param>
-        /// <param name="newValue">The value the text is chaning to.</param>
-        public TextChangedEventArgs(string oldValue, string newValue)
-        {
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-
-    }
-
-    /// <summary>
-    /// Event arguments to indicate that a key is being pressed on the textbox.
-    /// </summary>
-    public class KeyPressEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The key being pressed by the textbox.
-        /// </summary>
-        public readonly Input.AsciiKey Key;
-
-        /// <summary>
-        /// When set to <see langword="true"/>, causes the textbox to cancel the key press.
-        /// </summary>
-        public bool IsCancelled { get; set; }
-
-        /// <summary>
-        /// Creates a new event args object.
-        /// </summary>
-        /// <param name="key">The key being pressed.</param>
-        public KeyPressEventArgs(Input.AsciiKey key) =>
-            Key = key;
     }
 }

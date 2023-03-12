@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Themes;
 
@@ -19,6 +20,12 @@ public class TextBoxTheme : ThemeBase
     /// </summary>
     [DataMember]
     public Effects.ICellEffect CaretEffect;
+
+    /// <summary>
+    /// The color to use with a <see cref="NumberBox"/> control when <see cref="NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
+    /// </summary>
+    [DataMember]
+    public Color? NumberBoxInvalidNumberForeground { get; set; }
 
     /// <summary>
     /// Creates a new theme used by the <see cref="TextBox"/>.
@@ -66,33 +73,39 @@ public class TextBoxTheme : ThemeBase
         RefreshTheme(control.FindThemeColors(), control);
         ColoredGlyph appearance = ControlThemeState.GetStateAppearance(textbox.State);
 
+        if (textbox is NumberBox numberBox && (numberBox.Text.Length != 0 || (numberBox.Text.Length == 1 && numberBox.Text[0] != '-')))
+        {
+            if (numberBox.IsEditingNumberInvalid)
+                appearance.Foreground = NumberBoxInvalidNumberForeground ?? _colorsLastUsed.Red;
+        }
+
         if (textbox.IsFocused && !textbox.DisableKeyboard)
         {
-            if (!textbox.IsCaretVisible)
+            // TextBox was just focused
+            if (textbox.State.HasFlag(ControlStates.Focused) && !_oldState.HasFlag(ControlStates.Focused))
             {
                 _oldCaretPosition = textbox.CaretPosition;
                 _oldState = textbox.State;
-                _editingText = textbox.EditingText;
+                _editingText = textbox.Text;
                 textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, Mirror.None);
 
                 if (textbox.Mask == null)
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    textbox.Surface.Print(0, 0, textbox.Text.Substring(textbox.LeftDrawOffset));
                 else
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.Mask.Value));
+                    textbox.Surface.Print(0, 0, textbox.Text.Substring(textbox.LeftDrawOffset).Masked(textbox.Mask.Value));
 
                 textbox.Surface.SetEffect(textbox.CaretPosition - textbox.LeftDrawOffset, 0, CaretEffect);
-                textbox.IsCaretVisible = true;
             }
 
-            else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State || _editingText != textbox.EditingText)
+            else if (_oldCaretPosition != textbox.CaretPosition || _oldState != textbox.State || _editingText != textbox.Text)
             {
                 textbox.Surface.Effects.RemoveAll();
                 textbox.Surface.Fill(appearance.Foreground, appearance.Background, 0, Mirror.None);
 
                 if (textbox.Mask == null)
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset));
+                    textbox.Surface.Print(0, 0, textbox.Text.Substring(textbox.LeftDrawOffset));
                 else
-                    textbox.Surface.Print(0, 0, textbox.EditingText.Substring(textbox.LeftDrawOffset).Masked(textbox.Mask.Value));
+                    textbox.Surface.Print(0, 0, textbox.Text.Substring(textbox.LeftDrawOffset).Masked(textbox.Mask.Value));
 
                 // TODO: If the keyboard repeat is down and the text goes off the end of the textbox and we're hitting the left arrow then sometimes control.LeftDrawOffset can exceed control.CaretPosition
                 // This causes an Out of Bounds error here.  I don't think it's new - I think it's been in for a long time so I'm gonna check in and come back to this.
@@ -100,8 +113,7 @@ public class TextBoxTheme : ThemeBase
                 textbox.Surface.SetEffect(textbox.CaretPosition - textbox.LeftDrawOffset, 0, CaretEffect);
                 _oldCaretPosition = textbox.CaretPosition;
                 _oldState = control.State;
-                _editingText = textbox.EditingText;
-
+                _editingText = textbox.Text;
             }
 
             textbox.IsDirty = true;
@@ -110,12 +122,12 @@ public class TextBoxTheme : ThemeBase
         {
             textbox.Surface.Effects.RemoveAll();
             textbox.Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
-            textbox.IsCaretVisible = false;
+            _oldState = control.State;
 
             if (textbox.Mask == null)
-                textbox.Surface.Print(0, 0, textbox.Text.Align(textbox.TextAlignment, textbox.Width));
+                textbox.Surface.Print(0, 0, textbox.Text.Align(HorizontalAlignment.Left, textbox.Width));
             else
-                textbox.Surface.Print(0, 0, textbox.Text.Masked(textbox.Mask.Value).Align(textbox.TextAlignment, textbox.Width));
+                textbox.Surface.Print(0, 0, textbox.Text.Masked(textbox.Mask.Value).Align(HorizontalAlignment.Left, textbox.Width));
 
             textbox.IsDirty = false;
         }

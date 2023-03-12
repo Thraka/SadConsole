@@ -88,6 +88,7 @@ public class Library
         SetControlTheme(typeof(ScrollBar), typeof(ScrollBarTheme));
         SetControlTheme(typeof(Label), typeof(LabelTheme));
         SetControlTheme(typeof(ListBox), typeof(ListBoxTheme));
+        SetControlTheme(typeof(NumberBox), typeof(TextBoxTheme));
         SetControlTheme(typeof(Panel), typeof(PanelTheme));
         SetControlTheme(typeof(ProgressBar), typeof(ProgressBarTheme));
         SetControlTheme(typeof(RadioButton), typeof(RadioButtonTheme));
