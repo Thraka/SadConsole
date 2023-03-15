@@ -89,7 +89,9 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        objects.Clear();
+        for (; objects.Count != 0 ; )
+            objects[0].Parent = null;
+
         CollectionChanged?.Invoke(this, EventArgs.Empty);
     }
 
