@@ -138,6 +138,9 @@ public class ScreenObject : IScreenObject
     public Point AbsolutePosition { get; protected set; }
 
     /// <inheritdoc/>
+    public bool IgnoreParentPosition { get; set; }
+
+    /// <inheritdoc/>
     [DataMember]
     public bool IsVisible
     {
@@ -502,7 +505,7 @@ public class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void UpdateAbsolutePosition()
     {
-        AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+        AbsolutePosition = !IgnoreParentPosition ? Position + (Parent?.AbsolutePosition ?? Point.Zero) : Position;
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)

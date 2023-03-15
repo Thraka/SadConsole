@@ -58,6 +58,11 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     Point AbsolutePosition { get; }
 
     /// <summary>
+    /// When <see langword="true"/>, this object should ignore it's parent position when calculating <see cref="AbsolutePosition"/>; otherwise <see langword="false"/>.
+    /// </summary>
+    bool IgnoreParentPosition { get; set; }
+
+    /// <summary>
     /// The child objects of this instance.
     /// </summary>
     ScreenObjectCollection Children { get; }

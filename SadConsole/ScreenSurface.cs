@@ -311,10 +311,15 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     /// <inheritdoc />
     public override void UpdateAbsolutePosition()
     {
-        if (UsePixelPositioning)
-            AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+        if (!IgnoreParentPosition)
+        {
+            if (UsePixelPositioning)
+                AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+            else
+                AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
+        }
         else
-            AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
+            AbsolutePosition = UsePixelPositioning ? Position : FontSize * Position;
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)
