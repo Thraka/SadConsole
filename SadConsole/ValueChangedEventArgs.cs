@@ -1,22 +1,13 @@
 ﻿using System;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 
 /// <summary>
-/// The old value and the value it changed to.
+/// Event arguments for an event fired when an object's properties are changed. The change can be cancelled.
 /// </summary>
-public class ValueChangedEventArgs<T> : EventArgs
+public class ValueChangedCancelableEventArgs<T> : ValueChangedEventArgs<T>
 {
-    /// <summary>
-    /// The previous object.
-    /// </summary>
-    public readonly T? OldValue;
-
-    /// <summary>
-    /// The new object.
-    /// </summary>
-    public readonly T? NewValue;
-
     /// <summary>
     /// Setting this property to <see langword="true"/> indicates that the change should be cancelled.
     /// </summary>
@@ -27,6 +18,5 @@ public class ValueChangedEventArgs<T> : EventArgs
     /// </summary>
     /// <param name="oldValue">The old value.</param>
     /// <param name="newValue">The new value.</param>
-    public ValueChangedEventArgs(T? oldValue, T? newValue) =>
-        (OldValue, NewValue) = (oldValue, newValue);
+    public ValueChangedCancelableEventArgs(T oldValue, T newValue): base(oldValue, newValue) { }
 }

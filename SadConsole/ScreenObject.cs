@@ -38,10 +38,13 @@ public class ScreenObject : IScreenObject
 
 
     /// <inheritdoc/>
-    public event EventHandler<ValueChangedEventArgs<IScreenObject>>? ParentChanged;
+    public event EventHandler<ValueChangedEventArgs<IScreenObject?>>? ParentChanged;
 
     /// <inheritdoc/>
     public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanging;
 
     /// <inheritdoc/>
     public event EventHandler? VisibleChanged;
@@ -128,9 +131,10 @@ public class ScreenObject : IScreenObject
         {
             if (_position == value) return;
 
-            Point oldPoint = _position;
+            OnPositionChanging(_position, value);
+            Point oldPosition = _position;
             _position = value;
-            OnPositionChanged(oldPoint, _position);
+            OnPositionChanged(oldPosition, _position);
         }
     }
 
@@ -476,8 +480,16 @@ public class ScreenObject : IScreenObject
     protected virtual void OnParentChanged(IScreenObject? oldParent, IScreenObject? newParent)
     {
         UpdateAbsolutePosition();
-        ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject>(oldParent, newParent));
+        ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject?>(oldParent, newParent));
     }
+
+    /// <summary>
+    /// Raises the <see cref="PositionChanging"/> event.
+    /// </summary>
+    /// <param name="oldPosition">The previous position.</param>
+    /// <param name="newPosition">The new position.</param>
+    protected virtual void OnPositionChanging(Point oldPosition, Point newPosition) =>
+        PositionChanging?.Invoke(this, new ValueChangedEventArgs<Point>(oldPosition, newPosition));
 
     /// <summary>
     /// Raises the <see cref="PositionChanged"/> event.
