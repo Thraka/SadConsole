@@ -67,9 +67,9 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
             if (_surface != null)
             {
                 if (value)
-                    _surface.IsDirtyChanged -= _isDirtyChangedEventHadler;
+                    _surface.IsDirtyChanged -= _isDirtyChangedEventHandler;
                 else
-                    _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+                    _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
             }
         }
     }
@@ -91,8 +91,8 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
 
             if (!_quietSurface)
             {
-                old.IsDirtyChanged -= _isDirtyChangedEventHadler;
-                _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+                old.IsDirtyChanged -= _isDirtyChangedEventHandler;
+                _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
 
                 OnSurfaceChanged(old);
                 CallOnHostUpdated();
@@ -266,7 +266,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     public ScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null)
     {
         _surface = surface;
-        _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+        _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
 
         _font = font ?? GameHost.Instance.DefaultFont;
         FontSize = fontSize ?? _font.GetFontSize(GameHost.Instance.DefaultFontSize);
@@ -382,7 +382,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
         }
     }
 
-    private void _isDirtyChangedEventHadler(object? sender, EventArgs e) =>
+    private void _isDirtyChangedEventHandler(object? sender, EventArgs e) =>
         OnIsDirtyChanged();
 
     /// <summary>
