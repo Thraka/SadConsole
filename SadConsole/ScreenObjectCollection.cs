@@ -107,14 +107,17 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
     /// </summary>
     /// <param name="obj">The obj object to check.</param>
-    /// <returns>True when the object is on top.</returns>
-    public bool IsTop(TScreenObject obj)
-    {
-        if (objects.Contains(obj))
-            return objects.IndexOf(obj) == objects.Count - 1;
+    /// <returns>True when the object is on the top.</returns>
+    public bool IsTop(TScreenObject obj) =>
+        objects.Count != 0 ? objects.IndexOf(obj) == objects.Count - 1 : false;
 
-        return false;
-    }
+    /// <summary>
+    /// When true, indicates that the <paramref name="obj"/> is at the bottom of the collection stack.
+    /// </summary>
+    /// <param name="obj">The obj object to check.</param>
+    /// <returns>True when the object is on the bottom.</returns>
+    public bool IsBottom(TScreenObject obj) =>
+        objects.Count != 0 ? objects.IndexOf(obj) == 0 : false;
 
     /// <summary>
     /// Adds a new child object to this collection.
