@@ -2226,8 +2226,8 @@ public static class CellSurfaceEditor
                 return false;
             };
         }
-
-        Algorithms.Line(start.X, start.Y, end.X, end.Y, processor);
+        foreach (Point location in Lines.GetBresenhamLine(start, end))
+            processor(location.X, location.Y);
 
         return result;
     }
@@ -2361,11 +2361,11 @@ public static class CellSurfaceEditor
 
         if (parameters.BorderGlyph == null) throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
-        Algorithms.Ellipse(area.X, area.Y, area.MaxExtentX, area.MaxExtentY, (x, y) =>
+        foreach (var location in Shapes.GetEllipse(area.Position, area.MaxExtent))
         {
-            if (parameters.HasBorder && obj.Surface.IsValidCell(x, y))
+            if (parameters.HasBorder && obj.Surface.IsValidCell(location.X, location.Y))
             {
-                ColoredGlyph cell = obj.Surface[x, y];
+                ColoredGlyph cell = obj.Surface[location.X, location.Y];
 
                 if (!parameters.IgnoreBorderForeground) cell.Foreground = parameters.BorderGlyph.Foreground;
                 if (!parameters.IgnoreBorderBackground) cell.Background = parameters.BorderGlyph.Background;
@@ -2373,8 +2373,8 @@ public static class CellSurfaceEditor
                 if (!parameters.IgnoreBorderMirror) cell.Mirror = parameters.BorderGlyph.Mirror;
             }
 
-            cells.Add(Point.ToIndex(x, y, obj.Surface.Width));
-        });
+            cells.Add(Point.ToIndex(location.X, location.Y, obj.Surface.Width));
+        }
 
         if (parameters.HasFill && parameters.FillGlyph != null)
         {
