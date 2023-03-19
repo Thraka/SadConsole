@@ -55,6 +55,7 @@ class RotatedSurface : ScreenSurface
 
 class RotatedOutputSurfaceRenderStep: IRenderStep
 {
+    public string Name => SadConsole.Renderers.Constants.RenderStepNames.Output;
     public uint SortOrder { get; set; } = SadConsole.Renderers.Constants.RenderStepSortValues.Output;
 
     public double Rotation { get; set; }

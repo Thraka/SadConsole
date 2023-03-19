@@ -33,6 +33,8 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public ControlsTest() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
+        Controls.ThemeColors = Colors.CreateSadConsoleBlue();
+
         var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
         {
             Position = new Point(16, 5)
@@ -60,6 +62,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         Controls.Add(slider);
 
         progressTimer = new SadConsole.Components.Timer(TimeSpan.FromSeconds(0.5));
+        progressTimer.Start();
         progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
 
         SadComponents.Add(progressTimer);
@@ -133,10 +136,12 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         selButton2.PreviousSelection = selButton1;
         selButton2.NextSelection = selButton;
 
-        var input = new TextBox(10)
+        var input = new NumberBox(10)
         {
             Position = new Point(51, 9),
-            MaxLength = 5
+            MaxLength = 3,
+            NumberMaximum = 255,
+            AllowDecimal = true
         };
         Controls.Add(input);
 
@@ -179,6 +184,13 @@ class ControlsTest : SadConsole.UI.ControlsConsole
             Position = new Point(51, 13)
         };
         Controls.Add(checkbox);
+
+        // ComboBox
+        ComboBox box = new ComboBox(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
+        {
+            Position = (checkbox.Bounds.MaxExtentX + 4, checkbox.Position.Y),
+        };
+        Controls.Add(box);
 
         Controls.FocusedControl = null;
         //DisableControlFocusing = true;
@@ -260,8 +272,11 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         this.Print(65, 7, "(WITH MASK)", colors.YellowDark);
 
         this.Print(51, 11, "CHECKBOX", colors.YellowDark);
+        this.Print(67, 11, "COMBOBOX", colors.YellowDark);
 
-        this.Print(2, 15, "RED ".CreateColored(colors.Red, null) +
+        int colorsStartY = 17;
+
+        this.Print(2, colorsStartY, "RED ".CreateColored(colors.Red, null) +
                                   "PURPLE ".CreateColored(colors.Purple, null) +
                                   "BLUE ".CreateColored(colors.Blue, null) +
                                   "CYAN ".CreateColored(colors.Cyan, null) +
@@ -273,7 +288,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
                                   "WHITE ".CreateColored(colors.White, null)
                                   );
 
-        this.Print(2, 16, "RED ".CreateColored(colors.RedDark, null) +
+        this.Print(2, colorsStartY + 1, "RED ".CreateColored(colors.RedDark, null) +
                                   "PURPLE ".CreateColored(colors.PurpleDark, null) +
                                   "BLUE ".CreateColored(colors.BlueDark, null) +
                                   "CYAN ".CreateColored(colors.CyanDark, null) +
@@ -284,16 +299,16 @@ class ControlsTest : SadConsole.UI.ControlsConsole
                                   "GRAY ".CreateColored(colors.GrayDark, null) +
                                   "BLACK ".CreateColored(colors.Black, null)
                                   );
-        this.Print(2, 18, CreateGradientExample("RED", colors.Red, colors.RedDark));
-        this.Print(2, 19, CreateGradientExample("PURPLE", colors.Purple, colors.PurpleDark));
-        this.Print(2, 20, CreateGradientExample("BLUE", colors.Blue, colors.BlueDark));
-        this.Print(2, 21, CreateGradientExample("CYAN", colors.Cyan, colors.CyanDark));
-        this.Print(2, 22, CreateGradientExample("GREEN", colors.Green, colors.GreenDark));
-        this.Print(34, 18, CreateGradientExample("YELLOW", colors.Yellow, colors.YellowDark));
-        this.Print(34, 19, CreateGradientExample("ORANGE", colors.Orange, colors.OrangeDark));
-        this.Print(34, 20, CreateGradientExample("BROWN", colors.Brown, colors.BrownDark));
-        this.Print(34, 21, CreateGradientExample("GRAY", colors.Gray, colors.GrayDark));
-        this.Print(34, 22, CreateGradientExample("WHITE", colors.White, colors.Black));
+        this.Print(2, colorsStartY + 3, CreateGradientExample("RED", colors.Red, colors.RedDark));
+        this.Print(2, colorsStartY + 4, CreateGradientExample("PURPLE", colors.Purple, colors.PurpleDark));
+        this.Print(2, colorsStartY + 5, CreateGradientExample("BLUE", colors.Blue, colors.BlueDark));
+        this.Print(2, colorsStartY + 6, CreateGradientExample("CYAN", colors.Cyan, colors.CyanDark));
+        this.Print(2, colorsStartY + 7, CreateGradientExample("GREEN", colors.Green, colors.GreenDark));
+        this.Print(34, colorsStartY + 3, CreateGradientExample("YELLOW", colors.Yellow, colors.YellowDark));
+        this.Print(34, colorsStartY + 4, CreateGradientExample("ORANGE", colors.Orange, colors.OrangeDark));
+        this.Print(34, colorsStartY + 5, CreateGradientExample("BROWN", colors.Brown, colors.BrownDark));
+        this.Print(34, colorsStartY + 6, CreateGradientExample("GRAY", colors.Gray, colors.GrayDark));
+        this.Print(34, colorsStartY + 7, CreateGradientExample("WHITE", colors.White, colors.Black));
 
         //Print(2, 23, CreateGradientExample("GOLD", Library.Default.Colors.Gold, Library.Default.Colors.GoldDark));
     }
