@@ -45,7 +45,7 @@ public partial class TextBox : ControlBase
     /// <summary>
     /// Raised before the text has changed and allows the change to be cancelled.
     /// </summary>
-    public event EventHandler<ValueChangedEventArgs<string>>? TextChangedPreview;
+    public event EventHandler<ValueChangedCancelableEventArgs<string>>? TextChangedPreview;
 
     /// <summary>
     /// Raised when a key is pressed on the textbox.
@@ -95,7 +95,7 @@ public partial class TextBox : ControlBase
         {
             if (value != _text)
             {
-                var args = new ValueChangedEventArgs<string>(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
+                var args = new ValueChangedCancelableEventArgs<string>(_text, MaxLength != 0 && value.Length > MaxLength ? value.Substring(0, MaxLength) : value);
 
                 TextChangedPreview?.Invoke(this, args);
 

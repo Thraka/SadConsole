@@ -43,7 +43,7 @@
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.1.0" />
+    <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
