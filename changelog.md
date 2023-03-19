@@ -5,10 +5,14 @@ Major changes (possibly breaking)
 - [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
 - [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
 
+New features
+
+- [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
+- [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
+
 Normal changes
 
-- Target .NET 6 exclusively. Core library is nullable aware.
-- [MonoGame] Fix conversion of Mirror to SpriteEffects.
+- Target .NET 6+ exclusively. Core library is nullable aware.
 - [Core] Splash screen printing wasn't being shown because of cursor changes.
 - [Core] `IFont` now defines glyph definitions.
 - [Core] Various `SadFont` properties and methods are now settable/callable.
@@ -24,23 +28,32 @@ Normal changes
 - [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
 - [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
 - [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
-- [Core] `Surface.RenderSteps` is now a `List` and you must call `RenderSteps.Sort(new SadConsole.Renderers.RenderStepComparer())` when the collection is changed.
+- [Core] `Surface.RenderSteps` is now a `List` and you must call `RenderSteps.Sort(SadConsole.Renderers.RenderStepComparer.Instance)` when the collection is changed.
 - [Core] `Instructions.DrawString` uses `System.TimeSpan` now, and is more accurate.
 - [Core] Effects have a `RunEffectOnApply` property that will run the `effect.Update` method once, with a duration of zero, when the effect is added to a manager.
 - [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
 - [Core] Surface shifting is much more performant (Thanks Chris3606)
 - [Core] `Cursor` has some new methods for erasing: `Erase`, `EraseUp`, `EraseDown`, `EraseLeft`, `EraseRight`, `EraseColumn`, `EraseRow`.
-- [Core] Mouse state object now tracks *ButtonDownDuration times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
-- [Core] Rename RexPaint ToLayersComponent to ToCellSurface.
+- [Core] Mouse state object now tracks `*ButtonDownDuration` times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
+- [Core] Rename RexPaint `ToLayersComponent` to `ToCellSurface`.
+- [Core] Rework `Timer` with `Start/Stop/Restart` methods.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
 - [UI] Scroll bar supports a thickness other than 1.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
+- [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
+
+Removed
+
+- [Core] `Algorithms.Line\Circle\Ellipse` have been removed. The latest primitives library that SadConsole uses, provides these.
+- [Core] `Shapes` namespace removed. The latest primitives library release that SadConsole uses, provides these.
+
 
 ### Host changes
 
 - [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
+- [MonoGame] Fix conversion of Mirror to SpriteEffects.
 - [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
 - [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
 - [MonoGame\SFML] New `Game.Configuration` object used for creating a SadConsole game.
@@ -745,12 +758,12 @@ Some methods and/or properties have been renamed. Here are some of them.
 | Old name              | New name |
 | --------------------- | -------- |
 | Input.Keyboard.ProcessKeys | Input.Keyboard.Process |
-| Input.Mouse.ProcessMouse   | Input.Mouse.Process |
+| InputIndicatesProcessMouse   | InputIndicatesProcess |
 | Engine.ActiveConsole       | Global.InputTargets -- This is a new type that allows a Push/Pop/Set system for who gets keyboard/exclusive mouse input |
 
 ### Input
 
-Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.Input.Mouse.Update` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
+Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.InputIndicatesUpdate` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
 
 ### Startup code
 
