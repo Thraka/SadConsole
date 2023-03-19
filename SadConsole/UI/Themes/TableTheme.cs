@@ -82,7 +82,7 @@ public class TableTheme : ThemeBase
         for (int row = 0; row <= rows; row++)
         {
             // Check if entire row is !IsVisible, then skip this row index entirely
-            var entireRowNotVisible = IsEntireRowOrColumnNotVisible(rowIndex, table, Cells.Layout.LayoutType.Row);
+            var entireRowNotVisible = table.IsEntireRowOrColumnNotVisible(rowIndex, Cells.Layout.LayoutType.Row);
 
             int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
@@ -107,12 +107,11 @@ public class TableTheme : ThemeBase
 
                 col += columnSize - 1;
 
-                if (fakeCells != null)
-                    fakeCells.Add((cellPosition, (rowIndex, colIndex)));
+                fakeCells?.Add((cellPosition, (rowIndex, colIndex)));
 
                 // Check if entire column is !IsVisible, then skip this column index entirely
-                var entireRowOrColumnNotVisible = entireRowNotVisible ||
-                    IsEntireRowOrColumnNotVisible(colIndex, table, Cells.Layout.LayoutType.Column);
+                bool entireRowOrColumnNotVisible = entireRowNotVisible ||
+                    table.IsEntireRowOrColumnNotVisible(colIndex, Cells.Layout.LayoutType.Column);
                 if (!headerRow && entireRowOrColumnNotVisible)
                 {
                     colIndex++;
@@ -187,7 +186,7 @@ public class TableTheme : ThemeBase
     {
         if (fakeCells == null)
         {
-            foreach (var cellV in table.Cells)
+            foreach (Table.Cell cellV in table.Cells)
             {
                 if (cellV.Position == cellPosition)
                 {
@@ -199,7 +198,7 @@ public class TableTheme : ThemeBase
         }
         else
         {
-            foreach (var cellV in fakeCells)
+            foreach (((int x, int y), (int row, int col)) cellV in fakeCells)
             {
                 if (cellV.Item1 == cellPosition)
                 {
@@ -209,59 +208,6 @@ public class TableTheme : ThemeBase
                 }
             }
         }
-    }
-
-    private static bool IsEntireRowOrColumnNotVisible(int index, Table table, Cells.Layout.LayoutType type)
-    {
-        table.Cells._hiddenIndexes.TryGetValue(type, out var indexes);
-        return indexes != null && indexes.Contains(index);
-    }
-
-    /// <summary>
-    /// Shows the scroll bar when there are too many items to display; otherwise, hides it.
-    /// </summary>
-    /// <param name="table">Reference to the listbox being processed.</param>
-    /// <param name="scrollBar"></param>
-    private static bool ShowHideScrollBar(Table table, ScrollBar scrollBar)
-    {
-        // process the scroll bar
-        int scrollbarItems = GetScrollBarItems(table, scrollBar.Orientation);
-        if (scrollbarItems > 0)
-        {
-            scrollBar.Maximum = scrollbarItems;
-            return true;
-        }
-        else
-        {
-            scrollBar.Maximum = 0;
-            return false;
-        }
-    }
-
-    private static int GetScrollBarItems(Table table, Orientation orientation)
-    {
-        IEnumerable<IGrouping<int, Table.Cell>> indexes = orientation == Orientation.Vertical ?
-            table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
-        IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
-
-        Cells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-        int maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
-        int totalSize = 0;
-        int items = 0;
-        foreach (IGrouping<int, Table.Cell> index in orderedIndex)
-        {
-            int size = table.Cells.GetSizeOrDefault(index.Key, layoutType);
-            if (IsEntireRowOrColumnNotVisible(index.Key, table, layoutType))
-                continue;
-
-            totalSize += size;
-
-            if (totalSize > maxSize)
-            {
-                items++;
-            }
-        }
-        return items;
     }
 
     private static void SetScrollBarPropertiesOnTable(Table table, ScrollBar scrollBar, int maxRowsHeight, int maxColumnsWidth)
@@ -292,12 +238,12 @@ public class TableTheme : ThemeBase
         {
             if (table.VerticalScrollBar != null)
             {
-                table.IsVerticalScrollBarVisible = ShowHideScrollBar(table, table.VerticalScrollBar);
+                table.IsVerticalScrollBarVisible = table.ShowHideScrollBar(table.VerticalScrollBar);
                 SetScrollBarPropertiesOnTable(table, table.VerticalScrollBar, maxRowsHeight, maxColumnsWidth);
             }
             if (table.HorizontalScrollBar != null)
             {
-                table.IsHorizontalScrollBarVisible = ShowHideScrollBar(table, table.HorizontalScrollBar);
+                table.IsHorizontalScrollBarVisible = table.ShowHideScrollBar(table.HorizontalScrollBar);
                 SetScrollBarPropertiesOnTable(table, table.HorizontalScrollBar, maxRowsHeight, maxColumnsWidth);
             }
         }

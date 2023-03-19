@@ -142,6 +142,32 @@ public class Table : CompositeControl
     }
 
     /// <summary>
+    /// The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+    /// </summary>
+    public int VerticalScrollBarMaximum
+    {
+        get
+        {
+            if (VerticalScrollBar == null) return 0;
+            UpdateScrollBarMaximum(Orientation.Vertical);
+            return VerticalScrollBar.Maximum;
+        }
+    }
+
+    /// <summary>
+    /// The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+    /// </summary>
+    public int HorizontalScrollBarMaximum
+    {
+        get
+        {
+            if (HorizontalScrollBar == null) return 0;
+            UpdateScrollBarMaximum(Orientation.Horizontal);
+            return HorizontalScrollBar.Maximum;
+        }
+    }
+
+    /// <summary>
     /// By default the table will automatically scroll to the selected cell if possible.
     /// </summary>
     public bool AutoScrollOnCellSelection { get; set; } = true;
@@ -301,6 +327,68 @@ public class Table : CompositeControl
             .GroupBy(a => a.Column)
             .Select(a => Cells.GetSizeOrDefault(a.Key, Cells.Layout.LayoutType.Column))
             .Sum();
+    }
+
+    private void UpdateScrollBarMaximum(Orientation orientation)
+    {
+        var scrollBar = orientation == Orientation.Horizontal ? HorizontalScrollBar : VerticalScrollBar;
+        if (scrollBar != null)
+        {
+            var scrollItems = GetScrollBarItems(orientation);
+            scrollBar.Maximum = scrollItems < 0 ? 0 : scrollItems;
+        }
+    }
+
+    internal int GetScrollBarItems(Orientation orientation)
+    {
+        IEnumerable<IGrouping<int, Cell>> indexes = orientation == Orientation.Vertical ?
+            Cells.GroupBy(a => a.Row) : Cells.GroupBy(a => a.Column);
+        IOrderedEnumerable<IGrouping<int, Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
+
+        Cells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+        int maxSize = orientation == Orientation.Vertical ? Height : Width;
+        int totalSize = 0;
+        int items = 0;
+        foreach (IGrouping<int, Cell> index in orderedIndex)
+        {
+            int size = Cells.GetSizeOrDefault(index.Key, layoutType);
+            if (IsEntireRowOrColumnNotVisible(index.Key, layoutType))
+                continue;
+
+            totalSize += size;
+
+            if (totalSize > maxSize)
+            {
+                items++;
+            }
+        }
+        return items;
+    }
+
+    /// <summary>
+    /// Shows the scroll bar when there are too many items to display; otherwise, hides it.
+    /// </summary>
+    /// <param name="scrollBar"></param>
+    internal bool ShowHideScrollBar(ScrollBar scrollBar)
+    {
+        // process the scroll bar
+        int scrollbarItems = GetScrollBarItems(scrollBar.Orientation);
+        if (scrollbarItems > 0)
+        {
+            scrollBar.Maximum = scrollbarItems;
+            return true;
+        }
+        else
+        {
+            scrollBar.Maximum = 0;
+            return false;
+        }
+    }
+
+    internal bool IsEntireRowOrColumnNotVisible(int index, Cells.Layout.LayoutType type)
+    {
+        Cells._hiddenIndexes.TryGetValue(type, out var indexes);
+        return indexes != null && indexes.Contains(index);
     }
 
     /// <summary>
