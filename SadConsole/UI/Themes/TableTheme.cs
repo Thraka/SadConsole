@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
@@ -353,6 +354,7 @@ public class TableTheme : ThemeBase
 
         // Split the character array into parts based on cell width
         string[] splittedTextArray = WordWrap(cell.StringValue, maxCharsPerLine).ToArray();
+        int yIndex = 0;
         for (int y = 0; y < height; y++)
         {
             // Don't go out of bounds of the cell height
@@ -365,22 +367,25 @@ public class TableTheme : ThemeBase
             int startPosX = GetHorizontalAlignment(hAlign, totalWidth, textArr);
             int startPosY = GetVerticalAlignment(vAlign, totalHeight, splittedTextArray);
 
-            int index = 0, yIndex = y;
+            int index = 0;
             foreach (char character in textArr)
             {
+                if (yIndex >= height)
+                {
+                    y = height;
+                    break;
+                }
+
                 if (character == '\n')
                 {
                     yIndex++;
                     index = 0;
-                    if (yIndex >= height)
-                    {
-                        y = height;
-                        break;
-                    }
                     continue;
                 }
                 table.Surface.SetGlyph(startPosX + cell.Position.X + index++, startPosY + cell.Position.Y + yIndex, character);
             }
+            if (index != 0)
+                yIndex++;
         }
     }
 
@@ -394,23 +399,34 @@ public class TableTheme : ThemeBase
     {
         string line = "";
         int availableLength = maxCharsPerLine;
-        string[] words = text.Trim().Split(' ');
+        string[] words = text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .SelectMany(a => Regex.Split(a, @"(?=[\n])")).ToArray(); // Regex split will also split \n but keep \n part of the parts
         foreach (string w in words)
         {
             string word = w;
             if (word == string.Empty)
-            {
                 continue;
-            }
 
             int wordLength = word.Length;
             if (wordLength >= maxCharsPerLine)
             {
                 if (availableLength > 0)
                 {
-                    yield return line += word.Substring(0, availableLength);
-                    line = string.Empty;
-                    word = word[availableLength..];
+                    var lineValue = word.Substring(0, availableLength);
+                    if (lineValue.Contains('\n'))
+                    {
+                        var splitLine = lineValue.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < splitLine.Length - 1; i++)
+                            yield return line += splitLine[i];
+                        line = string.Empty;
+                        word = splitLine[splitLine.Length - 1];
+                    }
+                    else
+                    {
+                        yield return line += word.Substring(0, availableLength);
+                        line = string.Empty;
+                        word = word[availableLength..];
+                    }
                 }
                 else
                 {
@@ -422,6 +438,14 @@ public class TableTheme : ThemeBase
                 {
                     char ch = word.ElementAt(count);
 
+                    if (ch == '\n')
+                    {
+                        yield return line;
+                        line = string.Empty;
+                        availableLength = maxCharsPerLine;
+                        continue;
+                    }
+
                     line += ch;
                     availableLength--;
 
@@ -432,22 +456,46 @@ public class TableTheme : ThemeBase
                         availableLength = maxCharsPerLine;
                     }
                 }
-                line += " ";
-                availableLength--;
+                if (availableLength > 0)
+                {
+                    line += " ";
+                    availableLength--;
+                }
                 continue;
             }
 
-            if ((wordLength + 1) <= availableLength)
+            // Attempt to cut of early, if the word doesn't fit the line anymore
+            if (word.Length > availableLength)
             {
-                line += word + " ";
-                availableLength -= wordLength + 1;
-            }
-            else
-            {
-                availableLength = maxCharsPerLine;
                 yield return line;
-                line = word + " ";
-                availableLength -= wordLength + 1;
+                line = string.Empty;
+                availableLength = maxCharsPerLine;
+            }
+
+            foreach (var ch in word)
+            {
+                if (availableLength == 0)
+                {
+                    yield return line;
+                    line = string.Empty;
+                    availableLength = maxCharsPerLine;
+                }
+
+                if (ch == '\n')
+                {
+                    yield return line;
+                    line = string.Empty;
+                    availableLength = maxCharsPerLine;
+                    continue;
+                }
+
+                line += ch;
+                availableLength--;
+            }
+            if (availableLength > 0)
+            {
+                line += " ";
+                availableLength--;
             }
         }
 
