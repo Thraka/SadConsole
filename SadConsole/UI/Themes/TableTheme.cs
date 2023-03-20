@@ -365,10 +365,21 @@ public class TableTheme : ThemeBase
             int startPosX = GetHorizontalAlignment(hAlign, totalWidth, textArr);
             int startPosY = GetVerticalAlignment(vAlign, totalHeight, splittedTextArray);
 
-            int index = 0;
+            int index = 0, yIndex = y;
             foreach (char character in textArr)
             {
-                table.Surface.SetGlyph(startPosX + cell.Position.X + index++, startPosY + cell.Position.Y + y, character);
+                if (character == '\n')
+                {
+                    yIndex++;
+                    index = 0;
+                    if (yIndex >= height)
+                    {
+                        y = height;
+                        break;
+                    }
+                    continue;
+                }
+                table.Surface.SetGlyph(startPosX + cell.Position.X + index++, startPosY + cell.Position.Y + yIndex, character);
             }
         }
     }
