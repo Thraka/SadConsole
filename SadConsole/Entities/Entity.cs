@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Dynamic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
@@ -13,8 +12,10 @@ namespace SadConsole.Entities;
 /// </summary>
 //[JsonConverter(typeof(EntityJsonConverter))]
 [DataContract]
-public class Entity : ScreenObject
+public class Entity : ScreenObject, IHasID
 {
+    private static uint _idGenerator;
+
     // TODO Change this to where Position/Center/Absolute values all come from this object instead of the AnimatedScreenSurface
     private SingleCell? _appearanceSingleCell;
     private Animated? _appearanceSurface;
@@ -122,6 +123,8 @@ public class Entity : ScreenObject
             _isSingleCell = value;
         }
     }
+
+    uint IHasID.ID { get; } = _idGenerator++;
 
     /// <summary>
     /// Creates a new entity as an animated surface.

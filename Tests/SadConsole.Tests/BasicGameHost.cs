@@ -12,11 +12,14 @@ namespace SadConsole.Tests
     {
         public class RenderStep : IRenderStep
         {
-            public string Name => "Nothing";
+            public string Name { get; private set; }
             public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
 
+            public RenderStep(string name) =>
+                Name = name;
+
             public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
-            public void Dispose() => throw new NotImplementedException();
+            public void Dispose() { }
             public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
             public void Render(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
             public void Reset() => throw new NotImplementedException();
@@ -104,7 +107,7 @@ namespace SadConsole.Tests
 
         public override IRenderStep GetRendererStep(string name)
         {
-            return new RenderStep();
+            return new RenderStep(name);
         }
 
         public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
