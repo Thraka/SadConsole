@@ -1,0 +1,9 @@
+﻿{
+  "$type": "SadConsole.SadFont, SadConsole",
+  "FilePath": "kawaii.png",
+  "GlyphHeight": 6,
+  "GlyphPadding": 0,
+  "GlyphWidth": 3,
+  "Name": "Kawaii",
+  "SolidGlyphIndex": 219
+}
