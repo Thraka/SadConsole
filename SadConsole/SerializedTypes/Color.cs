@@ -15,7 +15,7 @@ public class ColorJsonConverter : JsonConverter<Color>
         serializer.Deserialize<ColorSerialized>(reader);
 }
 
-public class ColorSerialized
+public struct ColorSerialized
 {
     public byte R;
     public byte G;
@@ -34,4 +34,3 @@ public class ColorSerialized
     public static implicit operator Color(ColorSerialized color) =>
         new Color(color.R, color.G, color.B, color.A);
 }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

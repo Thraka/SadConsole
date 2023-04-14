@@ -39,14 +39,21 @@ public static class Serializer
             //else if (objectType == typeof(SadRogue.Primitives.BoundedRectangle))
             //    contract.Converter = new SadConsole.SerializedTypes.BoundedRectangleJsonConverter();
 
-            //else if (objectType == typeof(SadRogue.Primitives.Color))
-            //    contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
 
             if (objectType == typeof(IFont))
                 contract.Converter = new SerializedTypes.FontJsonConverter();
 
             else if (objectType == typeof(ColoredGlyph))
                 contract.Converter = new SerializedTypes.ColoredGlyphJsonConverter();
+
+            else if (objectType == typeof(SadRogue.Primitives.Color))
+                contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
+
+            //else if (objectType == typeof(ScreenObject))
+            //    contract.Converter = new SadConsole.SerializedTypes.ScreenObjectJsonConverter();
+
+            //else if (objectType == typeof(ScreenSurface))
+            //    contract.Converter = new SadConsole.SerializedTypes.ScreenSurfaceJsonConverter();
 
             return contract;
         }

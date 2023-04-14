@@ -46,6 +46,7 @@
     <Compile Remove="SerializedTypes\Console.cs" />
     <Compile Remove="SerializedTypes\Entity.cs" />
     <Compile Remove="SerializedTypes\ScreenObject.cs" />
+    <Compile Remove="SerializedTypes\ScreenSurface.cs" />
     <Compile Remove="SerializedTypes\ScrollingConsole.cs" />
   </ItemGroup>
 
