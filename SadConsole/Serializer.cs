@@ -37,56 +37,11 @@ public static class Serializer
             else if (objectType == typeof(SadRogue.Primitives.Color))
                 return new SadConsole.SerializedTypes.ColorJsonConverter();
 
-            //else if (objectType == typeof(ScreenObject))
-            //    return new SadConsole.SerializedTypes.ScreenObjectJsonConverter();
-
             else if (objectType == typeof(FocusBehavior))
                 return new StringEnumConverter();
 
             return base.ResolveContractConverter(objectType);
         }
-
-        ///// <summary>
-        ///// Resolves <see cref="IFont"/> and <see cref="ColoredGlyph"/> with the appropriate converters.
-        ///// </summary>
-        ///// <param name="objectType"></param>
-        ///// <returns></returns>
-        ////protected override JsonContract CreateContract(Type objectType)
-        //public override JsonContract ResolveContract(Type objectType)
-        //{
-        //    JsonContract contract = base.CreateContract(objectType);
-
-        //    //if (objectType == typeof(SadRogue.Primitives.Rectangle))
-        //    //    contract.Converter = new SadConsole.SerializedTypes.RectangleJsonConverter();
-
-        //    //else if (objectType == typeof(SadRogue.Primitives.BoundedRectangle))
-        //    //    contract.Converter = new SadConsole.SerializedTypes.BoundedRectangleJsonConverter();
-
-        //    if (objectType == typeof(IFont))
-        //        contract.Converter = new SerializedTypes.FontJsonConverter();
-
-        //    else if (objectType == typeof(ColoredGlyph))
-        //        contract.Converter = new SerializedTypes.ColoredGlyphJsonConverter();
-
-        //    else if (objectType == typeof(SadRogue.Primitives.Color))
-        //        contract.Converter = new SadConsole.SerializedTypes.ColorJsonConverter();
-
-        //    else if (objectType == typeof(ScreenObject))
-        //        contract.Converter = new SadConsole.SerializedTypes.ScreenObjectJsonConverter();
-
-        //    else if (objectType == typeof(FocusBehavior))
-        //        contract.Converter = new StringEnumConverter();
-
-        //    //else if (objectType == typeof(ScreenSurface))
-        //    //    contract.Converter = new SadConsole.SerializedTypes.ScreenSurfaceJsonConverter();
-
-        //    return contract;
-        //}
-
-        //public override JsonContract ResolveContract(Type type)
-        //{
-        //    return base.ResolveContract(type);
-        //}
     }
 
 
