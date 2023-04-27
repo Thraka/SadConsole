@@ -6,30 +6,12 @@
     <members>
         <member name="T:SadConsole.Algorithms">
             <summary>
-            The Bresenham algorithm collection
+            Provides a few minor helper methods related to filling.
             </summary>
-        </member>
-        <member name="M:SadConsole.Algorithms.Swap``1(``0@,``0@)">
-            <summary>
-            Swaps two references.
-            </summary>
-            <typeparam name="T">The type being swapped.</typeparam>
-            <param name="lhs">Left value.</param>
-            <param name="rhs">Right value.</param>
-        </member>
-        <member name="M:SadConsole.Algorithms.Line(System.Int32,System.Int32,System.Int32,System.Int32,System.Func{System.Int32,System.Int32,System.Boolean})">
-            <summary>
-            Plot the line from (x0, y0) to (x1, y1) using steep.
-            </summary>
-            <param name="x1">The start x</param>
-            <param name="y1">The start y</param>
-            <param name="x2">The end x</param>
-            <param name="y2">The end y</param>
-            <param name="plot">The plotting function, taking x and y. (if this returns false, the algorithm stops early)</param>
         </member>
         <member name="M:SadConsole.Algorithms.FloodFill``1(``0,System.Func{``0,System.Boolean},System.Action{``0},System.Func{``0,SadConsole.Algorithms.NodeConnections{``0}})">
             <summary>
-            Uses a 4-way fill algorithm to change items from one type to another.
+            A very slow 4-way fill algorithm to change items from one type to another.
             </summary>
             <typeparam name="TNode">The item type that is changed.</typeparam>
             <param name="node">The item to change.</param>
@@ -48,25 +30,6 @@
             <param name="area">The area to calculate.</param>
             <param name="gradient">The color gradient to fill with.</param>
             <param name="applyAction">The callback called for each part of the area.</param>
-        </member>
-        <member name="M:SadConsole.Algorithms.Circle(System.Int32,System.Int32,System.Int32,System.Action{System.Int32,System.Int32})">
-            <summary>
-            Plots the outside of the circle, passing the x,y to <paramref name="plot"/>.
-            </summary>
-            <param name="centerX">The X coordinate of the center of the circle.</param>
-            <param name="centerY">The Y coordinate of the center of the circle.</param>
-            <param name="radius">The radius of the circle.</param>
-            <param name="plot">A method to call on each x,y coordinate of the outside of the circle.</param>
-        </member>
-        <member name="M:SadConsole.Algorithms.Ellipse(System.Int32,System.Int32,System.Int32,System.Int32,System.Action{System.Int32,System.Int32})">
-            <summary>
-            Plots the outside of an ellipse, passing the x,y to <paramref name="plot"/>.
-            </summary>
-            <param name="x0">The X coordinate of the first corner of the ellipse.</param>
-            <param name="y0">The Y coordinate of the first corner of the ellipse.</param>
-            <param name="x1">The X coordinate of the second corner of the ellipse.</param>
-            <param name="y1">The Y coordinate of the second corner of the ellipse.</param>
-            <param name="plot">A method to call on each x,y coordinate of the outside of the ellipse.</param>
         </member>
         <member name="T:SadConsole.Algorithms.NodeConnections`1">
             <summary>
@@ -1813,6 +1776,11 @@
             The visible portion of the surface layers.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.LayeredSurface.DefaultBackground">
+            <summary>
+            The default color to clear the rendering surface. This is used instead of the individual layer's default background.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.LayeredSurface.Count">
             <summary>
             The numbers of layers.
@@ -3280,7 +3248,7 @@
         </member>
         <member name="M:SadConsole.Entities.Renderer.AddEntity(SadConsole.Entities.Entity,System.Boolean)">
             <summary>
-            Adds an entity to the collection, subscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})"/>.
+            Adds an entity to the collection, subscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})"/>.
             </summary>
             <param name="entity">The entity to remove.</param>
             <param name="skipSort">When true, skips sorting when <see cref="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)"/> is called inside this method.</param>
@@ -3324,7 +3292,7 @@
             Sorts the <see cref="P:SadConsole.Entities.Renderer.EntitiesVisible"/> collection according to the <see cref="P:SadConsole.Entities.Entity.ZIndex"/> value.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+        <member name="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <summary>
             Called when an entity changes position.
             </summary>
@@ -7130,11 +7098,6 @@
             Raised when the <see cref="P:SadConsole.IScreenObject.Parent"/> property changes.
             </summary>
         </member>
-        <member name="E:SadConsole.IScreenObject.PositionChanged">
-            <summary>
-            Raised when the <see cref="P:SadConsole.IScreenObject.Position"/> property changes.
-            </summary>
-        </member>
         <member name="E:SadConsole.IScreenObject.VisibleChanged">
             <summary>
             Raised when the <see cref="P:SadConsole.IScreenObject.IsVisible"/> property changes.
@@ -7163,6 +7126,11 @@
         <member name="P:SadConsole.IScreenObject.AbsolutePosition">
             <summary>
             A position that is based on the current <see cref="P:SadConsole.IScreenObject.Position"/> and <see cref="P:SadConsole.IScreenObject.Parent"/> position, in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.IScreenObject.IgnoreParentPosition">
+            <summary>
+            When <see langword="true"/>, this object should ignore it's parent position when calculating <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/>; otherwise <see langword="false"/>.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenObject.Children">
@@ -7333,11 +7301,6 @@
         <member name="P:SadConsole.IScreenSurface.Renderer">
             <summary>
             The renderer used to draw this surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenSurface.RenderSteps">
-            <summary>
-            The render steps to draw this object.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.UsePixelPositioning">
@@ -8113,6 +8076,21 @@
             The default renderer for a screen surface.
             </summary>
         </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface">
+            <summary>
+            The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface">
+            <summary>
+            The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.Window">
+            <summary>
+            The renderer for a <see cref="T:SadConsole.UI.Window"/>.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.Constants.RenderStepNames">
             <summary>
             Renderer names used by hosts and types.
@@ -8203,9 +8181,24 @@
             The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.ILayeredData">
+            <summary>
+            Provides the methods and properties used by the LayeredSurface renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ILayeredData.Layers">
+            <summary>
+            Access to the layers.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.IRenderer">
             <summary>
             Draws a surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRenderer.Name">
+            <summary>
+            The name used to create the renderer from the host.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.IRenderer.Output">
@@ -8221,6 +8214,11 @@
         <member name="P:SadConsole.Renderers.IRenderer.IsForced">
             <summary>
             <see langword="true"/> when the renderer is being forced to be redrawn this frame; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRenderer.Steps">
+            <summary>
+            The render steps for the renderer.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.IRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
@@ -8306,6 +8304,21 @@
         <member name="P:SadConsole.Renderers.IRenderStepTexture.CachedTexture">
             <summary>
             The texture created by the render step.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.IWindowData">
+            <summary>
+            Provides the methods and properties used by the Window renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IWindowData.IsModal">
+            <summary>
+            The status of whether or not the window is being shown in modal mode.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IWindowData.Controls">
+            <summary>
+            Access to the controls used by the window.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.RenderStepComparer">
@@ -8451,11 +8464,17 @@
             <summary>
             A generic object processed by SadConsole. Provides parent/child, components, and position.
             </summary>
+            <summary>
+            A generic object processed by SadConsole. Provides parent/child, components, and position.
+            </summary>
         </member>
         <member name="E:SadConsole.ScreenObject.ParentChanged">
             <inheritdoc/>
         </member>
         <member name="E:SadConsole.ScreenObject.PositionChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.ScreenObject.PositionChanging">
             <inheritdoc/>
         </member>
         <member name="E:SadConsole.ScreenObject.VisibleChanged">
@@ -8513,6 +8532,9 @@
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenObject.AbsolutePosition">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.IgnoreParentPosition">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenObject.IsVisible">
@@ -8590,6 +8612,13 @@
             <param name="oldParent">The previous parent.</param>
             <param name="newParent">The new parent.</param>
         </member>
+        <member name="M:SadConsole.ScreenObject.OnPositionChanging(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Raises the <see cref="E:SadConsole.ScreenObject.PositionChanging"/> event.
+            </summary>
+            <param name="oldPosition">The previous position.</param>
+            <param name="newPosition">The new position.</param>
+        </member>
         <member name="M:SadConsole.ScreenObject.OnPositionChanged(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Raises the <see cref="E:SadConsole.ScreenObject.PositionChanged"/> event.
@@ -8620,12 +8649,6 @@
             Returns the value "ScreenObject".
             </summary>
             <returns>The string "ScreenObject".</returns>
-        </member>
-        <member name="M:SadConsole.ScreenObject.OnSerializingMethod(System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Nothing.
-            </summary>
-            <param name="context">Nothing.</param>
         </member>
         <member name="M:SadConsole.ScreenObject.Components_FilterAddItem(SadConsole.Components.IComponent,System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent},System.Collections.Generic.List{SadConsole.Components.IComponent})">
             <summary>
@@ -8664,6 +8687,12 @@
             Returns an enumerator for <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:SadConsole.ScreenObject.OnSerializingMethod(System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Nothing.
+            </summary>
+            <param name="context">Nothing.</param>
         </member>
         <member name="T:SadConsole.ScreenObjectCollection">
             <summary>
@@ -8736,7 +8765,14 @@
             When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
             </summary>
             <param name="obj">The obj object to check.</param>
-            <returns>True when the object is on top.</returns>
+            <returns>True when the object is on the top.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection`1.IsBottom(`0)">
+            <summary>
+            When true, indicates that the <paramref name="obj"/> is at the bottom of the collection stack.
+            </summary>
+            <param name="obj">The obj object to check.</param>
+            <returns>True when the object is on the bottom.</returns>
         </member>
         <member name="M:SadConsole.ScreenObjectCollection`1.Add(`0)">
             <summary>
@@ -8819,9 +8855,6 @@
             <summary>
             When <see langword="true"/>, prevents the <see cref="P:SadConsole.ScreenSurface.Surface"/> property from raising events and virtual methods when the surface changes.
             </summary>
-        </member>
-        <member name="P:SadConsole.ScreenSurface.RenderSteps">
-            <inheritdoc/>
         </member>
         <member name="P:SadConsole.ScreenSurface.Surface">
             <summary>
@@ -9071,6 +9104,17 @@
         <member name="M:SadConsole.ScreenSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.SerializedTypes.RendererJsonConverter">
+            <summary>
+            Converts a <see cref="T:SadConsole.Renderers.IRenderer"/> to its <see cref="P:SadConsole.Renderers.IRenderer.Name"/> value and back.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.RendererJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,SadConsole.Renderers.IRenderer,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.RendererJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,SadConsole.Renderers.IRenderer,System.Boolean,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Serializer">
             <summary>
             Common serialization tasks for SadConsole.
@@ -9080,13 +9124,6 @@
             <summary>
             Registers the default converters for SadConsole objects, when needed.
             </summary>
-        </member>
-        <member name="M:SadConsole.Serializer.Contracts.CreateContract(System.Type)">
-            <summary>
-            Resolves <see cref="T:SadConsole.IFont"/> and <see cref="T:SadConsole.ColoredGlyph"/> with the appropriate converters.
-            </summary>
-            <param name="objectType"></param>
-            <returns></returns>
         </member>
         <member name="P:SadConsole.Serializer.Settings">
             <summary>
@@ -13087,27 +13124,17 @@
             <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the colors are from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
             <param name="buttonTheme">The theme for the buttons on the message box. If <see langword="null"/>, then the theme the default from <see cref="T:SadConsole.UI.Themes.Library"/> will be used.</param>
         </member>
-        <member name="T:SadConsole.ValueChangedEventArgs`1">
+        <member name="T:SadConsole.ValueChangedCancelableEventArgs`1">
             <summary>
-            The old value and the value it changed to.
+            Event arguments for an event fired when an object's properties are changed. The change can be cancelled.
             </summary>
         </member>
-        <member name="F:SadConsole.ValueChangedEventArgs`1.OldValue">
-            <summary>
-            The previous object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.ValueChangedEventArgs`1.NewValue">
-            <summary>
-            The new object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ValueChangedEventArgs`1.IsCancelled">
+        <member name="P:SadConsole.ValueChangedCancelableEventArgs`1.IsCancelled">
             <summary>
             Setting this property to <see langword="true"/> indicates that the change should be cancelled.
             </summary>
         </member>
-        <member name="M:SadConsole.ValueChangedEventArgs`1.#ctor(`0,`0)">
+        <member name="M:SadConsole.ValueChangedCancelableEventArgs`1.#ctor(`0,`0)">
             <summary>
             Creates a new instance of this object with the specified old and new value.
             </summary>

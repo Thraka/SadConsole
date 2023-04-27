@@ -17,17 +17,8 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-public class ScreenObject : IScreenObject
+public partial class ScreenObject : IScreenObject
 {
-    [DataMember(Name = "Children")]
-    private IScreenObject[]? _childrenSerialized;
-
-    [DataMember(Name = "ChildrenLocked")]
-    private bool _isChildrenLocked;
-
-    [DataMember(Name = "Components")]
-    private IComponent[]? _componentsSerialized;
-
     [DataMember(Name = "Position")]
     private Point _position;
 
@@ -35,7 +26,6 @@ public class ScreenObject : IScreenObject
     private bool _isVisible = true;
     private bool _isEnabled = true;
     private bool _isFocused;
-
 
     /// <inheritdoc/>
     public event EventHandler<ValueChangedEventArgs<IScreenObject?>>? ParentChanged;
@@ -142,6 +132,7 @@ public class ScreenObject : IScreenObject
     public Point AbsolutePosition { get; protected set; }
 
     /// <inheritdoc/>
+    [DataMember]
     public bool IgnoreParentPosition { get; set; }
 
     /// <inheritdoc/>
@@ -542,44 +533,7 @@ public class ScreenObject : IScreenObject
     /// <returns>The string "ScreenObject".</returns>
     public override string ToString() =>
         "ScreenObject";
-
-    /// <summary>
-    /// Nothing.
-    /// </summary>
-    /// <param name="context">Nothing.</param>
-    [OnSerializing]
-    protected void OnSerializingMethod(StreamingContext context)
-    {
-        _childrenSerialized = Children.ToArray();
-        _componentsSerialized = SadComponents.ToArray();
-        _isChildrenLocked = Children.IsLocked;
-    }
-
-    [OnSerialized]
-    private void OnSerialized(StreamingContext context)
-    {
-        _childrenSerialized = null;
-        _componentsSerialized = null;
-    }
-
-    [OnDeserialized]
-    private void OnDeserialized(StreamingContext context)
-    {
-        foreach (IScreenObject item in _childrenSerialized!)
-            Children.Add(item);
-
-        foreach (IComponent item in _componentsSerialized!)
-            SadComponents.Add(item);
-
-        Children.IsLocked = _isChildrenLocked;
-
-        _componentsSerialized = null;
-        _childrenSerialized = null;
-
-        UpdateAbsolutePosition();
-    }
-
-
+    
     /// <summary>
     /// Adds a component to the provided collections, based on its configuration.
     /// </summary>

@@ -34,7 +34,16 @@ namespace SadConsole.Tests
             obj2.UseKeyboard = false;
             obj2.UseMouse = true;
 
+            //SadConsole.ScreenSurface obj3 = new SadConsole.ScreenSurface(10, 10);
+            ScreenObject obj3 = new ScreenObject();
+            obj3.Position = (44, 44);
+            obj3.IsEnabled = true;
+            obj3.IsVisible = false;
+            obj3.UseKeyboard = false;
+            obj3.UseMouse = true;
+
             obj.Children.Add(obj2);
+            obj2.Children.Add(obj3);
 
             Component1 comp1 = new Component1() { Name = "component 1" };
             Component1 comp2 = new Component1() { Name = "component 2" };
@@ -59,14 +68,16 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
 
-            Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenObject));
-
             Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
             Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
+            Assert.AreEqual(obj3.SadComponents.Count, newObj.Children[0].Children[0].SadComponents.Count);
 
             Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
             Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
 
+            Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenObject));
+            Assert.IsInstanceOfType(newObj.SadComponents[0], typeof(Component1));
+            Assert.IsInstanceOfType(newObj.Children[0].Children[0], typeof(ScreenObject));
         }
 
         [TestMethod]
@@ -107,6 +118,7 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj.UseKeyboard, newObj.UseKeyboard);
             Assert.AreEqual(obj.UseMouse, newObj.UseMouse);
             Assert.AreEqual(obj.AbsolutePosition, newObj.AbsolutePosition);
+            Assert.IsInstanceOfType(obj.Renderer, newObj.Renderer.GetType());
 
             Assert.AreEqual(obj2.Position, newObj.Children[0].Position);
             Assert.AreEqual(obj2.IsEnabled, newObj.Children[0].IsEnabled);
@@ -114,6 +126,7 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseKeyboard, newObj.Children[0].UseKeyboard);
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
+            Assert.IsInstanceOfType(obj2.Renderer, ((SadConsole.ScreenSurface)newObj.Children[0]).Renderer.GetType());
 
             for (int i = 0; i < 10; i++)
             {
