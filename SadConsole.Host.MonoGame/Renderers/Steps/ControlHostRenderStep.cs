@@ -73,7 +73,7 @@ namespace SadConsole.Renderers
             {
                 Host.Global.GraphicsDevice.SetRenderTarget(BackingTexture);
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
-                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, ((ScreenSurfaceRenderer)renderer).MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+                Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, ((IRendererMonoGame)renderer).MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 ProcessContainer(_controlsHost, ((ScreenSurfaceRenderer)renderer), screenObject);
 

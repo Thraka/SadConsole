@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using SadRogue.Primitives;
 using SadConsole.Components;
+using SadConsole.Renderers;
 
 namespace SadConsole;
 
@@ -9,7 +10,7 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("ScreenSurface (Layered)")]
-public class LayeredScreenSurface : ScreenSurface
+public class LayeredScreenSurface : ScreenSurface, ILayeredData
 {
     /// <summary>
     /// The controls host holding all the controls.
@@ -52,17 +53,8 @@ public class LayeredScreenSurface : ScreenSurface
     {
         Layers = new LayeredSurface();
 
-        // Remove the normal surface render step
-        for (int i = 0; i < RenderSteps.Count; i++)
-        {
-            if (RenderSteps[i].Name == SadConsole.Renderers.Constants.RenderStepNames.Surface)
-            {
-                RenderSteps.RemoveAt(i);
-                break;
-            }
-        }
+        Renderer = GameHost.Instance.GetRenderer(SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface);
 
-        // Add the layers component which also adds the layers render step
         SadComponents.Add(Layers);
     }
 
@@ -76,15 +68,7 @@ public class LayeredScreenSurface : ScreenSurface
     {
         Layers = new LayeredSurface();
 
-        // Remove the normal surface render step
-        for (int i = 0; i < RenderSteps.Count; i++)
-        {
-            if (RenderSteps[i].Name == SadConsole.Renderers.Constants.RenderStepNames.Surface)
-            {
-                RenderSteps.RemoveAt(i);
-                break;
-            }
-        }
+        Renderer = GameHost.Instance.GetRenderer(SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface);
 
         // Add the layers component which also adds the layers render step
         SadComponents.Add(Layers);

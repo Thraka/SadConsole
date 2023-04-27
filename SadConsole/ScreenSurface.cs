@@ -29,6 +29,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     [DataMember(Name = "Surface")]
     private ICellSurface _surface;
 
+    //[DataMember(Name = "QuietSurfaceHandling")]
     private bool _quietSurface;
 
     private Renderers.IRenderer? _renderer;
@@ -40,7 +41,9 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     public virtual string DefaultRendererName { get; } = Renderers.Constants.RendererNames.Default;
 
     /// <inheritdoc/>
-    public Renderers.IRenderer? Renderer
+    [DataMember]
+    [JsonConverter(typeof(SerializedTypes.RendererJsonConverter))]
+    public IRenderer? Renderer
     {
         get => _renderer;
         protected set
@@ -57,6 +60,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     /// <summary>
     /// When <see langword="true"/>, prevents the <see cref="Surface"/> property from raising events and virtual methods when the surface changes.
     /// </summary>
+    [DataMember]
     public bool QuietSurfaceHandling
     {
         get => _quietSurface;
@@ -73,9 +77,6 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
             }
         }
     }
-
-    /// <inheritdoc/>
-    public List<IRenderStep> RenderSteps { get; } = new List<IRenderStep>();
 
     /// <summary>
     /// The surface this screen object represents.
@@ -272,12 +273,8 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
         FontSize = fontSize ?? _font.GetFontSize(GameHost.Instance.DefaultFontSize);
 
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
-        RenderSteps.Sort(RenderStepComparer.Instance);
     }
-
+    
     /// <summary>
     /// Resizes the surface to the specified width and height.
     /// </summary>
@@ -427,16 +424,12 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
             SadComponents[i].OnHostUpdated(this);
 
         Renderer?.OnHostUpdated(this);
-
-        foreach (IRenderStep step in RenderSteps)
-            step.OnHostUpdated(this);
     }
 
     /// <inheritdoc/>
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
     {
-        Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
         UpdateAbsolutePosition();
     }
 

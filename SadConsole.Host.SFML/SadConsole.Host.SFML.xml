@@ -293,12 +293,18 @@
             </summary>
             <returns>The configuration object.</returns>
         </member>
-        <member name="M:SadConsole.Game.Configuration.SetRenderWindow(SFML.Graphics.RenderWindow)">
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen``1">
             <summary>
-            Sets the rendering window to use by SFML, when you don't want a window created for you.
+            Sets the startup splash screen to the specified object.
             </summary>
-            <param name="renderWindow">The window to render to.</param>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen(System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
+            <summary>
+            A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
         </member>
         <member name="T:SadConsole.Game.ConfigurationFontLoader">
             <summary>
@@ -474,6 +480,87 @@
         <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
             <summary>
             A shader used when drawing the final texture to the screen.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
+            <summary>
+            Render steps to process.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+            <summary>
+            Cached set of rectangles used in rendering each cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the render steps this renderer uses.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
@@ -711,63 +798,6 @@
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
-            <summary>
-            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
-            </summary>
-            <remarks>
-            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
-            </remarks>
-        </member>
-        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
-            <summary>
-            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
-            <summary>
-            Quick access to backing texture.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
-            <summary>
-            The cached texture of the drawn surface.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
-            <summary>
-            Color used with drawing the texture to the screen. Let's a surface become transparent.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
-            <summary>
-            Render steps to process.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
-            <summary>
-            The blend state used by this renderer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
-            <summary>
-            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
-            <inheritdoc/>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
-            <summary>
-            Cached set of rectangles used in rendering each cell.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
-             <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
@@ -932,6 +962,14 @@
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
         </member>
     </members>

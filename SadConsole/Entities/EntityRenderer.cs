@@ -243,14 +243,14 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
 
         if (RenderStep != null)
         {
-            surface.RenderSteps.Remove(RenderStep);
+            surface.Renderer?.Steps.Remove(RenderStep);
             RenderStep.Dispose();
         }
 
         RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
         RenderStep.SetData(this);
-        surface.RenderSteps.Add(RenderStep);
-        surface.RenderSteps.Sort(RenderStepComparer.Instance);
+        surface.Renderer?.Steps.Add(RenderStep);
+        surface.Renderer?.Steps.Sort(RenderStepComparer.Instance);
         _screen = surface;
         IsAttached = true;
 
@@ -268,7 +268,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
     {
         if (RenderStep != null)
         {
-            ((IScreenSurface)host).RenderSteps.Remove(RenderStep);
+            ((IScreenSurface)host).Renderer?.Steps.Remove(RenderStep);
             RenderStep.Dispose();
             RenderStep = null;
         }

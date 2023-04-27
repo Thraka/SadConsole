@@ -9,6 +9,21 @@ public static class RendererNames
     /// The default renderer for a screen surface.
     /// </summary>
     public const string Default = "default";
+
+    /// <summary>
+    /// The renderer for a <see cref="ScreenSurface"/>.
+    /// </summary>
+    public const string ScreenSurface = "screensurface";
+
+    /// <summary>
+    /// The renderer for a <see cref="LayeredScreenSurface"/>.
+    /// </summary>
+    public const string LayeredScreenSurface = "layeredscreensurface";
+
+    /// <summary>
+    /// The renderer for a <see cref="UI.Window"/>.
+    /// </summary>
+    public const string Window = "window";
 }
 
 /// <summary>

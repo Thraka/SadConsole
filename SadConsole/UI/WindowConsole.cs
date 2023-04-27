@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadConsole.Input;
+using SadConsole.Renderers;
+using SadConsole.Renderers.Constants;
 using SadRogue.Primitives;
 using Keyboard = SadConsole.Input.Keyboard;
 using Mouse = SadConsole.Input.Mouse;
@@ -12,8 +15,9 @@ namespace SadConsole.UI;
 /// Represents a windowed controls console.
 /// </summary>
 [DataContract]
+[JsonObject(memberSerialization: MemberSerialization.OptIn)]
 [System.Diagnostics.DebuggerDisplay("Window")]
-public partial class Window : Console
+public partial class Window : Console, IWindowData
 {
     /// <summary>
     /// Raised when the window is closed.
@@ -200,11 +204,9 @@ public partial class Window : Console
         _isVisibleProcessing = false;
         CanDrag = true;
         MoveToFrontOnMouseClick = true;
+        Renderer = GameHost.Instance.GetRenderer(RendererNames.Window);
         Controls = new ControlHost();
         SadComponents.Add(Controls);
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
-        RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
-        //Renderer = GameHost.Instance.GetRenderer("window");
 
         // todo: Perhaps a new design with windows.
         // A border surface so that the surface of the window contains just the controls and print code.
@@ -227,11 +229,9 @@ public partial class Window : Console
         MoveToFrontOnMouseClick = true;
         Controls = new ControlHost();
         SadComponents.Add(Controls);
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Window));
-        RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
+        Renderer = GameHost.Instance.GetRenderer(RendererNames.Window);
         DrawBorder();
     }
-
 
     /// <inheritdoc />
     public override bool ProcessMouse(MouseScreenObjectState state)

@@ -37,11 +37,11 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public void Render(IRenderer renderer, IScreenSurface screenObject)
         {
-            UI.Window window = (UI.Window)screenObject;
+            IWindowData window = (IWindowData)screenObject;
             UI.Colors colors = window.Controls.GetThemeColors();
 
             if (window.IsModal && colors.ModalBackground.A != 0)
-                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((Host.GameTexture)window.Font.Image).Texture, new XnaRectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), window.Font.SolidGlyphRectangle.ToMonoRectangle()));
+                GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToMonoColor(), ((Host.GameTexture)screenObject.Font.Image).Texture, new XnaRectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screenObject.Font.SolidGlyphRectangle.ToMonoRectangle()));
         }
 
         /// <summary>

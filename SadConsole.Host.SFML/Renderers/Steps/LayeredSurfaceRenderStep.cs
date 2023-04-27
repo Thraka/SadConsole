@@ -66,6 +66,7 @@ namespace SadConsole.Renderers
             }
 
             var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
+            Components.LayeredSurface layerObject = _layers ?? ((ILayeredData)screenObject).Layers;
 
             // Redraw is needed
             if (result || screenObject.IsDirty || isForced)
@@ -73,14 +74,15 @@ namespace SadConsole.Renderers
                 BackingTexture.Clear(Color.Transparent);
                 Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
 
-                int rectIndex = 0;
                 ColoredGlyph cell;
                 IFont font = screenObject.Font;
 
-                foreach (ICellSurface layer in _layers)
+                if (layerObject.DefaultBackground.A != 0)
+                    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), layerObject.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+
+                foreach (ICellSurface layer in layerObject)
                 {
-                    if (layer.Surface.DefaultBackground.A != 0)
-                        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), layer.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                    int rectIndex = 0;
 
                     for (int y = 0; y < layer.Surface.View.Height; y++)
                     {

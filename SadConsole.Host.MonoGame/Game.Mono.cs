@@ -51,10 +51,12 @@ public sealed partial class Game : GameHost
     public new static Game Instance
     {
         get => (Game)GameHost.Instance;
-        protected set => GameHost.Instance = value;
+        set => GameHost.Instance = value;
     }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Game() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary>
     /// Creates a new game with default configuration, an 80x25 console.
@@ -140,6 +142,9 @@ public sealed partial class Game : GameHost
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.Window, typeof(Renderers.WindowRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface, typeof(Renderers.LayeredRenderer));
 
         SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));

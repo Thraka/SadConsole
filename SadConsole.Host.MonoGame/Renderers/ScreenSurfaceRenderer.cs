@@ -15,20 +15,26 @@ namespace SadConsole.Renderers
     /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("Surface")]
-    public class ScreenSurfaceRenderer : IRenderer
+    public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
     {
-        private Host.GameTexture _renderTexture;
+        /// <summary>
+        /// The final texture steps are drawing on.
+        /// </summary>
+        protected Host.GameTexture _renderTexture;
 
         /// <summary>
         /// Raised when the <see cref="_backingTexture" /> is recreated.
         /// </summary>
         public event EventHandler BackingTextureRecreated;
 
+        /// <inheritdoc/>
+        public string Name { get; set; }
+
         /// <summary>
         /// Quick access to backing texture.
         /// </summary>
         public RenderTarget2D _backingTexture;
-        
+
         /// <summary>
         /// The cached texture of the drawn surface.
         /// </summary>
@@ -56,10 +62,20 @@ namespace SadConsole.Renderers
         /// <inheritdoc/>
         public bool IsForced { get; set; }
 
+        /// <inheritdoc/>
+        public List<IRenderStep> Steps { get; set; } = new();
+
+        /// <inheritdoc/>
+        public XnaRectangle[] CachedRenderRects { get; protected set; }
+
         /// <summary>
-        /// Cached set of rectangles used in rendering each cell.
+        /// Creates a new instance of this renderer with the default steps.
         /// </summary>
-        public XnaRectangle[] CachedRenderRects;
+        public ScreenSurfaceRenderer()
+        {
+            AddDefaultSteps();
+            Steps.Sort(RenderStepComparer.Instance);
+        }
 
         ///  <inheritdoc/>
         public virtual void Refresh(IScreenSurface screen, bool force = false)
@@ -96,7 +112,7 @@ namespace SadConsole.Renderers
             bool composeRequested = IsForced;
 
             // Let everything refresh before compose.
-            foreach (IRenderStep step in screen.RenderSteps)
+            foreach (IRenderStep step in Steps)
                 composeRequested |= step.Refresh(this, screen, backingTextureChanged, IsForced);
 
             // If any step (or IsForced) requests a compose, process them.
@@ -108,7 +124,7 @@ namespace SadConsole.Renderers
                 Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
                 // Compose each step
-                foreach (IRenderStep step in screen.RenderSteps)
+                foreach (IRenderStep step in Steps)
                     step.Composing(this, screen);
 
                 // End sprite batch
@@ -120,8 +136,18 @@ namespace SadConsole.Renderers
         ///  <inheritdoc/>
         public virtual void Render(IScreenSurface screen)
         {
-            foreach (IRenderStep step in screen.RenderSteps)
+            foreach (IRenderStep step in Steps)
                 step.Render(this, screen);
+        }
+
+        /// <summary>
+        /// Adds the render steps this renderer uses.
+        /// </summary>
+        protected virtual void AddDefaultSteps()
+        {
+            Steps.Add(new SurfaceRenderStep());
+            Steps.Add(new OutputSurfaceRenderStep());
+            Steps.Add(new TintSurfaceRenderStep());
         }
 
         #region IDisposable Support
