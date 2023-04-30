@@ -1388,9 +1388,9 @@ public sealed class Cells : IEnumerable<Table.Cell>
         var maxRows = MaxRow;
         var startRow = HeaderRow ? 1 : 0;
 
-        for (int row = startRow; row < maxRows; row++)
+        for (int row = startRow; row <= maxRows; row++)
         {
-            for (int col = 0; col < maxColumns; col++)
+            for (int col = 0; col <= maxColumns; col++)
             {
                 Remove(row, col, false);
 
@@ -1405,6 +1405,10 @@ public sealed class Cells : IEnumerable<Table.Cell>
         // Adjust maxes
         MaxRow = HeaderRow ? 1 : 0;
         MaxColumn = HeaderRow ? maxColumns : 0;
+
+        AdjustCellPositionsAfterResize();
+        _table.SyncScrollAmountOnResize();
+        _table.IsDirty = true;
     }
     #endregion
 
