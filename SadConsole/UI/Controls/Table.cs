@@ -1358,14 +1358,7 @@ public sealed class Cells : IEnumerable<Table.Cell>
     /// <param name="column"></param>
     public void Remove(int row, int column)
     {
-        int prev = _cells.Count;
-        _ = _cells.Remove((row, column));
-        if (prev != _cells.Count)
-        {
-            AdjustCellPositionsAfterResize();
-            _table.SyncScrollAmountOnResize();
-            _table.IsDirty = true;
-        }
+        Remove(row, column, true);
     }
 
     /// <summary>
@@ -1383,6 +1376,35 @@ public sealed class Cells : IEnumerable<Table.Cell>
         MaxColumn = 0;
         _cells.Clear();
         _table.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Removes all rows and columns except the header if applicable
+    /// </summary>
+    /// <param name="clearLayoutOptionsForContent"></param>
+    public void ClearContent(bool clearLayoutOptionsForContent = true)
+    {
+        var maxColumns = MaxColumn;
+        var maxRows = MaxRow;
+        var startRow = HeaderRow ? 1 : 0;
+
+        for (int row = startRow; row < maxRows; row++)
+        {
+            for (int col = 0; col < maxColumns; col++)
+            {
+                Remove(row, col, false);
+
+                if (clearLayoutOptionsForContent)
+                {
+                    _rowLayout.Remove(row);
+                    _columnLayout.Remove(col);
+                }
+            }
+        }
+
+        // Adjust maxes
+        MaxRow = HeaderRow ? 1 : 0;
+        MaxColumn = HeaderRow ? maxColumns : 0;
     }
     #endregion
 
@@ -1557,6 +1579,23 @@ public sealed class Cells : IEnumerable<Table.Cell>
         return GetEnumerator();
     }
     #endregion
+
+    private void Remove(int row, int column, bool adjustMaxRowColumns)
+    {
+        int prev = _cells.Count;
+        _ = _cells.Remove((row, column));
+        if (prev != _cells.Count)
+        {
+            if (adjustMaxRowColumns)
+            {
+                MaxRow = _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Row);
+                MaxColumn = _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Column);
+            }
+            AdjustCellPositionsAfterResize();
+            _table.SyncScrollAmountOnResize();
+            _table.IsDirty = true;
+        }
+    }
 
     /// <summary>
     /// Defines the layout for a row or a column defined in <see cref="Table.Cells"/>
