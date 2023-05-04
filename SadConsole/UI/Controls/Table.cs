@@ -1390,17 +1390,18 @@ public sealed class Cells : IEnumerable<Table.Cell>
     /// <param name="clearLayoutOptionsForContent"></param>
     public void ClearContent(bool clearLayoutOptionsForContent = true)
     {
-        var maxColumn = HeaderRow ? _cells.Where(a => a.Key.Y == 0).Count() : 0;
+        // X = row, Y = column
+        var maxColumn = HeaderRow ? _cells.Where(a => a.Key.X == 0).Count() : 0;
         foreach (var cell in _cells.ToArray())
         {
-            if (HeaderRow && cell.Key.Y == 0) continue;
+            if (HeaderRow && cell.Key.X == 0) continue;
 
-            Remove(cell.Key.Y, cell.Key.X, false);
+            Remove(cell.Key.X, cell.Key.Y, false);
 
             if (clearLayoutOptionsForContent)
             {
-                _rowLayout.Remove(cell.Key.Y);
-                _columnLayout.Remove(cell.Key.X);
+                _rowLayout.Remove(cell.Key.X);
+                _columnLayout.Remove(cell.Key.Y);
             }
         }
 
