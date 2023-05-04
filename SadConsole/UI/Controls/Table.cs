@@ -1390,27 +1390,23 @@ public sealed class Cells : IEnumerable<Table.Cell>
     /// <param name="clearLayoutOptionsForContent"></param>
     public void ClearContent(bool clearLayoutOptionsForContent = true)
     {
-        var maxColumns = MaxColumn;
-        var maxRows = MaxRow;
-        var startRow = HeaderRow ? 1 : 0;
-
-        for (int row = startRow; row <= maxRows; row++)
+        var maxColumn = HeaderRow ? _cells.Where(a => a.Key.Y == 0).Count() : 0;
+        foreach (var cell in _cells.ToArray())
         {
-            for (int col = 0; col <= maxColumns; col++)
-            {
-                Remove(row, col, false);
+            if (HeaderRow && cell.Key.Y == 0) continue;
 
-                if (clearLayoutOptionsForContent)
-                {
-                    _rowLayout.Remove(row);
-                    _columnLayout.Remove(col);
-                }
+            Remove(cell.Key.Y, cell.Key.X, false);
+
+            if (clearLayoutOptionsForContent)
+            {
+                _rowLayout.Remove(cell.Key.Y);
+                _columnLayout.Remove(cell.Key.X);
             }
         }
 
         // Adjust maxes
         MaxRow = HeaderRow ? 1 : 0;
-        MaxColumn = HeaderRow ? maxColumns : 0;
+        MaxColumn = maxColumn;
 
         AdjustCellPositionsAfterResize();
         _table.SyncScrollAmountOnResize();
