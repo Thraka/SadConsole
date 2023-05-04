@@ -313,6 +313,12 @@ public class Table : CompositeControl
         DetermineState();
     }
 
+    internal HashSet<int> GetIndexesWithContent(Cells.Layout.LayoutType indexType)
+    {
+        return !Cells.Any() ? new HashSet<int>() :
+            Cells.Select(a => indexType == Cells.Layout.LayoutType.Row ? a.Row : a.Column).ToHashSet();
+    }
+
     internal int GetMaxRowsBasedOnRowSizes()
     {
         return !Cells.Any() ? 0 : Cells

@@ -66,6 +66,8 @@ public class TableTheme : ThemeBase
 
         int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
         int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
+        HashSet<int> allRowIndexesWithContent = table.GetIndexesWithContent(Cells.Layout.LayoutType.Row);
+        HashSet<int> allColumnIndexesWithContent = table.GetIndexesWithContent(Cells.Layout.LayoutType.Column);
 
         if (table.DrawFakeCells && maxColumnsWidth < table.Width)
             maxColumnsWidth = table.Width;
@@ -74,14 +76,18 @@ public class TableTheme : ThemeBase
 
         SetScrollBarVisibility(table, maxRowsHeight, maxColumnsWidth);
 
-        int columns = maxColumnsWidth;
-        int rows = maxRowsHeight;
+        int rows = 0;
         int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
         int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
         bool offScreenY = false;
         List<((int x, int y), (int row, int col))>? fakeCells = table.DrawFakeCells ? new() : null;
-        for (int row = 0; row <= rows; row++)
+        for (int row = 0; row <= table.Height; row++)
         {
+            if (rows >= allRowIndexesWithContent.Count) break;
+            if (allRowIndexesWithContent.Contains(row)) rows++;
+
+            int columns = 0;
+
             // Check if entire row is !IsVisible, then skip this row index entirely
             var entireRowNotVisible = table.IsEntireRowOrColumnNotVisible(rowIndex, Cells.Layout.LayoutType.Row);
 
@@ -90,8 +96,11 @@ public class TableTheme : ThemeBase
             int fullRowSize = 0;
 
             bool headerRow = false;
-            for (int col = 0; col <= columns; col++)
+            for (int col = 0; col <= table.Width; col++)
             {
+                if (columns >= allColumnIndexesWithContent.Count) break;
+                if (allColumnIndexesWithContent.Contains(col)) columns++;
+
                 int verticalScrollBarValue = table.IsVerticalScrollBarVisible ? table.StartRenderYPos : 0;
                 int horizontalScrollBarValue = table.IsHorizontalScrollBarVisible ? table.StartRenderXPos : 0;
 
