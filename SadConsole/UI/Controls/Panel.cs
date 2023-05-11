@@ -10,18 +10,15 @@ namespace SadConsole.UI.Controls;
 /// A control container that processes the mouse on each child. <see cref="ControlBase.TabStop"/> defaults to <see langword="false"/>.
 /// </summary>
 [DataContract]
-public class Panel : ControlBase, IContainer
+public class Panel : CompositeControl, IList<ControlBase>
 {
     /// <summary>
-    /// The controls this panel contains.
+    /// Gets or sets a control in the collection of controls.
     /// </summary>
-    protected List<ControlBase> Controls { get; set; } = new List<ControlBase>();
-
-    /// <inheritdoc/>
-    public int Count => Controls.Count;
-
-    /// <inheritdoc/>
-    public ControlBase this[int index]
+    /// <param name="index">The index of the control.</param>
+    /// <returns>The control at the specified index.</returns>
+    /// <exception cref="IndexOutOfRangeException">Thrown when the index doesn't exist in the collection.</exception>
+    public new ControlBase this[int index]
     {
         get => Controls[index];
         set
@@ -34,12 +31,6 @@ public class Panel : ControlBase, IContainer
         }
     }
     
-
-    /// <inheritdoc/>
-    public ControlHost? Host => Parent?.Host;
-
-    bool ICollection<ControlBase>.IsReadOnly => false;
-
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
     /// </summary>
@@ -68,6 +59,8 @@ public class Panel : ControlBase, IContainer
     /// <inheritdoc/>
     public void Add(ControlBase control)
     {
+        if (Controls.Contains(control)) return;
+
         Controls.Add(control);
         if (control.Parent != this)
             control.Parent = this;
@@ -94,7 +87,7 @@ public class Panel : ControlBase, IContainer
     /// </summary>
     /// <param name="index">The index of the control to remove.</param>
     public void RemoveAt(int index) =>
-        Controls.RemoveAt(index);
+        Remove(Controls[index]);
 
     /// <summary>
     /// Returns the index of the specified control.
@@ -109,8 +102,17 @@ public class Panel : ControlBase, IContainer
     /// </summary>
     /// <param name="index">The index to insert at.</param>
     /// <param name="control">The control to insert.</param>
-    public void Insert(int index, ControlBase control) =>
+    public void Insert(int index, ControlBase control)
+    {
+        if (Controls.Contains(control)) return;
+
         Controls.Insert(index, control);
+
+        if (control.Parent != this)
+            control.Parent = this;
+
+        control.IsDirtyChanged += Control_IsDirtyChanged;
+    }
 
     /// <inheritdoc/>
     public bool Contains(ControlBase control) =>
@@ -126,46 +128,9 @@ public class Panel : ControlBase, IContainer
         base.Update(time);
 
         ControlBase[] tempControls = Controls.ToArray();
+
         for (int i = 0; i < tempControls.Length; i++)
-        {
-            ControlBase control = tempControls[i];
-            if (control.IsDirty)
-                IsDirty = true;
-
-            control.Update(time);
-
-            if (control.IsDirty)
-                IsDirty = true;
-        }
-    }
-
-    /// <inheritdoc/>
-    public override bool ProcessMouse(MouseScreenObjectState state)
-    {
-        if (IsEnabled && UseMouse)
-        {
-            bool processResult = base.ProcessMouse(state);
-
-            var controls = new List<ControlBase>(Controls);
-            controls.Reverse();
-
-            int count = controls.Count;
-            for (int i = 0; i < count; i++)
-            {
-                ControlBase control = controls[i];
-                var state2 = new ControlMouseState(control, state);
-
-                if (state2.IsMouseOver && state.Mouse.RightClicked)
-                    System.Diagnostics.Debugger.Break();
-
-                if (control.ProcessMouse(state))
-                    return true;
-            }
-
-            return processResult;
-        }
-
-        return false;
+            tempControls[i].Update(time);
     }
 
     /// <inheritdoc/>
@@ -203,6 +168,18 @@ public class Panel : ControlBase, IContainer
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// When <see cref="ControlBase.IsDirty"/> is set to <see langword="true"/>, changes the child controls to also be dirty.
+    /// </summary>
+    protected override void OnIsDirtyChanged()
+    {
+        if (IsDirty)
+            foreach (var control in Controls)
+                control.IsDirty = true;
+
+        base.OnIsDirtyChanged();
     }
 
     private void Control_IsDirtyChanged(object? sender, EventArgs e)

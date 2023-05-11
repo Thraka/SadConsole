@@ -41,6 +41,8 @@ Normal changes
 - [UI] Scroll bar supports a thickness other than 1.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
+- [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
+- [UI] `Panel` control uses `CompositeControl` as a base class. Theme supports lines as a border of the panel.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 
