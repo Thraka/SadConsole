@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole;
+﻿using SadConsole;
 
 namespace SadConsole
 {
