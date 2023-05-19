@@ -112,6 +112,77 @@
             <param name="font">The font to use when drawing the glyph.</param>
             <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
         </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontTexture">
+            <summary>
+            The texture, most likely a SadConsole font texture, containing the solid white rectangle referenced by <see cref="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="T:SFML.Graphics.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            The color of the target rectangle.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(SFML.Graphics.Color,SFML.Graphics.Texture,SFML.Graphics.IntRect,SFML.Graphics.IntRect)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="color">The folor of the rectangle.</param>
+            <param name="texture">The texture containing a solid white rectangle referenced by <paramref name="fontSolidRect"/>.</param>
+            <param name="targetRect">The drawing location of the rectangle.</param>
+            <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws an image ot the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The image to draw.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            A color tint to apply when drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(SFML.Graphics.Texture,SFML.System.Vector2i,System.Nullable{SFML.Graphics.Color})">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="texture">The image to draw.</param>
+            <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
+            <param name="tint">A color tint to apply to the drawn image.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Game">
             <summary>
             The SadConsole game object.
@@ -452,6 +523,46 @@
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the SFML host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
+            <summary>
+            When <see langword="true"/>, prevents the keyboard and mouse logic from running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDevice">
+            <summary>
+            The render window created by SFML.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SharedSpriteBatch">
+            <summary>
+            A sprite batch used by all of SadConsole to render objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutput">
+            <summary>
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateTimer">
+            <summary>
+            Reference to the game timer used in the update loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.DrawTimer">
+            <summary>
+            Reference to the game timer used in the render loop.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Settings">
+            <summary>
+            A settings class usually used when creating the host object.
+            </summary>
+        </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
             <summary>
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
@@ -459,12 +570,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
+            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="!:SadConsole.Game.Create(int, int, string, RenderWindow)"/>.
+            The game window title. Set before calling <see cref="M:SadConsole.Game.Create"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
@@ -971,6 +1082,51 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
+        </member>
+        <member name="T:SFML.Graphics.SpriteBatch">
+            <summary>
+            A sprite batching class.
+            </summary>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.Reset(SFML.Graphics.RenderTarget,SFML.Graphics.BlendMode,SFML.Graphics.Transform,SFML.Graphics.Shader)">
+            <summary>
+            Resets the batcher.
+            </summary>
+            <param name="target">The new rendering target.</param>
+            <param name="blend">The blending mode.</param>
+            <param name="renderingTransform">The transform.</param>
+            <param name="shader">An optional shader.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawQuad(SFML.Graphics.IntRect,SFML.Graphics.IntRect,SFML.Graphics.Color,SFML.Graphics.Texture)">
+            <summary>
+            Draws a textured quad to the render target.
+            </summary>
+            <param name="screenRect">The rectangle on the render target to draw the quad.</param>
+            <param name="textCoords">The texture coordinates used with <paramref name="texture"/>.</param>
+            <param name="color">A color to shade the quad. Use <see cref="F:SFML.Graphics.Color.White"/> to disable shading.</param>
+            <param name="texture">The texture to draw with.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCell(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,System.Boolean,SadConsole.IFont)">
+            <summary>
+            Draws a single glyph to the screen.
+            </summary>
+            <param name="cell">The glyph information.</param>
+            <param name="screenRect">The rectangle on the render target to draw the glyph.</param>
+            <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
+            <param name="font">The SadConsole font containing the glyph texture.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCellBackground(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont)">
+            <summary>
+            Draws the background color of a cell to the render target.
+            </summary>
+            <param name="cell">The cell information containing the background color.</param>
+            <param name="screenRect">The rectangle on the render target to draw the background color.</param>
+            <param name="font">The SadConsole font containing the solid color glyph used in drawing backgrounds.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.End">
+            <summary>
+            Ends the sprite batch and draws the data to the screen.
+            </summary>
         </member>
     </members>
 </doc>

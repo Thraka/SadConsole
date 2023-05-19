@@ -3,136 +3,135 @@ using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadRogue.Primitives;
 
-namespace SadConsole.Renderers
+namespace SadConsole.Renderers;
+
+/// <summary>
+/// Draws a <see cref="SadConsole.IScreenSurface"/> object.
+/// </summary>
+[System.Diagnostics.DebuggerDisplay("Surface (Dirty)")]
+public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
 {
+    private Host.GameTexture _cachedTexture;
+
     /// <summary>
-    /// Draws a <see cref="SadConsole.IScreenSurface"/> object.
+    /// The cached texture of the drawn surface.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Surface (Dirty)")]
-    public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
+    public RenderTexture BackingTexture { get; private set; }
+
+    /// <inheritdoc/>//
+    public ITexture CachedTexture => _cachedTexture;
+
+    /// <inheritdoc/>
+    public string Name => Constants.RenderStepNames.SurfaceDirtyCells;
+
+    /// <inheritdoc/>
+    public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
+
+    /// <summary>
+    /// Not used.
+    /// </summary>
+    public void SetData(object data) { }
+
+    ///  <inheritdoc/>
+    public void Reset()
     {
-        private Host.GameTexture _cachedTexture;
+        BackingTexture?.Dispose();
+        BackingTexture = null;
+        _cachedTexture?.Dispose();
+        _cachedTexture = null;
+    }
 
-        /// <summary>
-        /// The cached texture of the drawn surface.
-        /// </summary>
-        public RenderTexture BackingTexture { get; private set; }
+    ///  <inheritdoc/>
+    public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
+    {
+        bool fullRedraw = false;
 
-        /// <inheritdoc/>//
-        public ITexture CachedTexture => _cachedTexture;
-
-        /// <inheritdoc/>
-        public string Name => Constants.RenderStepNames.SurfaceDirtyCells;
-
-        /// <inheritdoc/>
-        public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
-
-        /// <summary>
-        /// Not used.
-        /// </summary>
-        public void SetData(object data) { }
-
-        ///  <inheritdoc/>
-        public void Reset()
+        // Update texture if something is out of size.
+        if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
         {
             BackingTexture?.Dispose();
-            BackingTexture = null;
+            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
             _cachedTexture?.Dispose();
-            _cachedTexture = null;
+            _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
+            fullRedraw = true;
         }
 
-        ///  <inheritdoc/>
-        public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
+        var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
+
+        // Redraw is needed
+        if (fullRedraw || screenObject.IsDirty || isForced)
         {
-            bool fullRedraw = false;
+            // Only cleared when full redraw needed
+            if (fullRedraw)
+                BackingTexture.Clear(Color.Transparent);
 
-            // Update texture if something is out of size.
-            if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+            Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
+
+            int rectIndex = 0;
+            ColoredGlyph cell;
+            IFont font = screenObject.Font;
+
+            if (fullRedraw)
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+
+            for (int y = 0; y < screenObject.Surface.View.Height; y++)
             {
-                BackingTexture?.Dispose();
-                BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
-                _cachedTexture?.Dispose();
-                _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
-                fullRedraw = true;
-            }
+                int i = ((y + screenObject.Surface.ViewPosition.Y) * screenObject.Surface.Width) + screenObject.Surface.ViewPosition.X;
 
-            var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
-
-            // Redraw is needed
-            if (fullRedraw || screenObject.IsDirty || isForced)
-            {
-                // Only cleared when full redraw needed
-                if (fullRedraw)
-                    BackingTexture.Clear(Color.Transparent);
-
-                Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
-
-                int rectIndex = 0;
-                ColoredGlyph cell;
-                IFont font = screenObject.Font;
-
-                if (fullRedraw)
-                    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
-
-                for (int y = 0; y < screenObject.Surface.View.Height; y++)
+                for (int x = 0; x < screenObject.Surface.View.Width; x++)
                 {
-                    int i = ((y + screenObject.Surface.ViewPosition.Y) * screenObject.Surface.Width) + screenObject.Surface.ViewPosition.X;
+                    cell = screenObject.Surface[i];
 
-                    for (int x = 0; x < screenObject.Surface.View.Width; x++)
+                    if (cell.IsDirty || fullRedraw)
                     {
-                        cell = screenObject.Surface[i];
+                        cell.IsDirty = false;
 
-                        if (cell.IsDirty || fullRedraw)
-                        {
-                            cell.IsDirty = false;
-
-                            if (cell.IsVisible)
-                                Host.Global.SharedSpriteBatch.DrawCell(cell, sfmlRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
-                        }
-
-                        i++;
-                        rectIndex++;
+                        if (cell.IsVisible)
+                            Host.Global.SharedSpriteBatch.DrawCell(cell, sfmlRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
                     }
+
+                    i++;
+                    rectIndex++;
                 }
-
-                Host.Global.SharedSpriteBatch.End();
-                BackingTexture.Display();
-
-                fullRedraw = true;
-                screenObject.IsDirty = false;
             }
 
-            return fullRedraw;
+            Host.Global.SharedSpriteBatch.End();
+            BackingTexture.Display();
+
+            fullRedraw = true;
+            screenObject.IsDirty = false;
         }
 
-        ///  <inheritdoc/>
-        public void Composing(IRenderer renderer, IScreenSurface screenObject)
-        {
-            IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-            Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
-        }
-
-        ///  <inheritdoc/>
-        public void Render(IRenderer renderer, IScreenSurface screenObject) { }
-
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
-        protected void Dispose(bool disposing) =>
-            Reset();
-
-        ///  <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Finalizes the object for collection.
-        /// </summary>
-        ~SurfaceDirtyCellsRenderStep() =>
-            Dispose(false);
+        return fullRedraw;
     }
+
+    ///  <inheritdoc/>
+    public void Composing(IRenderer renderer, IScreenSurface screenObject)
+    {
+        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+    }
+
+    ///  <inheritdoc/>
+    public void Render(IRenderer renderer, IScreenSurface screenObject) { }
+
+    /// <summary>
+    /// Disposes the object.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
+    protected void Dispose(bool disposing) =>
+        Reset();
+
+    ///  <inheritdoc/>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Finalizes the object for collection.
+    /// </summary>
+    ~SurfaceDirtyCellsRenderStep() =>
+        Dispose(false);
 }

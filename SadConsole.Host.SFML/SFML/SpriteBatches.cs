@@ -1,345 +1,375 @@
 ﻿using Rectangle = SFML.Graphics.IntRect;
 using Matrix = SFML.Graphics.Transform;
 using SadConsole;
-using SadConsole.Host;
 using SadRogue.Primitives;
 
-namespace SFML.Graphics
+namespace SFML.Graphics;
+
+/// <summary>
+/// A sprite batching class.
+/// </summary>
+public class SpriteBatch
 {
-    public class SpriteBatch
+    private Matrix _transform;
+    private BatchDrawCall _lastDrawCall = new BatchDrawCall();
+    private RenderTarget _target;
+    private RenderStates _state;
+
+    private int _maxIndex = 800;
+
+    /// <summary>
+    /// Resets the batcher.
+    /// </summary>
+    /// <param name="target">The new rendering target.</param>
+    /// <param name="blend">The blending mode.</param>
+    /// <param name="renderingTransform">The transform.</param>
+    /// <param name="shader">An optional shader.</param>
+    public void Reset(RenderTarget target, BlendMode blend, Matrix renderingTransform, Shader shader = null)
     {
-        private Matrix _transform;
-        private BatchDrawCall _lastDrawCall = new BatchDrawCall();
-        private RenderTarget _target;
-        private RenderStates _state;
+        _transform = renderingTransform;
+        _lastDrawCall.VertIndex = 0;
+        _target = target;
+        _state = RenderStates.Default;
+        _state.BlendMode = blend;
+        _state.Transform *= renderingTransform;
 
-        private int _maxIndex = 800;
+        if (shader != null)
+            _state.Shader = shader;
+    }
 
-        public void Reset(RenderTarget target, BlendMode blend, Matrix renderingTransform, Shader shader = null)
+    private class BatchDrawCall
+    {
+        public Texture Texture;
+        public Vertex[] Verticies = new Vertex[1000];
+        public int VertIndex;
+    }
+
+    /// <summary>
+    /// Draws a textured quad to the render target.
+    /// </summary>
+    /// <param name="screenRect">The rectangle on the render target to draw the quad.</param>
+    /// <param name="textCoords">The texture coordinates used with <paramref name="texture"/>.</param>
+    /// <param name="color">A color to shade the quad. Use <see cref="Color.White"/> to disable shading.</param>
+    /// <param name="texture">The texture to draw with.</param>
+    public unsafe void DrawQuad(Rectangle screenRect, Rectangle textCoords, Color color, Texture texture)
+    {
+        if (_lastDrawCall.Texture != texture && _lastDrawCall.Texture != null)
         {
-            _transform = renderingTransform;
+            End();
             _lastDrawCall.VertIndex = 0;
-            _target = target;
-            _state = RenderStates.Default;
-            _state.BlendMode = blend;
-            _state.Transform *= renderingTransform;
-
-            if (shader != null)
-                _state.Shader = shader;
         }
 
-        private class BatchDrawCall
+        _lastDrawCall.Texture = texture;
+
+        if (_lastDrawCall.VertIndex >= _maxIndex)
         {
-            public Texture Texture;
-            public Vertex[] Verticies = new Vertex[1000];
-            public int VertIndex;
+            global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
+            _maxIndex = _lastDrawCall.Verticies.Length - 200;
         }
 
-        public unsafe void DrawQuad(Rectangle screenRect, Rectangle textCoords, Color color, Texture texture)
+        // Change rects to correct rendering size
+        screenRect.Width += screenRect.Left;
+        screenRect.Height += screenRect.Top;
+        textCoords.Width += textCoords.Left;
+        textCoords.Height += textCoords.Top;
+
+        fixed (Vertex* verts = _lastDrawCall.Verticies)
         {
-            if (_lastDrawCall.Texture != texture && _lastDrawCall.Texture != null)
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Height;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Height;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+        }
+    }
+
+    /// <summary>
+    /// Draws a single glyph to the screen.
+    /// </summary>
+    /// <param name="cell">The glyph information.</param>
+    /// <param name="screenRect">The rectangle on the render target to draw the glyph.</param>
+    /// <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
+    /// <param name="font">The SadConsole font containing the glyph texture.</param>
+    public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, IFont font)
+    {
+        Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
+
+        if (_lastDrawCall.Texture != ((SadConsole.Host.GameTexture)font.Image).Texture && _lastDrawCall.Texture != null)
+        {
+            End();
+            _lastDrawCall.VertIndex = 0;
+        }
+
+        _lastDrawCall.Texture = ((SadConsole.Host.GameTexture)font.Image).Texture;
+
+        if (_lastDrawCall.VertIndex >= _maxIndex)
+        {
+            global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
+            _maxIndex = _lastDrawCall.Verticies.Length - 200;
+        }
+
+        Rectangle glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
+        Color background = cell.Background.ToSFMLColor();
+        Color foreground = cell.Foreground.ToSFMLColor();
+
+        // Change rects to correct rendering size
+        screenRect.Width += screenRect.Left;
+        screenRect.Height += screenRect.Top;
+        glyphRect.Width += glyphRect.Left;
+        glyphRect.Height += glyphRect.Top;
+        solidRect.Width += solidRect.Left;
+        solidRect.Height += solidRect.Top;
+
+        if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
+        {
+            int temp = glyphRect.Left;
+            glyphRect.Left = glyphRect.Width;
+            glyphRect.Width = temp;
+        }
+
+        if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
+        {
+            int temp = glyphRect.Top;
+            glyphRect.Top = glyphRect.Height;
+            glyphRect.Height = temp;
+        }
+
+        fixed (Vertex* verts = _lastDrawCall.Verticies)
+        {
+            if (background != Color.Transparent && drawBackground)
             {
-                End();
-                _lastDrawCall.VertIndex = 0;
-            }
-
-            _lastDrawCall.Texture = texture;
-
-            if (_lastDrawCall.VertIndex >= _maxIndex)
-            {
-                global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
-                _maxIndex = _lastDrawCall.Verticies.Length - 200;
-            }
-
-            // Change rects to correct rendering size
-            screenRect.Width += screenRect.Left;
-            screenRect.Height += screenRect.Top;
-            textCoords.Width += textCoords.Left;
-            textCoords.Height += textCoords.Top;
-
-            fixed (Vertex* verts = _lastDrawCall.Verticies)
-            {
+                // Background
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
-                verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
-                verts[_lastDrawCall.VertIndex].Color = color;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
 
-                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
-                verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
-                verts[_lastDrawCall.VertIndex].Color = color;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
 
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
-                verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Height;
-                verts[_lastDrawCall.VertIndex].Color = color;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
 
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
-                verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Height;
-                verts[_lastDrawCall.VertIndex].Color = color;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
-            }
-        }
 
-        public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, SadConsole.IFont font)
-        {
-            Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
-
-            if (_lastDrawCall.Texture != ((SadConsole.Host.GameTexture)font.Image).Texture && _lastDrawCall.Texture != null)
-            {
-                End();
-                _lastDrawCall.VertIndex = 0;
+                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
 
-            _lastDrawCall.Texture = ((SadConsole.Host.GameTexture)font.Image).Texture;
-
-            if (_lastDrawCall.VertIndex >= _maxIndex)
+            if (cell.Glyph != 0 && foreground != Color.Transparent && foreground != background)
             {
-                global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
-                _maxIndex = _lastDrawCall.Verticies.Length - 200;
+                // Foreground
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
+                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
 
-            var glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
-            var background = cell.Background.ToSFMLColor();
-            var foreground = cell.Foreground.ToSFMLColor();
-
-            // Change rects to correct rendering size
-            screenRect.Width += screenRect.Left;
-            screenRect.Height += screenRect.Top;
-            glyphRect.Width += glyphRect.Left;
-            glyphRect.Height += glyphRect.Top;
-            solidRect.Width += solidRect.Left;
-            solidRect.Height += solidRect.Top;
-
-            if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
+            if (cell.Decorators.Length != 0)
             {
-                var temp = glyphRect.Left;
-                glyphRect.Left = glyphRect.Width;
-                glyphRect.Width = temp;
-            }
-
-            if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
-            {
-                var temp = glyphRect.Top;
-                glyphRect.Top = glyphRect.Height;
-                glyphRect.Height = temp;
-            }
-
-            fixed (Vertex* verts = _lastDrawCall.Verticies)
-            {
-                if (background != Color.Transparent && drawBackground)
+                for (int d = 0; d < cell.Decorators.Length; d++)
                 {
-                    // Background
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
+                    glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
 
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
+                    // Change rects to correct rendering size;
+                    glyphRect.Width += glyphRect.Left;
+                    glyphRect.Height += glyphRect.Top;
 
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
+                    foreground = cell.Decorators[d].Color.ToSFMLColor();
 
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
-
-                    //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
-                }
-
-                if (cell.Glyph != 0 && foreground != Color.Transparent && foreground != background)
-                {
-                    // Foreground
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = foreground;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = foreground;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = foreground;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = foreground;
-                    _lastDrawCall.VertIndex++;
-
-                    //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
-                }
-
-                if (cell.Decorators.Length != 0)
-                {
-                    for (int d = 0; d < cell.Decorators.Length; d++)
+                    if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
                     {
-                        glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
+                        int temp = glyphRect.Left;
+                        glyphRect.Left = glyphRect.Width;
+                        glyphRect.Width = temp;
+                    }
 
-                        // Change rects to correct rendering size;
-                        glyphRect.Width += glyphRect.Left;
-                        glyphRect.Height += glyphRect.Top;
+                    if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
+                    {
+                        int temp = glyphRect.Top;
+                        glyphRect.Top = glyphRect.Height;
+                        glyphRect.Height = temp;
+                    }
 
-                        foreground = cell.Decorators[d].Color.ToSFMLColor();
+                    if (foreground != Color.Transparent)
+                    {
+                        // Foreground
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
 
-                        if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
-                        {
-                            var temp = glyphRect.Left;
-                            glyphRect.Left = glyphRect.Width;
-                            glyphRect.Width = temp;
-                        }
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
 
-                        if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
-                        {
-                            var temp = glyphRect.Top;
-                            glyphRect.Top = glyphRect.Height;
-                            glyphRect.Height = temp;
-                        }
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
 
-                        if (foreground != Color.Transparent)
-                        {
-                            // Foreground
-                            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                            verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
-                            verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
-                            verts[_lastDrawCall.VertIndex].Color = foreground;
-                            _lastDrawCall.VertIndex++;
-
-                            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
-                            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                            verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
-                            verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
-                            verts[_lastDrawCall.VertIndex].Color = foreground;
-                            _lastDrawCall.VertIndex++;
-
-                            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
-                            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                            verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
-                            verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
-                            verts[_lastDrawCall.VertIndex].Color = foreground;
-                            _lastDrawCall.VertIndex++;
-
-                            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                            verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
-                            verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
-                            verts[_lastDrawCall.VertIndex].Color = foreground;
-                            _lastDrawCall.VertIndex++;
-                        }
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
                     }
                 }
             }
         }
+    }
 
-        public unsafe void DrawCellBackground(ColoredGlyph cell, Rectangle screenRect, SadConsole.IFont font)
+    /// <summary>
+    /// Draws the background color of a cell to the render target.
+    /// </summary>
+    /// <param name="cell">The cell information containing the background color.</param>
+    /// <param name="screenRect">The rectangle on the render target to draw the background color.</param>
+    /// <param name="font">The SadConsole font containing the solid color glyph used in drawing backgrounds.</param>
+    public unsafe void DrawCellBackground(ColoredGlyph cell, Rectangle screenRect, SadConsole.IFont font)
+    {
+        Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
+
+        if (_lastDrawCall.Texture != ((SadConsole.Host.GameTexture)font.Image).Texture && _lastDrawCall.Texture != null)
         {
-            Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
-
-            if (_lastDrawCall.Texture != ((SadConsole.Host.GameTexture)font.Image).Texture && _lastDrawCall.Texture != null)
-            {
-                End();
-                _lastDrawCall.VertIndex = 0;
-            }
-
-            _lastDrawCall.Texture = ((SadConsole.Host.GameTexture)font.Image).Texture;
-
-            if (_lastDrawCall.VertIndex >= _maxIndex)
-            {
-                global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
-                _maxIndex = _lastDrawCall.Verticies.Length - 200;
-            }
-
-            var glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
-            var background = cell.Background.ToSFMLColor();
-
-            // Change rects to correct rendering size
-            screenRect.Width += screenRect.Left;
-            screenRect.Height += screenRect.Top;
-            glyphRect.Width += glyphRect.Left;
-            glyphRect.Height += glyphRect.Top;
-            solidRect.Width += solidRect.Left;
-            solidRect.Height += solidRect.Top;
-
-            fixed (Vertex* verts = _lastDrawCall.Verticies)
-            {
-                if (background != Color.Transparent)
-                {
-                    // Background
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
-
-                    verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
-                    verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
-                    verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
-                    verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
-                    verts[_lastDrawCall.VertIndex].Color = background;
-                    _lastDrawCall.VertIndex++;
-
-                    //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
-                }
-            }
+            End();
+            _lastDrawCall.VertIndex = 0;
         }
 
+        _lastDrawCall.Texture = ((SadConsole.Host.GameTexture)font.Image).Texture;
 
-        public void End()
+        if (_lastDrawCall.VertIndex >= _maxIndex)
         {
-            if (_lastDrawCall.VertIndex != 0)
+            global::System.Array.Resize(ref _lastDrawCall.Verticies, _lastDrawCall.Verticies.Length + _lastDrawCall.Verticies.Length / 2);
+            _maxIndex = _lastDrawCall.Verticies.Length - 200;
+        }
+
+        Rectangle glyphRect = font.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
+        Color background = cell.Background.ToSFMLColor();
+
+        // Change rects to correct rendering size
+        screenRect.Width += screenRect.Left;
+        screenRect.Height += screenRect.Top;
+        glyphRect.Width += glyphRect.Left;
+        glyphRect.Height += glyphRect.Top;
+        solidRect.Width += solidRect.Left;
+        solidRect.Height += solidRect.Top;
+
+        fixed (Vertex* verts = _lastDrawCall.Verticies)
+        {
+            if (background != Color.Transparent)
             {
-                _state.Texture = _lastDrawCall.Texture;
-                _target.Draw(_lastDrawCall.Verticies, 0, (uint)(_lastDrawCall.VertIndex), PrimitiveType.Quads, _state);
+                // Background
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
+        }
+    }
+
+    /// <summary>
+    /// Ends the sprite batch and draws the data to the screen.
+    /// </summary>
+    public void End()
+    {
+        if (_lastDrawCall.VertIndex != 0)
+        {
+            _state.Texture = _lastDrawCall.Texture;
+            _target.Draw(_lastDrawCall.Verticies, 0, (uint)(_lastDrawCall.VertIndex), PrimitiveType.Quads, _state);
         }
     }
 }
