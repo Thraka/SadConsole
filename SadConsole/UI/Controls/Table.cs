@@ -612,6 +612,7 @@ public class Table : CompositeControl
                 {
                     OnCellExit?.Invoke(this, new CellEventArgs(CurrentMouseCell));
                     CurrentMouseCell = null;
+                    IsDirty = true;
                 }
             }
         }
@@ -629,10 +630,13 @@ public class Table : CompositeControl
 
             if (scrollBar != null)
             {
+                var prev = scrollBar.Value;
                 if (state.OriginalMouseState.Mouse.ScrollWheelValueChange < 0)
                     scrollBar.Value -= 1;
                 else
                     scrollBar.Value += 1;
+                if (prev != scrollBar.Value)
+                    IsDirty = true;
             }
         }
     }
@@ -698,6 +702,7 @@ public class Table : CompositeControl
             if (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                 OnCellExit?.Invoke(this, new CellEventArgs(CurrentMouseCell));
             CurrentMouseCell = null;
+            IsDirty = true;
         }
     }
 
