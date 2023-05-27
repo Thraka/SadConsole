@@ -23,11 +23,11 @@ public class EntityManager
 
         surfaceObject.SadComponents.Add(manager);
 
-        Assert.IsNotNull(surfaceObject.RenderSteps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
+        Assert.IsNotNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
 
         surfaceObject.SadComponents.Remove(manager);
 
-        Assert.IsNull(surfaceObject.RenderSteps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
+        Assert.IsNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
     }
 
     [TestMethod]
