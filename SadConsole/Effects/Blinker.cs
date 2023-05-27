@@ -4,10 +4,10 @@ using SadRogue.Primitives;
 namespace SadConsole.Effects;
 
 /// <summary>
-/// Switches between the normal foreground of a cell and a specified color for an amount of time, and then repeats.
+/// Blinks the foreground and background colors of a cell with the specified colors.
 /// </summary>
 [DataContract]
-public class Blink : CellEffectBase
+public class Blinker : CellEffectBase
 {
     private int _blinkCounter = 0;
     private bool _isOn;
@@ -20,16 +20,22 @@ public class Blink : CellEffectBase
     public System.TimeSpan BlinkSpeed { get; set; }
 
     /// <summary>
-    /// When true, uses the current cells background color for fading instead of the value of <see cref="BlinkOutColor"/>.
-    /// </summary>
-    [DataMember]
-    public bool UseCellBackgroundColor { get; set; }
-
-    /// <summary>
     /// The color the foreground blinks to.
     /// </summary>
     [DataMember]
-    public Color BlinkOutColor { get; set; }
+    public Color BlinkOutForegroundColor { get; set; }
+
+    /// <summary>
+    /// The color the background blinks to.
+    /// </summary>
+    [DataMember]
+    public Color BlinkOutBackgroundColor { get; set; }
+
+    /// <summary>
+    /// When <see langword="true"/>, ignores the <see cref="BlinkOutBackgroundColor"/> and <see cref="BlinkOutForegroundColor"/> colors and instead swaps the glyph's foreground and background colors.
+    /// </summary>
+    [DataMember]
+    public bool SwapColorsFromCell { get; set; }
 
     /// <summary>
     /// How many times to blink. The value of -1 represents forever.
@@ -46,13 +52,13 @@ public class Blink : CellEffectBase
     /// <summary>
     /// Creates a new instance of the blink effect.
     /// </summary>
-    public Blink()
+    public Blinker()
     {
         Duration = System.TimeSpan.MaxValue;
         BlinkCount = -1;
         BlinkSpeed = System.TimeSpan.FromSeconds(1);
-        UseCellBackgroundColor = true;
-        BlinkOutColor = Color.Transparent;
+        BlinkOutBackgroundColor = Color.Transparent;
+        BlinkOutForegroundColor = Color.Transparent;
         _isOn = true;
         _blinkCounter = 0;
     }
@@ -64,17 +70,25 @@ public class Blink : CellEffectBase
 
         if (!_isOn)
         {
-            if (UseCellBackgroundColor)
+            if (SwapColorsFromCell)
+            {
                 cell.Foreground = originalState.Background;
+                cell.Background = originalState.Foreground;
+            }
             else
-                cell.Foreground = BlinkOutColor;
+            {
+                cell.Foreground = BlinkOutForegroundColor;
+                cell.Background = BlinkOutBackgroundColor;
+            }
         }
         else
+        {
             cell.Foreground = originalState.Foreground;
+            cell.Background = originalState.Background;
+        }
 
         return cell.Foreground != oldColor;
     }
-
 
     /// <inheritdoc />
     public override void Update(System.TimeSpan delta)
@@ -123,12 +137,13 @@ public class Blink : CellEffectBase
 
 
     /// <inheritdoc />
-    public override ICellEffect Clone() => new Blink()
+    public override ICellEffect Clone() => new Blinker()
     {
-        BlinkOutColor = BlinkOutColor,
+        BlinkOutBackgroundColor = BlinkOutBackgroundColor,
+        BlinkOutForegroundColor = BlinkOutForegroundColor,
         BlinkSpeed = BlinkSpeed,
         _isOn = _isOn,
-        UseCellBackgroundColor = UseCellBackgroundColor,
+        SwapColorsFromCell = SwapColorsFromCell,
         BlinkCount = BlinkCount,
 
         IsFinished = IsFinished,
@@ -140,26 +155,6 @@ public class Blink : CellEffectBase
         _timeElapsed = _timeElapsed,
     };
 
-    //public override bool Equals(ICellEffect effect)
-    //{
-
-    //    if (effect is Blink)
-    //    {
-    //        if (base.Equals(effect))
-    //        {
-    //            var effect2 = (Blink)effect;
-
-    //            return BlinkOutColor == effect2.BlinkOutColor &&
-    //                   BlinkSpeed == effect2.BlinkSpeed &&
-    //                   UseCellBackgroundColor == effect2.UseCellBackgroundColor &&
-    //                   StartDelay == effect2.StartDelay &&
-    //                   BlinkCount == effect2.BlinkCount;
-    //        }
-    //    }
-
-    //    return false;
-    //}
-
     /// <inheritdoc />
-    public override string ToString() => $"BLINK-{BlinkOutColor.PackedValue}-{BlinkSpeed}-{UseCellBackgroundColor}-{StartDelay}-{BlinkCount}";
+    public override string ToString() => $"BLINKER-{BlinkOutBackgroundColor.PackedValue}-{BlinkOutForegroundColor.PackedValue}-{BlinkSpeed}-{SwapColorsFromCell}-{StartDelay}";
 }
