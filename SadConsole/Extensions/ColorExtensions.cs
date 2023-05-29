@@ -526,6 +526,10 @@ public static class ColorExtensions2
             useDefault = true;
             return new Color(r, g, b, a);
         }
+        else if (value == "rand")
+        {
+            return GetRandomColor(Color.White, SadConsole.GameHost.Instance.Random);
+        }
         else
         {
             value = value.ToLowerInvariant();
