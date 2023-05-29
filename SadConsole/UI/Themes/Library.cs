@@ -95,6 +95,7 @@ public class Library
         SetControlTheme(typeof(SelectionButton), typeof(ButtonTheme));
         SetControlTheme(typeof(SurfaceViewer), typeof(SurfaceViewerTheme));
         SetControlTheme(typeof(TextBox), typeof(TextBoxTheme));
+        SetControlTheme(typeof(Table), typeof(TableTheme));
     }
 
     /// <summary>
