@@ -66,8 +66,8 @@ public class TableTheme : ThemeBase
 
         int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
         int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
-        HashSet<int> allRowIndexesWithContent = table.GetIndexesWithContent(Cells.Layout.LayoutType.Row);
-        HashSet<int> allColumnIndexesWithContent = table.GetIndexesWithContent(Cells.Layout.LayoutType.Column);
+        HashSet<int> allRowIndexesWithContent = table.GetIndexesWithContent(Table.TableCells.Layout.LayoutType.Row);
+        HashSet<int> allColumnIndexesWithContent = table.GetIndexesWithContent(Table.TableCells.Layout.LayoutType.Column);
 
         if (table.DrawFakeCells && maxColumnsWidth < table.Width)
             maxColumnsWidth = table.Width;
@@ -77,7 +77,7 @@ public class TableTheme : ThemeBase
         SetScrollBarVisibility(table, maxRowsHeight, maxColumnsWidth);
 
         int rows = 0;
-        int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Cells.Layout.LayoutType.Row, out _);
+        int rowIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderYPos, Table.TableCells.Layout.LayoutType.Row, out _);
         int rowIndex = table.IsVerticalScrollBarVisible ? rowIndexPos : 0;
         bool offScreenY = false;
         List<((int x, int y), (int row, int col))>? fakeCells = table.DrawFakeCells ? new() : null;
@@ -89,9 +89,9 @@ public class TableTheme : ThemeBase
             int columns = 0;
 
             // Check if entire row is !IsVisible, then skip this row index entirely
-            var entireRowNotVisible = table.IsEntireRowOrColumnNotVisible(rowIndex, Cells.Layout.LayoutType.Row);
+            var entireRowNotVisible = table.IsEntireRowOrColumnNotVisible(rowIndex, Table.TableCells.Layout.LayoutType.Row);
 
-            int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Cells.Layout.LayoutType.Column, out _);
+            int colIndexPos = table.Cells.GetIndexAtCellPosition(table.StartRenderXPos, Table.TableCells.Layout.LayoutType.Column, out _);
             int colIndex = table.IsHorizontalScrollBarVisible ? colIndexPos : 0;
             int fullRowSize = 0;
 
@@ -121,7 +121,7 @@ public class TableTheme : ThemeBase
 
                 // Check if entire column is !IsVisible, then skip this column index entirely
                 bool entireRowOrColumnNotVisible = entireRowNotVisible ||
-                    table.IsEntireRowOrColumnNotVisible(colIndex, Cells.Layout.LayoutType.Column);
+                    table.IsEntireRowOrColumnNotVisible(colIndex, Table.TableCells.Layout.LayoutType.Column);
                 if (!headerRow && entireRowOrColumnNotVisible)
                 {
                     colIndex++;
@@ -266,38 +266,38 @@ public class TableTheme : ThemeBase
 
         if ((!cell.IsSettingsInitialized || cell.Settings.Selectable) && table.SelectedCell != null)
         {
-            Cells.Layout.Mode selectionMode = !cell.IsSettingsInitialized ? table.DefaultSelectionMode : cell.Settings.SelectionMode;
+            Table.TableCells.Layout.Mode selectionMode = !cell.IsSettingsInitialized ? table.DefaultSelectionMode : cell.Settings.SelectionMode;
             switch (selectionMode)
             {
-                case Cells.Layout.Mode.Single:
+                case Table.TableCells.Layout.Mode.Single:
                     if (cell._row != table.SelectedCell._row ||
                         cell._column != table.SelectedCell._column) break;
                     return ControlThemeState.Selected;
-                case Cells.Layout.Mode.EntireRow:
+                case Table.TableCells.Layout.Mode.EntireRow:
                     if (cell._row != table.SelectedCell._row) break;
                     return ControlThemeState.Selected;
-                case Cells.Layout.Mode.EntireColumn:
+                case Table.TableCells.Layout.Mode.EntireColumn:
                     if (cell._column != table.SelectedCell._column) break;
                     return ControlThemeState.Selected;
-                case Cells.Layout.Mode.None:
+                case Table.TableCells.Layout.Mode.None:
                     break;
             }
         }
 
-        Cells.Layout.Mode hoverMode = !cell.IsSettingsInitialized ? table.DefaultHoverMode : cell.Settings.HoverMode;
+        Table.TableCells.Layout.Mode hoverMode = !cell.IsSettingsInitialized ? table.DefaultHoverMode : cell.Settings.HoverMode;
         switch (hoverMode)
         {
-            case Cells.Layout.Mode.Single:
+            case Table.TableCells.Layout.Mode.Single:
                 if (table.CurrentMouseCell == null || cell._row != table.CurrentMouseCell._row ||
                         cell._column != table.CurrentMouseCell._column) break;
                 return ControlThemeState.MouseOver;
-            case Cells.Layout.Mode.EntireRow:
+            case Table.TableCells.Layout.Mode.EntireRow:
                 if (table.CurrentMouseCell == null || table.CurrentMouseCell._row != cell._row) break;
                 return ControlThemeState.MouseOver;
-            case Cells.Layout.Mode.EntireColumn:
+            case Table.TableCells.Layout.Mode.EntireColumn:
                 if (table.CurrentMouseCell == null || table.CurrentMouseCell._column != cell._column) break;
                 return ControlThemeState.MouseOver;
-            case Cells.Layout.Mode.None:
+            case Table.TableCells.Layout.Mode.None:
                 break;
         }
         return null;
@@ -305,8 +305,8 @@ public class TableTheme : ThemeBase
 
     private static void AdjustControlSurface(Table table, Table.Cell cell, ColoredGlyph? customStateAppearance, bool adjustVisibility)
     {
-        int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-        int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+        int width = table.Cells.GetSizeOrDefault(cell.Column, Table.TableCells.Layout.LayoutType.Column);
+        int height = table.Cells.GetSizeOrDefault(cell.Row, Table.TableCells.Layout.LayoutType.Row);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -324,8 +324,8 @@ public class TableTheme : ThemeBase
 
     private static void HideVisualCell(Table table, int column, int row, Point position)
     {
-        int width = table.Cells.GetSizeOrDefault(column, Cells.Layout.LayoutType.Column);
-        int height = table.Cells.GetSizeOrDefault(row, Cells.Layout.LayoutType.Row);
+        int width = table.Cells.GetSizeOrDefault(column, Table.TableCells.Layout.LayoutType.Column);
+        int height = table.Cells.GetSizeOrDefault(row, Table.TableCells.Layout.LayoutType.Row);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -348,8 +348,8 @@ public class TableTheme : ThemeBase
     {
         if (string.IsNullOrWhiteSpace(cell.StringValue) || !cell.IsVisible) return;
 
-        int width = table.Cells.GetSizeOrDefault(cell.Column, Cells.Layout.LayoutType.Column);
-        int height = table.Cells.GetSizeOrDefault(cell.Row, Cells.Layout.LayoutType.Row);
+        int width = table.Cells.GetSizeOrDefault(cell.Column, Table.TableCells.Layout.LayoutType.Column);
+        int height = table.Cells.GetSizeOrDefault(cell.Row, Table.TableCells.Layout.LayoutType.Row);
 
         // Handle alignments
         Table.Cell.Options.VerticalAlign vAlign = cell.IsSettingsInitialized ? cell.Settings.VerticalAlignment : default;

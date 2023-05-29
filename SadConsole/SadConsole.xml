@@ -2277,7 +2277,7 @@
         </member>
         <member name="P:SadConsole.Effects.Blink.BlinkSpeed">
             <summary>
-            In seconds, how fast the fade in and fade out each are
+            How long it takes to transition from blinking in and out.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.Blink.UseCellBackgroundColor">
@@ -2287,7 +2287,7 @@
         </member>
         <member name="P:SadConsole.Effects.Blink.BlinkOutColor">
             <summary>
-            The color to fade out to.
+            The color the foreground blinks to.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.Blink.BlinkCount">
@@ -2367,6 +2367,63 @@
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Effects.Blinker">
+            <summary>
+            Blinks the foreground and background colors of a cell with the specified colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.BlinkSpeed">
+            <summary>
+            How long it takes to transition from blinking in and out.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.BlinkOutForegroundColor">
+            <summary>
+            The color the foreground blinks to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.BlinkOutBackgroundColor">
+            <summary>
+            The color the background blinks to.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.SwapColorsFromCell">
+            <summary>
+            When <see langword="true"/>, ignores the <see cref="P:SadConsole.Effects.Blinker.BlinkOutBackgroundColor"/> and <see cref="P:SadConsole.Effects.Blinker.BlinkOutForegroundColor"/> colors and instead swaps the glyph's foreground and background colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.BlinkCount">
+            <summary>
+            How many times to blink. The value of -1 represents forever.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.Blinker.Duration">
+            <summary>
+            The total duraction this effect will run for, before being flagged as finished. <see cref="F:System.TimeSpan.MaxValue"/> represents forever.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.#ctor">
+            <summary>
+            Creates a new instance of the blink effect.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.Update(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.Restart">
+            <summary>
+            Restarts the cell effect but does not reset it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Blinker.ToString">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Effects.CellEffectBase">
@@ -10940,7 +10997,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
             <summary>
-            Gets or sets the parent console of this control.
+            Gets or sets the parent container of this control.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Theme">
@@ -10997,6 +11054,11 @@
         <member name="M:SadConsole.UI.Controls.ControlBase.OnThemeChanged">
             <summary>
             Called when the <see cref="P:SadConsole.UI.Controls.ControlBase.Theme"/> changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnIsDirtyChanged">
+            <summary>
+            Called when the <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> property changes value.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
@@ -11501,19 +11563,13 @@
             A control container that processes the mouse on each child. <see cref="P:SadConsole.UI.Controls.ControlBase.TabStop"/> defaults to <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Panel.Controls">
-            <summary>
-            The controls this panel contains.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Panel.Count">
-            <inheritdoc/>
-        </member>
         <member name="P:SadConsole.UI.Controls.Panel.Item(System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Panel.Host">
-            <inheritdoc/>
+            <summary>
+            Gets or sets a control in the collection of controls.
+            </summary>
+            <param name="index">The index of the control.</param>
+            <returns>The control at the specified index.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">Thrown when the index doesn't exist in the collection.</exception>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.#ctor(System.Int32,System.Int32)">
             <summary>
@@ -11562,14 +11618,16 @@
         <member name="M:SadConsole.UI.Controls.Panel.Update(System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.UI.Controls.Panel.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
-            <inheritdoc/>
-        </member>
         <member name="M:SadConsole.UI.Controls.Panel.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.OnIsDirtyChanged">
+            <summary>
+            When <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> is set to <see langword="true"/>, changes the child controls to also be dirty.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.GetEnumerator">
             <summary>
@@ -11921,6 +11979,218 @@
             A scrollable table control.
             </summary>
         </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell">
+            <summary>
+            A basic cell used in the Table control
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Position">
+            <summary>
+            Contains the real position value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell._row">
+            <summary>
+            Contains the real row value and column value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell._column">
+            <summary>
+            Contains the real row value and column value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Row">
+            <summary>
+            The row this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Column">
+            <summary>
+            The column this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Height">
+            <summary>
+            The height of the row this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Width">
+            <summary>
+            The width of the column this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Foreground">
+            <summary>
+            The foreground color used by the cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Background">
+            <summary>
+            The background color used by the cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.StringValue">
+            <summary>
+            The text shown within the cell, empty string when no value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Value">
+            <summary>
+            The value of the cell, .ToString() method is shown as the text result within the cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.IsVisible">
+            <summary>
+            Set to false if the cell should not be rendered within the table (default IsVisible sadconsole behaviour),
+            If an entire row or column IsVislbe is set to false in the layout, it will skip this row/column entirely (differs from default behaviour)
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Settings">
+            <summary>
+            The setting options used by the cell to define its layout
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Equality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Inequality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.CopyAppearanceFrom(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Copies the appearance of the cell passed to this method, onto the this cell.
+            </summary>
+            <param name="cell"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.SetFieldValue``1(SadConsole.UI.Controls.Table.Cell,``0,``0@,``0,System.Boolean)">
+            <summary>
+            Helper to set the underlying field value with some checks.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="cell"></param>
+            <param name="previousValue"></param>
+            <param name="field"></param>
+            <param name="newValue"></param>
+            <param name="usedForLayout"></param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options">
+            <summary>
+            A collection of settings that are used by <see cref="T:SadConsole.UI.Controls.Table.Cell"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlignment">
+            <summary>
+            The horizontal text alignment setting; Default: left
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlignment">
+            <summary>
+            The vertical text alignment setting; Default: left
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.UseFakeLayout">
+            <summary>
+            Defines if the cell should also trigger the fake layout event if the option is enabled on the table; Default: false
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.MaxCharactersPerLine">
+            <summary>
+            The maximum characters this cell can show per line; Default: cell width
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Interactable">
+            <summary>
+            Defines if the cell can interact with mouse events; Default: true
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Selectable">
+            <summary>
+            Defines if the cell can be selected by the mouse; Default: true
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.SelectionMode">
+            <summary>
+            Defines the selection visual mode when the cell is selected; Default: single
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HoverMode">
+            <summary>
+            Defines the hover visual mode when the cell is hovered over by the mouse; Default: single
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.#ctor(SadConsole.UI.Controls.Table)">
+            <summary>
+            Creates new options based on the default values of the table
+            </summary>
+            <param name="table"></param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign">
+            <summary>
+            Alignment enum for the horizontal axis
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Left">
+            <summary>
+            Text will be aligned to the left side of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Center">
+            <summary>
+            Text will be aligned within the center of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Right">
+            <summary>
+            Text will be aligned to the right side of the cell
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign">
+            <summary>
+            Alignment enum for the vertical axis
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Top">
+            <summary>
+            Text will be aligned to the top of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Center">
+            <summary>
+            Text will be aligned in the center of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Bottom">
+            <summary>
+            Text will be aligned to the bottom of the cell
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Equality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Inequality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.GetHashCode">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.UI.Controls.Table.Cells">
             <summary>
             The cells collection used to modify the table cells
@@ -12027,6 +12297,16 @@
             Returns true if the horizontal scroll bar is currently visible.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.Table.VerticalScrollBarMaximum">
+            <summary>
+            The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.HorizontalScrollBarMaximum">
+            <summary>
+            The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.Table.AutoScrollOnCellSelection">
             <summary>
             By default the table will automatically scroll to the selected cell if possible.
@@ -12094,6 +12374,12 @@
             <param name="size"></param>
             <param name="position">The position of the scrollbar.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.Table.ShowHideScrollBar(SadConsole.UI.Controls.ScrollBar)">
+            <summary>
+            Shows the scroll bar when there are too many items to display; otherwise, hides it.
+            </summary>
+            <param name="scrollBar"></param>
+        </member>
         <member name="M:SadConsole.UI.Controls.Table.ScrollToSelectedItem">
             <summary>
             Scrolls the list to the item currently selected.
@@ -12149,205 +12435,17 @@
             The original cell before the event was triggered
             </summary>
         </member>
-        <member name="T:SadConsole.UI.Controls.Table.Cell">
-            <summary>
-            A basic cell used in the Table control
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Row">
-            <summary>
-            The row this cell is part of
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Column">
-            <summary>
-            The column this cell is part of
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Height">
-            <summary>
-            The height of the row this cell is part of
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Width">
-            <summary>
-            The width of the column this cell is part of
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Foreground">
-            <summary>
-            The foreground color used by the cell
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Background">
-            <summary>
-            The background color used by the cell
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.StringValue">
-            <summary>
-            The text shown within the cell, empty string when no value.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Value">
-            <summary>
-            The value of the cell, .ToString() method is shown as the text result within the cell.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Settings">
-            <summary>
-            The setting options used by the cell to define its layout
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Equality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Inequality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(SadConsole.UI.Controls.Table.Cell)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(System.Object)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.GetHashCode">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.CopyAppearanceFrom(SadConsole.UI.Controls.Table.Cell)">
-            <summary>
-            Copies the appearance of the cell passed to this method, onto the this cell.
-            </summary>
-            <param name="cell"></param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.SetFieldValue``1(SadConsole.UI.Controls.Table.Cell,``0,``0@,``0,System.Boolean)">
-            <summary>
-            Helper to set the underlying field value with some checks.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="cell"></param>
-            <param name="previousValue"></param>
-            <param name="field"></param>
-            <param name="newValue"></param>
-            <param name="usedForLayout"></param>
-        </member>
-        <member name="T:SadConsole.UI.Controls.Table.Cell.Options">
-            <summary>
-            A collection of settings that are used by <see cref="T:SadConsole.UI.Controls.Table.Cell"/>
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlignment">
-            <summary>
-            The horizontal text alignment setting; Default: left
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlignment">
-            <summary>
-            The vertical text alignment setting; Default: left
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.UseFakeLayout">
-            <summary>
-            Defines if the cell should also trigger the fake layout event if the option is enabled on the table; Default: false
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.MaxCharactersPerLine">
-            <summary>
-            The maximum characters this cell can show per line; Default: cell width
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Interactable">
-            <summary>
-            Defines if the cell can interact with mouse events; Default: true
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Selectable">
-            <summary>
-            Defines if the cell can be selected by the mouse; Default: true
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.IsVisible">
-            <summary>
-            Defines if the cell should be rendered to the surface; Default: true
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.SelectionMode">
-            <summary>
-            Defines the selection visual mode when the cell is selected; Default: single
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HoverMode">
-            <summary>
-            Defines the hover visual mode when the cell is hovered over by the mouse; Default: single
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.#ctor(SadConsole.UI.Controls.Table)">
-            <summary>
-            Creates new options based on the default values of the table
-            </summary>
-            <param name="table"></param>
-        </member>
-        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign">
-            <summary>
-            Alignment enum for the horizontal axis
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Left">
-            <summary>
-            Text will be aligned to the left side of the cell
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Center">
-            <summary>
-            Text will be aligned within the center of the cell
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Right">
-            <summary>
-            Text will be aligned to the right side of the cell
-            </summary>
-        </member>
-        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign">
-            <summary>
-            Alignment enum for the vertical axis
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Top">
-            <summary>
-            Text will be aligned to the top of the cell
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Center">
-            <summary>
-            Text will be aligned in the center of the cell
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Bottom">
-            <summary>
-            Text will be aligned to the bottom of the cell
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Equality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Inequality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(SadConsole.UI.Controls.Table.Cell.Options)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(System.Object)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.GetHashCode">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.UI.Controls.Cells">
+        <member name="T:SadConsole.UI.Controls.Table.TableCells">
             <summary>
             A collection class that contains all the cells of the <see cref="T:SadConsole.UI.Controls.Table"/> and methods to modify them.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Item(System.Int32,System.Int32)">
+        <member name="F:SadConsole.UI.Controls.Table.TableCells._hiddenIndexes">
+            <summary>
+            Contains all rows and columns that aren't rendered
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Item(System.Int32,System.Int32)">
             <summary>
             Gets or creates a new cell on the specified row and column
             </summary>
@@ -12355,36 +12453,55 @@
             <param name="col"></param>
             <returns></returns>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.MaxRow">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.MaxRow">
             <summary>
             The maximum row in the table.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.MaxColumn">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.MaxColumn">
             <summary>
             The maximum column in the table.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Count">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.HeaderRow">
+            <summary>
+            True if row 0 should be the header of the table, and remain at the top when vertical scrolling.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Count">
             <summary>
             The amount of cells currently in the table.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Column(System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Row(System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility of the entire row
+            </summary>
+            <param name="row"></param>
+            <param name="visible"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Column(System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility of the entire column
+            </summary>
+            <param name="column"></param>
+            <param name="visible"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Column(System.Int32)">
             <summary>
             Get the layout for the given column
             </summary>
             <param name="column"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Row(System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Row(System.Int32)">
             <summary>
             Get the layout for the given row
             </summary>
             <param name="row"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.GetCell(System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetCell(System.Int32,System.Int32)">
             <summary>
             Gets the cell at the given row and col
             </summary>
@@ -12392,32 +12509,38 @@
             <param name="col"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Select(System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Select(System.Int32,System.Int32)">
             <summary>
             Sets the specified cell as the selected cell if it exists.
             </summary>
             <param name="row"></param>
             <param name="column"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Deselect">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Deselect">
             <summary>
             Deselects the current selected cell.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Remove(System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Remove(System.Int32,System.Int32)">
             <summary>
             Removes a cell from the table.
             </summary>
             <param name="row"></param>
             <param name="column"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Clear(System.Boolean)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Clear(System.Boolean)">
             <summary>
             Resets all the cells data
             </summary>
             <param name="clearLayoutOptions"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.GetCellPosition(System.Int32,System.Int32,System.Int32@,System.Int32@,System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.ClearContent(System.Boolean)">
+            <summary>
+            Removes all rows and columns except the header if applicable
+            </summary>
+            <param name="clearLayoutOptionsForContent"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetCellPosition(System.Int32,System.Int32,System.Int32@,System.Int32@,System.Int32,System.Int32)">
             <summary>
             Get's the cell position on the control based on the row and column
             </summary>
@@ -12429,46 +12552,51 @@
             <param name="horizontalScrollbarValue"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.GetSizeOrDefault(System.Int32,SadConsole.UI.Controls.Cells.Layout.LayoutType)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetSizeOrDefault(System.Int32,SadConsole.UI.Controls.Table.TableCells.Layout.LayoutType)">
             <summary>
             Get the size of the column or row or the default if no layout exists, without allocating a new layout object.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.GetEnumerator">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetEnumerator">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.UI.Controls.Cells.Layout">
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout">
             <summary>
             Defines the layout for a row or a column defined in <see cref="P:SadConsole.UI.Controls.Table.Cells"/>
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Layout.Size">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Size">
             <summary>
             The size of the row or column
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Layout.Foreground">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Foreground">
             <summary>
             The foreground color used by the row or column
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Layout.Background">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Background">
             <summary>
             The background color used by the row or column
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Layout.Settings">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Settings">
             <summary>
             The setting options used by the row or column
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.Cells.Layout.HasCustomSettings">
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.HasCustomSettings">
             <summary>
             True if the Settings property has been accessed before.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Layout.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.Remove">
+            <summary>
+            Removes this entire layout from the table.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
             <summary>
             Set a default layout to be used for each new cell
             </summary>
@@ -12477,7 +12605,7 @@
             <param name="background"></param>
             <param name="settings"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Layout.SetLayoutInternal(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.SetLayoutInternal(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
             <summary>
             Sets the layout without adjusting cells or setting the table dirty
             </summary>
@@ -12486,37 +12614,37 @@
             <param name="background"></param>
             <param name="settings"></param>
         </member>
-        <member name="T:SadConsole.UI.Controls.Cells.Layout.Mode">
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout.Mode">
             <summary>
             Defines several visual modes
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.Cells.Layout.Mode.Single">
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.Single">
             <summary>
             Only a single cell will be visualized
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.Cells.Layout.Mode.None">
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.None">
             <summary>
             Nothing will be visualized
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.Cells.Layout.Mode.EntireRow">
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.EntireRow">
             <summary>
             The entire row of the cell will be visualized
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.Cells.Layout.Mode.EntireColumn">
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.EntireColumn">
             <summary>
             The entire column of the cell will be visualized
             </summary>
         </member>
-        <member name="T:SadConsole.UI.Controls.Cells.Layout.RangeEnumerable">
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable">
             <summary>
             An enumerable range that contains the layouts of all the rows and columns defined by the size of the range method within <see cref="P:SadConsole.UI.Controls.Table.Cells"/>
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Layout.RangeEnumerable.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
             <summary>
             Sets the layout of all the columns and rows for the given params
             </summary>
@@ -12525,7 +12653,7 @@
             <param name="background"></param>
             <param name="settings"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Cells.Layout.RangeEnumerable.GetEnumerator">
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable.GetEnumerator">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.TableExtensions">
@@ -12533,7 +12661,7 @@
             Extensions used for the <see cref="T:SadConsole.UI.Controls.Table"/>
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.TableExtensions.Range(SadConsole.UI.Controls.Cells,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Range(SadConsole.UI.Controls.Table.TableCells,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Returns a range of cells that fits the given parameter values.
             </summary>
@@ -12581,7 +12709,7 @@
             </summary>
             <param name="cell"></param>
         </member>
-        <member name="M:SadConsole.UI.Controls.TableExtensions.Column(SadConsole.UI.Controls.Cells,System.Int32[])">
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Column(SadConsole.UI.Controls.Table.TableCells,System.Int32[])">
             <summary>
             Get the layout for the given columns.
             </summary>
@@ -12589,7 +12717,7 @@
             <param name="columns"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.UI.Controls.TableExtensions.Row(SadConsole.UI.Controls.Cells,System.Int32[])">
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Row(SadConsole.UI.Controls.Table.TableCells,System.Int32[])">
             <summary>
             Get the layout for the given rows.
             </summary>
@@ -13209,9 +13337,24 @@
             When true, ignores all states and doesn't draw anything.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.DrawBorder">
+            <summary>
+            When <see langword="true"/>, indicates that the theme should draw along the inner bounds of the panel.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.UseExtendedBorderGlyphs">
+            <summary>
+            When <see langword="true"/>, indicates that the lines of the theme should use the extended SadConsole font characters if available.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Themes.PanelTheme.UseInsetBorder">
+            <summary>
+            When <see langword="true"/>, indicates that the border colors should make it appear like the border is inset.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Themes.PanelTheme.Appearance">
             <summary>
-            The current appearance based on the control state.
+            The current Appearance based on the control state.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.PanelTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
@@ -13373,13 +13516,6 @@
         </member>
         <member name="M:SadConsole.UI.Themes.TableTheme.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
             <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.TableTheme.ShowHideScrollBar(SadConsole.UI.Controls.Table,SadConsole.UI.Controls.ScrollBar)">
-            <summary>
-            Shows the scroll bar when there are too many items to display; otherwise, hides it.
-            </summary>
-            <param name="table">Reference to the listbox being processed.</param>
-            <param name="scrollBar"></param>
         </member>
         <member name="M:SadConsole.UI.Themes.TableTheme.WordWrap(System.String,System.Int32)">
             <summary>
