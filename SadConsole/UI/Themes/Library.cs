@@ -81,20 +81,20 @@ public class Library
     /// </summary>
     public void ApplyDefaults()
     {
-        SetControlTheme(typeof(Button), typeof(ButtonTheme));
-        SetControlTheme(typeof(CheckBox), typeof(CheckBoxTheme));
-        SetControlTheme(typeof(ComboBox), typeof(ComboBoxTheme));
-        SetControlTheme(typeof(DrawingArea), typeof(DrawingAreaTheme));
-        SetControlTheme(typeof(ScrollBar), typeof(ScrollBarTheme));
-        SetControlTheme(typeof(Label), typeof(LabelTheme));
-        SetControlTheme(typeof(ListBox), typeof(ListBoxTheme));
-        SetControlTheme(typeof(NumberBox), typeof(TextBoxTheme));
-        SetControlTheme(typeof(Panel), typeof(PanelTheme));
-        SetControlTheme(typeof(ProgressBar), typeof(ProgressBarTheme));
-        SetControlTheme(typeof(RadioButton), typeof(RadioButtonTheme));
-        SetControlTheme(typeof(SelectionButton), typeof(ButtonTheme));
-        SetControlTheme(typeof(SurfaceViewer), typeof(SurfaceViewerTheme));
-        SetControlTheme(typeof(TextBox), typeof(TextBoxTheme));
+        SetControlTheme<Button, ButtonTheme>();
+        SetControlTheme<CheckBox, CheckBoxTheme>();
+        SetControlTheme<ComboBox, ComboBoxTheme>();
+        SetControlTheme<DrawingArea, DrawingAreaTheme>();
+        SetControlTheme<ScrollBar, ScrollBarTheme>();
+        SetControlTheme<Label, LabelTheme>();
+        SetControlTheme<ListBox, ListBoxTheme>();
+        SetControlTheme<NumberBox, TextBoxTheme>();
+        SetControlTheme<Panel, PanelTheme>();
+        SetControlTheme<ProgressBar, ProgressBarTheme>();
+        SetControlTheme<RadioButton, RadioButtonTheme>();
+        SetControlTheme<SelectionButton, ButtonTheme>();
+        SetControlTheme<SurfaceViewer, SurfaceViewerTheme>();
+        SetControlTheme<TextBox, TextBoxTheme>();
         SetControlTheme(typeof(Table), typeof(TableTheme));
     }
 
@@ -124,6 +124,23 @@ public class Library
     }
 
     /// <summary>
+    /// Creates and returns a theme based on the type of control provided.
+    /// </summary>
+    /// <typeparam name="TControl">The control type to get a theme of.</typeparam>
+    /// <returns>A theme.</returns>
+    public ThemeBase GetControlTheme<TControl>() =>
+        GetControlTheme(typeof(TControl));
+
+    /// <summary>
+    /// Creates and returns a theme based on the type of control provided.
+    /// </summary>
+    /// <typeparam name="TControl">The control type to get a theme of.</typeparam>
+    /// <typeparam name="TTheme">The expected theme type.</typeparam>
+    /// <returns>A theme.</returns>
+    public TTheme GetControlTheme<TControl, TTheme>() where TTheme : ThemeBase =>
+        (TTheme)GetControlTheme(typeof(TControl));
+
+    /// <summary>
     /// Sets a control theme based on the control type.
     /// </summary>
     /// <param name="control">The control type to register a theme.</param>
@@ -134,6 +151,14 @@ public class Library
         if (null == control) throw new ArgumentNullException(nameof(control), "Cannot use a null control type");
         _controlThemes[control] = theme ?? throw new ArgumentNullException(nameof(theme), "Cannot set the theme of a control to null");
     }
+
+    /// <summary>
+    /// Sets a control theme based on the control type.
+    /// </summary>
+    /// <typeparam name="TControl">The control type to register a theme.</typeparam>
+    /// <typeparam name="TTheme">The theme to associate with the control</typeparam>
+    public void SetControlTheme<TControl, TTheme>() =>
+        SetControlTheme(typeof(TControl), typeof(TTheme));
 
     /// <summary>
     /// Copies the colors from the specified <see cref="SadConsole.UI.Colors"/> object to <see cref="Colors"/> property.
