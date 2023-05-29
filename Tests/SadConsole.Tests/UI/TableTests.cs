@@ -120,7 +120,7 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Cells_Layout_Settings_SetCorrectly()
     {
-        Cells.Layout layout = Table.Cells.Row(0);
+        Table.TableCells.Layout layout = Table.Cells.Row(0);
         layout.Settings.Selectable = false;
         Assert.AreEqual(Table.Cells[0, 0].Settings.Selectable, false);
     }
@@ -128,9 +128,9 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Cells_Layout_GetMultiple_Correct()
     {
-        Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
+        Table.TableCells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
         Assert.AreEqual(rowLayouts.Count(), 3);
-        Cells.Layout.RangeEnumerable columnLayouts = Table.Cells.Column(0, 1, 2);
+        Table.TableCells.Layout.RangeEnumerable columnLayouts = Table.Cells.Column(0, 1, 2);
         Assert.AreEqual(columnLayouts.Count(), 3);
     }
 
@@ -141,9 +141,9 @@ public class TableTests : TableTestsBase
         {
             Interactable = false
         };
-        Cells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
+        Table.TableCells.Layout.RangeEnumerable rowLayouts = Table.Cells.Row(0, 1, 2);
         rowLayouts.SetLayout(3, Color.White, Color.Orange, settings);
-        foreach (Cells.Layout layout in rowLayouts)
+        foreach (Table.TableCells.Layout layout in rowLayouts)
         {
             Assert.AreEqual(layout.Size, 3);
             Assert.AreEqual(layout.Foreground, Color.White);
@@ -166,9 +166,9 @@ public class TableTests : TableTestsBase
     [TestMethod]
     public void Can_Enumerate_LayoutRange()
     {
-        Cells.Layout.RangeEnumerable layouts = Table.Cells.Row(0, 1);
+        Table.TableCells.Layout.RangeEnumerable layouts = Table.Cells.Row(0, 1);
         int count = 0;
-        foreach (Cells.Layout layout in layouts)
+        foreach (Table.TableCells.Layout layout in layouts)
             count++;
         Assert.AreEqual(count, 2);
     }
@@ -597,9 +597,9 @@ public abstract class TableTestsBase
 
     protected static int GetLastVisibleCellSize(Table table, Orientation orientation, bool increment)
     {
-        Cells.Layout.LayoutType type = orientation == Orientation.Vertical ?
-            Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
-        bool isRowType = type == Cells.Layout.LayoutType.Row;
+        Table.TableCells.Layout.LayoutType type = orientation == Orientation.Vertical ?
+            Table.TableCells.Layout.LayoutType.Row : Table.TableCells.Layout.LayoutType.Column;
+        bool isRowType = type == Table.TableCells.Layout.LayoutType.Row;
         System.Collections.Generic.IEnumerable<IGrouping<int, Table.Cell>> cellGroups = table.Cells.GroupBy(a => isRowType ? a.Row : a.Column);
         IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
             cellGroups.OrderByDescending(a => a.Key);
@@ -646,7 +646,7 @@ public abstract class TableTestsBase
                 return increment ? size : -size;
             }
         }
-        int defaultSize = type == Cells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
+        int defaultSize = type == Table.TableCells.Layout.LayoutType.Row ? table.DefaultCellSize.Y : table.DefaultCellSize.X;
         return increment ? defaultSize : -defaultSize;
     }
 
@@ -656,7 +656,7 @@ public abstract class TableTestsBase
             table.Cells.GroupBy(a => a.Row) : table.Cells.GroupBy(a => a.Column);
         IOrderedEnumerable<IGrouping<int, Table.Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
 
-        Cells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Cells.Layout.LayoutType.Row : Cells.Layout.LayoutType.Column;
+        Table.TableCells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? Table.TableCells.Layout.LayoutType.Row : Table.TableCells.Layout.LayoutType.Column;
         int maxSize = orientation == Orientation.Vertical ? table.Height : table.Width;
         int totalSize = 0;
         int items = 0;

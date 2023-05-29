@@ -12053,6 +12053,11 @@
             The setting options used by the cell to define its layout
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.InternalCreate(System.Int32,System.Int32,SadConsole.UI.Controls.Table,System.Object,System.Boolean)">
+            <summary>
+            Internal use only. This is used by the table and the theme to create new cell instances.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.Table.Cell.op_Equality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
             <inheritdoc/>
         </member>
@@ -13187,6 +13192,21 @@
             <param name="control">The control type.</param>
             <returns>A theme that is associated with the control.</returns>
         </member>
+        <member name="M:SadConsole.UI.Themes.Library.GetControlTheme``1">
+            <summary>
+            Creates and returns a theme based on the type of control provided.
+            </summary>
+            <typeparam name="TControl">The control type to get a theme of.</typeparam>
+            <returns>A theme.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.GetControlTheme``2">
+            <summary>
+            Creates and returns a theme based on the type of control provided.
+            </summary>
+            <typeparam name="TControl">The control type to get a theme of.</typeparam>
+            <typeparam name="TTheme">The expected theme type.</typeparam>
+            <returns>A theme.</returns>
+        </member>
         <member name="M:SadConsole.UI.Themes.Library.SetControlTheme(System.Type,System.Type)">
             <summary>
             Sets a control theme based on the control type.
@@ -13194,6 +13214,13 @@
             <param name="control">The control type to register a theme.</param>
             <param name="theme">The theme to associate with the control.</param>
             <returns>A theme that is associated with the control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Themes.Library.SetControlTheme``2">
+            <summary>
+            Sets a control theme based on the control type.
+            </summary>
+            <typeparam name="TControl">The control type to register a theme.</typeparam>
+            <typeparam name="TTheme">The theme to associate with the control</typeparam>
         </member>
         <member name="M:SadConsole.UI.Themes.Library.SetColors(SadConsole.UI.Colors)">
             <summary>
@@ -13494,7 +13521,7 @@
         </member>
         <member name="T:SadConsole.UI.Themes.TableTheme">
             <summary>
-            The theme for a Table control.
+            The theme for a <see cref="T:SadConsole.UI.Controls.Table"/> control.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Themes.TableTheme.ScrollBarTheme">
@@ -13504,9 +13531,14 @@
         </member>
         <member name="M:SadConsole.UI.Themes.TableTheme.#ctor(SadConsole.UI.Themes.ScrollBarTheme)">
             <summary>
-            Creates a new theme used by the <see cref="T:SadConsole.UI.Controls.Table"/>.
+            Creates an instance of this class with the specified scroll bar theme.
             </summary>
-            <param name="scrollBarTheme"></param>
+            <param name="scrollBarTheme">The theme to use with the scroll bar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Themes.TableTheme.#ctor">
+            <summary>
+            Creates an instance of this class with the default scroll bar theme.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Themes.TableTheme.Attached(SadConsole.UI.Controls.ControlBase)">
             <inheritdoc/>

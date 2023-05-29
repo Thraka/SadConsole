@@ -11,6 +11,8 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public partial class Table : CompositeControl
 {
+    private bool _useMouse = true;
+
     /// <summary>
     /// The cells collection used to modify the table cells
     /// </summary>
@@ -41,7 +43,7 @@ public partial class Table : CompositeControl
     /// </summary>
     public TableCells.Layout.Mode DefaultSelectionMode { get; set; }
 
-    private bool _useMouse = true;
+
     /// <summary>
     /// When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
     /// </summary>
@@ -66,6 +68,7 @@ public partial class Table : CompositeControl
     public Cell? CurrentMouseCell { get; private set; }
 
     private Cell? _selectedCell;
+
     /// <summary>
     /// Returns the current selected cell
     /// </summary>
@@ -94,26 +97,32 @@ public partial class Table : CompositeControl
     /// Fires an event when a cell is entered by the mouse.
     /// </summary>
     public event EventHandler<CellEventArgs>? OnCellEnter;
+
     /// <summary>
     /// Fires an event when a cell is exited by the mouse.
     /// </summary>
     public event EventHandler<CellEventArgs>? OnCellExit;
+
     /// <summary>
     /// Fires an event when the selected cell has changed.
     /// </summary>
     public event EventHandler<CellChangedEventArgs>? SelectedCellChanged;
+
     /// <summary>
     /// Fires an event when a cell is left clicked.
     /// </summary>
     public event EventHandler<CellEventArgs>? OnCellLeftClick;
+
     /// <summary>
     /// Fires an event when a cell is right clicked.
     /// </summary>
     public event EventHandler<CellEventArgs>? OnCellRightClick;
+
     /// <summary>
     /// Fires an event when a cell is double clicked.
     /// </summary>
     public event EventHandler<CellEventArgs>? OnCellDoubleClick;
+
     /// <summary>
     /// Called when a fake cells is being drawn, you can use this to modify the cell layout.
     /// </summary>
@@ -123,6 +132,7 @@ public partial class Table : CompositeControl
     /// The vertical scrollbar, use the SetupScrollBar method with Vertical orientation to initialize it.
     /// </summary>
     public ScrollBar? VerticalScrollBar { get; private set; }
+
     /// <summary>
     /// The horizontal scrollbar, use the SetupScrollBar method with Horizontal orientation to initialize it.
     /// </summary>
@@ -180,14 +190,17 @@ public partial class Table : CompositeControl
     /// The total rows visible in the table.
     /// </summary>
     internal int VisibleRowsTotal { get; set; }
+
     /// <summary>
     /// The maximum amount of rows that can be shown in the table.
     /// </summary>
     internal int VisibleRowsMax { get; set; }
+
     /// <summary>
     /// The total columns visible in the table.
     /// </summary>
     internal int VisibleColumnsTotal { get; set; }
+
     /// <summary>
     /// The maximum amount of columns that can be shown in the table.
     /// </summary>
@@ -319,13 +332,26 @@ public partial class Table : CompositeControl
 
     internal HashSet<int> GetIndexesWithContent(TableCells.Layout.LayoutType indexType)
     {
-        return !Cells.Any() ? new HashSet<int>() :
-            Cells.Select(a => indexType == TableCells.Layout.LayoutType.Row ? a.Row : a.Column).ToHashSet();
+        if (Cells.Count == 0)
+            return new HashSet<int>();
+
+        HashSet<int> indexes = new HashSet<int>();
+
+        if (indexType == TableCells.Layout.LayoutType.Row)
+            foreach (Cell item in Cells)
+                indexes.Add(item.Row);
+        else
+            foreach (Cell item in Cells)
+                indexes.Add(item.Column);
+
+        return indexes;
     }
 
     internal int GetMaxRowsBasedOnRowSizes()
     {
-        return !Cells.Any() ? 0 : Cells
+        if (Cells.Count == 0) return 0;
+
+        return Cells
             .GroupBy(a => a.Row)
             .Select(a => Cells.GetSizeOrDefault(a.Key, TableCells.Layout.LayoutType.Row))
             .Sum();
@@ -333,7 +359,9 @@ public partial class Table : CompositeControl
 
     internal int GetMaxColumnsBasedOnColumnSizes()
     {
-        return !Cells.Any() ? 0 : Cells
+        if (Cells.Count == 0) return 0;
+
+        return Cells
             .GroupBy(a => a.Column)
             .Select(a => Cells.GetSizeOrDefault(a.Key, TableCells.Layout.LayoutType.Column))
             .Sum();
@@ -341,10 +369,10 @@ public partial class Table : CompositeControl
 
     private void UpdateScrollBarMaximum(Orientation orientation)
     {
-        var scrollBar = orientation == Orientation.Horizontal ? HorizontalScrollBar : VerticalScrollBar;
+        ScrollBar? scrollBar = orientation == Orientation.Horizontal ? HorizontalScrollBar : VerticalScrollBar;
         if (scrollBar != null)
         {
-            var scrollItems = GetScrollBarItems(orientation);
+            int scrollItems = GetScrollBarItems(orientation);
             scrollBar.Maximum = scrollItems < 0 ? 0 : scrollItems;
         }
     }
@@ -480,6 +508,7 @@ public partial class Table : CompositeControl
     /// The column the rendering should start at
     /// </summary>
     internal int StartRenderXPos { get; private set; }
+
     private void SetScrollAmount(Orientation orientation, bool increment)
     {
         int scrollPos = GetNextScrollPos(increment, orientation);
@@ -495,12 +524,19 @@ public partial class Table : CompositeControl
 
     internal int GetNextScrollPos(bool increment, Orientation orientation)
     {
-        TableCells.Layout.LayoutType type = orientation == Orientation.Vertical ?
-            TableCells.Layout.LayoutType.Row : TableCells.Layout.LayoutType.Column;
+        TableCells.Layout.LayoutType type =
+            orientation == Orientation.Vertical
+            ? TableCells.Layout.LayoutType.Row
+            : TableCells.Layout.LayoutType.Column;
+
         bool isRowType = type == TableCells.Layout.LayoutType.Row;
+
         IEnumerable<IGrouping<int, Cell>> cellGroups = Cells.GroupBy(a => isRowType ? a.Row : a.Column);
-        IOrderedEnumerable<IGrouping<int, Cell>> orderedCells = increment ? cellGroups.OrderBy(a => a.Key) :
-            cellGroups.OrderByDescending(a => a.Key);
+
+        IOrderedEnumerable<IGrouping<int, Cell>> orderedCells =
+            increment
+            ? cellGroups.OrderBy(a => a.Key)
+            : cellGroups.OrderByDescending(a => a.Key);
 
         foreach (IGrouping<int, Cell> group in orderedCells)
         {
@@ -524,14 +560,11 @@ public partial class Table : CompositeControl
                         // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                         // which means its not off screen
                         int realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+
                         if (realCellPosition > (isRowType ? Height : Width))
-                        {
                             partialOverlap = true;
-                        }
                         else
-                        {
                             break;
-                        }
                     }
                 }
 
@@ -554,6 +587,7 @@ public partial class Table : CompositeControl
         }
 
         int defaultCellSize = isRowType ? DefaultCellSize.Y : DefaultCellSize.X;
+
         return increment ? defaultCellSize : -defaultCellSize;
     }
 
@@ -594,17 +628,19 @@ public partial class Table : CompositeControl
             if (mousePosCellIndex != null)
             {
                 Cell? cell = Cells.GetIfExists(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, true);
+
                 if (cell == null && DrawFakeCells)
                 {
                     // A fake cell doesn't know if it should be selected if the row is hidden
-                    cell = new Cell(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, this, string.Empty)
-                    {
-                        Position = Cells.GetCellPosition(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, out _, out _,
-                            IsVerticalScrollBarVisible ? StartRenderYPos : 0, IsHorizontalScrollBarVisible ? StartRenderXPos : 0)
-                    };
+                    cell = Cell.InternalCreate(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, this, string.Empty);
+                    cell.Position = Cells.GetCellPosition(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, out _, out _,
+                                                IsVerticalScrollBarVisible ? StartRenderYPos : 0,
+                                                IsHorizontalScrollBarVisible ? StartRenderXPos : 0);
                 }
+
                 if (CurrentMouseCell != cell)
                     IsDirty = true;
+
                 CurrentMouseCell = cell;
 
                 if (CurrentMouseCell != null && CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
@@ -624,21 +660,26 @@ public partial class Table : CompositeControl
         if (state.OriginalMouseState.Mouse.ScrollWheelValueChange != 0)
         {
             ScrollBar? scrollBar = null;
+
             if (IsVerticalScrollBarVisible && !IsHorizontalScrollBarVisible)
                 scrollBar = VerticalScrollBar;
+
             else if (!IsVerticalScrollBarVisible && IsHorizontalScrollBarVisible)
                 scrollBar = HorizontalScrollBar;
+
             // If both scroll bars are not null, we only wanna scroll on the vertical scrollbar with the mousewheel
             else if (IsVerticalScrollBarVisible && IsHorizontalScrollBarVisible)
                 scrollBar = VerticalScrollBar;
 
             if (scrollBar != null)
             {
-                var prev = scrollBar.Value;
+                int prev = scrollBar.Value;
+
                 if (state.OriginalMouseState.Mouse.ScrollWheelValueChange < 0)
                     scrollBar.Value -= 1;
                 else
                     scrollBar.Value += 1;
+
                 if (prev != scrollBar.Value)
                     IsDirty = true;
             }
@@ -680,9 +721,7 @@ public partial class Table : CompositeControl
             }
         }
         else
-        {
             SelectedCell = null;
-        }
     }
 
     /// <inheritdoc/>
@@ -690,10 +729,8 @@ public partial class Table : CompositeControl
     {
         base.OnRightMouseClicked(state);
 
-        if (CurrentMouseCell != null && (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable)))
-        {
+        if (CurrentMouseCell != null && CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
             OnCellRightClick?.Invoke(this, new CellEventArgs(CurrentMouseCell));
-        }
     }
 
     /// <inheritdoc/>
@@ -705,6 +742,7 @@ public partial class Table : CompositeControl
         {
             if (CurrentMouseCell.IsVisible && (!CurrentMouseCell.IsSettingsInitialized || CurrentMouseCell.Settings.Interactable))
                 OnCellExit?.Invoke(this, new CellEventArgs(CurrentMouseCell));
+
             CurrentMouseCell = null;
             IsDirty = true;
         }
@@ -736,8 +774,9 @@ public partial class Table : CompositeControl
     {
         int maxX = column + width;
         int maxY = row + height;
+
         return mousePosition.X >= column && mousePosition.X < maxX &&
-            mousePosition.Y >= row && mousePosition.Y < maxY;
+               mousePosition.Y >= row && mousePosition.Y < maxY;
     }
 
     #region Event Args
@@ -751,10 +790,8 @@ public partial class Table : CompositeControl
         /// </summary>
         public readonly Cell? Cell;
 
-        internal CellEventArgs(Cell? cell)
-        {
+        internal CellEventArgs(Cell? cell) =>
             Cell = cell;
-        }
     }
 
     /// <inheritdoc/>
@@ -765,11 +802,8 @@ public partial class Table : CompositeControl
         /// </summary>
         public readonly Cell? PreviousCell;
 
-        internal CellChangedEventArgs(Cell? previousCell, Cell? cell)
-            : base(cell)
-        {
+        internal CellChangedEventArgs(Cell? previousCell, Cell? cell): base(cell) =>
             PreviousCell = previousCell;
-        }
     }
     #endregion
 }
@@ -809,9 +843,7 @@ public static class TableExtensions
     public static void ForEach(this IEnumerable<Table.Cell> range, Action<Table.Cell> action)
     {
         foreach (Table.Cell cell in range)
-        {
             action(cell);
-        }
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ using SadRogue.Primitives;
 namespace SadConsole.UI.Themes;
 
 /// <summary>
-/// The theme for a Table control.
+/// The theme for a <see cref="Table"/> control.
 /// </summary>
 public class TableTheme : ThemeBase
 {
@@ -18,13 +18,17 @@ public class TableTheme : ThemeBase
     public ScrollBarTheme ScrollBarTheme { get; private set; }
 
     /// <summary>
-    /// Creates a new theme used by the <see cref="Table"/>.
+    /// Creates an instance of this class with the specified scroll bar theme.
     /// </summary>
-    /// <param name="scrollBarTheme"></param>
-    public TableTheme(ScrollBarTheme scrollBarTheme)
-    {
+    /// <param name="scrollBarTheme">The theme to use with the scroll bar.</param>
+    public TableTheme(ScrollBarTheme scrollBarTheme) =>
         ScrollBarTheme = scrollBarTheme;
-    }
+
+    /// <summary>
+    /// Creates an instance of this class with the default scroll bar theme.
+    /// </summary>
+    public TableTheme() =>
+        ScrollBarTheme = Library.Default.GetControlTheme<ScrollBar, ScrollBarTheme>();
 
     /// <inheritdoc/>
     public override void Attached(ControlBase control)
@@ -48,7 +52,7 @@ public class TableTheme : ThemeBase
             if (scrollBar != null)
             {
                 scrollBar.Theme = ScrollBarTheme;
-                ScrollBarTheme?.RefreshTheme(_colorsLastUsed, scrollBar);
+                ScrollBarTheme.RefreshTheme(_colorsLastUsed, scrollBar);
             }
         }
     }
@@ -62,7 +66,7 @@ public class TableTheme : ThemeBase
         RefreshTheme(control.FindThemeColors(), control);
 
         // Draw the basic table surface foreground and background, and clear the glyphs
-        _ = control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
+        control.Surface.Fill(table.DefaultForeground, table.DefaultBackground, 0);
 
         int maxColumnsWidth = table.GetMaxColumnsBasedOnColumnSizes();
         int maxRowsHeight = table.GetMaxRowsBasedOnRowSizes();
@@ -147,12 +151,10 @@ public class TableTheme : ThemeBase
                 Table.Cell? cell = table.Cells.GetIfExists(rowIndex, colIndex, true);
                 if (cell == null && table.DrawFakeCells)
                 {
-                    cell = new Table.Cell(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false)
-                    {
-                        Position = cellPosition,
-                        _row = oldRow != -1 ? oldRow : rowIndex,
-                        _column = oldCol != -1 ? oldCol : colIndex
-                    };
+                    cell = Table.Cell.InternalCreate(rowIndex, colIndex, table, string.Empty, addToTableIfModified: false);
+                    cell.Position = cellPosition;
+                    cell._row = oldRow != -1 ? oldRow : rowIndex;
+                    cell._column = oldCol != -1 ? oldCol : colIndex;
                 }
                 else if (cell != null)
                 {
@@ -227,6 +229,7 @@ public class TableTheme : ThemeBase
             int total = scrollBar.Orientation == Orientation.Vertical ?
                 (maxRowsHeight >= table.Height ? table.Height : maxRowsHeight) :
                 (maxColumnsWidth >= table.Width ? table.Width : maxColumnsWidth);
+
             int max = scrollBar.Orientation == Orientation.Vertical ? table.Height : table.Width;
 
             if (scrollBar.Orientation == Orientation.Vertical)
@@ -563,7 +566,7 @@ public class TableTheme : ThemeBase
     {
         return new TableTheme((ScrollBarTheme)ScrollBarTheme.Clone())
         {
-            ControlThemeState = ControlThemeState.Clone(),
+            ScrollBarTheme = (ScrollBarTheme)ScrollBarTheme.Clone()
         };
     }
 }

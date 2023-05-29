@@ -50,7 +50,7 @@ public partial class Table
         /// </summary>
         public bool HeaderRow
         {
-            get { return _headerRow; }
+            get => _headerRow;
             set
             {
                 _headerRow = value;
@@ -77,7 +77,7 @@ public partial class Table
         /// <param name="visible"></param>
         public void Row(int row, bool visible)
         {
-            if (!_hiddenIndexes.TryGetValue(Layout.LayoutType.Row, out var indexes))
+            if (!_hiddenIndexes.TryGetValue(Layout.LayoutType.Row, out HashSet<int>? indexes))
             {
                 if (visible) return;
 
@@ -101,6 +101,7 @@ public partial class Table
 
             if (_table.HorizontalScrollBar != null)
                 _table.HorizontalScrollBar.Value = 0;
+
             if (_table.VerticalScrollBar != null)
                 _table.VerticalScrollBar.Value = 0;
 
@@ -115,7 +116,7 @@ public partial class Table
         /// <param name="visible"></param>
         public void Column(int column, bool visible)
         {
-            if (!_hiddenIndexes.TryGetValue(Layout.LayoutType.Column, out var indexes))
+            if (!_hiddenIndexes.TryGetValue(Layout.LayoutType.Column, out HashSet<int>? indexes))
             {
                 if (visible) return;
 
@@ -153,7 +154,7 @@ public partial class Table
         /// <returns></returns>
         public Layout Column(int column)
         {
-            _ = _columnLayout.TryGetValue(column, out Layout? layout);
+            _columnLayout.TryGetValue(column, out Layout? layout);
             layout ??= _columnLayout[column] = new Layout(_table, column, Layout.LayoutType.Column);
             return layout;
         }
@@ -165,7 +166,7 @@ public partial class Table
         /// <returns></returns>
         public Layout Row(int row)
         {
-            _ = _rowLayout.TryGetValue(row, out Layout? layout);
+            _rowLayout.TryGetValue(row, out Layout? layout);
             layout ??= _rowLayout[row] = new Layout(_table, row, Layout.LayoutType.Row);
             return layout;
         }
@@ -176,10 +177,8 @@ public partial class Table
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        public Cell GetCell(int row, int col)
-        {
-            return this[row, col];
-        }
+        public Cell GetCell(int row, int col) =>
+            this[row, col];
 
         /// <summary>
         /// Sets the specified cell as the selected cell if it exists.
@@ -189,11 +188,10 @@ public partial class Table
         public void Select(int row, int column)
         {
             // Set existing cell, or a fake one if it does not yet exists, but modifying this fake cell with add it to the table
-            _table.SelectedCell = GetIfExists(row, column, false) ?? new Cell(row, column, _table, string.Empty)
-            {
-                Position = GetCellPosition(row, column, out _, out _,
-                    _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0, _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0)
-            };
+            _table.SelectedCell = GetIfExists(row, column, false) ?? Cell.InternalCreate(row, column, _table, string.Empty);
+            _table.SelectedCell.Position = GetCellPosition(row, column, out _, out _,
+                    _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0,
+                    _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
         }
 
         /// <summary>
@@ -238,8 +236,8 @@ public partial class Table
         public void ClearContent(bool clearLayoutOptionsForContent = true)
         {
             // X = row, Y = column
-            var maxColumn = HeaderRow ? _cells.Where(a => a.Key.X == 0).Count() : 0;
-            foreach (var cell in _cells.ToArray())
+            int maxColumn = HeaderRow ? _cells.Where(a => a.Key.X == 0).Count() : 0;
+            foreach (KeyValuePair<Point, Cell> cell in _cells.ToArray())
             {
                 if (HeaderRow && cell.Key.X == 0) continue;
 
@@ -297,7 +295,7 @@ public partial class Table
         internal Cell? GetIfExists(int row, int col, bool useRealRowAndCols)
         {
             Cell? chosenCell = null;
-            foreach (var cell in _cells)
+            foreach (KeyValuePair<Point, Cell> cell in _cells)
             {
                 if (useRealRowAndCols)
                 {
@@ -318,19 +316,21 @@ public partial class Table
         {
             if (!_cells.TryGetValue((row, col), out Cell? cell))
             {
-                cell = new Cell(row, col, _table, string.Empty)
-                {
-                    Position = GetCellPosition(row, col, out _, out _,
-                        _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0, _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0)
-                };
+                cell = Cell.InternalCreate(row, col, _table, string.Empty);
+                cell.Position = GetCellPosition(row, col, out _, out _,
+                        _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0,
+                        _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
 
                 _cells[(row, col)] = cell;
                 if (MaxRow < row)
                     MaxRow = row;
+
                 if (MaxColumn < col)
                     MaxColumn = col;
+
                 _table._checkScrollBarVisibility = true;
             }
+
             return cell;
         }
 
@@ -339,18 +339,17 @@ public partial class Table
             // Matches the right cell we should start at, but it could be we need to start somewhere within this cell.
             int startIndex = GetIndexAtCellPosition(startPos, type, out int indexPos);
             int controlIndex = 0;
-            if (indexPos < startPos)
-            {
-                controlIndex = indexPos - startPos;
-            }
 
-            var layoutDict = type == Layout.LayoutType.Column ? _columnLayout : _rowLayout;
-            var defaultSize = type == Layout.LayoutType.Column ? _table.DefaultCellSize.X : _table.DefaultCellSize.Y;
+            if (indexPos < startPos)
+                controlIndex = indexPos - startPos;
+
+            Dictionary<int, Layout> layoutDict = type == Layout.LayoutType.Column ? _columnLayout : _rowLayout;
+            int defaultSize = type == Layout.LayoutType.Column ? _table.DefaultCellSize.X : _table.DefaultCellSize.Y;
 
             indexSize = layoutDict.TryGetValue(startIndex, out Layout? layout) ? layout.Size : defaultSize;
 
             // If entire row or column is hidden then skip it
-            _hiddenIndexes.TryGetValue(type, out var indexes);
+            _hiddenIndexes.TryGetValue(type, out HashSet<int>? indexes);
             if (indexes != null && indexes.Contains(startIndex))
                 indexSize = 0;
 
@@ -377,7 +376,7 @@ public partial class Table
             for (int i = 0; i < total; i++)
             {
                 int indexSize = layoutDict.TryGetValue(i, out Layout? layout) ? layout.Size : defaultSize;
-                _hiddenIndexes.TryGetValue(type, out var indexes);
+                _hiddenIndexes.TryGetValue(type, out HashSet<int>? indexes);
                 if (indexes != null && indexes.Contains(i))
                     indexSize = 0;
                 totalSize += indexSize;
@@ -422,22 +421,20 @@ public partial class Table
             _table._checkScrollBarVisibility = true;
             _table.IsDirty = true;
         }
-        /// <inheritdoc/>
-        public IEnumerator<Cell> GetEnumerator()
-        {
-            return _cells.Values.GetEnumerator();
-        }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        /// <inheritdoc/>
+        public IEnumerator<Cell> GetEnumerator() =>
+            _cells.Values.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+
         #endregion
 
         private void Remove(int row, int column, bool adjustMaxRowColumns)
         {
             int prev = _cells.Count;
-            _ = _cells.Remove((row, column));
+            _cells.Remove((row, column));
             if (prev != _cells.Count)
             {
                 if (adjustMaxRowColumns)
@@ -445,6 +442,7 @@ public partial class Table
                     MaxRow = _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Row);
                     MaxColumn = _cells.Count == 0 ? 0 : _cells.Values.Max(a => a.Column);
                 }
+
                 AdjustCellPositionsAfterResize();
                 _table.SyncScrollAmountOnResize();
                 _table.IsDirty = true;
@@ -521,7 +519,7 @@ public partial class Table
             /// </summary>
             public void Remove()
             {
-                var layoutDict = _layoutType == LayoutType.Row ? _table.Cells._rowLayout : _table.Cells._columnLayout;
+                Dictionary<int, Layout> layoutDict = _layoutType == LayoutType.Row ? _table.Cells._rowLayout : _table.Cells._columnLayout;
                 layoutDict.Remove(_index);
                 _table.IsDirty = true;
             }
@@ -579,14 +577,17 @@ public partial class Table
                 /// Only a single cell will be visualized
                 /// </summary>
                 Single = 0,
+
                 /// <summary>
                 /// Nothing will be visualized
                 /// </summary>
                 None,
+
                 /// <summary>
                 /// The entire row of the cell will be visualized
                 /// </summary>
                 EntireRow,
+
                 /// <summary>
                 /// The entire column of the cell will be visualized
                 /// </summary>
@@ -600,10 +601,8 @@ public partial class Table
             {
                 private readonly IEnumerable<Layout> _layouts;
 
-                internal RangeEnumerable(IEnumerable<Layout> layouts)
-                {
+                internal RangeEnumerable(IEnumerable<Layout> layouts) =>
                     _layouts = layouts;
-                }
 
                 /// <summary>
                 /// Sets the layout of all the columns and rows for the given params
@@ -619,15 +618,11 @@ public partial class Table
                 }
 
                 /// <inheritdoc/>
-                public IEnumerator<Layout> GetEnumerator()
-                {
-                    return _layouts.GetEnumerator();
-                }
+                public IEnumerator<Layout> GetEnumerator() =>
+                    _layouts.GetEnumerator();
 
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return GetEnumerator();
-                }
+                IEnumerator IEnumerable.GetEnumerator() =>
+                    GetEnumerator();
             }
         }
     }

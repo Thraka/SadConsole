@@ -70,7 +70,7 @@ public class ListBoxTheme : ThemeBase
 
     public ListBoxTheme()
     {
-        ScrollBarTheme = (ScrollBarTheme)Library.Default.GetControlTheme(typeof(ScrollBar));
+        ScrollBarTheme = Library.Default.GetControlTheme<ScrollBar, ScrollBarTheme>();
         ItemTheme = new ListBoxItemTheme();
         BorderTheme = new ThemeStates();
     }

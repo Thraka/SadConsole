@@ -28,7 +28,8 @@ Normal changes
 - [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
 - [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
 - [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
-- [Core] `Surface.RenderSteps` is now a `List` and you must call `RenderSteps.Sort(SadConsole.Renderers.RenderStepComparer.Instance)` when the collection is changed.
+- [Core] `Surface.RenderSteps` moved to the renderer.
+- [Core] `RenderSteps` is now a `List` and you must call `RenderSteps.Sort(SadConsole.Renderers.RenderStepComparer.Instance)` when the collection is changed.
 - [Core] `Instructions.DrawString` uses `System.TimeSpan` now, and is more accurate.
 - [Core] Effects have a `RunEffectOnApply` property that will run the `effect.Update` method once, with a duration of zero, when the effect is added to a manager.
 - [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
@@ -43,14 +44,14 @@ Normal changes
 - [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
 - [UI] `Panel` control uses `CompositeControl` as a base class. Theme supports lines as a border of the panel.
+- [UI] Ven0maus added the `Table` control.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 
 Removed
 
-- [Core] `Algorithms.Line\Circle\Ellipse` have been removed. The latest primitives library that SadConsole uses, provides these.
+- [Core] `Algorithms.Line\Circle\Ellipse` have been removed. The latest primitives library provides these methods.
 - [Core] `Shapes` namespace removed. The latest primitives library release that SadConsole uses, provides these.
-
 
 ### Host changes
 

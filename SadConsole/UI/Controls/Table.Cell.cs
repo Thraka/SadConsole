@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -97,7 +98,7 @@ public partial class Table
         private readonly bool _addToTableIfModified;
         internal readonly Table _table;
 
-        internal Cell(int row, int col, Table table, object value, bool addToTableIfModified = true)
+        private Cell(int row, int col, Table table, object value, bool addToTableIfModified = true)
         {
             _table = table;
             _value = value;
@@ -111,20 +112,29 @@ public partial class Table
             Column = col;
 
             // Set cell layout options
-            _ = table.Cells._columnLayout.TryGetValue(col, out TableCells.Layout? columnLayout);
-            _ = table.Cells._rowLayout.TryGetValue(row, out TableCells.Layout? rowLayout);
+            table.Cells._columnLayout.TryGetValue(col, out TableCells.Layout? columnLayout);
+            table.Cells._rowLayout.TryGetValue(row, out TableCells.Layout? rowLayout);
             TableCells.Layout?[] layoutOptions = new[] { columnLayout, rowLayout };
             foreach (TableCells.Layout? option in layoutOptions)
             {
                 if (option == null) continue;
+
                 if (option.Foreground != null)
                     _foreground = option.Foreground.Value;
+
                 if (option.Background != null)
                     _background = option.Background.Value;
+
                 if (option.HasCustomSettings)
                     (_settings ??= new Options(this)).CopyFrom(option.Settings);
             }
         }
+
+        /// <summary>
+        /// Internal use only. This is used by the table and the theme to create new cell instances.
+        /// </summary>
+        public static Cell InternalCreate(int row, int col, Table table, object value, bool addToTableIfModified = true) =>
+            new(row, col, table, value, addToTableIfModified);
 
         internal void AddToTableIfNotExists()
         {
