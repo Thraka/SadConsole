@@ -171,13 +171,13 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if (_controlsRenderStep != null)
         {
-            surface.RenderSteps.Remove(_controlsRenderStep);
+            surface.Renderer?.Steps.Remove(_controlsRenderStep);
             _controlsRenderStep?.Dispose();
         }
         _controlsRenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.ControlHost);
         _controlsRenderStep.SetData(this);
-        surface.RenderSteps.Add(_controlsRenderStep);
-        surface.RenderSteps.Sort(RenderStepComparer.Instance);
+        surface.Renderer?.Steps.Add(_controlsRenderStep);
+        surface.Renderer?.Steps.Sort(RenderStepComparer.Instance);
         surface.UseKeyboard = true;
         surface.UseMouse = true;
         surface.FocusOnMouseClick = true;
@@ -219,7 +219,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if (_controlsRenderStep != null)
         {
-            ((IScreenSurface)host).RenderSteps.Remove(_controlsRenderStep);
+            ((IScreenSurface)host).Renderer?.Steps.Remove(_controlsRenderStep);
             _controlsRenderStep.Dispose();
             _controlsRenderStep = null;
         }

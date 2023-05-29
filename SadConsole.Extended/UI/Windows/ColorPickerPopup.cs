@@ -25,10 +25,10 @@ namespace SadConsole.UI.Windows
         private Button _otherColorsButton;
         private Button _cancelButton;
 
-        private TextBox _redInput;
-        private TextBox _greenInput;
-        private TextBox _blueInput;
-        private TextBox _alphaInput;
+        private NumberBox _redInput;
+        private NumberBox _greenInput;
+        private NumberBox _blueInput;
+        private NumberBox _alphaInput;
 
         private OtherColorsPopup otherColorPopup;
 
@@ -89,30 +89,30 @@ namespace SadConsole.UI.Windows
             _picker.SelectedColorChanged += _picker_SelectedColorChanged;
             Controls.Add(_picker);
 
-            #region TextBoxes
-            _redInput = new TextBox(5);
-            _redInput.IsNumeric = true;
+            #region NumberBoxes
+            _redInput = new NumberBox(5);
+            _redInput.NumberMaximum = 255;
             _redInput.MaxLength = 3;
             _redInput.Position = new Point(Width - 7, Height - 14);
             _redInput.TextChanged += (sender, e) => { _barR.SelectedColor = new Color(int.Parse(_redInput.Text), 0, 0); };
             Controls.Add(_redInput);
 
-            _greenInput = new TextBox(5);
-            _greenInput.IsNumeric = true;
+            _greenInput = new NumberBox(5);
+            _greenInput.NumberMaximum = 255;
             _greenInput.MaxLength = 3;
             _greenInput.Position = new Point(Width - 7, Height - 13);
             _greenInput.TextChanged += (sender, e) => { _barG.SelectedColor = new Color(0, int.Parse(_greenInput.Text), 0); };
             Controls.Add(_greenInput);
 
-            _blueInput = new TextBox(5);
-            _blueInput.IsNumeric = true;
+            _blueInput = new NumberBox(5);
+            _blueInput.NumberMaximum = 255;
             _blueInput.MaxLength = 3;
             _blueInput.Position = new Point(Width - 7, Height - 12);
             _blueInput.TextChanged += (sender, e) => { _barB.SelectedColor = new Color(0, 0, int.Parse(_blueInput.Text)); };
             Controls.Add(_blueInput);
 
-            _alphaInput = new TextBox(5);
-            _alphaInput.IsNumeric = true;
+            _alphaInput = new NumberBox(5);
+            _alphaInput.NumberMaximum = 255;
             _alphaInput.MaxLength = 3;
             _alphaInput.Position = new Point(Width - 7, Height - 11);
             _alphaInput.Text = "255";

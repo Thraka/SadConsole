@@ -57,11 +57,6 @@ public interface IScreenSurface : IScreenObject, ISurface
     IRenderer? Renderer { get; }
 
     /// <summary>
-    /// The render steps to draw this object.
-    /// </summary>
-    List<IRenderStep> RenderSteps { get; }
-
-    /// <summary>
     /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
     /// </summary>
     bool UsePixelPositioning { get; set; }

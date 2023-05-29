@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
@@ -66,6 +67,11 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
                 _screen.IsDirty = true;
         }
     }
+
+    /// <summary>
+    /// The default color to clear the rendering surface. This is used instead of the individual layer's default background.
+    /// </summary>
+    public Color DefaultBackground { get; set; } = Color.Transparent;
 
     /// <summary>
     /// The numbers of layers.
@@ -169,8 +175,23 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     /// </summary>
     /// <param name="index">The index to insert at.</param>
     /// <param name="layer">The layer to insert.</param>
-    public void Insert(int index, ICellSurface layer) =>
+    public void Insert(int index, ICellSurface layer)
+    {
+        if (!CheckLayerValidity(layer)) throw new ArgumentException("Layer is invalid, it must be the same size as the other layers.");
+
+        if (!_layers.Contains(layer))
+        {
+            if (_layers.Count == 0 && _screen != null)
+            {
+                ((ISurfaceSettable)_screen).Surface = layer;
+                _screenCachedView = layer.View;
+            }
+            _layers.Add(layer);
+            layer.View = _screenCachedView;
+        }
+
         _layers.Insert(index, layer);
+    }
 
     /// <summary>
     /// Removes a layer at the specified index.
@@ -254,14 +275,18 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
 
         if (RenderStep != null)
         {
-            surface.RenderSteps.Remove(RenderStep);
+            surface.Renderer?.Steps.Remove(RenderStep);
             RenderStep.Dispose();
         }
 
-        RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered);
-        RenderStep.SetData(this);
-        surface.RenderSteps.Add(RenderStep);
-        surface.RenderSteps.Sort(Renderers.RenderStepComparer.Instance);
+        // If the renderer is a layered screen surface, skip adding our own
+        if (surface.Renderer != null && surface.Renderer.Name != Renderers.Constants.RendererNames.LayeredScreenSurface)
+        {
+            RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered);
+            RenderStep.SetData(this);
+            surface.Renderer?.Steps.Add(RenderStep);
+            surface.Renderer?.Steps.Sort(Renderers.RenderStepComparer.Instance);
+        }
         _screen = surface;
 
         Add(surface.Surface);
@@ -275,7 +300,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     {
         if (RenderStep != null)
         {
-            ((IScreenSurface)host).RenderSteps.Remove(RenderStep);
+            ((IScreenSurface)host).Renderer?.Steps.Remove(RenderStep);
             RenderStep.Dispose();
             RenderStep = null;
         }

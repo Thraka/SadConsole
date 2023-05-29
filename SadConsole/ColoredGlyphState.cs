@@ -62,7 +62,7 @@ public readonly struct ColoredGlyphState
     /// <param name="background">Background color.</param>
     /// <param name="glyph">The glyph index.</param>
     /// <param name="mirror">The mirror effect.</param>
-    /// <param name="isVisible">The visiblity of the glyph.</param>
+    /// <param name="isVisible">The visibility of the glyph.</param>
     [JsonConstructor]
     public ColoredGlyphState(CellDecorator[] decorators, Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
     {
@@ -77,7 +77,7 @@ public readonly struct ColoredGlyphState
     /// <summary>
     /// Restores this state to the specified cell.
     /// </summary>
-    public void RestoreState(ref ColoredGlyph cell)
+    public readonly void RestoreState(ref ColoredGlyph cell)
     {
         cell.Foreground = Foreground;
         cell.Background = Background;

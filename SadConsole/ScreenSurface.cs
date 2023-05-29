@@ -29,6 +29,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     [DataMember(Name = "Surface")]
     private ICellSurface _surface;
 
+    //[DataMember(Name = "QuietSurfaceHandling")]
     private bool _quietSurface;
 
     private Renderers.IRenderer? _renderer;
@@ -40,7 +41,9 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     public virtual string DefaultRendererName { get; } = Renderers.Constants.RendererNames.Default;
 
     /// <inheritdoc/>
-    public Renderers.IRenderer? Renderer
+    [DataMember]
+    [JsonConverter(typeof(SerializedTypes.RendererJsonConverter))]
+    public IRenderer? Renderer
     {
         get => _renderer;
         protected set
@@ -57,6 +60,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     /// <summary>
     /// When <see langword="true"/>, prevents the <see cref="Surface"/> property from raising events and virtual methods when the surface changes.
     /// </summary>
+    [DataMember]
     public bool QuietSurfaceHandling
     {
         get => _quietSurface;
@@ -67,15 +71,12 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
             if (_surface != null)
             {
                 if (value)
-                    _surface.IsDirtyChanged -= _isDirtyChangedEventHadler;
+                    _surface.IsDirtyChanged -= _isDirtyChangedEventHandler;
                 else
-                    _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+                    _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
             }
         }
     }
-
-    /// <inheritdoc/>
-    public List<IRenderStep> RenderSteps { get; } = new List<IRenderStep>();
 
     /// <summary>
     /// The surface this screen object represents.
@@ -91,8 +92,8 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
 
             if (!_quietSurface)
             {
-                old.IsDirtyChanged -= _isDirtyChangedEventHadler;
-                _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+                old.IsDirtyChanged -= _isDirtyChangedEventHandler;
+                _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
 
                 OnSurfaceChanged(old);
                 CallOnHostUpdated();
@@ -266,18 +267,14 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     public ScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null)
     {
         _surface = surface;
-        _surface.IsDirtyChanged += _isDirtyChangedEventHadler;
+        _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
 
         _font = font ?? GameHost.Instance.DefaultFont;
         FontSize = fontSize ?? _font.GetFontSize(GameHost.Instance.DefaultFontSize);
 
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Output));
-        RenderSteps.Add(GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Tint));
-        RenderSteps.Sort(RenderStepComparer.Instance);
     }
-
+    
     /// <summary>
     /// Resizes the surface to the specified width and height.
     /// </summary>
@@ -311,10 +308,15 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
     /// <inheritdoc />
     public override void UpdateAbsolutePosition()
     {
-        if (UsePixelPositioning)
-            AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+        if (!IgnoreParentPosition)
+        {
+            if (UsePixelPositioning)
+                AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+            else
+                AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
+        }
         else
-            AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
+            AbsolutePosition = UsePixelPositioning ? Position : FontSize * Position;
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)
@@ -377,7 +379,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
         }
     }
 
-    private void _isDirtyChangedEventHadler(object? sender, EventArgs e) =>
+    private void _isDirtyChangedEventHandler(object? sender, EventArgs e) =>
         OnIsDirtyChanged();
 
     /// <summary>
@@ -422,16 +424,12 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
             SadComponents[i].OnHostUpdated(this);
 
         Renderer?.OnHostUpdated(this);
-
-        foreach (IRenderStep step in RenderSteps)
-            step.OnHostUpdated(this);
     }
 
     /// <inheritdoc/>
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
     {
-        Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
         UpdateAbsolutePosition();
     }
 

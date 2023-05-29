@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using SFMLKeys = SFML.Window.Keyboard.Key;
 
 namespace SadConsole.Input
@@ -140,12 +137,6 @@ namespace SadConsole.Input
             */
         }
 
-        public static void SaveTexture(SFML.Graphics.Texture texture, string output)
-        {
-            using (var image = texture.CopyToImage())
-                image.SaveToFile(output);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Input.Keys ToSadConsole(this SFMLKeys key)
         {
@@ -211,6 +202,18 @@ namespace SadConsole.Input
                 SFMLKeys.Period => Input.Keys.OemPeriod,
                 SFMLKeys.Backslash => Input.Keys.OemBackslash,
             */
+        }
+    }
+}
+
+namespace SFML.Graphics
+{
+    public static class Extensions
+    {
+        public static void SaveTexture(Texture texture, string output)
+        {
+            using (var image = texture.CopyToImage())
+                image.SaveToFile(output);
         }
     }
 }

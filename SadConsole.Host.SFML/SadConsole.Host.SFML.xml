@@ -112,6 +112,77 @@
             <param name="font">The font to use when drawing the glyph.</param>
             <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
         </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontTexture">
+            <summary>
+            The texture, most likely a SadConsole font texture, containing the solid white rectangle referenced by <see cref="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="T:SFML.Graphics.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            The color of the target rectangle.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(SFML.Graphics.Color,SFML.Graphics.Texture,SFML.Graphics.IntRect,SFML.Graphics.IntRect)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="color">The folor of the rectangle.</param>
+            <param name="texture">The texture containing a solid white rectangle referenced by <paramref name="fontSolidRect"/>.</param>
+            <param name="targetRect">The drawing location of the rectangle.</param>
+            <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws an image ot the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The image to draw.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            A color tint to apply when drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(SFML.Graphics.Texture,SFML.System.Vector2i,System.Nullable{SFML.Graphics.Color})">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="texture">The image to draw.</param>
+            <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
+            <param name="tint">A color tint to apply to the drawn image.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Game">
             <summary>
             The SadConsole game object.
@@ -202,7 +273,7 @@
         </member>
         <member name="M:SadConsole.Game.ToggleFullScreen">
             <summary>
-            Toggles between windowed and fullscreen rendering for SadConsole.
+            Toggles between windowed and full screen rendering for SadConsole.
             </summary>
         </member>
         <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
@@ -293,12 +364,18 @@
             </summary>
             <returns>The configuration object.</returns>
         </member>
-        <member name="M:SadConsole.Game.Configuration.SetRenderWindow(SFML.Graphics.RenderWindow)">
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen``1">
             <summary>
-            Sets the rendering window to use by SFML, when you don't want a window created for you.
+            Sets the startup splash screen to the specified object.
             </summary>
-            <param name="renderWindow">The window to render to.</param>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Game.Configuration.SetSplashScreen(System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
+            <summary>
+            A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
         </member>
         <member name="T:SadConsole.Game.ConfigurationFontLoader">
             <summary>
@@ -326,6 +403,276 @@
             Loads the provided font files into SadConsole.
             </summary>
             <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Wraps a <see cref="T:SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Texture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Size">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32)">
+            <summary>
+            Creates a new game texture with the specified width and height.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture,System.Boolean)">
+            <summary>
+            Wraps a texture. Doesn't dispose it when this object is disposed!
+            </summary>
+            <param name="texture">The texture to wrap</param>
+            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
+            <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <summary>
+            Disposes the underlaying texture object and releases reference to it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SFML.Graphics.Color)">
+            <summary>
+            Sets the color of a pixel in the texture.
+            </summary>
+            <param name="position">The position to set the color.</param>
+            <param name="color">The color to set.</param>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SFML.Graphics.Color)">
+            <summary>
+            Sets the color of a pixel in the texture by index position.
+            </summary>
+            <param name="index">The position to set the color. Row-major ordered.</param>
+            <param name="color">The color to set.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelsSFMLColor">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Image)">
+            <summary>
+            Updates the texture with the image data.
+            </summary>
+            <param name="image">The image to copy to the texture.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SFML.Graphics.Color[])">
+            <summary>
+            Sets all pixels in the texture to the provided colors.
+            </summary>
+            <param name="colors">The colors to set every pixel to.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(System.Int32)">
+            <summary>
+            Gets a pixel color at the specified index.
+            </summary>
+            <param name="index">The position in the texture.</param>
+            <returns>The color of the position in the texture.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelSFMLColor(SadRogue.Primitives.Point)">
+            <summary>
+            Gets a pixel color at the specified position.
+            </summary>
+            <param name="position">The position in the texture.</param>
+            <returns>The color of the position in the texture.</returns>
+            <exception cref="T:System.IndexOutOfRangeException">The pixel position is outside the bounds of the texture.</exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the SFML host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
+            <summary>
+            When <see langword="true"/>, prevents the keyboard and mouse logic from running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDevice">
+            <summary>
+            The render window created by SFML.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SharedSpriteBatch">
+            <summary>
+            A sprite batch used by all of SadConsole to render objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutput">
+            <summary>
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateTimer">
+            <summary>
+            Reference to the game timer used in the update loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.DrawTimer">
+            <summary>
+            Reference to the game timer used in the render loop.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Settings">
+            <summary>
+            A settings class usually used when creating the host object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
+            <summary>
+            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.FPS">
+            <summary>
+            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.WindowTitle">
+            <summary>
+            The game window title. Set before calling <see cref="M:SadConsole.Game.Create"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
+            <summary>
+            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenBlendMode">
+            <summary>
+            The blend state used when drawing surfaces to the final texture and screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
+            <summary>
+            A shader used when drawing the final texture to the screen.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
+            <summary>
+            Render steps to process.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+            <summary>
+            Cached set of rectangles used in rendering each cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the render steps this renderer uses.
+            </summary>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
@@ -562,63 +909,6 @@
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
-            <summary>
-            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
-            </summary>
-            <remarks>
-            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
-            </remarks>
-        </member>
-        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
-            <summary>
-            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
-            <summary>
-            Quick access to backing texture.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
-            <summary>
-            The cached texture of the drawn surface.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
-            <summary>
-            Color used with drawing the texture to the screen. Let's a surface become transparent.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
-            <summary>
-            Render steps to process.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
-            <summary>
-            The blend state used by this renderer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
-            <summary>
-            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
-            <inheritdoc/>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
-            <summary>
-            Cached set of rectangles used in rendering each cell.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
-             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
-             <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
@@ -784,6 +1074,59 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
              <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SFML.Graphics.SpriteBatch">
+            <summary>
+            A sprite batching class.
+            </summary>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.Reset(SFML.Graphics.RenderTarget,SFML.Graphics.BlendMode,SFML.Graphics.Transform,SFML.Graphics.Shader)">
+            <summary>
+            Resets the batcher.
+            </summary>
+            <param name="target">The new rendering target.</param>
+            <param name="blend">The blending mode.</param>
+            <param name="renderingTransform">The transform.</param>
+            <param name="shader">An optional shader.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawQuad(SFML.Graphics.IntRect,SFML.Graphics.IntRect,SFML.Graphics.Color,SFML.Graphics.Texture)">
+            <summary>
+            Draws a textured quad to the render target.
+            </summary>
+            <param name="screenRect">The rectangle on the render target to draw the quad.</param>
+            <param name="textCoords">The texture coordinates used with <paramref name="texture"/>.</param>
+            <param name="color">A color to shade the quad. Use <see cref="F:SFML.Graphics.Color.White"/> to disable shading.</param>
+            <param name="texture">The texture to draw with.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCell(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,System.Boolean,SadConsole.IFont)">
+            <summary>
+            Draws a single glyph to the screen.
+            </summary>
+            <param name="cell">The glyph information.</param>
+            <param name="screenRect">The rectangle on the render target to draw the glyph.</param>
+            <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
+            <param name="font">The SadConsole font containing the glyph texture.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCellBackground(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont)">
+            <summary>
+            Draws the background color of a cell to the render target.
+            </summary>
+            <param name="cell">The cell information containing the background color.</param>
+            <param name="screenRect">The rectangle on the render target to draw the background color.</param>
+            <param name="font">The SadConsole font containing the solid color glyph used in drawing backgrounds.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.End">
+            <summary>
+            Ends the sprite batch and draws the data to the screen.
+            </summary>
         </member>
     </members>
 </doc>

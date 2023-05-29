@@ -59,8 +59,7 @@ public abstract class CompositeControl : ControlBase, IContainer
 
             int count = controls.Count;
             for (int i = 0; i < count; i++)
-                if (controls[i].ProcessMouse(state))
-                    return true;
+                processResult |= controls[i].ProcessMouse(state);
 
             return processResult;
         }

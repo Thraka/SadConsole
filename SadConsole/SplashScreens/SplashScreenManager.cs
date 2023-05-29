@@ -37,7 +37,7 @@ public class SplashScreenManager : ScreenObject
         GameHost.Instance.FocusedScreenObjects.Set(_activeScreen);
     }
 
-    private ScreenSurface _activeScreen;
+    private IScreenSurface _activeScreen;
 
     /// <inheritdoc/>
     public override void Update(TimeSpan delta)

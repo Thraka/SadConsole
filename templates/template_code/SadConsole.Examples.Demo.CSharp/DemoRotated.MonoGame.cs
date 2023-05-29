@@ -40,21 +40,22 @@ class RotatedSurface : ScreenSurface
         FontSize = Font.GetFontSize(IFont.Sizes.Two);
 
         Surface.FillWithRandomGarbage(Font);
-        for (int i = 0; i < RenderSteps.Count; i++)
+        for (int i = 0; i < Renderer!.Steps.Count; i++)
         {
-            if (RenderSteps[i] is OutputSurfaceRenderStep)
+            if (Renderer!.Steps[i] is OutputSurfaceRenderStep)
             {
-                RenderSteps.RemoveAt(i);
+                Renderer!.Steps.RemoveAt(i);
                 break;
             }
         }
 
-        RenderSteps.Add(new RotatedOutputSurfaceRenderStep() { Rotation = 45d });
+        Renderer!.Steps.Add(new RotatedOutputSurfaceRenderStep() { Rotation = 45d });
     }
 }
 
 class RotatedOutputSurfaceRenderStep: IRenderStep
 {
+    public string Name => SadConsole.Renderers.Constants.RenderStepNames.Output;
     public uint SortOrder { get; set; } = SadConsole.Renderers.Constants.RenderStepSortValues.Output;
 
     public double Rotation { get; set; }

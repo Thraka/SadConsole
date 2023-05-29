@@ -152,7 +152,7 @@ public abstract class ControlBase
             if (value != _isDirty)
             {
                 _isDirty = value;
-                IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+                OnIsDirtyChanged();
             }
         }
     }
@@ -233,7 +233,7 @@ public abstract class ControlBase
     public Rectangle Bounds => new(_position.X, _position.Y, Width, Height);
 
     /// <summary>
-    /// Gets or sets the parent console of this control.
+    /// Gets or sets the parent container of this control.
     /// </summary>
     public IContainer? Parent
     {
@@ -372,6 +372,12 @@ public abstract class ControlBase
     /// Called when the <see cref="Theme"/> changes.
     /// </summary>
     protected virtual void OnThemeChanged() { }
+
+    /// <summary>
+    /// Called when the <see cref="IsDirty"/> property changes value.
+    /// </summary>
+    protected virtual void OnIsDirtyChanged() =>
+        IsDirtyChanged?.Invoke(this, EventArgs.Empty);
 
     #region Input
     /// <summary>

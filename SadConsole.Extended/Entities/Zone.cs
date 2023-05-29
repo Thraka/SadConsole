@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using SadConsole.DrawCalls;
 using SadRogue.Primitives;
 
@@ -33,6 +34,13 @@ namespace SadConsole.Entities
         /// Key-value pairs for the zone.
         /// </summary>
         [DataMember] public Dictionary<string, string> Settings = new Dictionary<string, string>();
+
+        internal List<Entity> _members = new List<Entity>();
+
+        /// <summary>
+        /// A list of entities in the 
+        /// </summary>
+        public IReadOnlyList<Entity> Entities => _members;
 
         /// <summary>
         /// Creates a new zone object with the specified area.

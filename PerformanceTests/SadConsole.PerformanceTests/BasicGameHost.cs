@@ -13,6 +13,7 @@ namespace SadConsole.PerformanceTests
     {
         public class RenderStep : IRenderStep
         {
+            public string Name => "Nothing";
             public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
             public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
             public void Dispose() => throw new NotImplementedException();

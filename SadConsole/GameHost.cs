@@ -39,7 +39,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The splashs screens to show on game startup.
     /// </summary>
-    protected internal Queue<ScreenSurface> _splashScreens { get; set; } = new Queue<ScreenSurface>();
+    protected internal Queue<IScreenSurface> _splashScreens { get; set; } = new Queue<IScreenSurface>();
 
     /// <summary>
     /// Instance of the game host.
@@ -137,12 +137,17 @@ public abstract partial class GameHost : IDisposable
     /// <returns>A new renderer.</returns>
     public virtual IRenderer GetRenderer(string name)
     {
+        IRenderer? result = null;
+
         if (_renderers.TryGetValue(name, out Type? objType))
-            return Activator.CreateInstance(objType) as IRenderer
+            result = Activator.CreateInstance(objType) as IRenderer
                 ?? throw new NullReferenceException($"Renderer was found registered, but the system was unable to create an instance of it as an {nameof(IRenderer)}.");
 
-        return Activator.CreateInstance(_renderers["default"]) as IRenderer
-            ?? throw new NullReferenceException("Unable to create the default renderer, it doesn't seem to be registered.");
+        if (result is null) throw new KeyNotFoundException($"Renderer '{name}' isn't registered with the host.");
+
+        result.Name = name;
+
+        return result;
     }
 
     /// <summary>
@@ -191,8 +196,8 @@ public abstract partial class GameHost : IDisposable
     /// The splash screens the game should sequentially show on startup.
     /// </summary>
     /// <param name="surfaces">The splash screens to show.</param>
-    public void SetSplashScreens(params ScreenSurface[] surfaces) =>
-        _splashScreens = new Queue<ScreenSurface>(surfaces);
+    public void SetSplashScreens(params IScreenSurface[] surfaces) =>
+        _splashScreens = new Queue<IScreenSurface>(surfaces);
 
     /// <summary>
     /// Loads a font from a file and adds it to the <see cref="Fonts"/> collection.

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Collections.Specialized;
-using System.Text;
 using SadRogue.Primitives;
 using System.Linq;
+using SadRogue.Primitives.SpatialMaps;
 
 namespace SadConsole.Entities
 {
@@ -15,7 +14,7 @@ namespace SadConsole.Entities
     public class Manager : Renderer, Components.IComponent
     {
         private Dictionary<Entity, EntityState> _entityStates;
-        private Dictionary<Point, Entity[]> _entityByPosition;
+        private AutoSyncMultiSpatialMap<Entity> _spatialMap;
 
         /// <summary>
         /// An event to indicate that an entity entered a zone.
@@ -44,8 +43,8 @@ namespace SadConsole.Entities
         /// </summary>
         public Manager()
         {
-            _entityStates = new Dictionary<Entity, EntityState>();
-            _entityByPosition = new Dictionary<Point, Entity[]>();
+            _entityStates = new(); //TODO: IDComparer
+            _spatialMap = new();
         }
 
         /// <summary>
@@ -57,6 +56,16 @@ namespace SadConsole.Entities
             if (_zones.Contains(zone)) return;
 
             _zones.Add(zone);
+
+            for (int i = 0; i < _entities.Count; i++)
+            {
+                Entity ent = _entities[i];
+                if (zone.Area.Contains(ent.Position))
+                {
+                    _entityStates[ent].Zones.Add(zone);
+                    OnEntityEnterZone(_screen, zone, ent, ent.Position);
+                }
+            }
         }
 
         /// <summary>
@@ -69,40 +78,41 @@ namespace SadConsole.Entities
 
             _zones.Remove(zone);
 
-            for (int i = 0; i < Entities.Count; i++)
+            for (int i = 0; i < _entities.Count; i++)
             {
-                Entity item = Entities[i];
-                var state = _entityStates[item];
-                state.Zone = null;
-                state.IsInZone = false;
+                Entity ent = _entities[i];
+                EntityState state = _entityStates[ent];
+
+                if (state.Zones.Remove(zone))
+                    OnEntityExitZone(_screen, zone, ent, ent.Position);
             }
         }
 
         /// <summary>
-        /// Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+        /// Checks if the manager contains the specified zone.
+        /// </summary>
+        /// <param name="zone">The zone to check for.</param>
+        public bool Contains(Zone zone) =>
+            _zones.Contains(zone);
+
+        /// <summary>
+        /// Returns an entity at the specified position or <see langword="null"/> if there is no entity. If there are multiple entities at the specified position, only one of them is returned.
         /// </summary>
         /// <param name="position">The position to get an entity at.</param>
-        /// <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+        /// <returns>The entity if it exists; otherwise it returns <see langword="null"/>.</returns>
         public Entity GetEntityAtPosition(Point position)
         {
-            if (_entityByPosition.ContainsKey(position))
-                return _entityByPosition[position][0];
-
-            return null;
+            ListEnumerator<Entity> items = _spatialMap.GetItemsAt(position);
+            return items.MoveNext() ? items.Current : null;
         }
 
         /// <summary>
-        /// Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+        /// Returns an enumerator containing the entities, if any, at the specified position.
         /// </summary>
         /// <param name="position">The position to get an entity at.</param>
         /// <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
-        public Entity[] GetEntitiesAtPosition(Point position)
-        {
-            if (_entityByPosition.ContainsKey(position))
-                return _entityByPosition[position].ToArray();
-
-            return null;
-        }
+        public ListEnumerator<Entity> GetEntitiesAtPosition(Point position) =>
+            _spatialMap.GetItemsAt(position);
 
         /// <summary>
         /// Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
@@ -110,11 +120,42 @@ namespace SadConsole.Entities
         /// <param name="position">The position to check.</param>
         /// <returns>A value indicating if an entity exists.</returns>
         public bool HasEntityAt(Point position) =>
-            _entityByPosition.ContainsKey(position);
+            _spatialMap.Contains(position);
+
+        /// <summary>
+        /// Returns a collection of zones at the specified position.
+        /// </summary>
+        /// <param name="position">The position to check for zones.</param>
+        /// <returns>Every zone that contains the position.</returns>
+        public Zone[] GetZonesAtPosition(Point position)
+        {
+            List<Zone> foundZones = new();
+            
+            foreach (var zone in _zones)
+            {
+                if (zone.Area.Contains(position))
+                    foundZones.Add(zone);
+            }
+            return foundZones.ToArray();
+        }
+
+        public IReadOnlyList<Entity> GetEntitiesInZone(Zone zone)
+        {
+            ListEnumerator<Entity> enumerator = new ListEnumerator<Entity>(_entities);
+            List<Entity> results = new();
+
+            foreach (var entity in enumerator)
+            {
+                if (zone.Area.Contains(entity.Position))
+                    results.Add(entity);
+            }
+
+            return results.Count != 0 ? results.ToArray() : Array.Empty<Entity>();
+        }
 
         /// <inheritdoc/>
         protected override void OnEntityChangedPosition(Entity entity, ValueChangedEventArgs<Point> e) =>
-            EvaluateEntityState(entity);
+            EvaluateEntityState(entity, e.OldValue);
 
         /// <summary>
         /// Adds entity state information to an entity when it's added.
@@ -123,11 +164,19 @@ namespace SadConsole.Entities
         protected override void OnEntityAdded(Entity entity)
         {
             var state = new EntityState();
-            state.Position = entity.Position;
-            state.IsInZone = IsPositionZone(state.Position, out Zone zone);
-            state.Zone = zone;
+
             _entityStates.Add(entity, state);
-            UpdateEntityPositionCollection(entity);
+            _spatialMap.Add(entity);
+
+            if (GetZonesAtPosition(entity.Position, out HashSet<Zone> zones))
+            {
+                state.Zones = zones;
+                foreach (var zone in zones)
+                {
+                    zone._members.Add(entity);
+                    OnEntityEnterZone(_screen, zone, entity, entity.Position);
+                }
+            }
         }
 
         /// <summary>
@@ -136,107 +185,67 @@ namespace SadConsole.Entities
         /// <param name="entity">The entity that was removed.</param>
         protected override void OnEntityRemoved(Entity entity)
         {
+            foreach (var zone in _entityStates[entity].Zones)
+            {
+                zone._members.Remove(entity);
+                OnEntityExitZone(_screen, zone, entity, entity.Position);
+            }
+
             _entityStates.Remove(entity);
-            RemoveEntityPositionCollection(entity, entity.Position);
+            _spatialMap.Remove(entity);
         }
 
-        private void EvaluateEntityState(Entity entity)
+        private void EvaluateEntityState(Entity entity, Point oldPosition)
         {
             var state = _entityStates[entity];
 
-            // Check if entity has moved
-            if (entity.Position != state.Position)
+            GetZonesAtPosition(entity.Position, out HashSet<Zone> newZones);
+
+            if (!state.Zones.SetEquals(newZones))
             {
-                var isZone = IsPositionZone(entity.Position, out var zone);
-                
-                //EntityMoved?.Invoke(this, new Entity.EntityMovedEventArgs(entity, state.Position));
+                IEnumerable<Zone> sameZones = newZones.Intersect(state.Zones);
 
-                if (!state.IsDisabled)
+                foreach (Zone zone in state.Zones.Except(newZones))
                 {
-                    // Still in zone
-                    if (state.IsInZone && isZone)
-                    {
-                        // Same zone -- trigger move event
-                        if (state.Zone == zone)
-                        {
-                            OnEntityMoveZone(_screen, zone, entity, entity.Position, state.Position);
-                            //MoveZone?.Invoke(this, new ZoneMoveEventArgs(_screen, zone, entity, entity.Position, state.Position));
-                        }
-                        // New zone -- trigger exit and enter event.
-                        else
-                        {
-                            OnEntityExitZone(_screen, state.Zone, entity, entity.Position);
-                            OnEntityEnterZone(_screen, zone, entity, entity.Position);
-                            ExitZone?.Invoke(this, new ZoneEventArgs(_screen, state.Zone, entity, state.Position));
-                            EnterZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, entity.Position));
-                            state.Zone = zone;
-                        }
-                    }
-                    // Left zone
-                    else if (state.IsInZone)
-                    {
-                        OnEntityExitZone(_screen, state.Zone, entity, entity.Position);
-                        ExitZone?.Invoke(this, new ZoneEventArgs(_screen, state.Zone, entity, state.Position));
-                        state.IsInZone = false;
-                        state.Zone = null;
-                    }
-                    // Entered zone
-                    else if (isZone)
-                    {
-                        OnEntityEnterZone(_screen, zone, entity, entity.Position);
-                        EnterZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, entity.Position));
-                        state.IsInZone = true;
-                        state.Zone = zone;
-                    }
-
-                    //// Still in hotspot
-                    //if (state.IsInHotspot && isHotspot)
-                    //{
-                    //    OnEntityExitHotspot(_screen, state.Hotspot, entity, state.Position);
-                    //    OnEntityEnterHotspot(_screen, spot, entity, entity.Position);
-                    //    ExitHotspot?.Invoke(this, new HotspotEventArgs(_screen, state.Hotspot, entity, state.Position));
-                    //    EnterHotspot?.Invoke(this, new HotspotEventArgs(_screen, spot, entity, entity.Position));
-                    //    state.Hotspot = spot;
-                    //}
-                    //// Left hotspot
-                    //else if (state.IsInHotspot)
-                    //{
-                    //    OnEntityExitHotspot(_screen, state.Hotspot, entity, state.Position);
-                    //    ExitHotspot?.Invoke(this, new HotspotEventArgs(_screen, state.Hotspot, entity, state.Position));
-                    //    state.IsInHotspot = false;
-                    //    state.Hotspot = null;
-                    //}
-                    //else if (isHotspot)
-                    //{
-                    //    OnEntityEnterHotspot(_screen, spot, entity, entity.Position);
-                    //    EnterHotspot?.Invoke(this, new HotspotEventArgs(_screen, spot, entity, entity.Position));
-                    //    state.IsInHotspot = true;
-                    //    state.Hotspot = spot;
-                    //}
+                    state.Zones.Remove(zone);
+                    zone._members.Remove(entity);
+                    OnEntityExitZone(_screen, zone, entity, entity.Position);
                 }
-                RemoveEntityPositionCollection(entity, state.Position);
-                state.Position = entity.Position;
-                UpdateEntityPositionCollection(entity);
+
+                foreach (Zone zone in newZones.Except(state.Zones))
+                {
+                    state.Zones.Add(zone);
+                    zone._members.Add(entity);
+                    OnEntityEnterZone(_screen, zone, entity, entity.Position);
+                }
+
+                foreach (Zone zone in sameZones)
+                {
+                    OnEntityMoveZone(_screen, zone, entity, entity.Position, oldPosition);
+                }
             }
         }
 
         /// <summary>
-        /// Called when an entity enters a zone.
+        /// Called when an entity enters a zone and raises the <see cref="EnterZone"/> event.
         /// </summary>
         /// <param name="host">The host that the zone and entity share.</param>
         /// <param name="zone">The zone the entity entered.</param>
         /// <param name="entity">The entity that entered the zone.</param>
         /// <param name="triggeredPosition">The position the entity entered.</param>
-        protected virtual void OnEntityEnterZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) { }
+        protected virtual void OnEntityEnterZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) =>
+            EnterZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, entity.Position));
 
         /// <summary>
-        /// Called when an entity enters a zone.
+        /// Called when an entity enters a zone and raises the <see cref="ExitZone"/> event.
         /// </summary>
         /// <param name="host">The host that the zone and entity share.</param>
         /// <param name="zone">The zone the entity exited.</param>
         /// <param name="entity">The entity that exited the zone.</param>
         /// <param name="triggeredPosition">The new position the entity left.</param>
-        protected virtual void OnEntityExitZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) { }
+        protected virtual void OnEntityExitZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) =>
+            ExitZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, triggeredPosition));
+
 
         /// <summary>
         /// Called when an entity moves within a zone.
@@ -249,65 +258,25 @@ namespace SadConsole.Entities
         protected virtual void OnEntityMoveZone(IScreenSurface host, Zone zone, Entity entity, Point newPosition, Point oldPosition) { }
 
         /// <summary>
-        /// Creates a new event args for the entity movement.
+        /// Gets the zones that contain the specified position.
         /// </summary>
-        /// <param name="entity">The entity associated with the event.</param>
-        /// <param name="newPosition">The position the entity moved to.</param>
-        /// <param name="oldPosition">The position the entity moved from.</param>
-        protected virtual void OnEntityMoved(Entity entity, Point newPosition, Point oldPosition) { }
-
-        private bool IsPositionZone(in Point point, out Zone zone)
+        /// <param name="point">The position to check.</param>
+        /// <param name="zones">The zones that contain this position.</param>
+        /// <returns><see langword="true"/> when at least one zone was found; otherwise <see langword="false"/>.</returns>
+        public bool GetZonesAtPosition(in Point point, out HashSet<Zone> zones)
         {
+            zones = new HashSet<Zone>();
+
             for (int i = 0; i < Zones.Count; i++)
             {
                 Zone z = Zones[i];
                 if (z.Area.Contains(point))
                 {
-                    zone = z;
-                    return true;
+                    zones.Add(z);
                 }
             }
-            zone = null;
-            return false;
-        }
 
-        private void UpdateEntityPositionCollection(Entity entity)
-        {
-            if (_entityByPosition.ContainsKey(entity.Position))
-            {
-                var entities = _entityByPosition[entity.Position];
-                var newList = new Entity[entities.Length];
-                entities.CopyTo(newList, 0);
-                newList[newList.Length] = entity;
-                _entityByPosition[entity.Position] = newList;
-            }
-            else
-                _entityByPosition.Add(entity.Position, new[] { entity });
-        }
-
-        private void RemoveEntityPositionCollection(Entity entity, Point oldPosition)
-        {
-            if (_entityByPosition.ContainsKey(oldPosition)) 
-            {
-                var entities = _entityByPosition[oldPosition];
-                if (entities.Length == 1)
-                    _entityByPosition.Remove(oldPosition);
-                else
-                {
-                    var newList = new Entity[entities.Length - 1];
-                    int index = 0;
-                    for (int i = 0; i < entities.Length; i++)
-                    {
-                        Entity item = entities[i];
-                        if (item != entity)
-                        {
-                            newList[index] = item;
-                            index += 1;
-                        }
-                    }
-                    _entityByPosition[oldPosition] = newList;
-                }
-            }
+            return zones.Count != 0;
         }
 
         /// <summary>
@@ -317,8 +286,18 @@ namespace SadConsole.Entities
         public void DisableEntity(Entity entity)
         {
             if (_entityStates.ContainsKey(entity)) throw new Exception("Entity is not managed by this entity manager.");
-            _entityStates[entity].IsDisabled = true;
+
+            var state = _entityStates[entity];
+            state.IsDisabled = true;
+            foreach  (var zone in state.Zones.ToArray())
+            {
+                zone._members.Remove(entity);
+                state.Zones.Remove(zone);
+                OnEntityExitZone(_screen, zone, entity, entity.Position);
+            }
+
         }
+
         /// <summary>
         /// Enables the entity to be processed with with the <see cref="Zones"/>.
         /// </summary>
@@ -342,14 +321,20 @@ namespace SadConsole.Entities
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
-
         }
 
+        [OnSerializing]
+        private void OnSerializing(StreamingContext context)
+        {
+        }
+
+        [DataContract]
         private class EntityState
         {
-            public Point Position { get; set; }
-            public bool IsInZone { get; set; }
-            public Zone Zone { get; set; }
+            [DataMember]
+            public HashSet<Zone> Zones { get; set; } = new();
+
+            [DataMember]
             public bool IsDisabled { get; set; }
         }
 

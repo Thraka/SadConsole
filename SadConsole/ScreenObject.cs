@@ -17,17 +17,8 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-public class ScreenObject : IScreenObject
+public partial class ScreenObject : IScreenObject
 {
-    [DataMember(Name = "Children")]
-    private IScreenObject[]? _childrenSerialized;
-
-    [DataMember(Name = "ChildrenLocked")]
-    private bool _isChildrenLocked;
-
-    [DataMember(Name = "Components")]
-    private IComponent[]? _componentsSerialized;
-
     [DataMember(Name = "Position")]
     private Point _position;
 
@@ -36,12 +27,14 @@ public class ScreenObject : IScreenObject
     private bool _isEnabled = true;
     private bool _isFocused;
 
-
     /// <inheritdoc/>
-    public event EventHandler<ValueChangedEventArgs<IScreenObject>>? ParentChanged;
+    public event EventHandler<ValueChangedEventArgs<IScreenObject?>>? ParentChanged;
 
     /// <inheritdoc/>
     public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanging;
 
     /// <inheritdoc/>
     public event EventHandler? VisibleChanged;
@@ -128,14 +121,19 @@ public class ScreenObject : IScreenObject
         {
             if (_position == value) return;
 
-            Point oldPoint = _position;
+            OnPositionChanging(_position, value);
+            Point oldPosition = _position;
             _position = value;
-            OnPositionChanged(oldPoint, _position);
+            OnPositionChanged(oldPosition, _position);
         }
     }
 
     /// <inheritdoc/>
     public Point AbsolutePosition { get; protected set; }
+
+    /// <inheritdoc/>
+    [DataMember]
+    public bool IgnoreParentPosition { get; set; }
 
     /// <inheritdoc/>
     [DataMember]
@@ -473,8 +471,16 @@ public class ScreenObject : IScreenObject
     protected virtual void OnParentChanged(IScreenObject? oldParent, IScreenObject? newParent)
     {
         UpdateAbsolutePosition();
-        ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject>(oldParent, newParent));
+        ParentChanged?.Invoke(this, new ValueChangedEventArgs<IScreenObject?>(oldParent, newParent));
     }
+
+    /// <summary>
+    /// Raises the <see cref="PositionChanging"/> event.
+    /// </summary>
+    /// <param name="oldPosition">The previous position.</param>
+    /// <param name="newPosition">The new position.</param>
+    protected virtual void OnPositionChanging(Point oldPosition, Point newPosition) =>
+        PositionChanging?.Invoke(this, new ValueChangedEventArgs<Point>(oldPosition, newPosition));
 
     /// <summary>
     /// Raises the <see cref="PositionChanged"/> event.
@@ -502,7 +508,7 @@ public class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void UpdateAbsolutePosition()
     {
-        AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
+        AbsolutePosition = !IgnoreParentPosition ? Position + (Parent?.AbsolutePosition ?? Point.Zero) : Position;
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)
@@ -527,44 +533,7 @@ public class ScreenObject : IScreenObject
     /// <returns>The string "ScreenObject".</returns>
     public override string ToString() =>
         "ScreenObject";
-
-    /// <summary>
-    /// Nothing.
-    /// </summary>
-    /// <param name="context">Nothing.</param>
-    [OnSerializing]
-    protected void OnSerializingMethod(StreamingContext context)
-    {
-        _childrenSerialized = Children.ToArray();
-        _componentsSerialized = SadComponents.ToArray();
-        _isChildrenLocked = Children.IsLocked;
-    }
-
-    [OnSerialized]
-    private void OnSerialized(StreamingContext context)
-    {
-        _childrenSerialized = null;
-        _componentsSerialized = null;
-    }
-
-    [OnDeserialized]
-    private void OnDeserialized(StreamingContext context)
-    {
-        foreach (IScreenObject item in _childrenSerialized!)
-            Children.Add(item);
-
-        foreach (IComponent item in _componentsSerialized!)
-            SadComponents.Add(item);
-
-        Children.IsLocked = _isChildrenLocked;
-
-        _componentsSerialized = null;
-        _childrenSerialized = null;
-
-        UpdateAbsolutePosition();
-    }
-
-
+    
     /// <summary>
     /// Adds a component to the provided collections, based on its configuration.
     /// </summary>

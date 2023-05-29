@@ -169,25 +169,21 @@ public static class Screen
                 Title = "Set Position",
                 CloseOnEscKey = true
             };
-            TextBox widthBox;
-            TextBox heightBox;
+            NumberBox widthBox;
+            NumberBox heightBox;
 
             Label label = CreateLabel("X: ", new Point(1, 2));
-            widthBox = new TextBox(4)
+            widthBox = new NumberBox(4)
             {
                 Position = new Point(label.Bounds.MaxExtentX + 4, label.Bounds.Y),
-                IsNumeric = true,
-                AllowDecimal = false,
                 Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.X.ToString()
             };
             window.Controls.Add(widthBox);
 
             label = CreateLabel("Y: ", new Point(1, 3));
-            heightBox = new TextBox(4)
+            heightBox = new NumberBox(4)
             {
                 Position = new Point(label.Bounds.MaxExtentX + 4, label.Bounds.Y),
-                IsNumeric = true,
-                AllowDecimal = false,
                 Text = ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.Y.ToString()
             };
             window.Controls.Add(heightBox);
@@ -200,7 +196,7 @@ public static class Screen
             };
             buttonSave.Click += (s, e2) =>
             {
-                ((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position = new Point(int.Parse(widthBox.Text), int.Parse(heightBox.Text));
+                //((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position = new Point(int.Parse(widthBox.Text), int.Parse(heightBox.Text));
                 _labelConsolePosition.DisplayText = $"{((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.X},{((ConsoleListboxItem)_listConsoles.SelectedItem).Console.Position.Y}";
                 window.Hide();
             };

@@ -285,16 +285,22 @@
             </summary>
             <param name="zone">The hotspot to remove.</param>
         </member>
+        <member name="M:SadConsole.Entities.Manager.Contains(SadConsole.Entities.Zone)">
+            <summary>
+            Checks if the manager contains the specified zone.
+            </summary>
+            <param name="zone">The zone to check for.</param>
+        </member>
         <member name="M:SadConsole.Entities.Manager.GetEntityAtPosition(SadRogue.Primitives.Point)">
             <summary>
-            Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+            Returns an entity at the specified position or <see langword="null"/> if there is no entity. If there are multiple entities at the specified position, only one of them is returned.
             </summary>
             <param name="position">The position to get an entity at.</param>
-            <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+            <returns>The entity if it exists; otherwise it returns <see langword="null"/>.</returns>
         </member>
         <member name="M:SadConsole.Entities.Manager.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
             <summary>
-            Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+            Returns an enumerator containing the entities, if any, at the specified position.
             </summary>
             <param name="position">The position to get an entity at.</param>
             <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
@@ -306,7 +312,14 @@
             <param name="position">The position to check.</param>
             <returns>A value indicating if an entity exists.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+        <member name="M:SadConsole.Entities.Manager.GetZonesAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Returns a collection of zones at the specified position.
+            </summary>
+            <param name="position">The position to check for zones.</param>
+            <returns>Every zone that contains the position.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Entities.Manager.OnEntityAdded(SadConsole.Entities.Entity)">
@@ -323,7 +336,7 @@
         </member>
         <member name="M:SadConsole.Entities.Manager.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.Manager.EnterZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity entered.</param>
@@ -332,7 +345,7 @@
         </member>
         <member name="M:SadConsole.Entities.Manager.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.Manager.ExitZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity exited.</param>
@@ -349,13 +362,13 @@
             <param name="newPosition">The position the entity moved to.</param>
             <param name="oldPosition">The position the entity moved from.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityMoved(SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.Manager.GetZonesAtPosition(SadRogue.Primitives.Point@,System.Collections.Generic.HashSet{SadConsole.Entities.Zone}@)">
             <summary>
-            Creates a new event args for the entity movement.
+            Gets the zones that contain the specified position.
             </summary>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="newPosition">The position the entity moved to.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
+            <param name="point">The position to check.</param>
+            <param name="zones">The zones that contain this position.</param>
+            <returns><see langword="true"/> when at least one zone was found; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)">
             <summary>
@@ -453,6 +466,11 @@
         <member name="F:SadConsole.Entities.Zone.Settings">
             <summary>
             Key-value pairs for the zone.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Zone.Entities">
+            <summary>
+            A list of entities in the 
             </summary>
         </member>
         <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
@@ -1196,7 +1214,7 @@
         <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Themes.HueBar">

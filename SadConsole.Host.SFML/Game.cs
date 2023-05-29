@@ -22,20 +22,20 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// The keyboard translation object.
     /// </summary>
-    protected Keyboard _keyboard;
+    private Keyboard _keyboard;
 
     /// <summary>
     /// The mouse translation object.
     /// </summary>
-    protected Mouse _mouse;
+    private Mouse _mouse;
 
     /// <summary>
-    /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
+    /// Static instance to the game after the <see cref="Create()"/> method has been called.
     /// </summary>
     public new static Game Instance
     {
         get => (Game)GameHost.Instance;
-        protected set => GameHost.Instance = value;
+        private set => GameHost.Instance = value;
     }
 
     internal string _font;
@@ -76,7 +76,7 @@ public sealed partial class Game : GameHost
                     .OnStart(initCallback));
 
     /// <summary>
-    /// Creates a new game and assigns it to the <see cref="MonoGameInstance"/> property.
+    /// Creates a new game and assigns it to the <see cref="Instance"/> property.
     /// </summary>
     /// <param name="configuration">The settings used in creating the game.</param>
     public static void Create(Configuration configuration)
@@ -93,10 +93,9 @@ public sealed partial class Game : GameHost
     }
 
     /// <summary>
-    /// Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="GameHost.ScreenCellsX"/>, <see cref="GameHost.ScreenCellsY"/>, and the <see cref="GameHost.DefaultFontSize"/>.
+    /// Initializes SadConsole and sets up the window events, based on the <see cref="_configuration"/> variable.
     /// </summary>
-    /// <param name="window"></param>
-    protected void Initialize()
+    private void Initialize()
     {
         if (_configuration == null) throw new Exception("Configuration must be set.");
 
@@ -156,6 +155,9 @@ public sealed partial class Game : GameHost
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.Window, typeof(Renderers.WindowRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface, typeof(Renderers.LayeredRenderer));
 
         SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));
@@ -197,6 +199,9 @@ public sealed partial class Game : GameHost
             }
         }
 
+        // Set splash screens from config
+        if (_configuration.GenerateSplashScreen != null)
+            SetSplashScreens(_configuration.GenerateSplashScreen(this));
 
         // Kill off config instance
         _configuration = null;

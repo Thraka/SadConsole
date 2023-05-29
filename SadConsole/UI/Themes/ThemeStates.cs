@@ -172,7 +172,6 @@ public class ThemeStates
         CopyAppearance(MouseDown, colors.Appearance_ControlMouseDown);
         CopyAppearance(Selected, colors.Appearance_ControlSelected);
         CopyAppearance(Focused, colors.Appearance_ControlFocused);
-        CopyAppearance(Normal, colors.Appearance_ControlNormal);
     }
 
     private static void CopyAppearance(ColoredGlyph to, ColoredGlyph from)

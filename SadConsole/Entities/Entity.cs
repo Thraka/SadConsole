@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Dynamic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
@@ -13,8 +12,10 @@ namespace SadConsole.Entities;
 /// </summary>
 //[JsonConverter(typeof(EntityJsonConverter))]
 [DataContract]
-public class Entity : ScreenObject
+public class Entity : ScreenObject, IHasID
 {
+    private static uint _idGenerator;
+
     // TODO Change this to where Position/Center/Absolute values all come from this object instead of the AnimatedScreenSurface
     private SingleCell? _appearanceSingleCell;
     private Animated? _appearanceSurface;
@@ -122,6 +123,8 @@ public class Entity : ScreenObject
             _isSingleCell = value;
         }
     }
+
+    uint IHasID.ID { get; } = _idGenerator++;
 
     /// <summary>
     /// Creates a new entity as an animated surface.
@@ -274,8 +277,6 @@ public class Entity : ScreenObject
             {
                 _glyph = value ?? throw new System.NullReferenceException("Appearance cannot be null.");
                 IsDirty = true;
-
-                _effectState = new ColoredGlyphState(value);
             }
         }
 
@@ -292,16 +293,18 @@ public class Entity : ScreenObject
                 {
                     if (_effect.RestoreCellOnRemoved)
                         _effectState.RestoreState(ref _glyph);
-                    else
-                        // If we keep what the effect did to the cell, then replace the state of the cell
-                        // with its latest.
-                        _effectState = new ColoredGlyphState(_glyph);
                 }
 
                 if (value == null)
+                {
+                    _effectState = default;
                     _effect = null;
+                }
                 else
+                {
+                    _effectState = new ColoredGlyphState(_glyph);
                     _effect = value.CloneOnAdd ? value.Clone() : value;
+                }
             }
         }
 

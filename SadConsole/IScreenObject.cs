@@ -10,7 +10,7 @@ namespace SadConsole;
 /// <summary>
 /// A generic object processed by SadConsole. Provides parent/child, components, position, and input callbacks.
 /// </summary>
-public interface IScreenObject : IEnumerable<IScreenObject>
+public interface IScreenObject : IEnumerable<IScreenObject>, IPositionable
 {
     /// <summary>
     /// Raised when the <see cref="IsEnabled"/> property changes.
@@ -20,12 +20,7 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     /// <summary>
     /// Raised when the <see cref="Parent"/> property changes.
     /// </summary>
-    event EventHandler<ValueChangedEventArgs<IScreenObject>> ParentChanged;
-
-    /// <summary>
-    /// Raised when the <see cref="Position"/> property changes.
-    /// </summary>
-    event EventHandler<ValueChangedEventArgs<Point>> PositionChanged;
+    event EventHandler<ValueChangedEventArgs<IScreenObject?>> ParentChanged;
 
     /// <summary>
     /// Raised when the <see cref="IsVisible"/> property changes.
@@ -56,6 +51,11 @@ public interface IScreenObject : IEnumerable<IScreenObject>
     /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
     /// </summary>
     Point AbsolutePosition { get; }
+
+    /// <summary>
+    /// When <see langword="true"/>, this object should ignore it's parent position when calculating <see cref="AbsolutePosition"/>; otherwise <see langword="false"/>.
+    /// </summary>
+    bool IgnoreParentPosition { get; set; }
 
     /// <summary>
     /// The child objects of this instance.
