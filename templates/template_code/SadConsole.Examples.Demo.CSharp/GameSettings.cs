@@ -26,6 +26,7 @@ static class GameSettings
             new DemoShapes(),
             new DemoSurfaceOpacity(),
             new DemoRotatedSurface(),
-            new DemoLayeredSurface()
+            new DemoLayeredSurface(),
+            new DemoScrollableConsole()
         };
 }

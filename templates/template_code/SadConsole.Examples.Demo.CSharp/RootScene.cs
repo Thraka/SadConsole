@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using SadConsole.Components;
+﻿using SadConsole.Components;
 using SadConsole.UI;
 
 namespace SadConsole.Examples;
