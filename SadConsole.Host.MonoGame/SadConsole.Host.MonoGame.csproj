@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UseProjectReferences>true</UseProjectReferences>
+    <UseProjectReferences>false</UseProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1-debug" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="TheSadRogue.Primitives.MonoGame" Version="1.1.1" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
     <Version>10.0.0-alpha1</Version>
@@ -30,12 +30,12 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <UseProjectReferences>true</UseProjectReferences>
+    <UseProjectReferences>false</UseProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1-debug" />
     
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.0" />
     

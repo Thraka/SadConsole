@@ -205,7 +205,7 @@
         </member>
         <member name="P:SadConsole.Game.Instance">
             <summary>
-            Static instance to the game after the <see cref="!:Create(int, int, string, RenderWindow)"/> method has been called.
+            Static instance to the game after the <see cref="M:SadConsole.Game.Create"/> method has been called.
             </summary>
         </member>
         <member name="M:SadConsole.Game.#ctor">
@@ -237,15 +237,14 @@
         </member>
         <member name="M:SadConsole.Game.Create(SadConsole.Game.Configuration)">
             <summary>
-            Creates a new game and assigns it to the <see cref="!:MonoGameInstance"/> property.
+            Creates a new game and assigns it to the <see cref="P:SadConsole.Game.Instance"/> property.
             </summary>
             <param name="configuration">The settings used in creating the game.</param>
         </member>
         <member name="M:SadConsole.Game.Initialize">
             <summary>
-            Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="P:SadConsole.GameHost.ScreenCellsX"/>, <see cref="P:SadConsole.GameHost.ScreenCellsY"/>, and the <see cref="P:SadConsole.GameHost.DefaultFontSize"/>.
+            Initializes SadConsole and sets up the window events, based on the <see cref="F:SadConsole.Game._configuration"/> variable.
             </summary>
-            <param name="window"></param>
         </member>
         <member name="M:SadConsole.Game.Run">
             <inheritdoc/>

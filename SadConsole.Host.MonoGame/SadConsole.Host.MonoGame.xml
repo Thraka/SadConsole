@@ -68,7 +68,7 @@
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallGlyph">
             <summary>
-            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            Draws a glyph to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
             </summary>
         </member>
         <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Texture">
@@ -109,6 +109,43 @@
         <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Texture">
+            <summary>
+            The texture, most likely a SadConsole font texture, containing the solid white rectangle referenced by <see cref="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="F:SadConsole.DrawCalls.DrawCallColor.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            The color of the target rectangle.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="color">The folor of the rectangle.</param>
+            <param name="texture">The texture containing a solid white rectangle referenced by <paramref name="fontSolidRect"/>.</param>
+            <param name="targetRect">The drawing location of the rectangle.</param>
+            <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallManager">
             <summary>
             Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
@@ -123,6 +160,38 @@
             <summary>
             Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
             </summary>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws an image ot the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The image to draw.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            A color tint to apply when drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color})">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="texture">The image to draw.</param>
+            <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
+            <param name="tint">A color tint to apply to the drawn image.</param>
+            <exception cref="T:System.NullReferenceException">Thrown when <paramref name="texture"/> is null.</exception>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Extensions.ToMonoGame(SadConsole.Mirror)">
             <summary>
@@ -575,10 +644,27 @@
             A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
             </summary>
         </member>
+        <member name="T:SadConsole.Host.Game.ClearScreenGameComponent">
+            <summary>
+            A MonoGame component that clears the screen with the <see cref="F:SadConsole.Settings.ClearColor"/> color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.ClearScreenGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Host.Game.FPSCounterComponent">
             <summary>
             A component to draw how many frames per second the engine is performing at.
             </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.FPSCounterComponent.#ctor(Microsoft.Xna.Framework.Game)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.Game.FPSCounterComponent.Update(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.Game.FPSCounterComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
         </member>
         <member name="F:SadConsole.Host.Game.SadConsoleComponent">
             <summary>
@@ -674,7 +760,7 @@
         </member>
         <member name="P:SadConsole.Host.Global.RenderOutput">
             <summary>
-            The output texture. After each screen in SadConsole is drawn, they're then drawn on to this output texture to compose the final scene.
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Global.UpdateLoopGameTime">
@@ -695,6 +781,11 @@
         <member name="M:SadConsole.Host.Global.ResetGraphicsDevice">
             <summary>
             Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to <see langword="null"/>, targeting the app window.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Settings">
+            <summary>
+            A settings class usually used when creating the host object.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
@@ -836,6 +927,25 @@
             <summary>
             Adds the render steps this renderer uses.
             </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
@@ -1196,6 +1306,9 @@
         </member>
         <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Dispose">
              <inheritdoc/>

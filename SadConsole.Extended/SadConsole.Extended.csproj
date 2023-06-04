@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
     <Version>10.0.0-alpha1</Version>
@@ -29,15 +29,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UseProjectReferences>true</UseProjectReferences>
+    <UseProjectReferences>false</UseProjectReferences>
   </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
     
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
+    <PackageReference Include="SadConsole" Version="10.0.0-alpha1-debug" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 
