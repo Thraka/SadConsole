@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
-using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -13,16 +11,18 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public abstract class ControlBase
 {
-    public Type ThemeType { get; set; }
-
     private Point _position;
     private bool _isEnabled = true;
     private IContainer? _parent;
-    [DataMember(Name = "CustomTheme")]
-    private Themes.ThemeBase _activeTheme;
     [DataMember(Name = "ThemeColors")]
     private Colors? _themeColors;
     private bool _isDirty;
+    private bool _isFocused;
+
+    /// <summary>
+    /// The theme of the control based on its state.
+    /// </summary>
+    protected ThemeStates ThemeState;
 
     /// <summary>
     /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
@@ -48,6 +48,41 @@ public abstract class ControlBase
     /// Raised when the <see cref="IsDirty"/> property changes.
     /// </summary>
     public event EventHandler<EventArgs>? IsDirtyChanged;
+
+    /// <summary>
+    /// Raised when the <see cref="IsFocused"/> is set to <see langword="true"/>.
+    /// </summary>
+    public event EventHandler<EventArgs>? Focused;
+
+    /// <summary>
+    /// Raised when the <see cref="IsFocused"/> is set to <see langword="false"/>.
+    /// </summary>
+    public event EventHandler<EventArgs>? Unfocused;
+
+    /// <summary>
+    /// Raised when the <see cref="Position"/> property changes value.
+    /// </summary>
+    public event EventHandler<EventArgs>? PositionChanged;
+
+    /// <summary>
+    /// Raised when the mouse enters this control.
+    /// </summary>
+    public event EventHandler<ControlMouseState>? MouseEnter;
+
+    /// <summary>
+    /// Raised when the mouse exits this control.
+    /// </summary>
+    public event EventHandler<ControlMouseState>? MouseExit;
+
+    /// <summary>
+    /// Raised when the mouse is moved over this control.
+    /// </summary>
+    public event EventHandler<ControlMouseState>? MouseMove;
+
+    /// <summary>
+    /// Raised when a mouse button is clicked while the mouse is over this control.
+    /// </summary>
+    public event EventHandler<ControlMouseState>? MouseButtonClicked;
 
     /// <summary>
     /// <see langword="true"/> to allow this control to respond to keyboard interactions when focused.
@@ -184,31 +219,51 @@ public abstract class ControlBase
     /// </summary>
     public bool IsFocused
     {
-        get
-        {
-            if (Parent == null || Parent.Host == null)
-                return false;
-            else
-                return Parent.Host.FocusedControl == this;
-        }
+        get => _isFocused;
         set
         {
-            if (Parent != null && Parent.Host != null)
+            if (Parent?.Host != null)
             {
+                // We're focused
                 if (value)
                 {
+                    // Some other control is focused, swap
                     if (Parent.Host.FocusedControl != this)
+                    {
                         Parent.Host.FocusedControl = this;
+                        _isFocused = Parent.Host.FocusedControl == this;
+                        DetermineState();
+
+                        if (_isFocused)
+                            OnFocused();
+                    }
+
+                    // We're focused, check internal flag and set properly
+                    else if (!_isFocused)
+                    {
+                        _isFocused = true;
+                        DetermineState();
+                        OnFocused();
+                    }
                 }
-                else if (Parent.Host.FocusedControl == this)
+                else
                 {
-                    Parent.Host.TabNextControl();
+                    _isFocused = false;
 
                     if (Parent.Host.FocusedControl == this)
                         Parent.Host.FocusedControl = null;
-                }
 
+                    DetermineState();
+                    OnUnfocused();;
+                }
+            }
+
+            // No parent/host and we're currently focused internally, clear it
+            else if (_isFocused)
+            {
+                _isFocused = false;
                 DetermineState();
+                OnUnfocused();
             }
         }
     }
@@ -244,6 +299,7 @@ public abstract class ControlBase
 
             if (_parent == null)
             {
+                IsFocused = false;
                 _parent = value!;
 
                 if (_parent.IsReadOnly == false)
@@ -251,6 +307,7 @@ public abstract class ControlBase
             }
             else
             {
+                IsFocused = false;
                 IContainer temp = _parent;
                 _parent = null;
                 if (!temp.IsReadOnly)
@@ -260,73 +317,18 @@ public abstract class ControlBase
 
                 if (_parent != null && !_parent.IsReadOnly)
                     _parent.Add(this);
-            }    
+            }
 
+            DetermineState();
             IsDirty = true;
             OnParentChanged();
         }
     }
 
     /// <summary>
-    /// The custom theme to use with this control. If set to <see langword="null"/>, will use the theme assigned by the <see cref="Parent"/>.
-    /// </summary>
-    [AllowNull]
-    public ThemeBase Theme
-    {
-        get => _activeTheme;
-        set
-        {
-            if (value != _activeTheme)
-            {
-                if (value == null)
-                {
-                    IsCustomTheme = false;
-                    _activeTheme = Library.Default.GetControlTheme(GetType());
-                    if (_activeTheme == null) throw new NullReferenceException($"Theme unavailable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
-                }
-                else
-                {
-                    _activeTheme = value;
-                    IsCustomTheme = true;
-                }
-
-                OnThemeChanged();
-                _activeTheme.Attached(this);
-                DetermineState();
-                IsDirty = true;
-            }
-        }
-    }
-
-    /// <summary>
-    /// When <see langword="true"/>, indicates the control has a custom theme assigned to it; othwerise <see langword="false"/>.
-    /// </summary>
-    public bool IsCustomTheme { get; protected set; }
-
-    /// <summary>
     /// The state of the control.
     /// </summary>
     public ControlStates State { get; protected set; }
-
-    /// <summary>
-    /// Raised when the mouse enters this control.
-    /// </summary>
-    public event EventHandler<ControlMouseState>? MouseEnter;
-
-    /// <summary>
-    /// Raised when the mouse exits this control.
-    /// </summary>
-    public event EventHandler<ControlMouseState>? MouseExit;
-
-    /// <summary>
-    /// Raised when the mouse is moved over this control.
-    /// </summary>
-    public event EventHandler<ControlMouseState>? MouseMove;
-
-    /// <summary>
-    /// Raised when a mouse button is clicked while the mouse is over this control.
-    /// </summary>
-    public event EventHandler<ControlMouseState>? MouseButtonClicked;
 
     #region Constructors
     /// <inheritdoc />
@@ -348,30 +350,27 @@ public abstract class ControlBase
         UseKeyboard = true;
         MouseArea = new Rectangle(0, 0, width, height);
 
-        // Set theme
-        Surface = null!;
-        _activeTheme = Library.Default.GetControlTheme(GetType());
-        if (_activeTheme == null) throw new NullReferenceException($"Theme unavailable for {GetType().FullName}. Register a theme with SadConsole.Library.Default.SetControlTheme");
-        _activeTheme.Attached(this);
+        Surface = new CellSurface(Width, Height)
+        {
+            DefaultBackground = SadRogue.Primitives.Color.Transparent
+        };
+        Surface.Clear();
+
         DetermineState();
     }
     #endregion
 
     /// <summary>
-    /// Called when the control loses focus. Calls DetermineAppearance.
+    /// Called when the control loses focus.
     /// </summary>
-    public virtual void FocusLost() => DetermineState();
+    protected virtual void OnUnfocused() =>
+        Unfocused?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
-    /// Called when the control is focused. Calls DetermineAppearance.
+    /// Called when the control is focused.
     /// </summary>
-    public virtual void Focused() => DetermineState();
-
-
-    /// <summary>
-    /// Called when the <see cref="Theme"/> changes.
-    /// </summary>
-    protected virtual void OnThemeChanged() { }
+    protected virtual void OnFocused() =>
+        Focused?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Called when the <see cref="IsDirty"/> property changes value.
@@ -448,7 +447,8 @@ public abstract class ControlBase
     /// <summary>
     /// Called when the control changes position.
     /// </summary>
-    protected virtual void OnPositionChanged() { }
+    protected virtual void OnPositionChanged() =>
+        PositionChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Places this control relative to another, taking into account the bounds of the control.
@@ -566,15 +566,6 @@ public abstract class ControlBase
     /// <summary>
     /// Resizes the control if the <see cref="CanResize"/> property is <see langword="true"/>.
     /// </summary>
-    /// <remarks>
-    /// When overriding this method, to perhaps restrict the requested size, make sure to do the following:
-    ///
-    /// - Check if the <see cref="CanResize"/> property allows resizing. If it doesn't, throw an <see cref="InvalidOperationException"/>.
-    /// - The <see cref="Width"/> and <see cref="Height"/> variables of the control are set to the values provided.
-    /// - The <see cref="MouseArea"/> property is set to the same width and height as values provided. Generally the theme will adjust this if needed, but it might ignore this so you'll need to set it.
-    /// - The <see cref="Theme"/>, if set, is reattached by calling <see cref="ThemeBase.Attached(ControlBase)"/>.
-    /// - Set <see cref="IsDirty"/> to <see langword="true"/>.
-    /// </remarks>
     /// <param name="width">The desired width of the control.</param>
     /// <param name="height">The desired height of the control.</param>
     public virtual void Resize(int width, int height)
@@ -584,8 +575,20 @@ public abstract class ControlBase
         Width = width;
         Height = height;
         MouseArea = new Rectangle(0, 0, width, height);
-        Theme?.Attached(this);
         IsDirty = true;
+        OnResized();
+    }
+
+    /// <summary>
+    /// Called when <see cref="Resize(int, int)"/> was called. Resizes the <see cref="Surface"/> to match the <see cref="Width"/> and <see cref="Height"/> properties.
+    /// </summary>
+    protected virtual void OnResized()
+    {
+        Surface = new CellSurface(Width, Height)
+        {
+            DefaultBackground = SadRogue.Primitives.Color.Transparent
+        };
+        Surface.Clear();
     }
 
     /// <summary>
@@ -662,10 +665,9 @@ public abstract class ControlBase
     }
 
     /// <summary>
-    /// Update the control appearance based on <see cref="DetermineState"/> and <see cref="IsDirty"/>.
+    /// Redraws the control if applicable.
     /// </summary>
-    public virtual void Update(TimeSpan time) =>
-        Theme.UpdateAndDraw(this, time);
+    public abstract void UpdateAndRedraw(TimeSpan time);
 
     [OnDeserialized]
     private void AfterDeserialized(StreamingContext context)

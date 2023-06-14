@@ -8,7 +8,7 @@ namespace SadConsole.UI.Controls;
 /// Represents a scrollbar control.
 /// </summary>
 [DataContract]
-public class ScrollBar : ControlBase
+public partial class ScrollBar : ControlBase
 {
     /// <summary>
     /// Raised when the <see cref="Value"/> property changes.
@@ -110,6 +110,15 @@ public class ScrollBar : ControlBase
         SliderBarSize = size - 2;
 
         SetSliderPositionFromValue();
+
+        //TODO add states for ends. Bar should use base state.
+        StartButtonVerticalGlyph = 30;
+        EndButtonVerticalGlyph = 31;
+        StartButtonHorizontalGlyph = 17;
+        EndButtonHorizontalGlyph = 16;
+        SliderGlyph = 219;
+        BarGlyph = 176;
+        UseExtended = true;
     }
 
     /// <summary>
@@ -129,6 +138,15 @@ public class ScrollBar : ControlBase
         SliderBarSize = orientation == Orientation.Horizontal ? width - 2 : height - 2;
 
         SetSliderPositionFromValue();
+
+        //TODO add states for ends. Bar should use base state.
+        StartButtonVerticalGlyph = 30;
+        EndButtonVerticalGlyph = 31;
+        StartButtonHorizontalGlyph = 17;
+        EndButtonHorizontalGlyph = 16;
+        SliderGlyph = 219;
+        BarGlyph = 176;
+        UseExtended = true;
     }
 
     /// <inheritdoc/>

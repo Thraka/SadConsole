@@ -1,4 +1,7 @@
-﻿using SadRogue.Primitives;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 
@@ -144,6 +147,120 @@ public static class StringExtensions
         newString.IgnoreMirror = true;
 
         return newString;
+    }
+
+    /// <summary>
+    /// Wraps text into lines by words, long words are also properly wrapped into multiple lines.
+    /// </summary>
+    /// <param name="text">The text to parse.</param>
+    /// <param name="maxCharsPerLine">The maximum number of characters per line of text returned.</param>
+    /// <returns>Each line in the string.</returns>
+    public static IEnumerable<string> WordWrap(this string text, int maxCharsPerLine)
+    {
+        string line = "";
+        int availableLength = maxCharsPerLine;
+        string[] words = text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .SelectMany(a => System.Text.RegularExpressions.Regex.Split(a, @"(?=[\n])")).ToArray(); // Regex split will also split \n but keep \n part of the parts
+        foreach (string w in words)
+        {
+            string word = w;
+            if (word == string.Empty)
+                continue;
+
+            int wordLength = word.Length;
+            if (wordLength >= maxCharsPerLine)
+            {
+                if (availableLength > 0)
+                {
+                    var lineValue = word.Substring(0, availableLength);
+                    if (lineValue.Contains('\n'))
+                    {
+                        var splitLine = lineValue.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < splitLine.Length - 1; i++)
+                            yield return line += splitLine[i];
+                        line = string.Empty;
+                        word = splitLine[splitLine.Length - 1];
+                    }
+                    else
+                    {
+                        yield return line += word.Substring(0, availableLength);
+                        line = string.Empty;
+                        word = word[availableLength..];
+                    }
+                }
+                else
+                {
+                    yield return line;
+                    line = string.Empty;
+                }
+                availableLength = maxCharsPerLine;
+                for (int count = 0; count < word.Length; count++)
+                {
+                    char ch = word.ElementAt(count);
+
+                    if (ch == '\n')
+                    {
+                        yield return line;
+                        line = string.Empty;
+                        availableLength = maxCharsPerLine;
+                        continue;
+                    }
+
+                    line += ch;
+                    availableLength--;
+
+                    if (availableLength == 0)
+                    {
+                        yield return line;
+                        line = string.Empty;
+                        availableLength = maxCharsPerLine;
+                    }
+                }
+                if (availableLength > 0)
+                {
+                    line += " ";
+                    availableLength--;
+                }
+                continue;
+            }
+
+            // Attempt to cut of early, if the word doesn't fit the line anymore
+            if (word.Length > availableLength)
+            {
+                yield return line;
+                line = string.Empty;
+                availableLength = maxCharsPerLine;
+            }
+
+            foreach (var ch in word)
+            {
+                if (availableLength == 0)
+                {
+                    yield return line;
+                    line = string.Empty;
+                    availableLength = maxCharsPerLine;
+                }
+
+                if (ch == '\n')
+                {
+                    yield return line;
+                    line = string.Empty;
+                    availableLength = maxCharsPerLine;
+                    continue;
+                }
+
+                line += ch;
+                availableLength--;
+            }
+            if (availableLength > 0)
+            {
+                line += " ";
+                availableLength--;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(line))
+            yield return line.TrimEnd();
     }
 
     /// <summary>

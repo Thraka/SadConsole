@@ -7,7 +7,7 @@ namespace SadConsole.UI.Controls;
 /// A control that fills an area (vertical or horizontal) according to a value.
 /// </summary>
 [DataContract]
-public class ProgressBar : ControlBase
+public partial class ProgressBar : ControlBase
 {
     private string _displayText = "%";
     private HorizontalAlignment _displayTextAlignment = HorizontalAlignment.Center;
@@ -193,6 +193,15 @@ public class ProgressBar : ControlBase
 
         CanFocus = false;
         TabStop = false;
+
+        PrintDisplayAsDecorator = true;
+
+        ThemeStateBackground = new ThemeStates();
+        ThemeStateForeground = new ThemeStates();
+        DisplayTextStates = new ThemeStates();
+
+        ThemeStateBackground.SetGlyph(176);
+        ThemeStateForeground.SetGlyph(219);
     }
 
     /// <summary>
@@ -215,6 +224,15 @@ public class ProgressBar : ControlBase
 
         CanFocus = false;
         TabStop = false;
+
+        PrintDisplayAsDecorator = true;
+
+        ThemeStateBackground = new ThemeStates();
+        ThemeStateForeground = new ThemeStates();
+        DisplayTextStates = new ThemeStates();
+
+        ThemeStateBackground.SetGlyph(176);
+        ThemeStateForeground.SetGlyph(219);
     }
 
     /// <summary>

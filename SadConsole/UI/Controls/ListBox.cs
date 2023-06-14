@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
-using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -12,7 +11,7 @@ namespace SadConsole.UI.Controls;
 /// A scrollable list control.
 /// </summary>
 [DataContract]
-public class ListBox : CompositeControl
+public partial class ListBox : CompositeControl
 {
     /// <summary>
     /// The event args used when the selected item changes.
@@ -71,10 +70,10 @@ public class ListBox : CompositeControl
     }
 
     /// <summary>
-    /// Used in rendering.
+    /// The scroll bar control used with this list box.
     /// </summary>
     [DataMember(Name = "ScrollBar")]
-    public ScrollBar ScrollBar { get; private set; }
+    public ScrollBar ScrollBar { get; protected set; }
 
     /// <summary>
     /// Used in rendering.
@@ -197,6 +196,7 @@ public class ListBox : CompositeControl
 
         Items = new ObservableCollection<object>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
+        ItemTheme = new ListBoxItemTheme();
     }
 
     /// <summary>
@@ -205,7 +205,8 @@ public class ListBox : CompositeControl
     /// <param name="width">The width of the listbox.</param>
     /// <param name="height">The height of the listbox.</param>
     /// <param name="itemTheme">The theme to use with rendering the listbox items.</param>
-    public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) => ((ListBoxTheme)Theme).ItemTheme = itemTheme;
+    public ListBox(int width, int height, ListBoxItemTheme itemTheme) : this(width, height) =>
+        ItemTheme = itemTheme;
 
     private void _scrollbar_ValueChanged(object? sender, EventArgs e) => IsDirty = true;
 
@@ -260,7 +261,6 @@ public class ListBox : CompositeControl
         _serializedScrollPosition = position;
         _serializedScrollOrientation = orientation;
 
-        OnThemeChanged();
         DetermineState();
     }
 
@@ -278,19 +278,6 @@ public class ListBox : CompositeControl
             else
                 ScrollBar.Value = _selectedIndex - VisibleItemsTotal + 1;
         }
-    }
-
-    /// <summary>
-    /// Sets the scrollbar's theme to the current theme's <see cref="ListBoxTheme.ScrollBarTheme"/>.
-    /// </summary>
-    protected override void OnThemeChanged()
-    {
-        if (ScrollBar == null) return;
-
-        if (Theme is ListBoxTheme theme)
-            ScrollBar.Theme = theme.ScrollBarTheme;
-        else
-            ScrollBar.Theme = null;
     }
 
     private void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -317,7 +304,7 @@ public class ListBox : CompositeControl
         IsDirty = true;
 
         // Update right away so theme/scrollbars are updated.
-        Update(TimeSpan.Zero);
+        UpdateAndRedraw(TimeSpan.Zero);
     }
 
     /// <inheritdoc />
@@ -380,8 +367,6 @@ public class ListBox : CompositeControl
     {
         base.OnMouseIn(state);
 
-        if (Theme is not ListBoxTheme theme) return;
-
         (_, int itemIndex) = GetItemAndIndexUnderMouse(state);
 
         ItemIndexMouseOver = itemIndex;
@@ -399,8 +384,6 @@ public class ListBox : CompositeControl
     protected override void OnLeftMouseClicked(ControlMouseState state)
     {
         base.OnLeftMouseClicked(state);
-
-        if (Theme is not ListBoxTheme theme) return;
 
         DateTime click = DateTime.Now;
         bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
@@ -438,11 +421,9 @@ public class ListBox : CompositeControl
     /// <exception cref="Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
     public (object? item, int itemIndex) GetItemAndIndexUnderMouse(ControlMouseState state)
     {
-        if (Theme is not ListBoxTheme theme) throw new Exception($"{nameof(ListBox)} must use a theme based on {nameof(ListBoxTheme)}");
-
-        int rowOffset = theme.DrawBorder ? 1 : 0;
-        int rowOffsetReverse = theme.DrawBorder ? 0 : 1;
-        int columnOffsetEnd = IsScrollBarVisible || !theme.DrawBorder ? 1 : 0;
+        int rowOffset = DrawBorder ? 1 : 0;
+        int rowOffsetReverse = DrawBorder ? 0 : 1;
+        int columnOffsetEnd = IsScrollBarVisible || !DrawBorder ? 1 : 0;
 
         int itemIndex = -1;
 

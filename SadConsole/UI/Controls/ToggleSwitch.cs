@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
@@ -6,24 +7,20 @@ namespace SadConsole.UI.Controls;
 /// Represents a button that can be toggled on/off within a group of other buttons.
 /// </summary>
 [DataContract]
-public partial class CheckBox : ToggleButtonBase
+public partial class ToggleSwitch : ToggleButtonBase
 {
     /// <summary>
     /// Creates a new checkbox control with the specified width and height.
     /// </summary>
     /// <param name="width">The width of the control.</param>
     /// <param name="height">The height of the control.</param>
-    public CheckBox(int width, int height) : base(width, height)
+    public ToggleSwitch(int width, int height) : base(width, height)
     {
-        _textAlignment = HorizontalAlignment.Left;
-
-        LeftBracketGlyph = '[';
-        RightBracketGlyph = ']';
-        CheckedIconGlyph = 251;
-        UncheckedIconGlyph = 0;
-
-        BracketsThemeState = new ThemeStates();
-        IconThemeState = new ThemeStates();
+        OnGlyph = 178;
+        OnGlyphColor = Color.LawnGreen;
+        BackgroundGlyph = 177;
+        OffGlyphColor = Color.DarkGreen;
+        SwitchOrientation = HorizontalAlignment.Right;
     }
 
     /// <summary>
@@ -34,4 +31,6 @@ public partial class CheckBox : ToggleButtonBase
         base.OnClick();
         IsSelected = !IsSelected;
     }
+
+
 }

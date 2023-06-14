@@ -99,16 +99,14 @@ public abstract class CompositeControl : ControlBase, IContainer
     /// Updates each control hosted by this control.
     /// </summary>
     /// <param name="time">The game frame time delta.</param>
-    public override void Update(TimeSpan time)
+    public override void UpdateAndRedraw(TimeSpan time)
     {
-        base.Update(time);
-
         ControlBase[] controls = Controls.ToArray();
 
         for (int i = 0; i < controls.Length; i++)
         {
             ControlBase control = controls[i];
-            control.Update(time);
+            control.UpdateAndRedraw(time);
         }
     }
 

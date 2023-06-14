@@ -10,6 +10,17 @@ namespace SadConsole.UI.Controls;
 public class DrawingArea : ControlBase
 {
     /// <summary>
+    /// When true, only uses <see cref="ThemeStates.Normal"/> for drawing.
+    /// </summary>
+    [DataMember]
+    public bool UseNormalStateOnly { get; set; } = true;
+
+    /// <summary>
+    /// The current appearance based on the control state.
+    /// </summary>
+    public ColoredGlyph? Appearance { get; protected set; }
+
+    /// <summary>
     /// Called when the surface is redrawn.
     /// </summary>
     public Action<DrawingArea, TimeSpan>? OnDraw { get; set; }
@@ -24,5 +35,21 @@ public class DrawingArea : ControlBase
         UseMouse = false;
         UseKeyboard = false;
         TabStop = false;
+    }
+
+    /// <inheritdoc/>
+    public override void UpdateAndRedraw(TimeSpan time)
+    {
+        if (!IsDirty) return;
+
+        ThemeState.RefreshTheme(FindThemeColors());
+
+        if (!UseNormalStateOnly)
+            Appearance = ThemeState.GetStateAppearance(State);
+        else
+            Appearance = ThemeState.Normal;
+
+        OnDraw?.Invoke(this, time);
+        IsDirty = false;
     }
 }

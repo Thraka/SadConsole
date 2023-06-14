@@ -4,7 +4,7 @@ using System;
 using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
+
 using SadRogue.Primitives;
 
 namespace SadConsole.Debug;
@@ -54,16 +54,13 @@ public static class Screen
             Font = font;
             FontSize = fontSize;
 
-            var listboxTheme = (ListBoxTheme)Library.Default.GetControlTheme(typeof(ListBox));
-            listboxTheme.DrawBorder = true;
-
             Title = "Global.CurrentScreen Debugger";
             IsModalDefault = true;
             CloseOnEscKey = true;
 
             _listConsoles = new ListBox(30, 15) { Position = new Point(2, 3) };
             _listConsoles.SelectedItemChanged += Listbox_SelectedItemChanged;
-            _listConsoles.Theme = listboxTheme;
+            _listConsoles.DrawBorder = true;
             Controls.Add(_listConsoles);
 
             Label label = CreateLabel("Current Screen", new Point(_listConsoles.Bounds.X, _listConsoles.Bounds.Y - 1));
@@ -192,7 +189,7 @@ public static class Screen
             {
                 Text = "Save",
                 Position = new Point(1, window.Height - 2),
-                Theme = new UI.Themes.ButtonTheme() { ShowEnds = false }
+                ShowEnds = false
             };
             buttonSave.Click += (s, e2) =>
             {
@@ -206,7 +203,7 @@ public static class Screen
             {
                 Text = "Cancel",
                 Position = new Point(window.Width - 1 - 6, window.Height - 2),
-                Theme = new ButtonTheme() { ShowEnds = false }
+                ShowEnds = false
             };
             buttonCancel.Click += (s, e2) =>
             {

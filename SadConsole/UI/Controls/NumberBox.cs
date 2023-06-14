@@ -121,10 +121,10 @@ public partial class NumberBox : TextBox
     }
 
     /// <inheritdoc/>
-    public override void FocusLost()
+    protected override void OnUnfocused()
     {
         FixNumber();
-        base.FocusLost();
+        base.OnUnfocused();
     }
 
     /// <summary>

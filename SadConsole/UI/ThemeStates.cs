@@ -2,7 +2,7 @@
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
-namespace SadConsole.UI.Themes;
+namespace SadConsole.UI;
 
 /// <summary>
 /// Has the basic appearances of each control state.

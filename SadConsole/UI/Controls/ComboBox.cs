@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using SadConsole.UI.Themes;
+
 using SadConsole.Quick;
 using System.Linq;
 using SadRogue.Primitives;
@@ -12,7 +12,7 @@ namespace SadConsole.UI.Controls;
 /// Represents a button that can be toggled on/off within a group of other buttons.
 /// </summary>
 [DataContract]
-public class ComboBox : CheckBox
+public partial class ComboBox : CheckBox
 {
     private ScreenSurface _dropDownContainer;
     private ListBox _listBox;
@@ -86,6 +86,18 @@ public class ComboBox : CheckBox
 
             return false;
         });
+
+        // Theme settings
+        IconThemeState = new ThemeStates();
+
+        CollapsedButtonGlyph = 16; // ▶
+        ExpandedButtonGlyph = 31; // ▼
+
+        _listBox.DrawBorder = true;
+
+        PopupInnerAligned = true;
+        PopupHorizontal = HorizontalAlignment.Left;
+        PopupVertical = VerticalAlignment.Bottom;
     }
 
 
@@ -135,33 +147,29 @@ public class ComboBox : CheckBox
             if (IsSelected)
             {
                 Colors colors = FindThemeColors();
-                ComboBoxTheme theme = (ComboBoxTheme)Theme;
                 _listBox.Parent!.Host!.ThemeColors = colors;
-                //_listBox.SetThemeColors(colors);
-                //_listBox.ScrollBar.SetThemeColors(colors);
-                _listBox.Theme = ((ComboBoxTheme)Theme).ListBoxTheme;
                 _dropDownContainer.Font = Parent.Host.ParentConsole.Font;
                 _dropDownContainer.FontSize = Parent.Host.ParentConsole.FontSize;
                 _dropDownContainer.Parent = Parent.Host.ParentConsole;
 
                 Point position = AbsolutePosition;
 
-                switch (theme.PopupHorizontal)
+                switch (PopupHorizontal)
                 {
                     case HorizontalAlignment.Left:
-                        position -= theme.PopupInnerAligned ? (0, 0) : (_dropDownContainer.Width, 0);
+                        position -= PopupInnerAligned ? (0, 0) : (_dropDownContainer.Width, 0);
                         break;
                     case HorizontalAlignment.Center:
                         position -= (_dropDownContainer.Width / 2 - Width / 2, 0);
                         break;
                     case HorizontalAlignment.Right:
-                        position += theme.PopupInnerAligned ? (Width - _dropDownContainer.Width, 0) : (Width, 0);
+                        position += PopupInnerAligned ? (Width - _dropDownContainer.Width, 0) : (Width, 0);
                         break;
                     default:
                         break;
                 }
 
-                switch (theme.PopupVertical)
+                switch (PopupVertical)
                 {
                     case VerticalAlignment.Top:
                         position -= (0, _dropDownContainer.Height);

@@ -10,7 +10,7 @@ namespace SadConsole.UI.Controls;
 /// A control container that processes the mouse on each child. <see cref="ControlBase.TabStop"/> defaults to <see langword="false"/>.
 /// </summary>
 [DataContract]
-public class Panel : CompositeControl, IList<ControlBase>
+public partial class Panel : CompositeControl, IList<ControlBase>
 {
     /// <summary>
     /// Gets or sets a control in the collection of controls.
@@ -121,17 +121,6 @@ public class Panel : CompositeControl, IList<ControlBase>
     /// <inheritdoc/>
     public void CopyTo(ControlBase[] array, int arrayIndex) =>
         Controls.CopyTo(array, arrayIndex);
-
-    /// <inheritdoc/>
-    public override void Update(TimeSpan time)
-    {
-        base.Update(time);
-
-        ControlBase[] tempControls = Controls.ToArray();
-
-        for (int i = 0; i < tempControls.Length; i++)
-            tempControls[i].Update(time);
-    }
 
     /// <inheritdoc/>
     protected override void OnMouseExit(ControlMouseState state)

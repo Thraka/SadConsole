@@ -57,7 +57,8 @@ public abstract class ButtonBase : ControlBase
     /// <summary>
     /// Raises the <see cref="Click"/> event.
     /// </summary>
-    protected virtual void OnClick() => Click?.Invoke(this, new EventArgs());
+    protected virtual void OnClick() =>
+        Click?.Invoke(this, new EventArgs());
 
     /// <summary>
     /// Simulates a mouse click on the button.
@@ -107,5 +108,12 @@ public abstract class ButtonBase : ControlBase
     {
         base.OnMouseExit(state);
         _mouseDownForClick = false;
+    }
+
+    [OnDeserialized]
+    private void AfterDeserialized(StreamingContext context)
+    {
+        DetermineState();
+        IsDirty = true;
     }
 }

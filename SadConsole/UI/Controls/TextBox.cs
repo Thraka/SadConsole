@@ -118,6 +118,11 @@ public partial class TextBox : ControlBase
     public TextBox(int width)
         : base(width, 1)
     {
+        CaretEffect = new Effects.BlinkGlyph()
+        {
+            GlyphIndex = 95,
+            BlinkSpeed = System.TimeSpan.FromSeconds(0.4d)
+        };
     }
     #endregion
 
@@ -256,18 +261,18 @@ public partial class TextBox : ControlBase
     /// <summary>
     /// Called when the control loses focus.
     /// </summary>
-    public override void FocusLost()
+    protected override void OnUnfocused()
     {
-        base.FocusLost();
+        base.OnUnfocused();
         IsDirty = true;
     }
 
     /// <summary>
     /// Called when the control is focused.
     /// </summary>
-    public override void Focused()
+    protected override void OnFocused()
     {
-        base.Focused();
+        base.OnFocused();
         ValidateCursorPosition(_text);
         IsDirty = true;
     }

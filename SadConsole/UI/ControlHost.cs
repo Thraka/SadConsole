@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
+
 using SadRogue.Primitives;
 
 namespace SadConsole.UI;
@@ -102,12 +103,13 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
         {
             if (!DisableControlFocusing)
             {
+                if (value == _focusedControl) return;
+
+                // If the control can be focused
                 if (FocusedControlChanging(value, _focusedControl))
                 {
-                    ControlBase? oldControl = _focusedControl;
-                    _focusedControl = value;
-
-                    FocusedControlChanged(_focusedControl, oldControl);
+                    // Actually change focused control
+                    FocusedControlChanged(value, _focusedControl);
                 }
             }
         }
@@ -305,7 +307,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
             if (control.IsDirty)
                 IsDirty = true;
 
-            control.Update(delta);
+            control.UpdateAndRedraw(delta);
 
             if (control.IsDirty)
                 IsDirty = true;
@@ -607,20 +609,34 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// </summary>
     /// <param name="newControl">The control requesting focus.</param>
     /// <param name="oldControl">The control that has focus.</param>
-    /// <returns>True when the focus change is allowed; otherwise false.</returns>
+    /// <returns><see langword="true"/> when the focus change is allowed; otherwise false.</returns>
     protected virtual bool FocusedControlChanging(ControlBase? newControl, ControlBase? oldControl) =>
-        newControl != null && newControl.CanFocus && newControl.IsEnabled;
+        CanFocusControl(newControl);
 
     /// <summary>
-    /// This method is called when a control gains focus.
+    /// This method actually changes the variable that tracks which control is focused. It then sets the <see cref="ControlBase.IsFocused"/> property
+    /// to the appropriate value for both the previously focused control and the newly focused control.
     /// </summary>
-    /// <param name="newControl">The control that has focus.</param>
-    /// <param name="oldControl">The control that previously had focus.</param>
+    /// <param name="newControl">The control that should be focused.</param>
+    /// <param name="oldControl">The control that currently has focus.</param>
     protected virtual void FocusedControlChanged(ControlBase? newControl, ControlBase? oldControl)
     {
-        oldControl?.FocusLost();
-        newControl?.Focused();
+        _focusedControl = newControl;
+
+        if (oldControl != null)
+            oldControl.IsFocused = false;
+
+        if (newControl != null)
+            newControl.IsFocused = true;
     }
+
+    /// <summary>
+    /// Determins if a control is enabled and <see cref="ControlBase.CanFocus"/> is <see langword="true"/>.
+    /// </summary>
+    /// <param name="control">The control to check.</param>
+    /// <returns><see langword="true"/> when the control can be focused; otherwise false.</returns>
+    protected virtual bool CanFocusControl(ControlBase? control) =>
+        control != null && control.CanFocus && control.IsEnabled;
 
     /// <summary>
     /// Reorders the control collection based on the tab index of each control.

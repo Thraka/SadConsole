@@ -7,7 +7,7 @@ namespace SadConsole.UI.Controls;
 /// Represents a button that can be toggled on/off within a group of other buttons.
 /// </summary>
 [DataContract]
-public class RadioButton : ToggleButtonBase
+public partial class RadioButton : ToggleButtonBase
 {
     [DataMember(Name = "GroupName")]
     private string _groupName = "";
@@ -35,6 +35,14 @@ public class RadioButton : ToggleButtonBase
     public RadioButton(int width, int height) : base(width, height)
     {
         _textAlignment = HorizontalAlignment.Left;
+
+        LeftBracketGlyph = '(';
+        RightBracketGlyph = ')';
+        CheckedIconGlyph = 15;
+        UncheckedIconGlyph = 0;
+
+        BracketsThemeState = new ThemeStates();
+        IconThemeState = new ThemeStates();
     }
 
     /// <summary>

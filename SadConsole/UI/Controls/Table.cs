@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -326,7 +325,6 @@ public partial class Table : CompositeControl
 
         _checkScrollBarVisibility = true;
 
-        OnThemeChanged();
         DetermineState();
     }
 
@@ -589,29 +587,6 @@ public partial class Table : CompositeControl
         int defaultCellSize = isRowType ? DefaultCellSize.Y : DefaultCellSize.X;
 
         return increment ? defaultCellSize : -defaultCellSize;
-    }
-
-    /// <summary>
-    /// Sets the scrollbar's theme to the current theme's <see cref="TableTheme.ScrollBarTheme"/>.
-    /// </summary>
-    protected override void OnThemeChanged()
-    {
-        if (VerticalScrollBar == null && HorizontalScrollBar == null) return;
-
-        if (Theme is TableTheme theme)
-        {
-            if (VerticalScrollBar != null)
-                VerticalScrollBar.Theme = theme.ScrollBarTheme;
-            if (HorizontalScrollBar != null)
-                HorizontalScrollBar.Theme = theme.ScrollBarTheme;
-        }
-        else
-        {
-            if (VerticalScrollBar != null)
-                VerticalScrollBar.Theme = null;
-            if (HorizontalScrollBar != null)
-                HorizontalScrollBar.Theme = null;
-        }
     }
 
     /// <inheritdoc/>
