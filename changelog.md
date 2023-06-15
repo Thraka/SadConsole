@@ -4,6 +4,7 @@ Major changes (possibly breaking)
 
 - [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
 - [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
+- [Core] Themes have been removed. Each control draws itself.
 
 New features
 
@@ -43,7 +44,7 @@ Normal changes
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
-- [UI] `Panel` control uses `CompositeControl` as a base class. Theme supports lines as a border of the panel.
+- [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
 - [UI] Ven0maus added the `Table` control.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.

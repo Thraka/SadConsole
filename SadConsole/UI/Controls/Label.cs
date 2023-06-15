@@ -45,32 +45,6 @@ public partial class Label : ControlBase
         }
     }
 
-
-
-    /*
-ControlThemeState changes to ThemeState
-
-_colorsLastUsed(when defined) should be defined in the `UpdateAndRedraw`: `Colors _colorsLastUsed = FindThemeColors();` that solves resolves the references.But you can rename it to `colors`.
-
-if `GetOffColor` is used, this has been moved from `ThemeState` to the `Colors` class.
-
-The order of code in `UpdateAndRedraw` is:
-
-1. Check if `IsDirty == false` and return.
-2. Get the current colors for the control `Colors _colorsLastUsed = FindThemeColors();`
-3. Instead of calling `RefreshTheme(control.FindThemeColors(), control);` call `ThemeState.RefreshTheme(_colorsLastUsed);`
-4. Copy any code in the theme's `RefreshTheme` method (if overridden).
-5. Copy any code in the theme's `UpdateAndDraw` method.
-6. If your code used the `control` parameter, just erase the code `control.` everywhere, since this method is on the control directly. Also, replace references of `ControlThemeState` with `ThemeState`.
-7. Set `IsDirty = false`
-8. Refactor the name `_colorsLastUsed` to `currentColors`.
-
-    */
-
-
-
-
-
     /// <summary>
     /// A control to display simple one-line text.
     /// </summary>
