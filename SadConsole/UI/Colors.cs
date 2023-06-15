@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System;
+﻿using System;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI;
@@ -9,10 +8,27 @@ namespace SadConsole.UI;
 /// </summary>
 public partial class Colors
 {
+    private static Colors s_default;
+
     /// <summary>
-    /// Indicates that this color object is set to a library object.
+    /// The default colors used by controls and your code.
     /// </summary>
-    public bool IsLibrary { get; internal set; }
+    public static Colors Default
+    {
+        get => s_default;
+        set
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            s_default = value;
+            s_default.AddToColorMappings();
+        }
+    }
+
+    static Colors()
+    {
+        s_default = CreateAnsi();
+        s_default.AddToColorMappings();
+    }
 
     /// <summary>
     /// Status flag to indicate that the primary backgrounds of the controls are considered light rather than dark.
@@ -267,7 +283,9 @@ public partial class Colors
     /// <summary>
     /// Creates a color object based on the <see cref="Colors.CreateAnsi"/> scheme.
     /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public Colors()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         Colors colors = CreateAnsi();
 
@@ -278,7 +296,9 @@ public partial class Colors
     /// Internal constructor to avoid creating any predefined colors.
     /// </summary>
     /// <param name="_">Discarded parameter</param>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     protected Colors(int _) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary>
     /// Sets all Appearance* properties based on the existing colors and settings.

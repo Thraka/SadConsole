@@ -596,7 +596,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// </summary>
     /// <returns>The found colors.</returns>
     public Colors GetThemeColors() =>
-        _themeColors ?? Library.Default.Colors;
+        _themeColors ?? Colors;
 
     /// <summary>
     /// Gets an array containing all of the controls this host contains.
