@@ -29,21 +29,25 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
   </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    
+    <PackageReference Condition=" '$(UseProjectReferences)' == 'false' " Include="SadConsole" Version="10.0.0-alpha1-debug" />
+
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
-    <PackageReference Include="SadConsole" Version="10.0.0-alpha1-debug" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Remove="SadConsole.Extended.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\Themes\" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

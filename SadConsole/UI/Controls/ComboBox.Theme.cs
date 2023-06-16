@@ -36,20 +36,10 @@ public partial class ComboBox
     [DataMember]
     public int ExpandedButtonGlyph { get; set; }
 
-    /// <summary>
-    /// The theme state used with the icon of the 
-    /// </summary>
-    public ThemeStates IconThemeState { get; protected set; }
-
     /// <inheritdoc/>
-    public override void UpdateAndRedraw(TimeSpan time)
+    protected override void RefreshThemeStateColors(Colors colors)
     {
-        if (!IsDirty) return;
-
-        // Update the theme data
-        Colors colors = FindThemeColors();
-
-        ThemeState.RefreshTheme(colors);
+        base.RefreshThemeStateColors(colors);
 
         IconThemeState.RefreshTheme(colors);
 
@@ -70,6 +60,17 @@ public partial class ComboBox
         IconThemeState.MouseOver.Background = ThemeState.MouseOver.Background;
         IconThemeState.MouseDown.Background = ThemeState.MouseDown.Background;
         IconThemeState.Focused.Background = ThemeState.Focused.Background;
+    }
+
+    /// <inheritdoc/>
+    public override void UpdateAndRedraw(TimeSpan time)
+    {
+        if (!IsDirty) return;
+
+        // Update the theme data
+        Colors colors = FindThemeColors();
+
+        RefreshThemeStateColors(colors);
 
         // Draw the control
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);

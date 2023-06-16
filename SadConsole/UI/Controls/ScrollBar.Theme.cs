@@ -52,18 +52,24 @@ public partial class ScrollBar
     public int SliderGlyph;
 
     /// <inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        ThemeState.SetForeground(ThemeState.Normal.Foreground);
+        ThemeState.SetBackground(ThemeState.Normal.Background);
+
+        ThemeState.Disabled = colors.Appearance_ControlDisabled.Clone();
+    }
+
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
 
         Colors currentColors = FindThemeColors();
 
-        ThemeState.RefreshTheme(currentColors);
-
-        ThemeState.SetForeground(ThemeState.Normal.Foreground);
-        ThemeState.SetBackground(ThemeState.Normal.Background);
-
-        ThemeState.Disabled = currentColors.Appearance_ControlDisabled.Clone();
+        RefreshThemeStateColors(currentColors);
 
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
 

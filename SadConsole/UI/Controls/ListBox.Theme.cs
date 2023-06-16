@@ -52,6 +52,8 @@ public partial class ListBox
             SetupScrollBar(Orientation.Vertical, Height - 2, new Point(Width - 1, 1));
         else
             SetupScrollBar(Orientation.Vertical, Height, new Point(Width - 1, 0));
+
+        ShowHideScrollBar();
     }
 
     /// <summary>
@@ -77,9 +79,30 @@ public partial class ListBox
     }
 
     /// <inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        ThemeState.SetForeground(ThemeState.Normal.Foreground);
+        ThemeState.SetBackground(ThemeState.Normal.Background);
+        ItemTheme.RefreshTheme(colors);
+
+        //ScrollBarTheme.RefreshTheme(colors, ScrollBar);
+        ItemTheme.RefreshTheme(colors);
+
+        BorderTheme.RefreshTheme(colors);
+        BorderTheme.SetForeground(colors.Lines);
+        BorderTheme.SetBackground(ThemeState.Normal.Background);
+    }
+
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
-        if (!IsDirty) return;
+        if (!IsDirty)
+        {
+            base.UpdateAndRedraw(time);
+            return;
+        }
 
         if (_reconfigureSrollBar)
         {
@@ -87,7 +110,7 @@ public partial class ListBox
             _reconfigureSrollBar = false;
         }
 
-        ThemeState.RefreshTheme(FindThemeColors());
+        RefreshThemeStateColors(FindThemeColors());
 
         int columnOffset;
         int columnEnd;
@@ -155,5 +178,7 @@ public partial class ListBox
         }
 
         IsDirty = Helpers.HasFlag((int)State, (int)ControlStates.MouseOver);
+
+        base.UpdateAndRedraw(time);
     }
 }

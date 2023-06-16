@@ -22,7 +22,7 @@ public abstract class ControlBase
     /// <summary>
     /// The theme of the control based on its state.
     /// </summary>
-    protected ThemeStates ThemeState;
+    public ThemeStates ThemeState { get; set; }
 
     /// <summary>
     /// A cached value determined by <see cref="OnMouseEnter(ControlMouseState)"/>. <see langword="true"/> when the mouse is over the bounds defined by <see cref="MouseArea"/> .
@@ -196,7 +196,7 @@ public abstract class ControlBase
     /// Represents a name to identify a control by.
     /// </summary>
     [DataMember]
-    public string Name { get; set; } = string.Empty;
+    public string? Name { get; init; } = null;
 
     /// <summary>
     /// Gets or sets whether or not this control will become focused when the mouse is clicked.
@@ -331,7 +331,6 @@ public abstract class ControlBase
     public ControlStates State { get; protected set; }
 
     #region Constructors
-    /// <inheritdoc />
     /// <summary>
     /// Creates a control.
     /// </summary>
@@ -349,12 +348,9 @@ public abstract class ControlBase
         UseMouse = true;
         UseKeyboard = true;
         MouseArea = new Rectangle(0, 0, width, height);
+        ThemeState = new();
 
-        Surface = new CellSurface(Width, Height)
-        {
-            DefaultBackground = SadRogue.Primitives.Color.Transparent
-        };
-        Surface.Clear();
+        Surface = CreateControlSurface();
 
         DetermineState();
     }
@@ -544,7 +540,7 @@ public abstract class ControlBase
     /// </summary>
     /// <returns>The found colors.</returns>
     public Colors FindThemeColors() =>
-        _themeColors ?? _parent?.Host?.ThemeColors ?? Library.Default.Colors;
+        _themeColors ?? _parent?.Host?.ThemeColors ?? Colors.Default;
 
     /// <summary>
     /// Sets the theme colors used by this control. When <see langword="null"/>, indicates this control should read the theme colors from the parent.
@@ -575,21 +571,36 @@ public abstract class ControlBase
         Width = width;
         Height = height;
         MouseArea = new Rectangle(0, 0, width, height);
+        Surface = CreateControlSurface();
         IsDirty = true;
         OnResized();
     }
 
     /// <summary>
-    /// Called when <see cref="Resize(int, int)"/> was called. Resizes the <see cref="Surface"/> to match the <see cref="Width"/> and <see cref="Height"/> properties.
+    /// Called when <see cref="Resize(int, int)"/> was called.
     /// </summary>
-    protected virtual void OnResized()
+    protected virtual void OnResized() { }
+
+    /// <summary>
+    /// Generates the surface to be used by this control. This method is called internally to assign the <see cref="Surface"/> property a value.
+    /// </summary>
+    /// <returns>A surface that should be assigned to the <see cref="Surface"/> property.</returns>
+    protected virtual ICellSurface CreateControlSurface()
     {
-        Surface = new CellSurface(Width, Height)
+        var surface = new CellSurface(Width, Height)
         {
             DefaultBackground = SadRogue.Primitives.Color.Transparent
         };
-        Surface.Clear();
+        surface.Clear();
+        return surface;
     }
+
+    /// <summary>
+    /// Updates the <see cref="ThemeState"/> by calling <see cref="ThemeStates.RefreshTheme(Colors)"/> with the provided colors. Override this method to adjust how colors are used by the <see cref="ThemeState"/>.
+    /// </summary>
+    /// <param name="colors">The colors to apply to the theme state.</param>
+    protected virtual void RefreshThemeStateColors(Colors colors) =>
+        ThemeState.RefreshTheme(colors);
 
     /// <summary>
     /// Called when the mouse first enters the control. Raises the MouseEnter event and calls the <see cref="DetermineState"/> method.

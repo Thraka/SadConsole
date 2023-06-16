@@ -40,6 +40,11 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     [DataMember]
     protected List<ControlBase> ControlsList = new List<ControlBase>();
 
+    /// <summary>
+    /// The controls added which contain a <see cref="ControlBase.Name"/> value.
+    /// </summary>
+    protected Dictionary<string, ControlBase> NamedControls = new();
+
     private ControlBase? _focusedControl;
     private bool _wasFocusedBeforeCapture;
     private bool _exclusiveBeforeCapture;
@@ -55,8 +60,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// </summary>
     /// <param name="index">The index of the control.</param>
     /// <returns>A control.</returns>
-    public ControlBase this[int index] =>
-        ControlsList[index];
+    public ControlBase this[int index] => ControlsList[index];
 
     /// <summary>
     /// The parent object hosting the controls.
@@ -163,7 +167,21 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
     ControlHost IContainer.Host => this;
 
-    ControlBase IList<ControlBase>.this[int index] { get => ((IList<ControlBase>)ControlsList)[index]; set => ((IList<ControlBase>)ControlsList)[index] = value; }
+    ControlBase IList<ControlBase>.this[int index]
+    {
+        get => ((IList<ControlBase>)ControlsList)[index];
+        set
+        {
+            RemoveAt(index);
+
+            if (value != null)
+                Insert(index, value);
+        }
+    }
+
+    /// <inheritdoc/>
+    public ControlBase this[string name] => NamedControls[name];
+
     #endregion
 
     void Components.IComponent.OnAdded(IScreenObject host)
@@ -596,7 +614,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// </summary>
     /// <returns>The found colors.</returns>
     public Colors GetThemeColors() =>
-        _themeColors ?? Colors;
+        _themeColors ?? Colors.Default;
 
     /// <summary>
     /// Gets an array containing all of the controls this host contains.
@@ -736,26 +754,27 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// <summary>
     /// Gets the index of the specified control.
     /// </summary>
-    /// <param name="item">The control.</param>
+    /// <param name="control">The control.</param>
     /// <returns>The index of the control in the backing collection.</returns>
-    public int IndexOf(ControlBase item) =>
-        ControlsList.IndexOf(item);
+    public int IndexOf(ControlBase control) =>
+        ControlsList.IndexOf(control);
 
     /// <summary>
     /// Inserts an item at the specified index and sets the <see cref="ControlBase.TabIndex"/> to the specified index.
     /// </summary>
     /// <remarks>Index within the backing collection is always based on <see cref="ControlBase.TabIndex"/> ranking. There may be conflicts so you're not guaranteed that the control will be available at the specified index.</remarks>
     /// <param name="index">Index to insert at.</param>
-    /// <param name="item">The control to insert.</param>
-    public void Insert(int index, ControlBase item)
+    /// <param name="control">The control to insert.</param>
+    public void Insert(int index, ControlBase control)
     {
-        ((IList<ControlBase>)ControlsList).Insert(index, item);
+        if (!ControlsList.Contains(control))
+            ControlsList.Insert(index, control);
 
-        if (!ControlsList.Contains(item))
-            ControlsList.Insert(index, item);
+        if (!string.IsNullOrEmpty(control.Name))
+            NamedControls[control.Name] = control;
 
-        item.Parent = this;
-        item.TabIndex = index;
+        control.Parent = this;
+        control.TabIndex = index;
 
         IsDirty = true;
 
@@ -780,6 +799,9 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     {
         if (!ControlsList.Contains(control))
             ControlsList.Add(control);
+
+        if (!string.IsNullOrEmpty(control.Name))
+            NamedControls[control.Name] = control;
 
         if (control.Parent != this)
             control.Parent = this;
@@ -868,5 +890,16 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     bool ICollection<ControlBase>.Remove(ControlBase item)
     {
         return ((ICollection<ControlBase>)ControlsList).Remove(item);
+    }
+
+    /// <inheritdoc/>
+    [OnDeserialized]
+    private void OnDeserialized(StreamingContext context)
+    {
+        List<ControlBase> controls = ControlsList;
+        ControlsList = new List<ControlBase>();
+
+        foreach (ControlBase item in controls)
+            Add(item);
     }
 }

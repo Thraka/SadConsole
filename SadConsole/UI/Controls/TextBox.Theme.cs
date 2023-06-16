@@ -35,23 +35,23 @@ public partial class TextBox
 
         if (!IsDirty) return;
 
-        Colors _colorsLastUsed = FindThemeColors();
+        Colors colors = FindThemeColors();
 
-        ThemeState.RefreshTheme(_colorsLastUsed);
+        RefreshThemeStateColors(colors);
 
-        bool isFocusedSameAsBack = ThemeState.Focused.Background == _colorsLastUsed.ControlHostBackground;
+        bool isFocusedSameAsBack = ThemeState.Focused.Background == colors.ControlHostBackground;
 
-        ThemeState.Normal.Background = _colorsLastUsed.GetOffColor(ThemeState.Normal.Background, _colorsLastUsed.ControlHostBackground);
-        ThemeState.MouseOver.Background = _colorsLastUsed.GetOffColor(ThemeState.MouseOver.Background, _colorsLastUsed.ControlHostBackground);
-        ThemeState.MouseDown.Background = _colorsLastUsed.GetOffColor(ThemeState.MouseDown.Background, _colorsLastUsed.ControlHostBackground);
-        ThemeState.Focused.Background = _colorsLastUsed.GetOffColor(ThemeState.Focused.Background, _colorsLastUsed.ControlHostBackground);
+        ThemeState.Normal.Background = colors.GetOffColor(ThemeState.Normal.Background, colors.ControlHostBackground);
+        ThemeState.MouseOver.Background = colors.GetOffColor(ThemeState.MouseOver.Background, colors.ControlHostBackground);
+        ThemeState.MouseDown.Background = colors.GetOffColor(ThemeState.MouseDown.Background, colors.ControlHostBackground);
+        ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, colors.ControlHostBackground);
 
         // Further alter the color to indicate focus
         if (isFocusedSameAsBack)
-            ThemeState.Focused.Background = _colorsLastUsed.GetOffColor(ThemeState.Focused.Background, ThemeState.Focused.Background);
+            ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Focused.Background);
 
         // If the focused background color is the same as the non-focused, alter it so it stands out
-        ThemeState.Focused.Background = _colorsLastUsed.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
+        ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
 
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
 
@@ -59,7 +59,7 @@ public partial class TextBox
         if (this is NumberBox numberBox && (numberBox.Text.Length != 0 || (numberBox.Text.Length == 1 && numberBox.Text[0] != '-')))
         {
             if (numberBox.IsEditingNumberInvalid)
-                appearance.Foreground = NumberBoxInvalidNumberForeground ?? _colorsLastUsed.Red;
+                appearance.Foreground = NumberBoxInvalidNumberForeground ?? colors.Red;
         }
 
         if (IsFocused && (Parent?.Host?.ParentConsole?.IsFocused).GetValueOrDefault(false) && !DisableKeyboard)

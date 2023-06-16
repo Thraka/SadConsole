@@ -34,30 +34,32 @@ public partial class ProgressBar
     public bool PrintDisplayAsDecorator { get; set; }
 
     /// <inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        ThemeStateBackground.RefreshTheme(colors);
+        ThemeStateBackground.SetForeground(ThemeStateBackground.Normal.Foreground);
+        ThemeStateBackground.SetBackground(ThemeStateBackground.Normal.Background);
+        ThemeStateBackground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 176);
+        ThemeStateForeground.RefreshTheme(colors);
+        ThemeStateForeground.SetForeground(ThemeStateForeground.Normal.Foreground);
+        ThemeStateForeground.SetBackground(ThemeStateForeground.Normal.Background);
+        ThemeStateForeground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 219);
+        DisplayTextStates.RefreshTheme(colors);
+        DisplayTextStates.SetForeground(DisplayTextColor);
+    }
+
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
 
-        Colors themeColors = FindThemeColors();
-
-        ThemeState.RefreshTheme(themeColors);
-
-        ThemeStateBackground.RefreshTheme(themeColors);
-        ThemeStateBackground.SetForeground(ThemeStateBackground.Normal.Foreground);
-        ThemeStateBackground.SetBackground(ThemeStateBackground.Normal.Background);
-        ThemeStateBackground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 176);
-        ThemeStateForeground.RefreshTheme(themeColors);
-        ThemeStateForeground.SetForeground(ThemeStateForeground.Normal.Foreground);
-        ThemeStateForeground.SetBackground(ThemeStateForeground.Normal.Background);
-        ThemeStateForeground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 219);
-        DisplayTextStates.RefreshTheme(themeColors);
-        DisplayTextStates.SetForeground(DisplayTextColor);
+        RefreshThemeStateColors(FindThemeColors());
 
         ColoredGlyph foregroundAppearance = ThemeStateForeground.GetStateAppearance(State);
         ColoredGlyph backgroundAppearance = ThemeStateBackground.GetStateAppearance(State);
         ColoredGlyph displayTextAppearance = DisplayTextStates.GetStateAppearance(State);
-
-
 
         Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, backgroundAppearance.Glyph);
 

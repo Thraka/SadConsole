@@ -31,7 +31,7 @@ public partial class Label : ControlBase
 
         Colors colors = FindThemeColors();
 
-        ThemeState.RefreshTheme(colors);
+        RefreshThemeStateColors(colors);
 
         ColoredGlyph appearance;
 

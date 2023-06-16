@@ -22,27 +22,36 @@ public class Button3d : ButtonBase
     }
 
     ///<inheritdoc/>
+    protected override ICellSurface CreateControlSurface()
+    {
+        Surface = new CellSurface(Width + 2, Height + 1)
+        {
+            DefaultBackground = Color.Transparent
+        };
+        Surface.Clear();
+        return Surface;
+    }
+
+    ///<inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        ThemeState.Normal.Background = colors.GetOffColor(ThemeState.Normal.Background, colors.ControlHostBackground);
+        ThemeState.MouseOver.Background = colors.GetOffColor(ThemeState.MouseOver.Background, colors.ControlHostBackground);
+        ThemeState.MouseDown.Background = colors.GetOffColor(ThemeState.MouseDown.Background, colors.ControlHostBackground);
+        ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, colors.ControlHostBackground);
+    }
+
+    ///<inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
 
         Colors colors = FindThemeColors();
 
-        // This control uses a surface that is bigger than the control's "size" so that it can draw the shadow
-        if (Surface.Width != Width + 2 || Surface.Height != Height + 2)
-        {
-            Surface = new CellSurface(Width + 2, Height + 1)
-            {
-                DefaultBackground = Color.Transparent
-            };
-            Surface.Clear();
-        }
-
         // Refresh any theme state colors
-        ThemeState.Normal.Background = colors.GetOffColor(ThemeState.Normal.Background, colors.ControlHostBackground);
-        ThemeState.MouseOver.Background = colors.GetOffColor(ThemeState.MouseOver.Background, colors.ControlHostBackground);
-        ThemeState.MouseDown.Background = colors.GetOffColor(ThemeState.MouseDown.Background, colors.ControlHostBackground);
-        ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, colors.ControlHostBackground);
+        RefreshThemeStateColors(colors);
 
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
         ColoredGlyph shade = new ColoredGlyph(colors.ControlForegroundNormal, colors.ControlBackgroundNormal, 176);
@@ -51,6 +60,8 @@ public class Button3d : ButtonBase
         int middle = Height != 1 ? Height / 2 : 0;
 
         Rectangle shadowBounds = new Rectangle(0, 0, Width, Height).WithPosition((2, 1));
+
+        Surface.Clear();
 
         if (appearance.Matches(ThemeState.MouseDown))
         {

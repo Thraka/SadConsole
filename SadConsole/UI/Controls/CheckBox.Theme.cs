@@ -54,19 +54,14 @@ public partial class CheckBox : ToggleButtonBase
     public ThemeStates IconThemeState { get; protected set; }
 
     /// <inheritdoc/>
-    public override void UpdateAndRedraw(TimeSpan time)
+    protected override void RefreshThemeStateColors(Colors colors)
     {
-        if (!IsDirty) return;
-
-        // Update the theme data
-        Colors colors = FindThemeColors();
+        base.RefreshThemeStateColors(colors);
 
         BracketsThemeState.RefreshTheme(colors);
         IconThemeState.RefreshTheme(colors);
 
         BracketsThemeState.SetForeground(colors.Lines);
-
-        ThemeState.RefreshTheme(colors);
 
         if (IsSelected)
         {
@@ -106,6 +101,17 @@ public partial class CheckBox : ToggleButtonBase
 
             IconThemeState.SetGlyph(UncheckedIconGlyph);
         }
+    }
+
+    /// <inheritdoc/>
+    public override void UpdateAndRedraw(TimeSpan time)
+    {
+        if (!IsDirty) return;
+
+        // Update the theme data
+        Colors colors = FindThemeColors();
+
+        RefreshThemeStateColors(colors);
 
         // Draw the control
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);

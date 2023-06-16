@@ -14,7 +14,7 @@ public partial class Table
     {
         if (!IsDirty) return;
 
-        ThemeState.RefreshTheme(FindThemeColors());
+        RefreshThemeStateColors(FindThemeColors());
 
         // Draw the basic table surface foreground and background, and clear the glyphs
         Surface.Fill(DefaultForeground, DefaultBackground, 0);

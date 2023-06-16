@@ -10050,9 +10050,9 @@
             Default colors used by control themes.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Colors.IsLibrary">
+        <member name="P:SadConsole.UI.Colors.Default">
             <summary>
-            Indicates that this color object is set to a library object.
+            The default colors used by controls and your code.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Colors.IsLightTheme">
@@ -10412,6 +10412,11 @@
             The collection of controls.
             </summary>
         </member>
+        <member name="F:SadConsole.UI.ControlHost.NamedControls">
+            <summary>
+            The controls added which contain a <see cref="P:SadConsole.UI.Controls.ControlBase.Name"/> value.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.ControlHost.Item(System.Int32)">
             <summary>
             Gets a control by index.
@@ -10483,6 +10488,9 @@
             <summary>
             Always returns <see langword="false"/>.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.ControlHost.Item(System.String)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.ControlHost.TabNextControl">
             <summary>
@@ -10580,7 +10588,7 @@
             <summary>
             Gets the index of the specified control.
             </summary>
-            <param name="item">The control.</param>
+            <param name="control">The control.</param>
             <returns>The index of the control in the backing collection.</returns>
         </member>
         <member name="M:SadConsole.UI.ControlHost.Insert(System.Int32,SadConsole.UI.Controls.ControlBase)">
@@ -10589,7 +10597,7 @@
             </summary>
             <remarks>Index within the backing collection is always based on <see cref="P:SadConsole.UI.Controls.ControlBase.TabIndex"/> ranking. There may be conflicts so you're not guaranteed that the control will be available at the specified index.</remarks>
             <param name="index">Index to insert at.</param>
-            <param name="item">The control to insert.</param>
+            <param name="control">The control to insert.</param>
         </member>
         <member name="M:SadConsole.UI.ControlHost.RemoveAt(System.Int32)">
             <summary>
@@ -10628,6 +10636,9 @@
             </summary>
             <param name="control">The control to remove.</param>
             <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.ControlsConsole">
             <summary>
@@ -10707,12 +10718,20 @@
             The theme state used with the right end of the button. Defaults to '>'.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.Button.EndsThemeState">
+            <summary>
+            The theme state used with the left end of the button.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.Button.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates an instance of the button control with the specified width and height.
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Button.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -10728,6 +10747,12 @@
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button3d.CreateControlSurface">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button3d.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Button3d.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -10811,6 +10836,9 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.ButtonBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
@@ -10870,6 +10898,9 @@
             <summary>
             The theme state used with the icon of the 
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CheckBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -10945,10 +10976,8 @@
             The glyph to use on the control when it's expanded.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.IconThemeState">
-            <summary>
-            The theme state used with the icon of the 
-            </summary>
+        <member name="M:SadConsole.UI.Controls.ComboBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ComboBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -10958,15 +10987,23 @@
             Base class for controls that host and render other controls.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.CompositeControl.Controls">
+        <member name="F:SadConsole.UI.Controls.CompositeControl.Controls">
             <summary>
             The controls this composite control is hosting. Use <see cref="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)"/> and <see cref="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)"/> to manage the collection.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.CompositeControl.NamedControls">
+            <summary>
+            The controls added which contain a <see cref="P:SadConsole.UI.Controls.ControlBase.Name"/> value.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.CompositeControl.Count">
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.UI.Controls.CompositeControl.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CompositeControl.Item(System.String)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.#ctor(System.Int32,System.Int32)">
@@ -10978,7 +11015,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.CreateChildControls">
             <summary>
-            Create each control and add it to <see cref="P:SadConsole.UI.Controls.CompositeControl.Controls"/>.
+            Create each control and add it to <see cref="F:SadConsole.UI.Controls.CompositeControl.Controls"/>.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.IsDirtyEventHandler(System.Boolean)">
@@ -11017,7 +11054,7 @@
             Base class for all controls.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ControlBase.ThemeState">
+        <member name="P:SadConsole.UI.Controls.ControlBase.ThemeState">
             <summary>
             The theme of the control based on its state.
             </summary>
@@ -11206,7 +11243,6 @@
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.#ctor(System.Int32,System.Int32)">
-            <inheritdoc />
             <summary>
             Creates a control.
             </summary>
@@ -11304,8 +11340,20 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.OnResized">
             <summary>
-            Called when <see cref="M:SadConsole.UI.Controls.ControlBase.Resize(System.Int32,System.Int32)"/> was called. Resizes the <see cref="P:SadConsole.UI.Controls.ControlBase.Surface"/> to match the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties.
+            Called when <see cref="M:SadConsole.UI.Controls.ControlBase.Resize(System.Int32,System.Int32)"/> was called.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.CreateControlSurface">
+            <summary>
+            Generates the surface to be used by this control. This method is called internally to assign the <see cref="P:SadConsole.UI.Controls.ControlBase.Surface"/> property a value.
+            </summary>
+            <returns>A surface that should be assigned to the <see cref="P:SadConsole.UI.Controls.ControlBase.Surface"/> property.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <summary>
+            Updates the <see cref="P:SadConsole.UI.Controls.ControlBase.ThemeState"/> by calling <see cref="M:SadConsole.UI.ThemeStates.RefreshTheme(SadConsole.UI.Colors)"/> with the provided colors. Override this method to adjust how colors are used by the <see cref="P:SadConsole.UI.Controls.ControlBase.ThemeState"/>.
+            </summary>
+            <param name="colors">The colors to apply to the theme state.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.OnMouseEnter(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
@@ -11471,6 +11519,13 @@
             <summary>
             The host owning this container.
             </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.IContainer.Item(System.String)">
+            <summary>
+            Gets a control by its <see cref="P:SadConsole.UI.Controls.ControlBase.Name"/> property.
+            </summary>
+            <param name="name">The name of the control.</param>
+            <returns>The control.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
@@ -11648,7 +11703,7 @@
             <param name="width">The width of the listbox.</param>
             <param name="height">The height of the listbox.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.#ctor(System.Int32,System.Int32,SadConsole.UI.ListBoxItemTheme)">
+        <member name="M:SadConsole.UI.Controls.ListBox.#ctor(System.Int32,System.Int32,SadConsole.UI.Controls.ListBoxItemTheme)">
             <summary>
             Creates a new instance of the listbox control with the specified item theme.
             </summary>
@@ -11665,6 +11720,9 @@
             <summary>
             Invokes the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox.OnResized">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ListBox.SetupScrollBar(SadConsole.Orientation,System.Int32,SadRogue.Primitives.Point)">
             <summary>
@@ -11731,8 +11789,55 @@
             Shows the scroll bar when there are too many items to display; otherwise, hides it.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.ListBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.ListBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ListBoxItemTheme">
+            <summary>
+            A generic theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> item.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBoxItemTheme.UseColoredStringBackground">
+            <summary>
+            Gets or sets a value to allow printing the background of a colored string. When <see langword="false"/>, the control state background is used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBoxItemTheme.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <summary>
+            Draws the <paramref name="item"/> in the specified <paramref name="area"/> of the listbox.
+            </summary>
+            <param name="control">The control containing a surface to draw on.</param>
+            <param name="area">The area to draw the item.</param>
+            <param name="item">The item object.</param>
+            <param name="itemState">The state of the item.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBoxItemTheme.Clone">
+            <summary>
+            Creates a copy of this theme.
+            </summary>
+            <returns>A new theme object.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ListBoxItemColorTheme">
+            <summary>
+            A theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> that displays a <see cref="T:SadRogue.Primitives.Color"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBoxItemColorTheme.UseSingleCharacterForBox">
+            <summary>
+            When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBoxItemColorTheme.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBoxItemColorTheme.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Controls.NumberBox">
             <summary>
@@ -12037,6 +12142,9 @@
             When <see langword="true"/>, prints the <see cref="P:SadConsole.UI.Controls.Label.DisplayText"/> on the control in decorators instead of replacing the portation of the bar that overlaps the text.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.ProgressBar.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.ProgressBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
@@ -12106,6 +12214,9 @@
             <summary>
             The theme state used with the icon of the 
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -12227,6 +12338,9 @@
             <summary>
             The theme part for the scroll bar icon.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
@@ -13304,6 +13418,11 @@
             An optional color of the <see cref="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyph"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.ToggleSwitch.SwitchThemeState">
+            <summary>
+            The theme state used for the switch.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.ToggleSwitch.SwitchOrientation">
             <summary>
             The orientation of the toggle switch relative to the text.
@@ -13314,50 +13433,6 @@
         </member>
         <member name="M:SadConsole.UI.Controls.ToggleSwitch.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.UI.ListBoxItemTheme">
-            <summary>
-            A generic theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> item.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ListBoxItemTheme.UseColoredStringBackground">
-            <summary>
-            Gets or sets a value to allow printing the background of a colored string. When <see langword="false"/>, the control state background is used.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ListBoxItemTheme.RefreshTheme(SadConsole.UI.Colors)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.ListBoxItemTheme.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
-            <summary>
-            Draws the <paramref name="item"/> in the specified <paramref name="area"/> of the listbox.
-            </summary>
-            <param name="control">The control containing a surface to draw on.</param>
-            <param name="area">The area to draw the item.</param>
-            <param name="item">The item object.</param>
-            <param name="itemState">The state of the item.</param>
-        </member>
-        <member name="M:SadConsole.UI.ListBoxItemTheme.Clone">
-            <summary>
-            Creates a copy of this theme.
-            </summary>
-            <returns>A new theme object.</returns>
-        </member>
-        <member name="T:SadConsole.UI.ListBoxItemColorTheme">
-            <summary>
-            A theme for a <see cref="T:SadConsole.UI.Controls.ListBox"/> that displays a <see cref="T:SadRogue.Primitives.Color"/> object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.ListBoxItemColorTheme.UseSingleCharacterForBox">
-            <summary>
-            When <see langword="false"/>, colored boxes used when drawing the color for (Color, string) tuple will use two characters; otherwise <see langword="true"/> and only one character is used.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.ListBoxItemColorTheme.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.ListBoxItemColorTheme.Clone">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.KeyPressEventArgs">
             <summary>
@@ -13379,38 +13454,6 @@
             Creates a new event args object.
             </summary>
             <param name="key">The key being pressed.</param>
-        </member>
-        <member name="T:SadConsole.UI.Library">
-            <summary>
-            The library of themes. Holds the themes of all controls.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Library.Default">
-            <summary>
-            If a control does not specify its own theme, the theme from this property will be used.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Library.Colors">
-            <summary>
-            Colors for the theme library.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Library.#ctor">
-            <summary>
-            Creates a new instance of the theme library with default themes.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Library.SetColors(SadConsole.UI.Colors)">
-            <summary>
-            Copies the colors from the specified <see cref="T:SadConsole.UI.Colors"/> object to <see cref="P:SadConsole.UI.Library.Colors"/> property.
-            </summary>
-            <param name="colors">The colors to copy.</param>
-        </member>
-        <member name="M:SadConsole.UI.Library.Clone">
-            <summary>
-            Clones this library.
-            </summary>
-            <returns>A new instance of a library.</returns>
         </member>
         <member name="T:SadConsole.UI.ThemeStates">
             <summary>
@@ -13701,7 +13744,7 @@
             <param name="yesPrompt">The yes button's text.</param>
             <param name="noPrompt">The no button's text.</param>
             <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="P:SadConsole.UI.Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Prompt(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors)">
             <summary>
@@ -13711,7 +13754,7 @@
             <param name="yesPrompt">The yes button's text.</param>
             <param name="noPrompt">The no button's text.</param>
             <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="P:SadConsole.UI.Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Message(System.String,System.String,System.Action,SadConsole.UI.Colors)">
             <summary>
@@ -13720,7 +13763,7 @@
             <param name="message">The message.</param>
             <param name="closeButtonText">The text of the dialog's close button.</param>
             <param name="closedCallback">A callback indicating the message was dismissed.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="P:SadConsole.UI.Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Message(SadConsole.ColoredString,System.String,System.Action,SadConsole.UI.Colors)">
             <summary>
@@ -13729,7 +13772,7 @@
             <param name="message">The message. (background color is ignored)</param>
             <param name="closeButtonText">The text of the dialog's close button.</param>
             <param name="closedCallback">A callback indicating the message was dismissed.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="P:SadConsole.UI.Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
         </member>
         <member name="T:SadConsole.ValueChangedCancelableEventArgs`1">
             <summary>

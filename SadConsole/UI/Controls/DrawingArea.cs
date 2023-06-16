@@ -42,7 +42,7 @@ public class DrawingArea : ControlBase
     {
         if (!IsDirty) return;
 
-        ThemeState.RefreshTheme(FindThemeColors());
+        RefreshThemeStateColors(FindThemeColors());
 
         if (!UseNormalStateOnly)
             Appearance = ThemeState.GetStateAppearance(State);

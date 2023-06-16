@@ -197,7 +197,7 @@ public class SurfaceViewer : CompositeControl
     {
         if (!IsDirty) return;
 
-        ThemeState.RefreshTheme(FindThemeColors());
+        RefreshThemeStateColors(FindThemeColors());
 
         bool showWidthScroll = false;
         bool showHeightScroll = false;

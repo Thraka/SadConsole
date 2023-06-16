@@ -53,6 +53,17 @@ public partial class RadioButton
     public ThemeStates IconThemeState { get; protected set; }
 
     /// <inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        BracketsThemeState.RefreshTheme(colors);
+        BracketsThemeState.SetForeground(colors.Lines);
+
+        IconThemeState.RefreshTheme(colors);
+    }
+
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
@@ -60,12 +71,7 @@ public partial class RadioButton
         // Update the theme data
         Colors colors = FindThemeColors();
 
-        BracketsThemeState.RefreshTheme(colors);
-        IconThemeState.RefreshTheme(colors);
-
-        BracketsThemeState.SetForeground(colors.Lines);
-
-        ThemeState.RefreshTheme(colors);
+        RefreshThemeStateColors(colors);
 
         if (IsSelected)
         {

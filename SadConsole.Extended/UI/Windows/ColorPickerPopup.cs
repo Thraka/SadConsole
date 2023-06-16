@@ -181,7 +181,7 @@ namespace SadConsole.UI.Windows
             Controls.Add(_otherColorsButton);
             #endregion
 
-            _previousColors = new ListBox(RideSideX - 4, Height - 20 - 9 + 1, new SadConsole.UI.Themes.ListBoxItemColorTheme());
+            _previousColors = new ListBox(RideSideX - 4, Height - 20 - 9 + 1, new ListBoxItemColorTheme());
             _previousColors.Position = new Point(Width - RideSideX + 2, 8);
             _previousColors.SelectedItemChanged += (sender, e) => { if (_previousColors.SelectedItem != null) SelectedColor = (Color)_previousColors.SelectedItem; };
             Controls.Add(_previousColors);

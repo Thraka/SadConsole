@@ -13,13 +13,21 @@ public abstract class CompositeControl : ControlBase, IContainer
     /// <summary>
     /// The controls this composite control is hosting. Use <see cref="AddControl(ControlBase)"/> and <see cref="RemoveControl(ControlBase)"/> to manage the collection.
     /// </summary>
-    protected List<ControlBase> Controls { get; set; } = new List<ControlBase>();
+    protected List<ControlBase> Controls = new();
+
+    /// <summary>
+    /// The controls added which contain a <see cref="ControlBase.Name"/> value.
+    /// </summary>
+    protected Dictionary<string, ControlBase> NamedControls = new();
 
     /// <inheritdoc/>
     public int Count => Controls.Count;
 
     /// <inheritdoc/>
     public ControlBase this[int index] => Controls[index];
+
+    /// <inheritdoc/>
+    public ControlBase this[string name] => NamedControls[name];
 
     /// <summary>
     /// Creates a new control with the specified width and height.
@@ -76,6 +84,10 @@ public abstract class CompositeControl : ControlBase, IContainer
         if (!Controls.Contains(control))
         {
             Controls.Add(control);
+
+            if (!string.IsNullOrEmpty(control.Name))
+                NamedControls[control.Name] = control;
+
             if (control.Parent != this)
                 control.Parent = this;
         }

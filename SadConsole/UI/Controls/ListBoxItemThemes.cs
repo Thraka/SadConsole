@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
-namespace SadConsole.UI;
+namespace SadConsole.UI.Controls;
 /// <summary>
 /// A generic theme for a <see cref="ListBox"/> item.
 /// </summary>

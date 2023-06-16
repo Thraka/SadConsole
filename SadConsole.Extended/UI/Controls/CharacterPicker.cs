@@ -131,9 +131,16 @@ namespace SadConsole.UI.Controls
             };
 
             ScrollBarMode = ScrollBarModes.AsNeeded;
+
+            // Remove the surface control created by the baseclass
+            RemoveControl(SurfaceControl);
+
+            // Create our version of the control
+            SurfaceControl = new DrawingAreaEffects(Width, Height);
             SurfaceControl.Surface.DefaultBackground = fill;
             SurfaceControl.Surface.DefaultForeground = foreground;
-            SurfaceControl.Theme = new EffectDrawingTheme();
+            AddControl(SurfaceControl);
+            SetSurface(Surface);
 
             for (int i = 0; i < SurfaceControl.Surface.Count; i++)
                 SurfaceControl.Surface[i].Glyph = i;
@@ -163,20 +170,112 @@ namespace SadConsole.UI.Controls
             base.OnLeftMouseClicked(info);
         }
 
-        private class EffectDrawingTheme : Themes.DrawingAreaTheme
+        /// <inheritdoc/>
+        protected override ICellSurface CreateControlSurface()
         {
-            public override void Attached(ControlBase control)
+            CellSurface surface = new CellSurface(Width, Height)
             {
-                if (control is DrawingArea drawingControl)
-                    drawingControl.Surface.Clear();
+                DefaultForeground = GlyphForeground,
+                DefaultBackground = GlyphBackground
+            };
+            
+            surface.Clear();
+            return surface;
+        }
 
-                else
-                    throw new InvalidCastException();
+        public override void UpdateAndRedraw(TimeSpan time)
+        {
+            if (!IsDirty) return;
+
+            RefreshThemeStateColors(FindThemeColors());
+
+            bool showWidthScroll = false;
+            bool showHeightScroll = false;
+
+            // Determine if any scroller is shown
+            if (ScrollBarMode == SurfaceViewer.ScrollBarModes.Always)
+            {
+                showWidthScroll = true;
+                showHeightScroll = true;
+            }
+            else if (ScrollBarMode == SurfaceViewer.ScrollBarModes.AsNeeded)
+            {
+                showWidthScroll = ChildSurface.Width > Width;
+                showHeightScroll = ChildSurface.Height > Height;
             }
 
-            public override void UpdateAndDraw(ControlBase control, TimeSpan time)
+            // If only 1 scroller needs to be shown, but the opposite axis size == the available height,
+            // it gets cut off so we need to show the other scroller.
+            if (showWidthScroll && !showHeightScroll && ChildSurface.Height == Height)
+                showHeightScroll = true;
+
+            else if (showHeightScroll && !showWidthScroll && ChildSurface.Width == Width)
+                showWidthScroll = true;
+
+            // Show or hide the scrollers
+            HorizontalScroller.IsVisible = showWidthScroll;
+            VerticalScroller.IsVisible = showHeightScroll;
+
+            // Based on which are shown, they may be different sizes
+            // Resize and show them
+            if (showWidthScroll && showHeightScroll)
             {
-                control.Surface.Effects.UpdateEffects(time);
+                // Account for the corner between them
+                if (HorizontalScroller.Width != Width - 1)
+                    HorizontalScroller.Resize(Width - 1, 1);
+
+                if (VerticalScroller.Height != Height - 1)
+                    VerticalScroller.Resize(1, Height - 1);
+
+                Surface.ViewWidth = Width - 1;
+                Surface.ViewHeight = Height - 1;
+            }
+            else if (showWidthScroll)
+            {
+                if (HorizontalScroller.Width != Width)
+                    HorizontalScroller.Resize(Width, 1);
+
+                Surface.ViewWidth = Width;
+                Surface.ViewHeight = Height - 1;
+            }
+            else if (showHeightScroll)
+            {
+                if (VerticalScroller.Height != Height)
+                    VerticalScroller.Resize(1, Height);
+
+                Surface.ViewWidth = Width - 1;
+                Surface.ViewHeight = Height;
+            }
+
+            // Ensure scroll bars positioned correctly
+            VerticalScroller.Position = new Point(Width - 1, 0);
+            HorizontalScroller.Position = new Point(0, Height - 1);
+            HorizontalScroller.IsEnabled = false;
+            VerticalScroller.IsEnabled = false;
+
+            if (ChildSurface.ViewWidth != ChildSurface.Width)
+            {
+                HorizontalScroller.Maximum = ChildSurface.Width - ChildSurface.ViewWidth;
+                HorizontalScroller.IsEnabled = true;
+            }
+            if (ChildSurface.ViewHeight != ChildSurface.Height)
+            {
+                VerticalScroller.Maximum = ChildSurface.Height - ChildSurface.ViewHeight;
+                VerticalScroller.IsEnabled = true;
+            }
+
+            ChildSurface.IsDirty = false;
+        }
+
+        private class DrawingAreaEffects : DrawingArea
+        {
+            public DrawingAreaEffects(int width, int height) : base(width, height)
+            {
+            }
+
+            public override void UpdateAndRedraw(TimeSpan time)
+            {
+                Surface.Effects.UpdateEffects(time);
             }
         }
     }

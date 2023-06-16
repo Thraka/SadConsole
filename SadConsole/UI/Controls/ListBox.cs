@@ -192,11 +192,11 @@ public partial class ListBox : CompositeControl
     /// <param name="height">The height of the listbox.</param>
     public ListBox(int width, int height) : base(width, height)
     {
-        if (ScrollBar == null) throw new NullReferenceException($"The theme for the current control didn't setup the {nameof(ScrollBar)} property.");
-
+        _reconfigureSrollBar = true;
         Items = new ObservableCollection<object>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
         ItemTheme = new ListBoxItemTheme();
+        SetupScrollBar();
     }
 
     /// <summary>
@@ -221,6 +221,10 @@ public partial class ListBox : CompositeControl
     /// </summary>
     protected virtual void OnItemAction() =>
         SelectedItemExecuted?.Invoke(this, new SelectedItemEventArgs(_selectedItem));
+
+    /// <inheritdoc/>
+    protected override void OnResized() =>
+        SetupScrollBar();
 
     /// <summary>
     /// Configures the associated <see cref="ScrollBar"/>.

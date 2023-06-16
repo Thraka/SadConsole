@@ -898,6 +898,9 @@
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.CreateControlSurface">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.UI.Controls.ColorBar">
             <summary>
             A color bar control.
@@ -948,6 +951,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ColorBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ColorPicker">
@@ -1016,12 +1022,12 @@
         </member>
         <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new instance of the control and uses <see cref="T:SadConsole.UI.Themes.FileDirectoryListboxItem"/> as the item theme.
+            Creates a new instance of the control and uses <see cref="T:SadConsole.UI.Controls.FileDirectoryListboxItem"/> as the item theme.
             </summary>
             <param name="width">The width of the control.</param>
             <param name="height">The height of the control.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32,SadConsole.UI.Themes.ListBoxItemTheme)">
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32,SadConsole.UI.Controls.ListBoxItemTheme)">
             <summary>
             Creates a new instance of the control with the specified item theme.
             </summary>
@@ -1053,6 +1059,77 @@
             <summary>
             The name of the file.
             </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.FileDirectoryListboxItem">
+            <summary>
+            Displays files and directories in various colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppNormal">
+            <summary>
+            The appearance of a directory in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppMouseOver">
+            <summary>
+            The appearance of a directory when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppSelected">
+            <summary>
+            The appearance of a directory when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppSelectedOver">
+            <summary>
+            The appearance of a directory when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppNormal">
+            <summary>
+            The appearance of a file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppMouseOver">
+            <summary>
+            The appearance of a file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppSelected">
+            <summary>
+            The appearance of a file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppSelectedOver">
+            <summary>
+            The appearance of a file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppNormal">
+            <summary>
+            The appearance of a highlighted file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppMouseOver">
+            <summary>
+            The appearance of a highlighted file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppSelected">
+            <summary>
+            The appearance of a highlighted file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppSelectedOver">
+            <summary>
+            The appearance of a highlighted file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.HueBar">
             <summary>
@@ -1091,145 +1168,8 @@
         <member name="M:SadConsole.UI.Controls.HueBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.UI.RegistrarExtended">
-            <summary>
-            Registers the controls in SadConsole.Extended with a library.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.RegistrarExtended.Register">
-            <summary>
-            Registers the controls with the <see cref="P:SadConsole.UI.Themes.Library.Default"/> library.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.RegistrarExtended.Register(SadConsole.UI.Themes.Library)">
-            <summary>
-            Registers the controls with the provided library.
-            </summary>
-            <param name="library"></param>
-        </member>
-        <member name="T:SadConsole.UI.Themes.CharacterPicker">
-            <summary>
-            The theme used for the <see cref="T:SadConsole.UI.Controls.CharacterPicker"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.ColorBar">
-            <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.ColorBar"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.ColorPicker">
-            <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.ColorPicker"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.FileDirectoryListboxItem">
-            <summary>
-            Displays files and directories in various colors.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppNormal">
-            <summary>
-            The appearance of a directory in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppMouseOver">
-            <summary>
-            The appearance of a directory when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelected">
-            <summary>
-            The appearance of a directory when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelectedOver">
-            <summary>
-            The appearance of a directory when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppNormal">
-            <summary>
-            The appearance of a file in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppMouseOver">
-            <summary>
-            The appearance of a file when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelected">
-            <summary>
-            The appearance of a file when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelectedOver">
-            <summary>
-            The appearance of a file when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppNormal">
-            <summary>
-            The appearance of a highlighted file in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppMouseOver">
-            <summary>
-            The appearance of a highlighted file when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelected">
-            <summary>
-            The appearance of a highlighted file when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelectedOver">
-            <summary>
-            The appearance of a highlighted file when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
+        <member name="M:SadConsole.UI.Controls.HueBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.UI.Themes.HueBar">
-            <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.HueBar"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.Clone">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.UI.Windows.ColorPickerPopup">
             <summary>

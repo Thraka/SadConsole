@@ -19,13 +19,18 @@ public class Button : ButtonBase
     /// The theme state used with the left end of the button.Defaults to '&lt;'.
     /// </summary>
     [DataMember]
-    public int LeftEndGlyph { get; set; }
+    public int LeftEndGlyph { get; set; } = '<';
 
     /// <summary>
     /// The theme state used with the right end of the button. Defaults to '>'.
     /// </summary>
     [DataMember]
-    public int RightEndGlyph { get; set; }
+    public int RightEndGlyph { get; set; } = '>';
+
+    /// <summary>
+    /// The theme state used with the left end of the button.
+    /// </summary>
+    public ThemeStates EndsThemeState { get; protected set; } = new ThemeStates();
 
     /// <summary>
     /// Creates an instance of the button control with the specified width and height.
@@ -39,18 +44,25 @@ public class Button : ButtonBase
     }
 
     ///<inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        EndsThemeState.RefreshTheme(colors);
+        EndsThemeState.Normal.Foreground = colors.Lines;
+    }
+
+    ///<inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
 
         Colors colors = FindThemeColors();
 
-        ThemeState.RefreshTheme(colors);
+        RefreshThemeStateColors(colors);
 
         ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph endGlyphAppearance = ThemeState.GetStateAppearance(State);
-
-        endGlyphAppearance.Foreground = colors.Lines;
+        ColoredGlyph endGlyphAppearance = EndsThemeState.GetStateAppearance(State);
 
         int middle = (Height != 1 ? Height / 2 : 0);
 

@@ -56,7 +56,7 @@ public partial class Panel
         {
             Colors currentColors = FindThemeColors();
 
-            ThemeState.RefreshTheme(currentColors);
+            RefreshThemeStateColors(currentColors);
 
             if (!UseNormalStateOnly)
                 Appearance = ThemeState.GetStateAppearance(State);

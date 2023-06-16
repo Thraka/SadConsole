@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -17,4 +18,11 @@ public interface IContainer : IList<ControlBase>
     /// The host owning this container.
     /// </summary>
     ControlHost? Host { get; }
+
+    /// <summary>
+    /// Gets a control by its <see cref="ControlBase.Name"/> property.
+    /// </summary>
+    /// <param name="name">The name of the control.</param>
+    /// <returns>The control.</returns>
+    ControlBase this[string name] { get; }
 }

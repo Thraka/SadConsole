@@ -28,20 +28,33 @@ public class ButtonBox : ButtonBase
     }
 
     ///<inheritdoc/>
+    protected override void RefreshThemeStateColors(Colors colors)
+    {
+        base.RefreshThemeStateColors(colors);
+
+        Color tempColor = ThemeState.Disabled.Background;
+        ThemeState.SetBackground(ThemeState.Normal.Background);
+        ThemeState.Disabled.Background = tempColor;
+
+        tempColor = ThemeState.Focused.Foreground;
+        ThemeState.SetForeground(ThemeState.Normal.Foreground);
+        ThemeState.Focused.Foreground = tempColor;
+    }
+
+    ///<inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
+
         ColoredGlyph appearance;
         bool mouseDown = false;
         bool focused = false;
 
-        Colors _colorsLastUsed = FindThemeColors();
+        Colors colors = FindThemeColors();
+
+        RefreshThemeStateColors(colors);
 
         appearance = ThemeState.GetStateAppearance(State);
-
-        var tempBackground = ThemeState.Disabled.Background;
-        ThemeState.SetBackground(ThemeState.Normal.Background);
-        ThemeState.Disabled.Background = tempBackground;
 
         if (Helpers.HasFlag((int)State, (int)ControlStates.MouseLeftButtonDown) ||
             Helpers.HasFlag((int)State, (int)ControlStates.MouseRightButtonDown))
@@ -49,8 +62,8 @@ public class ButtonBox : ButtonBase
 
         // Middle part of the button for text.
         int middle = Surface.Height != 1 ? Surface.Height / 2 : 0;
-        Color topleftcolor = !mouseDown ? _colorsLastUsed.Lines.ComputedColor.GetBright() : _colorsLastUsed.Lines.ComputedColor.GetDark();
-        Color bottomrightcolor = !mouseDown ? _colorsLastUsed.Lines.ComputedColor.GetDark() : _colorsLastUsed.Lines.ComputedColor.GetBright();
+        Color topleftcolor = !mouseDown ? colors.Lines.ComputedColor.GetBright() : colors.Lines.ComputedColor.GetDark();
+        Color bottomrightcolor = !mouseDown ? colors.Lines.ComputedColor.GetDark() : colors.Lines.ComputedColor.GetBright();
 
         if (Surface.Height > 1 && Surface.Height % 2 == 0)
             middle -= 1;
