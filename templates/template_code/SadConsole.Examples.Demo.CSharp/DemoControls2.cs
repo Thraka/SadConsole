@@ -6,7 +6,6 @@
 using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 
 namespace SadConsole.Examples;
 
@@ -42,8 +41,8 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         {
             
         }
-        ((PanelTheme)panel.Theme).DrawBorder = true;
-        ((PanelTheme)panel.Theme).UseExtendedBorderGlyphs = false;
+        panel.DrawBorder = true;
+        panel.UseExtendedBorderGlyphs = false;
 
         Controls.Add(panel);
 
@@ -57,9 +56,9 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             panel.Add(panelButton2);
             panel.Add(panelButton3);
         }
-        ((PanelTheme)panel.Theme).DrawBorder = true;
-        ((PanelTheme)panel.Theme).UseInsetBorder = true;
-        ((PanelTheme)panel.Theme).UseExtendedBorderGlyphs = false;
+        panel.DrawBorder = true;
+        panel.UseInsetBorder = true;
+        panel.UseExtendedBorderGlyphs = false;
 
         panel.PlaceRelativeTo(Controls[0], Direction.Types.Right, 2);
 

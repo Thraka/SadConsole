@@ -1,6 +1,5 @@
 ﻿using SadConsole.UI;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 
 namespace SadConsole.Examples;
 
@@ -66,21 +65,12 @@ internal class SurfaceOpacity : ControlsConsole
         Surface.Print(2, Height - 1, "0");
         Surface.Print(Width - 5, Height - 1, "255");
 
-        // New button theme: New colors and these buttons won't use the ends
-        ButtonTheme buttonTheme = new ButtonTheme();
-        buttonTheme.ShowEnds = false;
         Colors buttonColors = Colors.CreateSadConsoleBlue();
-
-        // New ScrollBar theme: Thin bar
-        ScrollBarTheme scrollTheme = new ScrollBarTheme();
-        scrollTheme.BarGlyph = ICellSurface.ConnectedLineThin[(int)ICellSurface.ConnectedLineIndex.Top];
-        scrollTheme.StartButtonHorizontalGlyph = '<';
-        scrollTheme.EndButtonHorizontalGlyph = '>';
 
         // Create the controls
         Button buttonIn = new Button(11);
         buttonIn.Text = "Fade In";
-        buttonIn.Theme = buttonTheme;
+        buttonIn.ShowEnds = false;
         buttonIn.Position = (Width - 13, 0);
         buttonIn.SetThemeColors(buttonColors);
         buttonIn.Click += ButtonIn_Click;
@@ -88,7 +78,7 @@ internal class SurfaceOpacity : ControlsConsole
 
         Button buttonOut = new Button(12);
         buttonOut.Text = "Fade Out";
-        buttonOut.Theme = buttonTheme;
+        buttonOut.ShowEnds = false;
         buttonOut.Position = (1, 0);
         buttonOut.SetThemeColors(buttonColors);
         buttonOut.Click += ButtonOut_Click;
@@ -96,7 +86,9 @@ internal class SurfaceOpacity : ControlsConsole
 
         _opacitySlider = new ScrollBar(Orientation.Horizontal, Width - 4);
         _opacitySlider.Position = (2, Height - 2);
-        _opacitySlider.Theme = scrollTheme;
+        _opacitySlider.BarGlyph = ICellSurface.ConnectedLineThin[(int)ICellSurface.ConnectedLineIndex.Top];
+        _opacitySlider.StartButtonHorizontalGlyph = '<';
+        _opacitySlider.EndButtonHorizontalGlyph = '>';
         _opacitySlider.Maximum = 255;
         _opacitySlider.Value = 255;
         _opacitySlider.ValueChanged += OpacitySlider_ValueChanged;

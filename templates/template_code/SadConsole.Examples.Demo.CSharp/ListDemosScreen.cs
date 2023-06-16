@@ -1,5 +1,4 @@
 ﻿using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 
 namespace SadConsole.Examples;
 
@@ -17,13 +16,10 @@ class ListDemosScreen : SadConsole.UI.ControlsConsole
 
     public ListDemosScreen(int width, int height) : base(width, height)
     {
-        ListBoxTheme theme = (ListBoxTheme)Library.Default.GetControlTheme(typeof(ListBox));
-        theme.DrawBorder = false;
-
         _lstDemos = new ListBox(80, 23)
         {
             Position = (0, 0),
-            Theme = theme
+            DrawBorder = false
         };
 
         _lstDemos.SelectedItemChanged += Demos_SelectedItemChanged;

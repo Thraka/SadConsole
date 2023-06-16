@@ -1,7 +1,6 @@
 ﻿using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 
 namespace SadConsole.Examples;
 
@@ -152,7 +151,9 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         };
         Controls.Add(password);
 
-        var button = new Button(11, 1)
+        ButtonBase button;
+
+        button = new Button(11, 1)
         {
             Text = "Click",
             Position = new Point(1, 3)
@@ -160,21 +161,19 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         button.Click += (s, a) => SadConsole.UI.Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");
         Controls.Add(button);
 
-        button = new Button(11, 3)
+        button = new Button3d(11, 3)
         {
             Text = "Click",
             Position = new Point(1, 5),
-            Theme = new Button3dTheme()
         };
         button.Click += (s, a) => listbox.ScrollToSelectedItem();
         //button.AlternateFont = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
         Controls.Add(button);
 
-        button = new Button(11, 3)
+        button = new ButtonBox(11, 3)
         {
             Text = "Click",
             Position = new Point(1, 10),
-            Theme = new ButtonLinesTheme()
         };
         Controls.Add(button);
 
@@ -197,26 +196,26 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
         List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>
             {
-                new Tuple<Color, string>(Library.Default.Colors.Red, "Red"),
-                new Tuple<Color, string>(Library.Default.Colors.RedDark, "DRed"),
-                new Tuple<Color, string>(Library.Default.Colors.Purple, "Prp"),
-                new Tuple<Color, string>(Library.Default.Colors.PurpleDark, "DPrp"),
-                new Tuple<Color, string>(Library.Default.Colors.Blue, "Blu"),
-                new Tuple<Color, string>(Library.Default.Colors.BlueDark, "DBlu"),
-                new Tuple<Color, string>(Library.Default.Colors.Cyan, "Cya"),
-                new Tuple<Color, string>(Library.Default.Colors.CyanDark, "DCya"),
-                new Tuple<Color, string>(Library.Default.Colors.Green, "Gre"),
-                new Tuple<Color, string>(Library.Default.Colors.GreenDark, "DGre"),
-                new Tuple<Color, string>(Library.Default.Colors.Yellow, "Yel"),
-                new Tuple<Color, string>(Library.Default.Colors.YellowDark, "DYel"),
-                new Tuple<Color, string>(Library.Default.Colors.Orange, "Ora"),
-                new Tuple<Color, string>(Library.Default.Colors.OrangeDark, "DOra"),
-                new Tuple<Color, string>(Library.Default.Colors.Brown, "Bro"),
-                new Tuple<Color, string>(Library.Default.Colors.BrownDark, "DBrow"),
-                new Tuple<Color, string>(Library.Default.Colors.Gray, "Gray"),
-                new Tuple<Color, string>(Library.Default.Colors.GrayDark, "DGray"),
-                new Tuple<Color, string>(Library.Default.Colors.White, "White"),
-                new Tuple<Color, string>(Library.Default.Colors.Black, "Black")
+                new Tuple<Color, string>(Colors.Default.Red, "Red"),
+                new Tuple<Color, string>(Colors.Default.RedDark, "DRed"),
+                new Tuple<Color, string>(Colors.Default.Purple, "Prp"),
+                new Tuple<Color, string>(Colors.Default.PurpleDark, "DPrp"),
+                new Tuple<Color, string>(Colors.Default.Blue, "Blu"),
+                new Tuple<Color, string>(Colors.Default.BlueDark, "DBlu"),
+                new Tuple<Color, string>(Colors.Default.Cyan, "Cya"),
+                new Tuple<Color, string>(Colors.Default.CyanDark, "DCya"),
+                new Tuple<Color, string>(Colors.Default.Green, "Gre"),
+                new Tuple<Color, string>(Colors.Default.GreenDark, "DGre"),
+                new Tuple<Color, string>(Colors.Default.Yellow, "Yel"),
+                new Tuple<Color, string>(Colors.Default.YellowDark, "DYel"),
+                new Tuple<Color, string>(Colors.Default.Orange, "Ora"),
+                new Tuple<Color, string>(Colors.Default.OrangeDark, "DOra"),
+                new Tuple<Color, string>(Colors.Default.Brown, "Bro"),
+                new Tuple<Color, string>(Colors.Default.BrownDark, "DBrow"),
+                new Tuple<Color, string>(Colors.Default.Gray, "Gray"),
+                new Tuple<Color, string>(Colors.Default.GrayDark, "DGray"),
+                new Tuple<Color, string>(Colors.Default.White, "White"),
+                new Tuple<Color, string>(Colors.Default.Black, "Black")
             };
 
         backgroundcycle = colors.Select(i => i.Item1).ToArray();

@@ -18,6 +18,7 @@ static class GameSettings
     public static IDemo[] Demos =
         {
             new DemoControls(),
+            new DemoControls2(),
             new DemoAutoTyping(),
             new DemoStringParsing(),
             new DemoMultipleCursors(),

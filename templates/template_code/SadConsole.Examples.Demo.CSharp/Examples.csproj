@@ -21,7 +21,7 @@
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
 
     <!-- Some constants for your game that can detect monogame or sfml. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -32,16 +32,15 @@
   <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
     <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha1-debug" />
     <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-alpha1-debug" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.0-alpha1-debug" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
   <!-- If you're using SFML, you don't need to add the sfml library as SadConsole adds it for you. -->
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0-alpha1-debug" />
-
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
 
-    <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows. -->
+    <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
   </ItemGroup>
 
