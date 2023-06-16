@@ -30,7 +30,7 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
   </PropertyGroup>
 
   <ItemGroup>
