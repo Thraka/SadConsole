@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using SadConsole.Input;
 
 namespace SadConsole.UI.Controls;
@@ -121,6 +122,14 @@ public abstract class CompositeControl : ControlBase, IContainer
             control.UpdateAndRedraw(time);
         }
     }
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name) =>
+        HasNamedControl(name, out _);
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
+        NamedControls.TryGetValue(name, out control);
 
     ControlHost? IContainer.Host => Parent?.Host;
 

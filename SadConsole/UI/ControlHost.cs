@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadConsole.UI.Controls;
@@ -183,6 +182,14 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     public ControlBase this[string name] => NamedControls[name];
 
     #endregion
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name) =>
+        HasNamedControl(name, out _);
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
+        NamedControls.TryGetValue(name, out control);
 
     void Components.IComponent.OnAdded(IScreenObject host)
     {

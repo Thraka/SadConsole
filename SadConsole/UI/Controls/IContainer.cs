@@ -25,4 +25,19 @@ public interface IContainer : IList<ControlBase>
     /// <param name="name">The name of the control.</param>
     /// <returns>The control.</returns>
     ControlBase this[string name] { get; }
+
+    /// <summary>
+    /// Checks whether or not the container has a control registered with the given name. 
+    /// </summary>
+    /// <param name="name">The name to check.</param>
+    /// <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+    bool HasNamedControl(string name);
+
+    /// <summary>
+    /// Checks whether or not the container has a control registered with the given name. If found, the instance is assigned to the <paramref name="control"/> parameter.
+    /// </summary>
+    /// <param name="name">The name to check.</param>
+    /// <param name="control">The control instance found.</param>
+    /// <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+    bool HasNamedControl(string name, out ControlBase? control);
 }
