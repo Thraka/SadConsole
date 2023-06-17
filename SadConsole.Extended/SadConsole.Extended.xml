@@ -479,6 +479,18 @@
             </summary>
             <param name="area">The area of the zone.</param>
         </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Creates a new zone object using the positions of a rectangle.
+            </summary>
+            <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(System.Collections.Generic.IEnumerable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new zone object using the specified positions.
+            </summary>
+            <param name="positions">The positions that make up the zone.</param>
+        </member>
         <member name="M:SadConsole.Entities.Zone.ToString">
             <summary>
             Returns the string "Zone - " followed by the <see cref="P:SadConsole.Entities.Zone.Name"/> of the zone. If the name is empty, appends the <see cref="F:SadConsole.Entities.Zone.Area"/> bounds.

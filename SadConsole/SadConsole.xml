@@ -10492,6 +10492,12 @@
         <member name="P:SadConsole.UI.ControlHost.Item(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.UI.ControlHost.HasNamedControl(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.ControlHost.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.ControlHost.TabNextControl">
             <summary>
             Gives the focus to the next control in the tab order.
@@ -11049,6 +11055,12 @@
             </summary>
             <param name="time">The game frame time delta.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.HasNamedControl(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.UI.Controls.ControlBase">
             <summary>
             Base class for all controls.
@@ -11526,6 +11538,21 @@
             </summary>
             <param name="name">The name of the control.</param>
             <returns>The control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.HasNamedControl(System.String)">
+            <summary>
+            Checks whether or not the container has a control registered with the given name. 
+            </summary>
+            <param name="name">The name to check.</param>
+            <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+            <summary>
+            Checks whether or not the container has a control registered with the given name. If found, the instance is assigned to the <paramref name="control"/> parameter.
+            </summary>
+            <param name="name">The name to check.</param>
+            <param name="control">The control instance found.</param>
+            <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
@@ -12065,11 +12092,6 @@
             An optional text to display on the bar. If set to <c>"%"</c>, displays the percentage of the progress.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextColor">
-            <summary>
-            The color to print the <see cref="P:SadConsole.UI.Controls.ProgressBar.DisplayText"/> string.
-            </summary>
-        </member>
         <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextAlignment">
             <summary>
             Alignment to print the <see cref="P:SadConsole.UI.Controls.ProgressBar.DisplayText"/>. <see cref="F:SadConsole.HorizontalAlignment.Stretch"/> is invalid for the property.
@@ -12122,12 +12144,7 @@
             <param name="info">The keyboard information.</param>
             <returns>True if the keyboard was handled by this control.</returns>
         </member>
-        <member name="P:SadConsole.UI.Controls.ProgressBar.ThemeStateBackground">
-            <summary>
-            The theme of the unprogressed part of the bar.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ProgressBar.ThemeStateForeground">
+        <member name="P:SadConsole.UI.Controls.ProgressBar.ThemeStateBar">
             <summary>
             The theme of the progressed part of the bar.
             </summary>
@@ -12135,6 +12152,26 @@
         <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextStates">
             <summary>
             The theme of the text displayed on the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.BackgroundGlyph">
+            <summary>
+            The glyph to use when drawing the unfilled part of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.BarGlyph">
+            <summary>
+            The glyph to use when drawing the filled part of the bar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.DisplayTextColor">
+            <summary>
+            The color to print the <see cref="P:SadConsole.UI.Controls.ProgressBar.DisplayText"/> string.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ProgressBar.BarColor">
+            <summary>
+            The color to print the filled part of the progress bar.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ProgressBar.PrintDisplayAsDecorator">
@@ -13352,6 +13389,9 @@
             <summary>
             The color to use with a <see cref="T:SadConsole.UI.Controls.NumberBox"/> control when <see cref="P:SadConsole.UI.Controls.NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextBox.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ToggleButtonBase">
             <summary>

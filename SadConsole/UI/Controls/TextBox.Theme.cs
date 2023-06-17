@@ -24,7 +24,7 @@ public partial class TextBox
     [DataMember]
     public Color? NumberBoxInvalidNumberForeground { get; set; }
 
-
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (Surface.Effects.Count != 0)

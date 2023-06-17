@@ -73,7 +73,7 @@ class ScrollableConsole : ControlsConsole
         // Remove the surface renderer, we don't care what this surface has on itself
         Renderer!.Steps.RemoveAll(p => p.Name == Renderers.Constants.RenderStepNames.Surface);
         Renderer.Steps.RemoveAll(p => p.Name == Renderers.Constants.RenderStepNames.Tint);
-
+        
         // Handle the scroll bar control
         _scrollBar = new ScrollBar(Orientation.Vertical, Height);
         _scrollBar.IsEnabled = false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
@@ -9,45 +10,73 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public partial class ProgressBar
 {
-    /// <summary>
-    /// The theme of the unprogressed part of the bar.
-    /// </summary>
-    [DataMember]
-    public ThemeStates ThemeStateBackground { get; protected set; }
+    Color? _displayTextColor = null;
+    Color? _barColor = null;
 
     /// <summary>
     /// The theme of the progressed part of the bar.
     /// </summary>
     [DataMember]
-    public ThemeStates ThemeStateForeground { get; protected set; }
+    public ThemeStates ThemeStateBar { get; protected set; } = new ThemeStates();
 
     /// <summary>
     /// The theme of the text displayed on the bar.
     /// </summary>
     [DataMember]
-    public ThemeStates DisplayTextStates { get; protected set; }
+    public ThemeStates DisplayTextStates { get; protected set; } = new ThemeStates();
+
+    /// <summary>
+    /// The glyph to use when drawing the unfilled part of the bar.
+    /// </summary>
+    [DataMember]
+    public int BackgroundGlyph { get; set; } = 0;
+
+    /// <summary>
+    /// The glyph to use when drawing the filled part of the bar.
+    /// </summary>
+    [DataMember]
+    public int BarGlyph { get; set; } = 219;
+
+    /// <summary>
+    /// The color to print the <see cref="DisplayText"/> string.
+    /// </summary>
+    [DataMember]
+    public Color? DisplayTextColor
+    {
+        get => _displayTextColor;
+        set { _displayTextColor = value; IsDirty = true; }
+    }
+
+    /// <summary>
+    /// The color to print the filled part of the progress bar.
+    /// </summary>
+    [DataMember]
+    public Color? BarColor
+    {
+        get => _barColor;
+        set { _barColor = value; IsDirty = true; }
+    }
 
     /// <summary>
     /// When <see langword="true"/>, prints the <see cref="Label.DisplayText"/> on the control in decorators instead of replacing the portation of the bar that overlaps the text.
     /// </summary>
     [DataMember]
-    public bool PrintDisplayAsDecorator { get; set; }
+    public bool PrintDisplayAsDecorator { get; set; } = true;
 
     /// <inheritdoc/>
     protected override void RefreshThemeStateColors(Colors colors)
     {
         base.RefreshThemeStateColors(colors);
-
-        ThemeStateBackground.RefreshTheme(colors);
-        ThemeStateBackground.SetForeground(ThemeStateBackground.Normal.Foreground);
-        ThemeStateBackground.SetBackground(ThemeStateBackground.Normal.Background);
-        ThemeStateBackground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 176);
-        ThemeStateForeground.RefreshTheme(colors);
-        ThemeStateForeground.SetForeground(ThemeStateForeground.Normal.Foreground);
-        ThemeStateForeground.SetBackground(ThemeStateForeground.Normal.Background);
-        ThemeStateForeground.Disabled = new ColoredGlyph(Color.Gray, Color.Black, 219);
         DisplayTextStates.RefreshTheme(colors);
-        DisplayTextStates.SetForeground(DisplayTextColor);
+        ThemeStateBar.RefreshTheme(colors);
+
+        if (DisplayTextColor != null)
+            DisplayTextStates.Normal.Foreground = DisplayTextColor.Value;
+        else
+            DisplayTextStates.Normal.Foreground = DisplayTextStates.Selected.Foreground;
+
+        if (BarColor != null)
+            ThemeStateBar.Normal.Foreground = BarColor.Value;
     }
 
     /// <inheritdoc/>
@@ -55,13 +84,15 @@ public partial class ProgressBar
     {
         if (!IsDirty) return;
 
-        RefreshThemeStateColors(FindThemeColors());
+        var colors = FindThemeColors();
 
-        ColoredGlyph foregroundAppearance = ThemeStateForeground.GetStateAppearance(State);
-        ColoredGlyph backgroundAppearance = ThemeStateBackground.GetStateAppearance(State);
-        ColoredGlyph displayTextAppearance = DisplayTextStates.GetStateAppearance(State);
+        RefreshThemeStateColors(colors);
 
-        Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, backgroundAppearance.Glyph);
+        ColoredGlyph backgroundAppearance = ThemeState.GetStateAppearanceNoMouse(State);
+        ColoredGlyph foregroundAppearance = ThemeStateBar.GetStateAppearanceNoMouse(State);
+        ColoredGlyph displayTextAppearance = DisplayTextStates.GetStateAppearanceNoMouse(State);
+
+        Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, BackgroundGlyph);
 
         if (IsHorizontal)
         {
@@ -72,9 +103,9 @@ public partial class ProgressBar
             else
                 fillRect = new Rectangle(Width - fillSize, 0, fillSize, Height);
 
-            Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
+            Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, BarGlyph);
 
-            if (DisplayTextColor.A != 0 && !string.IsNullOrEmpty(DisplayText))
+            if (displayTextAppearance.Foreground.A != 0 && !string.IsNullOrEmpty(DisplayText))
             {
                 string alignedString;
                 if (DisplayText == "%")
@@ -106,7 +137,7 @@ public partial class ProgressBar
             else
                 fillRect = new Rectangle(0, Height - fillSize, Width, fillSize);
 
-            Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, foregroundAppearance.Glyph);
+            Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, BarGlyph);
         }
 
         IsDirty = false;

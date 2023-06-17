@@ -11,7 +11,6 @@ public partial class ProgressBar : ControlBase
 {
     private string _displayText = "%";
     private HorizontalAlignment _displayTextAlignment = HorizontalAlignment.Center;
-    private SadRogue.Primitives.Color _displayTextColor;
 
     /// <summary>
     /// Called when the <see cref="Progress"/> property value changes.
@@ -62,16 +61,6 @@ public partial class ProgressBar : ControlBase
     {
         get => _displayText;
         set { _displayText = value; IsDirty = true; }
-    }
-
-    /// <summary>
-    /// The color to print the <see cref="DisplayText"/> string.
-    /// </summary>
-    [DataMember]
-    public SadRogue.Primitives.Color DisplayTextColor
-    {
-        get => _displayTextColor;
-        set { _displayTextColor = value; IsDirty = true; }
     }
 
     /// <summary>
@@ -183,9 +172,7 @@ public partial class ProgressBar : ControlBase
     public ProgressBar(int width, int height, HorizontalAlignment horizontalAlignment) : base(width, height)
     {
         if (horizontalAlignment == HorizontalAlignment.Center || horizontalAlignment == HorizontalAlignment.Stretch)
-        {
             throw new InvalidOperationException("HorizontalAlignment.Center or HorizontalAlignment.Stretch is invalid for the progress bar control.");
-        }
 
         this.horizontalAlignment = horizontalAlignment;
         isHorizontal = true;
@@ -193,15 +180,6 @@ public partial class ProgressBar : ControlBase
 
         CanFocus = false;
         TabStop = false;
-
-        PrintDisplayAsDecorator = true;
-
-        ThemeStateBackground = new ThemeStates();
-        ThemeStateForeground = new ThemeStates();
-        DisplayTextStates = new ThemeStates();
-
-        ThemeStateBackground.SetGlyph(176);
-        ThemeStateForeground.SetGlyph(219);
     }
 
     /// <summary>
@@ -224,15 +202,6 @@ public partial class ProgressBar : ControlBase
 
         CanFocus = false;
         TabStop = false;
-
-        PrintDisplayAsDecorator = true;
-
-        ThemeStateBackground = new ThemeStates();
-        ThemeStateForeground = new ThemeStates();
-        DisplayTextStates = new ThemeStates();
-
-        ThemeStateBackground.SetGlyph(176);
-        ThemeStateForeground.SetGlyph(219);
     }
 
     /// <summary>
