@@ -49,11 +49,26 @@ namespace SadConsole.Entities
         public Zone(Area area)
         {
             IsVisible = false;
+            IsEnabled = false;
             UseMouse = false;
             UseKeyboard = false;
 
             Area = area;
         }
+
+        /// <summary>
+        /// Creates a new zone object using the positions of a rectangle.
+        /// </summary>
+        /// <param name="area">The area of the zone.</param>
+        public Zone(Rectangle area) : this(new Area(area.Positions()))
+        { }
+
+        /// <summary>
+        /// Creates a new zone object using the specified positions.
+        /// </summary>
+        /// <param name="positions">The positions that make up the zone.</param>
+        public Zone(IEnumerable<Point> positions) : this(new Area(positions))
+        { }
 
         /// <summary>
         /// Returns the string "Zone - " followed by the <see cref="Name"/> of the zone. If the name is empty, appends the <see cref="Area"/> bounds.
