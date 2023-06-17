@@ -285,7 +285,7 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.Single,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+        <member name="M:SadConsole.AnimatedScreenSurface.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
             <summary>
             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
             </summary>

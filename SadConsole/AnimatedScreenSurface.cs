@@ -16,7 +16,7 @@ namespace SadConsole;
 public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
 {
     [DataMember(Name = "AnimationDuration")]
-    private float _animatedTime;
+    private TimeSpan _animatedTime;
     private AnimationState _state;
     private Point _center;
     [DataMember(Name = "Width")]
@@ -39,7 +39,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <summary>
     /// Time counter for the animation
     /// </summary>
-    protected double AddedTime;
+    protected TimeSpan AddedTime;
 
     /// <summary>
     /// The current frame index being animated.
@@ -50,7 +50,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <summary>
     /// How much time per animated frame should be used.
     /// </summary>
-    protected float TimePerFrame;
+    protected TimeSpan TimePerFrame;
 
     /// <summary>
     /// All frames of the animation.
@@ -91,7 +91,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <summary>
     /// The length of the animation.
     /// </summary>
-    public float AnimationDuration
+    public TimeSpan AnimationDuration
     {
         get => _animatedTime;
         set { _animatedTime = value; CalculateFrameDuration(); }
@@ -106,13 +106,9 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         set
         {
             if (value < 0 || value >= FramesList.Count)
-            {
                 CurrentFrameIndexValue = 0;
-            }
             else
-            {
                 CurrentFrameIndexValue = value;
-            }
 
             UpdateFrameReferences();
         }
@@ -240,14 +236,10 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// </summary>
     private void CalculateFrameDuration()
     {
-        if (IsEmpty || _animatedTime == 0)
-        {
-            TimePerFrame = 0f;
-        }
+        if (IsEmpty || _animatedTime == TimeSpan.Zero)
+            TimePerFrame = TimeSpan.Zero;
         else
-        {
             TimePerFrame = _animatedTime / FramesList.Count;
-        }
     }
 
     /// <summary>
@@ -287,14 +279,14 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <param name="delta">The time that has elapsed since this method was last called.</param>
     public override void Update(TimeSpan delta)
     {
-        if (IsPlaying && TimePerFrame != 0)
+        if (IsPlaying && TimePerFrame != TimeSpan.Zero)
         {
             // TODO: Evaluate if we should change this to calculate current frame based on total time passed, \\not calculate frame based on individual frame duration on screen.
-            AddedTime += delta.TotalSeconds;
+            AddedTime += delta;
 
             if (AddedTime > TimePerFrame)
             {
-                AddedTime = 0f;
+                AddedTime = TimeSpan.Zero;
                 CurrentFrameIndexValue++;
 
                 if (CurrentFrameIndexValue >= FramesList.Count)
@@ -406,7 +398,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
 
         }
 
-        animation.AnimationDuration = 1;
+        animation.AnimationDuration = TimeSpan.FromSeconds(0.5);
         animation.Repeat = true;
 
         animation.Start();
@@ -437,7 +429,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// 
     /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
     /// </remarks>
-    public static AnimatedScreenSurface FromImage(string name, string filePath, Point frameLayout, float frameDuration,
+    public static AnimatedScreenSurface FromImage(string name, string filePath, Point frameLayout, TimeSpan frameDuration,
         Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyph>? action = null,
         TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
         TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
