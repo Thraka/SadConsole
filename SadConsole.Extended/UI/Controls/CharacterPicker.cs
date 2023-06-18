@@ -134,6 +134,9 @@ namespace SadConsole.UI.Controls
 
             // Remove the surface control created by the baseclass
             RemoveControl(SurfaceControl);
+            Surface.DefaultBackground = fill;
+            Surface.DefaultForeground = foreground;
+            Surface.Clear();
 
             // Create our version of the control
             SurfaceControl = new DrawingAreaEffects(Width, Height);
@@ -186,8 +189,6 @@ namespace SadConsole.UI.Controls
         public override void UpdateAndRedraw(TimeSpan time)
         {
             if (!IsDirty) return;
-
-            RefreshThemeStateColors(FindThemeColors());
 
             bool showWidthScroll = false;
             bool showHeightScroll = false;
