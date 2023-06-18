@@ -130,21 +130,21 @@ public class MouseScreenObjectState
         }
     }
 
-    private MouseScreenObjectState(MouseScreenObjectState clonedCopy)
+    private MouseScreenObjectState(MouseScreenObjectState cloneSource)
     {
-        ScreenObject = clonedCopy.ScreenObject;
-        Mouse = clonedCopy.Mouse.Clone();
-        Cell = clonedCopy.Cell;
-        SurfaceCellPosition = clonedCopy.SurfaceCellPosition;
-        CellPosition = clonedCopy.CellPosition;
-        WorldCellPosition = clonedCopy.WorldCellPosition;
-        SurfacePixelPosition = clonedCopy.SurfacePixelPosition;
-        IsOnScreenObject = clonedCopy.IsOnScreenObject;
+        ScreenObject = cloneSource.ScreenObject;
+        Mouse = cloneSource.Mouse.Clone();
+        Cell = cloneSource.Cell;
+        SurfaceCellPosition = cloneSource.SurfaceCellPosition;
+        CellPosition = cloneSource.CellPosition;
+        WorldCellPosition = cloneSource.WorldCellPosition;
+        SurfacePixelPosition = cloneSource.SurfacePixelPosition;
+        IsOnScreenObject = cloneSource.IsOnScreenObject;
     }
 
     /// <summary>
     /// Creates a copy.
     /// </summary>
     /// <returns>A copy of this class instance.</returns>
-    public MouseScreenObjectState DeepClone() => new MouseScreenObjectState(this);
+    public MouseScreenObjectState Clone() => new(this);
 }

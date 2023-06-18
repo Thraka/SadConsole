@@ -6744,7 +6744,7 @@
             <param name="screenObject">The screen object to process with the mouse state.</param>
             <param name="mouseData">The current mouse state.</param>
         </member>
-        <member name="M:SadConsole.Input.MouseScreenObjectState.DeepClone">
+        <member name="M:SadConsole.Input.MouseScreenObjectState.Clone">
             <summary>
             Creates a copy.
             </summary>
@@ -13620,7 +13620,7 @@
             The line style for the border.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Window.PreviousMouseInfo">
+        <member name="F:SadConsole.UI.Window.PreviousMouseLeftButtonDown">
             <summary>
             The mouse state of the previous update frame.
             </summary>

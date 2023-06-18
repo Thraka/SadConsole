@@ -82,7 +82,7 @@ public partial class Window : Console, IWindowData
     /// <summary>
     /// The mouse state of the previous update frame.
     /// </summary>
-    protected MouseScreenObjectState PreviousMouseInfo = new MouseScreenObjectState(null, new Mouse());
+    protected bool PreviousMouseLeftButtonDown;
 
     /// <summary>
     /// The position of the cell that the window drag started at.
@@ -241,7 +241,7 @@ public partial class Window : Console, IWindowData
 
         if (!CanDrag || TitleAreaLength == 0)
         {
-            PreviousMouseInfo = state;
+            PreviousMouseLeftButtonDown = state.Mouse.LeftButtonDown;
             return base.ProcessMouse(state);
         }
 
@@ -254,7 +254,7 @@ public partial class Window : Console, IWindowData
                 else
                     Position = state.WorldCellPosition - CellAtDragPosition;
 
-                PreviousMouseInfo = state;
+                PreviousMouseLeftButtonDown = state.Mouse.LeftButtonDown;
                 return true;
             }
         }
@@ -264,12 +264,12 @@ public partial class Window : Console, IWindowData
         {
             IsDragging = false;
             IsExclusiveMouse = PreviousMouseExclusiveDrag;
-            PreviousMouseInfo = state;
+            PreviousMouseLeftButtonDown = state.Mouse.LeftButtonDown;
             return true;
         }
 
         // Left button freshly down and we're not already dragging, check to see if in title
-        if (Controls.CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseInfo.Mouse.LeftButtonDown && state.Mouse.LeftButtonDown)
+        if (Controls.CapturedControl == null && state.IsOnScreenObject && !IsDragging && !PreviousMouseLeftButtonDown && state.Mouse.LeftButtonDown)
         {
             if (state.CellPosition.Y == TitleAreaY && state.CellPosition.X >= TitleAreaX && state.CellPosition.X < TitleAreaX + TitleAreaLength)
             {
@@ -289,7 +289,7 @@ public partial class Window : Console, IWindowData
             }
         }
 
-        PreviousMouseInfo = state;
+        PreviousMouseLeftButtonDown = state.Mouse.LeftButtonDown;
         return base.ProcessMouse(state);
     }
 
@@ -471,8 +471,4 @@ public partial class Window : Console, IWindowData
     /// <returns>The string "Window".</returns>
     public override string ToString() =>
         "Window";
-
-    [OnDeserialized]
-    private void AfterDeserialized(StreamingContext context) =>
-        PreviousMouseInfo = new MouseScreenObjectState(null, new Mouse());//Redraw();
 }
