@@ -946,6 +946,26 @@ public static class CellSurfaceEditor
         obj.Surface.IsDirty = true;
     }
 
+    /// <summary>
+    /// Draws the string on the console at the specified location, wrapping if needed.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">X location of the text.</param>
+    /// <param name="y">Y location of the text.</param>
+    /// <param name="glyphs">An array of glyphs to print at the specified position.</param>
+    public static void Print(this ISurface obj, int x, int y, ColoredGlyph[] glyphs) =>
+        Print(obj, x, y, new ColoredString(glyphs));
+
+    /// <summary>
+    /// Draws the string on the console at the specified location, wrapping if needed.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">X location of the text.</param>
+    /// <param name="y">Y location of the text.</param>
+    /// <param name="glyphs">An enumeration of glyphs to print at the specified position.</param>
+    public static void Print(this ISurface obj, int x, int y, IEnumerable<ColoredGlyph> glyphs) =>
+        Print(obj, x, y, new ColoredString(glyphs.ToArray()));
+
     private static void PrintNoCheck(this ISurface obj, int index, ColoredString text)
     {
         int end = index + text.Length > obj.Surface.Count ? obj.Surface.Count : index + text.Length;
