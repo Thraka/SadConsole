@@ -10934,6 +10934,16 @@
             Represents a button that can be toggled on/off within a group of other buttons.
             </summary>
         </member>
+        <member name="F:SadConsole.UI.Controls.ComboBox.DropdownContainer">
+            <summary>
+            Surface that contains the listbox
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ComboBox.ListBox">
+            <summary>
+            Listbox used to control the items
+            </summary>
+        </member>
         <member name="E:SadConsole.UI.Controls.ComboBox.SelectedItemChanged">
             <summary>
             An event that triggers when the <see cref="P:SadConsole.UI.Controls.ComboBox.SelectedItem"/> property changes.
@@ -10958,6 +10968,13 @@
             <param name="dropdownHeight">The height of the dropdown container.</param>
             <param name="items">The items to seed the dropdown with.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.ResizeDropDown(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Resizes the dropdown container to the given width/height
+            </summary>
+            <param name="width">Width of the dropdown</param>
+            <param name="height">Height of the dropdown</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.ComboBox.SetItems(System.Object[])">
             <summary>
             Sets the items in the dropdown listbox.
@@ -10969,6 +10986,11 @@
             Gets an array of items from the dropdown listbox.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox.RepositionOffScreenContainer">
+            <summary>
+            Checks if the dropdown container is off-screen, and pushes it back in.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ComboBox.OnIsSelected">
             <summary>
