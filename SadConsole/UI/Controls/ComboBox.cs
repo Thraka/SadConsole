@@ -17,6 +17,7 @@ public partial class ComboBox : CheckBox
     /// Surface that contains the listbox
     /// </summary>
     protected readonly ScreenSurface DropdownContainer;
+
     /// <summary>
     /// Listbox used to control the items
     /// </summary>
@@ -156,7 +157,7 @@ public partial class ComboBox : CheckBox
     /// <summary>
     /// Checks if the dropdown container is off-screen, and pushes it back in.
     /// </summary>
-    private void RepositionOffScreenContainer()
+    protected void RepositionOffScreenContainer()
     {
         if (Parent?.Host?.ParentConsole is not null)
         {
