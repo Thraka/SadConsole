@@ -2,6 +2,7 @@
 
 [![Chat on discord](https://img.shields.io/discord/501465397518925843.svg)](https://discord.gg/pAFNKYjczM)
 [![NuGet](https://img.shields.io/nuget/v/SadConsole.svg)][nuget]
+[![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/csharp/Thraka/SadConsole)
 
 SadConsole is a generic library that emulates old-school console game systems. It provides command prompt-style graphics where one or more tile textures are used to represent an ASCII character set. Console's are made up of a grid of cells, each of which can have its own foreground, background, glyph, and special effect applied to it.
 
