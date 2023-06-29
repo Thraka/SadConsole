@@ -1,62 +1,62 @@
-using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 
-namespace SadConsole.UI.Controls
+namespace SadConsole.UI.Controls;
+
+/// <summary>
+/// Contains the header and content of a tab for the <see cref="TabControl"/>.
+/// </summary>
+public class TabItem
 {
+    /// <summary>
+    /// Display text of the header. Also functions as the access key
+    /// </summary>
+    public string Header { get; set; }
 
     /// <summary>
-    ///
+    /// Temporary variable holding the theme state of the tab item header.
     /// </summary>
-    public class TabItem
+    public ThemeStates ThemeHeaderStates { get; set; }
+
+    /// <summary>
+    /// Temporary variable holding where on the tab control the header is drawn.
+    /// </summary>
+    public Rectangle ThemeHeaderArea { get; set; }
+
+    /// <summary>
+    /// Temporary variable holding where on the tab control the mouse is tracked for this header.
+    /// </summary>
+    public Rectangle ThemeHeaderMouseArea { get; set; }
+
+    /// <summary>
+    /// The content of this tab item.
+    /// </summary>
+    public Panel Content { get; set; }
+
+    /// <summary>
+    /// The size in cells to allocate for displaying the header. <code>-1</code> indicates that the tab should be automatically sized to fit the size of the <see cref="Header"/>.
+    /// </summary>
+    public int TabSize { get; set; }
+
+    /// <summary>
+    /// If <see cref="TabSize"/> is any value other than <code>-1</code>, the <see cref="Header"/> is aligned according to this property.
+    /// </summary>
+    /// <value></value>
+    public HorizontalAlignment TextAlignment { get; set; }
+
+    /// <summary>
+    /// Creates a new tab item with the specified header as a colored string, and sets the content for the tab.
+    /// </summary>
+    /// <param name="header">The header to display on this tab item.</param>
+    /// <param name="content">The panel content to display for this tab.</param>
+    /// <exception cref="System.ArgumentException">Thrown when the <paramref name="header"/> value is an empty string.</exception>
+    public TabItem(string header, Panel content)
     {
-        /// <summary>
-        /// Display text of the header. Also functions as the access key
-        /// </summary>
-        public string Header { get; set; }
+        if (string.IsNullOrEmpty(header)) throw new System.ArgumentException("Header text cannot be empty.", nameof(header));
 
-        /// <summary>
-        /// Reference to the content area.
-        /// </summary>
-        public ScreenSurface Console { get; private set; }
-
-        /// <summary>
-        /// The width/height of the tab. This is based on the theme:
-        /// Width for horizontal theme, Height for vertical theme.
-        /// If a TabSize value is given, but is smaller then the header length, the longest value will be used
-        /// </summary>
-        /// <value>Size in cells</value>
-        public int TabSize { get; set; }
-
-        /// <summary>
-        /// If setting a custom width for the tab, this defines how the text will be alligned
-        /// </summary>
-        /// <value></value>
-        public HorizontalAlignment TextAlignment { get; set; }
-
-        internal Button TabButton { get; private set; }
-
-        /// <summary>
-        /// Constructs a new tab item
-        /// </summary>
-        /// <param name="_header">Display name of the tab</param>
-        /// <param name="_console">ScreenSurface with the content</param>
-        public TabItem(string _header, ScreenSurface _console)
-        {
-            Header = _header;
-            Console = _console;
-
-            if (Header.Length == 0 && TabSize == 0)
-            {
-                throw new System.ArgumentException("Either a header needs to be set, or a TabSize");
-            }
-
-            TabButton = new Button(Header.Length == 0 ? 1 : Header.Length)
-            {
-                Text = Header,
-                IsVisible = false
-            };
-            TextAlignment = HorizontalAlignment.Center;
-
-            ((ButtonTheme)TabButton.Theme).ShowEnds = false;
-        }
+        Header = header;
+        ThemeHeaderStates = new ThemeStates();
+        TextAlignment = HorizontalAlignment.Center;
+        TabSize = -1;
+        Content = content;
     }
 }
