@@ -49,7 +49,7 @@ public partial class Colors
         colors.Lines = new AdjustableColor(ColorNames.Gray, "Lines", colors);
 
         colors.ControlForegroundNormal = new AdjustableColor(ColorNames.Blue, "Control Foreground Normal", colors);
-        colors.ControlForegroundDisabled = new AdjustableColor(ColorNames.Gray, "Control Foreground Disabled", colors);
+        colors.ControlForegroundDisabled = new AdjustableColor(ColorNames.GrayDark, "Control Foreground Disabled", colors);
         colors.ControlForegroundMouseOver = new AdjustableColor(ColorNames.Blue, "Control Foreground MouseOver", colors);
         colors.ControlForegroundMouseDown = new AdjustableColor(ColorNames.BlueDark, "Control Foreground MouseDown", colors);
         colors.ControlForegroundSelected = new AdjustableColor(ColorNames.Yellow, "Control Foreground Selected", colors);

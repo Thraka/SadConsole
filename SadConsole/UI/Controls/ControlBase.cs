@@ -568,10 +568,14 @@ public abstract class ControlBase
     {
         if (!CanResize) throw new InvalidOperationException("This control can't resize.");
 
-        Width = width;
-        Height = height;
+        if (Width != width || Height != height)
+        {
+            Width = width;
+            Height = height;
+            Surface = CreateControlSurface();
+        }
+
         MouseArea = new Rectangle(0, 0, width, height);
-        Surface = CreateControlSurface();
         IsDirty = true;
         OnResized();
     }

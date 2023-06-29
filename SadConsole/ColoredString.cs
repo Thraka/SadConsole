@@ -144,11 +144,24 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     }
 
     /// <summary>
-    /// Creates a new instance of the ColoredString class with the specified string value.
+    /// Creates a new instance of this class with the specified string value.
     /// </summary>
     /// <param name="value">The backing string.</param>
-    public ColoredString(string value) =>
+    /// <param name="treatAsString">When <see langword="true"/>, sets all of the Ignore properties to <see langword="false"/>, treating this instance as a normal string.</param>
+    public ColoredString(string value, bool treatAsString = false)
+    {
         String = value;
+
+        if (treatAsString)
+        {
+            IgnoreBackground = true;
+            IgnoreDecorators = true;
+            IgnoreEffect = true;
+            IgnoreForeground = true;
+            IgnoreGlyph = true;
+            IgnoreMirror = true;
+        }
+    }
 
     /// <summary>
     /// Creates a new instance of the ColoredString class with the specified string value, foreground and background colors, and a cell effect.

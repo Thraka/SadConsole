@@ -25,10 +25,10 @@ public abstract class CompositeControl : ControlBase, IContainer
     public int Count => Controls.Count;
 
     /// <inheritdoc/>
-    public ControlBase this[int index] => Controls[index];
+    protected ControlBase this[int index] => Controls[index];
 
     /// <inheritdoc/>
-    public ControlBase this[string name] => NamedControls[name];
+    ControlBase IContainer.this[string name] => NamedControls[name];
 
     /// <summary>
     /// Creates a new control with the specified width and height.

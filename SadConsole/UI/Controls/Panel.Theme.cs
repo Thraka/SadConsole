@@ -67,8 +67,8 @@ public partial class Panel
 
             if (DrawBorder)
             {
-                Color topleftcolor = !UseInsetBorder ? currentColors.Lines.ComputedColor.GetBright() : currentColors.Lines.ComputedColor.GetDark();
-                Color bottomrightcolor = !UseInsetBorder ? currentColors.Lines.ComputedColor.GetDark() : currentColors.Lines.ComputedColor.GetBright();
+                Color topleftcolor = !UseInsetBorder ? currentColors.Lines : currentColors.Lines.ComputedColor.GetDarker();
+                Color bottomrightcolor = !UseInsetBorder ? currentColors.Lines.ComputedColor.GetDarker() : currentColors.Lines;
 
                 if (Parent!.Host!.ParentConsole!.Font.IsSadExtended && UseExtendedBorderGlyphs)
                 {

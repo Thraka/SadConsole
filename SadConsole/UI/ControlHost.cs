@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.Renderers;
@@ -80,9 +81,19 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
             if (ParentConsole != null)
                 ParentConsole.IsDirty = true;
 
-            int count = ControlsList.Count;
-            for (int i = 0; i < count; i++)
-                ControlsList[i].IsDirty = true;
+            DirtyTheChildren(this);
+
+            static void DirtyTheChildren(IContainer container)
+            {
+                int count = container.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    container[i].IsDirty = true;
+
+                    if (container[i] is IContainer)
+                        DirtyTheChildren((IContainer)container[i]);
+                }
+            }
         }
     }
 
