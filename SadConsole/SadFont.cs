@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
@@ -11,6 +12,10 @@ namespace SadConsole;
 [DataContract]
 public class SadFont : IFont
 {
+    [DataMember(Name="Mapping")]
+    private IndexMapping[]? _remapper;
+    [DataMember(Name="SkipGlyphGeneration")]
+    private bool _skipAutomaticGlyphGeneration;
     private int _solidGlyphIndex;
     private int _unsupportedGlyphIndex;
 
@@ -158,6 +163,26 @@ public class SadFont : IFont
     }
 
     /// <summary>
+    /// Generates a rectangle for the specified glyph based on the glyph index, <see cref="Rows"/>, <see cref="Columns"/>, and <see cref="GlyphPadding"/> values. For the actual font rectangle, use <see cref="GetGlyphSourceRectangle(int)"/>.
+    /// </summary>
+    /// <param name="glyph">The glyph.</param>
+    /// <returns>A rectangle based on where the font thinks the rectangle should be.</returns>
+    public Rectangle GenerateGlyphSourceRectangle(int glyph)
+    {
+        int cx = glyph % Columns;
+        int cy = glyph / Columns;
+
+        if (GlyphPadding != 0)
+        {
+            return new Rectangle((cx * GlyphWidth) + ((cx + 1) * GlyphPadding),
+                                 (cy * GlyphHeight) + ((cy + 1) * GlyphPadding),
+                                 GlyphWidth, GlyphHeight);
+        }
+        else
+            return new Rectangle(cx * GlyphWidth, cy * GlyphHeight, GlyphWidth, GlyphHeight);
+    }
+
+    /// <summary>
     /// Gets a <see cref="CellDecorator"/> by the <see cref="GlyphDefinition"/> defined by the font file.
     /// </summary>
     /// <param name="name">The name of the decorator to get.</param>
@@ -250,6 +275,21 @@ public class SadFont : IFont
         if (Rows == 0)
             Rows = (int)System.Math.Floor((double)Image.Height / (GlyphHeight + GlyphPadding));
 
-        ConfigureRects();
+        if (!_skipAutomaticGlyphGeneration)
+            ConfigureRects();
+
+        if (_remapper != null)
+        {
+            foreach (IndexMapping item in _remapper)
+                GlyphRectangles[item.From] = GenerateGlyphSourceRectangle(item.To);
+
+            _remapper = null;
+        }
+    }
+
+    private record struct IndexMapping
+    {
+        public int From;
+        public int To;
     }
 }

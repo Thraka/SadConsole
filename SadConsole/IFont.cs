@@ -59,11 +59,18 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
     ITexture Image { get; }
 
     /// <summary>
-    /// Gets the rendering rectangle for a glyph.
+    /// Gets the registered rendering rectangle for a glyph.
     /// </summary>
     /// <param name="glyph">The index of the glyph to get.</param>
     /// <returns>The rectangle for the glyph.</returns>
     Rectangle GetGlyphSourceRectangle(int glyph);
+
+    /// <summary>
+    /// Generates a rectangle for the specified glyph. For the actual font rectangle, use <see cref="GetGlyphSourceRectangle(int)"/>.
+    /// </summary>
+    /// <param name="glyph">The glyph.</param>
+    /// <returns>A rectangle based on where the font thinks the rectangle should be.</returns>
+    Rectangle GenerateGlyphSourceRectangle(int glyph);
 
     /// <summary>
     /// Gets the pixel size of a font based on a <see cref="IFont.Sizes"/>.
