@@ -2709,13 +2709,22 @@ public static class CellSurfaceEditor
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="maxGlyphValue">The maximum glyph value to use on the obj.Surface.</param>
-    public static void FillWithRandomGarbage(this ISurface obj, int maxGlyphValue)
+    public static void FillWithRandomGarbage(this ISurface obj, int maxGlyphValue) =>
+        FillWithRandomGarbage(obj, maxGlyphValue, obj.Surface.Area);
+
+    /// <summary>
+    /// Fills a console with random colors and glyphs.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="maxGlyphValue">The maximum glyph value to use on the obj.Surface.</param>
+    /// <param name="area">The area to fill with random garbage.</param>
+    public static void FillWithRandomGarbage(this ISurface obj, int maxGlyphValue, Rectangle area)
     {
         //pulse.Reset();
         int charCounter = 0;
-        for (int y = 0; y < obj.Surface.Height; y++)
+        for (int y = area.Y; y <= area.MaxExtentY; y++)
         {
-            for (int x = 0; x < obj.Surface.Width; x++)
+            for (int x = area.X; x <= area.MaxExtentX; x++)
             {
                 SetGlyph(obj, x, y, charCounter);
                 SetForeground(obj, x, y, new Color((byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)GameHost.Instance.Random.Next(0, 256), (byte)255));

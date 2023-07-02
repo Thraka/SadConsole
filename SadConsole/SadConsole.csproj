@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>10.0.0-alpha2</Version>
+    <Version>10.0.0-alpha3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -27,7 +27,14 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>...</PackageReleaseNotes>
+    <PackageReleaseNotes>
+- ComboBox is now resizble.
+- Some controls, like Button, now support a text-only constructor that automatically sizes the control.
+- TabControl added.
+- Table control added.
+- Surface.FillWithRandomGarbage supports a rectangle.
+- Font files can have a Mapping property of From,To int objects that remap glyphs to other position rects
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -988,7 +988,7 @@
             <summary>
             Processes a container from the control host.
             </summary>
-            <param name="controlContainer">The container.</param>
+            <param name="container">The container.</param>
             <param name="renderer">The renderer used with this step.</param>
             <param name="screenObject">The screen surface with font information.</param>
         </member>

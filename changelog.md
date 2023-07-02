@@ -10,6 +10,8 @@ New features
 
 - [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
 - [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
+- [UI] New control, `TabControl`. Contributed by arxae.
+- [UI] New control, `Table`. Contributed by Ven0maus.
 
 Normal changes
 
@@ -45,7 +47,7 @@ Normal changes
 - [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
 - [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
-- [UI] Ven0maus added the `Table` control.
+- [UI] `ProgressBar` is easier to customize.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 

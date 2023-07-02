@@ -5,6 +5,7 @@ using SadRogue.Primitives;
 using Color = Microsoft.Xna.Framework.Color;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadRectangle = SadRogue.Primitives.Rectangle;
+using SadConsole.UI.Controls;
 
 namespace SadConsole.Renderers;
 
@@ -101,22 +102,42 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <summary>
     /// Processes a container from the control host.
     /// </summary>
-    /// <param name="controlContainer">The container.</param>
+    /// <param name="container">The container.</param>
     /// <param name="renderer">The renderer used with this step.</param>
     /// <param name="screenObject">The screen surface with font information.</param>
-    protected void ProcessContainer(UI.Controls.IContainer controlContainer, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
+    protected void ProcessContainer(UI.Controls.IContainer container, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
     {
         UI.Controls.ControlBase control;
 
-        for (int i = 0; i < controlContainer.Count; i++)
+        /*
+         * Temp code to clip drawing controls to the containers region. Prevents controls bleeding outside their container.
+         * However, this code is useless until the mouse input is updated to account for the container. So probably
+         * IContainer needs to be improved to cache this information some how. Then the control's input can query its
+         * container to interset control.MouseBounds.
+
+        SadRectangle clipRect;
+
+        if (container is ControlBase containerAsControl)
         {
-            control = controlContainer[i];
+            SadRogue.Primitives.Point position = container.AbsolutePosition + containerAsControl.Surface.View.Position;
+            SadRogue.Primitives.Point size = containerAsControl.Surface.Area.Size;
+            clipRect = new(position.X, position.Y, size.X, size.Y);
+        }
+        else
+            clipRect = screenObject.Surface.View;
+
+        // clipRect would be passed to RenderControlCells
+        */
+
+        for (int i = 0; i < container.Count; i++)
+        {
+            control = container[i];
 
             if (!control.IsVisible) continue;
             RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
 
-            if (control is UI.Controls.IContainer container)
-                ProcessContainer(container, renderer, screenObject);
+            if (control is UI.Controls.IContainer childContainer)
+                ProcessContainer(childContainer, renderer, screenObject);
         }
     }
 
@@ -150,6 +171,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
                     SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
 
                     if (!parentViewRect.Contains(cellRenderPosition)) continue;
+                    //if (!parentViewRect.Contains(cellRenderPosition) || !clipRect.Contains(cellRenderPosition)) continue;
 
                     XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
 

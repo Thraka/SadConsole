@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>10.0.0-alpha2</Version>
+    <Version>10.0.0-alpha3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -30,7 +30,7 @@
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.0-alpha2</SadConsoleVersion>
+    <SadConsoleVersion>10.0.0-alpha3</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
 

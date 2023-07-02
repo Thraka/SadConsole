@@ -1120,11 +1120,12 @@
             </summary>
             <param name="capacity">The number of blank characters.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(System.String)">
+        <member name="M:SadConsole.ColoredString.#ctor(System.String,System.Boolean)">
             <summary>
-            Creates a new instance of the ColoredString class with the specified string value.
+            Creates a new instance of this class with the specified string value.
             </summary>
             <param name="value">The backing string.</param>
+            <param name="treatAsString">When <see langword="true"/>, sets all of the Ignore properties to <see langword="false"/>, treating this instance as a normal string.</param>
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.Mirror,SadConsole.CellDecorator[])">
             <summary>
@@ -5206,6 +5207,14 @@
             <param name="obj">The surface being edited.</param>
             <param name="maxGlyphValue">The maximum glyph value to use on the obj.Surface.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.FillWithRandomGarbage(SadConsole.ISurface,System.Int32,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Fills a console with random colors and glyphs.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="maxGlyphValue">The maximum glyph value to use on the obj.Surface.</param>
+            <param name="area">The area to fill with random garbage.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.PrintTheDraw(SadConsole.ICellSurface,System.Int32,System.String,SadConsole.Readers.TheDrawFont,SadConsole.HorizontalAlignment,System.Int32)">
             <summary>
             Prints text using <see cref="T:SadConsole.Readers.TheDrawFont"/> and horizontal alignment specified. Calculates x coordinate. Truncates string to fit it in one line.
@@ -5329,10 +5338,17 @@
         </member>
         <member name="M:SadConsole.IFont.GetGlyphSourceRectangle(System.Int32)">
             <summary>
-            Gets the rendering rectangle for a glyph.
+            Gets the registered rendering rectangle for a glyph.
             </summary>
             <param name="glyph">The index of the glyph to get.</param>
             <returns>The rectangle for the glyph.</returns>
+        </member>
+        <member name="M:SadConsole.IFont.GenerateGlyphSourceRectangle(System.Int32)">
+            <summary>
+            Generates a rectangle for the specified glyph. For the actual font rectangle, use <see cref="M:SadConsole.IFont.GetGlyphSourceRectangle(System.Int32)"/>.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <returns>A rectangle based on where the font thinks the rectangle should be.</returns>
         </member>
         <member name="M:SadConsole.IFont.GetFontSize(SadConsole.IFont.Sizes)">
             <summary>
@@ -8509,6 +8525,13 @@
             <param name="glyph">The index of the glyph to get.</param>
             <returns>The rectangle for the glyph if it exists, otherwise returns <see cref="P:SadConsole.SadFont.UnsupportedGlyphRectangle"/>.</returns>
         </member>
+        <member name="M:SadConsole.SadFont.GenerateGlyphSourceRectangle(System.Int32)">
+            <summary>
+            Generates a rectangle for the specified glyph based on the glyph index, <see cref="P:SadConsole.SadFont.Rows"/>, <see cref="P:SadConsole.SadFont.Columns"/>, and <see cref="P:SadConsole.SadFont.GlyphPadding"/> values. For the actual font rectangle, use <see cref="M:SadConsole.SadFont.GetGlyphSourceRectangle(System.Int32)"/>.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <returns>A rectangle based on where the font thinks the rectangle should be.</returns>
+        </member>
         <member name="M:SadConsole.SadFont.GetDecorator(System.String,SadRogue.Primitives.Color)">
             <summary>
             Gets a <see cref="T:SadConsole.CellDecorator"/> by the <see cref="T:SadConsole.GlyphDefinition"/> defined by the font file.
@@ -10754,11 +10777,23 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.Button.#ctor(System.String)">
+            <summary>
+            Creates an auto sizing button with the specified text.
+            </summary>
+            <param name="text">The text to display on the button.</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.Button.RefreshThemeStateColors(SadConsole.UI.Colors)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Button.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Button.CreateControlSurface">
+            <summary>
+            Resizes the control surface based on <see cref="P:SadConsole.UI.Controls.ButtonBase.AutoSize"/> or the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties.
+            </summary>
+            <returns>The control's surface.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Button3d">
             <summary>
@@ -10791,11 +10826,6 @@
             Raised when the button is clicked.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ButtonBase._text">
-            <summary>
-            The display text of the button.
-            </summary>
-        </member>
         <member name="F:SadConsole.UI.Controls.ButtonBase._textAlignment">
             <summary>
             The alignment of the <see cref="F:SadConsole.UI.Controls.ButtonBase._text"/>.
@@ -10804,6 +10834,11 @@
         <member name="P:SadConsole.UI.Controls.ButtonBase.Text">
             <summary>
             The text displayed on the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ButtonBase.AutoSize">
+            <summary>
+            When <see langword="true"/>, automatically resizes the surface to fit the <see cref="P:SadConsole.UI.Controls.ButtonBase.Text"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ButtonBase.TextAlignment">
@@ -10817,6 +10852,11 @@
             </summary>
             <param name="width">Width of the button.</param>
             <param name="height">Height of the button.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ButtonBase.#ctor">
+            <summary>
+            Creates a new button control with <see cref="P:SadConsole.UI.Controls.ButtonBase.AutoSize"/> set to <see langword="true"/>.
+            </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.OnClick">
             <summary>
@@ -10878,6 +10918,11 @@
             <param name="width">The width of the control.</param>
             <param name="height">The height of the control.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.#ctor(System.String)">
+            <summary>
+            Creates an auto sizing checkbox control with the specified text.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.CheckBox.OnClick">
             <summary>
             Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
@@ -10928,6 +10973,12 @@
         </member>
         <member name="M:SadConsole.UI.Controls.CheckBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.CreateControlSurface">
+            <summary>
+            Resizes the control surface based on <see cref="P:SadConsole.UI.Controls.ButtonBase.AutoSize"/> or the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties.
+            </summary>
+            <returns>The control's surface.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ComboBox">
             <summary>
@@ -11049,7 +11100,7 @@
         <member name="P:SadConsole.UI.Controls.CompositeControl.Item(System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.UI.Controls.CompositeControl.Item(System.String)">
+        <member name="P:SadConsole.UI.Controls.CompositeControl.SadConsole#UI#Controls#IContainer#Item(System.String)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.#ctor(System.Int32,System.Int32)">
@@ -11281,7 +11332,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Bounds">
             <summary>
-            The area this control covers.
+            The area of the host this control covers.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.Parent">
@@ -11650,12 +11701,12 @@
         </member>
         <member name="P:SadConsole.UI.Controls.Label.DecoratorUnderline">
             <summary>
-            The decorator to use when the <see cref="!:Controls.ShowUnderline"/> is <see langword="true"/>.
+            The decorator to use when the <see cref="P:SadConsole.UI.Controls.Label.ShowUnderline"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.Label.DecoratorStrikethrough">
             <summary>
-            The decorator to use when the <see cref="!:Controls.ShowStrikethrough"/> is <see langword="true"/>.
+            The decorator to use when the <see cref="P:SadConsole.UI.Controls.Label.ShowStrikethrough"/> is <see langword="true"/>.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.Label.UpdateAndRedraw(System.TimeSpan)">
@@ -12242,6 +12293,11 @@
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.#ctor(System.String)">
+            <summary>
+            Creates an auto sizing radio button control with the specified text.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.OnClick">
             <summary>
             Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
@@ -12297,6 +12353,12 @@
         </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.RadioButton.CreateControlSurface">
+            <summary>
+            Resizes the control surface based on <see cref="P:SadConsole.UI.Controls.ButtonBase.AutoSize"/> or the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties.
+            </summary>
+            <returns>The control's surface.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ScrollBar">
             <summary>
@@ -12545,6 +12607,253 @@
             </summary>
             <param name="state">The state of the mouse.</param>
             <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TabControl">
+            <summary>
+            A control with tabs along the edge of the control. Each tab sets the content of the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.InvalidActiveTabIndex">
+            <summary>
+            The index used when there isn't an active tab.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TabControl.ActiveTabItemChanged">
+            <summary>
+            Raised when the active tab changes.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.CachedMousePosition">
+            <summary>
+            The mouse position recorded from the last time the mouse was over the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.TabItems">
+            <summary>
+            The list of tab items displayed by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.Tabs">
+            <summary>
+            Gets a list of tabs in this control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.ActiveTabIndex">
+            <summary>
+            The index of the active tab. If <see cref="F:SadConsole.UI.Controls.TabControl.InvalidActiveTabIndex"/> is returned, there is no active tab.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.CurrentTab">
+            <summary>
+            Retursn the current tab.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.TabOrientation">
+            <summary>
+            Sets the position of the tab strip to the top or bottom of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.ConnectedLineStyle">
+            <summary>
+            An array of glyphs indexed by <see cref="T:SadConsole.ICellSurface.ConnectedLineIndex"/>. Defaults to <see cref="P:SadConsole.ICellSurface.ConnectedLineThin"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabControl.Item(System.Int32)">
+            <summary>
+            Gets or sets the tab item at the specified index.
+            </summary>
+            <param name="index">The index of the tab item to get or set.</param>
+            <returns>The tab item content.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.#ctor(System.Collections.Generic.IEnumerable{SadConsole.UI.Controls.TabItem},System.Int32,System.Int32)">
+            <summary>
+            Creates a new tab control with the specified tab items.
+            </summary>
+            <param name="tabItems">Tabs that are present on the tabcontrol</param>
+            <param name="width">Width of the content area</param>
+            <param name="height">Heigh of the content area</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.#ctor(System.Collections.Generic.IEnumerable{SadConsole.UI.Controls.TabItem},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new tab control with the specified tab items.
+            </summary>
+            <param name="tabItems">Tabs that are present on the tabcontrol</param>
+            <param name="activeTabIndex">What tab to be active on initialization</param>
+            <param name="width">Width of the content area</param>
+            <param name="height">Heigh of the content area</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.AddTab(SadConsole.UI.Controls.TabItem)">
+            <summary>
+            Adds a tab to the control.
+            </summary>
+            <param name="tab">TabItem with header and associated console for tab content</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.AddTab(System.String,SadConsole.UI.Controls.Panel)">
+            <summary>
+            Creates and adds a tab to the control.
+            </summary>
+            <param name="header">The header of the new tab.</param>
+            <param name="content">Associated content for the new tab.</param>
+            <returns>The new tab item.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.RemoveTab(SadConsole.UI.Controls.TabItem)">
+            <summary>
+            Removes a tab from the control.
+            </summary>
+            <param name="tab">TabItem that should be removed</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.RemoveTab(System.Int32)">
+            <summary>
+            Removes a tab by index.
+            </summary>
+            <param name="index">The index of the tab to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.SetActiveTab(System.Int32)">
+            <summary>
+            Sets the tab specified by the <paramref name="index"/> as active.
+            </summary>
+            <param name="index">Index of the tab.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.OnActiveTabItem(System.Int32,System.Int32)">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Controls.TabControl.ActiveTabItemChanged"/> event.
+            </summary>
+            <param name="previousActiveIndex">The tab index of the previous item.</param>
+            <param name="activeIndex">The index of the active tab.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.GetTabIndex(SadConsole.UI.Controls.TabItem)">
+            <summary>
+            Gets the index of a tab
+            </summary>
+            <param name="tab">Tab you need the index of</param>
+            <returns>0 based index of the tab</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.ContainsTab(SadConsole.UI.Controls.TabItem)">
+            <summary>
+            Determines whether a tab is contained in this control.
+            </summary>
+            <param name="tab">The tab to check.</param>
+            <returns>Returns <see langword="true"/> when the tab is in the control; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.SelectNextTab">
+            <summary>
+            Sets the next tab as active. Stops at the last tab.
+            </summary>
+            <returns>Returns <see langword="true"/> when the active tab changes; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.SelectPreviousTab">
+            <summary>
+            Sets the previous tab as active. Stops at the first tab.
+            </summary>
+            <returns>Returns <see langword="true"/> when the active tab changes; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.OnResized">
+            <summary>
+            Resizes the tab item.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.ContentRegion">
+            <summary>
+            The region of the control where a tab item's content should be displayed.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.TabsRegion">
+            <summary>
+            The region of the control where a tab headers should be displayed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.ThemeDetermineContentRegion">
+            <summary>
+            Sets the <see cref="F:SadConsole.UI.Controls.TabControl.ContentRegion"/> rectangle to how much space the tab control should give to tab item content.
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TabControl.Orientation">
+            <summary>
+            Horizontal alignment modes
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.Orientation.Top">
+            <summary>
+            Tabs should be placed at the top of the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.Orientation.Bottom">
+            <summary>
+            Tabs should be placed at the bottom of the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.Orientation.Left">
+            <summary>
+            Tabs should be placed to the left of the control.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.TabControl.Orientation.Right">
+            <summary>
+            Tabs should be placed to the right of the control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabControl.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.TabItem">
+            <summary>
+            Contains the header and content of a tab for the <see cref="T:SadConsole.UI.Controls.TabControl"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.Header">
+            <summary>
+            Display text of the header. Also functions as the access key
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.ThemeHeaderStates">
+            <summary>
+            Temporary variable holding the theme state of the tab item header.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.ThemeHeaderArea">
+            <summary>
+            Temporary variable holding where on the tab control the header is drawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.ThemeHeaderMouseArea">
+            <summary>
+            Temporary variable holding where on the tab control the mouse is tracked for this header.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.Content">
+            <summary>
+            The content of this tab item.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.TabSize">
+            <summary>
+            The size in cells to allocate for displaying the header. <code>-1</code> indicates that the tab should be automatically sized to fit the size of the <see cref="P:SadConsole.UI.Controls.TabItem.Header"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.AutomaticPadding">
+            <summary>
+            Padding to add around the <see cref="P:SadConsole.UI.Controls.TabItem.Header"/> text when <see cref="P:SadConsole.UI.Controls.TabItem.TabSize"/> is unset (-1).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TabItem.TextAlignment">
+            <summary>
+            If <see cref="P:SadConsole.UI.Controls.TabItem.TabSize"/> is any value other than <code>-1</code>, the <see cref="P:SadConsole.UI.Controls.TabItem.Header"/> is aligned according to this property.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TabItem.#ctor(System.String,SadConsole.UI.Controls.Panel)">
+            <summary>
+            Creates a new tab item with the specified header as a colored string, and sets the content for the tab.
+            </summary>
+            <param name="header">The header to display on this tab item.</param>
+            <param name="content">The panel content to display for this tab.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="header"/> value is an empty string.</exception>
         </member>
         <member name="T:SadConsole.UI.Controls.Table">
             <summary>
@@ -13460,6 +13769,11 @@
             </summary>
             <param name="width">Width of the control.</param>
             <param name="height">Height of the control (default is 1).</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ToggleButtonBase.#ctor">
+            <summary>
+            Creates an automatically sized button.
+            </summary>
         </member>
         <member name="T:SadConsole.UI.Controls.ToggleSwitch">
             <summary>
