@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
@@ -43,6 +44,13 @@ public class Button : ButtonBase
         
     }
 
+    /// <summary>
+    /// Creates an auto sizing button with the specified text.
+    /// </summary>
+    /// <param name="text">The text to display on the button.</param>
+    public Button(string text) : base() =>
+        Text = text;
+
     ///<inheritdoc/>
     protected override void RefreshThemeStateColors(Colors colors)
     {
@@ -56,6 +64,12 @@ public class Button : ButtonBase
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
+
+        // If automatically sized, ensure that the size is accurate
+        if (AutoSize && EstimateControlSurface().Size != Surface.Area.Size)
+            Surface = CreateControlSurface();
+
+        MouseArea = Surface.Area;
 
         Colors colors = FindThemeColors();
 
@@ -72,17 +86,41 @@ public class Button : ButtonBase
             appearance.Background,
             appearance.Glyph, null);
 
-        if (ShowEnds && Width >= 3)
+        int width = AutoSize ? Surface.Width : Width;
+        
+        if (ShowEnds && width >= 3)
         {
-            Surface.Print(1, middle, Text.Align(TextAlignment, Width - 2));
+            Surface.Print(1, middle, Text.Align(TextAlignment, width - 2));
             Surface.SetCellAppearance(0, middle, endGlyphAppearance);
+            Surface.SetCellAppearance(width - 1, middle, endGlyphAppearance);
+            Surface[width - 1, middle].Glyph = RightEndGlyph;
             Surface[0, middle].Glyph = LeftEndGlyph;
-            Surface.SetCellAppearance(Width - 1, middle, endGlyphAppearance);
-            Surface[Width - 1, middle].Glyph = RightEndGlyph;
         }
         else
-            Surface.Print(0, middle, Text.Align(TextAlignment, Width));
+            Surface.Print(0, middle, Text.Align(TextAlignment, width));
 
         IsDirty = false;
     }
+
+    /// <summary>
+    /// Resizes the control surface based on <see cref="ButtonBase.AutoSize"/> or the <see cref="ControlBase.Width"/> and <see cref="ControlBase.Height"/> properties.
+    /// </summary>
+    /// <returns>The control's surface.</returns>
+    protected override ICellSurface CreateControlSurface()
+    {
+        if (!AutoSize) return base.CreateControlSurface();
+
+        // Create an automatically sized control
+        Rectangle area = EstimateControlSurface();
+
+        var surface = new CellSurface(area.Width, area.Height)
+        {
+            DefaultBackground = SadRogue.Primitives.Color.Transparent
+        };
+        surface.Clear();
+        return surface;
+    }
+
+    private Rectangle EstimateControlSurface() =>
+        new(0, 0, Text.Length + 2 + (ShowEnds ? 2 : 0), 1);
 }

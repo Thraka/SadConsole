@@ -46,6 +46,23 @@ public partial class RadioButton : ToggleButtonBase
     }
 
     /// <summary>
+    /// Creates an auto sizing radio button control with the specified text.
+    /// </summary>
+    public RadioButton(string text) : base()
+    {
+        _textAlignment = HorizontalAlignment.Left;
+
+        LeftBracketGlyph = '(';
+        RightBracketGlyph = ')';
+        CheckedIconGlyph = 15;
+        UncheckedIconGlyph = 0;
+        Text = text;
+
+        BracketsThemeState = new ThemeStates();
+        IconThemeState = new ThemeStates();
+    }
+
+    /// <summary>
     /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
     /// </summary>
     protected override void OnClick()

@@ -68,6 +68,12 @@ public partial class RadioButton
     {
         if (!IsDirty) return;
 
+        // If automatically sized, ensure that the size is accurate
+        if (AutoSize && EstimateControlSurface().Size != Surface.Area.Size)
+            Surface = CreateControlSurface();
+
+        MouseArea = Surface.Area;
+
         // Update the theme data
         Colors colors = FindThemeColors();
 
@@ -117,13 +123,17 @@ public partial class RadioButton
         ColoredGlyph bracketAppearance = BracketsThemeState.GetStateAppearance(State);
         ColoredGlyph iconAppearance = IconThemeState.GetStateAppearance(State);
 
-        Surface.Fill(appearance.Foreground, appearance.Background, null);
+        Surface.DefaultBackground = appearance.Background;
+        Surface.DefaultForeground = appearance.Foreground;
+        Surface.Clear();
+
+        int width = AutoSize ? Surface.Width : Width;
 
         // If we are doing text, then print it otherwise we're just displaying the button part
-        if (Width <= 2)
+        if (width <= 2)
             iconAppearance.CopyAppearanceTo(Surface[0, 0]);
 
-        if (Width >= 3)
+        if (width >= 3)
         {
             bracketAppearance.CopyAppearanceTo(Surface[0, 0]);
             iconAppearance.CopyAppearanceTo(Surface[1, 0]);
@@ -133,10 +143,32 @@ public partial class RadioButton
             Surface[2, 0].Glyph = RightBracketGlyph;
         }
 
-        if (Width >= 5)
-            Surface.Print(4, 0, Text.Align(TextAlignment, Width - 4));
+        if (width >= 5)
+            Surface.Print(4, 0, Text.Align(TextAlignment, width - 4));
 
 
         IsDirty = false;
     }
+
+    /// <summary>
+    /// Resizes the control surface based on <see cref="ButtonBase.AutoSize"/> or the <see cref="ControlBase.Width"/> and <see cref="ControlBase.Height"/> properties.
+    /// </summary>
+    /// <returns>The control's surface.</returns>
+    protected override ICellSurface CreateControlSurface()
+    {
+        if (!AutoSize) return base.CreateControlSurface();
+
+        // Create an automatically sized control
+        Rectangle area = EstimateControlSurface();
+
+        var surface = new CellSurface(area.Width, area.Height)
+        {
+            DefaultBackground = SadRogue.Primitives.Color.Transparent
+        };
+        surface.Clear();
+        return surface;
+    }
+
+    private Rectangle EstimateControlSurface() =>
+        new(0, 0, Text.Length + 3 + 2, 1);
 }

@@ -27,6 +27,23 @@ public partial class CheckBox : ToggleButtonBase
     }
 
     /// <summary>
+    /// Creates an auto sizing checkbox control with the specified text.
+    /// </summary>
+    public CheckBox(string text) : base()
+    {
+        _textAlignment = HorizontalAlignment.Left;
+
+        LeftBracketGlyph = '[';
+        RightBracketGlyph = ']';
+        CheckedIconGlyph = 251;
+        UncheckedIconGlyph = 0;
+        Text = text;
+
+        BracketsThemeState = new ThemeStates();
+        IconThemeState = new ThemeStates();
+    }
+
+    /// <summary>
     /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
     /// </summary>
     protected override void OnClick()

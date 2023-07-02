@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using SadRogue.Primitives.SpatialMaps;
 
 namespace SadConsole.UI.Controls;
 
@@ -47,10 +48,13 @@ public abstract class ToggleButtonBase : ButtonBase
     /// </summary>
     /// <param name="width">Width of the control.</param>
     /// <param name="height">Height of the control (default is 1).</param>
-    public ToggleButtonBase(int width, int height)
-        : base(width, height)
-    {
-    }
+    protected ToggleButtonBase(int width, int height)
+        : base(width, height) { }
+
+    /// <summary>
+    /// Creates an automatically sized button.
+    /// </summary>
+    protected ToggleButtonBase() : base() { }
 
     [OnDeserialized]
     private void AfterDeserialized(StreamingContext context)

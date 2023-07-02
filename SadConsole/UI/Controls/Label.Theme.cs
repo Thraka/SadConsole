@@ -13,13 +13,13 @@ public partial class Label : ControlBase
     public bool UseNormalStateOnly { get; set; } = true;
 
     /// <summary>
-    /// The decorator to use when the <see cref="Controls.ShowUnderline"/> is <see langword="true"/>.
+    /// The decorator to use when the <see cref="ShowUnderline"/> is <see langword="true"/>.
     /// </summary>
     [DataMember]
     public CellDecorator DecoratorUnderline { get; set; }
 
     /// <summary>
-    /// The decorator to use when the <see cref="Controls.ShowStrikethrough"/> is <see langword="true"/>.
+    /// The decorator to use when the <see cref="ShowStrikethrough"/> is <see langword="true"/>.
     /// </summary>
     [DataMember]
     public CellDecorator DecoratorStrikethrough { get; set; }

@@ -10,7 +10,9 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public abstract class ButtonBase : ControlBase
 {
-    bool _mouseDownForClick = false;
+    private bool _mouseDownForClick = false;
+    private string _text = string.Empty;
+    private bool _autoSize = false;
 
     /// <summary>
     /// Raised when the button is clicked.
@@ -18,20 +20,14 @@ public abstract class ButtonBase : ControlBase
     public event EventHandler? Click;
 
     /// <summary>
-    /// The display text of the button.
-    /// </summary>
-    [DataMember(Name = "Text")]
-    protected string _text = string.Empty;
-
-    /// <summary>
     /// The alignment of the <see cref="_text"/>.
     /// </summary>
-    [DataMember(Name = "TextAlignment")]
     protected HorizontalAlignment _textAlignment = HorizontalAlignment.Center;
 
     /// <summary>
     /// The text displayed on the control.
     /// </summary>
+    [DataMember]
     public string Text
     {
         get => _text;
@@ -39,8 +35,19 @@ public abstract class ButtonBase : ControlBase
     }
 
     /// <summary>
+    /// When <see langword="true"/>, automatically resizes the surface to fit the <see cref="Text"/>.
+    /// </summary>
+    [DataMember]
+    public bool AutoSize
+    {
+        get => _autoSize;
+        set { _autoSize = value; CanResize = !value; IsDirty = true; }
+    }
+
+    /// <summary>
     /// The alignment of the text, left, center, or right.
     /// </summary>
+    [DataMember]
     public HorizontalAlignment TextAlignment
     {
         get => _textAlignment;
@@ -52,7 +59,15 @@ public abstract class ButtonBase : ControlBase
     /// </summary>
     /// <param name="width">Width of the button.</param>
     /// <param name="height">Height of the button.</param>
-    public ButtonBase(int width, int height) : base(width, height) { }
+    protected ButtonBase(int width, int height) : base(width, height) { }
+
+    /// <summary>
+    /// Creates a new button control with <see cref="AutoSize"/> set to <see langword="true"/>.
+    /// </summary>
+    protected ButtonBase(): base(1, 1)
+    {
+        AutoSize = true;
+    }
 
     /// <summary>
     /// Raises the <see cref="Click"/> event.

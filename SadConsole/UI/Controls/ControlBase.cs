@@ -283,7 +283,7 @@ public abstract class ControlBase
     }
 
     /// <summary>
-    /// The area this control covers.
+    /// The area of the host this control covers.
     /// </summary>
     public Rectangle Bounds => new(_position.X, _position.Y, Width, Height);
 
