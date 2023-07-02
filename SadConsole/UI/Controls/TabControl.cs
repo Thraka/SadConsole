@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
 /// <summary>
-/// Provides showing the relevant content area on tab switch. Works on a "bring your own" principle. Content itself has to be provided by parent
-/// through a ScreenSurface (or subclass of it). Will provide options to set the view so it won't overflow, and is set to the correct position.
-/// Other components for this (eg: sliders) will have to be setup on the ScreenSurface itself
-///
-///
-///
-///
-/// 
+/// A control with tabs along the edge of the control. Each tab sets the content of the control.
 /// </summary>
-public abstract class TabControlBase : CompositeControl
+public partial class TabControl : CompositeControl
 {
+    private Orientation _tabOrientation;
+    private int[] _connectedLineStyle;
+
     /// <summary>
     /// The index used when there isn't an active tab.
     /// </summary>
@@ -35,6 +31,7 @@ public abstract class TabControlBase : CompositeControl
     /// <summary>
     /// The list of tab items displayed by the control.
     /// </summary>
+    [DataMember]
     protected List<TabItem> TabItems { get; set; }
 
     /// <summary>
@@ -45,6 +42,7 @@ public abstract class TabControlBase : CompositeControl
     /// <summary>
     /// The index of the active tab. If <see cref="InvalidActiveTabIndex"/> is returned, there is no active tab.
     /// </summary>
+    [DataMember]
     public int ActiveTabIndex { get; protected set; } = 0;
 
     /// <summary>
@@ -53,9 +51,24 @@ public abstract class TabControlBase : CompositeControl
     public TabItem CurrentTab => TabItems[ActiveTabIndex];
 
     /// <summary>
-    /// Makes sure the console is positioned inside the content area
+    /// Sets the position of the tab strip to the top or bottom of the control.
     /// </summary>
-    public bool EnforceConsolePosition { get; set; } = true;
+    [DataMember]
+    public Orientation TabOrientation
+    {
+        get => _tabOrientation;
+        set { _tabOrientation = value; ThemeDetermineContentRegion(); IsDirty = true; }
+    }
+
+    /// <summary>
+    /// An array of glyphs indexed by <see cref="ICellSurface.ConnectedLineIndex"/>. Defaults to <see cref="ICellSurface.ConnectedLineThin"/>.
+    /// </summary>
+    [DataMember]
+    public int[] ConnectedLineStyle
+    {
+        get => _connectedLineStyle;
+        set { _connectedLineStyle = value; IsDirty = true; }
+    }
 
     /// <summary>
     /// Gets or sets the tab item at the specified index.
@@ -73,18 +86,12 @@ public abstract class TabControlBase : CompositeControl
     }
 
     /// <summary>
-    /// Automatically updates the view rectangle of the active console. Note that the console will have to handle scrollbars themselves
-    /// </summary>
-    /// <value>If set to true, the view of the rectangle will be clamped to the tabcontrol area</value>
-    public bool UpdateConsoleViewRect { get; set; } = true;
-
-    /// <summary>
     /// Creates a new tab control with the specified tab items.
     /// </summary>
     /// <param name="tabItems">Tabs that are present on the tabcontrol</param>
     /// <param name="width">Width of the content area</param>
     /// <param name="height">Heigh of the content area</param>
-    public TabControlBase(IEnumerable<TabItem> tabItems, int width, int height) : this(tabItems, 0, width, height) { }
+    public TabControl(IEnumerable<TabItem> tabItems, int width, int height) : this(tabItems, 0, width, height) { }
 
     /// <summary>
     /// Creates a new tab control with the specified tab items.
@@ -93,14 +100,15 @@ public abstract class TabControlBase : CompositeControl
     /// <param name="activeTabIndex">What tab to be active on initialization</param>
     /// <param name="width">Width of the content area</param>
     /// <param name="height">Heigh of the content area</param>
-    public TabControlBase(IEnumerable<TabItem> tabItems, int activeTabIndex, int width, int height) : base(width, height)
+    public TabControl(IEnumerable<TabItem> tabItems, int activeTabIndex, int width, int height) : base(width, height)
     {
+        _connectedLineStyle = ICellSurface.ConnectedLineThin;
         TabItems = new List<TabItem>(tabItems);
         SetActiveTab(activeTabIndex);
     }
 
     /// <summary>
-    /// Adds a tab
+    /// Adds a tab to the control.
     /// </summary>
     /// <param name="tab">TabItem with header and associated console for tab content</param>
     public void AddTab(TabItem tab)
@@ -271,13 +279,51 @@ public abstract class TabControlBase : CompositeControl
     /// <summary>
     /// Sets the <see cref="ContentRegion"/> rectangle to how much space the tab control should give to tab item content.
     /// </summary>
-    protected abstract void ThemeDetermineContentRegion();
+    protected void ThemeDetermineContentRegion()
+    {
+        if (TabOrientation == Orientation.Top)
+        {
+            TabsRegion = new Rectangle(1, 0, Width - 2, 3);
+            ContentRegion = new(1, 3, Width - 2, Height - 4);
+        }
+        else if (TabOrientation == Orientation.Bottom)
+        {
+            TabsRegion = new Rectangle(1, Height - 3, Width - 2, 3);
+            ContentRegion = new(1, 1, Width - 2, Height - 4);
+        }
+        else if (TabOrientation == Orientation.Left)
+        {
+            TabsRegion = new Rectangle(0, 1, 3, Height - 2);
+            ContentRegion = new(3, 1, Width - 4, Height - 2);
+        }
+        else //Orientation.Right
+        {
+            TabsRegion = new Rectangle(Width - 3, 1, 3, Height - 2);
+            ContentRegion = new(1, 1, Width - 4, Height - 2);
+        }
+
+        if (ActiveTabIndex != InvalidActiveTabIndex)
+        {
+            TabItems[ActiveTabIndex].Content.Position = ContentRegion.Position;
+            TabItems[ActiveTabIndex].Content.Resize(ContentRegion.Width, ContentRegion.Height);
+        }
+    }
 
     /// <summary>
-	/// Vertical alignment modes
-	/// </summary>
-    public enum VerticalTabPositions
+    /// Horizontal alignment modes
+    /// </summary>
+    public enum Orientation
     {
+        /// <summary>
+        /// Tabs should be placed at the top of the control.
+        /// </summary>
+        Top,
+
+        /// <summary>
+        /// Tabs should be placed at the bottom of the control.
+        /// </summary>
+        Bottom,
+
         /// <summary>
         /// Tabs should be placed to the left of the control.
         /// </summary>

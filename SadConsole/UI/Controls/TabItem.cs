@@ -38,6 +38,11 @@ public class TabItem
     public int TabSize { get; set; }
 
     /// <summary>
+    /// Padding to add around the <see cref="Header"/> text when <see cref="TabSize"/> is unset (-1).
+    /// </summary>
+    public int AutomaticPadding { get; set; }
+
+    /// <summary>
     /// If <see cref="TabSize"/> is any value other than <code>-1</code>, the <see cref="Header"/> is aligned according to this property.
     /// </summary>
     /// <value></value>
@@ -57,6 +62,7 @@ public class TabItem
         ThemeHeaderStates = new ThemeStates();
         TextAlignment = HorizontalAlignment.Center;
         TabSize = -1;
+        AutomaticPadding = 1;
         Content = content;
     }
 }
