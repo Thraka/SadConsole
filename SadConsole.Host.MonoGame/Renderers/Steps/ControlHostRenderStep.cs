@@ -134,7 +134,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
             control = container[i];
 
             if (!control.IsVisible) continue;
-            RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
+            RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View);
 
             if (control is UI.Controls.IContainer childContainer)
                 ProcessContainer(childContainer, renderer, screenObject);
@@ -149,8 +149,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <param name="font">The font to render the cells with.</param>
     /// <param name="fontSize">The size of a cell in pixels.</param>
     /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
-    /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
-    protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect, int bufferWidth)
+    protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, SadRogue.Primitives.Point fontSize, SadRectangle parentViewRect)
     {
         font = control.AlternateFont ?? font;
 
@@ -173,7 +172,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
                     if (!parentViewRect.Contains(cellRenderPosition)) continue;
                     //if (!parentViewRect.Contains(cellRenderPosition) || !clipRect.Contains(cellRenderPosition)) continue;
 
-                    XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
+                    XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
 
                     if (cell.Background != SadRogue.Primitives.Color.Transparent)
                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);

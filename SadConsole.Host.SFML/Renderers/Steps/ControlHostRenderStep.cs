@@ -100,7 +100,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
             control = controlContainer[i];
 
             if (!control.IsVisible) continue;
-            RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View, screenObject.Surface.Width);
+            RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View);
 
             if (control is UI.Controls.IContainer container)
                 ProcessContainer(container, renderer, screenObject);
@@ -127,8 +127,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <param name="font">The font to render the cells with.</param>
     /// <param name="fontSize">The size of a cell in pixels.</param>
     /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
-    /// <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
-    protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect, int bufferWidth)
+    protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect)
     {
         font = control.AlternateFont ?? font;
         ColoredGlyph cell;
@@ -155,7 +154,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
 
                     if (!parentViewRect.Contains(cellRenderPosition)) continue;
 
-                    IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(bufferWidth)];
+                    IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
 
                     Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
                 }
