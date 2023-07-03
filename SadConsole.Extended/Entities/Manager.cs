@@ -43,7 +43,7 @@ namespace SadConsole.Entities
         /// </summary>
         public Manager()
         {
-            _entityStates = new(); //TODO: IDComparer
+            _entityStates = new(new IDComparer<Entity>());
             _spatialMap = new();
         }
 
