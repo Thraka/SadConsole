@@ -278,7 +278,7 @@ namespace SadConsole.Entities
                 var entities = _entityByPosition[entity.Position];
                 var newList = new Entity[entities.Length];
                 entities.CopyTo(newList, 0);
-                newList[newList.Length] = entity;
+                newList[newList.Length-1] = entity;
                 _entityByPosition[entity.Position] = newList;
             }
             else
