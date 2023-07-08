@@ -302,6 +302,13 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// <inheritdoc />
     public void Resize(int viewWidth, int viewHeight, int bufferWidth, int bufferHeight, bool clear)
     {
+        if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
+        if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
+        if (bufferWidth <= 0) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Surface buffer width must be > 0");
+        if (bufferHeight <= 0) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Surface buffer height must be > 0");
+        if (viewWidth > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
+        if (viewHeight > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
+
         var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
 
         for (int y = 0; y < bufferHeight; y++)
