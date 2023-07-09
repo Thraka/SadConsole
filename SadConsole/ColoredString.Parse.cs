@@ -19,13 +19,6 @@ public partial class ColoredString
     */
 
     /// <summary>
-    /// This method is obsolete. Use <see cref="Parser"/>.
-    /// </summary>
-    [Obsolete("This method is forwarding to Parser.Parse. Use Parser.Parse instead.")]
-    public static ColoredString Parse(string value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null) =>
-        Parser.Parse(value, surfaceIndex, surface, initialBehaviors);
-
-    /// <summary>
     /// The string parser to use for transforming strings into <see cref="ColoredString"/>.
     /// </summary>
     public static IParser Parser { get; set; } = new Default();

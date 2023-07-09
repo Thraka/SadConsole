@@ -90,8 +90,7 @@ public partial class NumberBox : TextBox
     /// Creates a new instance of the input box.
     /// </summary>
     /// <param name="width">The width of the input box.</param>
-    public NumberBox(int width)
-        : base(width)
+    public NumberBox(int width): base(width)
     {
     }
     #endregion
