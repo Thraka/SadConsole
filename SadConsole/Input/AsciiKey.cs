@@ -15,17 +15,17 @@ public struct AsciiKey
     public readonly record struct ShiftedCharacterMapping(char Unshifted, char Shifted);
 
     /// <summary>
-    /// Associates a numeric keypad character with a funcational key.
+    /// Associates a character glyph and a <see cref="Keys"/> value.
     /// </summary>
-    /// <param name="NumberPadCharacter">The number pad character.</param>
-    /// <param name="NonNumlockKey">The key the character maps to.</param>
+    /// <param name="CharacterGlyph">The number pad character.</param>
+    /// <param name="Key">The key the character maps to.</param>
     /// <remarks>Used when the <see cref="Keys.NumLock"/> is active.</remarks>
-    public readonly record struct NumericKeyMapping(char NumberPadCharacter, Keys NonNumlockKey);
+    public readonly record struct CharacterKeyMapping(char CharacterGlyph, Keys Key);
 
     /// <summary>
     /// List of <see cref="Keys"/> to consider as shifted when capslock is on.
     /// </summary>
-    public static readonly List<Keys> CapsLockedKeys = new List<Keys>()
+    public static readonly List<Keys> CapsLockedKeys = new()
     {
         Keys.A, Keys.B, Keys.C, Keys.D, Keys.E, Keys.F, Keys.G, Keys.H, Keys.I, Keys.J, Keys.K, Keys.L, Keys.M,
         Keys.N, Keys.O, Keys.P, Keys.Q, Keys.R, Keys.S, Keys.T, Keys.U, Keys.V, Keys.W, Keys.X, Keys.Y, Keys.Z,
@@ -96,19 +96,186 @@ public struct AsciiKey
     /// <summary>
     /// Dictionary that maps <see cref="Keys"/> usually triggered by the numberpad with a character and non-numpad key.
     /// </summary>
-    public static readonly Dictionary<Keys, NumericKeyMapping> NumberKeyMappings = new Dictionary<Keys, NumericKeyMapping>
+    public static readonly Dictionary<Keys, CharacterKeyMapping> NumberKeyMappings = new()
     {
-        {Keys.Decimal, new NumericKeyMapping('.', Keys.Delete)},
-        {Keys.NumPad0, new NumericKeyMapping('0', Keys.Insert)},
-        {Keys.NumPad1, new NumericKeyMapping('1', Keys.End)},
-        {Keys.NumPad2, new NumericKeyMapping('2', Keys.Down)},
-        {Keys.NumPad3, new NumericKeyMapping('3', Keys.PageDown)},
-        {Keys.NumPad4, new NumericKeyMapping('4', Keys.Left)},
-        {Keys.NumPad5, new NumericKeyMapping('5', Keys.D5)},
-        {Keys.NumPad6, new NumericKeyMapping('6', Keys.Right)},
-        {Keys.NumPad7, new NumericKeyMapping('7', Keys.Home)},
-        {Keys.NumPad8, new NumericKeyMapping('8', Keys.Up)},
-        {Keys.NumPad9, new NumericKeyMapping('9', Keys.PageUp)},
+        {Keys.Decimal, new CharacterKeyMapping('.', Keys.Delete)},
+        {Keys.NumPad0, new CharacterKeyMapping('0', Keys.Insert)},
+        {Keys.NumPad1, new CharacterKeyMapping('1', Keys.End)},
+        {Keys.NumPad2, new CharacterKeyMapping('2', Keys.Down)},
+        {Keys.NumPad3, new CharacterKeyMapping('3', Keys.PageDown)},
+        {Keys.NumPad4, new CharacterKeyMapping('4', Keys.Left)},
+        {Keys.NumPad5, new CharacterKeyMapping('5', Keys.D5)},
+        {Keys.NumPad6, new CharacterKeyMapping('6', Keys.Right)},
+        {Keys.NumPad7, new CharacterKeyMapping('7', Keys.Home)},
+        {Keys.NumPad8, new CharacterKeyMapping('8', Keys.Up)},
+        {Keys.NumPad9, new CharacterKeyMapping('9', Keys.PageUp)},
+    };
+
+    /// <summary>
+    /// Remaps any incoming key to a combination of character and key.
+    /// </summary>
+    public static readonly Dictionary<Keys, Keys> KeyRemapping = new()
+    {
+        { Keys.None, Keys.None},
+        { Keys.Back, Keys.Back},
+        { Keys.Tab, Keys.Tab},
+        { Keys.Enter, Keys.Enter},
+        { Keys.CapsLock, Keys.CapsLock},
+        { Keys.Escape, Keys.Escape},
+        { Keys.Space, Keys.Space},
+        { Keys.PageUp, Keys.PageUp},
+        { Keys.PageDown, Keys.PageDown},
+        { Keys.End, Keys.End},
+        { Keys.Home, Keys.Home},
+        { Keys.Left, Keys.Left},
+        { Keys.Up, Keys.Up},
+        { Keys.Right, Keys.Right},
+        { Keys.Down, Keys.Down},
+        { Keys.Select, Keys.Select},
+        { Keys.Print, Keys.Print},
+        { Keys.Execute, Keys.Execute},
+        { Keys.PrintScreen, Keys.PrintScreen},
+        { Keys.Insert, Keys.Insert},
+        { Keys.Delete, Keys.Delete},
+        { Keys.Help, Keys.Help},
+        { Keys.D0, Keys.D0},
+        { Keys.D1, Keys.D1},
+        { Keys.D2, Keys.D2},
+        { Keys.D3, Keys.D3},
+        { Keys.D4, Keys.D4},
+        { Keys.D5, Keys.D5},
+        { Keys.D6, Keys.D6},
+        { Keys.D7, Keys.D7},
+        { Keys.D8, Keys.D8},
+        { Keys.D9, Keys.D9},
+        { Keys.A, Keys.A},
+        { Keys.B, Keys.B},
+        { Keys.C, Keys.C},
+        { Keys.D, Keys.D},
+        { Keys.E, Keys.E},
+        { Keys.F, Keys.F},
+        { Keys.G, Keys.G},
+        { Keys.H, Keys.H},
+        { Keys.I, Keys.I},
+        { Keys.J, Keys.J},
+        { Keys.K, Keys.K},
+        { Keys.L, Keys.L},
+        { Keys.M, Keys.M},
+        { Keys.N, Keys.N},
+        { Keys.O, Keys.O},
+        { Keys.P, Keys.P},
+        { Keys.Q, Keys.Q},
+        { Keys.R, Keys.R},
+        { Keys.S, Keys.S},
+        { Keys.T, Keys.T},
+        { Keys.U, Keys.U},
+        { Keys.V, Keys.V},
+        { Keys.W, Keys.W},
+        { Keys.X, Keys.X},
+        { Keys.Y, Keys.Y},
+        { Keys.Z, Keys.Z},
+        { Keys.LeftWindows, Keys.LeftWindows},
+        { Keys.RightWindows, Keys.RightWindows},
+        { Keys.Apps, Keys.Apps},
+        { Keys.Sleep, Keys.Sleep},
+        { Keys.NumPad0, Keys.NumPad0},
+        { Keys.NumPad1, Keys.NumPad1},
+        { Keys.NumPad2, Keys.NumPad2},
+        { Keys.NumPad3, Keys.NumPad3},
+        { Keys.NumPad4, Keys.NumPad4},
+        { Keys.NumPad5, Keys.NumPad5},
+        { Keys.NumPad6, Keys.NumPad6},
+        { Keys.NumPad7, Keys.NumPad7},
+        { Keys.NumPad8, Keys.NumPad8},
+        { Keys.NumPad9, Keys.NumPad9},
+        { Keys.Multiply, Keys.Multiply},
+        { Keys.Add, Keys.Add},
+        { Keys.Separator, Keys.Separator},
+        { Keys.Subtract, Keys.Subtract},
+        { Keys.Decimal, Keys.Decimal},
+        { Keys.Divide, Keys.Divide},
+        { Keys.F1, Keys.F1},
+        { Keys.F2, Keys.F2},
+        { Keys.F3, Keys.F3},
+        { Keys.F4, Keys.F4},
+        { Keys.F5, Keys.F5},
+        { Keys.F6, Keys.F6 },
+        { Keys.F7, Keys.F7 },
+        { Keys.F8, Keys.F8 },
+        { Keys.F9, Keys.F9 },
+        { Keys.F10, Keys.F10 },
+        { Keys.F11, Keys.F11 },
+        { Keys.F12, Keys.F12 },
+        { Keys.F13, Keys.F13 },
+        { Keys.F14, Keys.F14 },
+        { Keys.F15, Keys.F15 },
+        { Keys.F16, Keys.F16 },
+        { Keys.F17, Keys.F17 },
+        { Keys.F18, Keys.F18 },
+        { Keys.F19, Keys.F19 },
+        { Keys.F20, Keys.F20 },
+        { Keys.F21, Keys.F21 },
+        { Keys.F22, Keys.F22 },
+        { Keys.F23, Keys.F23 },
+        { Keys.F24, Keys.F24 },
+        { Keys.NumLock, Keys.NumLock },
+        { Keys.Scroll, Keys.Scroll },
+        { Keys.LeftShift, Keys.LeftShift },
+        { Keys.RightShift, Keys.RightShift },
+        { Keys.LeftControl, Keys.LeftControl },
+        { Keys.RightControl, Keys.RightControl },
+        { Keys.LeftAlt, Keys.LeftAlt },
+        { Keys.RightAlt, Keys.RightAlt },
+        { Keys.BrowserBack, Keys.BrowserBack },
+        { Keys.BrowserForward, Keys.BrowserForward },
+        { Keys.BrowserRefresh, Keys.BrowserRefresh },
+        { Keys.BrowserStop, Keys.BrowserStop },
+        { Keys.BrowserSearch, Keys.BrowserSearch },
+        { Keys.BrowserFavorites, Keys.BrowserFavorites },
+        { Keys.BrowserHome, Keys.BrowserHome },
+        { Keys.VolumeMute, Keys.VolumeMute },
+        { Keys.VolumeDown, Keys.VolumeDown },
+        { Keys.VolumeUp, Keys.VolumeUp },
+        { Keys.MediaNextTrack, Keys.MediaNextTrack },
+        { Keys.MediaPreviousTrack, Keys.MediaPreviousTrack },
+        { Keys.MediaStop, Keys.MediaStop },
+        { Keys.MediaPlayPause, Keys.MediaPlayPause },
+        { Keys.LaunchMail, Keys.LaunchMail },
+        { Keys.SelectMedia, Keys.SelectMedia },
+        { Keys.LaunchApplication1, Keys.LaunchApplication1 },
+        { Keys.LaunchApplication2, Keys.LaunchApplication2 },
+        { Keys.OemSemicolon, Keys.OemSemicolon },
+        { Keys.OemPlus, Keys.OemPlus },
+        { Keys.OemComma, Keys.OemComma },
+        { Keys.OemMinus, Keys.OemMinus },
+        { Keys.OemPeriod, Keys.OemPeriod },
+        { Keys.OemQuestion, Keys.OemQuestion },
+        { Keys.OemTilde, Keys.OemTilde },
+        { Keys.OemOpenBrackets, Keys.OemOpenBrackets },
+        { Keys.OemPipe, Keys.OemPipe },
+        { Keys.OemCloseBrackets, Keys.OemCloseBrackets },
+        { Keys.OemQuotes, Keys.OemQuotes },
+        { Keys.Oem8, Keys.Oem8 },
+        { Keys.OemBackslash, Keys.OemBackslash },
+        { Keys.ProcessKey, Keys.ProcessKey },
+        { Keys.Attn, Keys.Attn },
+        { Keys.Crsel, Keys.Crsel },
+        { Keys.Exsel, Keys.Exsel },
+        { Keys.EraseEof, Keys.EraseEof },
+        { Keys.Play, Keys.Play },
+        { Keys.Zoom, Keys.Zoom },
+        { Keys.Pa1, Keys.Pa1 },
+        { Keys.OemClear, Keys.OemClear },
+        { Keys.ChatPadGreen, Keys.ChatPadGreen },
+        { Keys.ChatPadOrange, Keys.ChatPadOrange },
+        { Keys.Pause, Keys.Pause },
+        { Keys.ImeConvert, Keys.ImeConvert },
+        { Keys.ImeNoConvert, Keys.ImeNoConvert },
+        { Keys.Kana, Keys.Kana },
+        { Keys.Kanji, Keys.Kanji },
+        { Keys.OemAuto, Keys.OemAuto },
+        { Keys.OemCopy, Keys.OemCopy },
+        { Keys.OemEnlW, Keys.OemEnlW },
     };
 
     /// <summary>
@@ -132,24 +299,6 @@ public struct AsciiKey
     public bool PostInitialDelay;
 
     /// <summary>
-    /// If numlock is off, tries to remap the key to the non numlock state.
-    /// </summary>
-    /// <param name="key"> The key to be remapped.</param>
-    /// <param name="state">Keyboar state to read numlock.</param>
-    /// <returns>The remapped key.</returns>
-    public static Keys RemapNumlockKey(Keys key, IKeyboardState state)
-    {
-        bool numLock = state.NumLock;
-        if (numLock)
-            return key;
-
-        if (NumberKeyMappings.ContainsKey(key))
-            return NumberKeyMappings[key].NonNumlockKey;
-
-        return key;
-    }
-
-    /// <summary>
     /// Fills out the fields based on the key.
     /// </summary>
     /// <param name="key">The key.</param>
@@ -157,8 +306,10 @@ public struct AsciiKey
     /// <param name="state">Keyboard state to read from.</param>
     public void Fill(Keys key, bool shiftPressed, IKeyboardState state)
     {
-        Key = key;
+        // Remap the key; defaults to the same key
+        Key = KeyRemapping[key];
 
+        // Check if the caps lock is on, and the key is in the caps lock transform dictionary
         if (state.CapsLock && CapsLockedKeys.Contains(key))
         {
             ShiftedCharacterMapping shiftedKey = ShiftKeyMappings[Key];
@@ -166,17 +317,24 @@ public struct AsciiKey
             // If the caps lock is on, and the shift key is on, it's inverted to unshifted
             Character = state.CapsLock & !shiftPressed ? shiftedKey.Shifted : shiftedKey.Unshifted;
         }
+
+        // Check if the key has different states based on shifed or not shifted
         else if (ShiftKeyMappings.ContainsKey(Key))
         {
             ShiftedCharacterMapping shiftedKey = ShiftKeyMappings[Key];
             Character = shiftPressed ? shiftedKey.Shifted : shiftedKey.Unshifted;
         }
+
+        // Check if the key is in the numberpad keys and then check for numlock state
         else if (NumberKeyMappings.ContainsKey(Key))
         {
-            NumericKeyMapping casesCur = NumberKeyMappings[Key];
-            Character = state.NumLock ? casesCur.NumberPadCharacter : (char)0;
-            Key = RemapNumlockKey(Key, state);
+            CharacterKeyMapping casesCur = NumberKeyMappings[Key];
+
+            Character = state.NumLock ? casesCur.CharacterGlyph : (char)0;
+            Key =       state.NumLock ? Key                     : casesCur.Key;
         }
+
+        // Otherwise, there is no associated character
         else
             Character = (char)0;
     }
