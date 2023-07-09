@@ -32,7 +32,7 @@ internal class EntitySurface : ScreenSurface
     private Entity player;
     private List<Entity> others;
     private Point playerPreviousPosition;
-    private Renderer entityManager;
+    private EntityManager entityManager;
     private bool moveEntities;
     private bool usePixelPositioning;
     private bool useCollision;
@@ -78,7 +78,7 @@ internal class EntitySurface : ScreenSurface
         SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = player });
 
         // Create the entity renderer. This component should contain all the entities you want drawn on the surface
-        entityManager = new SadConsole.Entities.Renderer();
+        entityManager = new SadConsole.Entities.EntityManager();
         SadComponents.Add(entityManager);
 
         // Add player to the entity manager

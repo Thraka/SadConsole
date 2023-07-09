@@ -243,116 +243,123 @@
             <param name="host">The host object being moved.</param>
             <param name="delta">The time difference from the previous frame.</param>
         </member>
-        <member name="T:SadConsole.Entities.Manager">
+        <member name="T:SadConsole.Entities.ManagerZoned">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.Manager.EnterZone">
+        <member name="E:SadConsole.Entities.ManagerZoned.EnterZone">
             <summary>
             An event to indicate that an entity entered a zone.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.Manager.ExitZone">
+        <member name="E:SadConsole.Entities.ManagerZoned.ExitZone">
             <summary>
             An event to indicate that an entity exited a zone.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager._zones">
+        <member name="F:SadConsole.Entities.ManagerZoned._zones">
             <summary>
             The zones in this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Manager.Zones">
+        <member name="P:SadConsole.Entities.ManagerZoned.Zones">
             <summary>
             The zones associated with this manager.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.#ctor">
+        <member name="M:SadConsole.Entities.ManagerZoned.#ctor">
             <summary>
             Creates a new manager to handle entity movement within zones.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
+        <member name="M:SadConsole.Entities.ManagerZoned.Add(SadConsole.Entities.Zone)">
             <summary>
             Adds a zone to this manager.
             </summary>
             <param name="zone">The zone to add.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
+        <member name="M:SadConsole.Entities.ManagerZoned.Remove(SadConsole.Entities.Zone)">
             <summary>
             Removes a zone from this manager.
             </summary>
             <param name="zone">The hotspot to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.Contains(SadConsole.Entities.Zone)">
+        <member name="M:SadConsole.Entities.ManagerZoned.Contains(SadConsole.Entities.Zone)">
             <summary>
             Checks if the manager contains the specified zone.
             </summary>
             <param name="zone">The zone to check for.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetEntityAtPosition(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.GetEntityAtPosition(SadRogue.Primitives.Point)">
             <summary>
             Returns an entity at the specified position or <see langword="null"/> if there is no entity. If there are multiple entities at the specified position, only one of them is returned.
             </summary>
             <param name="position">The position to get an entity at.</param>
             <returns>The entity if it exists; otherwise it returns <see langword="null"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
             <summary>
             Returns an enumerator containing the entities, if any, at the specified position.
             </summary>
             <param name="position">The position to get an entity at.</param>
             <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.HasEntityAt(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.HasEntityAt(SadRogue.Primitives.Point)">
             <summary>
             Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
             </summary>
             <param name="position">The position to check.</param>
             <returns>A value indicating if an entity exists.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetZonesAtPosition(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.GetZonesAtPosition(SadRogue.Primitives.Point)">
             <summary>
             Returns a collection of zones at the specified position.
             </summary>
             <param name="position">The position to check for zones.</param>
             <returns>Every zone that contains the position.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+        <member name="M:SadConsole.Entities.ManagerZoned.GetEntitiesInZone(SadConsole.Entities.Zone)">
+            <summary>
+            Returns a list of entities that are located in the specified zone.
+            </summary>
+            <param name="zone">The zone to filter entities by.</param>
+            <returns>A list of entities.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityAdded(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityAdded(SadConsole.Entities.Entity)">
             <summary>
             Adds entity state information to an entity when it's added.
             </summary>
             <param name="entity">The entity that was added.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityRemoved(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityRemoved(SadConsole.Entities.Entity)">
             <summary>
             Removes the entity state information of an entity being removed.
             </summary>
             <param name="entity">The entity that was removed.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.Manager.EnterZone"/> event.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.ManagerZoned.EnterZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity entered.</param>
             <param name="entity">The entity that entered the zone.</param>
             <param name="triggeredPosition">The position the entity entered.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.Manager.ExitZone"/> event.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.ManagerZoned.ExitZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity exited.</param>
             <param name="entity">The entity that exited the zone.</param>
             <param name="triggeredPosition">The new position the entity left.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Called when an entity moves within a zone.
             </summary>
@@ -362,7 +369,7 @@
             <param name="newPosition">The position the entity moved to.</param>
             <param name="oldPosition">The position the entity moved from.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetZonesAtPosition(SadRogue.Primitives.Point@,System.Collections.Generic.HashSet{SadConsole.Entities.Zone}@)">
+        <member name="M:SadConsole.Entities.ManagerZoned.GetZonesAtPosition(SadRogue.Primitives.Point@,System.Collections.Generic.HashSet{SadConsole.Entities.Zone}@)">
             <summary>
             Gets the zones that contain the specified position.
             </summary>
@@ -370,51 +377,51 @@
             <param name="zones">The zones that contain this position.</param>
             <returns><see langword="true"/> when at least one zone was found; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.ManagerZoned.DisableEntity(SadConsole.Entities.Entity)">
             <summary>
-            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.ManagerZoned.Zones"/>.
             </summary>
             <param name="entity">The entity to disable.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.EnableEntity(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.ManagerZoned.EnableEntity(SadConsole.Entities.Entity)">
             <summary>
-            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.ManagerZoned.Zones"/>.
             </summary>
             <param name="entity">The entity to disable.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.IsEntityDisabled(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.ManagerZoned.IsEntityDisabled(SadConsole.Entities.Entity)">
             <summary>
-            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
+            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.ManagerZoned.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
             </summary>
             <param name="entity">The entity to check.</param>
             <returns><see langword="true"/> when the entity is disabled.</returns>
         </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
+        <member name="T:SadConsole.Entities.ManagerZoned.ZoneEventArgs">
             <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
+            Contains event data for a <see cref="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.Entity"/> interaction.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
+        <member name="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.Zone">
             <summary>
             The zone associated with the event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
+        <member name="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.Entity">
             <summary>
             The entity associated with the event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
+        <member name="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.Host">
             <summary>
             The host that the zone and entity share.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
+        <member name="F:SadConsole.Entities.ManagerZoned.ZoneEventArgs.TriggeredPosition">
             <summary>
             The position within the zone associated with the event.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
             Creates a new event args for a zone interaction.
             </summary>
@@ -423,17 +430,17 @@
             <param name="entity">The entity associated with the event.</param>
             <param name="triggeredPosition">The new position within the zone associated with the event.</param>
         </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
+        <member name="T:SadConsole.Entities.ManagerZoned.ZoneMoveEventArgs">
             <summary>
             Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="T:SadConsole.Entities.Entity"/> interaction.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
+        <member name="F:SadConsole.Entities.ManagerZoned.ZoneMoveEventArgs.MovedFromPosition">
             <summary>
             The position within the zone that the entity moved from.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.ManagerZoned.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Creates a new event args for a zone movement event.
             </summary>

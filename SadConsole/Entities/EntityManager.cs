@@ -13,7 +13,7 @@ namespace SadConsole.Entities;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Entity host")]
-public class Renderer : Components.UpdateComponent, Components.IComponent, IList<Entity>
+public class EntityManager : Components.UpdateComponent, Components.IComponent, IList<Entity>
 {
     /// <summary>
     /// Indicates that the entity renderer has been added to a parent object.
@@ -247,7 +247,7 @@ public class Renderer : Components.UpdateComponent, Components.IComponent, IList
             RenderStep.Dispose();
         }
 
-        RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer);
+        RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.EntityManager);
         RenderStep.SetData(this);
         surface.Renderer?.Steps.Add(RenderStep);
         surface.Renderer?.Steps.Sort(RenderStepComparer.Instance);

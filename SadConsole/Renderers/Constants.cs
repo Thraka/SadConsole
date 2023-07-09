@@ -62,9 +62,9 @@ public static class RenderStepNames
     public const string Cursor = "cursor";
 
     /// <summary>
-    /// The render step for a <see cref="Entities.Renderer"/>.
+    /// The render step for a <see cref="Entities.EntityManager"/>.
     /// </summary>
-    public const string EntityRenderer = "entityrenderer";
+    public const string EntityManager = "entitymanager";
 
     /// <summary>
     /// The render to draw the output texture of an <see cref="IRenderer"/>.
@@ -103,7 +103,7 @@ public static class RenderStepSortValues
     public const uint Cursor = 70;
 
     /// <summary>
-    /// The render step for a <see cref="Entities.Renderer"/>.
+    /// The render step for a <see cref="Entities.EntityManager"/>.
     /// </summary>
     public const uint EntityRenderer = 60;
 

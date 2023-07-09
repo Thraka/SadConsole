@@ -6,12 +6,12 @@ using SadRogue.Primitives;
 namespace SadConsole.Renderers;
 
 /// <summary>
-/// Draws the entities of a <see cref="Entities.Renderer"/>.
+/// Draws the entities of a <see cref="Entities.EntityManager"/>.
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("Entity lite")]
-public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
+[System.Diagnostics.DebuggerDisplay("Entity")]
+public class EntityRenderStep : IRenderStep, IRenderStepTexture
 {
-    private Entities.Renderer _entityManager;
+    private Entities.EntityManager _entityManager;
     private Host.GameTexture _cachedTexture;
 
     /// <summary>
@@ -23,21 +23,21 @@ public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     public ITexture CachedTexture => _cachedTexture;
 
     /// <inheritdoc/>
-    public string Name => Constants.RenderStepNames.EntityRenderer;
+    public string Name => Constants.RenderStepNames.EntityManager;
 
     /// <inheritdoc/>
     public uint SortOrder { get; set; } = Constants.RenderStepSortValues.EntityRenderer;
 
     /// <summary>
-    /// Sets the <see cref="Entities.Renderer"/>.
+    /// Sets the <see cref="Entities.EntityManager"/>.
     /// </summary>
-    /// <param name="data">A <see cref="Entities.Renderer"/> object.</param>
+    /// <param name="data">A <see cref="Entities.EntityManager"/> object.</param>
     public void SetData(object data)
     {
-        if (data is Entities.Renderer manager)
+        if (data is Entities.EntityManager manager)
             _entityManager = manager;
         else
-            throw new ArgumentException($"{nameof(EntityLiteRenderStep)} must have a {nameof(Entities.Renderer)} passed to the {nameof(SetData)} method", nameof(data));
+            throw new ArgumentException($"{nameof(EntityRenderStep)} must have a {nameof(Entities.EntityManager)} passed to the {nameof(SetData)} method", nameof(data));
     }
 
     ///  <inheritdoc/>
@@ -159,6 +159,6 @@ public class EntityLiteRenderStep : IRenderStep, IRenderStepTexture
     /// <summary>
     /// Finalizes the object for collection.
     /// </summary>
-    ~EntityLiteRenderStep() =>
+    ~EntityRenderStep() =>
         Dispose(false);
 }

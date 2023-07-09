@@ -718,7 +718,7 @@
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle)">
             <summary>
             Renders the cells of a control.
             </summary>
@@ -727,7 +727,6 @@
             <param name="font">The font to render the cells with.</param>
             <param name="fontSize">The size of a cell in pixels.</param>
             <param name="parentViewRect">The view of the parent to cull cells from.</param>
-            <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
         </member>
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose(System.Boolean)">
             <summary>
