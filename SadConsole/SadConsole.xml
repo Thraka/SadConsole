@@ -1263,11 +1263,6 @@
             <param name="string2">The colored string.</param>
             <returns>A new colored string instance.</returns>
         </member>
-        <member name="M:SadConsole.ColoredString.Parse(System.String,System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
-            <summary>
-            This method is obsolete. Use <see cref="P:SadConsole.ColoredString.Parser"/>.
-            </summary>
-        </member>
         <member name="P:SadConsole.ColoredString.Parser">
             <summary>
             The string parser to use for transforming strings into <see cref="T:SadConsole.ColoredString"/>.
@@ -9982,6 +9977,98 @@
         <member name="M:SadConsole.StringParser.ParseCommandUndo.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.StringValidation">
+            <summary>
+            Validates a string
+            </summary>
+        </member>
+        <member name="T:SadConsole.StringValidation.Result">
+            <summary>
+            The object produced when validating a string.
+            </summary>
+        </member>
+        <member name="F:SadConsole.StringValidation.Result.IsValid">
+            <summary>
+            Indicates whether or not this result is valid.
+            </summary>
+        </member>
+        <member name="F:SadConsole.StringValidation.Result.ErrorMessage">
+            <summary>
+            The error message when <see cref="F:SadConsole.StringValidation.Result.IsValid"/> is <see langword="false"/>. May be an empty string when there isn't a message.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringValidation.Result.#ctor(System.Boolean,System.String)">
+            <summary>
+            Creates a new string validation result.
+            </summary>
+            <param name="isValid">A value to indicate that the result is valid or not.</param>
+            <param name="errorMsg">A message associated with the result when <paramref name="isValid"/> is <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.StringValidation.Result.Success">
+            <summary>
+            A successful result.
+            </summary>
+            <returns>A successful result.</returns>
+        </member>
+        <member name="T:SadConsole.StringValidation.Validator">
+            <summary>
+            Validates a string value.
+            </summary>
+            <param name="input">The string to validate.</param>
+            <returns>A result that indicates whether or not the string value has been validated.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.None(System.String)">
+            <summary>
+            Always validates to true.
+            </summary>
+            <param name="input">The string to validate.</param>
+            <returns>A positive validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.Integer(System.String)">
+            <summary>
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string can be parsed by the <see cref="M:System.Int64.TryParse(System.String,System.Int64@)"/>.
+            </summary>
+            <param name="errorMessage">A message to provide to the result if the validation fails.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.Decimal(System.String)">
+            <summary>
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string can be parsed by the <see cref="M:System.Double.TryParse(System.String,System.Double@)"/>.
+            </summary>
+            <param name="errorMessage">A message to provide to the result if the validation fails.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.LengthRange(System.Int32,System.Int32,System.String)">
+            <summary>
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a length of a string falls within the specified range.
+            </summary>
+            <param name="min"></param>
+            <param name="max"></param>
+            <param name="errorMessage">A message to provide to the result if the validation fails.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.All(SadConsole.StringValidation.Validator[])">
+            <summary>
+            Uses multiple <see cref="T:SadConsole.StringValidation.Validator"/> delegates to validate a string. All validators must pass.
+            </summary>
+            <param name="validators">Each <see cref="T:SadConsole.StringValidation.Validator"/> to use.</param>
+            <returns>When all validators pass, a successful result; otherwise, the failed result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.Letters(System.String)">
+            <summary>
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string contains only letters.
+            </summary>
+            <param name="errorMessage">A message to provide to the result if the validation fails.</param>
+            <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
+        </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
             A color that can be adjusted by brightness and mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
@@ -13660,6 +13747,11 @@
             Raised when a key is pressed on the textbox.
             </summary>
         </member>
+        <member name="E:SadConsole.UI.Controls.TextBox.TextValidated">
+            <summary>
+            Raised when the <see cref="P:SadConsole.UI.Controls.TextBox.Validator"/> validates the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.TextBox.DisableMouse">
             <summary>
             Disables mouse input.
@@ -13673,6 +13765,11 @@
         <member name="P:SadConsole.UI.Controls.TextBox.MaxLength">
             <summary>
             How big the text can be. Setting this to 0 will make it unlimited.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.Validator">
+            <summary>
+            When set, validates the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property after <see cref="E:SadConsole.UI.Controls.TextBox.TextChangedPreview"/> has allowed the result.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.TextBox.CaretPosition">
@@ -14130,6 +14227,30 @@
             </summary>
             <returns>The string "Window".</returns>
         </member>
+        <member name="M:SadConsole.UI.Window.Ask(System.String,System.String,System.String,System.Action{System.Boolean,System.String},SadConsole.StringValidation.Validator,System.String,SadConsole.UI.Colors)">
+            <summary>
+            Displays a window with an input box and an optional validator with a text prompt.
+            </summary>
+            <param name="message">The message to print in the window.</param>
+            <param name="acceptPrompt">The text of the accept button.</param>
+            <param name="cancelPrompt">The text of the cancel button.</param>
+            <param name="closedCallback">A delegate called when the window is closed.</param>
+            <param name="validator">An optional validator to validate the input text.</param>
+            <param name="defaultValue">An optional default value of the input text box.</param>
+            <param name="colors">An optional set of colors to apply to the window.</param>
+        </member>
+        <member name="M:SadConsole.UI.Window.Ask(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean,System.String},SadConsole.StringValidation.Validator,System.String,SadConsole.UI.Colors)">
+            <summary>
+            Displays a window with an input box and an optional validator, using a <see cref="T:SadConsole.ColoredString"/> as the prompt text.
+            </summary>
+            <param name="message">The message to print in the window.</param>
+            <param name="acceptPrompt">The text of the accept button.</param>
+            <param name="cancelPrompt">The text of the cancel button.</param>
+            <param name="closedCallback">A delegate called when the window is closed.</param>
+            <param name="validator">An optional validator to validate the input text.</param>
+            <param name="defaultValue">An optional default value of the input text box.</param>
+            <param name="colors">An optional set of colors to apply to the window.</param>
+        </member>
         <member name="M:SadConsole.UI.Window.Prompt(System.String,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors)">
             <summary>
             Shows a window prompt with two buttons for the user to click.
@@ -14137,8 +14258,8 @@
             <param name="message">The text to display.</param>
             <param name="yesPrompt">The yes button's text.</param>
             <param name="noPrompt">The no button's text.</param>
-            <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
+            <param name="closedCallback">Callback with the yes (true) or no (false) result.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Prompt(SadConsole.ColoredString,System.String,System.String,System.Action{System.Boolean},SadConsole.UI.Colors)">
             <summary>
@@ -14147,8 +14268,8 @@
             <param name="message">The text to display. (background color is ignored)</param>
             <param name="yesPrompt">The yes button's text.</param>
             <param name="noPrompt">The no button's text.</param>
-            <param name="resultCallback">Callback with the yes (true) or no (false) result.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
+            <param name="closedCallback">Callback with the yes (true) or no (false) result.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Message(System.String,System.String,System.Action,SadConsole.UI.Colors)">
             <summary>
@@ -14157,7 +14278,7 @@
             <param name="message">The message.</param>
             <param name="closeButtonText">The text of the dialog's close button.</param>
             <param name="closedCallback">A callback indicating the message was dismissed.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>.</param>
         </member>
         <member name="M:SadConsole.UI.Window.Message(SadConsole.ColoredString,System.String,System.Action,SadConsole.UI.Colors)">
             <summary>
@@ -14166,7 +14287,7 @@
             <param name="message">The message. (background color is ignored)</param>
             <param name="closeButtonText">The text of the dialog's close button.</param>
             <param name="closedCallback">A callback indicating the message was dismissed.</param>
-            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>, then the default <see cref="!:Library.Colors"/> will be used.</param>
+            <param name="colors">The colors to apply for the message box and buttons. If <see langword="null"/>.</param>
         </member>
         <member name="T:SadConsole.ValueChangedCancelableEventArgs`1">
             <summary>
@@ -14453,6 +14574,42 @@
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>
             <returns>A new colored string object.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
         </member>
     </members>
 </doc>

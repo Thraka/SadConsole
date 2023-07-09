@@ -53,6 +53,11 @@ public partial class TextBox : ControlBase
     public event EventHandler<KeyPressEventArgs>? KeyPressed;
 
     /// <summary>
+    /// Raised when the <see cref="Validator"/> validates the <see cref="Text"/> property.
+    /// </summary>
+    public event EventHandler<StringValidation.Result>? TextValidated;
+
+    /// <summary>
     /// Disables mouse input.
     /// </summary>
     [DataMember(Name = "DisableMouseInput")]
@@ -69,6 +74,11 @@ public partial class TextBox : ControlBase
     /// </summary>
     [DataMember]
     public int MaxLength { get; set; }
+
+    /// <summary>
+    /// When set, validates the <see cref="Text"/> property after <see cref="TextChangedPreview"/> has allowed the result.
+    /// </summary>
+    public StringValidation.Validator? Validator { get; set; }
 
     /// <summary>
     /// Gets or sets the position of the caret in the current text.
@@ -104,6 +114,9 @@ public partial class TextBox : ControlBase
                     _text = args.NewValue ?? "";
                     _text = MaxLength != 0 && _text.Length > MaxLength ? _text.Substring(0, MaxLength) : _text;
 
+                    if (Validator != null)
+                        TextValidated?.Invoke(this, Validator.Invoke(_text));
+
                     TextChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -115,8 +128,7 @@ public partial class TextBox : ControlBase
     /// Creates a new instance of the input box.
     /// </summary>
     /// <param name="width">The width of the input box.</param>
-    public TextBox(int width)
-        : base(width, 1)
+    public TextBox(int width): base(width, 1)
     {
         CaretEffect = new Effects.BlinkGlyph()
         {
