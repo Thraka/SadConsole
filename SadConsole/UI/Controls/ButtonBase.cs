@@ -76,9 +76,14 @@ public abstract class ButtonBase : ControlBase
         Click?.Invoke(this, new EventArgs());
 
     /// <summary>
-    /// Simulates a mouse click on the button.
+    /// Simulates a mouse click on the button. Optionally, focuses the button prior to simulating the click.
     /// </summary>
-    public void InvokeClick() => OnClick();
+    /// <param name="focus">When <see langword="true"/>, focuses the button before clicking.</param>
+    public void InvokeClick(bool focus = false)
+    {
+        if (focus) IsFocused = true;
+        OnClick();
+    }
 
     /// <summary>
     /// Detects if the SPACE or ENTER keys are pressed and calls the <see cref="Click"/> method.
