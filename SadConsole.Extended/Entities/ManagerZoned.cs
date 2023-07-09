@@ -11,7 +11,7 @@ namespace SadConsole.Entities;
 /// Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="IScreenSurface"/> visible area.
 /// </summary>
 [DataContract]
-public class ManagerZoned : EntityManager, Components.IComponent
+public class EntityManagerZoned : EntityManager, Components.IComponent
 {
     private Dictionary<Entity, EntityState> _entityStates;
     private AutoSyncMultiSpatialMap<Entity> _spatialMap;
@@ -41,7 +41,7 @@ public class ManagerZoned : EntityManager, Components.IComponent
     /// <summary>
     /// Creates a new manager to handle entity movement within zones.
     /// </summary>
-    public ManagerZoned()
+    public EntityManagerZoned()
     {
         _entityStates = new(new IDComparer<Entity>());
         _spatialMap = new();
