@@ -60,6 +60,7 @@ public partial class Window
         if (colors != null) window.Controls.ThemeColors = colors;
 
         window.Print(2, 2, message);
+        window.Title = "";
 
         yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
         noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.Height);
@@ -115,6 +116,7 @@ public partial class Window
         if (colors != null) window.Controls.ThemeColors = colors;
 
         window.Print(2, 2, message);
+        window.Title = "";
 
         yesButton.Position = new Point(2, window.Height - 1 - yesButton.Surface.Height);
         noButton.Position = new Point(window.Width - noButton.Width - 2, window.Height - 1 - yesButton.Surface.Height);
@@ -177,6 +179,7 @@ public partial class Window
         if (colors != null) window.Controls.ThemeColors = colors;
 
         window.Print(2, 2, message);
+        window.Title = "";
 
         closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.Height);
         closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
