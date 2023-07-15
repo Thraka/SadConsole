@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
@@ -9,25 +8,25 @@ namespace SadConsole;
 /// <summary>
 /// A screen object that has mouse input, surface, and render information.
 /// </summary>
-public interface IScreenSurface : IScreenObject, ISurface
+public interface IScreenSurface : IScreenObject
 {
     /// <summary>
-    /// Raised when the a mouse button is clicked on this console.
+    /// Raised when the a mouse button is clicked on this object.
     /// </summary>
     event EventHandler<MouseScreenObjectState> MouseButtonClicked;
 
     /// <summary>
-    /// Raised when the mouse enters this console.
+    /// Raised when the mouse enters this object.
     /// </summary>
     event EventHandler<MouseScreenObjectState> MouseEnter;
 
     /// <summary>
-    /// Raised when the mouse exits this console.
+    /// Raised when the mouse exits this object.
     /// </summary>
     event EventHandler<MouseScreenObjectState> MouseExit;
 
     /// <summary>
-    /// Raised when the mouse moves around the this console.
+    /// Raised when the mouse moves around the this object.
     /// </summary>
     event EventHandler<MouseScreenObjectState> MouseMove;
 
@@ -37,7 +36,7 @@ public interface IScreenSurface : IScreenObject, ISurface
     public string DefaultRendererName { get; }
 
     /// <summary>
-    /// When true, this console will set <see cref="IScreenObject.IsFocused"/> to true when the mouse is clicked.
+    /// When true, this object will set <see cref="IScreenObject.IsFocused"/> to true when the mouse is clicked.
     /// </summary>
     bool FocusOnMouseClick { get; set; }
 
@@ -47,7 +46,7 @@ public interface IScreenSurface : IScreenObject, ISurface
     int HeightPixels { get; }
 
     /// <summary>
-    /// When true, this console will move to the front of its parent console when the mouse is clicked.
+    /// When true, this object will move to the front of its parent object when the mouse is clicked.
     /// </summary>
     bool MoveToFrontOnMouseClick { get; set; }
 
@@ -57,7 +56,12 @@ public interface IScreenSurface : IScreenObject, ISurface
     IRenderer? Renderer { get; }
 
     /// <summary>
-    /// Treats the <see cref="IScreenObject.Position"/> of the console as if it is pixels and not cells.
+    /// The surface.
+    /// </summary>
+    ICellSurface Surface { get; }
+
+    /// <summary>
+    /// Treats the <see cref="IPositionable.Position"/> of the object as if it is pixels and not cells.
     /// </summary>
     bool UsePixelPositioning { get; set; }
 
