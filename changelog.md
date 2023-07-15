@@ -1,10 +1,12 @@
-## v10.0.0 Alpha 1 (XX/XX/2023)
+## v10.0.0 Alpha 3 (XX/XX/2023)
 
 Major changes (possibly breaking)
 
 - [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
 - [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
 - [Core] Themes have been removed. Each control draws itself.
+- [Core] `IScreenObject` no longer implements `IEnumerable` to access the children. Use the `.Children` collection property instead.
+- [Core] `Update` and `Render` no longer check for `IsEnabled` and `IsVisible`, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
 
 New features
 
@@ -26,6 +28,7 @@ Normal changes
 - [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
 - [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
 - [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
+- [Core] `Entities.Renderer` renamed `Entities.EntityRenderer`.
 - [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a **single cell** entity or **animated surface** entity.
 - [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
 - [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
@@ -50,6 +53,7 @@ Normal changes
 - [UI] `ProgressBar` is easier to customize.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
+- [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
 
 Removed
 

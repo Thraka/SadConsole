@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Components;
@@ -236,39 +234,37 @@ public partial class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void Render(TimeSpan delta)
     {
-        if (!IsVisible) return;
-
-        var components = ComponentsRender.ToArray();
-        var count = components.Length;
+        IComponent[] components = ComponentsRender.ToArray();
+        int count = components.Length;
         for (int i = 0; i < count; i++)
             components[i].Render(this, delta);
 
-        var children = new List<IScreenObject>(Children);
+        List<IScreenObject> children = new(Children);
         count = children.Count;
         for (int i = 0; i < count; i++)
-            children[i].Render(delta);
+            if (children[i].IsVisible)
+                children[i].Render(delta);
     }
 
     /// <inheritdoc/>
     public virtual void Update(TimeSpan delta)
     {
-        if (!IsEnabled) return;
-
-        var components = ComponentsUpdate.ToArray();
-        for (int i = 0; i < components.Length; i++)
+        IComponent[] components = ComponentsUpdate.ToArray();
+        int count = components.Length;
+        for (int i = 0; i < count; i++)
             components[i].Update(this, delta);
 
-        var children = new List<IScreenObject>(Children);
-        for (int i = 0; i < children.Count; i++)
-            children[i].Update(delta);
+        List<IScreenObject> children = new(Children);
+        count = children.Count;
+        for (int i = 0; i < count; i++)
+            if (children[i].IsEnabled)
+                children[i].Update(delta);
     }
 
     /// <inheritdoc/>
     public virtual bool ProcessKeyboard(Keyboard keyboard)
     {
-        if (!UseKeyboard) return false;
-
-        var components = ComponentsKeyboard.ToArray();
+        IComponent[] components = ComponentsKeyboard.ToArray();
         for (int i = 0; i < components.Length; i++)
         {
             components[i].ProcessKeyboard(this, keyboard, out bool isHandled);
@@ -286,7 +282,7 @@ public partial class ScreenObject : IScreenObject
         if (!IsVisible)
             return false;
 
-        var components = ComponentsMouse.ToArray();
+        IComponent[] components = ComponentsMouse.ToArray();
         for (int i = 0; i < components.Length; i++)
         {
             components[i].ProcessMouse(this, state, out bool isHandled);
@@ -294,9 +290,6 @@ public partial class ScreenObject : IScreenObject
             if (isHandled)
                 return true;
         }
-
-        if (!UseMouse)
-            return false;
 
         return false;
     }
@@ -406,7 +399,7 @@ public partial class ScreenObject : IScreenObject
                 SortComponents();
                 break;
             case NotifyCollectionChangedAction.Reset:
-                List<IComponent> items = new List<IComponent>(ComponentsRender.Count + ComponentsUpdate.Count + ComponentsKeyboard.Count + ComponentsMouse.Count);
+                List<IComponent> items = new(ComponentsRender.Count + ComponentsUpdate.Count + ComponentsKeyboard.Count + ComponentsMouse.Count);
 
                 while (ComponentsRender.Count != 0)
                 {
@@ -459,7 +452,7 @@ public partial class ScreenObject : IScreenObject
 
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                break;
         }
     }
 
@@ -651,14 +644,4 @@ public partial class ScreenObject : IScreenObject
 
         return 0;
     }
-
-    /// <summary>
-    /// Returns an enumerator for <see cref="Children"/>.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator<IScreenObject> GetEnumerator() =>
-        Children.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() =>
-        Children.GetEnumerator();
 }

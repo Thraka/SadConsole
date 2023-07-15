@@ -10,7 +10,7 @@ namespace SadConsole;
 /// <summary>
 /// A generic object processed by SadConsole. Provides parent/child, components, position, and input callbacks.
 /// </summary>
-public interface IScreenObject : IEnumerable<IScreenObject>, IPositionable
+public interface IScreenObject : IPositionable
 {
     /// <summary>
     /// Raised when the <see cref="IsEnabled"/> property changes.
@@ -91,11 +91,6 @@ public interface IScreenObject : IEnumerable<IScreenObject>, IPositionable
     /// The parent object that this instance is a child of.
     /// </summary>
     IScreenObject? Parent { get; set; }
-
-    /// <summary>
-    /// The position of the object on the screen.
-    /// </summary>
-    Point Position { get; set; }
 
     /// <summary>
     /// When <see langword="true"/>, this object will use the keyboard; otherwise <see langword="false"/>.

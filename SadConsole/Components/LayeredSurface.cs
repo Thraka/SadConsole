@@ -9,7 +9,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Components;
 
 /// <summary>
-/// Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="IScreenSurface"/> visible area.
+/// Manages a set of surface layers.
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Entity host")]

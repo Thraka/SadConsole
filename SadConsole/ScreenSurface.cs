@@ -96,8 +96,9 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurface, 
                 _surface.IsDirtyChanged += _isDirtyChangedEventHandler;
 
                 OnSurfaceChanged(old);
-                CallOnHostUpdated();
             }
+
+            CallOnHostUpdated();
         }
     }
 
