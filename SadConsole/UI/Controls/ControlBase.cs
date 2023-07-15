@@ -18,6 +18,7 @@ public abstract class ControlBase
     private Colors? _themeColors;
     private bool _isDirty;
     private bool _isFocused;
+    private ICellSurface _surface;
 
     /// <summary>
     /// The theme of the control based on its state.
@@ -117,8 +118,16 @@ public abstract class ControlBase
     /// <summary>
     /// The cell data to render the control. Controlled by a theme.
     /// </summary>
-    [DataMember]
-    public ICellSurface Surface { get; set; }
+    public ICellSurface Surface
+    {
+        get => _surface;
+        set
+        {
+            ICellSurface oldSurface = _surface;
+            _surface = value ?? throw new ArgumentNullException();
+            OnSurfaceChanged(oldSurface, value);
+        }
+    }
 
     /// <summary>
     /// The relative region the of the control used for mouse input.
@@ -350,7 +359,7 @@ public abstract class ControlBase
         MouseArea = new Rectangle(0, 0, width, height);
         ThemeState = new();
 
-        Surface = CreateControlSurface();
+        _surface = CreateControlSurface();
 
         DetermineState();
     }
@@ -534,6 +543,13 @@ public abstract class ControlBase
     /// <param name="oldState">The original state.</param>
     /// <param name="newState">The new state.</param>
     protected virtual void OnStateChanged(ControlStates oldState, ControlStates newState) => IsDirty = true;
+
+    /// <summary>
+    /// Called when the <see cref="Surface"/> property is set.
+    /// </summary>
+    /// <param name="oldSurface">The previous surface instance.</param>
+    /// <param name="newSurface">The new surface instance.</param>
+    protected virtual void OnSurfaceChanged(ICellSurface oldSurface, ICellSurface newSurface) { }
 
     /// <summary>
     /// Returns the colors assigned to this control, the parent, or the library default.

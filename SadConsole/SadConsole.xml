@@ -2979,6 +2979,46 @@
             A positioned and animated game object.
             </summary>
         </member>
+        <member name="T:SadConsole.Entities.Entity.Animated">
+            <summary>
+            An entity that is a an animated surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.Animation">
+            <summary>
+            The animation associated with this animated entity.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.DefaultCollisionRectangle">
+            <summary>
+            Represents the collision rectangle for this animated surface which is the size of the animation frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.CustomCollisionRectangle">
+            <summary>
+            A collision rectangle that you can specify.
+            </summary>
+            <remarks>
+            This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.Animated.IsDirty">
+            <summary>
+            When <see langword="true"/>, indicates that this animation is dirty and needs to be redrawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenSurface)">
+            <summary>
+            Creates a new instance of this type from an animated screen surface.
+            </summary>
+            <param name="surface">The animation to use.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.Animated.Update(System.TimeSpan)">
+            <summary>
+            Updates the <see cref="P:SadConsole.Entities.Entity.Animated.Animation"/>.
+            </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
+        </member>
         <member name="E:SadConsole.Entities.Entity.IsDirtyChanged">
             <summary>
             Raised when the <see cref="P:SadConsole.Entities.Entity.IsDirty"/> property changes value.
@@ -3016,7 +3056,7 @@
         </member>
         <member name="P:SadConsole.Entities.Entity.IsSingleCell">
             <summary>
-            
+            When <see langword="true"/>, indicates that this entity is a single cell entity; otherwise <see langword="false"/> and it's an animated surface entity.
             </summary>
         </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.Entities.Entity.Animated,System.Int32)">
@@ -3092,6 +3132,28 @@
             <param name="file">The source file.</param>
             <returns>The entity.</returns>
         </member>
+        <member name="T:SadConsole.Entities.Entity.EntityMovedEventArgs">
+            <summary>
+            Arguments for the entity moved event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity">
+            <summary>
+            The entity associated with the event.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.FromPosition">
+            <summary>
+            The position the <see cref="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity"/> moved from.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Entities.Entity.EntityMovedEventArgs.#ctor(SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new event args for the entity movement.
+            </summary>
+            <param name="entity">The entity associated with the event.</param>
+            <param name="oldPosition">The position the entity moved from.</param>
+        </member>
         <member name="T:SadConsole.Entities.Entity.SingleCell">
             <summary>
             An entity that is a single cell.
@@ -3132,149 +3194,87 @@
             </summary>
             <param name="delta"></param>
         </member>
-        <member name="T:SadConsole.Entities.Entity.Animated">
-            <summary>
-            An entity that is a an animated surface.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Entity.Animated.Animation">
-            <summary>
-            The animation associated with this animated entity.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Entity.Animated.DefaultCollisionRectangle">
-            <summary>
-            Represents the collision rectangle for this animated surface which is the size of the animation frame.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Entities.Entity.Animated.CustomCollisionRectangle">
-            <summary>
-            A collision rectangle that you can specify.
-            </summary>
-            <remarks>
-            This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.
-            </remarks>
-        </member>
-        <member name="P:SadConsole.Entities.Entity.Animated.IsDirty">
-            <summary>
-            When <see langword="true"/>, indicates that this animation is dirty and needs to be redrawn.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenSurface)">
-            <summary>
-            Creates a new instance of this type from an animated screen surface.
-            </summary>
-            <param name="surface">The animation to use.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.Animated.Update(System.TimeSpan)">
-            <summary>
-            Updates the <see cref="P:SadConsole.Entities.Entity.Animated.Animation"/>.
-            </summary>
-            <param name="delta">The time that has elapsed since this method was last called.</param>
-        </member>
-        <member name="T:SadConsole.Entities.Entity.EntityMovedEventArgs">
-            <summary>
-            Arguments for the entity moved event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity">
-            <summary>
-            The entity associated with the event.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Entities.Entity.EntityMovedEventArgs.FromPosition">
-            <summary>
-            The position the <see cref="F:SadConsole.Entities.Entity.EntityMovedEventArgs.Entity"/> moved from.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Entities.Entity.EntityMovedEventArgs.#ctor(SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new event args for the entity movement.
-            </summary>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
-        </member>
-        <member name="T:SadConsole.Entities.Renderer">
+        <member name="T:SadConsole.Entities.EntityManager">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer.IsAttached">
+        <member name="F:SadConsole.Entities.EntityManager.IsAttached">
             <summary>
             Indicates that the entity renderer has been added to a parent object.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._entities">
+        <member name="F:SadConsole.Entities.EntityManager._entities">
             <summary>
             The entities to process.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._entitiesVisible">
+        <member name="F:SadConsole.Entities.EntityManager._entitiesVisible">
             <summary>
             The entities currently visible.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._screen">
+        <member name="F:SadConsole.Entities.EntityManager._screen">
             <summary>
             The parent screen hosting this component.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._offsetAreaPixels">
+        <member name="F:SadConsole.Entities.EntityManager._offsetAreaPixels">
             <summary>
             Cached rectangle for rendering.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._screenCachedView">
+        <member name="F:SadConsole.Entities.EntityManager._screenCachedView">
             <summary>
             A cached copy of the <see cref="P:SadConsole.ICellSurface.View"/> of the hosting screen surface.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._screenCachedFont">
+        <member name="F:SadConsole.Entities.EntityManager._screenCachedFont">
             <summary>
             A cached copy of the <see cref="P:SadConsole.IScreenSurface.Font"/> of the hosting screen surface.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Renderer._screenCachedFontSize">
+        <member name="F:SadConsole.Entities.EntityManager._screenCachedFontSize">
             <summary>
             A cached copy of the <see cref="P:SadConsole.IScreenSurface.FontSize"/> of the hosting screen surface.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.Entities">
+        <member name="P:SadConsole.Entities.EntityManager.Entities">
             <summary>
             The entities associated with this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.EntitiesVisible">
+        <member name="P:SadConsole.Entities.EntityManager.EntitiesVisible">
             <summary>
             The entities within the visible portion of the parent surface.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.IsDirty">
+        <member name="P:SadConsole.Entities.EntityManager.IsDirty">
             <summary>
             When <see langword="true"/>, indicates that this object needs to be redrawn; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.DoEntityUpdate">
+        <member name="P:SadConsole.Entities.EntityManager.DoEntityUpdate">
             <summary>
             When <see langword="true"/>, indicates this manager should call <see cref="M:SadConsole.IScreenObject.Update(System.TimeSpan)"/> on each entity; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.SkipExistsChecks">
+        <member name="P:SadConsole.Entities.EntityManager.SkipExistsChecks">
             <summary>
-            When <see langword="true"/>, the <see cref="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)"/> won't check if the entity exists before doing its operation.
+            When <see langword="true"/>, the <see cref="M:SadConsole.Entities.EntityManager.Add(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.EntityManager.Remove(SadConsole.Entities.Entity)"/> won't check if the entity exists before doing its operation.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.Count">
+        <member name="P:SadConsole.Entities.EntityManager.Count">
             <summary>
             The number of entities in the renderer.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.IsReadOnly">
+        <member name="P:SadConsole.Entities.EntityManager.IsReadOnly">
             <summary>
             Always returns false.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Renderer.Item(System.Int32)">
+        <member name="P:SadConsole.Entities.EntityManager.Item(System.Int32)">
             <summary>
             Gets an entity by index.
             </summary>
@@ -3282,57 +3282,57 @@
             <returns>The entity.</returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="F:SadConsole.Entities.Renderer.RenderStep">
+        <member name="F:SadConsole.Entities.EntityManager.RenderStep">
             <summary>
             Internal use only
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.Add(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.Add(SadConsole.Entities.Entity)">
             <summary>
             Adds an entity to this manager.
             </summary>
             <param name="entity">The entity to add.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.AddRange(System.Collections.Generic.IEnumerable{SadConsole.Entities.Entity})">
+        <member name="M:SadConsole.Entities.EntityManager.AddRange(System.Collections.Generic.IEnumerable{SadConsole.Entities.Entity})">
             <summary>
             Adds a collection of entities to this manager.
             </summary>
             <param name="entities">The entities to add.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.AddEntity(SadConsole.Entities.Entity,System.Boolean)">
+        <member name="M:SadConsole.Entities.EntityManager.AddEntity(SadConsole.Entities.Entity,System.Boolean)">
             <summary>
-            Adds an entity to the collection, subscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})"/>.
+            Adds an entity to the collection, subscribes to events, and calls <see cref="M:SadConsole.Entities.EntityManager.OnEntityAdded(SadConsole.Entities.Entity)"/> and <see cref="M:SadConsole.Entities.EntityManager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})"/>.
             </summary>
             <param name="entity">The entity to remove.</param>
-            <param name="skipSort">When true, skips sorting when <see cref="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)"/> is called inside this method.</param>
+            <param name="skipSort">When true, skips sorting when <see cref="M:SadConsole.Entities.EntityManager.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)"/> is called inside this method.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.RemoveEntity(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.RemoveEntity(SadConsole.Entities.Entity)">
             <summary>
-            Adds an entity to the collection, unsubscribes to events, and calls <see cref="M:SadConsole.Entities.Renderer.OnEntityRemoved(SadConsole.Entities.Entity)"/>.
+            Adds an entity to the collection, unsubscribes to events, and calls <see cref="M:SadConsole.Entities.EntityManager.OnEntityRemoved(SadConsole.Entities.Entity)"/>.
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.Remove(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.Remove(SadConsole.Entities.Entity)">
             <summary>
             Removes an entity from this manager.
             </summary>
             <param name="entity">The entity to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.Clear">
+        <member name="M:SadConsole.Entities.EntityManager.Clear">
             <summary>
             Removes all entities from this renderer.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnAdded(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Entities.EntityManager.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnRemoved(SadConsole.IScreenObject)">
+        <member name="M:SadConsole.Entities.EntityManager.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.Update(SadConsole.IScreenObject,System.TimeSpan)">
+        <member name="M:SadConsole.Entities.EntityManager.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.GetRenderRectangle(SadRogue.Primitives.Point,System.Boolean)">
+        <member name="M:SadConsole.Entities.EntityManager.GetRenderRectangle(SadRogue.Primitives.Point,System.Boolean)">
             <summary>
             Gets a render rectangle for a position.
             </summary>
@@ -3340,31 +3340,31 @@
             <param name="isPixel">Indicates the entity is pixel positioned.</param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.SortVisibleEntities">
+        <member name="M:SadConsole.Entities.EntityManager.SortVisibleEntities">
             <summary>
-            Sorts the <see cref="P:SadConsole.Entities.Renderer.EntitiesVisible"/> collection according to the <see cref="P:SadConsole.Entities.Entity.ZIndex"/> value.
+            Sorts the <see cref="P:SadConsole.Entities.EntityManager.EntitiesVisible"/> collection according to the <see cref="P:SadConsole.Entities.Entity.ZIndex"/> value.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+        <member name="M:SadConsole.Entities.EntityManager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <summary>
             Called when an entity changes position.
             </summary>
             <param name="entity">The entity that moved.</param>
             <param name="e">The previous and new values of the position.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnEntityAdded(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.OnEntityAdded(SadConsole.Entities.Entity)">
             <summary>
             Called when an entity is added.
             </summary>
             <param name="entity">The entity.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.OnEntityRemoved(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.OnEntityRemoved(SadConsole.Entities.Entity)">
             <summary>
             Called when an entity is removed.
             </summary>
             <param name="entity">The entity.</param>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibility(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.CalculateEntityVisibility(SadConsole.Entities.Entity)">
             <summary>
             Updates the visibility state of an entity.
             </summary>
@@ -3372,7 +3372,7 @@
             <returns>Returns <see langword="true"/> when this entity is considered visible; otherwise <see langword="false"/>.</returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)">
+        <member name="M:SadConsole.Entities.EntityManager.CalculateEntityVisibilityProtected(SadConsole.Entities.Entity,System.Boolean)">
             <summary>
             Detects a visibility state change of an entity and changes its internal list position.
             </summary>
@@ -3380,21 +3380,21 @@
             <param name="skipSort">If <see langword="true"/>, skips sorting the visible.</param>
             <returns><see langword="true"/> when the entity is visible; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.UpdateCachedVisibilityArea">
+        <member name="M:SadConsole.Entities.EntityManager.UpdateCachedVisibilityArea">
             <summary>
             Updates the cached view area based on the parent surface.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.IndexOf(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.IndexOf(SadConsole.Entities.Entity)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.Contains(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManager.Contains(SadConsole.Entities.Entity)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.CopyTo(SadConsole.Entities.Entity[],System.Int32)">
+        <member name="M:SadConsole.Entities.EntityManager.CopyTo(SadConsole.Entities.Entity[],System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Renderer.GetEnumerator">
+        <member name="M:SadConsole.Entities.EntityManager.GetEnumerator">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.PointExtensions">
@@ -4571,6 +4571,13 @@
             <param name="view">An area of the surface to create a view of.</param>
             <returns>A new surface</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.GetSubSurface(SadConsole.ISurface)">
+            <summary>
+            Returns a new surface using the cells from the current surface.
+            </summary>
+            <param name="obj">The surface.</param>
+            <returns>A new surface instance.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetMirror(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
             Gets the mirror of a specified cell.
@@ -5441,26 +5448,26 @@
         <member name="P:SadConsole.Input.AsciiKey.ShiftedCharacterMapping.Shifted">
             <summary>The character when shifted.</summary>
         </member>
-        <member name="T:SadConsole.Input.AsciiKey.NumericKeyMapping">
+        <member name="T:SadConsole.Input.AsciiKey.CharacterKeyMapping">
             <summary>
-            Associates a numeric keypad character with a funcational key.
+            Associates a character glyph and a <see cref="T:SadConsole.Input.Keys"/> value.
             </summary>
-            <param name="NumberPadCharacter">The number pad character.</param>
-            <param name="NonNumlockKey">The key the character maps to.</param>
+            <param name="CharacterGlyph">The number pad character.</param>
+            <param name="Key">The key the character maps to.</param>
             <remarks>Used when the <see cref="F:SadConsole.Input.Keys.NumLock"/> is active.</remarks>
         </member>
-        <member name="M:SadConsole.Input.AsciiKey.NumericKeyMapping.#ctor(System.Char,SadConsole.Input.Keys)">
+        <member name="M:SadConsole.Input.AsciiKey.CharacterKeyMapping.#ctor(System.Char,SadConsole.Input.Keys)">
             <summary>
-            Associates a numeric keypad character with a funcational key.
+            Associates a character glyph and a <see cref="T:SadConsole.Input.Keys"/> value.
             </summary>
-            <param name="NumberPadCharacter">The number pad character.</param>
-            <param name="NonNumlockKey">The key the character maps to.</param>
+            <param name="CharacterGlyph">The number pad character.</param>
+            <param name="Key">The key the character maps to.</param>
             <remarks>Used when the <see cref="F:SadConsole.Input.Keys.NumLock"/> is active.</remarks>
         </member>
-        <member name="P:SadConsole.Input.AsciiKey.NumericKeyMapping.NumberPadCharacter">
+        <member name="P:SadConsole.Input.AsciiKey.CharacterKeyMapping.CharacterGlyph">
             <summary>The number pad character.</summary>
         </member>
-        <member name="P:SadConsole.Input.AsciiKey.NumericKeyMapping.NonNumlockKey">
+        <member name="P:SadConsole.Input.AsciiKey.CharacterKeyMapping.Key">
             <summary>The key the character maps to.</summary>
         </member>
         <member name="F:SadConsole.Input.AsciiKey.CapsLockedKeys">
@@ -5476,6 +5483,11 @@
         <member name="F:SadConsole.Input.AsciiKey.NumberKeyMappings">
             <summary>
             Dictionary that maps <see cref="T:SadConsole.Input.Keys"/> usually triggered by the numberpad with a character and non-numpad key.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Input.AsciiKey.KeyRemapping">
+            <summary>
+            Remaps any incoming key to a combination of character and key.
             </summary>
         </member>
         <member name="F:SadConsole.Input.AsciiKey.Key">
@@ -5497,14 +5509,6 @@
             <summary>
             Tracks if the key was previously held when calculating the <see cref="F:SadConsole.Input.Keyboard.InitialRepeatDelay"/>.
             </summary>
-        </member>
-        <member name="M:SadConsole.Input.AsciiKey.RemapNumlockKey(SadConsole.Input.Keys,SadConsole.Input.IKeyboardState)">
-            <summary>
-            If numlock is off, tries to remap the key to the non numlock state.
-            </summary>
-            <param name="key"> The key to be remapped.</param>
-            <param name="state">Keyboar state to read numlock.</param>
-            <returns>The remapped key.</returns>
         </member>
         <member name="M:SadConsole.Input.AsciiKey.Fill(SadConsole.Input.Keys,System.Boolean,SadConsole.Input.IKeyboardState)">
             <summary>
@@ -8220,9 +8224,9 @@
             The render step for a <see cref="T:SadConsole.Components.Cursor"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityRenderer">
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityManager">
             <summary>
-            The render step for a <see cref="T:SadConsole.Entities.Renderer"/>.
+            The render step for a <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Output">
@@ -8262,7 +8266,7 @@
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.EntityRenderer">
             <summary>
-            The render step for a <see cref="T:SadConsole.Entities.Renderer"/>.
+            The render step for a <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Output">
@@ -10950,10 +10954,11 @@
             Raises the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> event.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.ButtonBase.InvokeClick">
+        <member name="M:SadConsole.UI.Controls.ButtonBase.InvokeClick(System.Boolean)">
             <summary>
-            Simulates a mouse click on the button.
+            Simulates a mouse click on the button. Optionally, focuses the button prior to simulating the click.
             </summary>
+            <param name="focus">When <see langword="true"/>, focuses the button before clicking.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -11502,6 +11507,13 @@
             </summary>
             <param name="oldState">The original state.</param>
             <param name="newState">The new state.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.OnSurfaceChanged(SadConsole.ICellSurface,SadConsole.ICellSurface)">
+            <summary>
+            Called when the <see cref="P:SadConsole.UI.Controls.ControlBase.Surface"/> property is set.
+            </summary>
+            <param name="oldSurface">The previous surface instance.</param>
+            <param name="newSurface">The new surface instance.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.FindThemeColors">
             <summary>
@@ -12649,9 +12661,9 @@
             Sets the visual behavior of the scroll bars for the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface">
+        <member name="P:SadConsole.UI.Controls.SurfaceViewer.SurfaceSerialized">
             <summary>
-            The surface rendered on this control.
+            Ensures the base class <see cref="P:SadConsole.UI.Controls.ControlBase.Surface"/> property is serialized when this control is serialized.
             </summary>
         </member>
         <member name="F:SadConsole.UI.Controls.SurfaceViewer.HorizontalScroller">
@@ -12664,11 +12676,6 @@
             The vertical scroll bar. This shouldn't be changed.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.SurfaceViewer.SurfaceControl">
-            <summary>
-            A control that displays the view area of the <see cref="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface"/>.
-            </summary>
-        </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.#ctor(System.Int32,System.Int32,SadConsole.ICellSurface)">
             <summary>
             Creates a new drawing surface control with the specified width and height.
@@ -12677,23 +12684,17 @@
             <param name="height">Height of the control.</param>
             <param name="surface">The surface to view.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.SurfaceViewer.SetSurface(SadConsole.ICellSurface)">
-            <summary>
-            Sets the surface for the view.
-            </summary>
-            <param name="surface"></param>
-        </member>
         <member name="M:SadConsole.UI.Controls.SurfaceViewer.ResetSurface">
             <summary>
-            Resets <see cref="P:SadConsole.UI.Controls.SurfaceViewer.ChildSurface"/> to a 1x1 surface.
+            Resets the control's surface to a 1x1 surface transparent surface.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.SurfaceViewer.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.OnSurfaceChanged(SadConsole.ICellSurface,SadConsole.ICellSurface)">
             <summary>
-            Processes the mouse for the scrollers and then the surface area.
+            Handles and dehandles the <see cref="E:SadConsole.ICellSurface.IsDirtyChanged"/> event for the backing surface.
             </summary>
-            <param name="state">The state of the mouse.</param>
-            <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
+            <param name="oldSurface">The previous surface instance.</param>
+            <param name="newSurface">The new surface instance.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.TabControl">
             <summary>

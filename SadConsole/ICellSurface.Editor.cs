@@ -495,21 +495,16 @@ public static class CellSurfaceEditor
         if (!new Rectangle(0, 0, obj.Surface.Width, obj.Surface.Height).Contains(view))
             throw new Exception("View is outside of surface bounds.");
 
-        var cells = new ColoredGlyph[view.Width * view.Height];
-
-        int index = 0;
-
-        for (int y = 0; y < view.Height; y++)
-        {
-            for (int x = 0; x < view.Width; x++)
-            {
-                cells[index] = obj.Surface[x + view.X, y + view.Y];
-                index++;
-            }
-        }
-
-        return new CellSurface(view.Width, view.Height, cells);
+        return new CellSurface(view.Width, view.Height, obj.Surface.GetCells(view).ToArray());
     }
+
+    /// <summary>
+    /// Returns a new surface using the cells from the current surface.
+    /// </summary>
+    /// <param name="obj">The surface.</param>
+    /// <returns>A new surface instance.</returns>
+    public static ICellSurface GetSubSurface(this ISurface obj) =>
+        new CellSurface(obj.Surface.Width, obj.Surface.Height, obj.Surface.GetCells(new Rectangle(0, 0, obj.Surface.Width, obj.Surface.Height)).ToArray());
 
     /// <summary>
     /// Gets the mirror of a specified cell.

@@ -61,7 +61,7 @@ public abstract class CompositeControl : ControlBase, IContainer
     {
         if (IsEnabled && UseMouse)
         {
-            bool processResult = base.ProcessMouse(state);
+            bool processResult = false;
 
             var controls = new List<ControlBase>(Controls);
             controls.Reverse();
@@ -69,6 +69,9 @@ public abstract class CompositeControl : ControlBase, IContainer
             int count = controls.Count;
             for (int i = 0; i < count; i++)
                 processResult |= controls[i].ProcessMouse(state);
+
+            if (!processResult)
+                processResult = base.ProcessMouse(state);
 
             return processResult;
         }

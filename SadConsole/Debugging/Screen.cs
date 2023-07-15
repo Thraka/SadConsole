@@ -257,7 +257,7 @@ public static class Screen
             {
                 _labelConsoleWidth.DisplayText = surface.Surface.Width.ToString();
                 _labelConsoleHeight.DisplayText = surface.Surface.Height.ToString();
-                _surfaceView.SetSurface(surface.Surface);
+                _surfaceView.Surface = surface.Surface;
             }
             else
                 _surfaceView.ResetSurface();

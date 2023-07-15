@@ -31,7 +31,6 @@ public class SurfaceViewer : CompositeControl
         AsNeeded
     }
 
-    private ICellSurface _surface;
     private ScrollBarModes _scrollModes;
 
     /// <summary>
@@ -45,10 +44,14 @@ public class SurfaceViewer : CompositeControl
     }
 
     /// <summary>
-    /// The surface rendered on this control.
+    /// Ensures the base class <see cref="ControlBase.Surface"/> property is serialized when this control is serialized.
     /// </summary>
     [DataMember(Name = "ChildSurface")]
-    public ICellSurface ChildSurface => _surface;
+    private ICellSurface SurfaceSerialized
+    {
+        get => Surface;
+        set => Surface = value;
+    }
 
     /// <summary>
     /// The horizontal scroll bar. This shouldn't be changed.
@@ -59,12 +62,6 @@ public class SurfaceViewer : CompositeControl
     /// The vertical scroll bar. This shouldn't be changed.
     /// </summary>
     public ScrollBar VerticalScroller;
-
-    /// <summary>
-    /// A control that displays the view area of the <see cref="ChildSurface"/>.
-    /// </summary>
-    public DrawingArea SurfaceControl;
-
 
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
@@ -80,119 +77,46 @@ public class SurfaceViewer : CompositeControl
 
         HorizontalScroller = new ScrollBar(Orientation.Horizontal, width);
         VerticalScroller = new ScrollBar(Orientation.Vertical, height);
-        SurfaceControl = new DrawingArea(width, height);
 
         AddControl(HorizontalScroller);
         AddControl(VerticalScroller);
-        AddControl(SurfaceControl);
 
         HorizontalScroller.ValueChanged += HorizontalScroller_ValueChanged;
         VerticalScroller.ValueChanged += VerticalScroller_ValueChanged;
-        SetSurface(surface);
+
+        Surface.IsDirtyChanged += _surface_IsDirtyChanged;
+
+        if (surface != null)
+            Surface = surface;
 
         UseMouse = true;
     }
 
     /// <summary>
-    /// Sets the surface for the view.
+    /// Resets the control's surface to a 1x1 surface transparent surface.
     /// </summary>
-    /// <param name="surface"></param>
-    [MemberNotNull("_surface")]
-    public void SetSurface(ICellSurface? surface)
-    {
-        if (surface == null)
-        {
-            ResetSurface();
-            return;
-        }
-
-        if (_surface == surface) return;
-
-        if (_surface != null)
-            _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
-
-        _surface = new CellSurface(surface, Width, Height);
-        _surface.DefaultBackground = surface.DefaultBackground;
-        _surface.DefaultForeground = surface.DefaultForeground;
-
-        IsDirty = true;
-
-        SurfaceControl.Surface = _surface;
-        _surface.IsDirty = true;
-        _surface.IsDirtyChanged += _surface_IsDirtyChanged;
-
-        UpdateAndRedraw(TimeSpan.Zero);
-    }
-
-    /// <summary>
-    /// Resets <see cref="ChildSurface"/> to a 1x1 surface.
-    /// </summary>
-    [MemberNotNull("_surface")]
     public void ResetSurface()
     {
-        if (_surface != null)
-            _surface.IsDirtyChanged -= _surface_IsDirtyChanged;
-
-        _surface = new CellSurface(1, 1);
-        _surface.DefaultBackground = Color.Transparent;
-        _surface.Clear();
+        Surface = new CellSurface(1, 1);
+        Surface.DefaultBackground = Color.Transparent;
+        Surface.Clear();
 
         IsDirty = true;
-
-        SurfaceControl.Surface = _surface;
-        _surface.IsDirty = true;
-        _surface.IsDirtyChanged += _surface_IsDirtyChanged;
+        Surface.IsDirty = true;
     }
 
     /// <summary>
-    /// Processes the mouse for the scrollers and then the surface area.
+    /// Handles and dehandles the <see cref="ICellSurface.IsDirtyChanged"/> event for the backing surface.
     /// </summary>
-    /// <param name="state">The state of the mouse.</param>
-    /// <returns><see langword="true"/> when the mouse was processed by a scroller or the surface area.</returns>
-    public override bool ProcessMouse(MouseScreenObjectState state)
+    /// <param name="oldSurface">The previous surface instance.</param>
+    /// <param name="newSurface">The new surface instance.</param>
+    protected override void OnSurfaceChanged(ICellSurface oldSurface, ICellSurface newSurface)
     {
-        if (IsEnabled && UseMouse)
-        {
-            var newState = new ControlMouseState(this, state);
-
-            if (newState.IsMouseOver)
-            {
-                if (VerticalScroller.IsVisible && VerticalScroller.ProcessMouse(state))
-                    return true;
-
-                if (HorizontalScroller.IsVisible && HorizontalScroller.ProcessMouse(state))
-                    return true;
-
-                if (MouseState_IsMouseOver != true)
-                {
-                    MouseState_IsMouseOver = true;
-                    OnMouseEnter(newState);
-                }
-
-                bool preventClick = MouseState_EnteredWithButtonDown;
-                OnMouseIn(newState);
-
-                if (!preventClick && state.Mouse.LeftClicked)
-                    OnLeftMouseClicked(newState);
-
-                if (!preventClick && state.Mouse.RightClicked)
-                    OnRightMouseClicked(newState);
-
-                return true;
-            }
-            else
-            {
-                if (MouseState_IsMouseOver)
-                {
-                    MouseState_IsMouseOver = false;
-                    OnMouseExit(newState);
-                }
-            }
-        }
-
-        return false;
+        oldSurface.IsDirtyChanged -= _surface_IsDirtyChanged;
+        newSurface.IsDirtyChanged += _surface_IsDirtyChanged;
     }
 
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;
@@ -210,16 +134,16 @@ public class SurfaceViewer : CompositeControl
         }
         else if (ScrollBarMode == SurfaceViewer.ScrollBarModes.AsNeeded)
         {
-            showWidthScroll = ChildSurface.Width > Width;
-            showHeightScroll = ChildSurface.Height > Height;
+            showWidthScroll = Surface.Width > Width;
+            showHeightScroll = Surface.Height > Height;
         }
 
         // If only 1 scroller needs to be shown, but the opposite axis size == the available height,
         // it gets cut off so we need to show the other scroller.
-        if (showWidthScroll && !showHeightScroll && ChildSurface.Height == Height)
+        if (showWidthScroll && !showHeightScroll && Surface.Height == Height)
             showHeightScroll = true;
 
-        else if (showHeightScroll && !showWidthScroll && ChildSurface.Width == Width)
+        else if (showHeightScroll && !showWidthScroll && Surface.Width == Width)
             showWidthScroll = true;
 
         // Show or hide the scrollers
@@ -263,31 +187,33 @@ public class SurfaceViewer : CompositeControl
         HorizontalScroller.IsEnabled = false;
         VerticalScroller.IsEnabled = false;
 
-        if (ChildSurface.ViewWidth != ChildSurface.Width)
+        if (Surface.ViewWidth != Surface.Width)
         {
-            HorizontalScroller.Maximum = ChildSurface.Width - ChildSurface.ViewWidth;
+            HorizontalScroller.Maximum = Surface.Width - Surface.ViewWidth;
             HorizontalScroller.IsEnabled = true;
         }
-        if (ChildSurface.ViewHeight != ChildSurface.Height)
+        if (Surface.ViewHeight != Surface.Height)
         {
-            VerticalScroller.Maximum = ChildSurface.Height - ChildSurface.ViewHeight;
+            VerticalScroller.Maximum = Surface.Height - Surface.ViewHeight;
             VerticalScroller.IsEnabled = true;
         }
 
-        ChildSurface.IsDirty = false;
+        base.UpdateAndRedraw(time);
+
+        Surface.IsDirty = false;
     }
 
     private void _surface_IsDirtyChanged(object? sender, EventArgs e)
     {
-        IsDirty = _surface.IsDirty;
+        IsDirty = IsDirty || Surface.IsDirty;
 
-        VerticalScroller.Value = _surface.ViewPosition.Y;
-        HorizontalScroller.Value = _surface.ViewPosition.X;
+        VerticalScroller.Value = Surface.ViewPosition.Y;
+        HorizontalScroller.Value = Surface.ViewPosition.X;
     }
 
     private void VerticalScroller_ValueChanged(object? sender, EventArgs e) =>
-        _surface.ViewPosition = (_surface.ViewPosition.X, VerticalScroller.Value);
+        Surface.ViewPosition = (Surface.ViewPosition.X, VerticalScroller.Value);
 
     private void HorizontalScroller_ValueChanged(object? sender, EventArgs e) =>
-        _surface.ViewPosition = (HorizontalScroller.Value, _surface.ViewPosition.Y);
+        Surface.ViewPosition = (HorizontalScroller.Value, Surface.ViewPosition.Y);
 }
