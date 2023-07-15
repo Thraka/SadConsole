@@ -194,7 +194,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     }
 
     [JsonConstructor]
-    public AnimatedScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize) { }
+    private AnimatedScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize) { }
 
     #endregion
 
