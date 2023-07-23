@@ -1,66 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 
 namespace SadConsole;
 
-/// <summary>
-/// Animates a collection of frames.
-/// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
+public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
 {
-    [DataMember(Name = "AnimationDuration")]
     private TimeSpan _animatedTime;
     private AnimationState _state;
     private Point _center;
-    [DataMember(Name = "Width")]
-    private int _width;
-    [DataMember(Name = "Height")]
-    private int _height;
 
     /// <summary>
     /// Raised when the <see cref="AnimationState"/> changes.
     /// </summary>
     public event EventHandler<AnimationStateChangedEventArgs>? AnimationStateChanged;
-
-    /// <summary>
-    /// The frames of animation.
-    /// </summary>
-    /// <remarks>If this collection changes, <see cref="CurrentFrameIndexValue"/>, <see cref="UpdateFrameReferences"/>, and <see cref="TimePerFrame"/> should all be recalculated.</remarks>
-    [DataMember]
-    protected internal List<ICellSurface> FramesList = new List<ICellSurface>();
-
-    /// <summary>
-    /// Time counter for the animation
-    /// </summary>
-    protected TimeSpan AddedTime;
-
-    /// <summary>
-    /// The current frame index being animated.
-    /// </summary>
-    [DataMember]
-    protected int CurrentFrameIndexValue;
-
-    /// <summary>
-    /// How much time per animated frame should be used.
-    /// </summary>
-    protected TimeSpan TimePerFrame;
-
-    /// <summary>
-    /// All frames of the animation.
-    /// </summary>
-    public ReadOnlyCollection<ICellSurface> Frames => FramesList.AsReadOnly();
-
-    /// <summary>
-    /// The total number of frames.
-    /// </summary>
-    public int FrameCount => FramesList.Count;
 
     /// <summary>
     /// Center of the animation used in positioning.
@@ -72,9 +29,11 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         set
         {
             _center = value;
+            IsDirty = true;
             UpdateAbsolutePosition();
         }
     }
+
 
     /// <summary>
     /// Indicates whether or not this animation will repeat once it has finished animating.
@@ -91,6 +50,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <summary>
     /// The length of the animation.
     /// </summary>
+    [DataMember]
     public TimeSpan AnimationDuration
     {
         get => _animatedTime;
@@ -105,40 +65,33 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         get => CurrentFrameIndexValue;
         set
         {
-            if (value < 0 || value >= FramesList.Count)
+            if (value < 0 || value >= Frames.Count)
                 CurrentFrameIndexValue = 0;
-            else
-                CurrentFrameIndexValue = value;
 
-            UpdateFrameReferences();
+            else if (value != CurrentFrameIndexValue)
+            {
+                CurrentFrameIndexValue = value;
+                IsDirty = true;
+            }
         }
     }
 
     /// <summary>
     /// Indicates the animation is empty.
     /// </summary>
-    public bool IsEmpty => FramesList.Count == 0;
+    public bool IsEmpty => Frames.Count == 0;
 
     /// <summary>
-    /// The width of the animation.
+    /// The frames of the animated surface.
     /// </summary>
-    public int Width => _width;
-
-    /// <summary>
-    /// The height of the animation.
-    /// </summary>
-    public int Height => _height;
+    [DataMember]
+    public List<ICellSurface> Frames { get; }
 
     /// <summary>
     /// Gets the name of this animation.
     /// </summary>
     [DataMember]
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets the current frame being animated.
-    /// </summary>
-    public ICellSurface CurrentFrame => FramesList[CurrentFrameIndexValue];
 
     /// <summary>
     /// Gets the current animation state.
@@ -158,60 +111,20 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         }
     }
 
-    #region Constructors
     /// <summary>
-    /// Creates a new animation with the specified name, width, and height.
+    /// Time counter for the animation
     /// </summary>
-    /// <param name="name">The name of the animation.</param>
-    /// <param name="width">The width of each frame this animation will have.</param>
-    /// <param name="height">The height of each frame this animation will have.</param>
-    public AnimatedScreenSurface(string name, int width, int height) : base(width, height)
-    {
-        Name = name;
-        _width = width;
-        _height = height;
-        QuietSurfaceHandling = true;
-    }
+    protected TimeSpan AddedTime;
 
     /// <summary>
-    /// Creates a new animation with the specified name, width, and height.
+    /// The current frame index being animated.
     /// </summary>
-    /// <param name="name">The name of the animation.</param>
-    /// <param name="width">The width of each frame this animation will have.</param>
-    /// <param name="height">The height of each frame this animation will have.</param>
-    /// <param name="font">The font used with this animation.</param>
-    /// <param name="fontSize">The size of the font.</param>
-    public AnimatedScreenSurface(string name, int width, int height, IFont font, Point fontSize) : base(width, height)
-    {
-        Name = name;
-        Font = font;
-        FontSize = fontSize;
-        _width = width;
-        _height = height;
-        UseMouse = false;
-        UseKeyboard = false;
-        QuietSurfaceHandling = true;
-    }
-
-    [JsonConstructor]
-    private AnimatedScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize) { }
-
-    #endregion
-
+    protected int CurrentFrameIndexValue;
 
     /// <summary>
-    /// Updates the visible surface according to <see cref="CurrentFrameIndex"/>.
+    /// How much time per animated frame should be used.
     /// </summary>
-    protected void UpdateFrameReferences()
-    {
-        ICellSurface frame = FramesList[CurrentFrameIndexValue];
-        //Surface.SetSurface(frame.Cells, _width, _height, _width, _height);
-        //Surface.DefaultBackground = frame.DefaultBackground;
-        //Surface.DefaultForeground = frame.DefaultForeground;
-        //Surface.DefaultGlyph = frame.DefaultGlyph;
-        Surface = frame;
-        IsDirty = true;
-    }
+    protected TimeSpan TimePerFrame;
 
     /// <summary>
     /// Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
@@ -219,15 +132,19 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <returns>The created frame.</returns>
     public ICellSurface CreateFrame()
     {
-        if (FramesList == null)
+        var frame = new CellSurface(NewFrameWidth, NewFrameHeight);
+
+        if (Frames.Count > 0)
         {
-            FramesList = new List<ICellSurface>();
+            frame.DefaultBackground = Frames[0].DefaultBackground;
+            frame.DefaultForeground = Frames[0].DefaultForeground;
+            frame.DefaultGlyph = Frames[0].DefaultGlyph;
         }
 
-        var frame = new CellSurface(Width, Height) { DefaultBackground = Surface.DefaultBackground, DefaultForeground = Surface.DefaultForeground, DefaultGlyph = Surface.DefaultGlyph };
         frame.Clear();
-        FramesList.Add(frame);
-        UpdateFrameReferences();
+
+        Frames.Add(frame);
+        IsDirty = true;
         return frame;
     }
 
@@ -239,7 +156,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
         if (IsEmpty || _animatedTime == TimeSpan.Zero)
             TimePerFrame = TimeSpan.Zero;
         else
-            TimePerFrame = _animatedTime / FramesList.Count;
+            TimePerFrame = _animatedTime / Frames.Count;
     }
 
     /// <summary>
@@ -274,94 +191,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     }
 
     /// <summary>
-    /// Updates the animation frames and calls update on the base class.
-    /// </summary>
-    /// <param name="delta">The time that has elapsed since this method was last called.</param>
-    public override void Update(TimeSpan delta)
-    {
-        if (IsPlaying && TimePerFrame != TimeSpan.Zero)
-        {
-            // TODO: Evaluate if we should change this to calculate current frame based on total time passed, \\not calculate frame based on individual frame duration on screen.
-            AddedTime += delta;
-
-            if (AddedTime > TimePerFrame)
-            {
-                AddedTime = TimeSpan.Zero;
-                CurrentFrameIndexValue++;
-
-                if (CurrentFrameIndexValue >= FramesList.Count)
-                {
-                    if (Repeat)
-                    {
-                        CurrentFrameIndexValue = 0;
-                        State = AnimationState.Restarted;
-                        State = AnimationState.Playing;
-                    }
-                    else
-                    {
-                        IsPlaying = false;
-                        CurrentFrameIndexValue--;
-                        State = AnimationState.Finished;
-                    }
-                }
-
-                UpdateFrameReferences();
-            }
-        }
-
-        base.Update(delta);
-    }
-
-    /// <summary>
-    /// Returns the name of the animation prefixed with "Animation - ".
-    /// </summary>
-    /// <returns>The name.</returns>
-    public override string ToString() =>
-        $"Animation - {Name}";
-
-    /// <inheritdoc />
-    public override void UpdateAbsolutePosition()
-    {
-        if (UsePixelPositioning)
-            AbsolutePosition = Position - (FontSize * Center) + (Parent?.AbsolutePosition ?? Point.Zero);
-        else
-            AbsolutePosition = (FontSize * Position) - (FontSize * Center) + (Parent?.AbsolutePosition ?? Point.Zero);
-
-        int count = Children.Count;
-        for (int i = 0; i < count; i++)
-            Children[i].UpdateAbsolutePosition();
-    }
-
-    /// <summary>
-    /// Does nothing.
-    /// </summary>
-    /// <param name="context">Nothing.</param>
-    [OnSerializing]
-    protected void OnSerializingMethod2(StreamingContext context)
-    {
-    }
-
-    /// <summary>
-    /// Does nothing.
-    /// </summary>
-    /// <param name="context">Nothing.</param>
-    [OnSerialized]
-    protected void OnSerializedMethod(StreamingContext context)
-    {
-    }
-
-    /// <summary>
-    /// Calls <see cref="UpdateFrameReferences"/>.
-    /// </summary>
-    /// <param name="context">Nothing.</param>
-    [OnDeserialized]
-    protected void OnDeserializedMethod(StreamingContext context)
-    {
-        UpdateFrameReferences();
-    }
-
-    /// <summary>
-    /// Creates an animated surface that looks like static.
+    /// Creates an animated surface that looks like static noise.
     /// </summary>
     /// <param name="width">The width of the surface.</param>
     /// <param name="height">The height of the surface.</param>
@@ -370,15 +200,21 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <param name="background">The background color of the animation. Defaults to transparent.</param>
     /// <param name="foreground">The foreground color of the animation. Defaults to white.</param>
     /// <returns>An animation.</returns>
-    public static AnimatedScreenSurface CreateStatic(int width, int height, int frames, double blankChance, Color? background = null, Color? foreground = null)
+    public static AnimatedScreenObject CreateStatic(int width, int height, int frames, double blankChance, Color? background = null, Color? foreground = null)
     {
-        var animation = new AnimatedScreenSurface("default", width, height);
-        animation.Surface.DefaultBackground = background ?? Color.Black;
+        var animation = new AnimatedScreenObject("default", width, height);
 
         Color foregroundColor = foreground ?? Color.White;
         for (int f = 0; f < frames; f++)
         {
             ICellSurface frame = animation.CreateFrame();
+
+            // First frame is the template for the rest of CreateFrame
+            if (f == 0)
+            {
+                frame.DefaultBackground = background ?? Color.Black;
+                frame.Clear();
+            }
 
             for (int x = 0; x < width; x++)
             {
@@ -407,7 +243,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     }
 
     /// <summary>
-    /// Converts an image file containing frames to an instance of <see cref="AnimatedScreenSurface"/>.
+    /// Converts an image file containing frames to an instance of <see cref="AnimatedScreenObject"/>.
     /// </summary>
     /// <param name="name">Name for the animation.</param>
     /// <param name="filePath">File path to the image file.</param>
@@ -415,13 +251,13 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// <param name="frameDuration">Duration for a frame in the animation.</param>
     /// <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
     /// <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
-    /// <param name="font"> <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenSurface"/>.</param>
+    /// <param name="font"> <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenObject"/>.</param>
     /// <param name="action">Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
     /// <param name="convertMode">The mode used when converting the texture to a surface.</param>
     /// <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Background"/>.</param>
     /// <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
     /// 
-    /// <returns>An instance of <see cref="AnimatedScreenSurface"/> with converted frames.</returns>
+    /// <returns>An instance of <see cref="AnimatedScreenObject"/> with converted frames.</returns>
     /// 
     /// <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
     /// 
@@ -429,7 +265,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     /// 
     /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
     /// </remarks>
-    public static AnimatedScreenSurface FromImage(string name, string filePath, Point frameLayout, TimeSpan frameDuration,
+    public static AnimatedScreenObject FromImage(string name, string filePath, Point frameLayout, TimeSpan frameDuration,
         Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyph>? action = null,
         TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
         TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
@@ -463,7 +299,7 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
 
         // calculate the frame size and create an instance of an animated screen surface
         Point frameSize = ((surfaceSize.X - (padding.X * (frameLayout.X - 1))) / frameLayout.X, (surfaceSize.Y - (padding.Y * (frameLayout.Y - 1))) / frameLayout.Y);
-        var clip = new AnimatedScreenSurface(name, frameSize.X, frameSize.Y, font, fontSize)
+        var clip = new AnimatedScreenObject(name, frameSize.X, frameSize.Y, font, fontSize)
         {
             AnimationDuration = frameCount * frameDuration
         };
@@ -523,17 +359,17 @@ public class AnimatedScreenSurface : ScreenSurface, IScreenSurface
     }
 
     /// <summary>
-    /// Saves the <see cref="AnimatedScreenSurface"/> to a file.
+    /// Saves the <see cref="AnimatedScreenObject"/> to a file.
     /// </summary>
     /// <param name="file">The destination file.</param>
     public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
 
     /// <summary>
-    /// Loads a <see cref="AnimatedScreenSurface"/> from a file.
+    /// Loads a <see cref="AnimatedScreenObject"/> from a file.
     /// </summary>
     /// <param name="file">The source file.</param>
     /// <returns>The animated surface.</returns>
-    public static AnimatedScreenSurface Load(string file) => Serializer.Load<AnimatedScreenSurface>(file, Settings.SerializationIsCompressed);
+    public static AnimatedScreenObject Load(string file) => Serializer.Load<AnimatedScreenObject>(file, Settings.SerializationIsCompressed);
 
     /// <summary>
     /// Event args for when the animation state changes

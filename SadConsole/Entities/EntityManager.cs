@@ -476,16 +476,16 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
                     ? _offsetAreaPixels.Intersects(GetAnimatedAreaOffsetByCenterPixel(entity))
                     : _screen!.Surface.View.Intersects(new Rectangle()
                                                         .WithPosition(entity.Position - entity.AppearanceSurface!.Animation.Center)
-                                                        .WithSize(entity.AppearanceSurface.Animation.CurrentFrame.ViewWidth * _screenCachedFontSize.X,
-                                                                  entity.AppearanceSurface.Animation.CurrentFrame.Height * _screenCachedFontSize.Y));
+                                                        .WithSize(entity.AppearanceSurface.Animation.ViewWidth * _screenCachedFontSize.X,
+                                                                  entity.AppearanceSurface.Animation.Height * _screenCachedFontSize.Y));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Rectangle GetAnimatedAreaOffsetByCenterPixel(Entity entity) =>
         new Rectangle(entity.Position.X - (entity.AppearanceSurface!.Animation.Center.X * _screenCachedFontSize.X),
                       entity.Position.Y - (entity.AppearanceSurface.Animation.Center.Y * _screenCachedFontSize.Y),
-                      entity.AppearanceSurface.Animation.CurrentFrame.ViewWidth * _screenCachedFontSize.X,
-                      entity.AppearanceSurface.Animation.CurrentFrame.Height * _screenCachedFontSize.Y);
+                      entity.AppearanceSurface.Animation.ViewWidth * _screenCachedFontSize.X,
+                      entity.AppearanceSurface.Animation.Height * _screenCachedFontSize.Y);
 
     private static int CompareEntity(Entity left, Entity right)
     {

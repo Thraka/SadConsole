@@ -143,7 +143,7 @@ public partial class Entity : ScreenObject, IHasID
     /// </summary>
     /// <param name="appearance">The surface appearance to use for the entity.</param>
     /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
-    public Entity(AnimatedScreenSurface appearance, int zIndex)
+    public Entity(AnimatedScreenObject appearance, int zIndex)
     {
         _appearanceSurface = new Animated(appearance);
         Children.IsLocked = true;

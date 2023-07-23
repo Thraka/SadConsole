@@ -16,14 +16,14 @@ public partial class Entity
         /// The animation associated with this animated entity.
         /// </summary>
         [DataMember]
-        public AnimatedScreenSurface Animation { get; }
+        public AnimatedScreenObject Animation { get; }
 
         /// <summary>
         /// Represents the collision rectangle for this animated surface which is the size of the animation frame.
         /// </summary>
         public Rectangle DefaultCollisionRectangle
         {
-            get => new Rectangle(0, 0, Animation.CurrentFrame.ViewWidth, Animation.CurrentFrame.ViewHeight);
+            get => new Rectangle(0, 0, Animation.ViewWidth, Animation.ViewHeight);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ public partial class Entity
         /// Creates a new instance of this type from an animated screen surface.
         /// </summary>
         /// <param name="surface">The animation to use.</param>
-        public Animated(AnimatedScreenSurface surface) =>
+        public Animated(AnimatedScreenObject surface) =>
             Animation = surface;
 
         /// <summary>
