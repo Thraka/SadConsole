@@ -95,187 +95,100 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.AnimatedScreenSurface">
+        <member name="E:SadConsole.AnimatedScreenObject.AnimationStateChanged">
             <summary>
-            Animates a collection of frames.
+            Raised when the <see cref="T:SadConsole.AnimatedScreenObject.AnimationState"/> changes.
             </summary>
         </member>
-        <member name="E:SadConsole.AnimatedScreenSurface.AnimationStateChanged">
-            <summary>
-            Raised when the <see cref="T:SadConsole.AnimatedScreenSurface.AnimationState"/> changes.
-            </summary>
-        </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.FramesList">
-            <summary>
-            The frames of animation.
-            </summary>
-            <remarks>If this collection changes, <see cref="F:SadConsole.AnimatedScreenSurface.CurrentFrameIndexValue"/>, <see cref="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences"/>, and <see cref="F:SadConsole.AnimatedScreenSurface.TimePerFrame"/> should all be recalculated.</remarks>
-        </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AddedTime">
-            <summary>
-            Time counter for the animation
-            </summary>
-        </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.CurrentFrameIndexValue">
-            <summary>
-            The current frame index being animated.
-            </summary>
-        </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.TimePerFrame">
-            <summary>
-            How much time per animated frame should be used.
-            </summary>
-        </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Frames">
-            <summary>
-            All frames of the animation.
-            </summary>
-        </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.FrameCount">
-            <summary>
-            The total number of frames.
-            </summary>
-        </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Center">
+        <member name="P:SadConsole.AnimatedScreenObject.Center">
             <summary>
             Center of the animation used in positioning.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Repeat">
+        <member name="P:SadConsole.AnimatedScreenObject.Repeat">
             <summary>
             Indicates whether or not this animation will repeat once it has finished animating.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.IsPlaying">
+        <member name="P:SadConsole.AnimatedScreenObject.IsPlaying">
             <summary>
-            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenSurface.Update(System.TimeSpan)"/> method will advance the frames.
+            When true, Indicates the animation is currently animating. The <see cref="M:SadConsole.AnimatedScreenObject.Update(System.TimeSpan)"/> method will advance the frames.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.AnimationDuration">
+        <member name="P:SadConsole.AnimatedScreenObject.AnimationDuration">
             <summary>
             The length of the animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrameIndex">
+        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrameIndex">
             <summary>
             Gets or sets the current frame index to animate.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.IsEmpty">
+        <member name="P:SadConsole.AnimatedScreenObject.IsEmpty">
             <summary>
             Indicates the animation is empty.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Width">
+        <member name="P:SadConsole.AnimatedScreenObject.Frames">
             <summary>
-            The width of the animation.
+            The frames of the animated surface.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Height">
-            <summary>
-            The height of the animation.
-            </summary>
-        </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.Name">
+        <member name="P:SadConsole.AnimatedScreenObject.Name">
             <summary>
             Gets the name of this animation.
             </summary>
         </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.CurrentFrame">
-            <summary>
-            Gets the current frame being animated.
-            </summary>
-        </member>
-        <member name="P:SadConsole.AnimatedScreenSurface.State">
+        <member name="P:SadConsole.AnimatedScreenObject.State">
             <summary>
             Gets the current animation state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.#ctor(System.String,System.Int32,System.Int32)">
+        <member name="F:SadConsole.AnimatedScreenObject.AddedTime">
             <summary>
-            Creates a new animation with the specified name, width, and height.
-            </summary>
-            <param name="name">The name of the animation.</param>
-            <param name="width">The width of each frame this animation will have.</param>
-            <param name="height">The height of each frame this animation will have.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.#ctor(System.String,System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)">
-            <summary>
-            Creates a new animation with the specified name, width, and height.
-            </summary>
-            <param name="name">The name of the animation.</param>
-            <param name="width">The width of each frame this animation will have.</param>
-            <param name="height">The height of each frame this animation will have.</param>
-            <param name="font">The font used with this animation.</param>
-            <param name="fontSize">The size of the font.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences">
-            <summary>
-            Updates the visible surface according to <see cref="P:SadConsole.AnimatedScreenSurface.CurrentFrameIndex"/>.
+            Time counter for the animation
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.CreateFrame">
+        <member name="F:SadConsole.AnimatedScreenObject.CurrentFrameIndexValue">
+            <summary>
+            The current frame index being animated.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedScreenObject.TimePerFrame">
+            <summary>
+            How much time per animated frame should be used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.CreateFrame">
             <summary>
             Creates a new frame with the same dimensions as this entity and adds it to the Frames collection of the entity.
             </summary>
             <returns>The created frame.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.CalculateFrameDuration">
+        <member name="M:SadConsole.AnimatedScreenObject.CalculateFrameDuration">
             <summary>
             Calculates the time needed per frame for rendering.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Stop">
+        <member name="M:SadConsole.AnimatedScreenObject.Stop">
             <summary>
             Stops animating.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Start">
+        <member name="M:SadConsole.AnimatedScreenObject.Start">
             <summary>
             Starts animating the frames.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Restart">
+        <member name="M:SadConsole.AnimatedScreenObject.Restart">
             <summary>
             Restarts the animation from the first frame.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Update(System.TimeSpan)">
+        <member name="M:SadConsole.AnimatedScreenObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
             <summary>
-            Updates the animation frames and calls update on the base class.
-            </summary>
-            <param name="delta">The time that has elapsed since this method was last called.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.ToString">
-            <summary>
-            Returns the name of the animation prefixed with "Animation - ".
-            </summary>
-            <returns>The name.</returns>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.UpdateAbsolutePosition">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.OnSerializingMethod2(System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Does nothing.
-            </summary>
-            <param name="context">Nothing.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.OnSerializedMethod(System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Does nothing.
-            </summary>
-            <param name="context">Nothing.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.OnDeserializedMethod(System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Calls <see cref="M:SadConsole.AnimatedScreenSurface.UpdateFrameReferences"/>.
-            </summary>
-            <param name="context">Nothing.</param>
-        </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
-            <summary>
-            Creates an animated surface that looks like static.
+            Creates an animated surface that looks like static noise.
             </summary>
             <param name="width">The width of the surface.</param>
             <param name="height">The height of the surface.</param>
@@ -285,9 +198,9 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+        <member name="M:SadConsole.AnimatedScreenObject.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
             <summary>
-            Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenSurface"/>.
+            Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenObject"/>.
             </summary>
             <param name="name">Name for the animation.</param>
             <param name="filePath">File path to the image file.</param>
@@ -295,13 +208,13 @@
             <param name="frameDuration">Duration for a frame in the animation.</param>
             <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
             <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
-            <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenSurface"/>.</param>
+            <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenObject"/>.</param>
             <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
             <param name="convertMode">The mode used when converting the texture to a surface.</param>
             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
             
-            <returns>An instance of <see cref="T:SadConsole.AnimatedScreenSurface"/> with converted frames.</returns>
+            <returns>An instance of <see cref="T:SadConsole.AnimatedScreenObject"/> with converted frames.</returns>
             
             <remarks>This method assumes the image file contains only frames and optional padding between the frames, no border space.
             
@@ -310,75 +223,265 @@
             Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
             </remarks>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Save(System.String)">
+        <member name="M:SadConsole.AnimatedScreenObject.Save(System.String)">
             <summary>
-            Saves the <see cref="T:SadConsole.AnimatedScreenSurface"/> to a file.
+            Saves the <see cref="T:SadConsole.AnimatedScreenObject"/> to a file.
             </summary>
             <param name="file">The destination file.</param>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.Load(System.String)">
+        <member name="M:SadConsole.AnimatedScreenObject.Load(System.String)">
             <summary>
-            Loads a <see cref="T:SadConsole.AnimatedScreenSurface"/> from a file.
+            Loads a <see cref="T:SadConsole.AnimatedScreenObject"/> from a file.
             </summary>
             <param name="file">The source file.</param>
             <returns>The animated surface.</returns>
         </member>
-        <member name="T:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs">
+        <member name="T:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs">
             <summary>
             Event args for when the animation state changes
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.PreviousState">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.PreviousState">
             <summary>
             The previous state.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.NewState">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.NewState">
             <summary>
             The new state.
             </summary>
         </member>
-        <member name="M:SadConsole.AnimatedScreenSurface.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedScreenSurface.AnimationState,SadConsole.AnimatedScreenSurface.AnimationState)">
+        <member name="M:SadConsole.AnimatedScreenObject.AnimationStateChangedEventArgs.#ctor(SadConsole.AnimatedScreenObject.AnimationState,SadConsole.AnimatedScreenObject.AnimationState)">
             <summary>
             Creates a new instance of the event args.
             </summary>
             <param name="previousState">The previous state.</param>
             <param name="newState">The new state.</param>
         </member>
-        <member name="T:SadConsole.AnimatedScreenSurface.AnimationState">
+        <member name="T:SadConsole.AnimatedScreenObject.AnimationState">
             <summary>
             Represents what state the animation is in.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Stopped">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Stopped">
             <summary>
             The animation has never been played or was forcibly stopped.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Playing">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Playing">
             <summary>
             The animation is currently playing.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Restarted">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Restarted">
             <summary>
             The animation was either manually restarted or repeated.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Finished">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Finished">
             <summary>
             The animation was played and completed.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Activated">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Activated">
             <summary>
             The animation is now the current animation for an entity.
             </summary>
         </member>
-        <member name="F:SadConsole.AnimatedScreenSurface.AnimationState.Deactivated">
+        <member name="F:SadConsole.AnimatedScreenObject.AnimationState.Deactivated">
             <summary>
             The animation is no longer the current animation for an entity.
             </summary>
+        </member>
+        <member name="E:SadConsole.AnimatedScreenObject.MouseButtonClicked">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.AnimatedScreenObject.MouseMove">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.AnimatedScreenObject.MouseExit">
+            <inheritdoc/>
+        </member>
+        <member name="E:SadConsole.AnimatedScreenObject.MouseEnter">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.AnimatedScreenObject.IsMouseOver">
+            <summary>
+            Indicates that the mouse is currently over this console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.MoveToFrontOnMouseClick">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.FocusOnMouseClick">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.AnimatedScreenObject.MouseEnter"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnMouseExit(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.AnimatedScreenObject.MouseExit"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnMouseMove(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.AnimatedScreenObject.MouseMove"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnMouseLeftClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.AnimatedScreenObject.MouseButtonClicked"/> event. Possibly moves the console to the top of it's parent's children collection.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnRightMouseClicked(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Raises the <see cref="E:SadConsole.AnimatedScreenObject.MouseButtonClicked"/> event.
+            </summary>
+            <param name="state">Current mouse state in relation to this console.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.LostMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.AnimatedScreenObject.NewFrameWidth">
+            <summary>
+            The width to assign a frame when <see cref="M:SadConsole.AnimatedScreenObject.CreateFrame"/> is called.
+            </summary>
+        </member>
+        <member name="F:SadConsole.AnimatedScreenObject.NewFrameHeight">
+            <summary>
+            The height to assign a frame when <see cref="M:SadConsole.AnimatedScreenObject.CreateFrame"/> is called.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.ForceRendererRefresh">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.DefaultRendererName">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.Renderer">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.SadConsole#IScreenSurface#Surface">
+            <summary>
+            The surface this screen object represents.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.IsDirty">
+            <summary>
+            When <see langword="true"/>, indicates that the animation needs to be redrawn; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.Font">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.FontSize">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.Tint">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.AbsoluteArea">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.UsePixelPositioning">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.WidthPixels">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.HeightPixels">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.Width">
+            <summary>
+            The total width of the console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.Height">
+            <summary>
+            The total height of the console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.ViewWidth">
+            <summary>
+            Gets or sets the visible width of the surface in cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.ViewHeight">
+            <summary>
+            Gets or sets the visible height of the surface in cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.ViewPosition">
+            <summary>
+            The position of the view within the console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.AnimatedScreenObject.CurrentFrame">
+            <summary>
+            Gets the current animation frame surface. A shortcut for <code>Frames[CurrentFrameIndex]</code>
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Creates a new animation with the specified name, width, and height.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="width">The width of each frame this animation will have.</param>
+            <param name="height">The height of each frame this animation will have.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Collections.Generic.IEnumerable{SadConsole.ICellSurface})">
+            <summary>
+            Creates a new animation with the specified name and frames.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="frames">The frames that make up the animation.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)" -->
+        <member name="M:SadConsole.AnimatedScreenObject.UpdateAbsolutePosition">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.Render(System.TimeSpan)">
+            <summary>
+            Draws the animation's current frame and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            </summary>
+            <param name="delta">The time that has elapsed since the last call.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.Update(System.TimeSpan)">
+            <summary>
+            Updates the <see cref="T:SadConsole.AnimatedScreenObject"/> effects and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
+            </summary>
+            <param name="delta">The time that has elapsed since this method was last called.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.ToString">
+            <summary>
+            Returns the value "ScreenSurface".
+            </summary>
+            <returns>The string "ScreenSurface".</returns>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.Finalize">
+            <summary>
+            Disposes <see cref="P:SadConsole.AnimatedScreenObject.Renderer"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Ansi.AnsiWriter">
             <summary>
@@ -1739,7 +1842,7 @@
         </member>
         <member name="T:SadConsole.Components.LayeredSurface">
             <summary>
-            Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
+            Manages a set of surface layers.
             </summary>
         </member>
         <member name="P:SadConsole.Components.LayeredSurface.IsAttached">
@@ -3007,7 +3110,7 @@
             When <see langword="true"/>, indicates that this animation is dirty and needs to be redrawn.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenSurface)">
+        <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenObject)">
             <summary>
             Creates a new instance of this type from an animated screen surface.
             </summary>
@@ -3041,7 +3144,7 @@
         </member>
         <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
             <summary>
-            Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the entity as if it is pixels and not cells.
+            Treats the <see cref="!:IScreenObject.Position"/> of the entity as if it is pixels and not cells.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.Entity.AppearanceSingle">
@@ -3066,7 +3169,7 @@
             <param name="appearance">The surface appearance to use for the entity.</param>
             <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenSurface,System.Int32)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.AnimatedScreenObject,System.Int32)">
             <summary>
             Creates a new entity as an animated surface.
             </summary>
@@ -7223,7 +7326,7 @@
         </member>
         <member name="P:SadConsole.IScreenObject.AbsolutePosition">
             <summary>
-            A position that is based on the current <see cref="P:SadConsole.IScreenObject.Position"/> and <see cref="P:SadConsole.IScreenObject.Parent"/> position, in pixels.
+            A position that is based on the current <see cref="!:Position"/> and <see cref="P:SadConsole.IScreenObject.Parent"/> position, in pixels.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenObject.IgnoreParentPosition">
@@ -7264,11 +7367,6 @@
         <member name="P:SadConsole.IScreenObject.Parent">
             <summary>
             The parent object that this instance is a child of.
-            </summary>
-        </member>
-        <member name="P:SadConsole.IScreenObject.Position">
-            <summary>
-            The position of the object on the screen.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenObject.UseKeyboard">
@@ -7348,7 +7446,7 @@
         </member>
         <member name="M:SadConsole.IScreenObject.UpdateAbsolutePosition">
             <summary>
-            Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="P:SadConsole.IScreenObject.Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
+            Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="!:Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
             </summary>
         </member>
         <member name="T:SadConsole.IScreenSurface">
@@ -7358,22 +7456,22 @@
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseButtonClicked">
             <summary>
-            Raised when the a mouse button is clicked on this console.
+            Raised when the a mouse button is clicked on this object.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseEnter">
             <summary>
-            Raised when the mouse enters this console.
+            Raised when the mouse enters this object.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseExit">
             <summary>
-            Raised when the mouse exits this console.
+            Raised when the mouse exits this object.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseMove">
             <summary>
-            Raised when the mouse moves around the this console.
+            Raised when the mouse moves around the this object.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.DefaultRendererName">
@@ -7383,7 +7481,7 @@
         </member>
         <member name="P:SadConsole.IScreenSurface.FocusOnMouseClick">
             <summary>
-            When true, this console will set <see cref="P:SadConsole.IScreenObject.IsFocused"/> to true when the mouse is clicked.
+            When true, this object will set <see cref="P:SadConsole.IScreenObject.IsFocused"/> to true when the mouse is clicked.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.HeightPixels">
@@ -7393,7 +7491,7 @@
         </member>
         <member name="P:SadConsole.IScreenSurface.MoveToFrontOnMouseClick">
             <summary>
-            When true, this console will move to the front of its parent console when the mouse is clicked.
+            When true, this object will move to the front of its parent object when the mouse is clicked.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.Renderer">
@@ -7401,9 +7499,14 @@
             The renderer used to draw this surface.
             </summary>
         </member>
+        <member name="P:SadConsole.IScreenSurface.Surface">
+            <summary>
+            The surface.
+            </summary>
+        </member>
         <member name="P:SadConsole.IScreenSurface.UsePixelPositioning">
             <summary>
-            Treats the <see cref="P:SadConsole.IScreenObject.Position"/> of the console as if it is pixels and not cells.
+            Treats the <see cref="P:SadRogue.Primitives.IPositionable.Position"/> of the object as if it is pixels and not cells.
             </summary>
         </member>
         <member name="P:SadConsole.IScreenSurface.WidthPixels">
@@ -7439,6 +7542,11 @@
         <member name="P:SadConsole.IScreenSurface.Tint">
             <summary>
             A tint used in rendering.
+            </summary>
+        </member>
+        <member name="T:SadConsole.IScreenSurfaceEditable">
+            <summary>
+            The same as a <see cref="T:SadConsole.IScreenSurface"/> interface, except that it also implements <see cref="T:SadConsole.ISurface"/> for convenience.
             </summary>
         </member>
         <member name="T:SadConsole.ISurface">
@@ -8787,12 +8895,6 @@
             <param name="componentsMouse">The mouse collection.</param>
             <param name="componentsEmpty">The empty collection.</param>
         </member>
-        <member name="M:SadConsole.ScreenObject.GetEnumerator">
-            <summary>
-            Returns an enumerator for <see cref="P:SadConsole.ScreenObject.Children"/>.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:SadConsole.ScreenObject.OnSerializingMethod(System.Runtime.Serialization.StreamingContext)">
             <summary>
             Nothing.
@@ -9093,14 +9195,12 @@
             Draws the <see cref="P:SadConsole.ScreenSurface.Surface"/> and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <param name="delta">The time that has elapsed since the last call.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.Update(System.TimeSpan)">
             <summary>
             Updates the <see cref="P:SadConsole.ScreenSurface.Surface"/> effects and all <see cref="P:SadConsole.ScreenObject.SadComponents"/> and <see cref="P:SadConsole.ScreenObject.Children"/>.
             </summary>
             <param name="delta">The time that has elapsed since this method was last called.</param>
-            <remarks>Only processes if <see cref="P:SadConsole.ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.ScreenSurface.OnIsDirtyChanged">
             <summary>
@@ -12695,6 +12795,9 @@
             </summary>
             <param name="oldSurface">The previous surface instance.</param>
             <param name="newSurface">The new surface instance.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.SurfaceViewer.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.TabControl">
             <summary>

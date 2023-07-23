@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Components;
@@ -239,8 +240,8 @@ public partial class ScreenObject : IScreenObject
         for (int i = 0; i < count; i++)
             components[i].Render(this, delta);
 
-        List<IScreenObject> children = new(Children);
-        count = children.Count;
+        IScreenObject[] children = Children.ToArray();
+        count = children.Length;
         for (int i = 0; i < count; i++)
             if (children[i].IsVisible)
                 children[i].Render(delta);
@@ -249,16 +250,22 @@ public partial class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void Update(TimeSpan delta)
     {
-        IComponent[] components = ComponentsUpdate.ToArray();
-        int count = components.Length;
-        for (int i = 0; i < count; i++)
-            components[i].Update(this, delta);
+        if (ComponentsUpdate.Count > 0)
+        {
+            IComponent[] components = ComponentsUpdate.ToArray();
+            int count = components.Length;
+            for (int i = 0; i < count; i++)
+                components[i].Update(this, delta);
+        }
 
-        List<IScreenObject> children = new(Children);
-        count = children.Count;
-        for (int i = 0; i < count; i++)
-            if (children[i].IsEnabled)
-                children[i].Update(delta);
+        if (Children.Count > 0)
+        {
+            IScreenObject[] children = Children.ToArray();
+            int count = children.Length;
+            for (int i = 0; i < count; i++)
+                if (children[i].IsEnabled)
+                    children[i].Update(delta);
+        }
     }
 
     /// <inheritdoc/>

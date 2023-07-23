@@ -6,7 +6,6 @@ namespace SadConsole;
 
 public partial class ScreenSurface
 {
-
     /// <inheritdoc/>
     public event EventHandler<MouseScreenObjectState>? MouseButtonClicked;
 
@@ -36,7 +35,8 @@ public partial class ScreenSurface
     /// Raises the <see cref="MouseEnter"/> event.
     /// </summary>
     /// <param name="state">Current mouse state in relation to this console.</param>
-    protected virtual void OnMouseEnter(MouseScreenObjectState state) => MouseEnter?.Invoke(this, state);
+    protected virtual void OnMouseEnter(MouseScreenObjectState state) =>
+        MouseEnter?.Invoke(this, state);
 
     /// <summary>
     /// Raises the <see cref="MouseExit"/> event.

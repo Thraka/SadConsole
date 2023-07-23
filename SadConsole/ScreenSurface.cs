@@ -309,15 +309,13 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     /// <inheritdoc />
     public override void UpdateAbsolutePosition()
     {
-        if (!IgnoreParentPosition)
-        {
-            if (UsePixelPositioning)
-                AbsolutePosition = Position + (Parent?.AbsolutePosition ?? Point.Zero);
-            else
-                AbsolutePosition = (FontSize * Position) + (Parent?.AbsolutePosition ?? Point.Zero);
-        }
+        if (UsePixelPositioning)
+            AbsolutePosition = Position;
         else
-            AbsolutePosition = UsePixelPositioning ? Position : FontSize * Position;
+            AbsolutePosition = (FontSize * Position);
+
+        if (!IgnoreParentPosition)
+            AbsolutePosition += Parent?.AbsolutePosition ?? Point.Zero;
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)
@@ -328,11 +326,15 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     /// Draws the <see cref="Surface"/> and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
     /// </summary>
     /// <param name="delta">The time that has elapsed since the last call.</param>
-    /// <remarks>Only processes if <see cref="ScreenObject.IsVisible"/> is <see langword="true"/>.</remarks>
     public override void Render(TimeSpan delta)
     {
-        if (!IsVisible) return;
+        // Components first
+        IComponent[] components = ComponentsRender.ToArray();
+        int count = components.Length;
+        for (int i = 0; i < count; i++)
+            components[i].Render(this, delta);
 
+        // This object second
         if (_renderer != null)
         {
             _renderer.Refresh(this, ForceRendererRefresh);
@@ -340,44 +342,23 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
             ForceRendererRefresh = false;
         }
 
-        int count = ComponentsRender.Count;
+        // Children last
+        IScreenObject[] children = Children.ToArray();
+        count = children.Length;
         for (int i = 0; i < count; i++)
-            ComponentsRender[i].Render(this, delta);
-
-        Children.IsLocked = true;
-        count = Children.Count;
-        for (int i = 0; i < count; i++)
-            Children[i].Render(delta);
-        Children.IsLocked = false;
+            if (children[i].IsVisible)
+                children[i].Render(delta);
     }
 
     /// <summary>
     /// Updates the <see cref="Surface"/> effects and all <see cref="ScreenObject.SadComponents"/> and <see cref="ScreenObject.Children"/>.
     /// </summary>
     /// <param name="delta">The time that has elapsed since this method was last called.</param>
-    /// <remarks>Only processes if <see cref="ScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
     public override void Update(TimeSpan delta)
     {
-        if (!IsEnabled) return;
-
         Surface.Effects.UpdateEffects(delta);
 
-        if (ComponentsUpdate.Count > 0)
-        {
-            IComponent[] array = ComponentsUpdate.ToArray();
-            for (int i = 0; i < array.Length; i++)
-            {
-                IComponent component = array[i];
-                component.Update(this, delta);
-            }
-        }
-
-        IScreenObject[] tempChildren = Children.ToArray();
-        for (int i1 = 0; i1 < tempChildren.Length; i1++)
-        {
-            IScreenObject child = tempChildren[i1];
-            child.Update(delta);
-        }
+        base.Update(delta);
     }
 
     private void _isDirtyChangedEventHandler(object? sender, EventArgs e) =>
