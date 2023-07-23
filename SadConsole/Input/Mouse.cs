@@ -212,29 +212,23 @@ public class Mouse
     /// </summary>
     public virtual void Process()
     {
-        var state = new MouseScreenObjectState(null, this);
-
         // Check if last mouse was marked exclusive
         if (_lastMouseScreenObject != null && _lastMouseScreenObject.IsExclusiveMouse)
         {
-            state.Refresh(_lastMouseScreenObject, this);
-
-            _lastMouseScreenObject.ProcessMouse(state);
+            _lastMouseScreenObject.ProcessMouse(new MouseScreenObjectState(_lastMouseScreenObject, this));
         }
 
         // Check if the focused input screen object wants exclusive mouse
         else if (GameHost.Instance.FocusedScreenObjects.ScreenObject != null && GameHost.Instance.FocusedScreenObjects.ScreenObject.IsExclusiveMouse)
         {
-            state.Refresh(GameHost.Instance.FocusedScreenObjects.ScreenObject, this);
-
             // if the last screen object to have the mouse is not our global, signal
             if (_lastMouseScreenObject != null && _lastMouseScreenObject != GameHost.Instance.FocusedScreenObjects.ScreenObject)
             {
-                _lastMouseScreenObject.LostMouse(state);
+                _lastMouseScreenObject.LostMouse(new MouseScreenObjectState(GameHost.Instance.FocusedScreenObjects.ScreenObject, this));
                 _lastMouseScreenObject = null;
             }
 
-            GameHost.Instance.FocusedScreenObjects.ScreenObject.ProcessMouse(state);
+            GameHost.Instance.FocusedScreenObjects.ScreenObject.ProcessMouse(new MouseScreenObjectState(GameHost.Instance.FocusedScreenObjects.ScreenObject, this));
 
             _lastMouseScreenObject = GameHost.Instance.FocusedScreenObjects.ScreenObject;
         }
@@ -253,12 +247,10 @@ public class Mouse
 
             for (int i = 0; i < screenObjects.Count; i++)
             {
-                state.Refresh(screenObjects[i], this);
-
-                if (screenObjects[i].ProcessMouse(state))
+                if (screenObjects[i].ProcessMouse(new MouseScreenObjectState(screenObjects[i], this)))
                 {
                     if (_lastMouseScreenObject != null && _lastMouseScreenObject != screenObjects[i])
-                        _lastMouseScreenObject.LostMouse(state);
+                        _lastMouseScreenObject.LostMouse(new MouseScreenObjectState(screenObjects[i], this));
 
                     foundMouseTarget = true;
                     _lastMouseScreenObject = screenObjects[i];
@@ -267,12 +259,8 @@ public class Mouse
             }
 
             if (!foundMouseTarget)
-            {
-                state.Refresh(null, this);
-                _lastMouseScreenObject?.LostMouse(state);
-            }
+                _lastMouseScreenObject?.LostMouse(new MouseScreenObjectState(null, this));
         }
-
     }
 
     private void GetConsoles(IScreenObject screen, ref List<IScreenObject> list)
