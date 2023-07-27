@@ -97,12 +97,12 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                     // Offset the top-left render rectangle by the center point of the animation.
                     var surfaceStartPosition = new Point(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
 
-                    for (int y = 0; y < item.AppearanceSurface.Animation.CurrentFrame.View.Height; y++)
+                    for (int y = 0; y < item.AppearanceSurface.Animation.ViewHeight; y++)
                     {
                         // local index of cell of surface we want to draw
-                        int index = ((y + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.Y) * item.AppearanceSurface.Animation.CurrentFrame.Width) + item.AppearanceSurface.Animation.CurrentFrame.ViewPosition.X;
+                        int index = ((y + item.AppearanceSurface.Animation.ViewPosition.Y) * item.AppearanceSurface.Animation.Width) + item.AppearanceSurface.Animation.ViewPosition.X;
 
-                        for (int x = 0; x < item.AppearanceSurface.Animation.CurrentFrame.View.Width; x++)
+                        for (int x = 0; x < item.AppearanceSurface.Animation.ViewWidth; x++)
                         {
                             // Move the render rect by the x,y of the current cell being drawn'
                             renderRect = new Rectangle(surfaceStartPosition.X + (x * renderRect.Width), surfaceStartPosition.Y + (y * renderRect.Height), renderRect.Width, renderRect.Height);
