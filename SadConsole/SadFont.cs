@@ -220,6 +220,24 @@ public class SadFont : IFont
         GlyphDefinitions.ContainsKey(name);
 
     /// <summary>
+    /// Gets the pixel size of a font based on a <see cref="IFont.Sizes"/>.
+    /// </summary>
+    /// <param name="size">The desired size.</param>
+    /// <returns>The width and height of a font cell.</returns>
+    public Point GetFontSize(IFont.Sizes size)
+    {
+        return size switch
+        {
+            IFont.Sizes.Quarter => new Point((int)(GlyphWidth * 0.25), (int)(GlyphHeight * 0.25)),
+            IFont.Sizes.Half => new Point((int)(GlyphWidth * 0.5), (int)(GlyphHeight * 0.5)),
+            IFont.Sizes.Two => new Point(GlyphWidth * 2, GlyphHeight * 2),
+            IFont.Sizes.Three => new Point(GlyphWidth * 3, GlyphHeight * 3),
+            IFont.Sizes.Four => new Point(GlyphWidth * 4, GlyphHeight * 4),
+            _ => new Point(GlyphWidth, GlyphHeight),
+        };
+    }
+
+    /// <summary>
     /// Builds the <see cref="GlyphRectangles"/> array based on the current font settings, if the <see cref="GlyphRectangles"/> dictionary is empty.
     /// </summary>
     public void ConfigureRects()

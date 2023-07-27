@@ -77,15 +77,15 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
     /// </summary>
     /// <param name="size">The desired size.</param>
     /// <returns>The width and height of a font cell.</returns>
-    public Point GetFontSize(IFont.Sizes size)
+    public Point GetFontSize(Sizes size)
     {
         return size switch
         {
-            IFont.Sizes.Quarter => new Point((int)(GlyphWidth * 0.25), (int)(GlyphHeight * 0.25)),
-            IFont.Sizes.Half => new Point((int)(GlyphWidth * 0.5), (int)(GlyphHeight * 0.5)),
-            IFont.Sizes.Two => new Point(GlyphWidth * 2, GlyphHeight * 2),
-            IFont.Sizes.Three => new Point(GlyphWidth * 3, GlyphHeight * 3),
-            IFont.Sizes.Four => new Point(GlyphWidth * 4, GlyphHeight * 4),
+            Sizes.Quarter => new Point((int)(GlyphWidth * 0.25), (int)(GlyphHeight * 0.25)),
+            Sizes.Half => new Point((int)(GlyphWidth * 0.5), (int)(GlyphHeight * 0.5)),
+            Sizes.Two => new Point(GlyphWidth * 2, GlyphHeight * 2),
+            Sizes.Three => new Point(GlyphWidth * 3, GlyphHeight * 3),
+            Sizes.Four => new Point(GlyphWidth * 4, GlyphHeight * 4),
             _ => new Point(GlyphWidth, GlyphHeight),
         };
     }
