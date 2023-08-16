@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 
 namespace SadConsole.Components;
@@ -44,6 +45,13 @@ public class DrawImage : RenderComponent, IDisposable
     /// <param name="filePath">Relative path to the image.</param>
     public DrawImage(string filePath) =>
         _image = (Host.GameTexture)SadConsole.GameHost.Instance.GetTexture(filePath);
+
+    /// <summary>
+    /// Creates a new component with the specified image.
+    /// </summary>
+    /// <param name="texture">The texture to use</param>
+    public DrawImage(Texture2D texture) =>
+        _image = new Host.GameTexture(texture, true);
 
     /// <summary>
     /// Calls <see cref="Dispose"/>.

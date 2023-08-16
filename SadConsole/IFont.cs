@@ -24,14 +24,19 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
     int GlyphWidth { get; }
 
     /// <summary>
-    /// Which glyph index is considered completely solid. Used for shading.
+    /// The amount of pixels between glyphs.
     /// </summary>
-    int SolidGlyphIndex { get; }
+    int GlyphPadding { get; set; }
 
     /// <summary>
     /// Gets how many glyphs this font has.
     /// </summary>
     int TotalGlyphs { get; }
+
+    /// <summary>
+    /// Which glyph index is considered completely solid. Used for shading.
+    /// </summary>
+    int SolidGlyphIndex { get; set; }
 
     /// <summary>
     /// The rectangle to draw the solid glyph used for shading.
@@ -41,7 +46,7 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
     /// <summary>
     /// The glyph index to use when an unsupported glyph is used during rendering.
     /// </summary>
-    int UnsupportedGlyphIndex { get; }
+    int UnsupportedGlyphIndex { get; set; }
 
     /// <summary>
     /// The rectangle to draw when a glyph that isn't supported is used by a surface.
@@ -51,12 +56,12 @@ public interface IFont  // TODO: We should probably support IDisposable, though 
     /// <summary>
     /// True when the font supports SadConsole extended decorators; otherwise false.
     /// </summary>
-    bool IsSadExtended { get; }
+    bool IsSadExtended { get; set; }
 
     /// <summary>
     /// The texture used by the font.
     /// </summary>
-    ITexture Image { get; }
+    ITexture Image { get; set; }
 
     /// <summary>
     /// Gets the registered rendering rectangle for a glyph.

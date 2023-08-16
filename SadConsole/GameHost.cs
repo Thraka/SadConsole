@@ -54,7 +54,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Contains the path to a file being serialized or deserialized.
     /// </summary>
-    protected internal static string SerializerPathHint { get; set; } = String.Empty;
+    public static string SerializerPathHint { get; internal set; } = String.Empty;
 
     /// <summary>
     /// Raised when the game draws a frame to the screen.
@@ -120,15 +120,23 @@ public abstract partial class GameHost : IDisposable
     /// Gets a texture from the implemented host.
     /// </summary>
     /// <param name="resourcePath">The path to the texture to load.</param>
-    /// <returns></returns>
+    /// <returns>The texture from the game host.</returns>
     public abstract ITexture GetTexture(string resourcePath);
 
     /// <summary>
     /// Gets a texture from the implemented host.
     /// </summary>
     /// <param name="textureStream">A stream containing the texture.</param>
-    /// <returns></returns>
+    /// <returns>The texture from the game host.</returns>
     public abstract ITexture GetTexture(Stream textureStream);
+
+    /// <summary>
+    /// Creates a texture.
+    /// </summary>
+    /// <param name="width">The width of the texture in pixels.</param>
+    /// <param name="height">The height of the texture in pixels.</param>
+    /// <returns>The texture from the game host.</returns>
+    public abstract ITexture CreateTexture(int width, int height);
 
     /// <summary>
     /// Creates and returns an <see cref="IRenderer"/> by name.

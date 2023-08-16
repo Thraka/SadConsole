@@ -216,6 +216,10 @@ public sealed partial class Game : GameHost
         new Host.GameTexture(textureStream);
 
     /// <inheritdoc/>
+    public override ITexture CreateTexture(int width, int height) =>
+        new Host.GameTexture(width, height);
+
+    /// <inheritdoc/>
     public override SadConsole.Input.IKeyboardState GetKeyboardState()
     {
         _keyboardState.Refresh();

@@ -36,12 +36,14 @@ public class GameTexture : ITexture
         using (Stream fontStream = new FileStream(path, FileMode.Open))
             _texture = new Texture(fontStream);
 
+        _skipDispose = false;
         _resourcePath = path;
         Size = Width * Height;
     }
 
     public GameTexture(Stream stream)
     {
+        _skipDispose = false;
         _texture = new Texture(stream);
         Size = Width * Height;
     }
@@ -53,6 +55,7 @@ public class GameTexture : ITexture
     /// <param name="height">The height of the texture in pixels.</param>
     public GameTexture(uint width, uint height)
     {
+        _skipDispose = false;
         _texture = new Texture(width, height);
         Size = (int)(width * height);
     }
@@ -65,7 +68,7 @@ public class GameTexture : ITexture
     /// <remarks>The only time the backing texture resource is disposed is when the <see cref="GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
     public GameTexture(Texture texture, bool handleDispose = false)
     {
-        _skipDispose = true;
+        _skipDispose = !handleDispose;
         _texture = texture;
         Size = Width * Height;
     }

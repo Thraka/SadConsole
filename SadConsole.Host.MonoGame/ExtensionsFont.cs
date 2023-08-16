@@ -17,7 +17,7 @@ public static class ExtensionsFontHost
     /// Converts the font's backing texture into a render target, if it isn't one.
     /// </summary>
     /// <param name="font">The font being edited.</param>
-    public static void Edit_EnableEditing(this SadFont font)
+    public static void Edit_EnableEditing(this IFont font)
     {
         var oldTexture = (SadConsole.Host.GameTexture)font.Image;
 
@@ -99,7 +99,7 @@ public static class ExtensionsFontHost
     /// <param name="font">The font being edited.</param>
     /// <param name="glyphIndexFrom">The source glyph index.</param>
     /// <param name="glyphIndexTo">The target glyph index.</param>
-    public static void Edit_CopyGlyph_Texture(this SadFont font, int glyphIndexFrom, int glyphIndexTo)
+    public static void Edit_CopyGlyph_Texture(this IFont font, int glyphIndexFrom, int glyphIndexTo)
     {
         if (glyphIndexFrom == glyphIndexTo) return;
 
@@ -127,7 +127,7 @@ public static class ExtensionsFontHost
     /// <param name="glyphIndex">The glyph index to erase.</param>
     /// <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
     /// <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
-    public static void Edit_EraseGlyph_Pixel(this SadFont font, int glyphIndex, bool doSetPixels, ref Color[] cachedFontTexturePixels) =>
+    public static void Edit_EraseGlyph_Pixel(this IFont font, int glyphIndex, bool doSetPixels, ref Color[] cachedFontTexturePixels) =>
         Edit_SetGlyph_Pixel(font, glyphIndex, new Color[font.GlyphWidth * font.GlyphHeight], doSetPixels, ref cachedFontTexturePixels);
 
     /// <summary>
@@ -139,7 +139,7 @@ public static class ExtensionsFontHost
     /// <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
     /// <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
     /// <exception cref="ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
-    public static void Edit_SetGlyph_Pixel(this SadFont font, int glyphIndex, Color[] pixels, bool doSetPixels, ref Color[] cachedFontTexturePixels)
+    public static void Edit_SetGlyph_Pixel(this IFont font, int glyphIndex, Color[] pixels, bool doSetPixels, ref Color[] cachedFontTexturePixels)
     {
         if (pixels.Length != font.GlyphWidth * font.GlyphHeight) throw new ArgumentOutOfRangeException($"Amount of pixels must match font glyph width * height: {font.GlyphWidth * font.GlyphHeight}.", nameof(pixels));
 
@@ -189,25 +189,5 @@ public static class ExtensionsFontHost
         }
 
         return newPixels;
-    }
-
-    /// <summary>
-    /// Clones a font by getting the pixels of the old font and generating a new one.
-    /// </summary>
-    /// <param name="font">The font being edited.</param>
-    /// <param name="newName">The name to apply when creating the cloned font.</param>
-    /// <returns>A new font.</returns>
-    public static SadFont Clone(this SadFont font, string newName)
-    {
-        var newTexture = new SadConsole.Host.GameTexture(font.Image.Width, font.Image.Height);
-        newTexture.SetPixels(((SadConsole.Host.GameTexture)font.Image).GetPixels());
-
-        return new SadFont(font.GlyphWidth, font.GlyphHeight, font.GlyphPadding, font.Rows, font.Columns, font.SolidGlyphIndex, newTexture, newName)
-        {
-            GlyphDefinitions = new Dictionary<string, GlyphDefinition>(font.GlyphDefinitions),
-            GlyphRectangles = new Dictionary<int, Rectangle>(font.GlyphRectangles),
-            IsSadExtended = font.IsSadExtended,
-            UnsupportedGlyphIndex = font.UnsupportedGlyphIndex
-        };
     }
 }

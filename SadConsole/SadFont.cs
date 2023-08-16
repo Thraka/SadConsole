@@ -10,7 +10,7 @@ namespace SadConsole;
 /// Represents a graphical font used by SadConsole.
 /// </summary>
 [DataContract]
-public class SadFont : IFont
+public sealed class SadFont : IFont
 {
     [DataMember(Name="Mapping")]
     private IndexMapping[]? _remapper;
@@ -303,6 +303,25 @@ public class SadFont : IFont
 
             _remapper = null;
         }
+    }
+
+    /// <summary>
+    /// Clones this font.
+    /// </summary>
+    /// <param name="newName">The name to apply when creating the cloned font.</param>
+    /// <returns>Returns the cloned font.</returns>
+    public SadFont Clone(string newName)
+    {
+        ITexture newTexture = SadConsole.GameHost.Instance.CreateTexture(Image.Width, Image.Height);
+        newTexture.SetPixels(Image.GetPixels());
+
+        return new SadFont(GlyphWidth, GlyphHeight, GlyphPadding, Rows, Columns, SolidGlyphIndex, newTexture, newName)
+        {
+            GlyphDefinitions = new Dictionary<string, GlyphDefinition>(GlyphDefinitions),
+            GlyphRectangles = new Dictionary<int, Rectangle>(GlyphRectangles),
+            IsSadExtended = IsSadExtended,
+            UnsupportedGlyphIndex = UnsupportedGlyphIndex
+        };
     }
 
     private record struct IndexMapping

@@ -28,6 +28,12 @@
             </summary>
             <param name="filePath">Relative path to the image.</param>
         </member>
+        <member name="M:SadConsole.Components.DrawImage.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a new component with the specified image.
+            </summary>
+            <param name="texture">The texture to use</param>
+        </member>
         <member name="M:SadConsole.Components.DrawImage.Finalize">
             <summary>
             Calls <see cref="M:SadConsole.Components.DrawImage.Dispose"/>.
@@ -205,7 +211,7 @@
             Extension methods to handle editing <see cref="T:SadConsole.SadFont"/> objects.
             </summary>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.SadFont)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.IFont)">
             <summary>
             Converts the font's backing texture into a render target, if it isn't one.
             </summary>
@@ -219,7 +225,7 @@
             <param name="count">The number of rows.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.SadFont,System.Int32,System.Int32)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.IFont,System.Int32,System.Int32)">
             <summary>
             Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
             </summary>
@@ -227,7 +233,7 @@
             <param name="glyphIndexFrom">The source glyph index.</param>
             <param name="glyphIndexTo">The target glyph index.</param>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.SadFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.IFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
             <summary>
             Erases a glyph in the font by index.
             </summary>
@@ -236,7 +242,7 @@
             <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
             <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.SadFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
             <summary>
             Sets the pixels of a font glyph by index.
             </summary>
@@ -256,14 +262,6 @@
             <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
             <returns>The pixels of the glyph.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
-        </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Clone(SadConsole.SadFont,System.String)">
-            <summary>
-            Clones a font by getting the pixels of the old font and generating a new one.
-            </summary>
-            <param name="font">The font being edited.</param>
-            <param name="newName">The name to apply when creating the cloned font.</param>
-            <returns>A new font.</returns>
         </member>
         <member name="T:SadConsole.Game">
             <summary>
@@ -346,6 +344,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetKeyboardState">
@@ -638,6 +639,141 @@
         </member>
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.SolidGlyphIndex">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.SolidGlyphRectangle">
+            <summary>
+            The rectangle associated with the <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.SolidGlyphIndex"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.Columns">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.Rows">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.TotalGlyphs">
+            <summary>
+            Gets the total glyphs in this font, which represents the last index. Calculated from <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.Columns"/> times <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.Rows"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.FilePath">
+            <summary>
+            The name of the image file as defined in the .font file.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphHeight">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphWidth">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphPadding">
+            <summary>
+            The amount of pixels between glyphs.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.UnsupportedGlyphIndex">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.UnsupportedGlyphRectangle">
+            <summary>
+            The rectangle associated with the <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.UnsupportedGlyphIndex"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphRectangles">
+            <summary>
+            A dictionary that stores the source rectangles of the font by glyph id.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.IsSadExtended">
+            <summary>
+            True when the font supports SadConsole extended decorators; otherwise false.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.Image">
+            <summary>
+            The texture used by the font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphDefinitions">
+            <summary>
+            A collection of named glyph definitions.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ITexture,System.String,System.Collections.Generic.Dictionary{System.Int32,SadRogue.Primitives.Rectangle})">
+            <summary>
+            Creates a new font with the specified settings.
+            </summary>
+            <param name="glyphWidth">The pixel width of each glyph.</param>
+            <param name="glyphHeight">The pixel height of each glyph.</param>
+            <param name="glyphPadding">The pixel padding between each glyph.</param>
+            <param name="rows">Number of glyph rows in the <paramref name="image"/>.</param>
+            <param name="columns">Number of glyph columns in the <paramref name="image"/>.</param>
+            <param name="solidGlyphIndex">The index of the glyph that is a solid white box.</param>
+            <param name="image">The <see cref="T:SadConsole.ITexture"/> of the font.</param>
+            <param name="name">A font identifier used for serialization of resources using this font.</param>
+            <param name="glyphRectangles">Glyph mapping dictionary.</param>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.GetGlyphSourceRectangle(System.Int32)">
+            <summary>
+            Gets the rendering rectangle for a glyph.
+            </summary>
+            <param name="glyph">The index of the glyph to get.</param>
+            <returns>The rectangle for the glyph if it exists, otherwise returns <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.UnsupportedGlyphRectangle"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.GenerateGlyphSourceRectangle(System.Int32)">
+            <summary>
+            Generates a rectangle for the specified glyph based on the glyph index, <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.Rows"/>, <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.Columns"/>, and <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphPadding"/> values. For the actual font rectangle, use <see cref="M:SadConsole.Host.MonoGame.MonoGameFont.GetGlyphSourceRectangle(System.Int32)"/>.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <returns>A rectangle based on where the font thinks the rectangle should be.</returns>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.GetDecorator(System.String,SadRogue.Primitives.Color)">
+            <summary>
+            Gets a <see cref="T:SadConsole.CellDecorator"/> by the <see cref="T:SadConsole.GlyphDefinition"/> defined by the font file.
+            </summary>
+            <param name="name">The name of the decorator to get.</param>
+            <param name="color">The color to apply to the decorator.</param>
+            <returns>The decorator instance.</returns>
+            <remarks>If the decorator does not exist, <see cref="P:SadConsole.CellDecorator.Empty"/> is returned.</remarks>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.GetGlyphDefinition(System.String)">
+            <summary>
+            A safe way to get a <see cref="T:SadConsole.GlyphDefinition"/> by name that is defined by the font file.
+            </summary>
+            <param name="name">The name of the glyph definition.</param>
+            <returns>The glyph definition.</returns>
+            <remarks>If the glyph definition doesn't exist, return s<see cref="P:SadConsole.GlyphDefinition.Empty"/>.</remarks>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.HasGlyphDefinition(System.String)">
+            <summary>
+            Returns <see langword="true"/> when the glyph has been defined by name.
+            </summary>
+            <param name="name">The name of the glyph</param>
+            <returns><see langword="true"/> when the glyph name exists, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.GetFontSize(SadConsole.IFont.Sizes)">
+            <summary>
+            Gets the pixel size of a font based on a <see cref="T:SadConsole.IFont.Sizes"/>.
+            </summary>
+            <param name="size">The desired size.</param>
+            <returns>The width and height of a font cell.</returns>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.ConfigureRects">
+            <summary>
+            Builds the <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphRectangles"/> array based on the current font settings, if the <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphRectangles"/> dictionary is empty.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.MonoGame.MonoGameFont.ForceConfigureRects">
+            <summary>
+            Builds the <see cref="P:SadConsole.Host.MonoGame.MonoGameFont.GlyphRectangles"/> array based on the current font settings.
+            </summary>
         </member>
         <member name="T:SadConsole.Host.Game">
             <summary>
@@ -1048,53 +1184,53 @@
         <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.EntityLiteRenderStep">
+        <member name="T:SadConsole.Renderers.EntityRenderStep">
             <summary>
-            Draws the entities of a <see cref="T:SadConsole.Entities.Renderer"/>.
+            Draws the entities of a <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.BackingTexture">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.BackingTexture">
             <summary>
             The cached texture of the drawn entities.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.CachedTexture">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.Name">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.Name">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.SortOrder">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.SetData(System.Object)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.SetData(System.Object)">
             <summary>
-            Sets the <see cref="T:SadConsole.Entities.Renderer"/>.
+            Sets the <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
-            <param name="data">A <see cref="T:SadConsole.Entities.Renderer"/> object.</param>
+            <param name="data">A <see cref="T:SadConsole.Entities.EntityManager"/> object.</param>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Reset">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Reset">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose(System.Boolean)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose(System.Boolean)">
             <summary>
             Disposes the object.
             </summary>
-            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose"/>.</param>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityRenderStep.Dispose"/>.</param>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Finalize">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Finalize">
             <summary>
             Finalizes the object for collection.
             </summary>
