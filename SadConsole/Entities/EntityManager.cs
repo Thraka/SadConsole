@@ -155,7 +155,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
         CalculateEntityVisibilityProtected(entity, skipSort);
 
         entity.PositionChanged += Entity_PositionChanged;
-        entity.VisibleChanged += Entity_VisibleChanged;
+        entity.IsVisibleChanged += Entity_VisibleChanged;
         entity.IsDirtyChanged += Entity_IsDirtyChanged;
 
         OnEntityAdded(entity);
@@ -171,7 +171,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
         if (!SkipExistsChecks && !_entities.Contains(entity)) return false;
 
         entity.PositionChanged -= Entity_PositionChanged;
-        entity.VisibleChanged -= Entity_VisibleChanged;
+        entity.IsVisibleChanged -= Entity_VisibleChanged;
         entity.IsDirtyChanged -= Entity_IsDirtyChanged;
 
         _entities.Remove(entity);
@@ -291,7 +291,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
         {
             entity = _entityHolding[i];
             entity.PositionChanged -= Entity_PositionChanged;
-            entity.VisibleChanged -= Entity_VisibleChanged;
+            entity.IsVisibleChanged -= Entity_VisibleChanged;
             entity.IsDirtyChanged -= Entity_IsDirtyChanged;
         }
     }

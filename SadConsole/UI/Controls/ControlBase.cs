@@ -211,7 +211,7 @@ public abstract class ControlBase
     /// Gets or sets whether or not this control will become focused when the mouse is clicked.
     /// </summary>
     [DataMember]
-    public bool FocusOnClick { get; set; }
+    public bool FocusOnMouseClick { get; set; }
 
     /// <summary>
     /// The width of the control.
@@ -351,7 +351,7 @@ public abstract class ControlBase
         IsDirty = true;
         TabStop = true;
         IsVisible = true;
-        FocusOnClick = true;
+        FocusOnMouseClick = true;
         CanFocus = true;
         _position = new Point();
         UseMouse = true;
@@ -678,7 +678,7 @@ public abstract class ControlBase
     {
         MouseButtonClicked?.Invoke(this, state);
 
-        if (FocusOnClick)
+        if (FocusOnMouseClick)
             IsFocused = true;
 
         DetermineState();

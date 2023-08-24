@@ -10,12 +10,12 @@ namespace SadConsole;
 /// <summary>
 /// A generic object processed by SadConsole. Provides parent/child, components, position, and input callbacks.
 /// </summary>
-public interface IScreenObject : IPositionable
+public interface IScreenObject : IPositionable, IComponentHost
 {
     /// <summary>
     /// Raised when the <see cref="IsEnabled"/> property changes.
     /// </summary>
-    event EventHandler EnabledChanged;
+    event EventHandler IsEnabledChanged;
 
     /// <summary>
     /// Raised when the <see cref="Parent"/> property changes.
@@ -25,7 +25,7 @@ public interface IScreenObject : IPositionable
     /// <summary>
     /// Raised when the <see cref="IsVisible"/> property changes.
     /// </summary>
-    event EventHandler VisibleChanged;
+    event EventHandler IsVisibleChanged;
 
     /// <summary>
     /// Raised when the <see cref="IsFocused"/> property is <see langword="false"/>.
@@ -48,8 +48,11 @@ public interface IScreenObject : IPositionable
     FocusBehavior FocusedMode { get; set; }
 
     /// <summary>
-    /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
+    /// A position that's based on the current <see cref="IPositionable.Position"/>, as interpreted by the implementing class, in pixels.
     /// </summary>
+    /// <remarks>
+    /// Most objects will implement this property based on <see cref="IPositionable.Position"/> which usually depends on the <see cref="Parent"/> object's position.
+    /// </remarks>
     Point AbsolutePosition { get; }
 
     /// <summary>
@@ -61,11 +64,6 @@ public interface IScreenObject : IPositionable
     /// The child objects of this instance.
     /// </summary>
     ScreenObjectCollection Children { get; }
-
-    /// <summary>
-    /// A collection of components processed by this console.
-    /// </summary>
-    ObservableCollection<IComponent> SadComponents { get; }
 
     /// <summary>
     /// Gets or sets the visibility of this object.
@@ -103,7 +101,7 @@ public interface IScreenObject : IPositionable
     bool UseMouse { get; set; }
 
     /// <summary>
-    /// Draws all <see cref="SadComponents"/> and <see cref="Children"/>.
+    /// Draws all <see cref="IComponentHost.SadComponents"/> and <see cref="Children"/>.
     /// </summary>
     /// <param name="delta">The time that has elapsed since the last call.</param>
     /// <remarks>Only processes if <see cref="IsVisible"/> is <see langword="true"/>.</remarks>
@@ -118,28 +116,7 @@ public interface IScreenObject : IPositionable
     /// Called when this object's focus has been lost.
     /// </summary>
     void OnFocusLost();
-
-    /// <summary>
-    /// Gets the first component of the specified type.
-    /// </summary>
-    /// <typeparam name="TComponent">The component to find.</typeparam>
-    /// <returns>The component if found, otherwise null.</returns>
-    TComponent? GetSadComponent<TComponent>() where TComponent : class, IComponent;
-
-    /// <summary>
-    /// Gets components of the specified types.
-    /// </summary>
-    /// <typeparam name="TComponent">The component to find</typeparam>
-    /// <returns>The components found.</returns>
-    IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : class, IComponent;
-
-    /// <summary>
-    /// Indicates whether or not the component exists in the <see cref="SadComponents"/> collection.
-    /// </summary>
-    /// <typeparam name="TComponent">The component to find.</typeparam>
-    /// <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
-    bool HasSadComponent<TComponent>(out TComponent? component) where TComponent : class, IComponent;
-
+    
     /// <summary>
     /// Called by the engine to process the keyboard.
     /// </summary>

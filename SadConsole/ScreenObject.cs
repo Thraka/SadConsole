@@ -36,10 +36,10 @@ public partial class ScreenObject : IScreenObject
     public event EventHandler<ValueChangedEventArgs<Point>>? PositionChanging;
 
     /// <inheritdoc/>
-    public event EventHandler? VisibleChanged;
+    public event EventHandler? IsVisibleChanged;
 
     /// <inheritdoc/>
-    public event EventHandler? EnabledChanged;
+    public event EventHandler? IsEnabledChanged;
 
     /// <inheritdoc/>
     public event EventHandler? FocusLost;
@@ -48,38 +48,10 @@ public partial class ScreenObject : IScreenObject
     public event EventHandler? Focused;
 
     /// <summary>
-    /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsUpdate"/> is <see langword="true"/>.
-    /// </summary>
-    protected List<IComponent> ComponentsUpdate;
-
-    /// <summary>
-    /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsRender"/> is <see langword="true"/>.
-    /// </summary>
-    protected List<IComponent> ComponentsRender;
-
-    /// <summary>
-    /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsMouse"/> is <see langword="true"/>.
-    /// </summary>
-    protected List<IComponent> ComponentsMouse;
-
-    /// <summary>
-    /// A filtered list from <see cref="SadComponents"/> where <see cref="IComponent.IsKeyboard"/> is <see langword="true"/>.
-    /// </summary>
-    protected List<IComponent> ComponentsKeyboard;
-
-    /// <summary>
-    /// A filtered list from <see cref="SadComponents"/> that is not set for update, render, mouse, or keyboard.
-    /// </summary>
-    protected List<IComponent> ComponentsEmpty;
-
-    /// <summary>
     /// Indicates the sorting order this object should use when parented. Sorting is a manual operation on the <see cref="Children"/> collection.
     /// </summary>
     [DataMember]
     public uint SortOrder { get; set; }
-
-    /// <inheritdoc/>
-    public ObservableCollection<IComponent> SadComponents { get; protected set; }
 
     /// <inheritdoc/>
     public ScreenObjectCollection Children { get; protected set; }
@@ -112,7 +84,9 @@ public partial class ScreenObject : IScreenObject
         }
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// A position that is based on the current <see cref="Position"/> and <see cref="Parent"/> position, in pixels.
+    /// </summary>
     public Point Position
     {
         get => _position;
@@ -222,6 +196,7 @@ public partial class ScreenObject : IScreenObject
     {
         UseMouse = Settings.DefaultScreenObjectUseMouse;
         UseKeyboard = Settings.DefaultScreenObjectUseKeyboard;
+        Children = new ScreenObjectCollection(this);
         SadComponents = new ObservableCollection<IComponent>();
         ComponentsUpdate = new List<IComponent>();
         ComponentsRender = new List<IComponent>();
@@ -229,7 +204,6 @@ public partial class ScreenObject : IScreenObject
         ComponentsMouse = new List<IComponent>();
         ComponentsEmpty = new List<IComponent>();
         SadComponents.CollectionChanged += Components_CollectionChanged;
-        Children = new ScreenObjectCollection(this);
     }
 
     /// <inheritdoc/>
@@ -310,159 +284,6 @@ public partial class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void OnFocused() { }
 
-    /// <inheritdoc/>
-    public IEnumerable<TComponent> GetSadComponents<TComponent>()
-        where TComponent : class, IComponent
-    {
-        foreach (IComponent component in SadComponents)
-        {
-            if (component is TComponent)
-                yield return (TComponent)component;
-        }
-    }
-
-    /// <inheritdoc/>
-    public TComponent? GetSadComponent<TComponent>()
-        where TComponent : class, IComponent
-    {
-        foreach (IComponent component in SadComponents)
-        {
-            if (component is TComponent)
-                return (TComponent)component;
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Called when a component is added to the <see cref="SadComponents"/> collection.
-    /// </summary>
-    /// <param name="component">The component added.</param>
-    protected virtual void OnSadComponentAdded(IComponent component) { }
-
-    /// <summary>
-    /// Called when a component is removed from the <see cref="SadComponents"/> collection.
-    /// </summary>
-    /// <param name="component">The component removed.</param>
-    protected virtual void OnSadComponentRemoved(IComponent component) { }
-
-    /// <inheritdoc/>
-    public bool HasSadComponent<TComponent>(out TComponent? component)
-        where TComponent : class, IComponent
-    {
-        int count = SadComponents.Count;
-        for (int i = 0; i < count; i++)
-        {
-            if (SadComponents[i] is TComponent component2)
-            {
-                component = component2;
-                return true;
-            }
-        }
-
-        component = null;
-        return false;
-    }
-
-    private void Components_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e.Action)
-        {
-            case NotifyCollectionChangedAction.Add:
-                if (e.NewItems != null)
-                    foreach (object item in e.NewItems)
-                    {
-                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                        ((IComponent)item).OnAdded(this);
-                        OnSadComponentAdded((IComponent)item);
-                    }
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                if (e.OldItems != null)
-                    foreach (object item in e.OldItems)
-                    {
-                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                        ((IComponent)item).OnRemoved(this);
-                        OnSadComponentRemoved((IComponent)item);
-                    }
-                break;
-            case NotifyCollectionChangedAction.Replace:
-                if (e.NewItems != null)
-                    foreach (object item in e.NewItems)
-                    {
-                        Components_FilterAddItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                        ((IComponent)item).OnAdded(this);
-                        OnSadComponentAdded((IComponent)item);
-                    }
-                if (e.OldItems != null)
-                    foreach (object item in e.OldItems)
-                    {
-                        Components_FilterRemoveItem((IComponent)item, ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                        ((IComponent)item).OnRemoved(this);
-                        OnSadComponentRemoved((IComponent)item);
-                    }
-                break;
-            case NotifyCollectionChangedAction.Move:
-                SortComponents();
-                break;
-            case NotifyCollectionChangedAction.Reset:
-                List<IComponent> items = new(ComponentsRender.Count + ComponentsUpdate.Count + ComponentsKeyboard.Count + ComponentsMouse.Count);
-
-                while (ComponentsRender.Count != 0)
-                {
-                    ComponentsRender[0].OnRemoved(this);
-
-                    if (!items.Contains(ComponentsRender[0]))
-                        items.Add(ComponentsRender[0]);
-
-                    Components_FilterRemoveItem(ComponentsRender[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                }
-                while (ComponentsUpdate.Count != 0)
-                {
-                    ComponentsUpdate[0].OnRemoved(this);
-
-                    if (!items.Contains(ComponentsUpdate[0]))
-                        items.Add(ComponentsUpdate[0]);
-
-                    Components_FilterRemoveItem(ComponentsUpdate[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                }
-                while (ComponentsKeyboard.Count != 0)
-                {
-                    ComponentsKeyboard[0].OnRemoved(this);
-
-                    if (!items.Contains(ComponentsKeyboard[0]))
-                        items.Add(ComponentsKeyboard[0]);
-
-                    Components_FilterRemoveItem(ComponentsKeyboard[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                }
-                while (ComponentsMouse.Count != 0)
-                {
-                    ComponentsMouse[0].OnRemoved(this);
-
-                    if (!items.Contains(ComponentsMouse[0]))
-                        items.Add(ComponentsMouse[0]);
-
-                    Components_FilterRemoveItem(ComponentsMouse[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                }
-                while (ComponentsEmpty.Count != 0)
-                {
-                    ComponentsEmpty[0].OnRemoved(this);
-
-                    if (!items.Contains(ComponentsEmpty[0]))
-                        items.Add(ComponentsEmpty[0]);
-
-                    Components_FilterRemoveItem(ComponentsEmpty[0], ComponentsRender, ComponentsUpdate, ComponentsKeyboard, ComponentsMouse, ComponentsEmpty);
-                }
-
-                foreach (IComponent item in items)
-                    OnSadComponentRemoved(item);
-
-                break;
-            default:
-                break;
-        }
-    }
-
     /// <summary>
     /// Raises the <see cref="ParentChanged"/> event.
     /// </summary>
@@ -497,13 +318,13 @@ public partial class ScreenObject : IScreenObject
     /// Called when the visibility of the object changes.
     /// </summary>
     protected virtual void OnVisibleChanged() =>
-        VisibleChanged?.Invoke(this, EventArgs.Empty);
+        IsVisibleChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>
     /// Called when the paused status of the object changes.
     /// </summary>
     protected virtual void OnEnabledChanged() =>
-        EnabledChanged?.Invoke(this, EventArgs.Empty);
+        IsEnabledChanged?.Invoke(this, EventArgs.Empty);
 
     /// <inheritdoc/>
     public virtual void UpdateAbsolutePosition()
@@ -516,139 +337,9 @@ public partial class ScreenObject : IScreenObject
     }
 
     /// <summary>
-    /// Sorts the components based on the <see cref="IComponent.SortOrder"/> value.
-    /// </summary>
-    public void SortComponents()
-    {
-        ComponentsRender.Sort(CompareComponent);
-        ComponentsUpdate.Sort(CompareComponent);
-        ComponentsKeyboard.Sort(CompareComponent);
-        ComponentsMouse.Sort(CompareComponent);
-        ComponentsEmpty.Sort(CompareComponent);
-    }
-
-    /// <summary>
     /// Returns the value "ScreenObject".
     /// </summary>
     /// <returns>The string "ScreenObject".</returns>
     public override string ToString() =>
         "ScreenObject";
-    
-    /// <summary>
-    /// Adds a component to the provided collections, based on its configuration.
-    /// </summary>
-    /// <param name="component">The component.</param>
-    /// <param name="componentsRender">The render collection.</param>
-    /// <param name="componentsUpdate">The update collection.</param>
-    /// <param name="componentsKeyboard">The keyboard collection.</param>
-    /// <param name="componentsMouse">The mouse collection.</param>
-    /// <param name="componentsEmpty">The empty collection.</param>
-    public static void Components_FilterAddItem(IComponent component,
-                                                List<IComponent> componentsRender,
-                                                List<IComponent> componentsUpdate,
-                                                List<IComponent> componentsKeyboard,
-                                                List<IComponent> componentsMouse,
-                                                List<IComponent> componentsEmpty)
-    {
-        if (component.IsRender)
-            if (!componentsRender.Contains(component))
-                componentsRender.Add(component);
-
-        if (component.IsUpdate)
-            if (!componentsUpdate.Contains(component))
-                componentsUpdate.Add(component);
-
-        if (component.IsKeyboard)
-            if (!componentsKeyboard.Contains(component))
-                componentsKeyboard.Add(component);
-
-        if (component.IsMouse)
-            if (!componentsMouse.Contains(component))
-                componentsMouse.Add(component);
-
-        if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
-            if (!componentsEmpty.Contains(component))
-                componentsEmpty.Add(component);
-
-        componentsRender.Sort(CompareComponent);
-        componentsUpdate.Sort(CompareComponent);
-        componentsKeyboard.Sort(CompareComponent);
-        componentsMouse.Sort(CompareComponent);
-        componentsEmpty.Sort(CompareComponent);
-    }
-
-    /// <summary>
-    /// Removes a component to the provided collections, based on its configuration.
-    /// </summary>
-    /// <param name="component">The component.</param>
-    /// <param name="componentsRender">The render collection.</param>
-    /// <param name="componentsUpdate">The update collection.</param>
-    /// <param name="componentsKeyboard">The keyboard collection.</param>
-    /// <param name="componentsMouse">The mouse collection.</param>
-    /// <param name="componentsEmpty">The empty collection.</param>
-    public static void Components_FilterRemoveItem(IComponent component,
-                                                    List<IComponent> componentsRender,
-                                                    List<IComponent> componentsUpdate,
-                                                    List<IComponent> componentsKeyboard,
-                                                    List<IComponent> componentsMouse,
-                                                    List<IComponent> componentsEmpty)
-    {
-        if (component.IsRender)
-            if (componentsRender.Contains(component))
-                componentsRender.Remove(component);
-
-        if (component.IsUpdate)
-            if (componentsUpdate.Contains(component))
-                componentsUpdate.Remove(component);
-
-        if (component.IsKeyboard)
-            if (componentsKeyboard.Contains(component))
-                componentsKeyboard.Remove(component);
-
-        if (component.IsMouse)
-            if (componentsMouse.Contains(component))
-                componentsMouse.Remove(component);
-
-        if (!component.IsRender && !component.IsUpdate && !component.IsKeyboard && !component.IsMouse)
-            if (!componentsEmpty.Contains(component))
-                componentsEmpty.Remove(component);
-
-        componentsRender.Sort(CompareComponent);
-        componentsUpdate.Sort(CompareComponent);
-        componentsKeyboard.Sort(CompareComponent);
-        componentsMouse.Sort(CompareComponent);
-        componentsEmpty.Sort(CompareComponent);
-    }
-
-    /// <summary>
-    /// Helper to sort the components in the split collections.
-    /// </summary>
-    /// <param name="componentsRender">The render collection.</param>
-    /// <param name="componentsUpdate">The update collection.</param>
-    /// <param name="componentsKeyboard">The keyboard collection.</param>
-    /// <param name="componentsMouse">The mouse collection.</param>
-    /// <param name="componentsEmpty">The empty collection.</param>
-    public static void Components_Sort(List<IComponent> componentsRender,
-                                        List<IComponent> componentsUpdate,
-                                        List<IComponent> componentsKeyboard,
-                                        List<IComponent> componentsMouse,
-                                        List<IComponent> componentsEmpty)
-    {
-        componentsRender.Sort(CompareComponent);
-        componentsUpdate.Sort(CompareComponent);
-        componentsKeyboard.Sort(CompareComponent);
-        componentsMouse.Sort(CompareComponent);
-        componentsEmpty.Sort(CompareComponent);
-    }
-
-    static int CompareComponent(IComponent left, IComponent right)
-    {
-        if (left.SortOrder > right.SortOrder)
-            return 1;
-
-        if (left.SortOrder < right.SortOrder)
-            return -1;
-
-        return 0;
-    }
 }
