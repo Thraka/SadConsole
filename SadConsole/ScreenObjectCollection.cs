@@ -30,17 +30,17 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <summary>
     /// Internal list of objects.
     /// </summary>
-    protected List<TScreenObject> objects;
+    protected List<TScreenObject> _objects;
 
     /// <summary>
     /// The parent object.
     /// </summary>
-    protected IScreenObject owningObject;
+    protected IScreenObject _owningObject;
 
     /// <summary>
     /// Returns the total number of objects in this collection.
     /// </summary>
-    public int Count => objects.Count;
+    public int Count => _objects.Count;
 
     /// <summary>
     /// When true, the collection cannot be modified.
@@ -54,17 +54,17 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <returns>The wanted object.</returns>
     public TScreenObject this[int index]
     {
-        get => objects[index];
+        get => _objects[index];
         set
         {
             if (IsLocked)
                 throw new Exception("The collection is locked and cannot be modified.");
 
-            if (objects[index] == value)
+            if (_objects[index] == value)
                 return;
 
-            TScreenObject oldObject = objects[index];
-            objects[index] = value;
+            TScreenObject oldObject = _objects[index];
+            _objects[index] = value;
             RemoveObjParent(oldObject);
             SetObjParent(value);
             CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -77,8 +77,8 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="owner">The owning object of this collection.</param>
     public ScreenObjectCollection(IScreenObject owner)
     {
-        objects = new List<TScreenObject>();
-        owningObject = owner;
+        _objects = new List<TScreenObject>();
+        _owningObject = owner;
     }
 
     /// <summary>
@@ -89,8 +89,8 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        for (; objects.Count != 0 ; )
-            objects[0].Parent = null;
+        for (; _objects.Count != 0 ; )
+            _objects[0].Parent = null;
 
         CollectionChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -101,7 +101,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="obj">The console to search for.</param>
     /// <returns></returns>
     public bool Contains(TScreenObject obj) =>
-        objects.Contains(obj);
+        _objects.Contains(obj);
 
     /// <summary>
     /// When true, indicates that the <paramref name="obj"/> is at the top of the collection stack.
@@ -109,7 +109,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="obj">The obj object to check.</param>
     /// <returns>True when the object is on the top.</returns>
     public bool IsTop(TScreenObject obj) =>
-        objects.Count != 0 ? objects.IndexOf(obj) == objects.Count - 1 : false;
+        _objects.Count != 0 ? _objects.IndexOf(obj) == _objects.Count - 1 : false;
 
     /// <summary>
     /// When true, indicates that the <paramref name="obj"/> is at the bottom of the collection stack.
@@ -117,7 +117,7 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="obj">The obj object to check.</param>
     /// <returns>True when the object is on the bottom.</returns>
     public bool IsBottom(TScreenObject obj) =>
-        objects.Count != 0 ? objects.IndexOf(obj) == 0 : false;
+        _objects.Count != 0 ? _objects.IndexOf(obj) == 0 : false;
 
     /// <summary>
     /// Adds a new child object to this collection.
@@ -129,8 +129,8 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        if (!objects.Contains(obj))
-            objects.Add(obj);
+        if (!_objects.Contains(obj))
+            _objects.Add(obj);
 
         SetObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -147,8 +147,8 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        if (!objects.Contains(obj))
-            objects.Insert(index, obj);
+        if (!_objects.Contains(obj))
+            _objects.Insert(index, obj);
 
         SetObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -164,8 +164,8 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        if (objects.Contains(obj))
-            objects.Remove(obj);
+        if (_objects.Contains(obj))
+            _objects.Remove(obj);
 
         RemoveObjParent(obj);
         CollectionChanged?.Invoke(this, EventArgs.Empty);
@@ -181,8 +181,15 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
         if (IsLocked)
             throw new Exception("The collection is locked and cannot be modified.");
 
-        objects.Sort(comparer);
+        _objects.Sort(comparer);
     }
+
+    /// <summary>
+    /// Copies the collections item to an array.
+    /// </summary>
+    /// <returns>A new array consisting of all of the objects in this collection.</returns>
+    public TScreenObject[] ToArray() =>
+        _objects.ToArray();
 
     /// <summary>
     /// Moves the specified <paramref name="obj"/>  to the top of the collection.
@@ -190,10 +197,10 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="obj">The child object.</param>
     public void MoveToTop(TScreenObject obj)
     {
-        if (objects.Contains(obj))
+        if (_objects.Contains(obj))
         {
-            objects.Remove(obj);
-            objects.Add(obj);
+            _objects.Remove(obj);
+            _objects.Add(obj);
             CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -204,10 +211,10 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// <param name="obj">The child object.</param>
     public void MoveToBottom(TScreenObject obj)
     {
-        if (objects.Contains(obj))
+        if (_objects.Contains(obj))
         {
-            objects.Remove(obj);
-            objects.Insert(0, obj);
+            _objects.Remove(obj);
+            _objects.Insert(0, obj);
             CollectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -217,18 +224,18 @@ public class ScreenObjectCollection<TScreenObject> : IReadOnlyList<TScreenObject
     /// </summary>
     /// <param name="obj">The child object.</param>
     public int IndexOf(TScreenObject obj) =>
-        objects.IndexOf(obj);
+        _objects.IndexOf(obj);
 
     private void SetObjParent(TScreenObject obj) =>
-        obj.Parent = owningObject;
+        obj.Parent = _owningObject;
 
     private void RemoveObjParent(TScreenObject obj) =>
         obj.Parent = null;
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
-        objects.GetEnumerator();
+        _objects.GetEnumerator();
 
     /// <inheritdoc />
     public IEnumerator<TScreenObject> GetEnumerator() =>
-        objects.GetEnumerator();
+        _objects.GetEnumerator();
 }
