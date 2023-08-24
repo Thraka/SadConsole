@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
 using SadRogue.Primitives;
 
 namespace SadConsole.Tests.UI;
@@ -274,7 +273,7 @@ public class TableTests : TableTestsBase
             Table.Cells[row, 0].Value = "Row " + row;
         }
 
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
         Assert.AreEqual(Table.VerticalScrollBar.Maximum, extraRowsOffScreen);
         Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
@@ -287,7 +286,7 @@ public class TableTests : TableTestsBase
             totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
             totalHeight = totalHeight < 0 ? 0 : totalHeight;
             Table.VerticalScrollBar.Value += 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
             Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
         }
@@ -298,7 +297,7 @@ public class TableTests : TableTestsBase
             totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
             totalHeight = totalHeight < 0 ? 0 : totalHeight;
             Table.VerticalScrollBar.Value -= 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
             Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
         }
@@ -318,7 +317,7 @@ public class TableTests : TableTestsBase
             Table.Cells[0, column].Value = "Column " + column;
         }
 
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
         Assert.AreEqual(Table.HorizontalScrollBar.Maximum, extraColumnsOffScreen);
         Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
@@ -331,7 +330,7 @@ public class TableTests : TableTestsBase
             totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
             totalWidth = totalWidth < 0 ? 0 : totalWidth;
             Table.HorizontalScrollBar.Value += 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
             Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
         }
@@ -342,7 +341,7 @@ public class TableTests : TableTestsBase
             totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
             totalWidth = totalWidth < 0 ? 0 : totalWidth;
             Table.HorizontalScrollBar.Value -= 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
             Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
         }
@@ -367,7 +366,7 @@ public class TableTests : TableTestsBase
         Table.Cells[2, 0].Resize(rowSize: 8);
         Table.Cells[3, 0].Resize(rowSize: 1);
 
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
@@ -381,7 +380,7 @@ public class TableTests : TableTestsBase
             totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
             totalHeight = totalHeight < 0 ? 0 : totalHeight;
             Table.VerticalScrollBar.Value += 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
             Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
         }
@@ -392,7 +391,7 @@ public class TableTests : TableTestsBase
             totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, false);
             totalHeight = totalHeight < 0 ? 0 : totalHeight;
             Table.VerticalScrollBar.Value -= 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
             Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
         }
@@ -417,7 +416,7 @@ public class TableTests : TableTestsBase
         Table.Cells[0, 2].Resize(columnSize: 8);
         Table.Cells[0, 3].Resize(columnSize: 1);
 
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
@@ -431,7 +430,7 @@ public class TableTests : TableTestsBase
             totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
             totalWidth = totalWidth < 0 ? 0 : totalWidth;
             Table.HorizontalScrollBar.Value += 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
             Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
         }
@@ -441,7 +440,7 @@ public class TableTests : TableTestsBase
             totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, false);
             totalWidth = totalWidth < 0 ? 0 : totalWidth;
             Table.HorizontalScrollBar.Value -= 1;
-            Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+            Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
             Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
         }
@@ -467,7 +466,7 @@ public class TableTests : TableTestsBase
         Table.Cells[0, 3].Resize(columnSize: 1);
 
         Table.HorizontalScrollBar.Value = 1;
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
@@ -477,7 +476,7 @@ public class TableTests : TableTestsBase
         // Resize existing cell
         Table.Cells[0, 1].Resize(columnSize: 9);
         Table.Cells[0, 2].Resize(columnSize: 16);
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreNotEqual(Table.HorizontalScrollBar.Maximum, maximum);
 
         // Update max
@@ -503,7 +502,7 @@ public class TableTests : TableTestsBase
         Table.Cells[3, 0].Resize(rowSize: 1);
 
         Table.VerticalScrollBar.Value = 1;
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
@@ -513,7 +512,7 @@ public class TableTests : TableTestsBase
         // Resize existing cell
         Table.Cells[1, 0].Resize(rowSize: 9);
         Table.Cells[2, 0].Resize(rowSize: 16);
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreNotEqual(Table.VerticalScrollBar.Maximum, maximum);
 
         // Update max
@@ -539,7 +538,7 @@ public class TableTests : TableTestsBase
         Table.Cells[3, 0].Resize(rowSize: 1);
 
         Table.VerticalScrollBar.Value = 0;
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         Table.Cells.Select(rows - 1, 0);
         Table.ScrollToSelectedItem();
@@ -565,7 +564,7 @@ public class TableTests : TableTestsBase
         Table.Cells[0, 3].Resize(columnSize: 1);
 
         Table.HorizontalScrollBar.Value = 0;
-        Table.Theme.UpdateAndDraw(Table, new System.TimeSpan());
+        Table.UpdateAndRedraw(new System.TimeSpan());
 
         Table.Cells.Select(0, columns - 1);
         Table.ScrollToSelectedItem();
@@ -585,8 +584,6 @@ public abstract class TableTestsBase
         Height = height;
         CellWidth = cellWidth;
         CellHeight = cellHeight;
-
-        Library.Default.SetControlTheme(typeof(Table), typeof(TableTheme));
     }
 
     [TestInitialize]

@@ -48,6 +48,12 @@
     <None Remove="SadConsole.Extended.xml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>SadConsole.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
