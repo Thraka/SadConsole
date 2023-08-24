@@ -61,19 +61,52 @@ public abstract class CompositeControl : ControlBase, IContainer
     {
         if (IsEnabled && UseMouse)
         {
-            bool processResult = false;
+            var newState = new ControlMouseState(this, state);
 
-            var controls = new List<ControlBase>(Controls);
-            controls.Reverse();
+            if (newState.IsMouseOver)
+            {
+                if (MouseState_IsMouseOver != true)
+                {
+                    MouseState_IsMouseOver = true;
+                    OnMouseEnter(newState);
+                }
 
-            int count = controls.Count;
-            for (int i = 0; i < count; i++)
-                processResult |= controls[i].ProcessMouse(state);
+                // Process the child controls first
+                bool processResult = false;
 
-            if (!processResult)
-                processResult = base.ProcessMouse(state);
+                var controls = new List<ControlBase>(Controls);
+                controls.Reverse();
 
-            return processResult;
+                int count = controls.Count;
+                for (int i = 0; i < count; i++)
+                    processResult |= controls[i].ProcessMouse(state);
+
+                if (!processResult)
+                    processResult = base.ProcessMouse(state);
+
+                // If no child control has the mouse over it, process it on this container
+                if (!processResult)
+                {
+                    bool preventClick = MouseState_EnteredWithButtonDown;
+                    OnMouseIn(newState);
+
+                    if (!preventClick && state.Mouse.LeftClicked)
+                        OnLeftMouseClicked(newState);
+
+                    if (!preventClick && state.Mouse.RightClicked)
+                        OnRightMouseClicked(newState);
+                }
+
+                return true;
+            }
+            else
+            {
+                if (MouseState_IsMouseOver)
+                {
+                    MouseState_IsMouseOver = false;
+                    OnMouseExit(newState);
+                }
+            }
         }
 
         return false;
@@ -120,10 +153,7 @@ public abstract class CompositeControl : ControlBase, IContainer
         ControlBase[] controls = Controls.ToArray();
 
         for (int i = 0; i < controls.Length; i++)
-        {
-            ControlBase control = controls[i];
-            control.UpdateAndRedraw(time);
-        }
+            controls[i].UpdateAndRedraw(time);
     }
 
     /// <inheritdoc/>

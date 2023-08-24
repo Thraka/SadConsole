@@ -39,7 +39,6 @@ public partial class Panel
     [DataMember]
     public bool UseInsetBorder { get; set; } = false;
 
-
     /// <summary>
     /// The current Appearance based on the control state.
     /// </summary>
@@ -49,10 +48,8 @@ public partial class Panel
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
-        if (!IsDirty) return;
-
         // If we're allowed to draw the panel itself
-        if (!SkipDrawing)
+        if (IsDirty && !SkipDrawing)
         {
             Colors currentColors = FindThemeColors();
 
@@ -131,14 +128,10 @@ public partial class Panel
                 }
             }
 
+            IsDirty = false;
         }
 
         // Draw the children controls
-        ControlBase[] tempControls = Controls.ToArray();
-
-        for (int i = 0; i < tempControls.Length; i++)
-            tempControls[i].UpdateAndRedraw(time);
-
-        IsDirty = false;
+        base.UpdateAndRedraw(time);
     }
 }

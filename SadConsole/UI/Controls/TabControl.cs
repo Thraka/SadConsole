@@ -145,6 +145,7 @@ public partial class TabControl : CompositeControl
         if (index == InvalidActiveTabIndex)
             throw new Exception("The control doesn't contain the specified tab.");
 
+        TabItems[index].Content.IsDirtyChanged -= Content_IsDirtyChanged;
         TabItems.RemoveAt(index);
 
         if (index == ActiveTabIndex)
@@ -168,12 +169,18 @@ public partial class TabControl : CompositeControl
         int previousIndex = ActiveTabIndex;
         ActiveTabIndex = index;
 
+        TabItems[previousIndex].Content.IsDirtyChanged -= Content_IsDirtyChanged;
+        TabItems[ActiveTabIndex].Content.IsDirtyChanged += Content_IsDirtyChanged;
+
         RemoveControl(TabItems[previousIndex].Content);
         AddControl(TabItems[ActiveTabIndex].Content);
         ThemeDetermineContentRegion();
         
         OnActiveTabItem(previousIndex, index);
     }
+
+    private void Content_IsDirtyChanged(object? sender, EventArgs e) =>
+        IsDirty |= ((ControlBase)sender!).IsDirty;
 
     /// <summary>
     /// Raises the <see cref="ActiveTabItemChanged"/> event.
