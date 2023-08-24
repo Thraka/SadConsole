@@ -13,7 +13,7 @@ New features
 - [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
 - [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
 - [UI] New control, `TabControl`. Contributed by arxae.
-- [UI] New control, `Table`. Contributed by Ven0maus.
+- [ExtendedLib.UI] New control, `Table`. Contributed by Ven0maus.
 
 Normal changes
 
