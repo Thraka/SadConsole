@@ -18,38 +18,21 @@ public interface IComponentHost
     /// </summary>
     /// <typeparam name="TComponent">The component to find.</typeparam>
     /// <returns>The component if found, otherwise null.</returns>
-    TComponent? GetSadComponent<TComponent>() where TComponent : class, IComponent
-    {
-        foreach (IComponent component in SadComponents)
-        {
-            if (component is TComponent)
-                return (TComponent)component;
-        }
-
-        return null;
-    }
+    TComponent? GetSadComponent<TComponent>() where TComponent : class, IComponent;
 
     /// <summary>
     /// Gets components of the specified types.
     /// </summary>
     /// <typeparam name="TComponent">The component to find</typeparam>
     /// <returns>The components found.</returns>
-    IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : class, IComponent
-    {
-        foreach (IComponent component in SadComponents)
-        {
-            if (component is TComponent)
-                yield return (TComponent)component;
-        }
-    }
+    IEnumerable<TComponent> GetSadComponents<TComponent>() where TComponent : class, IComponent;
 
     /// <summary>
     /// Indicates whether or not the component exists in the <see cref="SadComponents"/> collection.
     /// </summary>
     /// <typeparam name="TComponent">The component to find.</typeparam>
     /// <returns><see langword="true"/> when the component exists; otherwise <see langword="false"/>.</returns>
-    bool HasSadComponent<TComponent>(out TComponent? component) where TComponent : class, IComponent =>
-        (component = GetSadComponent<TComponent>()) == null ? false : true;
+    bool HasSadComponent<TComponent>(out TComponent? component) where TComponent : class, IComponent;
 
     /// <summary>
     /// Uses the <see cref="IComponent.SortOrder"/> to compare the <paramref name="left"/> component with the <paramref name="right"/> component.

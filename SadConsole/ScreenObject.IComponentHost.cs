@@ -43,21 +43,33 @@ public partial class ScreenObject : IScreenObject
 
     /// <inheritdoc/>
     public IEnumerable<TComponent> GetSadComponents<TComponent>()
-        where TComponent : class, IComponent =>
-
-        ((Components.IComponentHost)this).GetSadComponents<TComponent>();
+        where TComponent : class, IComponent
+    {
+        foreach (IComponent component in SadComponents)
+        {
+            if (component is TComponent)
+                yield return (TComponent)component;
+        }
+    }
 
     /// <inheritdoc/>
     public TComponent? GetSadComponent<TComponent>()
-        where TComponent : class, IComponent =>
+        where TComponent : class, IComponent
+    {
+        foreach (IComponent component in SadComponents)
+        {
+            if (component is TComponent)
+                return (TComponent)component;
+        }
 
-        ((Components.IComponentHost)this).GetSadComponent<TComponent>();
+        return null;
+    }
 
     /// <inheritdoc/>
     public bool HasSadComponent<TComponent>(out TComponent? component)
         where TComponent : class, IComponent =>
 
-        ((Components.IComponentHost)this).HasSadComponent<TComponent>(out component);
+        (component = GetSadComponent<TComponent>()) == null ? false : true;
 
     private void Components_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
