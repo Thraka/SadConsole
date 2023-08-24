@@ -24,6 +24,11 @@ public static class RendererNames
     /// The renderer for a <see cref="UI.Window"/>.
     /// </summary>
     public const string Window = "window";
+
+    /// <summary>
+    /// An absent renderer.
+    /// </summary>
+    public const string None = "none";
 }
 
 /// <summary>

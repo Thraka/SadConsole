@@ -145,6 +145,8 @@ public abstract partial class GameHost : IDisposable
     /// <returns>A new renderer.</returns>
     public virtual IRenderer GetRenderer(string name)
     {
+        if (name.Equals(Renderers.Constants.RendererNames.None, StringComparison.OrdinalIgnoreCase)) return null;
+
         IRenderer? result = null;
 
         if (_renderers.TryGetValue(name, out Type? objType))
