@@ -467,9 +467,6 @@ public abstract class ControlBase
         if (control.Parent != null && Parent != control.Parent)
             Parent = control.Parent;
 
-        Point calculatedDirection = (0, 0) + (Direction)direction;
-        Position = control.Position + (calculatedDirection.X * padding, calculatedDirection.Y * padding);
-
         switch (direction)
         {
             case Direction.Types.None:

@@ -179,6 +179,8 @@ public partial class Panel : CompositeControl, IList<ControlBase>
             IsDirty = true;
     }
 
+    bool ICollection<ControlBase>.IsReadOnly => false;
+
     /// <summary>
     /// Gets an enumerator that iterates over the controls in this panel.
     /// </summary>
