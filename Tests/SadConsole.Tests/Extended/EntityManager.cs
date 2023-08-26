@@ -7,7 +7,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Tests.Extended;
 
 [TestClass]
-public class EntityManager
+public class EntityManagerZoned
 {
     [TestInitialize]
     public void SetupHost()
@@ -18,28 +18,28 @@ public class EntityManager
     [TestMethod]
     public void Create_Remove()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
 
-        Assert.IsNotNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
+        Assert.IsNotNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityManager).FirstOrDefault());
 
         surfaceObject.SadComponents.Remove(manager);
 
-        Assert.IsNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityRenderer).FirstOrDefault());
+        Assert.IsNull(surfaceObject.Renderer.Steps.Where(r => r.Name == RenderStepNames.EntityManager).FirstOrDefault());
     }
 
     [TestMethod]
     public void AddAndRemove_Entity()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
 
         SadConsole.Entities.Entity ent1 = new Entities.Entity(Color.Blue, Color.AliceBlue, 1, 0);
-        SadConsole.Entities.Entity ent2 = new Entities.Entity(AnimatedScreenSurface.CreateStatic(4, 4, 2, 0.5d), 0);
+        SadConsole.Entities.Entity ent2 = new Entities.Entity(AnimatedScreenObject.CreateStatic(4, 4, 2, 0.5d), 0);
 
         manager.Add(ent1);
         manager.Add(ent2);
@@ -57,7 +57,7 @@ public class EntityManager
     [TestMethod]
     public void AddAndRemove_Zone()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
@@ -76,7 +76,7 @@ public class EntityManager
     [TestMethod]
     public void Entity_MoveEnterZone()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
@@ -116,7 +116,7 @@ public class EntityManager
     [TestMethod]
     public void EnableDisable()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
@@ -130,7 +130,7 @@ public class EntityManager
     [TestMethod]
     public void Entity_MoveExitZone()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);
@@ -169,7 +169,7 @@ public class EntityManager
     [TestMethod]
     public void Entity_InsertDeleteTriggerZone()
     {
-        Entities.Manager manager = new();
+        Entities.EntityManagerZoned manager = new();
         SadConsole.ScreenSurface surfaceObject = new(20, 20);
 
         surfaceObject.SadComponents.Add(manager);

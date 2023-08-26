@@ -8959,12 +8959,12 @@
             Raised when the items in this collection are added, removed, or repositioned.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectCollection`1.objects">
+        <member name="F:SadConsole.ScreenObjectCollection`1._objects">
             <summary>
             Internal list of objects.
             </summary>
         </member>
-        <member name="F:SadConsole.ScreenObjectCollection`1.owningObject">
+        <member name="F:SadConsole.ScreenObjectCollection`1._owningObject">
             <summary>
             The parent object.
             </summary>
@@ -9046,6 +9046,12 @@
             </summary>
             <param name="comparer">The comparer to use</param>
             <exception cref="T:System.Exception">Thrown when the <see cref="P:SadConsole.ScreenObjectCollection`1.IsLocked"/> property is set to true.</exception>
+        </member>
+        <member name="M:SadConsole.ScreenObjectCollection`1.ToArray">
+            <summary>
+            Copies the collections item to an array.
+            </summary>
+            <returns>A new array consisting of all of the objects in this collection.</returns>
         </member>
         <member name="M:SadConsole.ScreenObjectCollection`1.MoveToTop(`0)">
             <summary>

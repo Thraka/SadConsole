@@ -147,7 +147,7 @@ namespace SadConsole.Tests
         }
 
         [TestMethod]
-        public void AnimatedScreenSurface_SaveLoad()
+        public void AnimatedScreenObject_SaveLoad()
         {
             new SadConsole.Tests.BasicGameHost();
 
@@ -156,11 +156,11 @@ namespace SadConsole.Tests
             //   Repeat = true;
             //   Name = "default";
 
-            AnimatedScreenSurface animation = AnimatedScreenSurface.CreateStatic(10, 10, 10, 0.5d);
+            AnimatedScreenObject animation = AnimatedScreenObject.CreateStatic(10, 10, 10, 0.5d);
             animation.Name = "Static Frames";
             animation.Center = (2, 2);
             animation.Save("test.file");
-            AnimatedScreenSurface animation2 = AnimatedScreenSurface.Load("test.file");
+            AnimatedScreenObject animation2 = AnimatedScreenObject.Load("test.file");
 
             Assert.AreEqual(animation.Width, animation2.Width);
             Assert.AreEqual(animation.Height, animation2.Height);
@@ -174,11 +174,10 @@ namespace SadConsole.Tests
             Assert.AreEqual(animation.CurrentFrameIndex, animation2.CurrentFrameIndex);
 
             var surfaceTest = new CellSurface();
-            var surface1Frames = animation.Frames.ToList();
-            var surface2Frames = animation2.Frames.ToList();
-            for (int i = 0; i < surface1Frames.Count; i++)
+
+            for (int i = 0; i < animation.Frames.Count; i++)
             {
-                surfaceTest.Surface_Equals(surface1Frames[i], surface2Frames[i]);
+                surfaceTest.Surface_Equals(animation.Frames[i], animation2.Frames[i]);
             }
         }
     }

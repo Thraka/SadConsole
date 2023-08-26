@@ -6,9 +6,9 @@
 
 SadConsole is a generic library that emulates old-school console game systems. It provides command prompt-style graphics where one or more tile textures are used to represent an ASCII character set. Console's are made up of a grid of cells, each of which can have its own foreground, background, glyph, and special effect applied to it.
 
-While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for MonoGame and SFML.
+While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for **MonoGame** and **SFML**.
 
-_SadConsole currently targets .NET 6._
+_SadConsole currently targets .NET 6 and .NET 7_
 
 For the latest changes in this release, see the [notes below](#latest-changes)
 
@@ -21,12 +21,11 @@ Here are some of the features SadConsole supports:
 - Use more than one font file. However, each console is restricted to a single font.
 - Independently controlled entities for game objects.
 - Keyboard and Mouse support.
-- Text UI control framework.
-- Windowing capabilities.
+- Text UI control framework with windowing support.
 - Importers for [DOS ANSI files](https://wikipedia.org/wiki/ANSI_art), [TheDraw text fonts](https://en.wikipedia.org/wiki/TheDraw), [RexPaint](https://www.gridsagegames.com/rexpaint/), and [Playscii](http://vectorpoem.com/playscii/).
-- Animation support.
+- Animated consoles.
 - Translating images to text-blocks.
-- Highly customizable system.
+- Highly customizable framework.
 
 #### String display and parsing
 
@@ -44,8 +43,8 @@ Here are some of the features SadConsole supports:
 
 SadConsole uses NuGet for its .NET dependencies:
 
-- [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) (>= 13.0.1)
-- [TheSadRogue.Primitives](https://www.nuget.org/packages/TheSadRogue.Primitives/) (>= 1.0.0)
+- [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) (>= 13.0.3)
+- [TheSadRogue.Primitives](https://www.nuget.org/packages/TheSadRogue.Primitives/) (>= 1.6.0)
 
 [nuget]: http://www.nuget.org/packages/SadConsole/
 
@@ -78,17 +77,22 @@ void onStart()
 }
 ```
 
-## Latest changes v10.0.0 Alpha 1 (XX/XX/2023)
+## Latest changes v10.0.0 Alpha 3 (XX/XX/2023)
 
 Major changes (possibly breaking)
 
 - [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
 - [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
+- [Core] Themes have been removed. Each control draws itself.
+- [Core] `IScreenObject` no longer implements `IEnumerable` to access the children. Use the `.Children` collection property instead.
+- [Core] `Update` and `Render` no longer check for `IsEnabled` and `IsVisible`, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
 
 New features
 
 - [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
 - [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
+- [UI] New control, `TabControl`. Contributed by arxae.
+- [ExtendedLib.UI] New control, `Table`. Contributed by Ven0maus.
 
 Normal changes
 
@@ -103,6 +107,7 @@ Normal changes
 - [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
 - [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
 - [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
+- [Core] `Entities.Renderer` renamed `Entities.EntityRenderer`.
 - [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a **single cell** entity or **animated surface** entity.
 - [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
 - [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
@@ -123,10 +128,11 @@ Normal changes
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
 - [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
-- [UI] `Panel` control uses `CompositeControl` as a base class. Theme supports lines as a border of the panel.
-- [UI] Ven0maus added the `Table` control.
+- [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
+- [UI] `ProgressBar` is easier to customize.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
+- [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
 
 Removed
 

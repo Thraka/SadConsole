@@ -140,5 +140,10 @@ namespace SadConsole.Tests
         {
             throw new NotImplementedException();
         }
+
+        public override ITexture CreateTexture(int width, int height)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

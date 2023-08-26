@@ -41,7 +41,7 @@
     
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.0" />
     
-    <PackageReference Include="SFML.Net" Version="2.5.0" />
+    <PackageReference Include="SFML.Net" Version="2.5.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
