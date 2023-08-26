@@ -1,4 +1,6 @@
-﻿namespace SadConsole.Examples;
+﻿using SadConsole.UI;
+
+namespace SadConsole.Examples;
 
 static class GameSettings
 {
@@ -15,10 +17,13 @@ static class GameSettings
     public static Rectangle ScreenDescriptionBounds = new Rectangle(2, ScreenListBounds.MaxExtentY + 4, SCREEN_DESCRIPTION_WIDTH, SCREEN_DESCRIPTION_HEIGHT);
     public static Rectangle ScreenDemoBounds = new Rectangle(ScreenListBounds.MaxExtentX + 5, 2, SCREEN_DEMO_WIDTH, SCREEN_DEMO_HEIGHT);
 
+    public static Colors ControlColorScheme = Colors.CreateSadConsoleBlue();
+
     public static IDemo[] Demos =
         {
             new DemoControls(),
             new DemoControls2(),
+            new DemoScrollableViews(),
             new DemoAutoTyping(),
             new DemoStringParsing(),
             new DemoMultipleCursors(),

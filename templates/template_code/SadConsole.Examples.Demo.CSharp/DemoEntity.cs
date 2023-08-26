@@ -13,7 +13,6 @@ internal class DemoEntitySurface : IDemo
                                  "entities (although it supports larger entities)." +
                                  "\r\n\r\n" +
                                  "Press [c:r f:Red:2]F1 to toggle movement\r\n" +
-                                 "Press [c:r f:Red:2]F2 to toggle delete on collision\r\n" +
                                  "Use the [c:r f:Red:5]Arrow keys to move the player entity\r\n";
 
     public string CodeFile => "DemoEntity.cs";
@@ -35,7 +34,6 @@ internal class EntitySurface : ScreenSurface
     private EntityManager entityManager;
     private bool moveEntities;
     private bool usePixelPositioning;
-    private bool useCollision;
 
     public EntitySurface()
         : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height, 160, 46)
@@ -91,7 +89,7 @@ internal class EntitySurface : ScreenSurface
             Entity item;
 
             // Entites will be either randomly small 1x1 entities, or 3x3 animated entites
-            if (Game.Instance.Random.Next(0, 500) < 450)
+            if (Game.Instance.Random.Next(0, 500) < 480)
             {
                 item = new Entity(new Entity.SingleCell(Color.Red.GetRandomColor(SadConsole.Game.Instance.Random), Color.Black, Game.Instance.Random.Next(0, 60)), 0)
                 {
@@ -101,7 +99,7 @@ internal class EntitySurface : ScreenSurface
             }
             else
             {
-                item = new Entity(AnimatedScreenSurface.CreateStatic(3, 3, 3, 0.5d, Color.Black), 0)
+                item = new Entity(AnimatedScreenObject.CreateStatic(3, 3, 3, 0.5d, Color.Black), 0)
                 {
                     Position = GetRandomPosition(),
                     UsePixelPositioning = usePixelPositioning,
@@ -162,10 +160,7 @@ internal class EntitySurface : ScreenSurface
         if (info.IsKeyPressed(Keys.F1))
         {
             moveEntities = !moveEntities;
-        }
-        if (info.IsKeyPressed(Keys.F2))
-        {
-            useCollision = !useCollision;
+            return true;
         }
 
         // Process UP/DOWN movements
@@ -221,7 +216,8 @@ internal class EntitySurface : ScreenSurface
     {
         base.Update(delta);
 
-        if (moveEntities) foreach (var item in others)
+        if (moveEntities)
+            foreach (var item in others)
             {
                 var newPosition = item.Position + new Point(Game.Instance.Random.Next(-1, 2), Game.Instance.Random.Next(-1, 2));
 

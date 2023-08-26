@@ -11,9 +11,7 @@ internal class DemoControls : IDemo
     public string Description => "All of the SadConsole controls are displayed in this demo. You can test each control." +
                                  "\r\n\r\n" +
                                  "Controls use themes to style and color themselves. The bottom part of the demo window " +
-                                 "shows a set of colors used by the current theme." +
-                                 "\r\n\r\n" +
-                                 "Press [c:r f:Red:2]F1 to change themes.";
+                                 "shows a set of colors used by the current theme.";
 
     public string CodeFile => "DemoControls.cs";
 
@@ -32,7 +30,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public ControlsTest() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-        Controls.ThemeColors = Colors.CreateSadConsoleBlue();
+        Controls.ThemeColors = GameSettings.ControlColorScheme;
 
         var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
         {
@@ -242,12 +240,10 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public override bool ProcessKeyboard(Keyboard keyboard)
     {
-        // If the key we want to watch for is hit, change the themes
-        if (keyboard.IsKeyPressed(Keys.F1))
+        if (keyboard.IsKeyDown(Keys.F2))
         {
-            Controls.ThemeColors = Controls.ThemeColors == null ? UI.Colors.CreateSadConsoleBlue() : null;
-            OnInvalidated();
-            IsDirty = true;
+            CharacterSelectWindow window = new(15, 20);
+            window.Show(true);
             return true;
         }
 

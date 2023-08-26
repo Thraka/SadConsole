@@ -12,7 +12,7 @@ internal class DemoScrollableConsole : IDemo
 
     public string Description => "Example of a message console that scrolls as new messages are added";
 
-    public string CodeFile => "DemoShapes.cs";
+    public string CodeFile => "DemoScrollableConsole.cs";
 
     public IScreenSurface CreateDemoScreen() =>
         new ScrollableConsole(50) {  AllowInput = true, AutomaticScroll = true };

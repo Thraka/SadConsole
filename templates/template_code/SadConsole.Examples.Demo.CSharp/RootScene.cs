@@ -119,11 +119,11 @@ class RootScene : ScreenObject
 
             for (int i = 0; i < _lines.Length; i++)
             {
-                int stringLength = obj.GetString(0, i, obj.Surface.Width).Trim('\0').Length;
+                int stringLength = obj.Surface.GetString(0, i, obj.Surface.Width).Trim('\0').Length;
 
                 if (stringLength == 0) continue;
 
-                ColoredString coloredString = obj.GetStringColored(0, i, stringLength);
+                ColoredString coloredString = obj.Surface.GetStringColored(0, i, stringLength);
                 coloredString.SetEffect(_effect);
                 coloredString.IgnoreEffect = false;
                 _lineDrawers[i] = new Instructions.DrawString(coloredString);
@@ -135,7 +135,7 @@ class RootScene : ScreenObject
                 };
             }
 
-            obj.Clear();
+            obj.Surface.Clear();
 
             base.OnAdded(host);
         }

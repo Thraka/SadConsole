@@ -21,7 +21,7 @@
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
-    <UseProjectReferences>true</UseProjectReferences>
+    <UseProjectReferences>false</UseProjectReferences>
 
     <!-- Some constants for your game that can detect monogame or sfml. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -30,9 +30,9 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha1-debug" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-alpha1-debug" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0-alpha1-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha4-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-alpha4-debug" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.0-alpha4-debug" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
