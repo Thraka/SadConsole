@@ -13,11 +13,6 @@ public partial class Game : GameHost
     private Host.Keyboard _keyboardState = new Host.Keyboard();
 
     /// <summary>
-    /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitalContainer</code> when creating a stream to read a file.
-    /// </summary>
-    public bool UseTitleContainer { get; set; } = true;
-
-    /// <summary>
     /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
     /// </summary>
     public Host.Game MonoGameInstance { get; set; }
@@ -113,7 +108,7 @@ public partial class Game : GameHost
         if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
             return System.IO.File.OpenWrite(file);
 
-        return UseTitleContainer ? Microsoft.Xna.Framework.TitleContainer.OpenStream(file) : File.OpenRead(file);
+        return File.OpenRead(file);
     }
 
 
