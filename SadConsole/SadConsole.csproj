@@ -28,12 +28,11 @@
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
     <PackageReleaseNotes>
-- ComboBox is now resizble.
-- Some controls, like Button, now support a text-only constructor that automatically sizes the control.
-- TabControl added.
-- Table control added.
-- Surface.FillWithRandomGarbage supports a rectangle.
-- Font files can have a Mapping property of From,To int objects that remap glyphs to other position rects
+- Themes have been removed. Each control draws itself.
+- IScreenObject no longer implements IEnumerable to access the children. Use the .Children collection property instead.
+- Update and Render no longer check for IsEnabled and IsVisible, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
+- Added Table and Tab controls.
+- Entities.Renderer renamed Entities.EntityRenderer.
     </PackageReleaseNotes>
   </PropertyGroup>
 
