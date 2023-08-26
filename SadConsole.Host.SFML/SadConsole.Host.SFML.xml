@@ -597,7 +597,7 @@
         </member>
         <member name="T:SadConsole.Renderers.LayeredRenderer">
             <summary>
-            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            Draws a <see cref="T:SadConsole.Components.LayeredSurface"/> object by adding a <see cref="T:SadConsole.Renderers.LayeredSurfaceRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">

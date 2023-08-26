@@ -1,4 +1,4 @@
-## v10.0.0 Alpha 3 (XX/XX/2023)
+## v10.0.0 Alpha 4 (XX/XX/2023)
 
 Major changes (possibly breaking)
 
@@ -51,6 +51,7 @@ Normal changes
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
 - [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
 - [UI] `ProgressBar` is easier to customize.
+- [UI] `Colors.Name` property added.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 - [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
