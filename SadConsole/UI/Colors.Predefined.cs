@@ -44,6 +44,7 @@ public partial class Colors
         };
 
         colors.IsLightTheme = true;
+        colors.Name = "sadconsoleblue";
 
         colors.Title = new AdjustableColor(ColorNames.Orange, "Title", colors);
         colors.Lines = new AdjustableColor(ColorNames.Gray, "Lines", colors);
@@ -105,10 +106,11 @@ public partial class Colors
             Silver = Color.Silver,
             SilverDark = (Color.Silver * 0.50f).FillAlpha(),
             Bronze = new Color(205, 127, 50),
-            BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha(),
+            BronzeDark = (new Color(205, 127, 50) * 0.50f).FillAlpha()
         };
 
         colors.IsLightTheme = false;
+        colors.Name = "ansi";
 
         colors.Title = new AdjustableColor(ColorNames.Orange, "Title", colors);
         colors.Lines = new AdjustableColor(ColorNames.CyanDark, "Lines", colors);

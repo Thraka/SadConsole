@@ -36,6 +36,11 @@ public partial class Colors
     public bool IsLightTheme { get; set; }
 
     /// <summary>
+    /// The name of this color scheme.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
     /// The white color.
     /// </summary>
     public Color White { get; set; }
