@@ -11,7 +11,7 @@ namespace SadConsole.Renderers;
 /// <summary>
 /// Draws the entities of a <see cref="Entities.EntityManager"/>.
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("Entity lite")]
+[System.Diagnostics.DebuggerDisplay("Entity")]
 public class EntityRenderStep : IRenderStep, IRenderStepTexture
 {
     private Entities.EntityManager _entityManager;

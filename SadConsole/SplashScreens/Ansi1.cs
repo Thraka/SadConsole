@@ -8,7 +8,7 @@ namespace SadConsole.SplashScreens;
 /// <summary>
 /// A simple splashscreen that fades in a screen specifying "Powered by SadConsole".
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("Splashscreen: Simple")]
+[System.Diagnostics.DebuggerDisplay("Splashscreen: Ansi Logo")]
 public class Ansi1 : ScreenSurface
 {
     private Instructions.InstructionSet _endAnimation;

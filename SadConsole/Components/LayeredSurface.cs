@@ -12,7 +12,7 @@ namespace SadConsole.Components;
 /// Manages a set of surface layers.
 /// </summary>
 [DataContract]
-[System.Diagnostics.DebuggerDisplay("Entity host")]
+[System.Diagnostics.DebuggerDisplay("Layered surface")]
 public class LayeredSurface : Components.UpdateComponent, Components.IComponent, IList<ICellSurface>
 {
     /// <summary>

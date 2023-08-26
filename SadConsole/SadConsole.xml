@@ -10335,6 +10335,11 @@
             Status flag to indicate that the primary backgrounds of the controls are considered light rather than dark.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Colors.Name">
+            <summary>
+            The name of this color scheme.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Colors.White">
             <summary>
             The white color.

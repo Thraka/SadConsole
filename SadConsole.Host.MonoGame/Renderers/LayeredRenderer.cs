@@ -1,9 +1,9 @@
 ﻿namespace SadConsole.Renderers;
 
 /// <summary>
-/// Draws a <see cref="UI.Window"/> object by adding a <see cref="WindowRenderStep"/> to the <see cref="ScreenSurfaceRenderer.Steps"/> collection.
+/// Draws a <see cref="Components.LayeredSurface"/> object by adding a <see cref="LayeredSurfaceRenderStep"/> to the <see cref="ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("Window")]
+[System.Diagnostics.DebuggerDisplay("LayeredRenderer")]
 public sealed class LayeredRenderer : ScreenSurfaceRenderer
 {
     ///  <inheritdoc/>
