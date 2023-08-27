@@ -127,7 +127,7 @@ public partial class TabControl
                         header = tabItem.Header.Align(tabItem.TextAlignment, tabItem.TabSize);
 
                     if (header.Length + y >= Height)
-                        header = header.Substring(0, header.Length - Height + y + 1);
+                        header = header.Substring(0, Height - y - 1);
 
                     // Cache the headers area
                     tabItem.ThemeHeaderArea = new Rectangle(x, y, 3, header.Length + 2);
