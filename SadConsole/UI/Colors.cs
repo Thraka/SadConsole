@@ -258,32 +258,32 @@ public partial class Colors
     /// <summary>
     /// The appearance of a control when in the normal state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlNormal { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlNormal { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of a control when in the disabled state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlDisabled { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlDisabled { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of a control when in the mouse-over state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlOver { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlOver { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of a control when in the selected state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlSelected { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlSelected { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of a control when in the mouse-down state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlMouseDown { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlMouseDown { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of a control when in the focused state.
     /// </summary>
-    public ColoredGlyph Appearance_ControlFocused { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Appearance_ControlFocused { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// Creates a color object based on the <see cref="Colors.CreateAnsi"/> scheme.

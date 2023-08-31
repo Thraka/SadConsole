@@ -41,7 +41,7 @@ public interface ICellEffect// : System.IEquatable<ICellEffect>
     /// <param name="cell">The surface cell using this effect.</param>
     /// <param name="originalState">The state of the cell prior to the effect being applied.</param>
     /// <returns><see langword="true"/> when this method modified the <paramref name="cell"/>; otherwise <see langword="false"/>.</returns>
-    bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState);
+    bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState);
 
     /// <summary>
     /// Updates the state of the effect.

@@ -119,9 +119,9 @@ public partial class RadioButton
         }
 
         // Draw the control
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph bracketAppearance = BracketsThemeState.GetStateAppearance(State);
-        ColoredGlyph iconAppearance = IconThemeState.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase bracketAppearance = BracketsThemeState.GetStateAppearance(State);
+        ColoredGlyphBase iconAppearance = IconThemeState.GetStateAppearance(State);
 
         Surface.DefaultBackground = appearance.Background;
         Surface.DefaultForeground = appearance.Foreground;

@@ -46,7 +46,7 @@ public class ButtonBox : ButtonBase
     {
         if (!IsDirty) return;
 
-        ColoredGlyph appearance;
+        ColoredGlyphBase appearance;
         bool mouseDown = false;
         bool focused = false;
 

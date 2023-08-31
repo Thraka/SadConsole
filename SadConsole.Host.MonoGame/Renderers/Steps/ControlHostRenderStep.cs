@@ -154,7 +154,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
         font = control.AlternateFont ?? font;
 
         Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
-        ColoredGlyph cell;
+        ColoredGlyphBase cell;
 
         for (int y = 0; y < control.Surface.View.Height; y++)
         {

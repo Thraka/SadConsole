@@ -102,7 +102,7 @@
             Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyph,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyphBase,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
             <summary>
             Creates a new instance of this draw call.
             </summary>

@@ -64,7 +64,7 @@ public class Blinker : CellEffectBase
     }
 
     /// <inheritdoc />
-    public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
+    public override bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState)
     {
         Color oldColor = cell.Foreground;
 

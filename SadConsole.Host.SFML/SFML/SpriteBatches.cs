@@ -112,7 +112,7 @@ public class SpriteBatch
     /// <param name="screenRect">The rectangle on the render target to draw the glyph.</param>
     /// <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
     /// <param name="font">The SadConsole font containing the glyph texture.</param>
-    public unsafe void DrawCell(ColoredGlyph cell, Rectangle screenRect, bool drawBackground, IFont font)
+    public unsafe void DrawCell(ColoredGlyphBase cell, Rectangle screenRect, bool drawBackground, IFont font)
     {
         Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
 

@@ -28,7 +28,7 @@ public class CodeEffect : CellEffectBase
     /// </summary>
     public System.TimeSpan Duration { get; set; }
 
-    private readonly Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> _applyAction;
+    private readonly Func<CodeEffect, ColoredGlyphBase, ColoredGlyphBase, bool> _applyAction;
     private readonly Action<CodeEffect, System.TimeSpan> _updateAction;
     private readonly Action<CodeEffect> _restartAction;
 
@@ -36,14 +36,14 @@ public class CodeEffect : CellEffectBase
     /// Creates a cell effect that runs custom code instead of hardcoded effect actions.
     /// </summary>
     /// <param name="id">A user-definable identifier.</param>
-    /// <param name="apply">The code to run for <see cref="ICellEffect.ApplyToCell(ColoredGlyph, ColoredGlyphState)"/>.</param>
+    /// <param name="apply">The code to run for <see cref="ICellEffect.ApplyToCell(ColoredGlyphBase, ColoredGlyphBase)"/>.</param>
     /// <param name="update">The code to run for <see cref="ICellEffect.Update(TimeSpan)"/>.</param>
     /// <param name="restart">The code to run for <see cref="ICellEffect.Restart"/>.</param>
-    public CodeEffect(string id, Func<CodeEffect, ColoredGlyph, ColoredGlyphState, bool> apply, Action<CodeEffect, System.TimeSpan> update, Action<CodeEffect> restart) =>
+    public CodeEffect(string id, Func<CodeEffect, ColoredGlyphBase, ColoredGlyphBase, bool> apply, Action<CodeEffect, System.TimeSpan> update, Action<CodeEffect> restart) =>
         (Id, _applyAction, _updateAction, _restartAction) = (id, apply, update, restart);
 
     /// <inheritdoc />
-    public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState) =>
+    public override bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState) =>
         _applyAction(this, cell, originalState);
 
     /// <summary>

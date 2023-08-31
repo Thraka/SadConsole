@@ -68,7 +68,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
 
             int rectIndex = 0;
-            ColoredGlyph cell;
+            ColoredGlyphBase cell;
             IFont font = screenObject.Font;
 
             if (fullRedraw)

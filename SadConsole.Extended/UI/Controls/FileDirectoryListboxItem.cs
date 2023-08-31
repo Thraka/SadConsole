@@ -92,7 +92,7 @@ public class FileDirectoryListboxItem : ListBoxItemTheme
     /// <inheritdoc/>
     public override void Draw(ControlBase control, Rectangle area, object item, ControlStates itemState)
     {
-        ColoredGlyph appearance;
+        ColoredGlyphBase appearance;
         string displayString;
 
         if (item is System.IO.DirectoryInfo || item is FileDirectoryListbox.FauxDirectory)

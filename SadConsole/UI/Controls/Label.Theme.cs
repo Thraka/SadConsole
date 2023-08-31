@@ -33,7 +33,7 @@ public partial class Label : ControlBase
 
         RefreshThemeStateColors(colors);
 
-        ColoredGlyph appearance;
+        ColoredGlyphBase appearance;
 
         if (!UseNormalStateOnly)
             appearance = ThemeState.GetStateAppearance(State);

@@ -19,7 +19,7 @@ internal readonly struct ColoredGlyphAppearance
     public readonly Mirror Mirror;
     public readonly CellDecorator[] Decorators;
 
-    public ColoredGlyphAppearance(ColoredGlyph cell)
+    public ColoredGlyphAppearance(ColoredGlyphBase cell)
     {
         Foreground = cell.Foreground;
         Background = cell.Background;
@@ -36,10 +36,10 @@ internal readonly struct ColoredGlyphAppearance
     /// The Decorators array is copied using a shallow-copy.
     /// </summary>
     /// <remarks>
-    /// This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+    /// This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyphBase object.
     /// </remarks>
     /// <param name="cell">Cell to copy to.</param>
-    public void ShallowCopyTo(ColoredGlyph cell)
+    public void ShallowCopyTo(ColoredGlyphBase cell)
     {
         cell.Foreground = Foreground;
         cell.Background = Background;
@@ -367,7 +367,7 @@ public static class CellSurfaceEditor
         foreach (Point item in cells)
             cellList.Add(item.ToIndex(obj.Surface.Width));
 
-        obj.Surface.Effects.SetEffect((IEnumerable<ColoredGlyph>)cellList, effect);
+        obj.Surface.Effects.SetEffect((IEnumerable<ColoredGlyphBase>)cellList, effect);
         obj.Surface.IsDirty = true;
     }
 
@@ -379,7 +379,7 @@ public static class CellSurfaceEditor
     /// <param name="effect">The desired effect.</param>
     public static void SetEffect(this ISurface obj, IEnumerable<int> cells, ICellEffect? effect)
     {
-        List<ColoredGlyph> glyphs = new List<ColoredGlyph>(5);
+        List<ColoredGlyphBase> glyphs = new List<ColoredGlyphBase>(5);
 
         foreach (var index in cells)
             glyphs.Add(obj.Surface[index]);
@@ -394,7 +394,7 @@ public static class CellSurfaceEditor
     /// <param name="obj">The surface being edited.</param>
     /// <param name="cell">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ISurface obj, ColoredGlyph cell, ICellEffect? effect)
+    public static void SetEffect(this ISurface obj, ColoredGlyphBase cell, ICellEffect? effect)
     {
         obj.Surface.Effects.SetEffect(cell, effect);
         obj.Surface.IsDirty = true;
@@ -406,7 +406,7 @@ public static class CellSurfaceEditor
     /// <param name="obj">The surface being edited.</param>
     /// <param name="cells">The cells for the effect.</param>
     /// <param name="effect">The desired effect.</param>
-    public static void SetEffect(this ISurface obj, IEnumerable<ColoredGlyph> cells, ICellEffect? effect)
+    public static void SetEffect(this ISurface obj, IEnumerable<ColoredGlyphBase> cells, ICellEffect? effect)
     {
         obj.Surface.Effects.SetEffect(cells, effect);
         obj.Surface.IsDirty = true;
@@ -440,7 +440,7 @@ public static class CellSurfaceEditor
     /// <param name="x">The x location of the cell.</param>
     /// <param name="y">The y location of the cell.</param>
     /// <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
-    public static void SetCellAppearance(this ISurface obj, int x, int y, ColoredGlyph appearance)
+    public static void SetCellAppearance(this ISurface obj, int x, int y, ColoredGlyphBase appearance)
     {
         if (appearance == null)
             throw new NullReferenceException("Appearance may not be null.");
@@ -459,7 +459,7 @@ public static class CellSurfaceEditor
     /// <param name="x">The x location of the cell.</param>
     /// <param name="y">The y location of the cell.</param>
     /// <returns>The appearance.</returns>
-    public static ColoredGlyph GetCellAppearance(this ISurface obj, int x, int y)
+    public static ColoredGlyphBase GetCellAppearance(this ISurface obj, int x, int y)
     {
         var appearance = new ColoredGlyph();
         obj.Surface[y * obj.Surface.Width + x].CopyAppearanceTo(appearance);
@@ -472,7 +472,7 @@ public static class CellSurfaceEditor
     /// <param name="obj">The surface being edited.</param>
     /// <param name="area">The area to get cells from.</param>
     /// <returns>A new array with references to each cell in the area.</returns>
-    public static IEnumerable<ColoredGlyph> GetCells(this ISurface obj, Rectangle area)
+    public static IEnumerable<ColoredGlyphBase> GetCells(this ISurface obj, Rectangle area)
     {
         area = Rectangle.GetIntersection(area, new Rectangle(0, 0, obj.Surface.Width, obj.Surface.Height));
 
@@ -890,7 +890,7 @@ public static class CellSurfaceEditor
     /// <param name="text">The string to display.</param>
     /// <param name="appearance">The appearance of the cell</param>
     /// <param name="effect">An optional effect to apply to the printed obj.Surface.</param>
-    public static void Print(this ISurface obj, int x, int y, string text, ColoredGlyph appearance, ICellEffect? effect = null)
+    public static void Print(this ISurface obj, int x, int y, string text, ColoredGlyphBase appearance, ICellEffect? effect = null)
     {
         if (string.IsNullOrEmpty(text)) return;
         if (!obj.Surface.IsValidCell(x, y, out int index)) return;
@@ -903,7 +903,7 @@ public static class CellSurfaceEditor
 
             for (; index < end; index++)
             {
-                ColoredGlyph cell = obj.Surface[index];
+                ColoredGlyphBase cell = obj.Surface[index];
                 appearance.CopyAppearanceTo(cell, false);
                 cell.Glyph = text[charIndex];
                 effectIndices.Add(index);
@@ -948,7 +948,7 @@ public static class CellSurfaceEditor
     /// <param name="x">X location of the text.</param>
     /// <param name="y">Y location of the text.</param>
     /// <param name="glyphs">An array of glyphs to print at the specified position.</param>
-    public static void Print(this ISurface obj, int x, int y, ColoredGlyph[] glyphs) =>
+    public static void Print(this ISurface obj, int x, int y, ColoredGlyphBase[] glyphs) =>
         Print(obj, x, y, new ColoredString(glyphs));
 
     /// <summary>
@@ -958,7 +958,7 @@ public static class CellSurfaceEditor
     /// <param name="x">X location of the text.</param>
     /// <param name="y">Y location of the text.</param>
     /// <param name="glyphs">An enumeration of glyphs to print at the specified position.</param>
-    public static void Print(this ISurface obj, int x, int y, IEnumerable<ColoredGlyph> glyphs) =>
+    public static void Print(this ISurface obj, int x, int y, IEnumerable<ColoredGlyphBase> glyphs) =>
         Print(obj, x, y, new ColoredString(glyphs.ToArray()));
 
     private static void PrintNoCheck(this ISurface obj, int index, ColoredString text)
@@ -1062,7 +1062,7 @@ public static class CellSurfaceEditor
         for (int i = 0; i < length; i++)
         {
             int tempIndex = i + index;
-            var cell = (ColoredGlyph)sb[i];
+            var cell = sb[i];
             if (tempIndex < obj.Surface.Count)
             {
                 obj.Surface[tempIndex].CopyAppearanceTo(cell);
@@ -1823,22 +1823,22 @@ public static class CellSurfaceEditor
     /// <param name="count">The count of glyphs to erase.</param>
     /// <returns>The cells processed by this method.</returns>
     /// <remarks>
-    /// Cells altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
+    /// Cells altered by this method has the <see cref="ColoredGlyphBase.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyphBase.Decorators"/> array reset, and the <see cref="ColoredGlyphBase.Mirror"/> set to <see cref="Mirror.None"/>.
     /// </remarks>
-    public static ColoredGlyph[] Erase(this ISurface obj, int x, int y, int count)
+    public static ColoredGlyphBase[] Erase(this ISurface obj, int x, int y, int count)
     {
         if (!obj.Surface.IsValidCell(x, y, out int index))
         {
-            return Array.Empty<ColoredGlyph>();
+            return Array.Empty<ColoredGlyphBase>();
         }
 
         int end = index + count > obj.Surface.Count ? obj.Surface.Count : index + count;
         int total = end - index;
-        ColoredGlyph[] result = new ColoredGlyph[total];
+        ColoredGlyphBase[] result = new ColoredGlyphBase[total];
         int resultIndex = 0;
         for (; index < end; index++)
         {
-            ColoredGlyph c = obj.Surface[index];
+            ColoredGlyphBase c = obj.Surface[index];
 
             c.Glyph = obj.Surface.DefaultGlyph;
             c.Mirror = Mirror.None;
@@ -1859,7 +1859,7 @@ public static class CellSurfaceEditor
     /// <param name="x">The x position.</param>
     /// <param name="y">The y position.</param>
     /// <remarks>
-    /// The cell altered by this method has the <see cref="ColoredGlyph.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
+    /// The cell altered by this method has the <see cref="ColoredGlyphBase.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyphBase.Decorators"/> array reset, and the <see cref="ColoredGlyphBase.Mirror"/> set to <see cref="Mirror.None"/>.
     /// </remarks>
     public static void Erase(this ISurface obj, int x, int y)
     {
@@ -1880,7 +1880,7 @@ public static class CellSurfaceEditor
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <remarks>
-    /// All cells have <see cref="ColoredGlyph.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyph.Decorators"/> array reset, and the <see cref="ColoredGlyph.Mirror"/> set to <see cref="Mirror.None"/>.
+    /// All cells have <see cref="ColoredGlyphBase.Glyph"/> set to <see cref="ICellSurface.DefaultGlyph"/>, the <see cref="ColoredGlyphBase.Decorators"/> array reset, and the <see cref="ColoredGlyphBase.Mirror"/> set to <see cref="Mirror.None"/>.
     /// </remarks>
     public static void Erase(this ISurface obj)
     {
@@ -1901,7 +1901,7 @@ public static class CellSurfaceEditor
     /// <param name="obj">The surface being edited.</param>
     public static void Clear(this ISurface obj)
     {
-        ColoredGlyph cell;
+        ColoredGlyphBase cell;
 
         for (int i = 0; i < obj.Surface.Count; i++)
         {
@@ -1926,7 +1926,7 @@ public static class CellSurfaceEditor
     {
         if (!obj.Surface.IsValidCell(x, y)) return;
 
-        ColoredGlyph cell = obj.Surface[x, y];
+        ColoredGlyphBase cell = obj.Surface[x, y];
 
         obj.Surface.Effects.SetEffect(cell, null);
 
@@ -1952,9 +1952,9 @@ public static class CellSurfaceEditor
         if (index < 0 || index >= obj.Surface.Count) return;
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
-        var result = new ColoredGlyph[end - index];
+        var result = new ColoredGlyphBase[end - index];
         int resultIndex = 0;
-        ColoredGlyph cell;
+        ColoredGlyphBase cell;
 
         for (; index < end; index++)
         {
@@ -1983,9 +1983,9 @@ public static class CellSurfaceEditor
 
         if (area == Rectangle.Empty) return;
 
-        var result = new ColoredGlyph[area.Width * area.Height];
+        var result = new ColoredGlyphBase[area.Width * area.Height];
         int resultIndex = 0;
-        ColoredGlyph cell;
+        ColoredGlyphBase cell;
 
         for (int x = area.X; x < area.X + area.Width; x++)
         {
@@ -2013,8 +2013,8 @@ public static class CellSurfaceEditor
     /// <param name="cellPositions">The cells to clear.</param>
     public static void Clear(this ISurface obj, IEnumerable<Point> cellPositions)
     {
-        List<ColoredGlyph> result = new List<ColoredGlyph>(5);
-        ColoredGlyph cell;
+        List<ColoredGlyphBase> result = new List<ColoredGlyphBase>(5);
+        ColoredGlyphBase cell;
 
         foreach (Point position in cellPositions)
         {
@@ -2037,7 +2037,7 @@ public static class CellSurfaceEditor
     /// <param name="obj">The surface being edited.</param>
     /// <param name="iconAppearance">The appearance that is copied to every cell.</param>
     /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-    public static ColoredGlyph[] Fill(this ISurface obj, ColoredGlyph iconAppearance) =>
+    public static ColoredGlyphBase[] Fill(this ISurface obj, ColoredGlyphBase iconAppearance) =>
         Fill(obj, iconAppearance.Foreground, iconAppearance.Background, iconAppearance.Glyph, iconAppearance.Mirror);
 
     /// <summary>
@@ -2049,9 +2049,9 @@ public static class CellSurfaceEditor
     /// <param name="glyph">Glyph to apply. If null, skips.</param>
     /// <param name="mirror">Mirror to apply. If null, skips.</param>
     /// <returns>The array of all cells in this console, starting from the top left corner.</returns>
-    public static ColoredGlyph[] Fill(this ISurface obj, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+    public static ColoredGlyphBase[] Fill(this ISurface obj, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
     {
-        ColoredGlyph[] glyphs = new ColoredGlyph[obj.Surface.Count];
+        ColoredGlyphBase[] glyphs = new ColoredGlyphBase[obj.Surface.Count];
 
         for (int i = 0; i < obj.Surface.Count; i++)
         {
@@ -2090,17 +2090,17 @@ public static class CellSurfaceEditor
     /// <param name="glyph">Glyph to apply. If null, skips.</param>
     /// <param name="mirror">Mirror to apply. If null, skips.</param>
     /// <returns>An array containing the affected cells, starting from the top left corner. If x or y are out of bounds, nothing happens and an empty array is returned</returns>
-    public static ColoredGlyph[] Fill(this ISurface obj, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+    public static ColoredGlyphBase[] Fill(this ISurface obj, int x, int y, int length, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
     {
         if (!obj.Surface.IsValidCell(x, y, out int index))
-            return Array.Empty<ColoredGlyph>();
+            return Array.Empty<ColoredGlyphBase>();
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
-        ColoredGlyph[] result = new ColoredGlyph[end - index];
+        ColoredGlyphBase[] result = new ColoredGlyphBase[end - index];
         int resultIndex = 0;
         for (; index < end; index++)
         {
-            ColoredGlyph c = obj.Surface[index];
+            ColoredGlyphBase c = obj.Surface[index];
             if (background.HasValue)
                 c.Background = background.Value;
 
@@ -2134,21 +2134,21 @@ public static class CellSurfaceEditor
     /// <param name="glyph">Glyph to apply. If null, skips.</param>
     /// <param name="mirror">Mirror to apply. If null, skips.</param>
     /// <returns>An array containing the affected cells, starting from the top left corner. If the area is out of bounds, nothing happens and an empty array is returned.</returns>
-    public static ColoredGlyph[] Fill(this ISurface obj, Rectangle area, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
+    public static ColoredGlyphBase[] Fill(this ISurface obj, Rectangle area, Color? foreground = null, Color? background = null, int? glyph = null, Mirror? mirror = null)
     {
         area = Rectangle.GetIntersection(area, new Rectangle(0, 0, obj.Surface.Width, obj.Surface.Height));
 
         if (area == Rectangle.Empty)
-            return Array.Empty<ColoredGlyph>();
+            return Array.Empty<ColoredGlyphBase>();
 
-        var result = new ColoredGlyph[area.Width * area.Height];
+        var result = new ColoredGlyphBase[area.Width * area.Height];
         int resultIndex = 0;
 
         for (int x = area.X; x < area.X + area.Width; x++)
         {
             for (int y = area.Y; y < area.Y + area.Height; y++)
             {
-                ColoredGlyph cell = obj.Surface[y * obj.Surface.Width + x];
+                ColoredGlyphBase cell = obj.Surface[y * obj.Surface.Width + x];
 
                 if (background.HasValue)
                     cell.Background = background.Value;
@@ -2186,9 +2186,9 @@ public static class CellSurfaceEditor
     /// <param name="mirror">Mirror to set. If null, skipped.</param>
     /// <returns>A list of cells the line touched; ordered from first to last.</returns>
     /// <remarks>To simply return the list of cells that would be drawn to, use <see langword="null"/> for <paramref name="glyph"/>, <paramref name="foreground"/>, <paramref name="background"/>, and <paramref name="mirror"/>.</remarks>
-    public static IEnumerable<ColoredGlyph> DrawLine(this ISurface obj, Point start, Point end, int? glyph, Color? foreground = null, Color? background = null, Mirror? mirror = null)
+    public static IEnumerable<ColoredGlyphBase> DrawLine(this ISurface obj, Point start, Point end, int? glyph, Color? foreground = null, Color? background = null, Mirror? mirror = null)
     {
-        var result = new List<ColoredGlyph>();
+        var result = new List<ColoredGlyphBase>();
         Func<int, int, bool> processor;
 
         if (foreground.HasValue || background.HasValue || glyph.HasValue)
@@ -2197,7 +2197,7 @@ public static class CellSurfaceEditor
             {
                 if (obj.Surface.IsValidCell(x, y, out int index))
                 {
-                    ColoredGlyph cell = obj.Surface[index];
+                    ColoredGlyphBase cell = obj.Surface[index];
                     result.Add(cell);
 
                     if (foreground.HasValue)
@@ -2277,7 +2277,7 @@ public static class CellSurfaceEditor
                 if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
                     throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
 
-                ColoredGlyph border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
+                ColoredGlyphBase border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
                 // Draw the major sides
                 DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top],
@@ -2306,13 +2306,13 @@ public static class CellSurfaceEditor
             // Using full glyph line style
             else if (parameters.BoxBorderStyleGlyphs != null)
             {
-                ColoredGlyph[] connectedLineStyle = parameters.BoxBorderStyleGlyphs;
+                ColoredGlyphBase[] connectedLineStyle = parameters.BoxBorderStyleGlyphs;
 
                 if (!ICellSurface.ValidateLineStyle(connectedLineStyle))
                     throw new ArgumentException("Array is either null or does not have the required line style elements", nameof(connectedLineStyle));
 
                 // Draw the major sides
-                ColoredGlyph border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top];
+                ColoredGlyphBase border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top];
                 DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
@@ -2343,7 +2343,7 @@ public static class CellSurfaceEditor
             else
             {
                 // Draw the major sides
-                ColoredGlyph border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
+                ColoredGlyphBase border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
                 DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
@@ -2380,7 +2380,7 @@ public static class CellSurfaceEditor
         {
             if (parameters.HasBorder && obj.Surface.IsValidCell(location.X, location.Y))
             {
-                ColoredGlyph cell = obj.Surface[location.X, location.Y];
+                ColoredGlyphBase cell = obj.Surface[location.X, location.Y];
 
                 if (!parameters.IgnoreBorderForeground) cell.Foreground = parameters.BorderGlyph.Foreground;
                 if (!parameters.IgnoreBorderBackground) cell.Background = parameters.BorderGlyph.Background;
@@ -2398,7 +2398,7 @@ public static class CellSurfaceEditor
             {
                 if (obj.Surface.IsValidCell(c))
                 {
-                    ColoredGlyph cell = obj.Surface[c];
+                    ColoredGlyphBase cell = obj.Surface[c];
 
                     if (!parameters.IgnoreFillForeground) cell.Foreground = parameters.FillGlyph.Foreground;
                     if (!parameters.IgnoreFillBackground) cell.Background = parameters.FillGlyph.Background;

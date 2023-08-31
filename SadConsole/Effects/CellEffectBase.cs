@@ -62,7 +62,7 @@ public abstract class CellEffectBase : ICellEffect
     }
 
     /// <inheritdoc />
-    public abstract bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState);
+    public abstract bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState);
 
     /// <inheritdoc />
     public virtual void Update(System.TimeSpan delta)

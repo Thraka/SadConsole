@@ -14,37 +14,37 @@ public class ThemeStates
     /// The normal appearance of the control.
     /// </summary>
     [DataMember]
-    public ColoredGlyph Normal { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Normal { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of the control when it is disabled.
     /// </summary>
     [DataMember]
-    public ColoredGlyph Disabled { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Disabled { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of the control when it is focused.
     /// </summary>
     [DataMember]
-    public ColoredGlyph Focused { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Focused { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of the control when it is in a selected state.
     /// </summary>
     [DataMember]
-    public ColoredGlyph Selected { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase Selected { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// The appearance of the control when the mouse is over it.
     /// </summary>
     [DataMember]
-    public ColoredGlyph MouseOver { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase MouseOver { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// THe appearance of the control when a mouse button is held down.
     /// </summary>
     [DataMember]
-    public ColoredGlyph MouseDown { get; set; } = new ColoredGlyph();
+    public ColoredGlyphBase MouseDown { get; set; } = new ColoredGlyph();
 
     /// <summary>
     /// Sets the same foreground color to all theme states.
@@ -107,7 +107,7 @@ public class ThemeStates
     /// </summary>
     /// <param name="state">The state to check.</param>
     /// <returns>A cell appearance.</returns>
-    public ColoredGlyph GetStateAppearance(ControlStates state)
+    public ColoredGlyphBase GetStateAppearance(ControlStates state)
     {
         if (Helpers.HasFlag((int)state, (int)ControlStates.Disabled))
             return Disabled;
@@ -132,7 +132,7 @@ public class ThemeStates
     /// </summary>
     /// <param name="state">The state to check.</param>
     /// <returns>A cell appearance.</returns>
-    public ColoredGlyph GetStateAppearanceNoMouse(ControlStates state)
+    public ColoredGlyphBase GetStateAppearanceNoMouse(ControlStates state)
     {
         if (Helpers.HasFlag((int)state, (int)ControlStates.Disabled))
             return Disabled;
@@ -166,19 +166,11 @@ public class ThemeStates
     /// <param name="colors">The colors to create the theme with.</param>
     public virtual void RefreshTheme(Colors colors)
     {
-        CopyAppearance(Normal, colors.Appearance_ControlNormal);
-        CopyAppearance(Disabled, colors.Appearance_ControlDisabled);
-        CopyAppearance(MouseOver, colors.Appearance_ControlOver);
-        CopyAppearance(MouseDown, colors.Appearance_ControlMouseDown);
-        CopyAppearance(Selected, colors.Appearance_ControlSelected);
-        CopyAppearance(Focused, colors.Appearance_ControlFocused);
-    }
-
-    private static void CopyAppearance(ColoredGlyph to, ColoredGlyph from)
-    {
-        to.Foreground = from.Foreground;
-        to.Background = from.Background;
-        to.Mirror = from.Mirror;
-        to.Decorators = from.Decorators;
+        colors.Appearance_ControlNormal.CopyAppearanceTo(Normal);
+        colors.Appearance_ControlDisabled.CopyAppearanceTo(Disabled);
+        colors.Appearance_ControlOver.CopyAppearanceTo(MouseOver);
+        colors.Appearance_ControlMouseDown.CopyAppearanceTo(MouseDown);
+        colors.Appearance_ControlSelected.CopyAppearanceTo(Selected);
+        colors.Appearance_ControlFocused.CopyAppearanceTo(Focused);
     }
 }

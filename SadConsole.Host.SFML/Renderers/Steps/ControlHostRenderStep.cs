@@ -130,7 +130,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect)
     {
         font = control.AlternateFont ?? font;
-        ColoredGlyph cell;
+        ColoredGlyphBase cell;
 
         //if (control.Surface.DefaultBackground.A != 0)
         //{

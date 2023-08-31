@@ -126,7 +126,7 @@ public partial class Table
                 if (DrawFakeCells || (cell.IsSettingsInitialized && cell.Settings.UseFakeLayout))
                     DrawFakeCell(cell);
 
-                AdjustControlSurface( cell, GetCustomStateAppearance( cell), !entireRowOrColumnNotVisible);
+                AdjustControlSurface( cell, GetCustomStateAppearance(cell), !entireRowOrColumnNotVisible);
                 PrintText( cell);
 
                 colIndex++;
@@ -213,7 +213,7 @@ public partial class Table
         }
     }
 
-    protected ColoredGlyph? GetCustomStateAppearance(Table.Cell cell)
+    protected ColoredGlyphBase? GetCustomStateAppearance(Table.Cell cell)
     {
         if (!cell.IsVisible || (cell.IsSettingsInitialized && !cell.Settings.Interactable))
             return null;
@@ -257,7 +257,7 @@ public partial class Table
         return null;
     }
 
-    protected void AdjustControlSurface(Table.Cell cell, ColoredGlyph? customStateAppearance, bool adjustVisibility)
+    protected void AdjustControlSurface(Table.Cell cell, ColoredGlyphBase? customStateAppearance, bool adjustVisibility)
     {
         int width = Cells.GetSizeOrDefault(cell.Column, Table.TableCells.Layout.LayoutType.Column);
         int height = Cells.GetSizeOrDefault(cell.Row, Table.TableCells.Layout.LayoutType.Row);

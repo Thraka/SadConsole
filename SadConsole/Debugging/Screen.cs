@@ -222,7 +222,7 @@ public static class Screen
             }
         }
 
-        private void SetEditCell(ColoredGlyph cell)
+        private void SetEditCell(ColoredGlyphBase cell)
         {
             if (cell == null)
             {

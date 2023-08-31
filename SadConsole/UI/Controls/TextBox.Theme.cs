@@ -53,7 +53,7 @@ public partial class TextBox
         // If the focused background color is the same as the non-focused, alter it so it stands out
         ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
 
         // TODO: Fix this hack...
         if (this is NumberBox numberBox && (numberBox.Text.Length != 0 || (numberBox.Text.Length == 1 && numberBox.Text[0] != '-')))

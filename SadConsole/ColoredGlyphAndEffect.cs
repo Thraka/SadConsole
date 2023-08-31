@@ -1,12 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using SadConsole.Effects;
+using SadRogue.Primitives;
 
 namespace SadConsole;
 
 /// <summary>
 /// A <see cref="ColoredGlyph"/> with a <see cref="ICellEffect"/>.
 /// </summary>
-public class ColoredGlyphAndEffect : ColoredGlyph
+public sealed class ColoredGlyphAndEffect : ColoredGlyph
 {
     ICellEffect? _effect;
 
@@ -24,29 +27,12 @@ public class ColoredGlyphAndEffect : ColoredGlyph
     }
 
     /// <summary>
-    /// Creates a copy of this <see cref="ColoredGlyphAndEffect"/>.
-    /// </summary>
-    /// <returns>A copy of this <see cref="ColoredGlyphAndEffect"/>.</returns>
-    public new ColoredGlyphAndEffect Clone()
-    {
-        return new ColoredGlyphAndEffect()
-        {
-            Foreground = Foreground,
-            Background = Background,
-            Glyph = Glyph,
-            Mirror = Mirror,
-            Effect = Effect,
-            Decorators = Decorators.ToArray()
-        };
-    }
-
-    /// <summary>
     /// Creates a new <see cref="ColoredGlyphAndEffect"/> from a <see cref="ColoredGlyph"/> with the specified effect.
     /// </summary>
     /// <param name="glyph">The glyph.</param>
     /// <param name="effect">When provided, sets the <see cref="ColoredGlyphAndEffect.Effect"/>.</param>
     /// <returns></returns>
-    public static ColoredGlyphAndEffect FromColoredGlyph(ColoredGlyph glyph, ICellEffect? effect = null) =>
+    public static ColoredGlyphAndEffect FromColoredGlyph(ColoredGlyphBase glyph, ICellEffect? effect = null) =>
         new ColoredGlyphAndEffect()
         {
             Foreground = glyph.Foreground,
@@ -98,6 +84,31 @@ public class ColoredGlyphAndEffect : ColoredGlyph
             Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : System.Array.Empty<CellDecorator>();
         else
             Decorators = cell.Decorators;
+    }
+
+    /// <inheritdoc />
+    public override void Clear()
+    {
+        Foreground = Color.White;
+        Background = Color.Black;
+        Glyph = 0;
+        Mirror = Mirror.None;
+        Decorators = Array.Empty<CellDecorator>();
+        Effect = null;
+    }
+
+    /// <inheritdoc />
+    public override ColoredGlyphBase Clone()
+    {
+        return new ColoredGlyphAndEffect()
+        {
+            Foreground = Foreground,
+            Background = Background,
+            Glyph = Glyph,
+            Mirror = Mirror,
+            Effect = Effect,
+            Decorators = Decorators.ToArray()
+        };
     }
 }
 

@@ -43,7 +43,7 @@ public partial class Panel
     /// The current Appearance based on the control state.
     /// </summary>
     [DataMember]
-    public ColoredGlyph? Appearance { get; protected set; }
+    public ColoredGlyphBase? Appearance { get; protected set; }
 
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)

@@ -78,9 +78,9 @@ public partial class ToggleSwitch
 
         RefreshThemeStateColors(colors);
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearanceNoMouse(State);
-        ColoredGlyph iconAppearance = SwitchThemeState.GetStateAppearance(State);
-        ColoredGlyph iconBackgroundAppearance = colors.Appearance_ControlDisabled;
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearanceNoMouse(State);
+        ColoredGlyphBase iconAppearance = SwitchThemeState.GetStateAppearance(State);
+        ColoredGlyphBase iconBackgroundAppearance = colors.Appearance_ControlDisabled;
         iconBackgroundAppearance.Glyph = BackgroundGlyph;
 
         // If we are doing text, then print it otherwise we're just displaying the button part

@@ -111,7 +111,7 @@ public class ListBoxItemColorTheme : ListBoxItemTheme
         {
             string value = new string(' ', area.Width - 2);
 
-            ColoredGlyph cellLook = GetStateAppearance(itemState).Clone();
+            ColoredGlyphBase cellLook = GetStateAppearance(itemState).Clone();
 
             control.Surface.Print(area.X + 1, area.Y, value, cellLook);
 

@@ -73,8 +73,8 @@ public partial class ComboBox
         RefreshThemeStateColors(colors);
 
         // Draw the control
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph iconAppearance = IconThemeState.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase iconAppearance = IconThemeState.GetStateAppearance(State);
 
         Surface.Fill(appearance.Foreground, appearance.Background, 0);
         iconAppearance.CopyAppearanceTo(Surface[Width - 1, 0]);

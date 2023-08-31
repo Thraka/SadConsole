@@ -111,7 +111,7 @@ public partial class REXPaintImage
                     if (rexCell.IsTransparent())
                         continue;
 
-                    SadConsole.ColoredGlyph newCell = layers[i][x, y];
+                    SadConsole.ColoredGlyphBase newCell = layers[i][x, y];
                     newCell.Foreground = new SadRogueColor(rexCell.Foreground.R, rexCell.Foreground.G, rexCell.Foreground.B, (byte)255);
                     newCell.Background = new SadRogueColor(rexCell.Background.R, rexCell.Background.G, rexCell.Background.B, (byte)255);
                     newCell.Glyph = rexCell.Character;

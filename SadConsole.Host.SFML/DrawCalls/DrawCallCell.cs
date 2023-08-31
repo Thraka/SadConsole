@@ -15,7 +15,7 @@ public class DrawCallCell : IDrawCall
     /// <summary>
     /// The glyph to be drawn.
     /// </summary>
-    public ColoredGlyph Cell;
+    public ColoredGlyphBase Cell;
 
     /// <summary>
     /// Where on the <see cref="Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
@@ -23,7 +23,7 @@ public class DrawCallCell : IDrawCall
     public Rectangle TargetRect;
 
     /// <summary>
-    /// When <see langword="true"/>, draws the <see cref="ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
+    /// When <see langword="true"/>, draws the <see cref="ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
     /// </summary>
     public bool DrawBackground;
 
@@ -33,8 +33,8 @@ public class DrawCallCell : IDrawCall
     /// <param name="cell">The glyph to be drawn.</param>
     /// <param name="targetRect">Where on the <see cref="Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
     /// <param name="font">The font to use when drawing the glyph.</param>
-    /// <param name="drawBackground">When <see langword="true"/>, draws the <see cref="ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
-    public DrawCallCell(ColoredGlyph cell, Rectangle targetRect, IFont font, bool drawBackground)
+    /// <param name="drawBackground">When <see langword="true"/>, draws the <see cref="ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+    public DrawCallCell(ColoredGlyphBase cell, Rectangle targetRect, IFont font, bool drawBackground)
     {
         Font = font;
         TargetRect = targetRect;

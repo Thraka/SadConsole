@@ -198,7 +198,7 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyph},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+        <member name="M:SadConsole.AnimatedScreenObject.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyphBase},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
             <summary>
             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenObject"/>.
             </summary>
@@ -825,7 +825,7 @@
             <param name="width">The width of the surface in cells.</param>
             <param name="height">The height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -842,7 +842,7 @@
             <param name="totalWidth">The total width of the surface in cells.</param>
             <param name="totalHeight">The total height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -898,56 +898,6 @@
             Gets an enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.
             </summary>
             <returns>An enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.</returns>
-        </member>
-        <member name="T:SadConsole.ColoredGlyph">
-            <summary>
-            Represents an individual piece of a <see cref="T:SadConsole.ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
-            </summary>
-        </member>
-        <member name="E:SadConsole.ColoredGlyph.IsDirtySet">
-            <summary>
-            An event that is raised when the <see cref="P:SadConsole.ColoredGlyph.IsDirty"/> property is set to <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.Decorators">
-            <summary>
-            Modifies the look of a cell with additional character.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.Foreground">
-            <summary>
-            The foreground color of this cell.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.Background">
-            <summary>
-            The background color of this cell.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.Glyph">
-            <summary>
-            The glyph index from a font for this cell.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.Mirror">
-            <summary>
-            The mirror effect for this cell.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.GlyphCharacter">
-            <summary>
-            The glyph.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.IsVisible">
-            <summary>
-            <see langword="true"/> when this cell should be drawn; otherwise, <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyph.IsDirty">
-            <summary>
-            <see langword="true"/> when this cell needs to be redrawn; otherwise, <see langword="false"/>.
-            </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor">
             <summary>
@@ -1005,7 +955,63 @@
             <param name="isVisible">The visiblity of the glyph.</param>
             <param name="decorators">Decorators for the cell.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceTo(SadConsole.ColoredGlyph,System.Boolean)">
+        <member name="M:SadConsole.ColoredGlyph.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.Clone">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.ColoredGlyphBase">
+            <summary>
+            Represents an individual piece of a <see cref="T:SadConsole.ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ColoredGlyphBase.IsDirtySet">
+            <summary>
+            An event that is raised when the <see cref="P:SadConsole.ColoredGlyphBase.IsDirty"/> property is set to <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.Decorators">
+            <summary>
+            Modifies the look of a cell with additional character.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.Foreground">
+            <summary>
+            The foreground color of this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.Background">
+            <summary>
+            The background color of this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.Glyph">
+            <summary>
+            The glyph index from a font for this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.Mirror">
+            <summary>
+            The mirror effect for this cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.GlyphCharacter">
+            <summary>
+            The glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.IsVisible">
+            <summary>
+            <see langword="true"/> when this cell should be drawn; otherwise, <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphBase.IsDirty">
+            <summary>
+            <see langword="true"/> when this cell needs to be redrawn; otherwise, <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphBase.CopyAppearanceTo(SadConsole.ColoredGlyphBase,System.Boolean)">
             <summary>
             Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
             </summary>
@@ -1015,7 +1021,7 @@
             decorator array reference is moved directly.
             </param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CopyAppearanceFrom(SadConsole.ColoredGlyph,System.Boolean)">
+        <member name="M:SadConsole.ColoredGlyphBase.CopyAppearanceFrom(SadConsole.ColoredGlyphBase,System.Boolean)">
             <summary>
             Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
             </summary>
@@ -1025,38 +1031,32 @@
             decorator array reference is moved directly.
             </param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.Clear">
+        <member name="M:SadConsole.ColoredGlyphBase.Clear">
             <summary>
             Resets the foreground, background, glyph, mirror effect and decorators.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.ToState">
-            <summary>
-            Copies the settings of this colored glyph into a new state object.
-            </summary>
-            <returns>The state of this colored glyph.</returns>
-        </member>
-        <member name="M:SadConsole.ColoredGlyph.Clone">
+        <member name="M:SadConsole.ColoredGlyphBase.Clone">
             <summary>
             Returns a new cell with the same properties as this one.
             </summary>
             <returns>The new cell.</returns>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.Matches(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyphBase.Matches(SadConsole.ColoredGlyphBase)">
             <summary>
             Checks if this <see cref="T:SadConsole.ColoredGlyph"/> object's properties match another's.
             </summary>
             <param name="other">The other object to check.</param>
             <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.CreateArray(System.Int32)">
+        <member name="M:SadConsole.ColoredGlyphBase.CreateArray(System.Int32)">
             <summary>
             Creates an array of colored glyphs.
             </summary>
             <param name="size"></param>
             <returns></returns>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
+        <member name="M:SadConsole.ColoredGlyphBase.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.ColoredGlyphAndEffect">
@@ -1069,13 +1069,7 @@
             The effect of this cell.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
-            <summary>
-            Creates a copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.
-            </summary>
-            <returns>A copy of this <see cref="T:SadConsole.ColoredGlyphAndEffect"/>.</returns>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
             Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
             </summary>
@@ -1103,6 +1097,12 @@
             decorator array reference is moved directly.
             </param>
         </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.ColoredGlyphState">
             <summary>
             A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
@@ -1110,32 +1110,32 @@
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Decorators">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> property.
+            A copy of the <see cref="!:ColoredGlyph.Decorators"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Foreground">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Foreground"/> property.
+            A copy of the <see cref="!:ColoredGlyph.Foreground"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Background">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Background"/> property.
+            A copy of the <see cref="!:ColoredGlyph.Background"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Glyph">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> property.
+            A copy of the <see cref="!:ColoredGlyph.Glyph"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Mirror">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> property.
+            A copy of the <see cref="!:ColoredGlyph.Mirror"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.IsVisible">
             <summary>
-            A copy of the <see cref="P:SadConsole.ColoredGlyph.IsVisible"/> property.
+            A copy of the <see cref="!:ColoredGlyph.IsVisible"/> property.
             </summary>
         </member>
         <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
@@ -1253,7 +1253,7 @@
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
         </member>
-        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyphBase[])">
             <summary>
             Combines a <see cref="T:SadConsole.ColoredGlyph"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
@@ -1478,7 +1478,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)"/>.
+            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="!:Print(string, ColoredGlyph, ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -1559,7 +1559,7 @@
             <param name="text">The text to print.</param>
             <returns>Returns this cursor object.</returns>
         </member>
-        <member name="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
             Prints text on the console.
             </summary>
@@ -2443,7 +2443,7 @@
             Creates a new instance of the blink effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Blink.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Blink.Update(System.TimeSpan)">
@@ -2490,7 +2490,7 @@
             Creates an instance of the blink glyph effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.BlinkGlyph.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.BlinkGlyph.Update(System.TimeSpan)">
@@ -2547,7 +2547,7 @@
             Creates a new instance of the blink effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Blinker.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Blinker.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Blinker.Update(System.TimeSpan)">
@@ -2602,7 +2602,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.CellEffectBase.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CellEffectBase.Update(System.TimeSpan)">
@@ -2639,16 +2639,16 @@
             The amount of time this effect runs for in seconds.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.CodeEffect.#ctor(System.String,System.Func{SadConsole.Effects.CodeEffect,SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState,System.Boolean},System.Action{SadConsole.Effects.CodeEffect,System.TimeSpan},System.Action{SadConsole.Effects.CodeEffect})">
+        <member name="M:SadConsole.Effects.CodeEffect.#ctor(System.String,System.Func{SadConsole.Effects.CodeEffect,SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase,System.Boolean},System.Action{SadConsole.Effects.CodeEffect,System.TimeSpan},System.Action{SadConsole.Effects.CodeEffect})">
             <summary>
             Creates a cell effect that runs custom code instead of hardcoded effect actions.
             </summary>
             <param name="id">A user-definable identifier.</param>
-            <param name="apply">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)"/>.</param>
+            <param name="apply">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)"/>.</param>
             <param name="update">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.Update(System.TimeSpan)"/>.</param>
             <param name="restart">The code to run for <see cref="M:SadConsole.Effects.ICellEffect.Restart"/>.</param>
         </member>
-        <member name="M:SadConsole.Effects.CodeEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.CodeEffect.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.CodeEffect.Clone">
@@ -2673,7 +2673,7 @@
         <member name="M:SadConsole.Effects.Delay.Update(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Delay.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Delay.Clone">
@@ -2699,7 +2699,7 @@
             An artificial delay between each effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectSet.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.EffectSet.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.EffectSet.Update(System.TimeSpan)">
@@ -2759,21 +2759,21 @@
             </summary>
             <param name="surface">Text surface to manage.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
             Associates a cell effect with a cell.
             </summary>
             <param name="cell">Cell to set the effect for.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.Effects.EffectsManager.SetEffect(System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyphBase},SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of the <paramref name="cells"/> provided.
             </summary>
             <param name="cells">A list of cell indicies to change the effect on.</param>
             <param name="effect">The effect to associate with the cell.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Effects.EffectsManager.GetEffect(SadConsole.ColoredGlyphBase)">
             <summary>
             Gets the effect of the specified cell.
             </summary>
@@ -2809,7 +2809,7 @@
             <param name="effectData">The effect data ssociated with the effect.</param>
             <returns><see langword="true"/> when the effect exists; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Effects.EffectsManager.ClearCellEffect(SadConsole.ColoredGlyphBase)">
             <summary>
             Clears the effect for the cell specified by index.
             </summary>
@@ -2842,14 +2842,14 @@
             </summary>
             <param name="effect">The effect.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(SadConsole.ColoredGlyph,System.Boolean)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.RemoveCell(SadConsole.ColoredGlyphBase,System.Boolean)">
             <summary>
             Removes a cell by index from the effect data.
             </summary>
             <param name="cell">The cell.</param>
             <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphEffectData.ContainsCell(SadConsole.ColoredGlyphBase)">
             <summary>
             Returns <see langword="true"/> when the cell index is already associated with the effect; otherwise <see langword="false"/>.
             </summary>
@@ -2871,7 +2871,7 @@
             The original state of the cell.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Effects.EffectsManager.ColoredGlyphWithState.#ctor(SadConsole.ColoredGlyphBase)">
             <summary>
             Creates a new instance of this class with the specified cell and index.
             </summary>
@@ -2947,7 +2947,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Fade.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Fade.Update(System.TimeSpan)">
@@ -2997,12 +2997,13 @@
             When <see langword="true"/>, indicates that the <see cref="T:SadConsole.Effects.EffectsManager"/> should run one update frame on this effect when it's first added to the manager.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.ICellEffect.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <summary>
             Applies the state of the effect to a cell.
             </summary>
             <param name="cell">The surface cell using this effect.</param>
             <param name="originalState">The state of the cell prior to the effect being applied.</param>
+            <returns><see langword="true"/> when this method modified the <paramref name="cell"/>; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:SadConsole.Effects.ICellEffect.Update(System.TimeSpan)">
             <summary>
@@ -3051,7 +3052,7 @@
             Creates a new instance of the effect.
             </summary>
         </member>
-        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyph,SadConsole.ColoredGlyphState)">
+        <member name="M:SadConsole.Effects.Recolor.ApplyToCell(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.Effects.Recolor.Clone">
@@ -4464,13 +4465,13 @@
             Array index enum for line glyphs.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredGlyphAppearance.ShallowCopyTo(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyphAppearance.ShallowCopyTo(SadConsole.ColoredGlyphBase)">
             <summary>
             Copies the ColoredGlyphAppearance to the appearance fields of the given ColoredGlyphs.
             The Decorators array is copied using a shallow-copy.
             </summary>
             <remarks>
-            This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyph object.
+            This is more performant than a deep copy if you don't need to preserve the state of the ColoredGlyphBase object.
             </remarks>
             <param name="cell">Cell to copy to.</param>
         </member>
@@ -4654,7 +4655,7 @@
             <param name="cells">The cells for the effect.</param>
             <param name="effect">The desired effect.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ISurface,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ISurface,SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of a cell to the specified effect.
             </summary>
@@ -4662,7 +4663,7 @@
             <param name="cell">The cells for the effect.</param>
             <param name="effect">The desired effect.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ISurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph},SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetEffect(SadConsole.ISurface,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyphBase},SadConsole.Effects.ICellEffect)">
             <summary>
             Changes the effect of a cell to the specified effect.
             </summary>
@@ -4687,7 +4688,7 @@
             <param name="index">The index of the cell.</param>
             <returns>The effect.</returns>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyphBase)">
             <summary>
             Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
             </summary>
@@ -4866,7 +4867,7 @@
             <param name="text">The string to display.</param>
             <param name="mirror">The mirror to set on all characters in the text.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,System.String,SadConsole.ColoredGlyph,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,System.String,SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
             </summary>
@@ -4886,7 +4887,7 @@
             <param name="y">Y location of the text.</param>
             <param name="text">The string to display.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
             </summary>
@@ -4895,7 +4896,7 @@
             <param name="y">Y location of the text.</param>
             <param name="glyphs">An array of glyphs to print at the specified position.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyph})">
+        <member name="M:SadConsole.CellSurfaceEditor.Print(SadConsole.ISurface,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{SadConsole.ColoredGlyphBase})">
             <summary>
             Draws the string on the console at the specified location, wrapping if needed.
             </summary>
@@ -5148,7 +5149,7 @@
             <param name="count">The count of glyphs to erase.</param>
             <returns>The cells processed by this method.</returns>
             <remarks>
-            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            Cells altered by this method has the <see cref="P:SadConsole.ColoredGlyphBase.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyphBase.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ISurface,System.Int32,System.Int32)">
@@ -5159,7 +5160,7 @@
             <param name="x">The x position.</param>
             <param name="y">The y position.</param>
             <remarks>
-            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            The cell altered by this method has the <see cref="P:SadConsole.ColoredGlyphBase.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyphBase.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ISurface)">
@@ -5168,7 +5169,7 @@
             </summary>
             <param name="obj">The surface being edited.</param>
             <remarks>
-            All cells have <see cref="P:SadConsole.ColoredGlyph.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyph.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyph.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
+            All cells have <see cref="P:SadConsole.ColoredGlyphBase.Glyph"/> set to <see cref="P:SadConsole.ICellSurface.DefaultGlyph"/>, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> array reset, and the <see cref="P:SadConsole.ColoredGlyphBase.Mirror"/> set to <see cref="F:SadConsole.Mirror.None"/>.
             </remarks>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Clear(SadConsole.ISurface)">
@@ -5209,7 +5210,7 @@
             <param name="obj">The surface being edited.</param>
             <param name="cellPositions">The cells to clear.</param>
         </member>
-        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ISurface,SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.CellSurfaceEditor.Fill(SadConsole.ISurface,SadConsole.ColoredGlyphBase)">
             <summary>
             Fills the console. Clears cell decorators and effects.
             </summary>
@@ -9834,7 +9835,7 @@
             The speed of the blink.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandBlink.#ctor(System.String,SadConsole.ColoredGlyph[],SadConsole.StringParser.ParseCommandStacks,SadConsole.ICellSurface)">
+        <member name="M:SadConsole.StringParser.ParseCommandBlink.#ctor(System.String,SadConsole.ColoredGlyphBase[],SadConsole.StringParser.ParseCommandStacks,SadConsole.ICellSurface)">
             <summary>
             Creates a new instance of this command.
             </summary>

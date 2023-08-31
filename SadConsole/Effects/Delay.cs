@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Effects;
 
@@ -18,7 +19,7 @@ public class Delay : CellEffectBase
     }
 
     /// <inheritdoc />
-    public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState state) => false;
+    public override bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase state) => false;
 
     /// <inheritdoc />
     public override ICellEffect Clone() => new Delay()

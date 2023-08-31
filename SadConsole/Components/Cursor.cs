@@ -18,9 +18,9 @@ namespace SadConsole.Components;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Cursor : IComponent
 {
-    private ColoredGlyphState _cursorCellOriginal;
+    private ColoredGlyphBase _cursorCellOriginal;
     private ICellEffect? _cursorCellEffect;
-    private ColoredGlyph _cursorCell;
+    private ColoredGlyphBase _cursorCell;
 
     private ICellSurface? _editor;
     private Point _position = new Point();
@@ -42,14 +42,13 @@ public class Cursor : IComponent
     /// Cell used to render the cursor on the screen.
     /// </summary>
     [DataMember(Order = 0)]
-    public ColoredGlyphState CursorRenderCell
+    public ColoredGlyphBase CursorRenderCell
     {
         get => _cursorCellOriginal;
         set
         {
             _cursorCellOriginal = value;
-            _cursorCell = new ColoredGlyph();
-            value.RestoreState(ref _cursorCell);
+            _cursorCell = value.Clone();
 
             _cursorCellEffect?.Restart();
         }
@@ -58,13 +57,13 @@ public class Cursor : IComponent
     /// <summary>
     /// Used in rendering. The cell after the effect has been applied.
     /// </summary>
-    public ColoredGlyph CursorRenderCellActiveState => _cursorCell;
+    public ColoredGlyphBase CursorRenderCellActiveState => _cursorCell;
 
     /// <summary>
     /// Appearance used when printing text. <see cref="PrintOnlyCharacterData"/> must be set to <see langword="false"/> for this to apply.
     /// </summary>
     [DataMember]
-    public ColoredGlyph PrintAppearance { get; set; }
+    public ColoredGlyphBase PrintAppearance { get; set; }
 
     /// <summary>
     /// When <see langword="true"/>, printing will use the host's <see cref="ICellSurface.DefaultForeground"/> and <see cref="ICellSurface.DefaultBackground"/> color properties.
@@ -88,7 +87,7 @@ public class Cursor : IComponent
         set
         {
             _cursorCellEffect = value;
-            _cursorCellOriginal.RestoreState(ref _cursorCell);
+            _cursorCellOriginal.CopyAppearanceTo(_cursorCell, true);
         }
     }
 
@@ -98,7 +97,7 @@ public class Cursor : IComponent
     public int CursorGlyph
     {
         get => _cursorCellOriginal.Glyph;
-        set => CursorRenderCell = new ColoredGlyph(_cursorCellOriginal.Foreground, _cursorCellOriginal.Background, value).ToState();
+        set => CursorRenderCell = new ColoredGlyph(_cursorCellOriginal.Foreground, _cursorCellOriginal.Background, value);
     }
 
     /// <summary>
@@ -143,7 +142,7 @@ public class Cursor : IComponent
 
             // If this is disabled, restore cell state
             if (!value)
-                _cursorCellOriginal.RestoreState(ref _cursorCell);
+                _cursorCellOriginal.CopyAppearanceTo(_cursorCell);
             else
             {
                 _cursorCellEffect?.Restart();
@@ -248,9 +247,8 @@ public class Cursor : IComponent
         PrintAppearance = new ColoredGlyph(Color.White, Color.Black, 0);
 
         // CursorRenderCell property
-        _cursorCellOriginal = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph).ToState();
-        _cursorCell = new ColoredGlyph();
-        _cursorCellOriginal.RestoreState(ref _cursorCell);
+        _cursorCellOriginal = new ColoredGlyph(Color.White, Color.Transparent, DefaultCursorGlyph);
+        _cursorCell = _cursorCellOriginal.Clone();
 
         ApplyDefaultCursorEffect();
     }
@@ -268,7 +266,7 @@ public class Cursor : IComponent
     public Cursor ApplyDefaultCursorEffect()
     {
         if (_cursorCellEffect != null)
-            _cursorCellOriginal.RestoreState(ref _cursorCell);
+            _cursorCellOriginal.CopyAppearanceTo(_cursorCell);
 
         CursorRenderEffect = new Effects.Blink
         {
@@ -287,7 +285,7 @@ public class Cursor : IComponent
     {
         if (_cursorCellEffect == null) return this;
 
-        _cursorCellOriginal.RestoreState(ref _cursorCell);
+        _cursorCellOriginal.CopyAppearanceTo(_cursorCell);
 
         _cursorCellEffect.Restart();
         _cursorCellEffect.ApplyToCell(_cursorCell, _cursorCellOriginal);
@@ -347,7 +345,7 @@ public class Cursor : IComponent
     {
         if (_editor == null) throw new Exception("A host is not attached, cannot print.");
 
-        ColoredGlyph cell = _editor[_position.Y * _editor.Width + _position.X];
+        ColoredGlyphBase cell = _editor[_position.Y * _editor.Width + _position.X];
 
         if (!PrintOnlyCharacterData)
         {
@@ -412,7 +410,7 @@ public class Cursor : IComponent
     /// <param name="template">The way the text will look when it is printed.</param>
     /// <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
     /// <returns>Returns this cursor object.</returns>
-    public Cursor Print(string text, ColoredGlyph template, Effects.ICellEffect? templateEffect)
+    public Cursor Print(string text, ColoredGlyphBase template, Effects.ICellEffect? templateEffect)
     {
         if (_editor == null) throw new Exception("A host is not attached, cannot print.");
 
@@ -458,7 +456,7 @@ public class Cursor : IComponent
         {
             // Prep
             ColoredGlyphAndEffect glyph;
-            ColoredGlyphAndEffect spaceGlyph = text[0].Clone();
+            ColoredGlyphAndEffect spaceGlyph = (ColoredGlyphAndEffect)text[0].Clone();
 
             spaceGlyph.GlyphCharacter = ' ';
             string stringText = text.String.TrimEnd(' ');

@@ -71,7 +71,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
 
-            ColoredGlyph cell;
+            ColoredGlyphBase cell;
             Rectangle renderRect;
 
             Entities.Entity item;

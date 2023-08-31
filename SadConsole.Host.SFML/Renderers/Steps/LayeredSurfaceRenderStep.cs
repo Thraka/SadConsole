@@ -74,7 +74,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
             BackingTexture.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
 
-            ColoredGlyph cell;
+            ColoredGlyphBase cell;
             IFont font = screenObject.Font;
 
             if (layerObject.DefaultBackground.A != 0)

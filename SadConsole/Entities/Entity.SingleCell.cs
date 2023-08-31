@@ -21,7 +21,7 @@ public partial class Entity
         private ICellEffect? _effect;
 
         [DataMember(Name = "Appearance")]
-        private ColoredGlyphState _effectState;
+        private ColoredGlyph? _effectState;
 
         /// <summary>
         /// When <see langword="true"/>, indicates that this cell is dirty and needs to be redrawn.
@@ -39,7 +39,8 @@ public partial class Entity
             protected set
             {
                 _glyph = value ?? throw new System.NullReferenceException("Appearance cannot be null.");
-                _effectState = new ColoredGlyphState(_glyph);
+                if (_effect != null)
+                    _effectState = (ColoredGlyph)value.Clone();
 
                 IsDirty = true;
             }
@@ -52,6 +53,7 @@ public partial class Entity
         public ICellEffect? Effect
         {
             get => _effect;
+
             set
             {
                 // Same effect
@@ -61,20 +63,20 @@ public partial class Entity
                 if (_effect != null)
                 {
                     if (_effect.RestoreCellOnRemoved)
-                        _effectState.RestoreState(ref _glyph);
+                        _effectState!.CopyAppearanceTo(_glyph);
                 }
 
                 // Removing the effect; reset the appearance
                 if (value == null)
                 {
-                    _effectState = new ColoredGlyphState(_glyph);
+                    _effectState = null;
                     _effect = null;
                 }
 
                 // Adding a new effect
                 else
                 {
-                    _effectState = new ColoredGlyphState(_glyph);
+                    _effectState = (ColoredGlyph)_glyph.Clone();
                     _effect = value.CloneOnAdd ? value.Clone() : value;
                 }
             }
@@ -116,7 +118,7 @@ public partial class Entity
             if (_effect != null && !_effect.IsFinished)
             {
                 _effect.Update(delta);
-                _effect.ApplyToCell(Appearance, _effectState);
+                _effect.ApplyToCell(Appearance, _effectState!);
 
                 if (_effect.IsFinished)
                 {

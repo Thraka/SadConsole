@@ -100,17 +100,17 @@
         </member>
         <member name="F:SadConsole.DrawCalls.DrawCallCell.DrawBackground">
             <summary>
-            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
+        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
             <summary>
             
             </summary>
             <param name="cell">The glyph to be drawn.</param>
             <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
             <param name="font">The font to use when drawing the glyph.</param>
-            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallCell.Draw">
             <inheritdoc/>
@@ -1107,7 +1107,7 @@
             <param name="color">A color to shade the quad. Use <see cref="F:SFML.Graphics.Color.White"/> to disable shading.</param>
             <param name="texture">The texture to draw with.</param>
         </member>
-        <member name="M:SFML.Graphics.SpriteBatch.DrawCell(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,System.Boolean,SadConsole.IFont)">
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCell(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,System.Boolean,SadConsole.IFont)">
             <summary>
             Draws a single glyph to the screen.
             </summary>

@@ -28,7 +28,7 @@ public class DrawCallGlyph : IDrawCall
     /// <summary>
     /// The glyph to be drawn.
     /// </summary>
-    public ColoredGlyph Cell;
+    public ColoredGlyphBase Cell;
 
     /// <summary>
     /// Where on the <see cref="Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
@@ -43,7 +43,7 @@ public class DrawCallGlyph : IDrawCall
     /// <param name="targetRect">Where on the <see cref="Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
     /// <param name="fontGlyphRect">The rectangle from the <see cref="Texture"/> of the glyph.</param>
     /// <param name="fontSolidRect">The solid white glyph rectangle from <see cref="Texture"/> used for shading.</param>
-    public DrawCallGlyph(ColoredGlyph cell, Texture2D texture, Rectangle targetRect, Rectangle fontGlyphRect, Rectangle fontSolidRect)
+    public DrawCallGlyph(ColoredGlyphBase cell, Texture2D texture, Rectangle targetRect, Rectangle fontGlyphRect, Rectangle fontSolidRect)
     {
         Texture = texture;
         FontGlyphRect = fontGlyphRect;

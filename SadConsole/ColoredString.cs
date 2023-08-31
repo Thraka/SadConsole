@@ -69,7 +69,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
 
                     if (oldLength != 0)
                         for (int i = 0; i < value.Length - oldLength; i++)
-                            _characters[i + oldLength] = _characters[oldLength - 1].Clone();
+                            _characters[i + oldLength] = (ColoredGlyphAndEffect)_characters[oldLength - 1].Clone();
                     else
                         for (int i = 0; i < value.Length - oldLength; i++)
                             _characters[i + oldLength] = new ColoredGlyphAndEffect();
@@ -201,7 +201,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
     /// </summary>
     /// <param name="glyphs">The glyphs to combine.</param>
-    public ColoredString(params ColoredGlyph[] glyphs)
+    public ColoredString(params ColoredGlyphBase[] glyphs)
     {
         _characters = new ColoredGlyphAndEffect[glyphs.Length];
         for (int i = 0; i < glyphs.Length; i++)
@@ -225,7 +225,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
 
         for (int i = 0; i < _characters.Length; i++)
         {
-            returnObject._characters[i] = _characters[i].Clone();
+            returnObject._characters[i] = (ColoredGlyphAndEffect)_characters[i].Clone();
         }
         return returnObject;
     }
@@ -261,7 +261,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
 
         for (int i = 0; i < count; i++)
         {
-            returnObject._characters[i] = _characters[i + index].Clone();
+            returnObject._characters[i] = (ColoredGlyphAndEffect)_characters[i + index].Clone();
         }
 
         return returnObject;
@@ -381,10 +381,10 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
         ColoredString returnString = new ColoredString(string1.Length + string2.Length);
 
         for (int i = 0; i < string1.Length; i++)
-            returnString._characters[i] = string1._characters[i].Clone();
+            returnString._characters[i] = (ColoredGlyphAndEffect)string1._characters[i].Clone();
 
         for (int i = 0; i < string2.Length; i++)
-            returnString._characters[i + string1.Length] = string2._characters[i].Clone();
+            returnString._characters[i + string1.Length] = (ColoredGlyphAndEffect)string2._characters[i].Clone();
 
         returnString.IgnoreGlyph = string1.IgnoreGlyph && string2.IgnoreGlyph;
         returnString.IgnoreForeground = string1.IgnoreForeground && string2.IgnoreForeground;
@@ -407,7 +407,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
         var returnString = new ColoredString(string1.Length + string2.Length);
 
         for (int i = 0; i < string1.Length; i++)
-            returnString._characters[i] = string1._characters[i].Clone();
+            returnString._characters[i] = (ColoredGlyphAndEffect)string1._characters[i].Clone();
 
         ColoredGlyphAndEffect templateCharacter;
 
@@ -418,7 +418,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
 
         for (int i = 0; i < string2.Length; i++)
         {
-            ColoredGlyphAndEffect newChar = templateCharacter.Clone();
+            ColoredGlyphAndEffect newChar = (ColoredGlyphAndEffect)templateCharacter.Clone();
             newChar.GlyphCharacter = string2[i];
             returnString._characters[i + string1.Length] = newChar;
         }

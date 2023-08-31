@@ -79,7 +79,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
 
             IFont font = screenObject.Font;
             Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
-            ColoredGlyph cell;
+            ColoredGlyphBase cell;
 
             if (layerObject.DefaultBackground.A != 0)
                 Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), layerObject.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);

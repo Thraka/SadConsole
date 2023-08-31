@@ -76,7 +76,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
 
             Texture2D fontImage = ((Host.GameTexture)screenObject.Font.Image).Texture;
             IFont font = screenObject.Font;
-            ColoredGlyph cell;
+            ColoredGlyphBase cell;
             XnaRectangle renderRect;
 
             Entities.Entity item;

@@ -24,7 +24,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
     /// <param name="glyphString">The string that has been processed so far.</param>
     /// <param name="commandStack">The current commands for the string.</param>
     /// <param name="surface">The surface hosting the string.</param>
-    public ParseCommandBlink(string parameters, ColoredGlyph[] glyphString, ParseCommandStacks commandStack, ICellSurface? surface)
+    public ParseCommandBlink(string parameters, ColoredGlyphBase[] glyphString, ParseCommandStacks commandStack, ICellSurface? surface)
     {
         string[] parametersArray = parameters.Split(':');
 

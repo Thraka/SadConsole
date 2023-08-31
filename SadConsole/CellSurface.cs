@@ -153,7 +153,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
 
     /// <inheritdoc />
     [DataMember]
-    public ColoredGlyph[] Cells { get; protected set; }
+    public ColoredGlyphBase[] Cells { get; protected set; }
 
     /// <summary>
     /// The count of glyphs this surface contains.
@@ -161,21 +161,21 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     public int Count => Cells.Length;
 
     /// <inheritdoc />
-    public ColoredGlyph this[int x, int y]
+    public ColoredGlyphBase this[int x, int y]
     {
         get => Cells[Point.ToIndex(x, y, Width)];
         protected set { Cells[Point.ToIndex(x, y, Width)] = value; IsDirty = true; }
     }
 
     /// <inheritdoc />
-    public ColoredGlyph this[int index]
+    public ColoredGlyphBase this[int index]
     {
         get => Cells[index];
         protected set { Cells[index] = value; IsDirty = true; }
     }
 
     /// <inheritdoc />
-    public ColoredGlyph this[Point position]
+    public ColoredGlyphBase this[Point position]
     {
         get => Cells[position.ToIndex(Width)];
         protected set { Cells[position.ToIndex(Width)] = value; IsDirty = true; }
@@ -198,7 +198,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// <param name="width">The width of the surface in cells.</param>
     /// <param name="height">The height of the surface in cells.</param>
     /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-    public CellSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
+    public CellSurface(int width, int height, ColoredGlyphBase[] initialCells) : this(width, height, width, height, initialCells)
     {
 
     }
@@ -223,7 +223,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// <param name="totalWidth">The total width of the surface in cells.</param>
     /// <param name="totalHeight">The total height of the surface in cells.</param>
     /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-    public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[]? initialCells)
+    public CellSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyphBase[]? initialCells)
     {
         if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
         if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
@@ -309,7 +309,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         if (viewWidth > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
         if (viewHeight > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
 
-        var newCells = new ColoredGlyph[bufferWidth * bufferHeight];
+        var newCells = new ColoredGlyphBase[bufferWidth * bufferHeight];
 
         for (int y = 0; y < bufferHeight; y++)
         {
@@ -407,7 +407,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// Gets an enumerator for <see cref="Cells"/>.
     /// </summary>
     /// <returns>An enumerator for <see cref="Cells"/>.</returns>
-    public IEnumerator<ColoredGlyph> GetEnumerator() => ((IEnumerable<ColoredGlyph>)Cells).GetEnumerator();
+    public IEnumerator<ColoredGlyphBase> GetEnumerator() => ((IEnumerable<ColoredGlyphBase>)Cells).GetEnumerator();
 
     /// <summary>
     /// Gets an enumerator for <see cref="Cells"/>.

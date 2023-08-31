@@ -40,7 +40,7 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
     //public void End() => _enabled = false;
 
     /// <inheritdoc />
-    public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
+    public override bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState)
     {
         if (_currentEffectNode != null)
             return _currentEffectNode.Value.ApplyToCell(cell, originalState);

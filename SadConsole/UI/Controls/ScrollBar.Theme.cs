@@ -71,7 +71,7 @@ public partial class ScrollBar
 
         RefreshThemeStateColors(currentColors);
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
 
         Surface.Clear();
 

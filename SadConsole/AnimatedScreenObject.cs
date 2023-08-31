@@ -266,7 +266,7 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
     /// Frame size and the subsequent AnimatedScreenSurface size is calculated from the size of the image file, number of frames, padding and the font size ratio.
     /// </remarks>
     public static AnimatedScreenObject FromImage(string name, string filePath, Point frameLayout, TimeSpan frameDuration,
-        Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyph>? action = null,
+        Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyphBase>? action = null,
         TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
         TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
     {

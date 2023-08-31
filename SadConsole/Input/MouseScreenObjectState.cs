@@ -21,7 +21,7 @@ public struct MouseScreenObjectState
     /// <summary>
     /// The cell the mouse is over, from <see cref="IScreenObject"/>.
     /// </summary>
-    public ColoredGlyph? Cell { get; init; }
+    public ColoredGlyphBase? Cell { get; init; }
 
     /// <summary>
     /// The position of the <see cref="Cell"/>.  

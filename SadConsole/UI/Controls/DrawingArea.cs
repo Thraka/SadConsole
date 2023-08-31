@@ -18,7 +18,7 @@ public class DrawingArea : ControlBase
     /// <summary>
     /// The current appearance based on the control state.
     /// </summary>
-    public ColoredGlyph? Appearance { get; protected set; }
+    public ColoredGlyphBase? Appearance { get; protected set; }
 
     /// <summary>
     /// Called when the surface is redrawn.

@@ -22,7 +22,7 @@ public class EffectsManager
     /// <summary>
     /// A dictionary of effect data keyed by the cell index.
     /// </summary>
-    protected Dictionary<ColoredGlyph, ColoredGlyphEffectData> _effectCells;
+    protected Dictionary<ColoredGlyphBase, ColoredGlyphEffectData> _effectCells;
 
     /// <summary>
     /// The surface hosting this effects manager.
@@ -41,7 +41,7 @@ public class EffectsManager
     public EffectsManager(ICellSurface surface)
     {
         _effects = new Dictionary<ICellEffect, ColoredGlyphEffectData>(20);
-        _effectCells = new Dictionary<ColoredGlyph, ColoredGlyphEffectData>(50);
+        _effectCells = new Dictionary<ColoredGlyphBase, ColoredGlyphEffectData>(50);
         _backingSurface = surface;
     }
 
@@ -50,7 +50,7 @@ public class EffectsManager
     /// </summary>
     /// <param name="cell">Cell to set the effect for.</param>
     /// <param name="effect">The effect to associate with the cell.</param>
-    public void SetEffect(ColoredGlyph cell, ICellEffect? effect)
+    public void SetEffect(ColoredGlyphBase cell, ICellEffect? effect)
     {
         if (effect != null)
         {
@@ -104,7 +104,7 @@ public class EffectsManager
     /// </summary>
     /// <param name="cells">A list of cell indicies to change the effect on.</param>
     /// <param name="effect">The effect to associate with the cell.</param>
-    public void SetEffect(IEnumerable<ColoredGlyph> cells, ICellEffect? effect)
+    public void SetEffect(IEnumerable<ColoredGlyphBase> cells, ICellEffect? effect)
     {
         if (effect != null)
         {
@@ -157,7 +157,7 @@ public class EffectsManager
     /// Gets the effect of the specified cell.
     /// </summary>
     /// <returns>The effect.</returns>
-    public Effects.ICellEffect? GetEffect(ColoredGlyph cell) =>
+    public Effects.ICellEffect? GetEffect(ColoredGlyphBase cell) =>
         _effectCells.ContainsKey(cell) ? _effectCells[cell].Effect : null;
 
     /// <summary>
@@ -180,8 +180,8 @@ public class EffectsManager
         if (_effectCells.Count == 0) return;
 
         // Get all the cells
-        ColoredGlyph[] surfaceCells = _backingSurface.GetCells(_backingSurface.Area).ToArray();
-        List<ColoredGlyph> missingCells = new List<ColoredGlyph>(5);
+        ColoredGlyphBase[] surfaceCells = _backingSurface.GetCells(_backingSurface.Area).ToArray();
+        List<ColoredGlyphBase> missingCells = new List<ColoredGlyphBase>(5);
 
         foreach (var item in _effectCells)
         {
@@ -253,7 +253,7 @@ public class EffectsManager
     /// Clears the effect for the cell specified by index.
     /// </summary>
     /// <param name="cell">The cell index.</param>
-    protected void ClearCellEffect(ColoredGlyph cell)
+    protected void ClearCellEffect(ColoredGlyphBase cell)
     {
         if (_effectCells.TryGetValue(cell, out ColoredGlyphEffectData? oldEffectData))
         {
@@ -349,7 +349,7 @@ public class EffectsManager
         /// </summary>
         /// <param name="cell">The cell.</param>
         /// <param name="restoreState">If <see langword="true"/> the cell will have its original state restored; otherwise <see langword="false"/>.</param>
-        public void RemoveCell(ColoredGlyph cell, bool restoreState)
+        public void RemoveCell(ColoredGlyphBase cell, bool restoreState)
         {
             for (int i = 0; i < CellsStates.Count; i++)
             {
@@ -358,7 +358,7 @@ public class EffectsManager
                 if (cellState.Cell == cell)
                 {
                     if (restoreState)
-                        cellState.State.RestoreState(ref cell);
+                        cellState.State.CopyAppearanceTo(cell);
 
                     CellsStates.Remove(cellState);
                     return;
@@ -371,7 +371,7 @@ public class EffectsManager
         /// </summary>
         /// <param name="cell">The cell to check.</param>
         /// <returns><see langword="true"/> to indicate the cell is associated with the effect; otherwise <see langword="false"/>.</returns>
-        public bool ContainsCell(ColoredGlyph cell)
+        public bool ContainsCell(ColoredGlyphBase cell)
         {
             int count = CellsStates.Count;
             for (int i = 0; i < count; i++)
@@ -393,19 +393,19 @@ public class EffectsManager
         /// <summary>
         /// The cell.
         /// </summary>
-        public ColoredGlyph Cell;
+        public ColoredGlyphBase Cell;
 
         /// <summary>
         /// The original state of the cell.
         /// </summary>
-        public ColoredGlyphState State;
+        public ColoredGlyphBase State;
 
         /// <summary>
         /// Creates a new instance of this class with the specified cell and index.
         /// </summary>
         /// <param name="cell">The cell to generate a state from.</param>
-        public ColoredGlyphWithState(ColoredGlyph cell) =>
-            (Cell, State) = (cell, new ColoredGlyphState(cell));
+        public ColoredGlyphWithState(ColoredGlyphBase cell) =>
+            (Cell, State) = (cell, cell.Clone());
     }
 
     //TODO: load/save for effects manager now that it saves the cell index.

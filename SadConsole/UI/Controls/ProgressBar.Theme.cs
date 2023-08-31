@@ -88,9 +88,9 @@ public partial class ProgressBar
 
         RefreshThemeStateColors(colors);
 
-        ColoredGlyph backgroundAppearance = ThemeState.GetStateAppearanceNoMouse(State);
-        ColoredGlyph foregroundAppearance = ThemeStateBar.GetStateAppearanceNoMouse(State);
-        ColoredGlyph displayTextAppearance = DisplayTextStates.GetStateAppearanceNoMouse(State);
+        ColoredGlyphBase backgroundAppearance = ThemeState.GetStateAppearanceNoMouse(State);
+        ColoredGlyphBase foregroundAppearance = ThemeStateBar.GetStateAppearanceNoMouse(State);
+        ColoredGlyphBase displayTextAppearance = DisplayTextStates.GetStateAppearanceNoMouse(State);
 
         Surface.Fill(backgroundAppearance.Foreground, backgroundAppearance.Background, BackgroundGlyph);
 

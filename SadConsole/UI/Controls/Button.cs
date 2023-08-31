@@ -75,8 +75,8 @@ public class Button : ButtonBase
 
         RefreshThemeStateColors(colors);
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph endGlyphAppearance = EndsThemeState.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase endGlyphAppearance = EndsThemeState.GetStateAppearance(State);
 
         int middle = (Height != 1 ? Height / 2 : 0);
 

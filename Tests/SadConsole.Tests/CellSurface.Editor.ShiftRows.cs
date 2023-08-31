@@ -331,7 +331,7 @@ namespace SadConsole.Tests
             return glyph;
         }
 
-        private static bool CheckAppearancesEqual(ColoredGlyph c1, ColoredGlyph c2)
+        private static bool CheckAppearancesEqual(ColoredGlyphBase c1, ColoredGlyphBase c2)
         {
             if (c1.Glyph != c2.Glyph || c1.Background != c2.Background || c1.Foreground != c2.Foreground ||
                 c1.Mirror != c2.Mirror)

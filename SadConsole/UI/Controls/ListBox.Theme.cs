@@ -117,8 +117,8 @@ public partial class ListBox
         int startingRow;
         int endingRow;
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph borderAppearance = BorderTheme.GetStateAppearance(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase borderAppearance = BorderTheme.GetStateAppearance(State);
 
         // Redraw the control
         Surface.Fill(

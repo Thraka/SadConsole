@@ -53,8 +53,8 @@ public class Button3d : ButtonBase
         // Refresh any theme state colors
         RefreshThemeStateColors(colors);
 
-        ColoredGlyph appearance = ThemeState.GetStateAppearance(State);
-        ColoredGlyph shade = new ColoredGlyph(colors.ControlForegroundNormal, colors.ControlBackgroundNormal, 176);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+        ColoredGlyphBase shade = new ColoredGlyph(colors.ControlForegroundNormal, colors.ControlBackgroundNormal, 176);
 
         // Start drawing the control
         int middle = Height != 1 ? Height / 2 : 0;

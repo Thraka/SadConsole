@@ -93,7 +93,7 @@ public class Fade : CellEffectBase
     }
 
     /// <inheritdoc />
-    public override bool ApplyToCell(ColoredGlyph cell, ColoredGlyphState originalState)
+    public override bool ApplyToCell(ColoredGlyphBase cell, ColoredGlyphBase originalState)
     {
         Color oldForeground = cell.Foreground;
         Color oldBackground = cell.Background;
