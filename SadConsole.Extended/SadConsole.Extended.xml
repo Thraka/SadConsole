@@ -757,11 +757,11 @@
             <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
             <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
         </member>
-        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(SadConsole.ColoredGlyphBase)">
             <summary>
-            Fills the array of glyphs to be used as the border line with the given <see cref="T:SadConsole.ColoredGlyph"/>.
+            Fills the array of glyphs to be used as the border line with the given <see cref="T:SadConsole.ColoredGlyphBase"/>.
             </summary>
-            <param name="glyph">The <see cref="T:SadConsole.ColoredGlyph"/> to be used the border line.</param>
+            <param name="glyph">The <see cref="T:SadConsole.ColoredGlyphBase"/> to be used the border line.</param>
             <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
         </member>
         <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderColors(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">

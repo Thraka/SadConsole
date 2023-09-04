@@ -5,7 +5,7 @@ using SadRogue.Primitives;
 namespace SadConsole;
 
 /// <summary>
-/// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
+/// An array of <see cref="ColoredGlyphBase"/> objects used to represent a 2D surface.
 /// </summary>
 public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<ColoredGlyphBase>, IEnumerable<ColoredGlyphBase>, ISurface
 {

@@ -294,7 +294,7 @@ public class SpriteBatch
     /// <param name="cell">The cell information containing the background color.</param>
     /// <param name="screenRect">The rectangle on the render target to draw the background color.</param>
     /// <param name="font">The SadConsole font containing the solid color glyph used in drawing backgrounds.</param>
-    public unsafe void DrawCellBackground(ColoredGlyph cell, Rectangle screenRect, SadConsole.IFont font)
+    public unsafe void DrawCellBackground(ColoredGlyphBase cell, Rectangle screenRect, SadConsole.IFont font)
     {
         Rectangle solidRect = font.SolidGlyphRectangle.ToIntRect();
 

@@ -22,7 +22,7 @@ namespace SadConsole.Entities
         /// A visual for the area to help debug.
         /// </summary>
         [DataMember]
-        public ColoredGlyph Appearance { get; set; }
+        public ColoredGlyphBase Appearance { get; set; }
 
         /// <summary>
         /// The name of the zone.

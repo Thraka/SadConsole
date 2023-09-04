@@ -22,5 +22,5 @@ public partial interface ICellSurfaceSettable
     /// <param name="height">The viewable height of the surface.</param>
     /// <param name="bufferWidth">The maximum width of the surface.</param>
     /// <param name="bufferHeight">The maximum height of the surface.</param>
-    void SetSurface(ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight);
+    void SetSurface(ColoredGlyphBase[] cells, int width, int height, int bufferWidth, int bufferHeight);
 }

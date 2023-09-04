@@ -212,7 +212,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     /// <param name="width">The width in cells of the surface.</param>
     /// <param name="height">The height in cells of the surface.</param>
     /// <param name="initialCells">The initial cells to seed the surface.</param>
-    public ScreenSurface(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells)
+    public ScreenSurface(int width, int height, ColoredGlyphBase[] initialCells) : this(width, height, width, height, initialCells)
     {
 
     }
@@ -235,7 +235,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     /// <param name="surface">The surface to use as the source of cells.</param>
     /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
     /// <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
-    public ScreenSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0) :
+    public ScreenSurface(IGridView<ColoredGlyphBase> surface, int visibleWidth = 0, int visibleHeight = 0) :
         this(new CellSurface(surface, visibleWidth, visibleHeight))
     {
 
@@ -251,7 +251,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     /// <param name="totalWidth">The total width of the surface in cells.</param>
     /// <param name="totalHeight">The total height of the surface in cells.</param>
     /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
-    public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyph[]? initialCells):
+    public ScreenSurface(int viewWidth, int viewHeight, int totalWidth, int totalHeight, ColoredGlyphBase[]? initialCells):
         this(new CellSurface(viewWidth, viewHeight, totalWidth, totalHeight, initialCells), GameHost.Instance.DefaultFont, GameHost.Instance.DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize))
     {
     }

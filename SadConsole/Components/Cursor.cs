@@ -192,7 +192,7 @@ public class Cursor : IComponent
     public bool UseLinuxLineEndings { get; set; } = false;
 
     /// <summary>
-    /// Indicates this cursor should process te string through the <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyph, ICellEffect)"/>.
+    /// Indicates this cursor should process te string through the <see cref="StringParser.IParser.Parse"/> method from <see cref="ColoredString.Parser"/> to create a colored string when using <see cref="Print(string)"/> or <see cref="Print(string, ColoredGlyphBase, ICellEffect)"/>.
     /// </summary>
     [DataMember]
     public bool UseStringParser { get; set; } = false;
@@ -312,7 +312,7 @@ public class Cursor : IComponent
     /// </summary>
     /// <param name="appearance">The appearance to set.</param>
     /// <returns>This cursor object.</returns>
-    public Cursor SetPrintAppearance(ColoredGlyph appearance)
+    public Cursor SetPrintAppearance(ColoredGlyphBase appearance)
     {
         PrintAppearance = appearance;
         return this;

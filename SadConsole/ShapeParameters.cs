@@ -15,11 +15,11 @@ public class ShapeParameters
     public bool IgnoreBorderBackground { get; set; }
     public bool IgnoreBorderGlyph { get; set; }
     public bool IgnoreBorderMirror { get; set; }
-    public ColoredGlyph? FillGlyph { get; set; }
+    public ColoredGlyphBase? FillGlyph { get; set; }
 
     public int[]? BoxBorderStyle { get; set; }
-    public ColoredGlyph[]? BoxBorderStyleGlyphs { get; set; }
-    public ColoredGlyph? BorderGlyph { get; set; }
+    public ColoredGlyphBase[]? BoxBorderStyleGlyphs { get; set; }
+    public ColoredGlyphBase? BorderGlyph { get; set; }
 
     /// <summary>
     /// 
@@ -38,9 +38,9 @@ public class ShapeParameters
     /// <param name="ignoreFillMirror"></param>
     /// <param name="boxBorderStyle"></param>
     /// <param name="boxBorderStyleGlyphs"></param>
-    public ShapeParameters(bool hasBorder, ColoredGlyph? borderGlyph, bool ignoreBorderForeground, bool ignoreBorderBackground, bool ignoreBorderGlyph, bool ignoreBorderMirror,
-                           bool hasFill, ColoredGlyph? fillGlyph, bool ignoreFillForeground, bool ignoreFillBackground, bool ignoreFillGlyph, bool ignoreFillMirror,
-                           int[]? boxBorderStyle, ColoredGlyph[]? boxBorderStyleGlyphs)
+    public ShapeParameters(bool hasBorder, ColoredGlyphBase? borderGlyph, bool ignoreBorderForeground, bool ignoreBorderBackground, bool ignoreBorderGlyph, bool ignoreBorderMirror,
+                           bool hasFill, ColoredGlyphBase? fillGlyph, bool ignoreFillForeground, bool ignoreFillBackground, bool ignoreFillGlyph, bool ignoreFillMirror,
+                           int[]? boxBorderStyle, ColoredGlyphBase[]? boxBorderStyleGlyphs)
     {
         HasBorder = hasBorder;
         BorderGlyph = borderGlyph;
@@ -58,29 +58,29 @@ public class ShapeParameters
         BoxBorderStyleGlyphs = boxBorderStyleGlyphs;
     }
 
-    public static ShapeParameters CreateBorder(ColoredGlyph borderStyle,
+    public static ShapeParameters CreateBorder(ColoredGlyphBase borderStyle,
                                                bool ignoreForeground = false, bool ignoreBackground = false, bool ignoreGlyph = false, bool ignoreMirror = false) =>
         new ShapeParameters(true, borderStyle, ignoreForeground, ignoreBackground, ignoreGlyph, ignoreMirror, false, null, false, false, false, false, null, null);
 
-    public static ShapeParameters CreateFilled(ColoredGlyph borderStyle, ColoredGlyph fillStyle,
+    public static ShapeParameters CreateFilled(ColoredGlyphBase borderStyle, ColoredGlyphBase fillStyle,
                                                bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderGlyph = false, bool ignoreBorderMirror = false,
                                                bool ignoreFillForeground = false, bool ignoreFillBackground = false, bool ignoreFillGlyph = false, bool ignoreFillMirror = false) =>
         new ShapeParameters(borderStyle != null, borderStyle, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderGlyph, ignoreBorderMirror, true, fillStyle, ignoreFillForeground, ignoreFillBackground, ignoreFillGlyph, ignoreFillMirror, null, null);
 
-    public static ShapeParameters CreateStyledBox(int[] borderStyle, ColoredGlyph borderColors,
+    public static ShapeParameters CreateStyledBox(int[] borderStyle, ColoredGlyphBase borderColors,
                                                   bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderMirror = false) =>
         new ShapeParameters(true, borderColors, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderMirror, false, false, null, false, false, false, false, borderStyle, null);
 
-    public static ShapeParameters CreateStyledBoxFilled(int[] borderStyle, ColoredGlyph borderColors, ColoredGlyph fillStyle,
+    public static ShapeParameters CreateStyledBoxFilled(int[] borderStyle, ColoredGlyphBase borderColors, ColoredGlyphBase fillStyle,
                                                         bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderMirror = false,
                                                         bool ignoreFillForeground = false, bool ignoreFillBackground = false, bool ignoreFillGlyph = false, bool ignoreFillMirror = false) =>
         new ShapeParameters(true, borderColors, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderMirror, false, true, fillStyle, ignoreFillForeground, ignoreFillBackground, ignoreFillGlyph, ignoreFillMirror, borderStyle, null);
 
-    public static ShapeParameters CreateStyledBoxExplicit(ColoredGlyph[] borderGlyphs,
+    public static ShapeParameters CreateStyledBoxExplicit(ColoredGlyphBase[] borderGlyphs,
                                                           bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderMirror = true) =>
         new ShapeParameters(true, null, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderMirror, false, false, null, false, false, false, false, null, borderGlyphs);
 
-    public static ShapeParameters CreateStyledBoxExplicitFilled(ColoredGlyph[] borderGlyphs, ColoredGlyph fillStyle,
+    public static ShapeParameters CreateStyledBoxExplicitFilled(ColoredGlyphBase[] borderGlyphs, ColoredGlyphBase fillStyle,
                                                                 bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderGlyph = false, bool ignoreBorderMirror = true,
                                                                 bool ignoreFillForeground = false, bool ignoreFillBackground = false, bool ignoreFillGlyph = false, bool ignoreFillMirror = false) =>
         new ShapeParameters(true, null, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderGlyph, ignoreBorderMirror, true, fillStyle, ignoreFillForeground, ignoreFillBackground, ignoreFillGlyph, ignoreFillMirror, null, borderGlyphs);

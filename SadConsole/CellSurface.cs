@@ -8,7 +8,7 @@ using SadRogue.Primitives.GridViews;
 namespace SadConsole;
 
 /// <summary>
-/// An array of <see cref="ColoredGlyph"/> objects used to represent a 2D surface.
+/// An array of <see cref="ColoredGlyphBase"/> objects used to represent a 2D surface.
 /// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
@@ -241,7 +241,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
 
         if (initialCells == null)
         {
-            Cells = new ColoredGlyph[totalWidth * totalHeight];
+            Cells = new ColoredGlyphBase[totalWidth * totalHeight];
 
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -268,7 +268,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     /// <param name="surface">The surface to use as the source of cells.</param>
     /// <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
     /// <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
-    public CellSurface(IGridView<ColoredGlyph> surface, int visibleWidth = 0, int visibleHeight = 0)
+    public CellSurface(IGridView<ColoredGlyphBase> surface, int visibleWidth = 0, int visibleHeight = 0)
     {
         DefaultForeground = Color.White;
         DefaultBackground = Color.Transparent;
@@ -279,7 +279,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         _viewArea = new BoundedRectangle((0, 0, visibleWidth, visibleHeight),
                                          (0, 0, surface.Width, surface.Height));
 
-        Cells = new ColoredGlyph[surface.Count];
+        Cells = new ColoredGlyphBase[surface.Count];
 
         for (int i = 0; i < Cells.Length; i++)
             Cells[i] = surface[i];
@@ -354,7 +354,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         }
 
         _viewArea = new BoundedRectangle(new Rectangle(0, 0, rect.Width, rect.Height), new Rectangle(0, 0, rect.Width, rect.Height));
-        Cells = new ColoredGlyph[rect.Width * rect.Height];
+        Cells = new ColoredGlyphBase[rect.Width * rect.Height];
 
         int index = 0;
 
@@ -372,7 +372,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     }
 
     /// <inheritdoc />
-    public void SetSurface(ColoredGlyph[] cells, int width, int height, int bufferWidth, int bufferHeight)
+    public void SetSurface(ColoredGlyphBase[] cells, int width, int height, int bufferWidth, int bufferHeight)
     {
         if (cells.Length != bufferWidth * bufferHeight) throw new Exception("buffer width * buffer height must match the amount of cells.");
 

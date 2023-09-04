@@ -265,11 +265,11 @@ namespace SadConsole.UI
             }
 
             /// <summary>
-            /// Fills the array of glyphs to be used as the border line with the given <see cref="ColoredGlyph"/>.
+            /// Fills the array of glyphs to be used as the border line with the given <see cref="ColoredGlyphBase"/>.
             /// </summary>
-            /// <param name="glyph">The <see cref="ColoredGlyph"/> to be used the border line.</param>
+            /// <param name="glyph">The <see cref="ColoredGlyphBase"/> to be used the border line.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
-            public BorderParameters ChangeBorderGlyph(ColoredGlyph glyph)
+            public BorderParameters ChangeBorderGlyph(ColoredGlyphBase glyph)
             {
                 ChangeBorderGlyph(glyph.Glyph);
                 ChangeBorderColors(glyph.Foreground, glyph.Background);

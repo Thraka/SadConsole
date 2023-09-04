@@ -83,8 +83,8 @@ public class Ansi1 : ScreenSurface
         // Settings for editing the ansi file
         var monitorRect = new Rectangle((34, 7), (45, 10));
         CellSurface monitorSurface = new CellSurface(monitorRect.Width, monitorRect.Height);
-        ColoredGlyph tear = new ColoredGlyph();
-        ColoredGlyph tearPrevious = new ColoredGlyph();
+        ColoredGlyphBase tear = new ColoredGlyph();
+        ColoredGlyphBase tearPrevious = new ColoredGlyph();
         Point tearPosition = (44, 9);
         Point textMadeWithPosition = (34, 19);
         Point textSadConsolePosition = (35, 21);

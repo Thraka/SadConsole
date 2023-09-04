@@ -272,7 +272,7 @@ namespace SadConsole.UI.Windows
                     ThemeState.MouseDown =
                     ThemeState.Focused =
                     ThemeState.Disabled =
-                    new SadConsole.ColoredGlyph(_textColor, _colorValue);
+                    new ColoredGlyph(_textColor, _colorValue);
             }
         }
     }

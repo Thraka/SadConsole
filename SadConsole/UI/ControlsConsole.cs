@@ -28,7 +28,7 @@ public class ControlsConsole : Console
     /// <param name="width">The width in cells of the surface.</param>
     /// <param name="height">The height in cells of the surface.</param>
     /// <param name="initialCells">The initial cells to seed the surface.</param>
-    public ControlsConsole(int width, int height, ColoredGlyph[] initialCells) : this(width, height, width, height, initialCells) { }
+    public ControlsConsole(int width, int height, ColoredGlyphBase[] initialCells) : this(width, height, width, height, initialCells) { }
 
     /// <summary>
     /// Creates a new console with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
@@ -47,7 +47,7 @@ public class ControlsConsole : Console
     /// <param name="bufferWidth">The total width of the console in cells.</param>
     /// <param name="bufferHeight">The total height of the console in cells.</param>
     /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
-    public ControlsConsole(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyph[]? initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
+    public ControlsConsole(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyphBase[]? initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
     {
         Controls = new ControlHost();
         SadComponents.Add(Controls);

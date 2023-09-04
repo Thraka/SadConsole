@@ -7,7 +7,7 @@ using SadRogue.Primitives;
 namespace SadConsole;
 
 /// <summary>
-/// A <see cref="ColoredGlyph"/> with a <see cref="ICellEffect"/>.
+/// A <see cref="ColoredGlyphBase"/> with a <see cref="ICellEffect"/>.
 /// </summary>
 public sealed class ColoredGlyphAndEffect : ColoredGlyph
 {
@@ -27,7 +27,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
     }
 
     /// <summary>
-    /// Creates a new <see cref="ColoredGlyphAndEffect"/> from a <see cref="ColoredGlyph"/> with the specified effect.
+    /// Creates a new <see cref="ColoredGlyphAndEffect"/> from a <see cref="ColoredGlyphBase"/> with the specified effect.
     /// </summary>
     /// <param name="glyph">The glyph.</param>
     /// <param name="effect">When provided, sets the <see cref="ColoredGlyphAndEffect.Effect"/>.</param>

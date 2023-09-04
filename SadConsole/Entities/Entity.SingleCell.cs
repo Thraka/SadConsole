@@ -15,13 +15,13 @@ public partial class Entity
     [DataContract]
     public class SingleCell
     {
-        private ColoredGlyph _glyph;
+        private ColoredGlyphBase _glyph;
 
         [DataMember(Name = "Effect")]
         private ICellEffect? _effect;
 
         [DataMember(Name = "Appearance")]
-        private ColoredGlyph? _effectState;
+        private ColoredGlyphBase? _effectState;
 
         /// <summary>
         /// When <see langword="true"/>, indicates that this cell is dirty and needs to be redrawn.
@@ -31,7 +31,7 @@ public partial class Entity
         /// <summary>
         /// Represents what the entity looks like.
         /// </summary>
-        public ColoredGlyph Appearance
+        public ColoredGlyphBase Appearance
         {
             get => _glyph;
 
@@ -40,7 +40,7 @@ public partial class Entity
             {
                 _glyph = value ?? throw new System.NullReferenceException("Appearance cannot be null.");
                 if (_effect != null)
-                    _effectState = (ColoredGlyph)value.Clone();
+                    _effectState = (ColoredGlyphBase)value.Clone();
 
                 IsDirty = true;
             }
@@ -76,7 +76,7 @@ public partial class Entity
                 // Adding a new effect
                 else
                 {
-                    _effectState = (ColoredGlyph)_glyph.Clone();
+                    _effectState = (ColoredGlyphBase)_glyph.Clone();
                     _effect = value.CloneOnAdd ? value.Clone() : value;
                 }
             }
@@ -104,7 +104,7 @@ public partial class Entity
         /// Creates a new entity, references the provided glyph as the appearance.
         /// </summary>
         /// <param name="appearance">The appearance of the entity.</param>
-        public SingleCell(ColoredGlyph appearance)
+        public SingleCell(ColoredGlyphBase appearance)
         {
             Appearance = appearance;
         }

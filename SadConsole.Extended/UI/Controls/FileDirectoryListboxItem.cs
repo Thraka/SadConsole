@@ -10,62 +10,62 @@ public class FileDirectoryListboxItem : ListBoxItemTheme
     /// <summary>
     /// The appearance of a directory in normal state.
     /// </summary>
-    public ColoredGlyph DirectoryAppNormal { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
+    public ColoredGlyphBase DirectoryAppNormal { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
 
     /// <summary>
     /// The appearance of a directory when the mouse is over it.
     /// </summary>
-    public ColoredGlyph DirectoryAppMouseOver { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
+    public ColoredGlyphBase DirectoryAppMouseOver { get; set; } = new ColoredGlyph(Color.Purple, Color.Black);
 
     /// <summary>
     /// The appearance of a directory when selected.
     /// </summary>
-    public ColoredGlyph DirectoryAppSelected { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
+    public ColoredGlyphBase DirectoryAppSelected { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
 
     /// <summary>
     /// The appearance of a directory when selected and the mouse is over it.
     /// </summary>
-    public ColoredGlyph DirectoryAppSelectedOver { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
+    public ColoredGlyphBase DirectoryAppSelectedOver { get; set; } = new ColoredGlyph(new Color(255, 0, 255), Color.Black);
 
     /// <summary>
     /// The appearance of a file in normal state.
     /// </summary>
-    public ColoredGlyph FileAppNormal { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
+    public ColoredGlyphBase FileAppNormal { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
 
     /// <summary>
     /// The appearance of a file when the mouse is over it.
     /// </summary>
-    public ColoredGlyph FileAppMouseOver { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
+    public ColoredGlyphBase FileAppMouseOver { get; set; } = new ColoredGlyph(Color.Gray, Color.Black);
 
     /// <summary>
     /// The appearance of a file when selected.
     /// </summary>
-    public ColoredGlyph FileAppSelected { get; set; } = new ColoredGlyph(Color.White, Color.Black);
+    public ColoredGlyphBase FileAppSelected { get; set; } = new ColoredGlyph(Color.White, Color.Black);
 
     /// <summary>
     /// The appearance of a file when selected and the mouse is over it.
     /// </summary>
-    public ColoredGlyph FileAppSelectedOver { get; set; } = new ColoredGlyph(Color.White, Color.Black);
+    public ColoredGlyphBase FileAppSelectedOver { get; set; } = new ColoredGlyph(Color.White, Color.Black);
 
     /// <summary>
     /// The appearance of a highlighted file in normal state.
     /// </summary>
-    public ColoredGlyph HighExtAppNormal { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
+    public ColoredGlyphBase HighExtAppNormal { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
 
     /// <summary>
     /// The appearance of a highlighted file when the mouse is over it.
     /// </summary>
-    public ColoredGlyph HighExtAppMouseOver { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
+    public ColoredGlyphBase HighExtAppMouseOver { get; set; } = new ColoredGlyph(Color.AnsiYellow, Color.Black);
 
     /// <summary>
     /// The appearance of a highlighted file when selected.
     /// </summary>
-    public ColoredGlyph HighExtAppSelected { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
+    public ColoredGlyphBase HighExtAppSelected { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
 
     /// <summary>
     /// The appearance of a highlighted file when selected and the mouse is over it.
     /// </summary>
-    public ColoredGlyph HighExtAppSelectedOver { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
+    public ColoredGlyphBase HighExtAppSelectedOver { get; set; } = new ColoredGlyph(Color.Yellow, Color.Black);
 
     /// <inheritdoc/>
     public override void RefreshTheme(Colors themeColors)

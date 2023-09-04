@@ -34,7 +34,7 @@ public partial class TabControl
                     // Figure out the space the header text takes up
                     string header;
                     bool isMouseOver = false;
-                    ColoredGlyph linesGlyph = new ColoredGlyph(colors.Lines);
+                    ColoredGlyphBase linesGlyph = new ColoredGlyph(colors.Lines);
 
                     if (tabItem.TabSize == -1)
                         header = $"{new string(' ', tabItem.AutomaticPadding)}{tabItem.Header}{new string(' ', tabItem.AutomaticPadding)}";
@@ -119,7 +119,7 @@ public partial class TabControl
                     // Figure out the space the header text takes up
                     string header;
                     bool isMouseOver = false;
-                    ColoredGlyph linesGlyph = new ColoredGlyph(colors.Lines);
+                    ColoredGlyphBase linesGlyph = new ColoredGlyph(colors.Lines);
 
                     if (tabItem.TabSize == -1)
                         header = $"{new string(' ', tabItem.AutomaticPadding)}{tabItem.Header}{new string(' ', tabItem.AutomaticPadding)}";

@@ -209,7 +209,7 @@
             <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
             <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
             <param name="font"> <see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.AnimatedScreenObject"/>.</param>
-            <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyph"/> when creating a frame.</param>
+            <param name="action">Callback that will be applied to each <see cref="T:SadConsole.ColoredGlyphBase"/> when creating a frame.</param>
             <param name="convertMode">The mode used when converting the texture to a surface.</param>
             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
@@ -732,7 +732,7 @@
         </member>
         <member name="T:SadConsole.CellSurface">
             <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            An array of <see cref="T:SadConsole.ColoredGlyphBase"/> objects used to represent a 2D surface.
             </summary>
         </member>
         <member name="E:SadConsole.CellSurface.IsDirtyChanged">
@@ -852,7 +852,7 @@
             <param name="totalHeight">The total height of the surface in cells.</param>
             <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cell array for you.</param>
         </member>
-        <member name="M:SadConsole.CellSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
+        <member name="M:SadConsole.CellSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyphBase},System.Int32,System.Int32)">
             <summary>
             Creates a new surface from a grid view with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -869,7 +869,7 @@
         <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyph[],System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.CellSurface.SetSurface(SadConsole.ColoredGlyphBase[],System.Int32,System.Int32,System.Int32,System.Int32)">
             <inheritdoc />
         </member>
         <member name="M:SadConsole.CellSurface.SetIsDirtySafe">
@@ -1073,7 +1073,7 @@
         </member>
         <member name="T:SadConsole.ColoredGlyphAndEffect">
             <summary>
-            A <see cref="T:SadConsole.ColoredGlyph"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
+            A <see cref="T:SadConsole.ColoredGlyphBase"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
@@ -1083,7 +1083,7 @@
         </member>
         <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
             <summary>
-            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyph"/> with the specified effect.
+            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyphBase"/> with the specified effect.
             </summary>
             <param name="glyph">The glyph.</param>
             <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
@@ -1117,40 +1117,40 @@
         </member>
         <member name="T:SadConsole.ColoredGlyphState">
             <summary>
-            A <see cref="T:SadConsole.ColoredGlyph"/> with state information.
+            A <see cref="T:SadConsole.ColoredGlyphBase"/> with state information.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Decorators">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.Decorators"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Foreground">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.Foreground"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.Foreground"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Background">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.Background"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Glyph">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.Glyph"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.Glyph"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.Mirror">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.Mirror"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.Mirror"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.ColoredGlyphState.IsVisible">
             <summary>
-            A copy of the <see cref="!:ColoredGlyph.IsVisible"/> property.
+            A copy of the <see cref="P:SadConsole.ColoredGlyphBase.IsVisible"/> property.
             </summary>
         </member>
-        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.ColoredGlyphState.#ctor(SadConsole.ColoredGlyphBase)">
             <summary>
             Creates a new state from a cell.
             </summary>
@@ -1167,7 +1167,7 @@
             <param name="mirror">The mirror effect.</param>
             <param name="isVisible">The visibility of the glyph.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyph@)">
+        <member name="M:SadConsole.ColoredGlyphState.RestoreState(SadConsole.ColoredGlyphBase@)">
             <summary>
             Restores this state to the specified cell.
             </summary>
@@ -1267,7 +1267,7 @@
         </member>
         <member name="M:SadConsole.ColoredString.#ctor(SadConsole.ColoredGlyphBase[])">
             <summary>
-            Combines a <see cref="T:SadConsole.ColoredGlyph"/> array into a <see cref="T:SadConsole.ColoredString"/>.
+            Combines a <see cref="T:SadConsole.ColoredGlyphBase"/> array into a <see cref="T:SadConsole.ColoredString"/>.
             </summary>
             <param name="glyphs">The glyphs to combine.</param>
         </member>
@@ -1490,7 +1490,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
             <summary>
-            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="!:Print(string, ColoredGlyph, ICellEffect)"/>.
+            Indicates this cursor should process te string through the <see cref="M:SadConsole.StringParser.IParser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)"/> method from <see cref="P:SadConsole.ColoredString.Parser"/> to create a colored string when using <see cref="M:SadConsole.Components.Cursor.Print(System.String)"/> or <see cref="M:SadConsole.Components.Cursor.Print(System.String,SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
@@ -1542,7 +1542,7 @@
             <returns>This cursor object.</returns>
             <exception cref="T:System.Exception">Thrown when the cursor is not attached to any surface.</exception>
         </member>
-        <member name="M:SadConsole.Components.Cursor.SetPrintAppearance(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Components.Cursor.SetPrintAppearance(SadConsole.ColoredGlyphBase)">
             <summary>
             Sets <see cref="P:SadConsole.Components.Cursor.PrintAppearance"/>.
             </summary>
@@ -2288,7 +2288,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -2305,7 +2305,7 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.Console.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -3235,7 +3235,7 @@
             <param name="appearance">The single cell appearance to use for the entity.</param>
             <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyph,System.Int32)">
+        <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.ColoredGlyphBase,System.Int32)">
             <summary>
             Creates a new entity, copying the provided appearance to this entity.
             </summary>
@@ -3337,7 +3337,7 @@
             <param name="background">The background color of the entity.</param>
             <param name="glyph">The glyph color of the entity.</param>
         </member>
-        <member name="M:SadConsole.Entities.Entity.SingleCell.#ctor(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.Entities.Entity.SingleCell.#ctor(SadConsole.ColoredGlyphBase)">
             <summary>
             Creates a new entity, references the provided glyph as the appearance.
             </summary>
@@ -4277,7 +4277,7 @@
         </member>
         <member name="M:SadConsole.GlyphDefinition.CreateCell(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
-            Creates a <see cref="T:SadConsole.ColoredGlyph"/> from this definition.
+            Creates a <see cref="T:SadConsole.ColoredGlyphBase"/> from this definition.
             </summary>
             <param name="foreground">The foreground color of the cell.</param>
             <param name="background">The background color of the cell.</param>
@@ -4344,7 +4344,7 @@
         </member>
         <member name="T:SadConsole.ICellSurface">
             <summary>
-            An array of <see cref="T:SadConsole.ColoredGlyph"/> objects used to represent a 2D surface.
+            An array of <see cref="T:SadConsole.ColoredGlyphBase"/> objects used to represent a 2D surface.
             </summary>
         </member>
         <member name="E:SadConsole.ICellSurface.IsDirtyChanged">
@@ -5436,7 +5436,7 @@
             <param name="surface">The target surface to map cells from.</param>
             <param name="view">A view rectangle of the target surface.</param>
         </member>
-        <member name="M:SadConsole.ICellSurfaceSettable.SetSurface(SadConsole.ColoredGlyph[],System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:SadConsole.ICellSurfaceSettable.SetSurface(SadConsole.ColoredGlyphBase[],System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Changes the cells of the surface to the provided array.
             </summary>
@@ -7744,7 +7744,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -7761,7 +7761,7 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -7942,7 +7942,7 @@
         </member>
         <member name="F:SadConsole.Readers.Playscii.Layer.tiles">
             <summary>
-            <see cref="T:SadConsole.Readers.Playscii"/> tiles that will be converted to <see cref="T:SadConsole.ColoredGlyph"/>.
+            <see cref="T:SadConsole.Readers.Playscii"/> tiles that will be converted to <see cref="T:SadConsole.ColoredGlyphBase"/>.
             </summary>
         </member>
         <member name="F:SadConsole.Readers.Playscii.Layer.visible">
@@ -7985,11 +7985,11 @@
         </member>
         <member name="M:SadConsole.Readers.Playscii.Tile.ToColoredGlyph(SadConsole.IFont,SadRogue.Primitives.Palette)">
             <summary>
-            Converts the <see cref="T:SadConsole.Readers.Playscii"/> tile to a SadConsole <see cref="T:SadConsole.ColoredGlyph"/>.
+            Converts the <see cref="T:SadConsole.Readers.Playscii"/> tile to a SadConsole <see cref="T:SadConsole.ColoredGlyphBase"/>.
             </summary>
             <param name="font"><see cref="T:SadConsole.IFont"/> to be used when creating the <see cref="T:SadConsole.ScreenSurface"/>.</param>
             <param name="colors"><see cref="T:SadRogue.Primitives.Palette"/> of colors converted from the <see cref="T:SadConsole.Readers.Playscii"/> format.</param>
-            <returns><see cref="T:SadConsole.ColoredGlyph"/> equivalent of the <see cref="T:SadConsole.Readers.Playscii"/> tile.</returns>
+            <returns><see cref="T:SadConsole.ColoredGlyphBase"/> equivalent of the <see cref="T:SadConsole.Readers.Playscii"/> tile.</returns>
         </member>
         <member name="M:SadConsole.Readers.Playscii.GetPalette(System.String)">
             <summary>
@@ -8018,7 +8018,7 @@
             
             <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
             Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
-            Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyph"/> background like it does in Playscii.</remarks>
+            Transparent glyph foreground is fine, but it will not cut through the <see cref="T:SadConsole.ColoredGlyphBase"/> background like it does in Playscii.</remarks>
             
             <returns><see cref="T:SadConsole.ScreenSurface"/> containing the first frame from the <see cref="T:SadConsole.Readers.Playscii"/> file.</returns>
         </member>
@@ -9182,7 +9182,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -9199,7 +9199,7 @@
             <param name="totalWidth">The total width of the surface in cells.</param>
             <param name="totalHeight">The total height of the surface in cells.</param>
         </member>
-        <member name="M:SadConsole.ScreenSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyph},System.Int32,System.Int32)">
+        <member name="M:SadConsole.ScreenSurface.#ctor(SadRogue.Primitives.GridViews.IGridView{SadConsole.ColoredGlyphBase},System.Int32,System.Int32)">
             <summary>
             Creates a new surface from a grid view. The cells between this object and the grid view are shared.
             </summary>
@@ -9207,7 +9207,7 @@
             <param name="visibleWidth">Optional view width. If <c>0</c>, the view width matches the width of the surface.</param>
             <param name="visibleHeight">Optional view height. If <c>0</c>, the view width matches the height of the surface.</param>
         </member>
-        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -9629,7 +9629,7 @@
             Defines the parameters for generating a shape with a border and fill glyphs.
             </summary>
         </member>
-        <member name="M:SadConsole.ShapeParameters.#ctor(System.Boolean,SadConsole.ColoredGlyph,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,SadConsole.ColoredGlyph,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32[],SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.ShapeParameters.#ctor(System.Boolean,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32[],SadConsole.ColoredGlyphBase[])">
             <summary>
             
             </summary>
@@ -10956,7 +10956,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -10973,7 +10973,7 @@
             <param name="bufferWidth">The total width of the console in cells.</param>
             <param name="bufferHeight">The total height of the console in cells.</param>
         </member>
-        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.UI.ControlsConsole.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
@@ -13543,7 +13543,7 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a new screen object that can render a surface. Uses the specified cells to generate the surface.
             </summary>
@@ -13560,7 +13560,7 @@
             <param name="bufferWidth">The total width of the window in cells.</param>
             <param name="bufferHeight">The total height of the window in cells.</param>
         </member>
-        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyph[])">
+        <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
             Creates a window with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>

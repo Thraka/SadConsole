@@ -129,7 +129,7 @@ public class EffectsManager
                 }
             }
 
-            foreach (ColoredGlyph cell in cells)
+            foreach (ColoredGlyphBase cell in cells)
             {
                 if (!workingEffect.ContainsCell(cell))
                 {
@@ -148,7 +148,7 @@ public class EffectsManager
         {
             if (_effectCells.Count == 0) return;
 
-            foreach (ColoredGlyph cell in cells)
+            foreach (ColoredGlyphBase cell in cells)
                 ClearCellEffect(cell);
         }
     }
@@ -189,7 +189,7 @@ public class EffectsManager
                 missingCells.Add(item.Key);
         }
 
-        foreach (ColoredGlyph cell in missingCells)
+        foreach (ColoredGlyphBase cell in missingCells)
             ClearCellEffect(cell);
 
     }

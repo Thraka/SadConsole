@@ -169,7 +169,7 @@ public partial class Entity : ScreenObject, IHasID
     /// </summary>
     /// <param name="appearance">The appearance of the entity.</param>
     /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
-    public Entity(ColoredGlyph appearance, int zIndex) : this(new SingleCell(appearance), zIndex) { }
+    public Entity(ColoredGlyphBase appearance, int zIndex) : this(new SingleCell(appearance), zIndex) { }
 
     /// <summary>
     /// Creates a new entity, copying the provided appearance to this entity.

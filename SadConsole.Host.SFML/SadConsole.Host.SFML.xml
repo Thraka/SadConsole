@@ -1116,7 +1116,7 @@
             <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
             <param name="font">The SadConsole font containing the glyph texture.</param>
         </member>
-        <member name="M:SFML.Graphics.SpriteBatch.DrawCellBackground(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont)">
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCellBackground(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont)">
             <summary>
             Draws the background color of a cell to the render target.
             </summary>

@@ -252,7 +252,7 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
     /// <param name="pixelPadding">Pixel padding separating frames: X between the columns, Y between the rows.</param>
     /// <param name="frameStartAndFinish">Limits the number of frames copied to the animation. X first frame index, Y last frame index.</param>
     /// <param name="font"> <see cref="IFont"/> to be used when creating the <see cref="AnimatedScreenObject"/>.</param>
-    /// <param name="action">Callback that will be applied to each <see cref="ColoredGlyph"/> when creating a frame.</param>
+    /// <param name="action">Callback that will be applied to each <see cref="ColoredGlyphBase"/> when creating a frame.</param>
     /// <param name="convertMode">The mode used when converting the texture to a surface.</param>
     /// <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Background"/>.</param>
     /// <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>

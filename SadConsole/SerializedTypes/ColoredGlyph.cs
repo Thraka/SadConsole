@@ -7,12 +7,12 @@ using SadRogue.Primitives;
 
 namespace SadConsole.SerializedTypes;
 
-public class ColoredGlyphJsonConverter : JsonConverter<ColoredGlyph>
+public class ColoredGlyphJsonConverter : JsonConverter<ColoredGlyphBase>
 {
-    public override void WriteJson(JsonWriter writer, ColoredGlyph value, JsonSerializer serializer) =>
+    public override void WriteJson(JsonWriter writer, ColoredGlyphBase value, JsonSerializer serializer) =>
         serializer.Serialize(writer, (ColoredGlyphSerialized)value);
 
-    public override ColoredGlyph ReadJson(JsonReader reader, Type objectType, ColoredGlyph existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+    public override ColoredGlyphBase ReadJson(JsonReader reader, Type objectType, ColoredGlyphBase existingValue, bool hasExistingValue, JsonSerializer serializer) =>
         serializer.Deserialize<ColoredGlyphSerialized>(reader);
 }
 
@@ -25,7 +25,7 @@ public class ColoredGlyphSerialized
     public Mirror Mirror;
     public bool IsVisible;
 
-    public static implicit operator ColoredGlyphSerialized(ColoredGlyph cell) => new ColoredGlyphSerialized()
+    public static implicit operator ColoredGlyphSerialized(ColoredGlyphBase cell) => new ColoredGlyphSerialized()
     {
         Foreground = cell.Foreground,
         Background = cell.Background,
@@ -35,7 +35,7 @@ public class ColoredGlyphSerialized
         Decorators = cell.Decorators
     };
 
-    public static implicit operator ColoredGlyph(ColoredGlyphSerialized cell)
+    public static implicit operator ColoredGlyphBase(ColoredGlyphSerialized cell)
     {
         var newCell = new ColoredGlyph(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
         {

@@ -99,7 +99,7 @@ public class Playscii
         public string name;
 
         /// <summary>
-        /// <see cref="Playscii"/> tiles that will be converted to <see cref="ColoredGlyph"/>.
+        /// <see cref="Playscii"/> tiles that will be converted to <see cref="ColoredGlyphBase"/>.
         /// </summary>
         public Tile[] tiles;
 
@@ -161,12 +161,12 @@ public class Playscii
         public byte xform;
 
         /// <summary>
-        /// Converts the <see cref="Playscii"/> tile to a SadConsole <see cref="ColoredGlyph"/>.
+        /// Converts the <see cref="Playscii"/> tile to a SadConsole <see cref="ColoredGlyphBase"/>.
         /// </summary>
         /// <param name="font"><see cref="IFont"/> to be used when creating the <see cref="ScreenSurface"/>.</param>
         /// <param name="colors"><see cref="Palette"/> of colors converted from the <see cref="Playscii"/> format.</param>
-        /// <returns><see cref="ColoredGlyph"/> equivalent of the <see cref="Playscii"/> tile.</returns>
-        public ColoredGlyph ToColoredGlyph(IFont font, Palette colors)
+        /// <returns><see cref="ColoredGlyphBase"/> equivalent of the <see cref="Playscii"/> tile.</returns>
+        public ColoredGlyphBase ToColoredGlyph(IFont font, Palette colors)
         {
             if (bg < 0 || fg < 0 || bg >= colors.Length || fg >= colors.Length) throw new IndexOutOfRangeException("Glyph color out of palette range.");
             if (glyph < 0 || glyph >= font.TotalGlyphs) throw new IndexOutOfRangeException("Glyph index out of font range.");
@@ -284,7 +284,7 @@ public class Playscii
     /// 
     /// <remarks>SadConsole does not support all the Playscii features at the moment, so the conversion will not be perfect.<br></br>
     /// Do not use tile rotation and set Z-Depth to 0 on all Playscii layers.<br></br>
-    /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyph"/> background like it does in Playscii.</remarks>
+    /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyphBase"/> background like it does in Playscii.</remarks>
     /// 
     /// <returns><see cref="ScreenSurface"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
     public static ScreenSurface? ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")

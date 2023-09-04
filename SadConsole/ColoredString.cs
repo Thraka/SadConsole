@@ -198,7 +198,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     public ColoredString(params ColoredGlyphAndEffect[] glyphs) => _characters = glyphs.ToArray();
 
     /// <summary>
-    /// Combines a <see cref="ColoredGlyph"/> array into a <see cref="ColoredString"/>.
+    /// Combines a <see cref="ColoredGlyphBase"/> array into a <see cref="ColoredString"/>.
     /// </summary>
     /// <param name="glyphs">The glyphs to combine.</param>
     public ColoredString(params ColoredGlyphBase[] glyphs)

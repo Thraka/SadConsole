@@ -6,37 +6,37 @@ using SadRogue.Primitives;
 namespace SadConsole;
 
 /// <summary>
-/// A <see cref="ColoredGlyph"/> with state information.
+/// A <see cref="ColoredGlyphBase"/> with state information.
 /// </summary>
 public readonly struct ColoredGlyphState
 {
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.Decorators"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.Decorators"/> property.
     /// </summary>
     public CellDecorator[] Decorators { get; }
 
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.Foreground"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.Foreground"/> property.
     /// </summary>
     public Color Foreground { get; }
 
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.Background"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.Background"/> property.
     /// </summary>
     public Color Background { get; }
 
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.Glyph"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.Glyph"/> property.
     /// </summary>
     public int Glyph { get; }
 
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.Mirror"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.Mirror"/> property.
     /// </summary>
     public Mirror Mirror { get; }
 
     /// <summary>
-    /// A copy of the <see cref="ColoredGlyph.IsVisible"/> property.
+    /// A copy of the <see cref="ColoredGlyphBase.IsVisible"/> property.
     /// </summary>
     public bool IsVisible { get; }
 
@@ -44,7 +44,7 @@ public readonly struct ColoredGlyphState
     /// Creates a new state from a cell.
     /// </summary>
     /// <param name="cell">The colored glyph this state is a copy of.</param>
-    public ColoredGlyphState(ColoredGlyph cell)
+    public ColoredGlyphState(ColoredGlyphBase cell)
     {
         Foreground = cell.Foreground;
         Background = cell.Background;
@@ -77,7 +77,7 @@ public readonly struct ColoredGlyphState
     /// <summary>
     /// Restores this state to the specified cell.
     /// </summary>
-    public readonly void RestoreState(ref ColoredGlyph cell)
+    public readonly void RestoreState(ref ColoredGlyphBase cell)
     {
         cell.Foreground = Foreground;
         cell.Background = Background;
