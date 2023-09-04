@@ -8,5 +8,5 @@ public interface IRenderStepTexture
     /// <summary>
     /// The texture created by the render step.
     /// </summary>
-    ITexture CachedTexture { get; }
+    ITexture? CachedTexture { get; }
 }

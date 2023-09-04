@@ -899,6 +899,11 @@
             </summary>
             <returns>An enumerator for <see cref="P:SadConsole.CellSurface.Cells"/>.</returns>
         </member>
+        <member name="T:SadConsole.ColoredGlyph">
+            <summary>
+            Represents an individual piece of a <see cref="T:SadConsole.ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
+            </summary>
+        </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor">
             <summary>
             Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
@@ -960,6 +965,13 @@
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clone">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ColoredGlyph.Matches(SadConsole.ColoredGlyph)">
+            <summary>
+            Checks if this <see cref="T:SadConsole.ColoredGlyph"/> object's properties match another's.
+            </summary>
+            <param name="other">The other object to check.</param>
+            <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:SadConsole.ColoredGlyphBase">
             <summary>
@@ -13699,6 +13711,60 @@
             <param name="oldValue">The old value.</param>
             <param name="newValue">The new value.</param>
         </member>
+        <member name="T:System.CellDecoratorArray">
+            <summary>
+            Extensions for an array of <see cref="T:SadConsole.CellDecorator"/> types.
+            </summary>
+        </member>
+        <member name="P:System.CellDecoratorArray.DefaultComparer">
+            <summary>
+            Default eqaulity comparer for an array of cell decorators.
+            </summary>
+        </member>
+        <member name="M:System.CellDecoratorArray.ItemsMatch(SadConsole.CellDecorator[],SadConsole.CellDecorator[])">
+            <summary>
+            Determines whether the contents of two <see cref="T:SadConsole.CellDecorator"/> arrays are equal.
+            </summary>
+            <param name="self">The first object to compare.</param>
+            <param name="other">The second object to compare.</param>
+            <returns>A boolean value to indicate whether or not the two arrays are considered equal.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
         <member name="T:SadRogue.Primitives.ColorExtensions2">
             <summary>
             Various extension methods to <see cref="T:SadRogue.Primitives.Color"/> class.
@@ -13967,42 +14033,6 @@
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>
             <returns>A new colored string object.</returns>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
-            <summary>Cached, thread-safe singleton instance.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
-            <summary>Initializes the instance.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
-            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
-            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
-            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
-            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-            <returns>true if a possible match was found; false if no more matches are possible.</returns>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
-            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
-            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
-            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
         </member>
     </members>
 </doc>

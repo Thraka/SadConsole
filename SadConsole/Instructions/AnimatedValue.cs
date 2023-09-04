@@ -11,7 +11,7 @@ public class AnimatedValue : Wait
     /// <summary>
     /// Raised when the instruction is running and the value changes during <see cref="Update(IScreenObject, TimeSpan)"/>.
     /// </summary>
-    public event EventHandler<double> ValueChanged;
+    public event EventHandler<double>? ValueChanged;
 
     /// <summary>
     /// The easing function assigned to animate the value.
@@ -89,8 +89,11 @@ public class AnimatedValue : Wait
     {
         if (!IsFinished)
         {
+            double oldValue = Value;
             base.Update(console, delta);
-            ValueChanged?.Invoke(this, Value);
+
+            if (oldValue != Value)
+                ValueChanged?.Invoke(this, Value);
         }
     }
 
