@@ -135,7 +135,7 @@ namespace SadConsole.Tests
             surface1.Clear(region);
             PrintSurfaceGlyphs(surface1, "After:");
 
-            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+            ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
 
             foreach (var item in Rectangle.GetIntersection(region, new Rectangle(0, 0, surface1.Width, surface1.Height)).Positions())
                 Assert.IsTrue(defaultGlyph.Matches(surface1[item]));
@@ -158,7 +158,7 @@ namespace SadConsole.Tests
 
             if (surface1.IsValidCell(clearX, clearY))
             {
-                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
                 Assert.IsTrue(defaultGlyph.Matches(surface1[clearX, clearY]));
             }
         }
@@ -180,7 +180,7 @@ namespace SadConsole.Tests
 
             if (surface1.IsValidCell(clearX, clearY))
             {
-                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
                 int startingIndex = new Point(clearX, clearY).ToIndex(surface1.Width);
                 for (int i = 0; i < length; i++)
                 {
@@ -201,7 +201,7 @@ namespace SadConsole.Tests
             surface1.Clear();
             PrintSurfaceGlyphs(surface1, "After:");
 
-            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+            ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
             for (int i = 0; i < surface1.Count; i++)
                 Assert.IsTrue(defaultGlyph.Matches(surface1[i]));
         }

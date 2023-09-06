@@ -27,7 +27,7 @@ namespace SadConsole.Tests
             var surface1 = new SadConsole.CellSurface(20, 20);
             var surface2 = new SadConsole.CellSurface(22, 22);
 
-            ColoredGlyph defaultCell = new ColoredGlyph();
+            ColoredGlyphBase defaultCell = new ColoredGlyph();
             surface2[0].CopyAppearanceTo(defaultCell);
 
             surface1.FillWithRandomGarbage(255);

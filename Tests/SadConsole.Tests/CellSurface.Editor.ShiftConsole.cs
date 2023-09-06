@@ -221,12 +221,12 @@ public partial class CellSurface
 
     // Computes a ColoredGlyph with unique values for its appearance-related fields, given an ID. This ID
     // should be the "index" value of that position, eg. the result of point.ToIndex(surface.Width).
-    private static ColoredGlyph GetShiftCellForEntireSurface(int positionId)
+    private static ColoredGlyphBase GetShiftCellForEntireSurface(int positionId)
     {
         int id = positionId + 1;
         var colorId = new Color(id, id, id);
         var mirrorId = s_mirrorValues[positionId % s_mirrorValues.Length];
-        var glyph = new ColoredGlyph
+        var glyph = new ColoredGlyphBase
         {
             Glyph = id,
             Background = colorId,
@@ -242,7 +242,7 @@ public partial class CellSurface
     private static void AssertHasShiftedVertically(ICellSurface surface, int shiftAmount, bool wrap)
     {
         // Generate blank glyph appropriate for the surface we're checking
-        ColoredGlyph blankGlyph = new ColoredGlyph
+        ColoredGlyphBase blankGlyph = new ColoredGlyphBase
         {
             Glyph = surface.DefaultGlyph,
             Background = surface.DefaultBackground,
@@ -268,7 +268,7 @@ public partial class CellSurface
     private static void AssertHasShiftedHorizontally(ICellSurface surface, int shiftAmount, bool wrap)
     {
         // Generate blank glyph appropriate for the surface we're checking
-        ColoredGlyph blankGlyph = new ColoredGlyph
+        ColoredGlyphBase blankGlyph = new ColoredGlyphBase
         {
             Glyph = surface.DefaultGlyph,
             Background = surface.DefaultBackground,

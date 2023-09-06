@@ -315,12 +315,12 @@ namespace SadConsole.Tests
 
         // Computes a ColoredGlyph with unique values for its appearance-related fields, given an ID. This ID
         // should be either the X-value or the Y-value for a position on a surface.
-        private static ColoredGlyph GetShiftCellForSingleRowCol(int positionId)
+        private static ColoredGlyphBase GetShiftCellForSingleRowCol(int positionId)
         {
             int id = positionId + 1;
             var colorId = new Color(id, id, id);
             var mirrorId = s_mirrorValues[positionId % s_mirrorValues.Length];
-            var glyph = new ColoredGlyph
+            var glyph = new ColoredGlyphBase
             {
                 Glyph = id,
                 Background = colorId,
@@ -345,7 +345,7 @@ namespace SadConsole.Tests
         private static void AssertRowHasShifted(ICellSurface surface, int row, int startingX, int count, int shiftAmount, bool wrap)
         {
             // Generate blank glyph appropriate for the surface we're checking
-            ColoredGlyph blankGlyph = new ColoredGlyph
+            ColoredGlyphBase blankGlyph = new ColoredGlyphBase
             {
                 Glyph = surface.DefaultGlyph,
                 Background = surface.DefaultBackground,
@@ -380,7 +380,7 @@ namespace SadConsole.Tests
         private static void AssertColHasShifted(ICellSurface surface, int col, int startingY, int count, int shiftAmount, bool wrap)
         {
             // Generate blank glyph appropriate for the surface we're checking
-            ColoredGlyph blankGlyph = new ColoredGlyph
+            ColoredGlyphBase blankGlyph = new ColoredGlyphBase
             {
                 Glyph = surface.DefaultGlyph,
                 Background = surface.DefaultBackground,
