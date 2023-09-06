@@ -684,7 +684,7 @@ public abstract class ControlBase
     /// <summary>
     /// Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="DetermineState"/> method.
     /// </summary>
-    /// <param name="state">The current mouse data</param>
+    /// <param name="state">The current mouse data.</param>
     protected virtual void OnRightMouseClicked(ControlMouseState state)
     {
         MouseButtonClicked?.Invoke(this, state);
@@ -695,6 +695,7 @@ public abstract class ControlBase
     /// <summary>
     /// Redraws the control if applicable.
     /// </summary>
+    /// <param name="time">The duration of thecurrent frame.</param>
     public abstract void UpdateAndRedraw(TimeSpan time);
 
     [OnDeserialized]

@@ -65,12 +65,6 @@ public abstract class CompositeControl : ControlBase, IContainer
 
             if (newState.IsMouseOver)
             {
-                if (MouseState_IsMouseOver != true)
-                {
-                    MouseState_IsMouseOver = true;
-                    OnMouseEnter(newState);
-                }
-
                 // Process the child controls first
                 bool processResult = false;
 
@@ -81,23 +75,18 @@ public abstract class CompositeControl : ControlBase, IContainer
                 for (int i = 0; i < count; i++)
                     processResult |= controls[i].ProcessMouse(state);
 
+                // No child control used the mouse, process the base control logic
                 if (!processResult)
                     processResult = base.ProcessMouse(state);
 
-                // If no child control has the mouse over it, process it on this container
-                if (!processResult)
+                // Child control has the mouse over it, so we need to clear the base control as having the mouse over it, if it did have it
+                else if (MouseState_IsMouseOver)
                 {
-                    bool preventClick = MouseState_EnteredWithButtonDown;
-                    OnMouseIn(newState);
-
-                    if (!preventClick && state.Mouse.LeftClicked)
-                        OnLeftMouseClicked(newState);
-
-                    if (!preventClick && state.Mouse.RightClicked)
-                        OnRightMouseClicked(newState);
+                    MouseState_IsMouseOver = false;
+                    OnMouseExit(newState);
                 }
 
-                return true;
+                return processResult;
             }
             else
             {
