@@ -41,6 +41,11 @@ public partial class ListBox
     public ListBoxItemTheme ItemTheme { get; set; } = new ListBoxItemTheme();
 
     /// <summary>
+    /// The area on the control where items are drawn.
+    /// </summary>
+    public Rectangle ItemsArea { get; set; }
+
+    /// <summary>
     /// Sets up the scroll bar for the listbox.
     /// </summary>
     protected void SetupScrollBar()
@@ -145,7 +150,8 @@ public partial class ListBox
             Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
         }
 
-        MouseArea = new Rectangle(columnOffset, startingRow, columnEnd, endingRow);
+        ItemsArea = (columnOffset, startingRow, columnEnd, endingRow);
+        MouseArea = (0, 0, Width, Height);
 
         VisibleItemsTotal = Items.Count >= endingRow ? endingRow : Items.Count;
         VisibleItemsMax = MouseArea.Height;

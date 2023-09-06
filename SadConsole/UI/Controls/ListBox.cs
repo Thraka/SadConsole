@@ -425,25 +425,19 @@ public partial class ListBox : CompositeControl
     /// <exception cref="Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
     public (object? item, int itemIndex) GetItemAndIndexUnderMouse(ControlMouseState state)
     {
-        int rowOffset = DrawBorder ? 1 : 0;
-        int rowOffsetReverse = DrawBorder ? 0 : 1;
-        int columnOffsetEnd = IsScrollBarVisible || !DrawBorder ? 1 : 0;
-
-        int itemIndex = -1;
-
         Point mouseControlPosition = state.MousePosition;
-
-        if (mouseControlPosition.Y >= rowOffset && mouseControlPosition.Y < Height - rowOffset &&
-            mouseControlPosition.X >= rowOffset && mouseControlPosition.X < Width - columnOffsetEnd)
+        if (ItemsArea.Contains(mouseControlPosition))
         {
-            if (IsScrollBarVisible)
-                itemIndex = mouseControlPosition.Y - rowOffset + ScrollBar.Value;
+            int itemIndex = mouseControlPosition.Y - ItemsArea.Y;
 
-            else if (mouseControlPosition.Y <= Items.Count - rowOffsetReverse)
-                itemIndex = mouseControlPosition.Y - rowOffset;
+            if (IsScrollBarVisible)
+                itemIndex += ScrollBar.Value;
+
+            if (itemIndex < Items.Count)
+                return (Items[itemIndex], itemIndex);
         }
 
-        return (itemIndex == -1 ? null : Items[itemIndex], itemIndex);
+        return (null, -1);
     }
 
     [OnSerializing]
