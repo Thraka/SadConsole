@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using SadConsole.Extensions;
 using static SadConsole.ColoredString;
 
@@ -10,6 +11,8 @@ namespace SadConsole.StringParser;
 /// </summary>
 public class Default : IParser
 {
+    public Dictionary<string, Func<string>> Variables { get; } = new Dictionary<string, Func<string>>();
+
     /// <summary>
     /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
     /// </summary>
@@ -26,6 +29,26 @@ public class Default : IParser
     public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null)
     {
         ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
+
+        // Variable expansion
+        if (value.Contains("$$", StringComparison.InvariantCultureIgnoreCase))
+        {
+            // Generate a buffer that is only 25% bigger
+            StringBuilder sb = new(value.Length + value.Length / 4);
+
+            sb.Append(value);
+            string finalValue = sb.ToString();
+
+            foreach (var item in Variables)
+            {
+                string key = $"$${item.Key}";
+                if (finalValue.Contains(key))
+                    sb.Replace(key, item.Value());
+            }
+
+            value = sb.ToString();
+        }
+
         List<ColoredGlyphAndEffect> glyphs = new List<ColoredGlyphAndEffect>(value.Length);
 
         for (int i = 0; i < value.Length; i++)
