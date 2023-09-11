@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Components;
-using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
-using SadRogue.Primitives.GridViews;
 
 namespace SadConsole;
 
@@ -37,8 +32,6 @@ public partial class AnimatedScreenObject
     /// </summary>
     [DataMember]
     protected int NewFrameHeight;
-
-    private Renderers.IRenderer? _renderer;
 
     /// <inheritdoc/>
     public bool ForceRendererRefresh { get; set; }
@@ -238,10 +231,10 @@ public partial class AnimatedScreenObject
             components[i].Render(this, delta);
 
         // This object second
-        if (_renderer != null)
+        if (Renderer != null)
         {
-            _renderer.Refresh(this, ForceRendererRefresh);
-            _renderer.Render(this);
+            Renderer.Refresh(this, ForceRendererRefresh);
+            Renderer.Render(this);
             ForceRendererRefresh = false;
         }
 
@@ -341,8 +334,8 @@ public partial class AnimatedScreenObject
                 // dispose managed state (managed objects).
             }
 
-            _renderer?.Dispose();
-            _renderer = null;
+            Renderer?.Dispose();
+            Renderer = null;
 
             _disposedValue = true;
         }
