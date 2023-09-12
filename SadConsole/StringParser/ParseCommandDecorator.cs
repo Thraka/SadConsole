@@ -14,7 +14,7 @@ public sealed class ParseCommandDecorator : ParseCommandBase
     /// <summary>
     /// The decorator created by the command settings.
     /// </summary>
-    public CellDecorator? Decorator { get; set; } = null;
+    public CellDecorator Decorator { get; set; }
 
     /// <summary>
     /// The glyph of the decorator.
@@ -32,10 +32,16 @@ public sealed class ParseCommandDecorator : ParseCommandBase
     public Mirror Mirror { get; set; } = Mirror.None;
 
     /// <summary>
+    /// When <see langword="true"/>, replaces the decorators on the glyph, otherwise it adds them.
+    /// </summary>
+    public bool Replace { get; set; }
+
+    /// <summary>
     /// Creates a new instance of this command.
     /// </summary>
     /// <param name="parameters">The string to parse for parameters.</param>
-    public ParseCommandDecorator(string parameters)
+    /// <param name="replace">When <see langword="true"/>, replaces the decorators on the glyph, otherwise it adds them.</param>
+    public ParseCommandDecorator(string parameters, bool replace)
     {
         var badCommandException = new ArgumentException("command is invalid for decorator: " + parameters);
 
@@ -44,6 +50,7 @@ public sealed class ParseCommandDecorator : ParseCommandBase
         string[] paramArray = parameters.Split(':');
 
         CommandType = CommandTypes.Decorator;
+        Replace = replace;
 
         if (paramArray.Length == 3)
         {
@@ -84,29 +91,21 @@ public sealed class ParseCommandDecorator : ParseCommandBase
             throw badCommandException;
     }
 
-    /// <summary>
-    /// Creates a new instance of this command.
-    /// </summary>
-    public ParseCommandDecorator(int counter = -1)
-    {
-        _counter = counter;
-    }
-
     /// <inheritdoc />
     public override void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex,
         ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
-        // Create decorator if needed
-        if (!Decorator.HasValue) Decorator = new CellDecorator(Color, Glyph, Mirror);
+        Decorator = new CellDecorator(Color, Glyph, Mirror);
+
+        // Create decorator list if needed
+        if (Replace)
+            glyphState.Decorators = new();
+        else
+            glyphState.Decorators ??= new();
 
         // If decorator isn't already in the glyph state decorators, add it
-        if (Array.IndexOf(glyphState.Decorators, Decorator.Value) == -1)
-        {
-            CellDecorator[] decs = new CellDecorator[glyphState.Decorators.Length + 1];
-            glyphState.Decorators.CopyTo(decs, 0);
-            decs[decs.GetUpperBound(0)] = Decorator.Value;
-            glyphState.Decorators = decs;
-        }
+        if (glyphState.Decorators.IndexOf(Decorator) == -1)
+            glyphState.Decorators.Add(Decorator);
 
         // If counter is counting down
         if (_counter != -1)
@@ -119,18 +118,7 @@ public sealed class ParseCommandDecorator : ParseCommandBase
                 commandStack.RemoveSafe(this);
 
                 // Remove this decorator from the array
-                CellDecorator[] decs = new CellDecorator[glyphState.Decorators.Length - 1];
-                int insertIndex = 0;
-                for (int i = 0; i < glyphState.Decorators.Length; i++)
-                {
-                    if (glyphState.Decorators[i] != Decorator)
-                    {
-                        decs[insertIndex] = glyphState.Decorators[i];
-                        insertIndex++;
-                    }
-                }
-                glyphState.Decorators = decs;
-
+                DecoratorHelpers.RemoveDecorator(Decorator, glyphState);
             }
         }
     }

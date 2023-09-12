@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -51,7 +52,11 @@ public readonly struct ColoredGlyphState
         Mirror = cell.Mirror;
         Glyph = cell.Glyph;
         IsVisible = cell.IsVisible;
-        Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : Array.Empty<CellDecorator>();
+        Decorators = cell.Decorators != null
+                        ? (cell.Decorators.Count != 0
+                            ? cell.Decorators.ToArray()
+                            : Array.Empty<CellDecorator>())
+                        : Array.Empty<CellDecorator>();
     }
 
     /// <summary>
@@ -86,8 +91,8 @@ public readonly struct ColoredGlyphState
         cell.IsVisible = IsVisible;
 
         if (Decorators == null)
-            cell.Decorators = Array.Empty<CellDecorator>();
+            cell.Decorators = null;
         else
-            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : Array.Empty<CellDecorator>();
+            cell.Decorators = Decorators.Length != 0 ? new List<CellDecorator>(Decorators) : null;
     }
 }

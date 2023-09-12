@@ -320,12 +320,12 @@ namespace SadConsole.Tests
             int id = positionId + 1;
             var colorId = new Color(id, id, id);
             var mirrorId = s_mirrorValues[positionId % s_mirrorValues.Length];
-            var glyph = new ColoredGlyphBase
+            var glyph = new ColoredGlyph
             {
                 Glyph = id,
                 Background = colorId,
                 Foreground = colorId,
-                Decorators = new[] { new CellDecorator(colorId, id, mirrorId) },
+                Decorators = new() { new CellDecorator(colorId, id, mirrorId) },
                 Mirror = mirrorId,
             };
             return glyph;
@@ -337,7 +337,7 @@ namespace SadConsole.Tests
                 c1.Mirror != c2.Mirror)
                 return false;
 
-            return c1.Decorators.SequenceEqual(c2.Decorators);
+            return c1.Decorators.ItemsMatch(c2.Decorators);
         }
 
         // Checks that a row has been shifted as specified, assuming the cells were generated via GetShiftCellFor.
@@ -345,12 +345,12 @@ namespace SadConsole.Tests
         private static void AssertRowHasShifted(ICellSurface surface, int row, int startingX, int count, int shiftAmount, bool wrap)
         {
             // Generate blank glyph appropriate for the surface we're checking
-            ColoredGlyphBase blankGlyph = new ColoredGlyphBase
+            ColoredGlyphBase blankGlyph = new ColoredGlyph
             {
                 Glyph = surface.DefaultGlyph,
                 Background = surface.DefaultBackground,
                 Foreground = surface.DefaultForeground,
-                Decorators = Array.Empty<CellDecorator>(),
+                Decorators = null,
                 Mirror = Mirror.None
             };
 
@@ -380,12 +380,12 @@ namespace SadConsole.Tests
         private static void AssertColHasShifted(ICellSurface surface, int col, int startingY, int count, int shiftAmount, bool wrap)
         {
             // Generate blank glyph appropriate for the surface we're checking
-            ColoredGlyphBase blankGlyph = new ColoredGlyphBase
+            ColoredGlyphBase blankGlyph = new ColoredGlyph
             {
                 Glyph = surface.DefaultGlyph,
                 Background = surface.DefaultBackground,
                 Foreground = surface.DefaultForeground,
-                Decorators = Array.Empty<CellDecorator>(),
+                Decorators = null,
                 Mirror = Mirror.None
             };
 

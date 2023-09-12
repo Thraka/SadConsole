@@ -105,7 +105,10 @@ public class Default : IParser
                                     commandObject = new ParseCommandMirror(commandParams);
                                     break;
                                 case "d":
-                                    commandObject = new ParseCommandDecorator(commandParams);
+                                    commandObject = new ParseCommandDecorator(commandParams, false);
+                                    break;
+                                case "dr":
+                                    commandObject = new ParseCommandDecorator(commandParams, true);
                                     break;
                                 case "undo":
                                 case "u":

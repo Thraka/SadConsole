@@ -31,8 +31,8 @@ public static class Serializer
             if (objectType == typeof(IFont))
                 return new SerializedTypes.FontJsonConverter();
 
-            else if (objectType == typeof(ColoredGlyphBase))
-                return new SerializedTypes.ColoredGlyphJsonConverter();
+            //else if (objectType == typeof(ColoredGlyph))
+            //    return new SerializedTypes.ColoredGlyphJsonConverter();
 
             else if (objectType == typeof(SadRogue.Primitives.Color))
                 return new SadConsole.SerializedTypes.ColorJsonConverter();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using SadConsole.Effects;
@@ -38,7 +39,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
             Foreground = glyph.Foreground,
             Background = glyph.Background,
             Glyph = glyph.Glyph,
-            Decorators = glyph.Decorators.ToArray(),
+            Decorators = glyph.Decorators != null ? new List<CellDecorator>(glyph.Decorators) : null,
             Effect = effect
         };
 
@@ -59,7 +60,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
         cell.Effect = Effect;
 
         if (deepCopy)
-            cell.Decorators = Decorators.Length != 0 ? Decorators.ToArray() : System.Array.Empty<CellDecorator>();
+            cell.Decorators = Decorators != null ? new List<CellDecorator>(Decorators) : null;
         else
             cell.Decorators = Decorators;
     }
@@ -81,7 +82,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
         Effect = cell.Effect;
 
         if (deepCopy)
-            Decorators = cell.Decorators.Length != 0 ? cell.Decorators.ToArray() : System.Array.Empty<CellDecorator>();
+            Decorators = cell.Decorators != null ? new List<CellDecorator>(cell.Decorators) : null;
         else
             Decorators = cell.Decorators;
     }
@@ -93,7 +94,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
         Background = Color.Black;
         Glyph = 0;
         Mirror = Mirror.None;
-        Decorators = Array.Empty<CellDecorator>();
+        Decorators = null;
         Effect = null;
     }
 
@@ -107,7 +108,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
             Glyph = Glyph,
             Mirror = Mirror,
             Effect = Effect,
-            Decorators = Decorators.ToArray()
+            Decorators = Decorators != null ? new List<CellDecorator>(Decorators) : null
         };
     }
 }

@@ -226,9 +226,9 @@ public class SpriteBatch
                 //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
 
-            if (cell.Decorators.Length != 0)
+            if (cell.Decorators != null && cell.Decorators.Count != 0)
             {
-                for (int d = 0; d < cell.Decorators.Length; d++)
+                for (int d = 0; d < cell.Decorators.Count; d++)
                 {
                     glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
 

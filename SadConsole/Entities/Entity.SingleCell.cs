@@ -94,9 +94,9 @@ public partial class Entity
         }
 
         [JsonConstructor]
-        private SingleCell(ColoredGlyphState appearance, ICellEffect effect)
+        private SingleCell(ColoredGlyph appearance, ICellEffect effect)
         {
-            Appearance = new ColoredGlyph(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror, appearance.IsVisible, appearance.Decorators);
+            Appearance = appearance;
             Effect = effect;
         }
 

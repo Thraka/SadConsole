@@ -17,7 +17,7 @@ internal readonly struct ColoredGlyphAppearance
     public readonly Color Background;
     public readonly int Glyph;
     public readonly Mirror Mirror;
-    public readonly CellDecorator[] Decorators;
+    public readonly List<CellDecorator>? Decorators;
 
     public ColoredGlyphAppearance(ColoredGlyphBase cell)
     {
@@ -55,7 +55,7 @@ internal readonly struct ColoredGlyphAppearance
 public static class CellSurfaceEditor
 {
     /// <summary>
-    /// Sets each background of a cell to the array of colors. Must be the same length as this cell obj.Surface.
+    /// Sets each background of a cell to the array of colors. <paramref name="pixels"/> must be the same length as the amount of cells in the surface.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="pixels">The colors to place.</param>
@@ -249,7 +249,7 @@ public static class CellSurfaceEditor
         obj.Surface[index].Foreground = foreground;
         obj.Surface[index].Glyph = glyph;
         obj.Surface[index].Mirror = mirror;
-        obj.Surface[index].Decorators = decorators?.ToArray() ?? Array.Empty<CellDecorator>();
+        DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -533,7 +533,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Sets the decorator of one or more obj.Surface.
+    /// Sets the decorator of one or more cells.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="x">The x coordinate of the cell.</param>
@@ -545,7 +545,17 @@ public static class CellSurfaceEditor
         SetDecorator(obj, Point.ToIndex(x, y, obj.Surface.Width), count, decorators);
 
     /// <summary>
-    /// Sets the decorator of one or more obj.Surface.
+    /// Sets the decorators of a cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="position">The coordinate of the cell.</param>
+    /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void SetDecorator(this ISurface obj, Point position, params CellDecorator[]? decorators) =>
+        SetDecorator(obj, position.ToIndex(obj.Surface.Width), decorators);
+
+    /// <summary>
+    /// Sets the decorator of one or more cells.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="index">The index of the cell to start applying.</param>
@@ -559,16 +569,23 @@ public static class CellSurfaceEditor
         if (index + count > obj.Surface.Count)
             count = obj.Surface.Count - index;
 
-        if (decorators != null && decorators.Length == 0)
-            decorators = null;
-
         for (int i = index; i < index + count; i++)
-        {
-            if (decorators == null)
-                obj.Surface[i].Decorators = Array.Empty<CellDecorator>();
-            else
-                obj.Surface[i].Decorators = (CellDecorator[])decorators.Clone();
-        }
+            DecoratorHelpers.SetDecorators(decorators, obj.Surface[i]);
+
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Sets the decorators of a single cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="index">The index of the cell to start applying.</param>
+    /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+    public static void SetDecorator(this ISurface obj, int index, params CellDecorator[]? decorators)
+    {
+        if (!obj.Surface.IsValidCell(index)) return;
+
+        DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -580,7 +597,7 @@ public static class CellSurfaceEditor
     /// <param name="x">The x coordinate of the cell.</param>
     /// <param name="y">The y coordinate of the cell.</param>
     /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-    /// <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+    /// <param name="decorators">The decorators.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AddDecorator(this ISurface obj, int x, int y, int count, params CellDecorator[] decorators) =>
         AddDecorator(obj, Point.ToIndex(x, y, obj.Surface.Width), count, decorators);
@@ -589,9 +606,19 @@ public static class CellSurfaceEditor
     /// Appends the decorators to one or more cells
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
+    /// <param name="position">The x,y coordinate of the cell.</param>
+    /// <param name="decorators">The decorators.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AddDecorator(this ISurface obj, Point position, params CellDecorator[] decorators) =>
+        AddDecorator(obj, position.ToIndex(obj.Surface.Width), decorators);
+
+    /// <summary>
+    /// Appends the decorators to one or more cells
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
     /// <param name="index">The index of the cell to start applying.</param>
     /// <param name="count">The count of cells to use from the index (inclusive).</param>
-    /// <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+    /// <param name="decorators">The decorators.</param>
     public static void AddDecorator(this ISurface obj, int index, int count, params CellDecorator[] decorators)
     {
         if (count <= 0) return;
@@ -602,13 +629,89 @@ public static class CellSurfaceEditor
             count = obj.Surface.Count - index;
 
         for (int i = index; i < index + count; i++)
-            obj.Surface[i].Decorators = obj.Surface[i].Decorators.Union(decorators).Distinct().ToArray();
+            DecoratorHelpers.AddDecorators(decorators, obj.Surface[i]);
 
         obj.Surface.IsDirty = true;
     }
 
     /// <summary>
-    /// Clears the decorators of the specified obj.Surface.
+    /// Appends the decorators to one or more cells
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="index">The index of the cell to start applying.</param>
+    /// <param name="decorators">The decorators.</param>
+    public static void AddDecorator(this ISurface obj, int index, params CellDecorator[]? decorators)
+    {
+        if (!obj.Surface.IsValidCell(index)) return;
+        if (decorators == null || decorators.Length == 0) return;
+
+        DecoratorHelpers.AddDecorators(decorators, obj.Surface[index]);
+
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Removes the decorators from one or more cells.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">The x coordinate of the cell.</param>
+    /// <param name="y">The y coordinate of the cell.</param>
+    /// <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+    /// <param name="decorators">The decorators.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void RemoveDecorator(this ISurface obj, int x, int y, int count, params CellDecorator[] decorators) =>
+        RemoveDecorator(obj, Point.ToIndex(x, y, obj.Surface.Width), count, decorators);
+
+    /// <summary>
+    /// Removes the decorators from a cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="position">The x,y coordinate of the cell.</param>
+    /// <param name="decorators">The decorators.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void RemoveDecorator(this ISurface obj, Point position, params CellDecorator[] decorators) =>
+        RemoveDecorator(obj, position.ToIndex(obj.Surface.Width), decorators);
+
+    /// <summary>
+    /// Removes the decorators from one or more cells.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="index">The index of the cell to start applying.</param>
+    /// <param name="count">The count of cells to use from the index (inclusive).</param>
+    /// <param name="decorators">The decorators.</param>
+    public static void RemoveDecorator(this ISurface obj, int index, int count, params CellDecorator[] decorators)
+    {
+        if (count <= 0) return;
+        if (!obj.Surface.IsValidCell(index)) return;
+        if (decorators == null || decorators.Length == 0) return;
+
+        if (index + count > obj.Surface.Count)
+            count = obj.Surface.Count - index;
+
+        for (int i = index; i < index + count; i++)
+            DecoratorHelpers.RemoveDecorators(decorators, obj.Surface[i]);
+
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Removes the decorators from a cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="index">The index of the cell to start applying.</param>
+    /// <param name="decorators">The decorators.</param>
+    public static void RemoveDecorator(this ISurface obj, int index, params CellDecorator[] decorators)
+    {
+        if (!obj.Surface.IsValidCell(index)) return;
+        if (decorators == null || decorators.Length == 0) return;
+
+        DecoratorHelpers.RemoveDecorators(decorators, obj.Surface[index]);
+
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Clears the decorators of the specified cells.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="x">The x coordinate of the cell.</param>
@@ -619,7 +722,7 @@ public static class CellSurfaceEditor
         SetDecorator(obj, x, y, count, null);
 
     /// <summary>
-    /// Clears the decorators of the specified obj.Surface.
+    /// Clears the decorators of the specified cells
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="index">The index of the cell to start applying.</param>
@@ -820,7 +923,7 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Background = background;
                 obj.Surface[index].Foreground = foreground;
                 obj.Surface[index].Mirror = mirror;
-                obj.Surface[index].Decorators = decorators;
+                DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
                 effectIndices.Add(index);
                 charIndex++;
@@ -1004,7 +1107,7 @@ public static class CellSurfaceEditor
         GetString(obj, y * obj.Surface.Width + x, length);
 
     /// <summary>
-    /// Builds a string from the text obj.Surface.
+    /// Builds a string from the cells.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="index">Where to start getting characters from.</param>
@@ -1044,7 +1147,7 @@ public static class CellSurfaceEditor
         GetStringColored(obj, y * obj.Surface.Width + x, length);
 
     /// <summary>
-    /// Builds a string from the text obj.Surface.
+    /// Builds a string from the text surface.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="index">Where to start getting characters from.</param>
@@ -1842,7 +1945,7 @@ public static class CellSurfaceEditor
 
             c.Glyph = obj.Surface.DefaultGlyph;
             c.Mirror = Mirror.None;
-            c.Decorators = Array.Empty<CellDecorator>();
+            c.Decorators = null;
 
             result[resultIndex] = c;
             resultIndex++;
@@ -1870,7 +1973,7 @@ public static class CellSurfaceEditor
 
         obj.Surface[index].Glyph = obj.Surface.DefaultGlyph;
         obj.Surface[index].Mirror = Mirror.None;
-        obj.Surface[index].Decorators = Array.Empty<CellDecorator>();
+        obj.Surface[index].Decorators = null;
 
         obj.Surface.IsDirty = true;
     }
@@ -1888,7 +1991,7 @@ public static class CellSurfaceEditor
         {
             obj.Surface[i].Glyph = obj.Surface.DefaultGlyph;
             obj.Surface[i].Mirror = Mirror.None;
-            obj.Surface[i].Decorators = Array.Empty<CellDecorator>();
+            obj.Surface[i].Decorators = null;
         }
 
         obj.Surface.IsDirty = true;
@@ -2067,7 +2170,7 @@ public static class CellSurfaceEditor
             if (mirror.HasValue)
                 obj.Surface[i].Mirror = mirror.Value;
 
-            obj.Surface[i].Decorators = Array.Empty<CellDecorator>();
+            obj.Surface[i].Decorators = null;
 
             glyphs[i] = obj.Surface[i];
         }
@@ -2113,7 +2216,7 @@ public static class CellSurfaceEditor
             if (mirror.HasValue)
                 c.Mirror = mirror.Value;
 
-            c.Decorators = Array.Empty<CellDecorator>();
+            c.Decorators = null;
 
             result[resultIndex] = c;
             resultIndex++;
@@ -2162,7 +2265,7 @@ public static class CellSurfaceEditor
                 if (mirror.HasValue)
                     cell.Mirror = mirror.Value;
 
-                cell.Decorators = Array.Empty<CellDecorator>();
+                cell.Decorators = null;
 
                 result[resultIndex] = cell;
                 resultIndex++;
@@ -2648,7 +2751,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Copies an area of this cell surface to the destination obj.Surface.
+    /// Copies an area of this cell surface to the destination surface.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="area">The area to copy.</param>

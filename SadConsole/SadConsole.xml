@@ -949,7 +949,7 @@
             <param name="mirror">The mirror effect.</param>
             <param name="isVisible">The visiblity of the glyph.</param>
         </member>
-        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,SadConsole.CellDecorator[])">
+        <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,System.Collections.Generic.List{SadConsole.CellDecorator})">
             <summary>
             Creates a cell with the specified foreground, background, glyph, mirror effect, visibility and decorators.
             </summary>
@@ -972,6 +972,50 @@
             </summary>
             <param name="other">The other object to check.</param>
             <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:SadConsole.ColoredGlyphAndEffect">
+            <summary>
+            A <see cref="T:SadConsole.ColoredGlyphBase"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
+            <summary>
+            The effect of this cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyphBase"/> with the specified effect.
+            </summary>
+            <param name="glyph">The glyph.</param>
+            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceTo(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
+            <summary>
+            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
+            </summary>
+            <param name="cell">The target cell to copy to.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceFrom(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
+            <summary>
+            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
+            </summary>
+            <param name="cell">The target cell to copy from.</param>
+            <param name="deepCopy">
+            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
+            decorator array reference is moved directly.
+            </param>
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.ColoredGlyphBase">
             <summary>
@@ -1070,50 +1114,6 @@
         </member>
         <member name="M:SadConsole.ColoredGlyphBase.OnDeserialized(System.Runtime.Serialization.StreamingContext)">
             <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.ColoredGlyphAndEffect">
-            <summary>
-            A <see cref="T:SadConsole.ColoredGlyphBase"/> with a <see cref="T:SadConsole.Effects.ICellEffect"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ColoredGlyphAndEffect.Effect">
-            <summary>
-            The effect of this cell.
-            </summary>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.FromColoredGlyph(SadConsole.ColoredGlyphBase,SadConsole.Effects.ICellEffect)">
-            <summary>
-            Creates a new <see cref="T:SadConsole.ColoredGlyphAndEffect"/> from a <see cref="T:SadConsole.ColoredGlyphBase"/> with the specified effect.
-            </summary>
-            <param name="glyph">The glyph.</param>
-            <param name="effect">When provided, sets the <see cref="P:SadConsole.ColoredGlyphAndEffect.Effect"/>.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceTo(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
-            <summary>
-            Copies the visual appearance to the specified cell. This includes foreground, background, glyph, mirror effect and decorators.
-            </summary>
-            <param name="cell">The target cell to copy to.</param>
-            <param name="deepCopy">
-            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
-            decorator array reference is moved directly.
-            </param>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.CopyAppearanceFrom(SadConsole.ColoredGlyphAndEffect,System.Boolean)">
-            <summary>
-            Sets the foreground, background, glyph, mirror effect and decorators to the same as the specified cell.
-            </summary>
-            <param name="cell">The target cell to copy from.</param>
-            <param name="deepCopy">
-            Whether to perform a deep copy.  Decorators are copied to a new array when true; when false, the old
-            decorator array reference is moved directly.
-            </param>
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.Clear">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
-            <inheritdoc />
         </member>
         <member name="T:SadConsole.ColoredGlyphState">
             <summary>
@@ -1321,6 +1321,12 @@
             Applies the mirror value to each character in the colored string.
             </summary>
             <param name="mirror">The mirror mode.</param>
+        </member>
+        <member name="M:SadConsole.ColoredString.SetDecorators(System.Collections.Generic.IEnumerable{SadConsole.CellDecorator})">
+            <summary>
+            Applies the decorators to each character in the colored string.
+            </summary>
+            <param name="decorators">The decorators.</param>
         </member>
         <member name="M:SadConsole.ColoredString.SetDecorators(SadConsole.CellDecorator[])">
             <summary>
@@ -2358,6 +2364,14 @@
             <summary>
             Shows the debug screen with the default font and size.
             </summary>
+        </member>
+        <member name="M:SadConsole.DecoratorHelpers.ItemsMatch(System.Collections.Generic.List{SadConsole.CellDecorator},System.Collections.Generic.List{SadConsole.CellDecorator})">
+            <summary>
+            Determines whether the contents of two <see cref="T:SadConsole.CellDecorator"/> arrays are equal.
+            </summary>
+            <param name="self">The first object to compare.</param>
+            <param name="other">The second object to compare.</param>
+            <returns>A boolean value to indicate whether or not the two arrays are considered equal.</returns>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -4494,7 +4508,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetPixels(SadConsole.ISurface,SadRogue.Primitives.Color[])">
             <summary>
-            Sets each background of a cell to the array of colors. Must be the same length as this cell obj.Surface.
+            Sets each background of a cell to the array of colors. <paramref name="pixels"/> must be the same length as the amount of cells in the surface.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="pixels">The colors to place.</param>
@@ -4761,7 +4775,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
             <summary>
-            Sets the decorator of one or more obj.Surface.
+            Sets the decorator of one or more cells.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="x">The x coordinate of the cell.</param>
@@ -4769,13 +4783,29 @@
             <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
             <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ISurface,SadRogue.Primitives.Point,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorators of a cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="position">The coordinate of the cell.</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
             <summary>
-            Sets the decorator of one or more obj.Surface.
+            Sets the decorator of one or more cells.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="index">The index of the cell to start applying.</param>
             <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetDecorator(SadConsole.ISurface,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Sets the decorators of a single cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
             <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
@@ -4786,7 +4816,15 @@
             <param name="x">The x coordinate of the cell.</param>
             <param name="y">The y coordinate of the cell.</param>
             <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
-            <param name="decorators">The decorators. Use <code>null</code> to clear.</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ISurface,SadRogue.Primitives.Point,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="position">The x,y coordinate of the cell.</param>
+            <param name="decorators">The decorators.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
             <summary>
@@ -4795,11 +4833,54 @@
             <param name="obj">The surface being edited.</param>
             <param name="index">The index of the cell to start applying.</param>
             <param name="count">The count of cells to use from the index (inclusive).</param>
-            <param name="decorators">The decorators. If <code>null</code>, does nothing.</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.AddDecorator(SadConsole.ISurface,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Appends the decorators to one or more cells
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.RemoveDecorator(SadConsole.ISurface,System.Int32,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Removes the decorators from one or more cells.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="x">The x coordinate of the cell.</param>
+            <param name="y">The y coordinate of the cell.</param>
+            <param name="count">The count of cells to use from the x,y coordinate (inclusive).</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.RemoveDecorator(SadConsole.ISurface,SadRogue.Primitives.Point,SadConsole.CellDecorator[])">
+            <summary>
+            Removes the decorators from a cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="position">The x,y coordinate of the cell.</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.RemoveDecorator(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Removes the decorators from one or more cells.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="count">The count of cells to use from the index (inclusive).</param>
+            <param name="decorators">The decorators.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.RemoveDecorator(SadConsole.ISurface,System.Int32,SadConsole.CellDecorator[])">
+            <summary>
+            Removes the decorators from a cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="index">The index of the cell to start applying.</param>
+            <param name="decorators">The decorators.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ClearDecorators(SadConsole.ISurface,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Clears the decorators of the specified obj.Surface.
+            Clears the decorators of the specified cells.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="x">The x coordinate of the cell.</param>
@@ -4808,7 +4889,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.ClearDecorators(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
-            Clears the decorators of the specified obj.Surface.
+            Clears the decorators of the specified cells
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="index">The index of the cell to start applying.</param>
@@ -4929,7 +5010,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetString(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
-            Builds a string from the text obj.Surface.
+            Builds a string from the cells.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="index">Where to start getting characters from.</param>
@@ -4948,7 +5029,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetStringColored(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
-            Builds a string from the text obj.Surface.
+            Builds a string from the text surface.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="index">Where to start getting characters from.</param>
@@ -5337,7 +5418,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Copy(SadConsole.ISurface,SadRogue.Primitives.Rectangle,SadConsole.ICellSurface,System.Int32,System.Int32)">
             <summary>
-            Copies an area of this cell surface to the destination obj.Surface.
+            Copies an area of this cell surface to the destination surface.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="area">The area to copy.</param>
@@ -9899,16 +9980,17 @@
             The mirror to apply to the decorator.
             </summary>
         </member>
-        <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.String)">
+        <member name="P:SadConsole.StringParser.ParseCommandDecorator.Replace">
+            <summary>
+            When <see langword="true"/>, replaces the decorators on the glyph, otherwise it adds them.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.String,System.Boolean)">
             <summary>
             Creates a new instance of this command.
             </summary>
             <param name="parameters">The string to parse for parameters.</param>
-        </member>
-        <member name="M:SadConsole.StringParser.ParseCommandDecorator.#ctor(System.Int32)">
-            <summary>
-            Creates a new instance of this command.
-            </summary>
+            <param name="replace">When <see langword="true"/>, replaces the decorators on the glyph, otherwise it adds them.</param>
         </member>
         <member name="M:SadConsole.StringParser.ParseCommandDecorator.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
@@ -11746,12 +11828,13 @@
             <summary>
             Called when the right mouse button is clicked. Raises the MouseButtonClicked event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
-            <param name="state">The current mouse data</param>
+            <param name="state">The current mouse data.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.UpdateAndRedraw(System.TimeSpan)">
             <summary>
             Redraws the control if applicable.
             </summary>
+            <param name="time">The duration of thecurrent frame.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.ControlBase.ControlMouseState">
             <summary>
@@ -12155,6 +12238,11 @@
         <member name="P:SadConsole.UI.Controls.ListBox.ItemTheme">
             <summary>
             The appearance of the items displayed by the listbox control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox.ItemsArea">
+            <summary>
+            The area on the control where items are drawn.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ListBox.SetupScrollBar">
@@ -13711,60 +13799,6 @@
             <param name="oldValue">The old value.</param>
             <param name="newValue">The new value.</param>
         </member>
-        <member name="T:System.CellDecoratorArray">
-            <summary>
-            Extensions for an array of <see cref="T:SadConsole.CellDecorator"/> types.
-            </summary>
-        </member>
-        <member name="P:System.CellDecoratorArray.DefaultComparer">
-            <summary>
-            Default eqaulity comparer for an array of cell decorators.
-            </summary>
-        </member>
-        <member name="M:System.CellDecoratorArray.ItemsMatch(SadConsole.CellDecorator[],SadConsole.CellDecorator[])">
-            <summary>
-            Determines whether the contents of two <see cref="T:SadConsole.CellDecorator"/> arrays are equal.
-            </summary>
-            <param name="self">The first object to compare.</param>
-            <param name="other">The second object to compare.</param>
-            <returns>A boolean value to indicate whether or not the two arrays are considered equal.</returns>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
-            <summary>Cached, thread-safe singleton instance.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
-            <summary>Initializes the instance.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
-            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
-            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
-            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
-            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-            <returns>true if a possible match was found; false if no more matches are possible.</returns>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
-            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
-            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
-            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
-        </member>
         <member name="T:SadRogue.Primitives.ColorExtensions2">
             <summary>
             Various extension methods to <see cref="T:SadRogue.Primitives.Color"/> class.
@@ -14033,6 +14067,42 @@
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>
             <returns>A new colored string object.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
         </member>
     </members>
 </doc>

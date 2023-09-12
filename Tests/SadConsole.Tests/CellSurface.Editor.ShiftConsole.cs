@@ -226,12 +226,12 @@ public partial class CellSurface
         int id = positionId + 1;
         var colorId = new Color(id, id, id);
         var mirrorId = s_mirrorValues[positionId % s_mirrorValues.Length];
-        var glyph = new ColoredGlyphBase
+        var glyph = new ColoredGlyph
         {
             Glyph = id,
             Background = colorId,
             Foreground = colorId,
-            Decorators = new[] { new CellDecorator(colorId, id, mirrorId) },
+            Decorators = new() { new CellDecorator(colorId, id, mirrorId) },
             Mirror = mirrorId,
         };
         return glyph;
@@ -242,12 +242,12 @@ public partial class CellSurface
     private static void AssertHasShiftedVertically(ICellSurface surface, int shiftAmount, bool wrap)
     {
         // Generate blank glyph appropriate for the surface we're checking
-        ColoredGlyphBase blankGlyph = new ColoredGlyphBase
+        ColoredGlyphBase blankGlyph = new ColoredGlyph
         {
             Glyph = surface.DefaultGlyph,
             Background = surface.DefaultBackground,
             Foreground = surface.DefaultForeground,
-            Decorators = Array.Empty<CellDecorator>(),
+            Decorators = null,
             Mirror = Mirror.None
         };
 
@@ -268,12 +268,12 @@ public partial class CellSurface
     private static void AssertHasShiftedHorizontally(ICellSurface surface, int shiftAmount, bool wrap)
     {
         // Generate blank glyph appropriate for the surface we're checking
-        ColoredGlyphBase blankGlyph = new ColoredGlyphBase
+        ColoredGlyphBase blankGlyph = new ColoredGlyph
         {
             Glyph = surface.DefaultGlyph,
             Background = surface.DefaultBackground,
             Foreground = surface.DefaultForeground,
-            Decorators = Array.Empty<CellDecorator>(),
+            Decorators = null,
             Mirror = Mirror.None
         };
 

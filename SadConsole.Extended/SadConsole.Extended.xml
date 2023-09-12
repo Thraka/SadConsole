@@ -1061,7 +1061,7 @@
         </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory">
             <summary>
-            A listbox item container that represents a fake directory, such as <code>..</code>.
+            A listbox item container that represents a fake directory, such as <c>..</c>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory.Name">

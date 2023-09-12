@@ -100,9 +100,10 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                     if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent)
                         Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
-                    for (int d = 0; d < cell.Decorators.Length; d++)
-                        if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
-                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
+                    if (cell.Decorators != null)
+                        for (int d = 0; d < cell.Decorators.Count; d++)
+                            if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
                 }
                 else
                 {
@@ -130,9 +131,10 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                                 if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
                                     Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
-                                for (int d = 0; d < cell.Decorators.Length; d++)
-                                    if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
-                                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
+                                if (cell.Decorators != null)
+                                    for (int d = 0; d < cell.Decorators.Count; d++)
+                                        if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
                             }
 
                             index++;

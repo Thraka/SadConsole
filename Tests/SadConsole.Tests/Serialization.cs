@@ -85,12 +85,16 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
 
+            Point decoratorSpot = (5, 5);
+            CellDecorator decorator = new(Color.Purple, 22, Mirror.Horizontal);
+
             var obj = new SadConsole.ScreenSurface(10, 10);
             obj.Surface.FillWithRandomGarbage(255);
             obj.Position = (10, 10);
             obj.IsEnabled = false;
             obj.IsVisible = false;
             obj.UseKeyboard = true;
+            obj.Surface.SetDecorator(decoratorSpot.X, decoratorSpot.Y, 1, decorator);
             obj.UseMouse = false;
 
             var obj2 = new SadConsole.ScreenSurface(20, 20);
@@ -99,6 +103,7 @@ namespace SadConsole.Tests
             obj2.IsEnabled = true;
             obj2.IsVisible = false;
             obj2.UseKeyboard = false;
+            obj2.Surface.SetDecorator(decoratorSpot.X, decoratorSpot.Y, 1, decorator);
             obj2.UseMouse = true;
 
             obj.Children.Add(obj2);
@@ -118,6 +123,7 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj.UseKeyboard, newObj.UseKeyboard);
             Assert.AreEqual(obj.UseMouse, newObj.UseMouse);
             Assert.AreEqual(obj.AbsolutePosition, newObj.AbsolutePosition);
+            Assert.AreEqual(obj.Surface[decoratorSpot].Decorators![0], decorator);
             Assert.IsInstanceOfType(obj.Renderer, newObj.Renderer.GetType());
 
             Assert.AreEqual(obj2.Position, newObj.Children[0].Position);
@@ -126,6 +132,7 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseKeyboard, newObj.Children[0].UseKeyboard);
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
+            Assert.AreEqual(obj2.Surface[decoratorSpot].Decorators![0], decorator);
             Assert.IsInstanceOfType(obj2.Renderer, ((SadConsole.ScreenSurface)newObj.Children[0]).Renderer.GetType());
 
             for (int i = 0; i < 10; i++)

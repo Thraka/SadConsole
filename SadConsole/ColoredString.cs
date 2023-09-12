@@ -175,12 +175,14 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     {
         String = value;
 
+        List<CellDecorator>? decoratorsList = decorators != null ? new(decorators) : null;
+
         for (int i = 0; i < _characters.Length; i++)
         {
             _characters[i].Foreground = foreground;
             _characters[i].Background = background;
             _characters[i].Mirror = mirror;
-            _characters[i].Decorators = decorators ?? System.Array.Empty<CellDecorator>();
+            _characters[i].Decorators = decoratorsList;
         }
     }
 
@@ -327,11 +329,18 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     /// Applies the decorators to each character in the colored string.
     /// </summary>
     /// <param name="decorators">The decorators.</param>
-    public void SetDecorators(CellDecorator[] decorators)
+    public void SetDecorators(IEnumerable<CellDecorator> decorators)
     {
         for (int i = 0; i < _characters.Length; i++)
-            _characters[i].Decorators = decorators;
+            DecoratorHelpers.SetDecorators(decorators, _characters[i]);
     }
+
+    /// <summary>
+    /// Applies the decorators to each character in the colored string.
+    /// </summary>
+    /// <param name="decorators">The decorators.</param>
+    public void SetDecorators(params CellDecorator[] decorators) =>
+        SetDecorators((IEnumerable<CellDecorator>)decorators);
 
     /// <summary>
     /// Returns a string representing the glyphs in this object.
