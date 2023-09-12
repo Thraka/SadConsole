@@ -156,7 +156,7 @@ public class FileDirectoryListbox : ListBox
     }
 
     /// <summary>
-    /// A listbox item container that represents a fake directory, such as <code>..</code>.
+    /// A listbox item container that represents a fake directory, such as <c>..</c>.
     /// </summary>
     public class FauxDirectory
     {
