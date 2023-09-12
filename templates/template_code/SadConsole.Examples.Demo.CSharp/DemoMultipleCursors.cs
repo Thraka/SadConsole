@@ -30,14 +30,14 @@ class MultiCursor : ScreenSurface
     {
         CursorGreen = new SadConsole.Components.Cursor()
         {
-            CursorRenderCell = new ColoredGlyph(Color.Green, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph).ToState(),
+            CursorRenderCell = new ColoredGlyph(Color.Green, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             PrintAppearance = new ColoredGlyph(Color.Green, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             IsEnabled = true,
             ApplyCursorEffect = true
         };
         CursorYellow = new SadConsole.Components.Cursor()
         {
-            CursorRenderCell = new ColoredGlyph(Color.Yellow, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph).ToState(),
+            CursorRenderCell = new ColoredGlyph(Color.Yellow, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             PrintAppearance = new ColoredGlyph(Color.Yellow, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             PrintOnlyCharacterData = false,
             IsEnabled = false,
@@ -45,7 +45,7 @@ class MultiCursor : ScreenSurface
         };
         CursorPurple = new SadConsole.Components.Cursor()
         {
-            CursorRenderCell = new ColoredGlyph(Color.Purple, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph).ToState(),
+            CursorRenderCell = new ColoredGlyph(Color.Purple, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             PrintAppearance = new ColoredGlyph(Color.Purple, Color.Transparent, SadConsole.Components.Cursor.DefaultCursorGlyph),
             PrintOnlyCharacterData = false,
             IsEnabled = false,

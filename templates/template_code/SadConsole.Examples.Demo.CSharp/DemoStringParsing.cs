@@ -1,4 +1,5 @@
-﻿using SadConsole.StringParser;
+﻿using System.Reflection.Metadata.Ecma335;
+using SadConsole.StringParser;
 
 namespace SadConsole.Examples;
 
@@ -35,6 +36,9 @@ class StringParsingConsole : ScreenSurface
         int r = 1;
 
         ((Default)ColoredString.Parser).CustomProcessor = CustomParseCommand;
+
+        ((Default)ColoredString.Parser).Variables["first_name"] = () => "John";
+        ((Default)ColoredString.Parser).Variables["last_name"] = () => "Smith";
 
         Surface.Print(1, r, "[c:r f:ansibluebright][c:r b:ansiblue]String parsing supports...                                                    ");
         Surface.SetGlyph(0, r, 221, Color.Black, Color.AnsiBlue);
@@ -95,9 +99,12 @@ class StringParsingConsole : ScreenSurface
 
         Surface.Print(1, ++r, "[c:r f:default]`[c:g f:red:green:18]`[c:g b:green:red:18]Some text to print");
         Surface.Print(c + 2, r, "[c:g f:red:green:18][c:g b:green:red:18]Some text to print");
+
+        Surface.Print(1, ++r, "[c:r f:default]`[c:r f:BurlyWood]$first_name`[c:u] `[c:r f:Lav...");
+        Surface.Print(c + 2, r, "[c:r f:BurlyWood]$$first_name[c:u] [c:r f:LavenderBlush]$$last_name[c:u]");
     }
 
-    private ParseCommandBase? CustomParseCommand(string command, string parameters, ColoredGlyph[] glyphString,
+    private ParseCommandBase? CustomParseCommand(string command, string parameters, ColoredGlyphBase[] glyphString,
                                                       ICellSurface? surface, ParseCommandStacks? commandStacks)
     {
         return command switch

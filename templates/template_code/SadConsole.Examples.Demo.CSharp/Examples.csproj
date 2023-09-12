@@ -21,7 +21,7 @@
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
 
     <!-- Some constants for your game that can detect monogame or sfml. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>

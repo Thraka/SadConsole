@@ -33,7 +33,7 @@ class ListDemosScreen : SadConsole.UI.ControlsConsole
         _lstDemos.SelectedIndex = 0;
     }
 
-    private void Demos_SelectedItemChanged(object sender, ListBox.SelectedItemEventArgs e)
+    private void Demos_SelectedItemChanged(object? sender, ListBox.SelectedItemEventArgs e)
     {
         // Forward the event to ours
         SelectedDemoChanged?.Invoke(this, (IDemo)_lstDemos.SelectedItem);

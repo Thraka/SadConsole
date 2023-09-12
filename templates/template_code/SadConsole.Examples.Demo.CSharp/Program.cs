@@ -34,8 +34,8 @@ Settings.WindowTitle = "SadConsole Examples";
 
 Game.Configuration gameStartup = new Game.Configuration()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
-    .SetStartingScreen<RootScene>()
-    .IsStartingScreenFocused(false) // Dont want RootScene to be focused because RootScene automatically focuses the selected demo console
+    .SetStartingScreen<RootScreen>()
+    .IsStartingScreenFocused(false) // Dont want RootScreen to be focused because RootScreen automatically focuses the selected demo console
     .ConfigureFonts((f) => f.UseBuiltinFontExtended())
     ;
 

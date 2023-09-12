@@ -3,7 +3,7 @@ using SadConsole.UI;
 
 namespace SadConsole.Examples;
 
-class RootScene : ScreenObject
+class RootScreen : ScreenObject
 {
     private IDemo _activeDemo;
 
@@ -11,7 +11,7 @@ class RootScene : ScreenObject
     private ControlsConsole _demoDescriptionsScreen;
     private IScreenObject? _demoObject;
 
-    public RootScene()
+    public RootScreen()
     {
         _demoDescriptionsScreen = new ControlsConsole(GameSettings.ScreenDescriptionBounds.Width, GameSettings.ScreenDescriptionBounds.Height);
         _demoDescriptionsScreen.Position = GameSettings.ScreenDescriptionBounds.Position;
@@ -98,6 +98,7 @@ class RootScene : ScreenObject
                 CloneOnAdd = true,
                 FadeDuration = TimeSpan.FromMilliseconds(300),
                 RemoveOnFinished = true,
+                RestoreCellOnRemoved = true,
             };
         }
 
