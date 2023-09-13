@@ -10,7 +10,7 @@ namespace SadConsole;
 /// <summary>
 /// A <see cref="ColoredGlyphBase"/> with a <see cref="ICellEffect"/>.
 /// </summary>
-public sealed class ColoredGlyphAndEffect : ColoredGlyph
+public sealed class ColoredGlyphAndEffect : ColoredGlyph, IMatchable<ColoredGlyphAndEffect>
 {
     ICellEffect? _effect;
 
@@ -110,6 +110,23 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph
             Effect = Effect,
             Decorators = Decorators != null ? new List<CellDecorator>(Decorators) : null
         };
+    }
+
+    /// <summary>
+    /// Checks if this <see cref="ColoredGlyphAndEffect"/> object's properties match another's.
+    /// </summary>
+    /// <param name="other">The other object to check.</param>
+    /// <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
+    public bool Matches(ColoredGlyphAndEffect? other)
+    {
+        return other != null &&
+               Decorators.ItemsMatch(other.Decorators) &&
+               Foreground.Equals(other.Foreground) &&
+               Background.Equals(other.Background) &&
+               Glyph == other.Glyph &&
+               Mirror == other.Mirror &&
+               Effect == Effect &&
+               IsVisible == other.IsVisible;
     }
 }
 
