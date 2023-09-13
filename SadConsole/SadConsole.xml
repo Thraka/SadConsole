@@ -730,6 +730,73 @@
         <member name="M:SadConsole.CellDecorator.GetHashCode">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.CellDecoratorHelpers">
+            <summary>
+            Helpers for <see cref="T:SadConsole.CellDecorator"/> and <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> which manages null on the property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.CellDecoratorHelpers.Pool">
+            <summary>
+            The list pool used for creating the decorator lists applied to cells.
+            </summary>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.SetDecorators(System.Collections.Generic.IEnumerable{SadConsole.CellDecorator},SadConsole.ColoredGlyphBase)">
+            <summary>
+            Replaces the decorators of a glyph.
+            </summary>
+            <param name="decorators">The decorators to set. <see langword="null"/> clears the decorators.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.SetDecorator(SadConsole.CellDecorator,SadConsole.ColoredGlyphBase)">
+            <summary>
+            Replaces the decorators of a glyph with a single decorator.
+            </summary>
+            <param name="decorator">The decorator to set.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.AddDecorators(System.Collections.Generic.IEnumerable{SadConsole.CellDecorator},SadConsole.ColoredGlyphBase)">
+            <summary>
+            Adds the decorators to a glyph.
+            </summary>
+            <param name="decorators">The decorators to add. Duplicates are skipped.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.AddDecorator(SadConsole.CellDecorator,SadConsole.ColoredGlyphBase)">
+            <summary>
+            Adds the specified decorator to a glyph.
+            </summary>
+            <param name="decorator">The decorator to add.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.RemoveDecorators(System.Collections.Generic.IEnumerable{SadConsole.CellDecorator},SadConsole.ColoredGlyphBase)">
+            <summary>
+            Removes the specified decorators from a glyph. If no decorators remain on the glyph, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> collection is set to <see langword="null"/>.
+            </summary>
+            <param name="decorators">The decorators to remove.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.RemoveDecorator(SadConsole.CellDecorator,SadConsole.ColoredGlyphBase)">
+            <summary>
+            Removes the specified decorator from a glyph. If no decorators remain on the glyph, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> collection is set to <see langword="null"/>.
+            </summary>
+            <param name="decorator">The decorator to remove.</param>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.CloneDecorators(SadConsole.ColoredGlyphBase)">
+            <summary>
+            Returns a new list of decorators from the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> property of <paramref name="glyph"/>.
+            </summary>
+            <param name="glyph">The glyph to copy the decorators from.</param>
+            <returns>A list with all of the decorators from <paramref name="glyph"/>. If the glyph's decorators are <see langword="null"/>, <see langword="null"/> is returned.</returns>
+        </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.ItemsMatch(System.Collections.Generic.List{SadConsole.CellDecorator},System.Collections.Generic.List{SadConsole.CellDecorator})">
+            <summary>
+            Determines whether the contents of two <see cref="T:SadConsole.CellDecorator"/> arrays are equal.
+            </summary>
+            <param name="self">The first object to compare.</param>
+            <param name="other">The second object to compare.</param>
+            <returns>A boolean value to indicate whether or not the two arrays are considered equal.</returns>
+        </member>
         <member name="T:SadConsole.CellSurface">
             <summary>
             An array of <see cref="T:SadConsole.ColoredGlyphBase"/> objects used to represent a 2D surface.
@@ -1016,6 +1083,13 @@
         </member>
         <member name="M:SadConsole.ColoredGlyphAndEffect.Clone">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.ColoredGlyphAndEffect.Matches(SadConsole.ColoredGlyphAndEffect)">
+            <summary>
+            Checks if this <see cref="T:SadConsole.ColoredGlyphAndEffect"/> object's properties match another's.
+            </summary>
+            <param name="other">The other object to check.</param>
+            <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:SadConsole.ColoredGlyphBase">
             <summary>
@@ -2364,14 +2438,6 @@
             <summary>
             Shows the debug screen with the default font and size.
             </summary>
-        </member>
-        <member name="M:SadConsole.DecoratorHelpers.ItemsMatch(System.Collections.Generic.List{SadConsole.CellDecorator},System.Collections.Generic.List{SadConsole.CellDecorator})">
-            <summary>
-            Determines whether the contents of two <see cref="T:SadConsole.CellDecorator"/> arrays are equal.
-            </summary>
-            <param name="self">The first object to compare.</param>
-            <param name="other">The second object to compare.</param>
-            <returns>A boolean value to indicate whether or not the two arrays are considered equal.</returns>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -9548,11 +9614,6 @@
         <member name="F:SadConsole.Settings.DefaultScreenObjectUseMouse">
             <summary>
             Gets and sets the default value for <see cref="P:SadConsole.ScreenObject.UseMouse"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Settings.CreateStartingConsole">
-            <summary>
-            When <see langword="true"/>, tells the game host to create the <see cref="P:SadConsole.GameHost.StartingConsole"/> instance.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.ClearColor">

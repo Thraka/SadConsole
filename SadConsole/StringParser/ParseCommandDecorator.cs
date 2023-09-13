@@ -118,7 +118,7 @@ public sealed class ParseCommandDecorator : ParseCommandBase
                 commandStack.RemoveSafe(this);
 
                 // Remove this decorator from the array
-                DecoratorHelpers.RemoveDecorator(Decorator, glyphState);
+                CellDecoratorHelpers.RemoveDecorator(Decorator, glyphState);
             }
         }
     }

@@ -101,7 +101,7 @@ public class ColoredGlyph : ColoredGlyphBase, IMatchable<ColoredGlyph>
         {
             IsVisible = IsVisible,
         };
-        DecoratorHelpers.SetDecorators(Decorators, glyph);
+        CellDecoratorHelpers.SetDecorators(Decorators, glyph);
         return glyph;
     }
 

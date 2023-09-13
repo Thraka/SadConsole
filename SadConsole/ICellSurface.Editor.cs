@@ -249,7 +249,7 @@ public static class CellSurfaceEditor
         obj.Surface[index].Foreground = foreground;
         obj.Surface[index].Glyph = glyph;
         obj.Surface[index].Mirror = mirror;
-        DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
+        CellDecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -570,7 +570,7 @@ public static class CellSurfaceEditor
             count = obj.Surface.Count - index;
 
         for (int i = index; i < index + count; i++)
-            DecoratorHelpers.SetDecorators(decorators, obj.Surface[i]);
+            CellDecoratorHelpers.SetDecorators(decorators, obj.Surface[i]);
 
         obj.Surface.IsDirty = true;
     }
@@ -585,7 +585,7 @@ public static class CellSurfaceEditor
     {
         if (!obj.Surface.IsValidCell(index)) return;
 
-        DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
+        CellDecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -629,7 +629,7 @@ public static class CellSurfaceEditor
             count = obj.Surface.Count - index;
 
         for (int i = index; i < index + count; i++)
-            DecoratorHelpers.AddDecorators(decorators, obj.Surface[i]);
+            CellDecoratorHelpers.AddDecorators(decorators, obj.Surface[i]);
 
         obj.Surface.IsDirty = true;
     }
@@ -645,7 +645,7 @@ public static class CellSurfaceEditor
         if (!obj.Surface.IsValidCell(index)) return;
         if (decorators == null || decorators.Length == 0) return;
 
-        DecoratorHelpers.AddDecorators(decorators, obj.Surface[index]);
+        CellDecoratorHelpers.AddDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -689,7 +689,7 @@ public static class CellSurfaceEditor
             count = obj.Surface.Count - index;
 
         for (int i = index; i < index + count; i++)
-            DecoratorHelpers.RemoveDecorators(decorators, obj.Surface[i]);
+            CellDecoratorHelpers.RemoveDecorators(decorators, obj.Surface[i]);
 
         obj.Surface.IsDirty = true;
     }
@@ -705,7 +705,7 @@ public static class CellSurfaceEditor
         if (!obj.Surface.IsValidCell(index)) return;
         if (decorators == null || decorators.Length == 0) return;
 
-        DecoratorHelpers.RemoveDecorators(decorators, obj.Surface[index]);
+        CellDecoratorHelpers.RemoveDecorators(decorators, obj.Surface[index]);
 
         obj.Surface.IsDirty = true;
     }
@@ -923,7 +923,7 @@ public static class CellSurfaceEditor
                 obj.Surface[index].Background = background;
                 obj.Surface[index].Foreground = foreground;
                 obj.Surface[index].Mirror = mirror;
-                DecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
+                CellDecoratorHelpers.SetDecorators(decorators, obj.Surface[index]);
 
                 effectIndices.Add(index);
                 charIndex++;

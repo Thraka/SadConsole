@@ -332,7 +332,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     public void SetDecorators(IEnumerable<CellDecorator> decorators)
     {
         for (int i = 0; i < _characters.Length; i++)
-            DecoratorHelpers.SetDecorators(decorators, _characters[i]);
+            CellDecoratorHelpers.SetDecorators(decorators, _characters[i]);
     }
 
     /// <summary>

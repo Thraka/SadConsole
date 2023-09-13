@@ -362,7 +362,7 @@ public class Cursor : IComponent
                 cell.Mirror = glyph.Mirror;
 
             if (!settings.IgnoreDecorators)
-                cell.Decorators = DecoratorHelpers.CloneDecorators(glyph);
+                cell.Decorators = CellDecoratorHelpers.CloneDecorators(glyph);
 
             if (!settings.IgnoreEffect)
                 _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);

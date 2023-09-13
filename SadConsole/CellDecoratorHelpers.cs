@@ -6,7 +6,7 @@ namespace SadConsole;
 /// <summary>
 /// Helpers for <see cref="CellDecorator"/> and <see cref="ColoredGlyphBase.Decorators"/> which manages null on the property.
 /// </summary>
-public static class DecoratorHelpers
+public static class CellDecoratorHelpers
 {
     /// <summary>
     /// The list pool used for creating the decorator lists applied to cells.

@@ -270,7 +270,7 @@ class ColoredGlyphOffset : ColoredGlyphBase
             RenderingOffset = RenderingOffset,
             IsVisible = IsVisible,
         };
-        DecoratorHelpers.SetDecorators(Decorators, glyph);
+        CellDecoratorHelpers.SetDecorators(Decorators, glyph);
         return glyph;
     }
 }
