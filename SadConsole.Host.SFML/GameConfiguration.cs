@@ -21,7 +21,7 @@ public sealed partial class Game
         internal Func<Game, IScreenObject> GenerateStartingObject { get; set; }
         internal Func<Game, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
-        internal bool FocusStartingObject { get; set; } = true;
+        internal bool FocusStartingObject { get; set; }
 
         internal int ScreenSizeWidth { get; set; }
         internal int ScreenSizeHeight { get; set; }
@@ -32,6 +32,8 @@ public sealed partial class Game
         internal EventHandler<GameHost> event_FrameUpdate { get; private set; }
         internal EventHandler<GameHost> event_FrameRender { get; private set; }
 
+        internal bool CreateStartingConsole { get; set; }
+
         internal RenderWindow TargetWindow { get; set; }
 
 
@@ -41,6 +43,8 @@ public sealed partial class Game
         public Configuration()
         {
             FontLoaderData = new ConfigurationFontLoader();
+            FocusStartingObject = true;
+            CreateStartingConsole = true;
             SetScreenSize(80, 25);
             ConfigureFonts(loader =>
             {
@@ -70,7 +74,7 @@ public sealed partial class Game
         /// <returns>The configuration object.</returns>
         public Configuration SetStartingScreen<TRootObject>() where TRootObject : IScreenObject, new()
         {
-            Settings.CreateStartingConsole = false;
+            CreateStartingConsole = false;
             GenerateStartingObject = _ => new TRootObject();
             return this;
         }
@@ -82,7 +86,7 @@ public sealed partial class Game
         /// <returns>The configuration object.</returns>
         public Configuration SetStartingScreen(Func<Game, IScreenObject> creator)
         {
-            Settings.CreateStartingConsole = false;
+            CreateStartingConsole = false;
             GenerateStartingObject = creator;
             return this;
         }
@@ -171,7 +175,7 @@ public sealed partial class Game
         /// <returns>The configuration object.</returns>
         public Configuration SetSplashScreen<TSplashScreen>() where TSplashScreen : IScreenSurface, new()
         {
-            Settings.CreateStartingConsole = false;
+            CreateStartingConsole = false;
             GenerateSplashScreen = _ => new IScreenSurface[] { new TSplashScreen() };
             return this;
         }
@@ -182,7 +186,7 @@ public sealed partial class Game
         /// <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
         public Configuration SetSplashScreen(Func<Game, ScreenSurface[]> creator)
         {
-            Settings.CreateStartingConsole = false;
+            CreateStartingConsole = false;
             GenerateSplashScreen = creator;
             return this;
         }

@@ -180,7 +180,7 @@ public sealed partial class Game : GameHost
             FrameRender += _configuration.event_FrameRender;
 
         // Setup default starting console, otherwise, use the config starting object.
-        if (Settings.CreateStartingConsole)
+        if (_configuration.CreateStartingConsole)
         {
             StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
             StartingConsole.IsFocused = true;

@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Transactions;
 using SadRogue.Primitives;
 
 namespace SadConsole;
@@ -162,7 +161,7 @@ public sealed partial class Game : GameHost
             FrameRender += _configuration.event_FrameRender;
 
         // Setup default starting console, otherwise, use the config starting object.
-        if (Settings.CreateStartingConsole)
+        if (_configuration.CreateStartingConsole)
         {
             Screen = StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
             StartingConsole.IsFocused = true;

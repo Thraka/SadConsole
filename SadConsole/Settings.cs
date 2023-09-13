@@ -25,11 +25,6 @@ public static class Settings
     public static bool DefaultScreenObjectUseMouse = true;
 
     /// <summary>
-    /// When <see langword="true"/>, tells the game host to create the <see cref="GameHost.StartingConsole"/> instance.
-    /// </summary>
-    public static bool CreateStartingConsole = true;
-
-    /// <summary>
     /// The color to automatically clear the device with.
     /// </summary>
     public static Color ClearColor = Color.Black;
