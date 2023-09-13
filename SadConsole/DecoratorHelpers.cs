@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using SadRogue.Primitives.Pooling;
 
 namespace SadConsole;
 
@@ -9,6 +9,11 @@ namespace SadConsole;
 public static class DecoratorHelpers
 {
     /// <summary>
+    /// The list pool used for creating the decorator lists applied to cells.
+    /// </summary>
+    public static IListPool<CellDecorator> Pool { get; set; } = new ListPool<CellDecorator>(50, 1);
+
+    /// <summary>
     /// Replaces the decorators of a glyph.
     /// </summary>
     /// <param name="decorators">The decorators to set. <see langword="null"/> clears the decorators.</param>
@@ -17,14 +22,27 @@ public static class DecoratorHelpers
     {
         if (decorators is null)
         {
-            glyph.Decorators = null;
+            if (glyph.Decorators is not null)
+            {
+                Pool.Return(glyph.Decorators);
+                glyph.Decorators = null;
+            }
+
             return;
         }
 
-        glyph.Decorators = new(decorators);
+        if (glyph.Decorators is not null)
+            glyph.Decorators.Clear();
+        else
+            glyph.Decorators = Pool.Rent();
+
+        glyph.Decorators.AddRange(decorators);
 
         if (glyph.Decorators.Count == 0)
+        {
+            Pool.Return(glyph.Decorators);
             glyph.Decorators = null;
+        }
     }
 
     /// <summary>
@@ -34,10 +52,12 @@ public static class DecoratorHelpers
     /// <param name="glyph">The glyph to alter.</param>
     public static void SetDecorator(CellDecorator decorator, ColoredGlyphBase glyph)
     {
-        glyph.Decorators ??= new() { decorator };
+        if (glyph.Decorators is not null)
+            glyph.Decorators.Clear();
+        else
+            glyph.Decorators = Pool.Rent();
 
-        if (glyph.Decorators.Count == 0)
-            glyph.Decorators = null;
+        glyph.Decorators.Add(decorator);
     }
 
     /// <summary>
@@ -49,14 +69,14 @@ public static class DecoratorHelpers
     {
         if (decorators is null) return;
 
-        glyph.Decorators ??= new List<CellDecorator>();
-
+        glyph.Decorators ??= Pool.Rent();
         glyph.Decorators.AddRange(decorators);
 
         if (glyph.Decorators.Count == 0)
+        {
+            Pool.Return(glyph.Decorators);
             glyph.Decorators = null;
-        else
-            glyph.Decorators = glyph.Decorators.Distinct().ToList();
+        }
     }
 
     /// <summary>
@@ -66,10 +86,8 @@ public static class DecoratorHelpers
     /// <param name="glyph">The glyph to alter.</param>
     public static void AddDecorator(CellDecorator decorator, ColoredGlyphBase glyph)
     {
-        glyph.Decorators ??= new List<CellDecorator>();
-
-        if (!glyph.Decorators.Contains(decorator))
-            glyph.Decorators.Add(decorator);
+        glyph.Decorators ??= Pool.Rent();
+        glyph.Decorators.Add(decorator);
     }
 
     /// <summary>
@@ -85,7 +103,10 @@ public static class DecoratorHelpers
             glyph.Decorators.Remove(item);
 
         if (glyph.Decorators.Count == 0)
+        {
+            Pool.Return(glyph.Decorators);
             glyph.Decorators = null;
+        }
     }
 
     /// <summary>
@@ -100,7 +121,10 @@ public static class DecoratorHelpers
         glyph.Decorators.Remove(decorator);
 
         if (glyph.Decorators.Count == 0)
+        {
+            Pool.Return(glyph.Decorators);
             glyph.Decorators = null;
+        }
     }
 
     /// <summary>
@@ -112,7 +136,10 @@ public static class DecoratorHelpers
     {
         if (glyph.Decorators == null) return null;
 
-        return new List<CellDecorator>(glyph.Decorators);
+        List<CellDecorator> clonedList = Pool.Rent();
+        clonedList.AddRange(glyph.Decorators);
+
+        return clonedList;
     }
     /// <summary>
     /// Determines whether the contents of two <see cref="CellDecorator"/> arrays are equal.
@@ -137,5 +164,4 @@ public static class DecoratorHelpers
 
         return false;
     }
-
 }
