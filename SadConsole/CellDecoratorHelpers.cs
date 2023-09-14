@@ -11,7 +11,7 @@ public static class CellDecoratorHelpers
     /// <summary>
     /// The list pool used for creating the decorator lists applied to cells.
     /// </summary>
-    public static IListPool<CellDecorator> Pool { get; set; } = new ListPool<CellDecorator>(50, 1);
+    public static IListPool<CellDecorator> Pool { get; set; } = new ListPool<CellDecorator>(50, 5);
 
     /// <summary>
     /// Replaces the decorators of a glyph.
