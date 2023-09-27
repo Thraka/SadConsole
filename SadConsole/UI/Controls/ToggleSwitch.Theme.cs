@@ -19,13 +19,13 @@ public partial class ToggleSwitch
     public int BackgroundGlyph { get; set; }
 
     /// <summary>
-    /// An optional color of the <see cref="OnGlyph"/>.
+    /// The color of the <see cref="OnGlyph"/> when the control is <see cref="ToggleButtonBase.IsSelected"/> is true.
     /// </summary>
     [DataMember]
     public Color OnGlyphColor { get; set; }
 
     /// <summary>
-    /// An optional color of the <see cref="OnGlyph"/>.
+    /// The color of the <see cref="OnGlyph"/> when the control is <see cref="ToggleButtonBase.IsSelected"/> is false.
     /// </summary>
     [DataMember]
     public Color OffGlyphColor { get; set; }
@@ -43,6 +43,7 @@ public partial class ToggleSwitch
     /// </remarks>
     public HorizontalAlignment SwitchOrientation { get; set; }
 
+    /// <inheritdoc/>
     protected override void RefreshThemeStateColors(Colors colors)
     {
         base.RefreshThemeStateColors(colors);
@@ -51,34 +52,34 @@ public partial class ToggleSwitch
 
         if (IsSelected)
         {
-            ThemeState.Normal.Foreground = OnGlyphColor;
-            ThemeState.MouseOver.Foreground = OnGlyphColor;
-            ThemeState.MouseDown.Foreground = OnGlyphColor;
-            ThemeState.Focused.Foreground = OnGlyphColor;
+            SwitchThemeState.Normal.Foreground = OnGlyphColor;
+            SwitchThemeState.MouseOver.Foreground = OnGlyphColor;
+            SwitchThemeState.MouseDown.Foreground = OnGlyphColor;
+            SwitchThemeState.Focused.Foreground = OnGlyphColor;
 
-            ThemeState.SetGlyph(OnGlyph);
+            SwitchThemeState.SetGlyph(OnGlyph);
         }
         else
         {
-            ThemeState.Normal.Foreground = OffGlyphColor;
-            ThemeState.MouseOver.Foreground = OffGlyphColor;
-            ThemeState.MouseDown.Foreground = OffGlyphColor;
-            ThemeState.Focused.Foreground = OffGlyphColor;
+            SwitchThemeState.Normal.Foreground = OffGlyphColor;
+            SwitchThemeState.MouseOver.Foreground = OffGlyphColor;
+            SwitchThemeState.MouseDown.Foreground = OffGlyphColor;
+            SwitchThemeState.Focused.Foreground = OffGlyphColor;
 
-            ThemeState.SetGlyph(BackgroundGlyph);
+            SwitchThemeState.SetGlyph(BackgroundGlyph);
         }
     }
 
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
-        if (IsDirty) return;
+        if (!IsDirty) return;
 
         Colors colors = FindThemeColors();
 
         RefreshThemeStateColors(colors);
 
-        ColoredGlyphBase appearance = ThemeState.GetStateAppearanceNoMouse(State);
+        ColoredGlyphBase appearance = ThemeState.GetStateAppearanceNoMouse(State & ~ControlStates.Focused);
         ColoredGlyphBase iconAppearance = SwitchThemeState.GetStateAppearance(State);
         ColoredGlyphBase iconBackgroundAppearance = colors.Appearance_ControlDisabled;
         iconBackgroundAppearance.Glyph = BackgroundGlyph;
@@ -119,9 +120,15 @@ public partial class ToggleSwitch
                 iconBackgroundAppearance.CopyAppearanceTo(Surface[IsSelected ? ^3 : ^1]);
                 iconBackgroundAppearance.CopyAppearanceTo(Surface[IsSelected ? ^4 : ^2]);
             }
+            else if (SwitchOrientation == HorizontalAlignment.Stretch)
+            {
+                Surface.Fill(iconBackgroundAppearance);
+                iconAppearance.CopyAppearanceTo(Surface[IsSelected ? ^1 : 0]);
+                iconAppearance.CopyAppearanceTo(Surface[IsSelected ? ^2 : 1]);
+            }
             else
             {
-                Surface.Print(5, 0, Text.Align(TextAlignment, Width - 4), appearance);
+                Surface.Print(Width - 4, 0, Text.Align(TextAlignment, Width - 4), appearance);
                 iconAppearance.CopyAppearanceTo(Surface[IsSelected ? 2 : 0]);
                 iconAppearance.CopyAppearanceTo(Surface[IsSelected ? 3 : 1]);
                 iconBackgroundAppearance.CopyAppearanceTo(Surface[IsSelected ? 0 : 2]);

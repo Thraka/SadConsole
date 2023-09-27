@@ -16,11 +16,15 @@ public partial class ToggleSwitch : ToggleButtonBase
     /// <param name="height">The height of the control.</param>
     public ToggleSwitch(int width, int height) : base(width, height)
     {
-        OnGlyph = 178;
-        OnGlyphColor = Color.LawnGreen;
+        Colors colors = base.FindThemeColors();
+
+        OnGlyph = 219;
+        OnGlyphColor = colors.ControlForegroundSelected;
         BackgroundGlyph = 177;
-        OffGlyphColor = Color.DarkGreen;
-        SwitchOrientation = HorizontalAlignment.Right;
+        OffGlyphColor = colors.ControlForegroundSelected.ComputedColor.GetDark();
+        SwitchOrientation = HorizontalAlignment.Stretch;
+
+        SwitchThemeState = new();
     }
 
     /// <summary>
