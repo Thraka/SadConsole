@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
 using SadConsole.Input;
@@ -33,7 +34,7 @@ public partial class NumberBox : TextBox
     /// Set both <see cref="NumberMaximum"/> and <see cref="NumberMinimum"/> to 0 to disable number bounds checking.
     /// </remarks>
     [DataMember]
-    public int NumberMaximum { get; set; }
+    public long NumberMaximum { get; set; }
 
     /// <summary>
     /// The minimum number that can be set for this text box.
@@ -42,7 +43,7 @@ public partial class NumberBox : TextBox
     /// Set both <see cref="NumberMaximum"/> and <see cref="NumberMinimum"/> to 0 to disable number bounds checking.
     /// </remarks>
     [DataMember]
-    public int NumberMinimum { get; set; }
+    public long NumberMinimum { get; set; }
 
     /// <summary>
     /// The default value to use when the current value is invalid and <see cref="AllowDecimal"/> is <see langword="false"/>.
@@ -68,9 +69,9 @@ public partial class NumberBox : TextBox
     {
         get
         {
-            if (AllowDecimal && _text.Contains('.'))
+            if (AllowDecimal && _text.Contains(GetCultureDecimalSeperator()))
             {
-                if (!double.TryParse(_text, out double value))
+                if (!double.TryParse(_text, NumberStyles.Any, GetCulture(), out double value))
                     return true;
                 else
                     return UseMinMax && (value < NumberMinimum || value > NumberMaximum);
@@ -90,21 +91,19 @@ public partial class NumberBox : TextBox
     /// Creates a new instance of the input box.
     /// </summary>
     /// <param name="width">The width of the input box.</param>
-    public NumberBox(int width): base(width)
-    {
-    }
+    public NumberBox(int width) : base(width) { }
     #endregion
 
     private void FixNumber()
     {
-        if (AllowDecimal && _text.Contains('.'))
+        if (AllowDecimal && _text.Contains(GetCultureDecimalSeperator()))
         {
-            if (!double.TryParse(_text, out double value))
+            if (!double.TryParse(_text, NumberStyles.Any, GetCulture(), out double value))
                 value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : DefaultDecimalValue) : DefaultDecimalValue;
             else
                 value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultDecimalValue;
 
-            Text = value.ToString();
+            Text = value.ToString(GetCulture());
         }
         else
         {
@@ -113,10 +112,19 @@ public partial class NumberBox : TextBox
             else
                 value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultValue;
 
-            Text = value.ToString();
+            Text = value.ToString(GetCulture());
         }
 
         IsDirty = true;
+    }
+
+    /// <inheritdoc/>
+    protected override void OnFocused()
+    {
+        if (TextAsDouble() == 0)
+            _text = string.Empty;
+
+        base.OnFocused();
     }
 
     /// <inheritdoc/>
@@ -124,6 +132,26 @@ public partial class NumberBox : TextBox
     {
         FixNumber();
         base.OnUnfocused();
+    }
+
+    /// <summary>
+    /// Returns the <see cref="TextBox.Text"/> property as parsed by <see cref="long.TryParse(string?, NumberStyles, IFormatProvider?, out long)"/> with the current culture.
+    /// </summary>
+    /// <returns>The parsed text value.</returns>
+    public long TextAsLong()
+    {
+        long.TryParse(_text, NumberStyles.Any, GetCulture(), out long value);
+        return value;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="TextBox.Text"/> property as parsed by <see cref="double.TryParse(string?, NumberStyles, IFormatProvider?, out double)"/> with the current culture.
+    /// </summary>
+    /// <returns>The parsed text value.</returns>
+    public double TextAsDouble()
+    {
+        double.TryParse(_text, NumberStyles.Any, GetCulture(), out double value);
+        return value;
     }
 
     /// <summary>
@@ -164,15 +192,20 @@ public partial class NumberBox : TextBox
                     _caretPos += 1;
                 }
 
-                else if ((char.IsDigit(info.KeysPressed[i].Character)
-                         || (_allowDecimalPoint && info.KeysPressed[i].Character == '.' && !_text.Contains('.')))
-                         && MaxLength != 0 && newText.Length < MaxLength)
+                else if (
+                            (
+                                (   // Decimal was pressed and we allow decimals
+                                    info.KeysPressed[i].Character == GetCultureDecimalSeperator()
+                                    && _allowDecimalPoint
+                                    && !_text.Contains(GetCultureDecimalSeperator())
+                                )
+                                // Otherwise, a number was pressed
+                                || char.IsDigit(info.KeysPressed[i].Character)
+                            )
+                            // And we've not hit max length yet
+                            && (MaxLength == 0 || (MaxLength != 0 && newText.Length < MaxLength))
+                        )
                 {
-                    //if ((_allowDecimalPoint && info.KeysPressed[i].Character != '.') )
-                    //{
-
-                    //}
-
                     newText.Append(info.KeysPressed[i].Character);
                     _caretPos += 1;
                     ValidateCursorPosition(newText.ToString());
@@ -186,6 +219,20 @@ public partial class NumberBox : TextBox
 
         return false;
     }
+
+    /// <summary>
+    /// Gets the current culture's decimal separator.
+    /// </summary>
+    /// <returns>The current culture.</returns>
+    protected char GetCultureDecimalSeperator() =>
+        CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+
+    /// <summary>
+    /// Returns the current culture.
+    /// </summary>
+    /// <returns>The current culture.</returns>
+    protected CultureInfo GetCulture() =>
+        CultureInfo.CurrentCulture;
 
     [OnDeserialized]
     private void AfterDeserialized(StreamingContext context)
