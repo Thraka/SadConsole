@@ -32,13 +32,13 @@ public partial interface ICellSurface
     /// Glyph indexes for a block box that looks 3d.
     /// </summary>
     public static int[] Connected3dBox => new[]
-      { 219, 223, 220,
-        219, 219, 219,
-        223, 220, 219,
+      { 219, 223, 220, // █▀▄
+        219, 219, 219, // ███
+        223, 220, 219, // ▀▄█
 
-             219,
-        219,      219,
-             219};
+             219,      //  █
+        219,      219, // █ █
+             219};     //  █
 
     /// <summary>
     /// Glyph indexes for a thin line using a SadConsole extended font.

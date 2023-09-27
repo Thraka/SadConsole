@@ -44,7 +44,7 @@ public enum ControlStates
     MouseRightButtonDown = 1 << 5,
 
     /// <summary>
-    /// THe control is selected
+    /// The control is selected
     /// </summary>
     Selected = 1 << 6
 }

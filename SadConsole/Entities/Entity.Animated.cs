@@ -27,7 +27,7 @@ public partial class Entity
         }
 
         /// <summary>
-        /// A collision rectangle that you can specify.
+        /// A relative collision rectangle that you can specify. Defaults to the size of the animation surface.
         /// </summary>
         /// <remarks>
         /// This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.

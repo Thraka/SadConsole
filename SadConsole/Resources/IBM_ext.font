@@ -1,5 +1,5 @@
 {
-    "Name": "IBM_16x8_ext",
+    "Name": "IBM_8x16_ext",
     "FilePath": "res:SadConsole.Resources.IBM8x16_NoPadding_extended.png",
     "GlyphHeight": 16,
     "GlyphWidth": 8,
