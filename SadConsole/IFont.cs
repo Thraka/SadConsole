@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SadRogue.Primitives;
 
 namespace SadConsole;
@@ -6,7 +7,7 @@ namespace SadConsole;
 /// <summary>
 /// Represents a font used by the rendering engine.
 /// </summary>
-public interface IFont  // TODO: We should probably support IDisposable, though you generally don't destroy fonts during your game...
+public interface IFont: IDisposable
 {
     /// <summary>
     /// The name of the font used when it is registered with the <see cref="GameHost.Fonts"/> collection.

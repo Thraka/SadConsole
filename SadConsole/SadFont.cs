@@ -18,6 +18,7 @@ public sealed class SadFont : IFont
     private bool _skipAutomaticGlyphGeneration;
     private int _solidGlyphIndex;
     private int _unsupportedGlyphIndex;
+    private bool isDisposed;
 
     /// <inheritdoc/>
     [DataMember]
@@ -322,6 +323,17 @@ public sealed class SadFont : IFont
             IsSadExtended = IsSadExtended,
             UnsupportedGlyphIndex = UnsupportedGlyphIndex
         };
+    }
+
+
+    /// <summary>
+    /// Disposes the <see cref="Image"/> property.
+    /// </summary>
+    public void Dispose()
+    {
+        if (isDisposed) return;
+        Image.Dispose();
+        isDisposed = true;
     }
 
     private record struct IndexMapping

@@ -235,7 +235,7 @@ public abstract partial class GameHost : IDisposable
             }
 
             if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
-                GameHost.Instance.Fonts.Remove(masterFont.Name);
+                throw new Exception($"A font with the name '{masterFont.Name}' is already registered. Instead of reloading the font, you can get the existing font with 'Game.Instance.Fonts[\"name\"]'.");
 
             GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
 
@@ -315,6 +315,19 @@ public abstract partial class GameHost : IDisposable
         // Load the embedded fonts.
         System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;
 
+        EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
+        EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
+
+        // Configure default font
+        if (string.IsNullOrEmpty(defaultFont))
+            if (Settings.UseDefaultExtendedFont)
+                DefaultFont = EmbeddedFontExtended;
+            else
+                DefaultFont = EmbeddedFont;
+        else
+            DefaultFont = this.LoadFont(defaultFont);
+
+        // Local method to load a font from the built in assembly resource
         SadFont LoadFont(string fontName)
         {
             using Stream stream = assembly.GetManifestResourceStream(fontName)!;
@@ -337,18 +350,6 @@ public abstract partial class GameHost : IDisposable
 
             return masterFont;
         }
-
-        EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
-        EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
-
-        // Configure default font
-        if (string.IsNullOrEmpty(defaultFont))
-            if (Settings.UseDefaultExtendedFont)
-                DefaultFont = EmbeddedFontExtended;
-            else
-                DefaultFont = EmbeddedFont;
-        else
-            DefaultFont = this.LoadFont(defaultFont);
     }
 
     /// <summary>
