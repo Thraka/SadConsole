@@ -136,7 +136,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         var input = new NumberBox(10)
         {
             Position = new Point(51, 9),
-            MaxLength = 3,
+            MaxLength = 6,
             NumberMaximum = 255,
             AllowDecimal = true
         };

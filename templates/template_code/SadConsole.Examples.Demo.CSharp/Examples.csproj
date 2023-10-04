@@ -50,10 +50,14 @@
     <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
     <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Update="Res\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <None Update="app.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

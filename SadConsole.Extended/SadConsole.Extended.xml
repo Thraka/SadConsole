@@ -517,6 +517,11 @@
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
         </member>
+        <member name="T:SadConsole.SurfaceExtensions">
+            <summary>
+            Extensions for the <see cref="T:SadConsole.IScreenSurface"/> type
+            </summary>
+        </member>
         <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
             <summary>
             Prints text that blinks out the characters each after the specified time, using the default foreground and background colors of the surface.

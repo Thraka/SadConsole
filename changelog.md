@@ -1,4 +1,4 @@
-## v10.0.0 Alpha 4 (XX/XX/2023)
+## v10.0.0 Alpha 5 (XX/XX/2023)
 
 Major changes (possibly breaking)
 
@@ -44,6 +44,8 @@ Normal changes
 - [Core] Mouse state object now tracks `*ButtonDownDuration` times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
 - [Core] Rename RexPaint `ToLayersComponent` to `ToCellSurface`.
 - [Core] Rework `Timer` with `Start/Stop/Restart` methods.
+- [Core] If you load a font that's already been loaded, an exception is thrown. Previously the old font was replaced in the `GameHost.Fonts` dictionary.
+- [Core] `ColoredGlyph.Decorators` are Poolable Lists now and don't need to be messed with as arrays. Use `SadConsole.CellDecoratorHelpers` to manage the property.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
 - [UI] Scroll bar supports a thickness other than 1.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
@@ -67,7 +69,7 @@ Removed
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
 - [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
 - [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
-- [MonoGame\SFML] New `Game.Configuration` object used for creating a SadConsole game.
+- [MonoGame\SFML] New `SadConsole.Configuration.Builder` object used for creating a SadConsole game.
 
 ## v9.2.1 (01/04/2022)
 

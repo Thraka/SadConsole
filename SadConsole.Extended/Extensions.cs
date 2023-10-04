@@ -29,6 +29,9 @@ namespace SadConsole
         }
     }
 
+    /// <summary>
+    /// Extensions for the <see cref="IScreenSurface"/> type
+    /// </summary>
     public static class SurfaceExtensions
     {
         /// <summary>

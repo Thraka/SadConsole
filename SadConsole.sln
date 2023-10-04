@@ -27,8 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Files", "_Solutio
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		changelog.md = changelog.md
-		README.md = README.md
 		MigrationNotes.md = MigrationNotes.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThemeEditor", "Samples\ThemeEditor\ThemeEditor.csproj", "{7A961499-F7E8-4291-A906-AC1CC520EE03}"
@@ -44,6 +44,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debug UI", "Debug UI", "{FCE56F64-3D2E-4E11-A5C2-55B2A7EC6B23}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "templates\template_code\SadConsole.Examples.Demo.CSharp\Examples.csproj", "{80088519-A827-473C-A643-E77493A27C09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Analyzers", "SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj", "{42433EF4-5C31-4854-ABFD-5296894C7B4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Analyzers.CodeFixes", "SadConsole.Analyzers\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj", "{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Analyzers.Package", "SadConsole.Analyzers\SadConsole.Analyzers.Package\SadConsole.Analyzers.Package.csproj", "{D7E5F8CA-B35E-447D-972E-351673F11C98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Analyzers.Test", "SadConsole.Analyzers\SadConsole.Analyzers.Test\SadConsole.Analyzers.Test.csproj", "{D03E6374-A9B1-4BDC-AB16-7209220D8D6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Analyzers.Vsix", "SadConsole.Analyzers\SadConsole.Analyzers.Vsix\SadConsole.Analyzers.Vsix.csproj", "{FB797ABB-48D3-4B80-978F-8CFD71924E16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Analyzers", "Analyzers", "{E5649303-0016-4A06-B884-F779C31BAF0F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SadConsole.Host.Shared", "SadConsole.Host.Shared\SadConsole.Host.Shared.shproj", "{595434C5-2192-495B-903C-7922D7E8B149}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +117,26 @@ Global
 		{80088519-A827-473C-A643-E77493A27C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80088519-A827-473C-A643-E77493A27C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80088519-A827-473C-A643-E77493A27C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42433EF4-5C31-4854-ABFD-5296894C7B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42433EF4-5C31-4854-ABFD-5296894C7B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42433EF4-5C31-4854-ABFD-5296894C7B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42433EF4-5C31-4854-ABFD-5296894C7B4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7E5F8CA-B35E-447D-972E-351673F11C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7E5F8CA-B35E-447D-972E-351673F11C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7E5F8CA-B35E-447D-972E-351673F11C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7E5F8CA-B35E-447D-972E-351673F11C98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D03E6374-A9B1-4BDC-AB16-7209220D8D6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03E6374-A9B1-4BDC-AB16-7209220D8D6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03E6374-A9B1-4BDC-AB16-7209220D8D6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03E6374-A9B1-4BDC-AB16-7209220D8D6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB797ABB-48D3-4B80-978F-8CFD71924E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB797ABB-48D3-4B80-978F-8CFD71924E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB797ABB-48D3-4B80-978F-8CFD71924E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB797ABB-48D3-4B80-978F-8CFD71924E16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,8 +153,19 @@ Global
 		{234F04EC-2DB9-4212-B839-1B06D9EF2822} = {74E9C40F-4F2F-42DB-9734-803A7653D876}
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{80088519-A827-473C-A643-E77493A27C09} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
+		{42433EF4-5C31-4854-ABFD-5296894C7B4A} = {E5649303-0016-4A06-B884-F779C31BAF0F}
+		{C5ADE570-6EE9-400A-826F-0C2EBF0CFA4B} = {E5649303-0016-4A06-B884-F779C31BAF0F}
+		{D7E5F8CA-B35E-447D-972E-351673F11C98} = {E5649303-0016-4A06-B884-F779C31BAF0F}
+		{D03E6374-A9B1-4BDC-AB16-7209220D8D6A} = {E5649303-0016-4A06-B884-F779C31BAF0F}
+		{FB797ABB-48D3-4B80-978F-8CFD71924E16} = {E5649303-0016-4A06-B884-F779C31BAF0F}
+		{595434C5-2192-495B-903C-7922D7E8B149} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{595434c5-2192-495b-903c-7922d7e8b149}*SharedItemsImports = 13
+		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{b1de0b37-435d-453c-bbc9-7ace7e514e7f}*SharedItemsImports = 5
+		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{f02a2b3b-706e-4277-9ce2-b47733ccb22f}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

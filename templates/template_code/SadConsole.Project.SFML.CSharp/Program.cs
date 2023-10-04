@@ -2,7 +2,7 @@
 
 Game.Configuration gameStartup = new Game.Configuration()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
-    .SetStartingScreen<MyGame.Scenes.RootScene>()
+    .SetStartingScreen<SadConsoleGame.Scenes.RootScreen>()
     ;
 
 Game.Create(gameStartup);

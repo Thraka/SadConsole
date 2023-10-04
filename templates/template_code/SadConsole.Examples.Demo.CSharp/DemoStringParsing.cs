@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using SadConsole.StringParser;
+﻿using SadConsole.StringParser;
 
 namespace SadConsole.Examples;
 
@@ -109,6 +108,7 @@ class StringParsingConsole : ScreenSurface
     {
         return command switch
         {
+            "retext" => new ParseCommandRetext(parameters),
             "t" => new ParseCommandRetext(parameters),
             _ => null,
         };
@@ -125,13 +125,9 @@ class StringParsingConsole : ScreenSurface
 
             // Count and glyph type provided
             if (parts.Length == 2)
-            {
                 Counter = int.Parse(parts[1]);
-            }
             else
-            {
                 Counter = -1;
-            }
 
             // Get character
             Glyph = parts[0][0];
@@ -148,9 +144,7 @@ class StringParsingConsole : ScreenSurface
                 Counter--;
 
                 if (Counter == 0)
-                {
                     commandStack.RemoveSafe(this);
-                }
             }
         }
     }

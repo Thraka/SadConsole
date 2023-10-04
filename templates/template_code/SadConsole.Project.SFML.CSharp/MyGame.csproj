@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>MyGame</RootNamespace>
+    <RootNamespace>SadConsoleGame</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SadConsole.Host.SFML" Version="10.0.0-alpha4-debug" />
+    <PackageReference Include="SadConsole.Host.SFML" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

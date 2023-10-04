@@ -48,6 +48,16 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Controls.Add(panel);
 
         //
+        // Toggle switch
+        //
+        ToggleSwitch toggle = new(7, 1)
+        {
+            Position = (panel.Position.X, panel.Bounds.MaxExtentY + 3)
+        };
+
+        Controls.Add(toggle);
+
+        //
         // Table control 
         //
         Table tableControl = new Table(20, 10, 3);
@@ -176,6 +186,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         this.Print(panel.Position.X, panel.Position.Y - 1, "PANEL WITH LABEL", colors.YellowDark);
         this.Print(tab.Position.X, tab.Position.Y - 1, "TAB CONTROL", colors.YellowDark);
         this.Print(1, 21, "COLOR THEME", colors.YellowDark);
+        this.Print(1, panel.Bounds.MaxExtentY + 1, "TOGGLE SWITCH", colors.YellowDark);
     }
 }
 

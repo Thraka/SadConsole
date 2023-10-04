@@ -54,7 +54,7 @@
 
     <application xmlns="urn:schemas-microsoft-com:asm.v3">
         <windowsSettings>
-            <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+            <!-- To make your game scale with the OS, set dpiAwareness to 'false' -->
             <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">permonitorv2,permonitor</dpiAwareness>
             <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
         </windowsSettings>

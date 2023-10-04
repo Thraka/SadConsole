@@ -29,16 +29,19 @@ demo code, which you can reuse in your own project.
 */
 
 using SadConsole.Examples;
+using SadConsole.Configuration;
 
 Settings.WindowTitle = "SadConsole Examples";
 
-Game.Configuration gameStartup = new Game.Configuration()
+
+Builder startup = new Builder()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
     .SetStartingScreen<RootScreen>()
     .IsStartingScreenFocused(false) // Dont want RootScreen to be focused because RootScreen automatically focuses the selected demo console
-    .ConfigureFonts((f) => f.UseBuiltinFontExtended())
+    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
+    .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
     ;
 
-Game.Create(gameStartup);
+Game.Create(startup);
 Game.Instance.Run();
 Game.Instance.Dispose();
