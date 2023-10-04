@@ -19,19 +19,19 @@ public readonly struct CellDecorator : IEquatable<CellDecorator>
     /// Foreground color of the decorator.
     /// </summary>
     [DataMember]
-    public readonly Color Color;
+    public readonly Color Color { get; init; }
 
     /// <summary>
     /// Glyph of the decorator.
     /// </summary>
     [DataMember]
-    public readonly int Glyph;
+    public readonly int Glyph { get; init; }
 
     /// <summary>
     /// Mirror setting of the decorator.
     /// </summary>
     [DataMember]
-    public readonly Mirror Mirror;
+    public readonly Mirror Mirror { get; init; }
 
     /// <summary>
     /// Creates a new decorator with the specified colors, glyph, visiblity, and mirror settings.
