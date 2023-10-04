@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadConsole.Renderers;
@@ -234,10 +232,10 @@ public abstract partial class GameHost : IDisposable
                 throw new JsonSerializationException("Unable to load font. You either have a malformed json file, or you're missing the $type declaration as the first entry of the json content:\n \"$type\": \"SadConsole.SadFont, SadConsole\",", j);
             }
 
-            if (GameHost.Instance.Fonts.ContainsKey(masterFont.Name))
-                throw new Exception($"A font with the name '{masterFont.Name}' is already registered. Instead of reloading the font, you can get the existing font with 'Game.Instance.Fonts[\"name\"]'.");
+            if (Instance.Fonts.ContainsKey(masterFont.Name))
+                return Instance.Fonts[masterFont.Name];
 
-            GameHost.Instance.Fonts.Add(masterFont.Name, masterFont);
+            Instance.Fonts.Add(masterFont.Name, masterFont);
 
             return masterFont;
         }
