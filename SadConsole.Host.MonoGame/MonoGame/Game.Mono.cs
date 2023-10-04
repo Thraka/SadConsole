@@ -1,7 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.Configuration;
 
 namespace SadConsole.Host;
 
@@ -52,7 +53,8 @@ public partial class Game : Microsoft.Xna.Framework.Game
         
         Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
 
-        SadConsole.Game.Instance._configuration.MonoGameCtorCallback?.Invoke(this);
+        CallbackConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();
+        config?.MonoGameCtorCallback?.Invoke(this);
     }
 
     private void Window_ClientSizeChanged(object sender, EventArgs e)
@@ -103,11 +105,16 @@ public partial class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         Global.GraphicsDevice = GraphicsDevice;
-        if (SadConsole.Settings.UnlimitedFPS)
+
+        // Unlimited FPS setting
+        FpsConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
+        if (config != null && config.UnlimitedFPS)
         {
             Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
         }
+
+        // Window title
         Window.Title = SadConsole.Settings.WindowTitle;
 
         // Let the XNA framework show the mouse.
@@ -129,7 +136,9 @@ public partial class Game : Microsoft.Xna.Framework.Game
 
         Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
 
-        SadConsole.Game.Instance._configuration.MonoGameInitCallback?.Invoke(this);
+        // Invoke the monogame init callback
+        CallbackConfig monoGameConfig = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();
+        monoGameConfig?.MonoGameInitCallback?.Invoke(this);
 
         ResetRendering();
 
@@ -165,8 +174,8 @@ public partial class Game : Microsoft.Xna.Framework.Game
     protected virtual void RecreateRenderOutput(int width, int height)
     {
         if (Global.RenderOutput == null || Global.RenderOutput.Width != width || Global.RenderOutput.Height != height)
-    {
-        Global.RenderOutput?.Dispose();
+        {
+            Global.RenderOutput?.Dispose();
             Global.RenderOutput = new RenderTarget2D(GraphicsDevice, width, height);
         }
     }

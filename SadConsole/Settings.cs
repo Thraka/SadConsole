@@ -40,11 +40,6 @@ public static class Settings
     public static bool AllowWindowResize = true;
 
     /// <summary>
-    /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
-    /// </summary>
-    public static bool UnlimitedFPS = false;
-
-    /// <summary>
     /// When true, indicates that the game loop should call <see cref="IScreenObject.Render"/> on each object in <see cref="GameHost.Screen"/>.
     /// </summary>
     public static bool DoDraw = true;

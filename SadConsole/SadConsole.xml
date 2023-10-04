@@ -678,17 +678,17 @@
             An empty cell decorator.
             </summary>
         </member>
-        <member name="F:SadConsole.CellDecorator.Color">
+        <member name="P:SadConsole.CellDecorator.Color">
             <summary>
             Foreground color of the decorator.
             </summary>
         </member>
-        <member name="F:SadConsole.CellDecorator.Glyph">
+        <member name="P:SadConsole.CellDecorator.Glyph">
             <summary>
             Glyph of the decorator.
             </summary>
         </member>
-        <member name="F:SadConsole.CellDecorator.Mirror">
+        <member name="P:SadConsole.CellDecorator.Mirror">
             <summary>
             Mirror setting of the decorator.
             </summary>
@@ -714,7 +714,7 @@
             </summary>
             <param name="left">The first object to test.</param>
             <param name="right">The second object to test.</param>
-            <returns>True when the <see cref="F:SadConsole.CellDecorator.Color"/>, <see cref="F:SadConsole.CellDecorator.Glyph"/>, and <see cref="F:SadConsole.CellDecorator.Mirror"/> match.</returns>
+            <returns>True when the <see cref="P:SadConsole.CellDecorator.Color"/>, <see cref="P:SadConsole.CellDecorator.Glyph"/>, and <see cref="P:SadConsole.CellDecorator.Mirror"/> match.</returns>
         </member>
         <member name="M:SadConsole.CellDecorator.op_Inequality(SadConsole.CellDecorator,SadConsole.CellDecorator)">
             <summary>
@@ -722,7 +722,7 @@
             </summary>
             <param name="left">The first object to test.</param>
             <param name="right">The second object to test.</param>
-            <returns>True when the <see cref="F:SadConsole.CellDecorator.Color"/>, <see cref="F:SadConsole.CellDecorator.Glyph"/>, and <see cref="F:SadConsole.CellDecorator.Mirror"/> do not match.</returns>
+            <returns>True when the <see cref="P:SadConsole.CellDecorator.Color"/>, <see cref="P:SadConsole.CellDecorator.Glyph"/>, and <see cref="P:SadConsole.CellDecorator.Mirror"/> do not match.</returns>
         </member>
         <member name="M:SadConsole.CellDecorator.Equals(System.Object)">
             <inheritdoc />
@@ -3231,7 +3231,7 @@
         </member>
         <member name="P:SadConsole.Entities.Entity.Animated.CustomCollisionRectangle">
             <summary>
-            A collision rectangle that you can specify.
+            A relative collision rectangle that you can specify. Defaults to the size of the animation surface.
             </summary>
             <remarks>
             This rectangle should be declared without using the animation center. Only apply the center when you're testing for collision and reading this rectangle.
@@ -8868,6 +8868,11 @@
             <param name="newName">The name to apply when creating the cloned font.</param>
             <returns>Returns the cloned font.</returns>
         </member>
+        <member name="M:SadConsole.SadFont.Dispose">
+            <summary>
+            Disposes the <see cref="P:SadConsole.SadFont.Image"/> property.
+            </summary>
+        </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
             A generic object processed by SadConsole. Provides parent/child, components, and position.
@@ -9629,11 +9634,6 @@
         <member name="F:SadConsole.Settings.AllowWindowResize">
             <summary>
             Allow the user to resize the window. Must be set before the game is created.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Settings.UnlimitedFPS">
-            <summary>
-            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoDraw">
@@ -11979,7 +11979,7 @@
         </member>
         <member name="F:SadConsole.UI.Controls.ControlStates.Selected">
             <summary>
-            THe control is selected
+            The control is selected
             </summary>
         </member>
         <member name="T:SadConsole.UI.Controls.DrawingArea">
@@ -12421,8 +12421,23 @@
             </summary>
             <param name="width">The width of the input box.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.OnFocused">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.OnUnfocused">
             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.TextAsLong">
+            <summary>
+            Returns the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property as parsed by <see cref="M:System.Int64.TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.Int64@)"/> with the current culture.
+            </summary>
+            <returns>The parsed text value.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.TextAsDouble">
+            <summary>
+            Returns the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property as parsed by <see cref="M:System.Double.TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.Double@)"/> with the current culture.
+            </summary>
+            <returns>The parsed text value.</returns>
         </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
@@ -12430,6 +12445,18 @@
             </summary>
             <param name="info">The keyboard information.</param>
             <returns>True if the keyboard was handled by this control.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.GetCultureDecimalSeperator">
+            <summary>
+            Gets the current culture's decimal separator.
+            </summary>
+            <returns>The current culture.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.GetCulture">
+            <summary>
+            Returns the current culture.
+            </summary>
+            <returns>The current culture.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Panel">
             <summary>
@@ -13455,12 +13482,12 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyphColor">
             <summary>
-            An optional color of the <see cref="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyph"/>.
+            The color of the <see cref="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyph"/> when the control is <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is true.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ToggleSwitch.OffGlyphColor">
             <summary>
-            An optional color of the <see cref="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyph"/>.
+            The color of the <see cref="P:SadConsole.UI.Controls.ToggleSwitch.OnGlyph"/> when the control is <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is false.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ToggleSwitch.SwitchThemeState">
@@ -13475,6 +13502,9 @@
             <remarks>
             Valid values are <see cref="F:SadConsole.HorizontalAlignment.Left"/> and <see cref="F:SadConsole.HorizontalAlignment.Right"/>.
             </remarks>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ToggleSwitch.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ToggleSwitch.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>

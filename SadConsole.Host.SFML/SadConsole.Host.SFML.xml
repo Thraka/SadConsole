@@ -205,7 +205,7 @@
         </member>
         <member name="P:SadConsole.Game.Instance">
             <summary>
-            Static instance to the game after the <see cref="M:SadConsole.Game.Create"/> method has been called.
+            Static instance to the game after the <see cref="!:Create()"/> method has been called.
             </summary>
         </member>
         <member name="M:SadConsole.Game.#ctor">
@@ -213,14 +213,16 @@
             Creates the game instance.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.Create">
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32)">
             <summary>
-            Creates a new game with default configuration, an 80x25 console.
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
             </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
         </member>
         <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.Action)">
             <summary>
-            Creates a new game with the specific screen size, and an initialization callback. Uses the default IBM 8x16 font.
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
             </summary>
             <param name="cellCountX">The width of the screen, in cells.</param>
             <param name="cellCountY">The height of the screen, in cells.</param>
@@ -235,7 +237,7 @@
             <param name="font">The font file to load.</param>
             <param name="initCallback">A method which is called after SadConsole has been started.</param>
         </member>
-        <member name="M:SadConsole.Game.Create(SadConsole.Game.Configuration)">
+        <member name="M:SadConsole.Game.Create(SadConsole.Configuration.Builder)">
             <summary>
             Creates a new game and assigns it to the <see cref="P:SadConsole.Game.Instance"/> property.
             </summary>
@@ -285,126 +287,6 @@
             <summary>
             Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
             </summary>
-        </member>
-        <member name="T:SadConsole.Game.Configuration">
-            <summary>
-            An object used during the creation of the game to configure SadConsole and MonoGame.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.#ctor">
-            <summary>
-            Creates a new configuration object with a screen size of 80x25 and the default SadConsole font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.ConfigureFonts(System.Action{SadConsole.Game.ConfigurationFontLoader})">
-            <summary>
-            Configures which default font to use during game startup, as well as which other fonts to load for the game.
-            </summary>
-            <param name="fontLoader">A method that provides the <see cref="T:SadConsole.Game.ConfigurationFontLoader"/> object to load fonts.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetStartingScreen``1">
-            <summary>
-            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
-            </summary>
-            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetStartingScreen(System.Func{SadConsole.Game,SadConsole.IScreenObject})">
-            <summary>
-            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
-            </summary>
-            <param name="creator">A method that returns an object as the starting screen.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.IsStartingScreenFocused(System.Boolean)">
-            <summary>
-            Sets the starting screen's <see cref="P:SadConsole.IScreenObject.IsFocused"/> property to the provided value, when it's created.
-            </summary>
-            <param name="value"></param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetScreenSize(System.Int32,System.Int32)">
-            <summary>
-            Sets the initial screen size of the window, in cells.
-            </summary>
-            <param name="width">The cell count along the x-axis.</param>
-            <param name="height">The cell count along the y-axis.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.OnStart(System.Action)">
-            <summary>
-            Sets a method to run after SadConsole is initialized but before the game loop has started.
-            </summary>
-            <param name="onStartCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.OnEnd(System.Action)">
-            <summary>
-            Sets a method to run after SadConsole the game loop has ended.
-            </summary>
-            <param name="onEndCallback">A method.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseFrameUpdateEvent(System.EventHandler{SadConsole.GameHost})">
-            <summary>
-            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
-            </summary>
-            <param name="instance_FrameUpdate">The event handler</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseFrameRenderEvent(System.EventHandler{SadConsole.GameHost})">
-            <summary>
-            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
-            </summary>
-            <param name="instance_FrameRender">The event handler</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.UseUnlimitedFPS">
-            <summary>
-            Sets the <see cref="F:SadConsole.Settings.UnlimitedFPS"/> setting to <see langword="true"/>.
-            </summary>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetSplashScreen``1">
-            <summary>
-            Sets the startup splash screen to the specified object.
-            </summary>
-            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="M:SadConsole.Game.Configuration.SetSplashScreen(System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
-            <summary>
-            A method callback to generate splash screen objects to the return value of the <paramref name="creator"/> parameter.
-            </summary>
-            <param name="creator">A method that returns an array of screens to be used as the splash screens.</param>
-        </member>
-        <member name="T:SadConsole.Game.ConfigurationFontLoader">
-            <summary>
-            Settings for loading fonts at the start of a game.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFont">
-            <summary>
-            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseBuiltinFontExtended">
-            <summary>
-            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.UseCustomFont(System.String)">
-            <summary>
-            Sets the default font in SadConsole to the specified font file.
-            </summary>
-            <param name="fontFile"></param>
-        </member>
-        <member name="M:SadConsole.Game.ConfigurationFontLoader.AddExtraFonts(System.String[])">
-            <summary>
-            Loads the provided font files into SadConsole.
-            </summary>
-            <param name="fontFiles">An array of font files to load.</param>
         </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
@@ -572,12 +454,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create"/>.
+            The target frames per second for the game window. Set before calling <see cref="!:Game.Create()"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="M:SadConsole.Game.Create"/>.
+            The game window title. Set before calling <see cref="!:Game.Create()"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
@@ -1083,6 +965,194 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Configuration.Builder">
+            <summary>
+            Composes a game host object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.Builder.Configs">
+            <summary>
+            A collection of <see cref="T:SadConsole.Configuration.IConfigurator"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.GetOrCreateConfig``1">
+            <summary>
+            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection.
+            </summary>
+            <typeparam name="TConfig">The type of config object.</typeparam>
+            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection. If found in the collection, that instance is returned.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.Run(SadConsole.Game)">
+            <summary>
+            Runs each config object in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection with the specified game instance.
+            </summary>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.Run">
+            <summary>
+            Creates the <see cref="T:SadConsole.Game"/> host object with this configuration object.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Configuration.Extensions">
+            <summary>
+            Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnStart(SadConsole.Configuration.Builder,System.Action)">
+            <summary>
+            Sets a method to run after SadConsole is initialized but before the game loop has started.
+            </summary>
+            <param name="onStartCallback">A method.</param>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnEnd(SadConsole.Configuration.Builder,System.Action)">
+            <summary>
+            Sets a method to run after SadConsole the game loop has ended.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="onEndCallback">A method.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameUpdateEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameRenderEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.UseDefaultConsole(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.StartingConsole"/> and <see cref="P:SadConsole.GameHost.Screen"/> properties to new console when the game starts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Sets the 
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})" -->
+        <member name="M:SadConsole.Configuration.Extensions.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
+            <summary>
+            Sets the target window SadConsole renders to instead of building its own window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="window">The target window to render the game on.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the startup splash screen to the specified object.
+            </summary>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
+            <summary>
+            Sets the startup splash screens to the array returned by the <paramref name="creator"/> delegate.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A delegate that returns an array of surface objects.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.Game,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.Game)">
+            <summary>
+            Invokes the <see cref="P:SadConsole.Configuration.FontConfig.FontLoader"/> delegate.
+            </summary>
+            <param name="config">The builder running this configurator.</param>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.IConfigurator">
+            <summary>
+            Configuration interface that's added to the <see cref="T:SadConsole.Configuration.Builder"/> object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.Builder,SadConsole.Game)">
+            <summary>
+            Called by the <see cref="T:SadConsole.Configuration.Builder"/>; Runs the specific config for this object.
+            </summary>
+            <param name="config">The builder configuration object.</param>
+            <param name="game">The game object being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.SplashScreenConfig">
+            <summary>
+            A config object that adds splash screen objects with the <see cref="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.SplashScreenConfig.GenerateSplashScreen">
+            <summary>
+            A delegate that returns a set of splash screens to use.
+            </summary>
         </member>
         <member name="T:SFML.Graphics.SpriteBatch">
             <summary>

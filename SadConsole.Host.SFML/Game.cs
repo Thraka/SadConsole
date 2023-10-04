@@ -1,11 +1,11 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using SFML.Graphics;
 using SadRogue.Primitives;
 using SadConsole.Host;
+using SadConsole.Configuration;
+using System.Linq;
 
 namespace SadConsole;
 
@@ -17,7 +17,7 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// The configuration used in creating the game object.
     /// </summary>
-    internal Configuration? _configuration;
+    internal Builder? _configuration;
 
     /// <summary>
     /// The keyboard translation object.
@@ -46,21 +46,32 @@ public sealed partial class Game : GameHost
     private Game() { }
 
     /// <summary>
-    /// Creates a new game with default configuration, an 80x25 console.
+    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
     /// </summary>
-    public static void Create() =>
-        Create(new Configuration());
+    /// <param name="cellCountX">The width of the screen, in cells.</param>
+    /// <param name="cellCountY">The height of the screen, in cells.</param>
+    public static void Create(int cellCountX, int cellCountY) =>
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                );
 
     /// <summary>
-    /// Creates a new game with the specific screen size, and an initialization callback. Uses the default IBM 8x16 font.
+    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
     /// </summary>
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
     public static void Create(int cellCountX, int cellCountY, Action initCallback) =>
-        Create(new Configuration()
-                    .SetScreenSize(cellCountX, cellCountY)
-                    .OnStart(initCallback));
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                .OnStart(initCallback)
+                );
 
     /// <summary>
     /// Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
@@ -70,16 +81,19 @@ public sealed partial class Game : GameHost
     /// <param name="font">The font file to load.</param>
     /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
     public static void Create(int cellCountX, int cellCountY, string font, Action initCallback) =>
-        Create(new Configuration()
-                    .SetScreenSize(cellCountX, cellCountY)
-                    .ConfigureFonts(loader => loader.UseCustomFont(font))
-                    .OnStart(initCallback));
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts((loader, game) => loader.UseCustomFont(font))
+                .OnStart(initCallback)
+                );
 
     /// <summary>
     /// Creates a new game and assigns it to the <see cref="Instance"/> property.
     /// </summary>
     /// <param name="configuration">The settings used in creating the game.</param>
-    public static void Create(Configuration configuration)
+    public static void Create(Builder configuration)
     {
         if (Instance != null) throw new Exception("The game has already been created.");
 
@@ -99,28 +113,32 @@ public sealed partial class Game : GameHost
     {
         if (_configuration == null) throw new Exception("Configuration must be set.");
 
-        OnStart = _configuration.OnStartCallback;
-        OnEnd = _configuration.OnEndCallback;
-
         // Configure the fonts
-        _configuration.RunFontConfig();
-        SadConsole.Settings.UseDefaultExtendedFont = _configuration.FontLoaderData.UseExtendedFont;
-        LoadDefaultFonts(_configuration.FontLoaderData.AlternativeDefaultFont);
+        FontConfig fontConfig = _configuration.Configs.OfType<FontConfig>().FirstOrDefault()
+            ?? throw new Exception($"Configuration object must have a {nameof(FontConfig)} configurator added to it.");
 
-        foreach (var font in _configuration.FontLoaderData.CustomFonts)
+        _configuration.Configs.Remove(fontConfig);
+        fontConfig.Run(_configuration, this);
+
+        LoadDefaultFonts(fontConfig.AlternativeDefaultFont);
+
+        foreach (string font in fontConfig.CustomFonts)
             LoadFont(font);
 
         // Load screen size
-        ScreenCellsX = _configuration.ScreenSizeWidth;
-        ScreenCellsY = _configuration.ScreenSizeHeight;
+        InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
+            ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
 
-        if (_configuration.TargetWindow == null)
+        ScreenCellsX = startupData.ScreenCellsX;
+        ScreenCellsY = startupData.ScreenCellsY;
+
+        if (startupData.TargetWindow == null)
         {
             Global.GraphicsDevice = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
             Global.GraphicsDevice.SetTitle(Settings.WindowTitle);
         }
         else
-            Global.GraphicsDevice = _configuration.TargetWindow;
+            Global.GraphicsDevice = startupData.TargetWindow;
 
         Global.GraphicsDevice.Closed += (o, e) =>
         {
@@ -132,7 +150,9 @@ public sealed partial class Game : GameHost
             ResetRendering();
         };
 
-        if (!Settings.UnlimitedFPS)
+        // Load FPS
+        FpsConfig? fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
+        if (fpsConfig != null && fpsConfig.UnlimitedFPS)
             if (Host.Settings.FPS > 0)
                 Global.GraphicsDevice.SetFramerateLimit((uint)Host.Settings.FPS);
 
@@ -172,38 +192,8 @@ public sealed partial class Game : GameHost
         // Load the mapped colors
         LoadMappedColors();
 
-        // Hook up any events via config
-        if (_configuration.event_FrameUpdate != null)
-            FrameUpdate += _configuration.event_FrameUpdate;
-
-        if (_configuration.event_FrameRender != null)
-            FrameRender += _configuration.event_FrameRender;
-
-        // Setup default starting console, otherwise, use the config starting object.
-        if (_configuration.CreateStartingConsole)
-        {
-            StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
-            StartingConsole.IsFocused = true;
-            Screen = StartingConsole;
-        }
-        else
-        {
-            try
-            {
-                Screen = _configuration.GenerateStartingObject(this);
-                Screen.IsFocused = _configuration.FocusStartingObject;
-            }
-            catch (NullReferenceException e)
-            {
-                throw new NullReferenceException("'Settings.CreateStartingConsole' is false; configuration 'SetStartingScreen' method must return a valid object.");
-            }
-        }
-
-        // Set splash screens from config
-        if (_configuration.GenerateSplashScreen != null)
-            SetSplashScreens(_configuration.GenerateSplashScreen(this));
-
-        // Kill off config instance
+        // Run all startup config objects, then destroy the config instance
+        _configuration.Run(this);
         _configuration = null;
 
         // NOTE: Compared to the monogame game, this init method is invoked at create, but the game isn't yet running.
@@ -447,5 +437,8 @@ public sealed partial class Game : GameHost
 
     internal void InvokeFrameUpdate() =>
         OnFrameUpdate();
+
+    internal void SetStartingConsole(Console? console) =>
+        StartingConsole = console;
 }
 #nullable disable
