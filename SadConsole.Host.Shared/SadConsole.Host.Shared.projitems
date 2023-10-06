@@ -19,5 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InternalStartupData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\SplashScreens.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\StartingScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
   </ItemGroup>
 </Project>

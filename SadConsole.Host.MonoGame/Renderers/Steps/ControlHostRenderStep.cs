@@ -195,10 +195,8 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// Disposes the object.
     /// </summary>
     /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
-    protected void Dispose(bool disposing)
-    {
+    protected void Dispose(bool disposing) =>
         Reset();
-    }
 
     ///  <inheritdoc/>
     public void Dispose()

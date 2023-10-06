@@ -48,6 +48,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
         BackingTexture = null;
         _cachedTexture?.Dispose();
         _cachedTexture = null;
+        _layers = null;
     }
 
     ///  <inheritdoc/>

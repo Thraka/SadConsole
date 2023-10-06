@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
@@ -169,13 +170,8 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
     /// Disposes the object.
     /// </summary>
     /// <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="Dispose()"/>.</param>
-    protected void Dispose(bool disposing)
-    {
-        BackingTexture?.Dispose();
-        BackingTexture = null;
-        _cachedTexture?.Dispose();
-        _cachedTexture = null;
-    }
+    protected void Dispose(bool disposing) =>
+        Reset();
 
     ///  <inheritdoc/>
     public void Dispose()

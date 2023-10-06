@@ -152,23 +152,42 @@ public class ScreenSurfaceRenderer : IRenderer
     }
 
     #region IDisposable Support
-    protected bool disposedValue = false; // To detect redundant calls
+    /// <summary>
+    /// Detects redundant calls.
+    /// </summary>
+    protected bool disposedValue = false;
 
+    /// <summary>
+    /// Release the backing texture and the render texture target.
+    /// </summary>
+    /// <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
         {
-            foreach (var item in RenderSteps)
-                item.Dispose();
+            _backingTexture?.Dispose();
+            _renderTexture?.Dispose();
+
+            foreach (IRenderStep step in Steps)
+                step.Dispose();
 
             disposedValue = true;
         }
+
+        if (disposing)
+        {
+            Steps = null;
+            CachedRenderRects = null;
+        }
     }
 
+    /// <summary>
+    /// Disposes the object.
+    /// </summary>
     ~ScreenSurfaceRenderer() =>
         Dispose(false);
 
-    // This code added to correctly implement the disposable pattern.
+    /// <inheritdoc/>
     public void Dispose()
     {
         Dispose(true);

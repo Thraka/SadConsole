@@ -477,14 +477,6 @@
             A shader used when drawing the final texture to the screen.
             </summary>
         </member>
-        <member name="T:SadConsole.Renderers.LayeredRenderer">
-            <summary>
-            Draws a <see cref="T:SadConsole.Components.LayeredSurface"/> object by adding a <see cref="T:SadConsole.Renderers.LayeredSurfaceRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
-             <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -556,6 +548,22 @@
         <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
             <summary>
             Adds the render steps this renderer uses.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
@@ -956,6 +964,14 @@
              <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.Components.LayeredSurface"/> object by adding a <see cref="T:SadConsole.Renderers.LayeredSurfaceRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
              <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.WindowRenderer">

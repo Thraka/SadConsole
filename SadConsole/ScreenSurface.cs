@@ -421,15 +421,18 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     {
         if (!_disposedValue)
         {
-            if (disposing)
-            {
-                // dispose managed state (managed objects).
-            }
-
             _renderer?.Dispose();
             _renderer = null;
 
             _disposedValue = true;
+        }
+
+        if (disposing)
+        {
+            if (_surface != null)
+                _surface.IsDirtyChanged -= _isDirtyChangedEventHandler;
+            _surface = null!;
+            _font = null!;
         }
     }
 

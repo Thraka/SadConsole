@@ -159,7 +159,7 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
     /// <summary>
     /// Release the backing texture and the render texture target.
     /// </summary>
-    /// <param name="disposing"></param>
+    /// <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -167,7 +167,16 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
             _backingTexture?.Dispose();
             _renderTexture?.Dispose();
 
+            foreach (IRenderStep step in Steps)
+                step.Dispose();
+
             disposedValue = true;
+        }
+
+        if (disposing)
+        {
+            Steps = null;
+            CachedRenderRects = null;
         }
     }
 
