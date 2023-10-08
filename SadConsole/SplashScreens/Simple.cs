@@ -27,11 +27,11 @@ public class Simple : ScreenSurface
             .Wait(System.TimeSpan.FromMilliseconds(0.500))
             .Code((s, d) => { IsVisible = false; return true; });
 
-        var endTimeout = new Instructions.InstructionSet() { RemoveOnFinished = true }
+        Instructions.InstructionSet endTimeout = new Instructions.InstructionSet() { RemoveOnFinished = true }
             .Wait(System.TimeSpan.FromSeconds(3))
             .Code((s, d) => { _isEnding = true; SadComponents.Add(_endAnimation); return true; });
 
-        var startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
+        Instructions.InstructionSet startAnimation = new Instructions.InstructionSet { RemoveOnFinished = true }
             .Instruct(new Instructions.FadeTextSurfaceTint(new Gradient(Settings.ClearColor.SetAlpha(255), Settings.ClearColor.SetAlpha(0)), System.TimeSpan.FromSeconds(1)))
             .Wait(System.TimeSpan.FromMilliseconds(0.500));
 

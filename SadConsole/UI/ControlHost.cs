@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.Renderers;
@@ -38,7 +37,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// The collection of controls.
     /// </summary>
     [DataMember]
-    protected List<ControlBase> ControlsList = new List<ControlBase>();
+    protected List<ControlBase> ControlsList = new();
 
     /// <summary>
     /// The controls added which contain a <see cref="ControlBase.Name"/> value.
@@ -50,7 +49,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     private bool _exclusiveBeforeCapture;
     private Colors? _themeColors;
     private ControlBase? _controlWithMouse;
-    private Renderers.IRenderStep? _controlsRenderStep;
+    private IRenderStep? _controlsRenderStep;
     private Rectangle _parentView;
 
     #region Properties
@@ -90,8 +89,10 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
                 {
                     container[i].IsDirty = true;
 
-                    if (container[i] is IContainer)
-                        DirtyTheChildren((IContainer)container[i]);
+                    if (container[i] is not IContainer)
+                        continue;
+
+                    DirtyTheChildren((IContainer)container[i]);
                 }
             }
         }
@@ -222,7 +223,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if (ClearOnAdded)
         {
-            var colors = GetThemeColors();
+            Colors colors = GetThemeColors();
             surface.Surface.DefaultBackground = colors.ControlHostBackground;
             surface.Surface.DefaultForeground = colors.ControlHostForeground;
             surface.Surface.Clear();
@@ -840,7 +841,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         FocusedControl = null;
 
-        var controls = ControlsList.ToArray();
+        ControlBase[] controls = ControlsList.ToArray();
         ControlsList.Clear();
 
         int count = controls.Length;

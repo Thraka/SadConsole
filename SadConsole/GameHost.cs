@@ -27,12 +27,12 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Holds all of the <see cref="IRenderer"/> types.
     /// </summary>
-    protected Dictionary<string, System.Type> _renderers = new Dictionary<string, Type>(5);
+    protected Dictionary<string, System.Type> _renderers = new(5);
 
     /// <summary>
     /// Holds all of the <see cref="IRenderStep"/> types.
     /// </summary>
-    protected Dictionary<string, System.Type> _rendererSteps = new Dictionary<string, Type>(5);
+    protected Dictionary<string, System.Type> _rendererSteps = new(5);
 
     /// <summary>
     /// The splashs screens to show on game startup.
@@ -45,14 +45,9 @@ public abstract partial class GameHost : IDisposable
     public static GameHost Instance { get; protected set; } = null!;
 
     /// <summary>
-    /// Temp variable to indicate that the fonts being loaded are the embedded fonts.
-    /// </summary>
-    protected static bool LoadingEmbeddedFont = false;
-
-    /// <summary>
     /// Contains the path to a file being serialized or deserialized.
     /// </summary>
-    public static string SerializerPathHint { get; internal set; } = String.Empty;
+    public static string SerializerPathHint { get; internal set; } = string.Empty;
 
     /// <summary>
     /// Raised when the game draws a frame to the screen.
@@ -141,7 +136,7 @@ public abstract partial class GameHost : IDisposable
     /// </summary>
     /// <param name="name">The name of the renderer.</param>
     /// <returns>A new renderer.</returns>
-    public virtual IRenderer GetRenderer(string name)
+    public virtual IRenderer? GetRenderer(string name)
     {
         if (name.Equals(Renderers.Constants.RendererNames.None, StringComparison.OrdinalIgnoreCase)) return null;
 
@@ -231,11 +226,11 @@ public abstract partial class GameHost : IDisposable
             {
                 throw new JsonSerializationException("Unable to load font. You either have a malformed json file, or you're missing the $type declaration as the first entry of the json content:\n \"$type\": \"SadConsole.SadFont, SadConsole\",", j);
             }
+            
+            if (Fonts.ContainsKey(masterFont.Name))
+                return Fonts[masterFont.Name];
 
-            if (Instance.Fonts.ContainsKey(masterFont.Name))
-                return Instance.Fonts[masterFont.Name];
-
-            Instance.Fonts.Add(masterFont.Name, masterFont);
+            Fonts.Add(masterFont.Name, masterFont);
 
             return masterFont;
         }
@@ -313,8 +308,8 @@ public abstract partial class GameHost : IDisposable
         // Load the embedded fonts.
         System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;
 
-        EmbeddedFont = LoadFont("SadConsole.Resources.IBM.font");
-        EmbeddedFontExtended = LoadFont("SadConsole.Resources.IBM_ext.font");
+        EmbeddedFont = LoadResourceFont("SadConsole.Resources.IBM.font");
+        EmbeddedFontExtended = LoadResourceFont("SadConsole.Resources.IBM_ext.font");
 
         // Configure default font
         if (string.IsNullOrEmpty(defaultFont))
@@ -323,17 +318,16 @@ public abstract partial class GameHost : IDisposable
             else
                 DefaultFont = EmbeddedFont;
         else
-            DefaultFont = this.LoadFont(defaultFont);
+            DefaultFont = LoadFont(defaultFont);
 
         // Local method to load a font from the built in assembly resource
-        SadFont LoadFont(string fontName)
+        SadFont LoadResourceFont(string fontName)
         {
             using Stream stream = assembly.GetManifestResourceStream(fontName)!;
-            using StreamReader sr = new StreamReader(stream);
+            using StreamReader sr = new(stream);
 
             SerializerPathHint = "";
 
-            LoadingEmbeddedFont = true;
             var masterFont = (SadFont)Newtonsoft.Json.JsonConvert.DeserializeObject(
                 sr.ReadToEnd(),
                 typeof(SadFont),
@@ -342,7 +336,6 @@ public abstract partial class GameHost : IDisposable
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All,
                     Converters = null!
                 })!;
-            LoadingEmbeddedFont = false;
 
             Fonts.Add(masterFont.Name, masterFont);
 
@@ -358,7 +351,7 @@ public abstract partial class GameHost : IDisposable
         if (Settings.AutomaticAddColorsToMappings)
         {
             //ColorExtensions.ColorMappings.Add
-            var colorType = typeof(Color);
+            Type colorType = typeof(Color);
             foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
                 ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null)!);
         }
@@ -374,7 +367,7 @@ public abstract partial class GameHost : IDisposable
         {
             if (disposing)
             {
-                foreach (IFont font in GameHost.Instance.Fonts.Values)
+                foreach (IFont font in Fonts.Values)
                     font.Image.Dispose();
 
                 EmbeddedFont.Image.Dispose();

@@ -17,7 +17,7 @@ public class Playscii
     /// <summary>
     /// Cashed palletes.
     /// </summary>
-    static readonly Dictionary<string, Palette> s_palettes = new Dictionary<string, Palette>();
+    static readonly Dictionary<string, Palette> s_palettes = new();
 
     /// <summary>
     /// Palette file extensions supported by the Playscii format.
@@ -79,7 +79,7 @@ public class Playscii
         /// <returns><see cref="ScreenSurface"/> containing the image from the first animation frame.</returns>
         public ScreenSurface ToScreenSurface(int width, int height, IFont font, Palette colors)
         {
-            var output = new ScreenSurface(width, height) { Font = font };
+            ScreenSurface output = new(width, height) { Font = font };
 
             for (int i = 0; i < layers.Length; i++)
                 layers[i].ToSurface(output, colors);
@@ -118,14 +118,14 @@ public class Playscii
         {
             if (parent.Surface.Count != tiles.Length) throw new ArgumentException("Surface size must match number of tiles.");
 
-            var output = new ScreenSurface(parent.Surface.Width, parent.Surface.Height) { Parent = parent, Font = parent.Font, IsVisible = visible };
+            ScreenSurface output = new(parent.Surface.Width, parent.Surface.Height) { Parent = parent, Font = parent.Font, IsVisible = visible };
             for (int y = 0; y < output.Surface.Height; y++)
                 for (int x = 0; x < output.Surface.Width; x++)
                 {
                     int tileIndex = y * output.Surface.Width + x;
                     if (tileIndex < tiles.Length)
                     {
-                        var coloredGlyph = tiles[tileIndex].ToColoredGlyph(output.Font, colors);
+                        ColoredGlyphBase coloredGlyph = tiles[tileIndex].ToColoredGlyph(output.Font, colors);
                         output.Surface.SetCellAppearance(x, y, coloredGlyph);
                     }
                 }
@@ -204,7 +204,7 @@ public class Playscii
         if (s_palettes.ContainsKey(paletteName))
             return s_palettes[paletteName];
 
-        var colors = new List<Color>() { new Color(0, 0, 0, 0) };
+        var colors = new List<Color>() { new(0, 0, 0, 0) };
         using (ITexture image = GameHost.Instance.GetTexture(fileName))
         {
             Point imageSize = (image.Width, image.Height);
@@ -223,7 +223,7 @@ public class Playscii
             }
         }
 
-        Palette palette = new Palette(colors);
+        Palette palette = new(colors);
         s_palettes[paletteName] = palette;
         return palette;
     }
@@ -247,27 +247,30 @@ public class Playscii
                 if (archive.Entries.Count == 0) throw new FileNotFoundException("Zip file does not contain any files.");
 
                 // get reference for the playscii file from the archive
-                var playsciiZipEntry = archive.GetEntry(playsciiFileName);
+                ZipArchiveEntry? playsciiZipEntry = archive.GetEntry(playsciiFileName);
+
                 if (playsciiZipEntry is null) throw new FileNotFoundException("Specified playscii file doesn't exist in the zip archive.");
 
                 // create stream, read contents and return playscii instance
-                using (var stream = playsciiZipEntry.Open())
-                using (var reader = new StreamReader(stream))
-                    return ReadFromStream(reader);
+                using Stream stream = playsciiZipEntry.Open();
+                using StreamReader reader = new(stream);
+
+                return ReadFromStream(reader);
             }
         }
         else
         {
             if (!File.Exists(playsciiFileName)) throw new FileNotFoundException("Playscii file doesn't exist.");
 
-            using (StreamReader streamReader = File.OpenText(playsciiFileName))
-                return ReadFromStream(streamReader);
+            using StreamReader streamReader = File.OpenText(playsciiFileName);
+
+            return ReadFromStream(streamReader);
         }
     }
 
     static Playscii ReadFromStream(StreamReader streamReader)
     {
-        using (JsonTextReader reader = new JsonTextReader(streamReader))
+        using (JsonTextReader reader = new(streamReader))
         {
             JObject o2 = (JObject)JToken.ReadFrom(reader);
             return o2.ToObject(typeof(Playscii)) as Playscii ?? throw new Exception($"Unable to convert object to {nameof(Playscii)}");
@@ -287,24 +290,22 @@ public class Playscii
     /// Transparent glyph foreground is fine, but it will not cut through the <see cref="ColoredGlyphBase"/> background like it does in Playscii.</remarks>
     /// 
     /// <returns><see cref="ScreenSurface"/> containing the first frame from the <see cref="Playscii"/> file.</returns>
-    public static ScreenSurface? ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")
+    public static ScreenSurface ToScreenSurface(string fileName, IFont font, string paletteFileName = "", string zipArchiveName = "")
     {
-        ScreenSurface? output = null;
-
         // get the dir name from the file name
         string dirName = Path.GetDirectoryName(zipArchiveName != string.Empty ? zipArchiveName : fileName) ?? throw new Exception("Unable to find directory.");
 
         // read playscii json file
         if (ReadFile(fileName, zipArchiveName) is Playscii p)
         {
-            // read pallete file and generate colors
+            // read palette file and generate colors
             Palette palette = GetPalette(paletteFileName != string.Empty ? paletteFileName : $"{dirName}/{p.palette}.png");
 
             // convert the first frame to a screen surface
             if (p.frames.Length > 0)
-                output = p.frames[0].ToScreenSurface(p.width, p.height, font, palette);
+                return p.frames[0].ToScreenSurface(p.width, p.height, font, palette);
         }
 
-        return output;
+        throw new Exception("Unable to read Plascii file.");
     }
 }

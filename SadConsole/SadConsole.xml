@@ -4023,11 +4023,6 @@
             Instance of the game host.
             </summary>
         </member>
-        <member name="F:SadConsole.GameHost.LoadingEmbeddedFont">
-            <summary>
-            Temp variable to indicate that the fonts being loaded are the embedded fonts.
-            </summary>
-        </member>
         <member name="P:SadConsole.GameHost.SerializerPathHint">
             <summary>
             Contains the path to a file being serialized or deserialized.
