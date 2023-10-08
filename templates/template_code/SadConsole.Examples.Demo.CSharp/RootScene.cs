@@ -1,22 +1,21 @@
-﻿using SadConsole.Components;
-using SadConsole.UI;
+﻿using SadConsole.UI;
 
 namespace SadConsole.Examples;
 
-class RootScreen : ScreenObject
+partial class RootScreen : ScreenObject
 {
     private IDemo _activeDemo;
 
     private ListDemosScreen _listDemosScreen;
-    private ControlsConsole _demoDescriptionsScreen;
+    private Console _demoDescriptionsScreen;
     private IScreenObject? _demoObject;
 
     public RootScreen()
     {
-        _demoDescriptionsScreen = new ControlsConsole(GameSettings.ScreenDescriptionBounds.Width, GameSettings.ScreenDescriptionBounds.Height);
+        _demoDescriptionsScreen = new(GameSettings.ScreenDescriptionBounds.Width, GameSettings.ScreenDescriptionBounds.Height);
         _demoDescriptionsScreen.Position = GameSettings.ScreenDescriptionBounds.Position;
 
-        _listDemosScreen = new ListDemosScreen(GameSettings.ScreenListBounds.Width, GameSettings.ScreenListBounds.Height);
+        _listDemosScreen = new(GameSettings.ScreenListBounds.Width, GameSettings.ScreenListBounds.Height);
         _listDemosScreen.Position = GameSettings.ScreenListBounds.Position;
         _listDemosScreen.SelectedDemoChanged += (s, demo) => SetDemo(demo);
 
@@ -52,7 +51,7 @@ class RootScreen : ScreenObject
         demo.PostCreateDemoScreen(demoSurface);
 
         // Remove old description component
-        var component = _demoDescriptionsScreen.GetSadComponent<LineCharacterFade>();
+        LineCharacterFade? component = _demoDescriptionsScreen.GetSadComponent<LineCharacterFade>();
         if (component != null)
             _demoDescriptionsScreen.SadComponents.Remove(component);
 
@@ -70,75 +69,7 @@ class RootScreen : ScreenObject
         // Update all the base objects
         base.Update(delta);
 
-        // Even though keyboard handling happens before this, on the focused object,
-        // which is the demo surface, we want to listen for special keyboard keys
-        // that control the demo.
-    }
-
-    private class LineCharacterFade : Instructions.InstructionBase
-    {
-        private Effects.ICellEffect _effect;
-
-        private ColoredString[] _lines;
-        private Cursor[] _lineCursors;
-        private Instructions.DrawString[] _lineDrawers;
-        private TimeSpan _totalTimeToPrint;
-
-        public LineCharacterFade(TimeSpan totalTimeToPrint)
-        {
-            RemoveOnFinished = true;
-            _totalTimeToPrint = totalTimeToPrint;
-
-            _effect = new Effects.Fade()
-            {
-                FadeForeground = true,
-                DestinationForeground = new Gradient(new[] { Color.Violet, Color.Black, Color.Gray, Color.Purple }, new[] { 0.0f, 0.01f, 0.5f, 1.0f }),
-                UseCellDestinationReverse = true,
-                UseCellForeground = true,
-                CloneOnAdd = true,
-                FadeDuration = TimeSpan.FromMilliseconds(300),
-                RemoveOnFinished = true,
-                RestoreCellOnRemoved = true,
-            };
-        }
-
-        public override void Update(IScreenObject componentHost, TimeSpan delta)
-        {
-            base.Update(componentHost, delta);
-
-            foreach(var instruction in _lineDrawers) 
-                instruction?.Update(componentHost, delta);
-        }
-
-        public override void OnAdded(IScreenObject host)
-        {
-            if (host is not IScreenSurface obj) throw new ArgumentException($"Instruction can only be added to {nameof(IScreenSurface)}");
-
-            _lines = new ColoredString[obj.Surface.Height];
-            _lineDrawers = new Instructions.DrawString[obj.Surface.Height];
-            _lineCursors = new Cursor[obj.Surface.Height];
-
-            for (int i = 0; i < _lines.Length; i++)
-            {
-                int stringLength = obj.Surface.GetString(0, i, obj.Surface.Width).Trim('\0').Length;
-
-                if (stringLength == 0) continue;
-
-                ColoredString coloredString = obj.Surface.GetStringColored(0, i, stringLength);
-                coloredString.SetEffect(_effect);
-                coloredString.IgnoreEffect = false;
-                _lineDrawers[i] = new Instructions.DrawString(coloredString);
-                _lineDrawers[i].TotalTimeToPrint = _totalTimeToPrint;
-                _lineDrawers[i].Position = (0, i);
-                _lineDrawers[i].Cursor = new Cursor(obj.Surface)
-                {
-                    AutomaticallyShiftRowsUp = false
-                };
-            }
-
-            obj.Surface.Clear();
-
-            base.OnAdded(host);
-        }
+        // Even though keyboard handling happens before this, on the demo surface, which is focused
+        // we want to listen for special keyboard keys that control the demo.
     }
 }

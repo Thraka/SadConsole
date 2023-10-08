@@ -4,7 +4,7 @@ namespace SadConsole.Examples;
 
 static class GameSettings
 {
-    public const int GAME_WIDTH = 135;
+    public const int GAME_WIDTH = 120;
     public const int GAME_HEIGHT = 45;
     public const int SCREEN_DEMO_WIDTH = 80;
     public const int SCREEN_DEMO_HEIGHT = 25;
@@ -21,6 +21,7 @@ static class GameSettings
 
     public static IDemo[] Demos =
         {
+            new DemoAcii(),
             new DemoAnimations(),
             new DemoCustomCellsRenderer(),
             new DemoControls(),
