@@ -20,6 +20,34 @@ public static partial class Extensions
 
         return configBuilder;
     }
+
+    /// <summary>
+    /// Adds the embedded fonts to the font dictionary with the old incorrect name.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <returns>The configuration builder.</returns>
+    public static Builder FixOldFontName(this Builder configBuilder)
+    {
+         configBuilder.GetOrCreateConfig<OldFontNameConfig>();
+
+        return configBuilder;
+    }
+}
+
+internal class OldFontNameConfig : IConfigurator
+{
+    public void Run(Builder config, Game game)
+    {
+        game.Started += Game_Started;
+    }
+
+    private void Game_Started(object? sender, GameHost host)
+    {
+        host.Fonts["IBM_16x8"] = host.EmbeddedFont;
+        host.Fonts["IBM_16x8_ext"] = host.EmbeddedFontExtended;
+
+        host.Started -= Game_Started;
+    }
 }
 
 public class FontConfig : IConfigurator

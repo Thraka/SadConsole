@@ -78,14 +78,14 @@ public sealed partial class Game : GameHost
     /// </summary>
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
-    /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
-    public static void Create(int cellCountX, int cellCountY, Action initCallback) =>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
-                .OnStart(initCallback)
+                .OnStart(gameStarted)
                 );
 
     /// <summary>
@@ -94,14 +94,14 @@ public sealed partial class Game : GameHost
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     /// <param name="font">The font file to load.</param>
-    /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
-    public static void Create(int cellCountX, int cellCountY, string font, Action initCallback) =>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts((loader, game) => loader.UseCustomFont(font))
-                .OnStart(initCallback)
+                .OnStart(gameStarted)
                 );
 
     /// <summary>
@@ -184,12 +184,12 @@ public sealed partial class Game : GameHost
         if (fpsConfig != null && fpsConfig.ShowFPSVisual)
             Instance.MonoGameInstance.Components.Add(new Host.Game.FPSCounterComponent(Instance.MonoGameInstance));
 
-        // Run all startup config objects, then destroy the config instance
+        // Run all startup config objects
         _configuration.Run(this);
-        _configuration = null;
 
         // Normal start
-        OnStart?.Invoke();
+        OnGameStarted();
+        _configuration = null;
         SplashScreens.SplashScreenManager.CheckRun();
     }
 
@@ -197,7 +197,7 @@ public sealed partial class Game : GameHost
     public override void Run()
     {
         MonoGameInstance.Run();
-        OnEnd?.Invoke();
+        OnGameEnding();
         MonoGameInstance.Dispose();
     }
 

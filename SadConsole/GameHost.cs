@@ -62,12 +62,12 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// A callback to run before the <see cref="Run"/> method is called;
     /// </summary>
-    public Action? OnStart;
+    public event EventHandler<GameHost>? Started;
 
     /// <summary>
     /// A callback to run after the <see cref="Run"/> method is called;
     /// </summary>
-    public Action? OnEnd;
+    public event EventHandler<GameHost>? Ending;
 
     /// <summary>
     /// Draw calls registered for the next drawing frame.
@@ -88,6 +88,18 @@ public abstract partial class GameHost : IDisposable
     /// A frame number counter, incremented every game frame.
     /// </summary>
     public int FrameNumber { get; set; }
+
+    /// <summary>
+    /// Raises the <see cref="Started"/> event.
+    /// </summary>
+    protected virtual void OnGameStarted() =>
+        Started?.Invoke(this, this);
+
+    /// <summary>
+    /// Raises the <see cref="Ending"/> event.
+    /// </summary>
+    protected virtual void OnGameEnding() =>
+        Ending?.Invoke(this, this);
 
     /// <summary>
     /// Raises the <see cref="FrameRender"/> event.
@@ -239,7 +251,6 @@ public abstract partial class GameHost : IDisposable
 
             throw;
         }
-
     }
 
     /// <summary>

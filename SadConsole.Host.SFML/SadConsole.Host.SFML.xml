@@ -220,22 +220,22 @@
             <param name="cellCountX">The width of the screen, in cells.</param>
             <param name="cellCountY">The height of the screen, in cells.</param>
         </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.Action)">
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.EventHandler{SadConsole.GameHost})">
             <summary>
             Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
             </summary>
             <param name="cellCountX">The width of the screen, in cells.</param>
             <param name="cellCountY">The height of the screen, in cells.</param>
-            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
         </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.Action)">
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.EventHandler{SadConsole.GameHost})">
             <summary>
             Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
             </summary>
             <param name="cellCountX">The width of the screen, in cells.</param>
             <param name="cellCountY">The height of the screen, in cells.</param>
             <param name="font">The font file to load.</param>
-            <param name="initCallback">A method which is called after SadConsole has been started.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
         </member>
         <member name="M:SadConsole.Game.Create(SadConsole.Configuration.Builder)">
             <summary>
@@ -565,6 +565,9 @@
             <summary>
             Disposes the object.
             </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
@@ -1015,20 +1018,20 @@
             Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.Extensions.OnStart(SadConsole.Configuration.Builder,System.Action)">
+        <member name="M:SadConsole.Configuration.Extensions.OnStart(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
             <summary>
-            Sets a method to run after SadConsole is initialized but before the game loop has started.
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Started"/> event.
             </summary>
-            <param name="onStartCallback">A method.</param>
             <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_Started">The event handler</param>
             <returns>The configuration builder.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.Extensions.OnEnd(SadConsole.Configuration.Builder,System.Action)">
+        <member name="M:SadConsole.Configuration.Extensions.OnEnd(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
             <summary>
-            Sets a method to run after SadConsole the game loop has ended.
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Ending"/> event.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="onEndCallback">A method.</param>
+            <param name="instance_Ending">The event handler</param>
             <returns>The configuration builder.</returns>
         </member>
         <member name="M:SadConsole.Configuration.Extensions.AddFrameUpdateEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
@@ -1063,6 +1066,13 @@
             <returns>The configuration builder.</returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})" -->
+        <member name="M:SadConsole.Configuration.Extensions.FixOldFontName(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds the embedded fonts to the font dictionary with the old incorrect name.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
             <summary>
             Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.

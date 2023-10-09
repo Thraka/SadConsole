@@ -4038,12 +4038,12 @@
             Raised when the game updates prior to drawing a frame.
             </summary>
         </member>
-        <member name="F:SadConsole.GameHost.OnStart">
+        <member name="E:SadConsole.GameHost.Started">
             <summary>
             A callback to run before the <see cref="M:SadConsole.GameHost.Run"/> method is called;
             </summary>
         </member>
-        <member name="F:SadConsole.GameHost.OnEnd">
+        <member name="E:SadConsole.GameHost.Ending">
             <summary>
             A callback to run after the <see cref="M:SadConsole.GameHost.Run"/> method is called;
             </summary>
@@ -4066,6 +4066,16 @@
         <member name="P:SadConsole.GameHost.FrameNumber">
             <summary>
             A frame number counter, incremented every game frame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.OnGameStarted">
+            <summary>
+            Raises the <see cref="E:SadConsole.GameHost.Started"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.OnGameEnding">
+            <summary>
+            Raises the <see cref="E:SadConsole.GameHost.Ending"/> event.
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.OnFrameRender">
@@ -9851,7 +9861,7 @@
         </member>
         <member name="T:SadConsole.SplashScreens.SplashScreenManager">
             <summary>
-            GameHost use only. Use the <see cref="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun"/> method to show any splash screens after <see cref="F:SadConsole.GameHost.OnStart"/> was called.
+            GameHost use only. Use the <see cref="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun"/> method to show any splash screens after <see cref="!:GameHost.OnStart"/> was called.
             </summary>
         </member>
         <member name="E:SadConsole.SplashScreens.SplashScreenManager.SplashScreenFinished">

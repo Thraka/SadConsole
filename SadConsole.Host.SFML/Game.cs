@@ -63,14 +63,14 @@ public sealed partial class Game : GameHost
     /// </summary>
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
-    /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
-    public static void Create(int cellCountX, int cellCountY, Action initCallback) =>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
-                .OnStart(initCallback)
+                .OnStart(gameStarted)
                 );
 
     /// <summary>
@@ -79,14 +79,14 @@ public sealed partial class Game : GameHost
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     /// <param name="font">The font file to load.</param>
-    /// <param name="initCallback">A method which is called after SadConsole has been started.</param>
-    public static void Create(int cellCountX, int cellCountY, string font, Action initCallback) =>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts((loader, game) => loader.UseCustomFont(font))
-                .OnStart(initCallback)
+                .OnStart(gameStarted)
                 );
 
     /// <summary>
@@ -194,7 +194,6 @@ public sealed partial class Game : GameHost
 
         // Run all startup config objects, then destroy the config instance
         _configuration.Run(this);
-        _configuration = null;
 
         // NOTE: Compared to the monogame game, this init method is invoked at create, but the game isn't yet running.
         // in monogame, this same method is invoked when the game starts running.
@@ -203,8 +202,8 @@ public sealed partial class Game : GameHost
     /// <inheritdoc/>
     public override void Run()
     {
-        OnStart?.Invoke();
-
+        OnGameStarted();
+        _configuration = null;
         SplashScreens.SplashScreenManager.CheckRun();
 
         // Update keyboard/mouse with base info
@@ -287,7 +286,7 @@ public sealed partial class Game : GameHost
             Host.Global.DrawTimer.Restart();
         }
 
-        OnEnd?.Invoke();
+        OnGameEnding();
     }
 
     /// <inheritdoc/> 
