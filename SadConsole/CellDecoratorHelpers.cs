@@ -70,8 +70,22 @@ public static class CellDecoratorHelpers
         if (decorators is null) return;
 
         glyph.Decorators ??= Pool.Rent();
-        glyph.Decorators.AddRange(decorators);
 
+        // Glyph doesn't have any decorators, add all of them
+        if (glyph.Decorators.Count == 0)
+            glyph.Decorators.AddRange(decorators);
+
+        // Glyph has some decorators, so check for dupes
+        else
+        {
+            foreach (CellDecorator decorator in decorators)
+            {
+                if (!glyph.Decorators.Contains(decorator))
+                    glyph.Decorators.Add(decorator);
+            }
+        }
+
+        // No decorators left over, return the pool
         if (glyph.Decorators.Count == 0)
         {
             Pool.Return(glyph.Decorators);
@@ -87,7 +101,9 @@ public static class CellDecoratorHelpers
     public static void AddDecorator(CellDecorator decorator, ColoredGlyphBase glyph)
     {
         glyph.Decorators ??= Pool.Rent();
-        glyph.Decorators.Add(decorator);
+
+        if (!glyph.Decorators.Contains(decorator))
+            glyph.Decorators.Add(decorator);
     }
 
     /// <summary>
