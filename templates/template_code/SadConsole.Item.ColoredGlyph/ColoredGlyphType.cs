@@ -6,7 +6,7 @@ namespace SadConsole;
 /// <summary>
 /// Represents an individual piece of a <see cref="ICellSurface"/> containing a glyph, foreground color, background color, and a mirror effect.
 /// </summary>
-public class ColoredGlyphType : ColoredGlyphBase, IMatchable<ColoredGlyph>
+public class ColoredGlyphType : ColoredGlyphBase, IMatchable<ColoredGlyphType>
 {
     /// <summary>
     /// Creates a cell with a white foreground, black background, glyph 0, and no mirror effect.
@@ -56,7 +56,7 @@ public class ColoredGlyphType : ColoredGlyphBase, IMatchable<ColoredGlyph>
     /// <param name="background">Background color.</param>
     /// <param name="glyph">The glyph index.</param>
     /// <param name="mirror">The mirror effect.</param>
-    /// <param name="isVisible">The visiblity of the glyph.</param>
+    /// <param name="isVisible">The visibility of the glyph.</param>
     public ColoredGlyphType(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
     {
         Foreground = foreground;
@@ -73,7 +73,7 @@ public class ColoredGlyphType : ColoredGlyphBase, IMatchable<ColoredGlyph>
     /// <param name="background">Background color.</param>
     /// <param name="glyph">The glyph index.</param>
     /// <param name="mirror">The mirror effect.</param>
-    /// <param name="isVisible">The visiblity of the glyph.</param>
+    /// <param name="isVisible">The visibility of the glyph.</param>
     /// <param name="decorators">Decorators for the cell.</param>
     public ColoredGlyphType(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible, List<CellDecorator> decorators)
     {
@@ -107,11 +107,11 @@ public class ColoredGlyphType : ColoredGlyphBase, IMatchable<ColoredGlyph>
 
 
     /// <summary>
-    /// Checks if this <see cref="ColoredGlyph"/> object's properties match another's.
+    /// Checks if this <see cref="ColoredGlyphType"/> object's properties match another's.
     /// </summary>
     /// <param name="other">The other object to check.</param>
     /// <returns>Returns <see langword="true"/> when the object's properties match; otherwise <see langword="false"/>.</returns>
-    public bool Matches(ColoredGlyph? other)
+    public bool Matches(ColoredGlyphType? other)
     {
         return other != null &&
                Decorators.ItemsMatch(other.Decorators) &&
