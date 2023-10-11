@@ -52,14 +52,15 @@ SadConsole uses NuGet for its .NET dependencies:
 
 ```csharp
 using SadConsole;
+using SadConsole.Configuration;
 
 Settings.WindowTitle = "SadConsole Examples";
 
-Game.Configuration gameStartup = new Game.Configuration()
+Builder startup = new Builder()
     .SetScreenSize(90, 30)
     .OnStart(onStart)
-    .IsStartingScreenFocused(false)
-    .ConfigureFonts((f) => f.UseBuiltinFontExtended())
+    .IsStartingScreenFocused(true)
+    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
     ;
 
 Game.Create(gameStartup);
@@ -77,72 +78,5 @@ void onStart()
 }
 ```
 
-## Latest changes v10.0.0 Alpha 3 (XX/XX/2023)
+## Latest changes v10.0.0 Beta 1 (10/09/2023)
 
-Major changes (possibly breaking)
-
-- [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
-- [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
-- [Core] Themes have been removed. Each control draws itself.
-- [Core] `IScreenObject` no longer implements `IEnumerable` to access the children. Use the `.Children` collection property instead.
-- [Core] `Update` and `Render` no longer check for `IsEnabled` and `IsVisible`, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
-
-New features
-
-- [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
-- [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
-- [UI] New control, `TabControl`. Contributed by arxae.
-- [ExtendedLib.UI] New control, `Table`. Contributed by Ven0maus.
-
-Normal changes
-
-- Target .NET 6+ exclusively. Core library is nullable aware.
-- [Core] Splash screen printing wasn't being shown because of cursor changes.
-- [Core] `IFont` now defines glyph definitions.
-- [Core] Various `SadFont` properties and methods are now settable/callable.
-- [Core] Extensions methods added to hosts to allow manipulation of font textures.
-- [Core] `Settings.CreateStartingConsole` setting added to avoid creating the `StartingConsole`.
-- [Core] Cursor now has the property `DisablePrintAutomaticLineFeed` which, when true, prevents the cursor from moving to the next line if printing a character at the end of the current line.
-- [Core] `Ansi.AnsiWriter` handles sauce now by ignoring the rest of a document once character 26 (CTRL-Z) is encountered.
-- [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
-- [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
-- [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
-- [Core] `Entities.Renderer` renamed `Entities.EntityRenderer`.
-- [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a **single cell** entity or **animated surface** entity.
-- [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
-- [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
-- [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
-- [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
-- [Core] `Surface.RenderSteps` moved to the renderer.
-- [Core] `RenderSteps` is now a `List` and you must call `RenderSteps.Sort(SadConsole.Renderers.RenderStepComparer.Instance)` when the collection is changed.
-- [Core] `Instructions.DrawString` uses `System.TimeSpan` now, and is more accurate.
-- [Core] Effects have a `RunEffectOnApply` property that will run the `effect.Update` method once, with a duration of zero, when the effect is added to a manager.
-- [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
-- [Core] Surface shifting is much more performant (Thanks Chris3606)
-- [Core] `Cursor` has some new methods for erasing: `Erase`, `EraseUp`, `EraseDown`, `EraseLeft`, `EraseRight`, `EraseColumn`, `EraseRow`.
-- [Core] Mouse state object now tracks `*ButtonDownDuration` times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
-- [Core] Rename RexPaint `ToLayersComponent` to `ToCellSurface`.
-- [Core] Rework `Timer` with `Start/Stop/Restart` methods.
-- [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
-- [UI] Scroll bar supports a thickness other than 1.
-- [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
-- [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
-- [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
-- [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
-- [UI] `ProgressBar` is easier to customize.
-- [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
-- [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
-- [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
-
-Removed
-
-- [Core] `Algorithms.Line\Circle\Ellipse` have been removed. The latest primitives library provides these methods.
-- [Core] `Shapes` namespace removed. The latest primitives library release that SadConsole uses, provides these.
-
-### Host changes
-
-- [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
-- [MonoGame] Fix conversion of Mirror to SpriteEffects.
-- [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
-- [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
-- [MonoGame\SFML] New `Game.Configuration` object used for creating a SadConsole game.

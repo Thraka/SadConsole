@@ -1,19 +1,23 @@
-## v10.0.0 Alpha 5 (XX/XX/2023)
+## v10.0.0 Beta 1 (10/09/2023)
 
 Major changes (possibly breaking)
 
+- [Core] The default font's used the wrong name. It's been corrected from **IBM_16x8** to **IBM_8x16** and from **IBM_16x8_ext** to **IBM_8x16_ext**. If you've previously serialized a font with the wrong name, you'll need to change it in the json object. Or use the configuration extension `FixOldFontName()` which will add a name mapping.
 - [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
 - [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
 - [Core] Themes have been removed. Each control draws itself.
 - [Core] `IScreenObject` no longer implements `IEnumerable` to access the children. Use the `.Children` collection property instead.
 - [Core] `Update` and `Render` no longer check for `IsEnabled` and `IsVisible`, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
+- [Core] Decorators are no longer array's but rented from a list pool. Use the `CellDecoratorHelpers` class to manage them. SadConsole does its best to rent and return from the pool as you add or remove decorators.
+- [Core] The `OnStart` callback is now an event and not an `Action` delegate.
 
 New features
 
 - [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
-- [UI] New control, `NumberBox`. The `IsNumeric` system was removed from the `TextBox` and put into its own control.
-- [UI] New control, `TabControl`. Contributed by arxae.
-- [ExtendedLib.UI] New control, `Table`. Contributed by Ven0maus.
+- [Core] `StringParser` supports variables with the syntax of **$variable_name**. The parser has a dictionary that invokes a delegate which returns a value for the variable. So the value can be determined as the variable is used. See DemoStringParsing.cs in the sample template.
+- [Core] `EntityManager.AlternativeFont` added so entities can use a different font than the parent object.
+- [UI] New control, `TabControl`. Contributed by **arxae**.
+- [ExtendedLib.UI] New control, `Table`. Contributed by **Ven0maus**.
 
 Normal changes
 
@@ -44,16 +48,16 @@ Normal changes
 - [Core] Mouse state object now tracks `*ButtonDownDuration` times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
 - [Core] Rename RexPaint `ToLayersComponent` to `ToCellSurface`.
 - [Core] Rework `Timer` with `Start/Stop/Restart` methods.
-- [Core] If you load a font that's already been loaded, an exception is thrown. Previously the old font was replaced in the `GameHost.Fonts` dictionary.
+- [Core] If you load a font that's already been loaded, the existing instance is returned and the recently deserialized font is discarded. Previously the old font was replaced in the `GameHost.Fonts` dictionary.
 - [Core] `ColoredGlyph.Decorators` are Poolable Lists now and don't need to be messed with as arrays. Use `SadConsole.CellDecoratorHelpers` to manage the property.
 - [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
 - [UI] Scroll bar supports a thickness other than 1.
 - [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
-- [UI] `TextBox` rewritten. The `IsNumeric` system was removed and added to a new control: `NumberBox`. The `TextBox` no longer has an editing mode and simply starts editing as it's focused and stops editing once it loses focus.
 - [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
 - [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
 - [UI] `ProgressBar` is easier to customize.
 - [UI] `Colors.Name` property added.
+- [UI] `ListBox.ItemsArea` property added which the mouse now watches for so that it knows it's interacting with the list items specifically.
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 - [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
@@ -68,7 +72,7 @@ Removed
 - [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
 - [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
-- [MonoGame\SFML] New **SurfaceDirtyCells** renderer added which only draws cells that are marked dirty.
+- [MonoGame\SFML] New `SurfaceDirtyCells` renderer added which only draws cells that are marked dirty.
 - [MonoGame\SFML] New `SadConsole.Configuration.Builder` object used for creating a SadConsole game.
 
 ## v9.2.1 (01/04/2022)

@@ -4,14 +4,14 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>10.0.0-alpha4</Version>
+    <Version>10.0.0-beta1</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole Common Helpers</AssemblyTitle>
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
-    <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -30,7 +30,7 @@
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.0-alpha4</SadConsoleVersion>
+    <SadConsoleVersion>10.0.0-beta1</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
   

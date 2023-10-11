@@ -5,9 +5,7 @@ The built-in fonts incorrectly named themselves IBM_16x8, even though the glyphs
 corrected in SadConsole. If you deserialize an object and it can't find the IBM_16x8 font you have two solutions:
 
 - Edit the json and fix the font name.
-- TODO CODE: edit the default font .Name and remove/readd the font from the fonts collection. (I should add this as an config boot extension method in the extended lib)
-
-
+- Use the configuration `FixOldFontName()` option.
 
 Themes from v9
 ----------------------

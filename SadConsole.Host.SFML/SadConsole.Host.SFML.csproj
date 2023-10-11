@@ -4,14 +4,14 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>10.0.0-alpha4</Version>
+    <Version>10.0.0-beta1</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole SFML</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
-    <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -32,7 +32,7 @@
     <DefineConstants>$(DefineConstants);SFML</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.0-alpha4</SadConsoleVersion>
+    <SadConsoleVersion>10.0.0-beta1</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
 
