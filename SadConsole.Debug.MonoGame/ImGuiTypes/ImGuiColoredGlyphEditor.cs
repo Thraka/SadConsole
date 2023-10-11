@@ -23,13 +23,13 @@ internal class ImGuiColoredGlyphEditor
         Back = 4
     }
 
-    SadConsole.ColoredGlyph _glyph;
+    SadConsole.ColoredGlyphBase _glyph;
     ColoredGlyph _imGuiGlyph;
     Modes _mode;
 
     public Vector4 TextColor = Color.White.ToVector4();
 
-    public bool BuildUI(string id, ImGuiRenderer renderer, SadConsole.ColoredGlyph coloredGlyph, IFont font, Modes mode)
+    public bool BuildUI(string id, ImGuiRenderer renderer, SadConsole.ColoredGlyphBase coloredGlyph, IFont font, Modes mode)
     {
         bool changed = false;
 

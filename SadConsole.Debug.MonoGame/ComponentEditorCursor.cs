@@ -23,7 +23,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
     private bool _printAppearanceMatchesHost;
 
     private ImGuiColoredGlyphEditor _cursorAppearanceEditor;
-    private SadConsole.ColoredGlyph _cursorAppearance;
+    private SadConsole.ColoredGlyphBase _cursorAppearance;
 
     private int _positionX;
     private int _positionY;
@@ -44,7 +44,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
 
             // Copy the render state of the cursor
             _cursorAppearance = new ColoredGlyph();
-            _stateComponent.CursorRenderCell.RestoreState(ref _cursorAppearance);
+            _stateComponent.CursorRenderCell.CopyAppearanceTo(_cursorAppearance);
 
             // Position
             _positionX = _stateComponent.Position.X;
@@ -74,7 +74,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
             if (_cursorAppearanceEditor.BuildUI("comp_cur_edit_renderappearance", renderer, _cursorAppearance, ((IScreenSurface)_screenObject).Font, ImGuiColoredGlyphEditor.Modes.Glyph | ImGuiColoredGlyphEditor.Modes.Fore | ImGuiColoredGlyphEditor.Modes.Back))
             {
                 // was edited, apply it back to cursor
-                _stateComponent.CursorRenderCell = _cursorAppearance.ToState();
+                _stateComponent.CursorRenderCell.CopyAppearanceFrom(_cursorAppearance);
             }
             ImGui.Unindent();
 

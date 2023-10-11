@@ -9,7 +9,7 @@ public struct ColoredGlyph
     public Vector4 Background;
     public int Glyph;
 
-    public static implicit operator ColoredGlyph(SadConsole.ColoredGlyph cell) => new ColoredGlyph()
+    public static implicit operator ColoredGlyph(SadConsole.ColoredGlyphBase cell) => new ColoredGlyph()
     {
         Foreground = cell.Foreground.ToVector4(),
         Background = cell.Background.ToVector4(),

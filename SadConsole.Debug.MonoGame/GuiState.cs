@@ -126,7 +126,7 @@ namespace SadConsole.Debug.MonoGame
                 RenderStepsNames = Array.Empty<string>();
                 RenderSteps = Array.Empty<IRenderStepTexture>();
 
-                if (surface.RenderSteps.Count != 0)
+                if (surface.Renderer!.Steps.Count != 0)
                 {
                     List<string> names = new List<string>();
                     List<IRenderStepTexture> steps = new List<IRenderStepTexture>();
@@ -134,7 +134,7 @@ namespace SadConsole.Debug.MonoGame
                     names.Add("Final");
                     steps.Add(null);
 
-                    foreach (var step in surface.RenderSteps)
+                    foreach (var step in surface.Renderer!.Steps)
                     {
                         if (step is IRenderStepTexture stepTexture)
                         {
