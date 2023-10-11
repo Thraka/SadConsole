@@ -36,12 +36,6 @@ public sealed class Builder
     /// Runs each config object in the <see cref="Configs"/> collection with the specified game instance.
     /// </summary>
     /// <param name="game">The game being created.</param>
-    public void Run(Game game) =>
+    internal void Run(Game game) =>
         Configs.ForEach(config => config.Run(this, game));
-
-    /// <summary>
-    /// Creates the <see cref="Game"/> host object with this configuration object.
-    /// </summary>
-    public void Run() =>
-        Game.Create(this);
 }
