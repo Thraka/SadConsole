@@ -84,6 +84,11 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
     public bool SkipExistsChecks { get; set; } = false;
 
     /// <summary>
+    /// An alternative font to use when drawing the entities. If <see langword="null"/>, the hosting surface's font is used.
+    /// </summary>
+    public IFont? AlternativeFont { get; set; }
+
+    /// <summary>
     /// The number of entities in the renderer.
     /// </summary>
     public int Count => _entities.Count;

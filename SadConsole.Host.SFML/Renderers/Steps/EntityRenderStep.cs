@@ -74,6 +74,8 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
             ColoredGlyphBase cell;
             Rectangle renderRect;
 
+            IFont font = _entityManager.AlternativeFont ?? screenObject.Font;
+
             Entities.Entity item;
 
             for (int i = 0; i < _entityManager.EntitiesVisible.Count; i++)
@@ -90,7 +92,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                     cell = item.AppearanceSingle.Appearance;
                     cell.IsDirty = false;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, screenObject.Font);
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, font);
                 }
                 else
                 {
@@ -111,7 +113,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                             cell.IsDirty = false;
 
                             if (cell.IsVisible)
-                                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, screenObject.Font);
+                                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, font);
 
                             index++;
                         }

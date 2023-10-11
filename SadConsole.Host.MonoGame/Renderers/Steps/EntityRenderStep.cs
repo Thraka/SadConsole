@@ -75,8 +75,8 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
             Host.Global.GraphicsDevice.Clear(Color.Transparent);
             Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, ((IRendererMonoGame)renderer).MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
-            Texture2D fontImage = ((Host.GameTexture)screenObject.Font.Image).Texture;
-            IFont font = screenObject.Font;
+            IFont font = _entityManager.AlternativeFont ?? screenObject.Font;
+            Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
             ColoredGlyphBase cell;
             XnaRectangle renderRect;
 
