@@ -56,7 +56,7 @@ public class ColoredGlyph : ColoredGlyphBase, IMatchable<ColoredGlyph>
     /// <param name="background">Background color.</param>
     /// <param name="glyph">The glyph index.</param>
     /// <param name="mirror">The mirror effect.</param>
-    /// <param name="isVisible">The visiblity of the glyph.</param>
+    /// <param name="isVisible">The visibility of the glyph.</param>
     public ColoredGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible)
     {
         Foreground = foreground;
@@ -73,7 +73,7 @@ public class ColoredGlyph : ColoredGlyphBase, IMatchable<ColoredGlyph>
     /// <param name="background">Background color.</param>
     /// <param name="glyph">The glyph index.</param>
     /// <param name="mirror">The mirror effect.</param>
-    /// <param name="isVisible">The visiblity of the glyph.</param>
+    /// <param name="isVisible">The visibility of the glyph.</param>
     /// <param name="decorators">Decorators for the cell.</param>
     public ColoredGlyph(Color foreground, Color background, int glyph, Mirror mirror, bool isVisible, List<CellDecorator> decorators)
     {
