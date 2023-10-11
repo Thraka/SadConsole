@@ -20,7 +20,7 @@
         {
           "modifiers": [
             {
-              "copyOnly": [ "DemoRotated.MonoGame.cs", "DemoRotated.SFML.cs" ]
+              "copyOnly": [ "*.MonoGame.cs", "*.SFML.cs" ]
             }
           ]
         }

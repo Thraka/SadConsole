@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SadConsole.Host.SFML" Version="10.0.0" />
+    <PackageReference Include="SadConsole.Host.SFML" Version="10.0.0-beta2-debug" />
   </ItemGroup>
 
 </Project>
