@@ -51,26 +51,31 @@ SadConsole uses NuGet for its .NET dependencies:
 ## Example startup code
 
 ```csharp
+using Console = SadConsole.Console;
 using SadConsole;
 using SadConsole.Configuration;
+using SadRogue.Primitives;
 
 Settings.WindowTitle = "SadConsole Examples";
 
+// Configure how SadConsole starts up
 Builder startup = new Builder()
     .SetScreenSize(90, 30)
-    .OnStart(onStart)
+    .UseDefaultConsole()
+    .OnStart(Game_Started)
     .IsStartingScreenFocused(true)
     .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
     ;
 
-Game.Create(gameStartup);
+// Setup the engine and start the game
+Game.Create(startup);
 Game.Instance.Run();
 Game.Instance.Dispose();
 
-void onStart()
+void Game_Started(object? sender, GameHost host)
 {
-    ColoredGlyph boxBorder = new ColoredGlyph(Color.White, Color.Black, 178);
-    ColoredGlyph boxFill = new ColoredGlyph(Color.White, Color.Black);
+    ColoredGlyph boxBorder = new(Color.White, Color.Black, 178);
+    ColoredGlyph boxFill = new(Color.White, Color.Black);
 
     Game.Instance.StartingConsole.FillWithRandomGarbage(255);
     Game.Instance.StartingConsole.DrawBox(new Rectangle(2, 2, 26, 5), ShapeParameters.CreateFilled(boxBorder, boxFill));
@@ -78,5 +83,61 @@ void onStart()
 }
 ```
 
-## Latest changes v10.0.0 Beta 1 (10/09/2023)
+```vb
+Imports SadConsole
+Imports Console = SadConsole.Console
+Imports SadConsole.Configuration
+Imports SadRogue.Primitives
 
+Module Module1
+
+    Sub Main()
+
+        Dim startup As New Builder()
+
+        ' Configure how SadConsole starts up
+        startup.SetScreenSize(90, 30)
+        startup.UseDefaultConsole()
+        startup.OnStart(AddressOf Game_Started)
+        startup.IsStartingScreenFocused(True)
+        startup.ConfigureFonts(Sub(config As FontConfig, gameObject As Game)
+                                   config.UseBuiltinFontExtended()
+                               End Sub)
+
+        ' Setup the engine and start the game
+        SadConsole.Game.Create(startup)
+        SadConsole.Game.Instance.Run()
+        SadConsole.Game.Instance.Dispose()
+
+    End Sub
+
+    Sub Game_Started(sender As Object, host As GameHost)
+
+        Dim boxBorder = New ColoredGlyph(Color.White, Color.Black, 178)
+        Dim boxFill = New ColoredGlyph(Color.White, Color.Black)
+
+        Game.Instance.StartingConsole.FillWithRandomGarbage(255)
+        Game.Instance.StartingConsole.DrawBox(New Rectangle(2, 2, 26, 5), ShapeParameters.CreateFilled(boxBorder, boxFill))
+        Game.Instance.StartingConsole.Print(4, 4, "Welcome to SadConsole!")
+
+    End Sub
+
+End Module
+```
+
+## Latest changes v10.0.0 Beta 1 and 2 (10/11/2023)
+
+- OnStart startup config is no longer an Action but is now an event.
+- Startup config changed again from the last alpha. Types were renamed and rewritten to be extensible. It works the same way as before except that everything is in the SadConsole.Configuration namespace. You must import that namespace to enable the extension methods that build the config. The type to build the config is Builder.
+- Tabs orientated left/right didn't display the text properly.
+- ColoredGlyph was renamed to ColoredGlyphBase and a new ColoredGlyph that inherits from the base class was added.
+- Scrollbars didn't behave properly when in a CompositeControl.
+- ListBox mouse logic was improved to use an "ItemsArea" property that designates when the mouse is over the items list specifically.
+- StringParser supports variables. There's a dictionary that invokes a delegate which returns a value for the variable. So the value can be determined as the variable is used. See DemoStringParsing.cs in the sample template.
+- AnimatedScreenObject's weren't rendering correctly.
+- Decorators are no longer array's but rented from a list pool. Use the CellDecoratorHelpers class to manage them. SadConsole does its best to rent and return from the pool as you add or remove decorators.
+- Default font used the wrong name. It's been corrected from "IBM_16x8" to "IBM_8x16".
+- The ToggleSwitch control wasn't drawing properly.
+- NumberBox supports cultured number parsing.
+- CellDecorator, as a readonly struct, now declares the properties with "get; init;" which allows mutation with the the "with" keyword.
+- EntityManager.AlternativeFont added to support different fonts for entities.
