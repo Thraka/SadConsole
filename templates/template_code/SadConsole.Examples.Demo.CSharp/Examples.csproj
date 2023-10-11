@@ -18,21 +18,23 @@
   <PropertyGroup>
     <!-- Choose which game host you want to use, monogame or sfml. -->
     <GameHost>monogame</GameHost>
+    
+    <!-- Some constants for your game that can detect monogame or sfml. -->
+    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
     <UseProjectReferences>true</UseProjectReferences>
-
-    <!-- Some constants for your game that can detect monogame or sfml. -->
-    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
-    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(UseProjectReferences)' == 'true' ">$(DefineConstants);PROJREFS</DefineConstants>
   </PropertyGroup>
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha4-debug" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-alpha4-debug" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0-alpha4-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-beta1-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-beta1-debug" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.0-beta1-debug" />
+    <PackageReference Include="SadConsole" Version="10.0.0-beta1-debug" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
@@ -44,12 +46,7 @@
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
   </ItemGroup>
 
-  <!-- If you're using the project references, like when running from the git repo, this section contains those references. -->
-  <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
-    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
-  </ItemGroup>
+  <!-- Files related to compiling and running the demos. -->
   <ItemGroup>
     <None Update="Res\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -59,6 +56,19 @@
     <None Update="app.manifest">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <!--
+  The following settings are related to running from the SadConsole git repo and not
+  related to when you create the project through the template.
+  -->
+  <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    
+    <!-- MonoGame Debugging, only available when running from the git repo -->
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
   </ItemGroup>
 
 </Project>
