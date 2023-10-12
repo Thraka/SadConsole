@@ -9,9 +9,18 @@ class Keyboard : SadConsole.Input.IKeyboardState
     public Keyboard() =>
         Refresh();
 
+#if !FNA
     public bool CapsLock => _keyboard.CapsLock;
+#else
+    public bool CapsLock => false;
+#endif
 
+#if !FNA
     public bool NumLock => _keyboard.NumLock;
+#else
+    public bool NumLock => false;
+
+#endif
 
     public SadConsole.Input.Keys[] GetPressedKeys() =>
         _keyboard.GetPressedKeys().Cast<SadConsole.Input.Keys>().ToArray();

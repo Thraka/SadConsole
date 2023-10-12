@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0</TargetFrameworks>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
+    <DocumentationFile>SadConsole.Host.FNA.xml</DocumentationFile>
+    <Version>10.0.0-beta2</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole FNA</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
+    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SadConsole.Host.FNA</PackageId>
+    <PackageIcon>nugeticon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
+    <PackageTags>fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
+    <PackageReleaseNotes>...</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MONOGAME;FNA</DefineConstants>
+    <UseProjectReferences>true</UseProjectReferences>
+    <SadConsoleVersion>10.0.0-beta2</SadConsoleVersion>
+    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="FNA">
+      <HintPath>.\FNA\FNA.dll</HintPath>
+    </Reference>
+    <None Update=".\FNA\*\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+
+    <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.*;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Wpf.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Xaml\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

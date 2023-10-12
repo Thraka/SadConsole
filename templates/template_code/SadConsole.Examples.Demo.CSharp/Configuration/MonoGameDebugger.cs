@@ -12,7 +12,7 @@ internal static class MonoGameDebuggerExtensions
     {
         if (e.Keyboard.IsKeyPressed(Input.Keys.F12))
         {
-#if PROJREFS && MONOGAME
+#if PROJREFS && MONOGAME && !FNA
             SadConsole.Debug.MonoGame.Debugger.Start();
 #endif
         }

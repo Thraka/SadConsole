@@ -1244,11 +1244,6 @@
             </summary>
             <param name="game">The game being created.</param>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.Run">
-            <summary>
-            Creates the <see cref="T:SadConsole.Game"/> host object with this configuration object.
-            </summary>
-        </member>
         <member name="T:SadConsole.Configuration.Extensions">
             <summary>
             Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
@@ -1317,7 +1312,14 @@
             <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})" -->
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="fontLoader">A method that provides access to the <see cref="T:SadConsole.Configuration.FontConfig"/> object that loads fonts.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.FixOldFontName(SadConsole.Configuration.Builder)">
             <summary>
             Adds the embedded fonts to the font dictionary with the old incorrect name.
@@ -1463,6 +1465,256 @@
             </summary>
             <param name="target">The texture.</param>
             <param name="path">The path to a png file.</param>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoColorExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Color"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoColorExtensions.ToSadRogueColor(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Color"/> to <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoColorExtensions.Matches(Microsoft.Xna.Framework.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Color"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoPointExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Point"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.ToPoint(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Point"/> to <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Adds a <see cref="T:SadRogue.Primitives.Point"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Adds an integer to both the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Direction)">
+            <summary>
+            Adds a <see cref="T:SadRogue.Primitives.Direction"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="dir"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Subtracts a <see cref="T:SadRogue.Primitives.Point"/> from a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Subtracts an integer from both the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Direction)">
+            <summary>
+            Subtracts a <see cref="T:SadRogue.Primitives.Direction"/> from a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="dir"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Multiplies a <see cref="T:Microsoft.Xna.Framework.Point"/> by a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Multiplies the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by an integer.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,System.Double)">
+            <summary>
+            Multiplies the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by a double, then rounds the
+            values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="d"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Divide(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Divides a <see cref="T:Microsoft.Xna.Framework.Point"/> by a <see cref="T:SadRogue.Primitives.Point"/>, and
+            rounds the resulting X and Y values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Divide(Microsoft.Xna.Framework.Point,System.Double)">
+            <summary>
+            Divides the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by a double, then rounds the
+            values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="d"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Matches(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Point"/> to a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoRectangleExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Rectangle"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoRectangleExtensions.ToRectangle(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Rectangle"/> to <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoRectangleExtensions.Matches(Microsoft.Xna.Framework.Rectangle,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Rectangle"/> to a <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRogueColorExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Color"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueColorExtensions.ToMonoColor(SadRogue.Primitives.Color)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Color"/> to <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueColorExtensions.Matches(SadRogue.Primitives.Color,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRoguePointExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Point"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.ToMonoPoint(SadRogue.Primitives.Point)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Point"/> to <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Add(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Adds a <see cref="T:Microsoft.Xna.Framework.Point"/> to a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Subtract(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Subtracts a <see cref="T:Microsoft.Xna.Framework.Point"/> from a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Multiply(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Multiplies a <see cref="T:SadRogue.Primitives.Point"/> by a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Divide(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Divides a <see cref="T:SadRogue.Primitives.Point"/> by a <see cref="T:Microsoft.Xna.Framework.Point"/>, and
+            rounds the resulting X and Y values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Matches(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Point"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRogueRectangleExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Rectangle"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueRectangleExtensions.ToMonoRectangle(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Rectangle"/> to <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueRectangleExtensions.Matches(SadRogue.Primitives.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Rectangle"/> to a <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
         </member>
     </members>
 </doc>

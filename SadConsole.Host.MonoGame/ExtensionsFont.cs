@@ -5,6 +5,7 @@ using MonoColor = Microsoft.Xna.Framework.Color;
 using System.Collections.Generic;
 using SadRogue.Primitives;
 using Microsoft.Xna.Framework.Graphics;
+using SadConsole.Host;
 
 namespace SadConsole.FontEditing;
 
@@ -156,7 +157,7 @@ public static class ExtensionsFontHost
                 indexCounter++;
             }
         }
-
+        
         if (doSetPixels)
             font.Image.SetPixels(cachedFontTexturePixels);
     }

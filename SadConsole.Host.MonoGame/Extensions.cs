@@ -24,6 +24,12 @@ namespace SadConsole
 
             return result;
         }
+
+#if FNA
+        public static Microsoft.Xna.Framework.Vector2 ToVector2(this Microsoft.Xna.Framework.Point point) =>
+            new Microsoft.Xna.Framework.Vector2(point.X, point.Y);
+#endif
+
     }
 }
 

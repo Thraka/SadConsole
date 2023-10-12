@@ -50,8 +50,10 @@ public partial class Game : Microsoft.Xna.Framework.Game
         };
 
         Content.RootDirectory = "Content";
-        
+
+#if !FNA
         Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
+#endif
 
         CallbackConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();
         config?.MonoGameCtorCallback?.Invoke(this);
@@ -134,7 +136,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
         Window.ClientSizeChanged += Window_ClientSizeChanged;
         Window.AllowUserResizing = SadConsole.Settings.AllowWindowResize;
 
-        Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
+        Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice);
 
         // Invoke the monogame init callback
         CallbackConfig monoGameConfig = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();

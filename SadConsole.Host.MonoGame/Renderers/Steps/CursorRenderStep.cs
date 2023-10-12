@@ -1,6 +1,7 @@
 ﻿using System;
 using SadRogue.Primitives;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
+using XnaPoint = Microsoft.Xna.Framework.Point;
 
 namespace SadConsole.Renderers;
 
@@ -54,13 +55,14 @@ public class CursorRenderStep : IRenderStep
             {
                 if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
                 {
+                    XnaPoint position = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
+                                                                        cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
+                                                                        screenObject.FontSize).Translate(screenObject.AbsolutePosition).Position.ToMonoPoint();
+
                     GameHost.Instance.DrawCalls.Enqueue(
                         new DrawCalls.DrawCallGlyph(cursor.CursorRenderCellActiveState,
                                                     ((Host.GameTexture)screenObject.Font.Image).Texture,
-                                                    new XnaRectangle(screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
-                                                                                                cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
-                                                                                                screenObject.FontSize).Translate(screenObject.AbsolutePosition).Position.ToMonoPoint(),
-                                                                        screenObject.FontSize.ToMonoPoint()),
+                                                    new XnaRectangle(position.X, position.Y, screenObject.FontSize.X, screenObject.FontSize.Y),
                                                     screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCellActiveState.Glyph).ToMonoRectangle(),
                                                     screenObject.Font.SolidGlyphRectangle.ToMonoRectangle()
                                                     )
