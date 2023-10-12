@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ClassicBasic.Interpreter;
 using ClassicBasic.Interpreter.Exceptions;
 using SadConsole;
+using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Primitives;
 
@@ -236,5 +237,12 @@ namespace BasicTerminal
 
         public short Position() =>
             (short)(_console.Cursor.Position.X + 1);
+
+        public void ClearScreen()
+        {
+            _console.Clear();
+            _console.Cursor.Position = Point.Zero;
+        }
+            
     }
 }

@@ -1,55 +1,55 @@
-﻿using System;
-using SadConsole;
-using SadConsole.Input;
-using SadRogue.Primitives;
-using Console = SadConsole.Console;
+﻿using BasicTerminal;
+using ClassicBasic.Interpreter;
+using SadConsole.Configuration;
 
-namespace BasicTerminal
+Settings.WindowTitle = "SadConsole Examples";
+
+Builder startup = new Builder()
+    .SetScreenSize(80, 25)
+    .SetStartingScreen(game => {
+
+        Console console = new(80, 25);
+        console.Cursor.IsVisible = true;
+        console.Cursor.IsEnabled = true;
+        console.Cursor.SortOrder = 1;
+
+        ConsoleBASICInterpreter interpreter = new ConsoleBASICInterpreter();
+        interpreter.BASICTokensProvider.Tokens.Add(new ClearScreen(interpreter));
+        console.SadComponents.Add(interpreter);
+
+        console.SortComponents();
+
+        return console;
+    })
+    .IsStartingScreenFocused(true)
+    .ConfigureFonts((config, game) => config.UseBuiltinFont())
+    .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
+    ;
+
+Game.Create(startup);
+Game.Instance.Run();
+Game.Instance.Dispose();
+
+class ClearScreen : Token, ICommand
 {
-    internal class Program
+    private readonly ConsoleBASICInterpreter _teleTypeInterpreter;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Clear"/> class.
+    /// </summary>
+    /// <param name="runEnvironment">Run time environment.</param>
+    /// <param name="variableRepository">Variable Repository.</param>
+    /// <param name="dataStatementReader">Data statement reader.</param>
+    public ClearScreen(ConsoleBASICInterpreter teleTypeInterpreter) : base("CLR", TokenClass.Statement)
     {
-        public static ClassicBasic.Interpreter.Interpreter Interpreter;
-        public static ClassicBasic.Interpreter.Executor Executor;
+        _teleTypeInterpreter = teleTypeInterpreter;
+    }
 
-        private static void Main(string[] args)
-        {
-            //SadConsole.Settings.UnlimitedFPS = true;
-            //SadConsole.Settings.UseDefaultExtendedFont = true;
-
-            SadConsole.Game.Create(80, 25, Init);
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
-        }
-        
-        /// <summary>
-        /// <c>test</c>
-        /// </summary>
-        private static void Init()
-        {
-            //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
-
-            //GameHost.Instance.Screen.Renderer = null;
-            //Teletype keyboardComponent = new Teletype();
-
-            //var runtimeEnv = new ClassicBasic.Interpreter.RunEnvironment();
-            //var programRep = new ClassicBasic.Interpreter.ProgramRepository();
-            //var tokensProvider = new new ClassicBasic.Interpreter.TokensProvider(new ClassicBasic.Interpreter.IToken[] { });
-            //var tokenizer = new ClassicBasic.Interpreter.Tokeniser(tokensProvider);
-
-            //Executor = new ClassicBasic.Interpreter.Executor(keyboardComponent, runtimeEnv, programRep, tokensProvider, tokenizer);
-
-
-            //Interpreter = new ClassicBasic.Interpreter.Interpreter(keyboardComponent, tokenizer, runtimeEnv, programRep, Executor);
-            GameHost.Instance.Screen.SadComponents.Add(new ConsoleBASICInterpreter());
-            ((Console)GameHost.Instance.Screen).Cursor.IsVisible = true;
-            ((Console)GameHost.Instance.Screen).Cursor.IsEnabled = true;
-            ((Console)GameHost.Instance.Screen).IsFocused = true;
-
-            // Move the cursor's processing to AFTER our basic processor
-            ((Console)GameHost.Instance.Screen).Cursor.SortOrder = 1;
-            ((Console)GameHost.Instance.Screen).SortComponents();
-
-            
-        }
+    /// <summary>
+    /// Executes the CLEAR command.
+    /// </summary>
+    public void Execute()
+    {
+        _teleTypeInterpreter.ClearScreen();
     }
 }
