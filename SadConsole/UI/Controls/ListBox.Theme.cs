@@ -14,7 +14,7 @@ public partial class ListBox
     protected bool _reconfigureSrollBar;
 
     /// <summary>
-    /// The drawing theme for the boarder when <see cref="DrawBorder"/> is true.
+    /// The drawing theme for the border when <see cref="DrawBorder"/> is true.
     /// </summary>
     public ThemeStates BorderTheme { get; protected set; } = new ThemeStates();
 
