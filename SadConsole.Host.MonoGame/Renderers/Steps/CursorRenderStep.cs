@@ -61,10 +61,9 @@ public class CursorRenderStep : IRenderStep
 
                     GameHost.Instance.DrawCalls.Enqueue(
                         new DrawCalls.DrawCallGlyph(cursor.CursorRenderCellActiveState,
-                                                    ((Host.GameTexture)screenObject.Font.Image).Texture,
                                                     new XnaRectangle(position.X, position.Y, screenObject.FontSize.X, screenObject.FontSize.Y),
-                                                    screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCellActiveState.Glyph).ToMonoRectangle(),
-                                                    screenObject.Font.SolidGlyphRectangle.ToMonoRectangle()
+                                                    screenObject.Font,
+                                                    true
                                                     )
                         );
                 }
