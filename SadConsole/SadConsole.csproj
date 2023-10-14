@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>10.0.0-beta2</Version>
+    <Version>10.0.0-beta3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>

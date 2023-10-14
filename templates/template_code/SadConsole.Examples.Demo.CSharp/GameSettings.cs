@@ -21,6 +21,7 @@ static class GameSettings
 
     public static IDemo[] Demos =
         {
+            new DemoFontManipulation(),
             new DemoAcii(),
             new DemoAnimations(),
             new DemoCustomCellsRenderer(),

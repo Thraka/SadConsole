@@ -22,6 +22,7 @@
     <!-- Some constants for your game that can detect monogame or sfml. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
 
     <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
     <!-- Most likely you always want this false. -->
@@ -31,10 +32,10 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-beta2-debug" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-beta2-debug" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0-beta2-debug" />
-    <PackageReference Include="SadConsole" Version="10.0.0-beta2-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0-beta3-debug" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0-beta3-debug" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.0-beta3-debug" />
+    <PackageReference Include="SadConsole" Version="10.0.0-beta3-debug" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
@@ -65,10 +66,15 @@
   <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
     <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
     <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
     
     <!-- MonoGame Debugging, only available when running from the git repo -->
     <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+
+    <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
+      <HintPath>..\..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

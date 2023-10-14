@@ -6,7 +6,7 @@ Builder gameStartup = new Builder()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
     .SetStartingScreen<SadConsoleGame.Scenes.RootScreen>()
     .IsStartingScreenFocused(false)
-    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
+    .ConfigureFonts(true)
     ;
 
 Game.Create(gameStartup);

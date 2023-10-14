@@ -37,8 +37,8 @@ Builder startup = new Builder()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
     .SetStartingScreen<RootScreen>()
     .IsStartingScreenFocused(false) // Dont want RootScreen to be focused because RootScreen automatically focuses the selected demo console
-    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
-    .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
+    .ConfigureFonts(true)
+    //.SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
     .KeyhookMonoGameDebugger()
     ;
 

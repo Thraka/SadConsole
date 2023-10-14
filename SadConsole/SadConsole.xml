@@ -1014,7 +1014,7 @@
             <param name="background">Background color.</param>
             <param name="glyph">The glyph index.</param>
             <param name="mirror">The mirror effect.</param>
-            <param name="isVisible">The visiblity of the glyph.</param>
+            <param name="isVisible">The visibility of the glyph.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32,SadConsole.Mirror,System.Boolean,System.Collections.Generic.List{SadConsole.CellDecorator})">
             <summary>
@@ -1024,7 +1024,7 @@
             <param name="background">Background color.</param>
             <param name="glyph">The glyph index.</param>
             <param name="mirror">The mirror effect.</param>
-            <param name="isVisible">The visiblity of the glyph.</param>
+            <param name="isVisible">The visibility of the glyph.</param>
             <param name="decorators">Decorators for the cell.</param>
         </member>
         <member name="M:SadConsole.ColoredGlyph.Clear">
@@ -12293,7 +12293,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ListBox.BorderTheme">
             <summary>
-            The drawing theme for the boarder when <see cref="P:SadConsole.UI.Controls.ListBox.DrawBorder"/> is true.
+            The drawing theme for the border when <see cref="P:SadConsole.UI.Controls.ListBox.DrawBorder"/> is true.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.ListBox.BorderLineStyle">

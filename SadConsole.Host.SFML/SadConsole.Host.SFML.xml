@@ -78,43 +78,6 @@
             <param name="host">The host of the component.</param>
             <param name="delta">Unused.</param>
         </member>
-        <member name="T:SadConsole.DrawCalls.DrawCallCell">
-            <summary>
-            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
-            </summary>
-        </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.Font">
-            <summary>
-            The font to use when drawing the glyph.
-            </summary>
-        </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.Cell">
-            <summary>
-            The glyph to be drawn.
-            </summary>
-        </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.TargetRect">
-            <summary>
-            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
-            </summary>
-        </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.DrawBackground">
-            <summary>
-            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
-            <summary>
-            
-            </summary>
-            <param name="cell">The glyph to be drawn.</param>
-            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
-            <param name="font">The font to use when drawing the glyph.</param>
-            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
-        </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallCell.Draw">
-            <inheritdoc/>
-        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallColor">
             <summary>
             Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
@@ -150,6 +113,43 @@
             <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallGlyph">
+            <summary>
+            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Font">
+            <summary>
+            The font to use when drawing the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.DrawBackground">
+            <summary>
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="cell">The glyph to be drawn.</param>
+            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
+            <param name="font">The font to use when drawing the glyph.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallTexture">
@@ -205,7 +205,7 @@
         </member>
         <member name="P:SadConsole.Game.Instance">
             <summary>
-            Static instance to the game after the <see cref="!:Create()"/> method has been called.
+            Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Game.#ctor">
@@ -1008,11 +1008,6 @@
             </summary>
             <param name="game">The game being created.</param>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.Run">
-            <summary>
-            Creates the <see cref="T:SadConsole.Game"/> host object with this configuration object.
-            </summary>
-        </member>
         <member name="T:SadConsole.Configuration.Extensions">
             <summary>
             Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
@@ -1065,7 +1060,31 @@
             <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})" -->
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="fontLoader">A method that provides access to the <see cref="T:SadConsole.Configuration.FontConfig"/> object that loads fonts.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.String,System.String[])">
+            <summary>
+            Configures SadConsole to use the specified font file as the default font.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="customDefaultFont">Creates the font config for SadConsole using this font file as the default.</param>
+            <param name="extraFonts">Extra fonts to load into SadConsole.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Configures SadConsole to use the built in default fonts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="useExtendedDefault">When <see langword="true"/>, SadConsole sets the default font to <see cref="P:SadConsole.GameHost.EmbeddedFontExtended"/>; otherwise <see cref="P:SadConsole.GameHost.EmbeddedFont"/> is used.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.FixOldFontName(SadConsole.Configuration.Builder)">
             <summary>
             Adds the embedded fonts to the font dictionary with the old incorrect name.
@@ -1128,6 +1147,11 @@
             <param name="width">The cell count along the x-axis.</param>
             <param name="height">The cell count along the y-axis.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.FontConfig">
+            <summary>
+            The config settings for loading the default fonts when the game starts.
+            </summary>
         </member>
         <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
             <summary>

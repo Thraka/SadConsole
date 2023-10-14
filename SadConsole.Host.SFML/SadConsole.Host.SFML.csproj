@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>10.0.0-beta2</Version>
+    <Version>10.0.0-beta3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -32,7 +32,7 @@
     <DefineConstants>$(DefineConstants);SFML</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.0-beta2</SadConsoleVersion>
+    <SadConsoleVersion>10.0.0-beta3</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
 
