@@ -18,7 +18,7 @@ namespace ThemeEditor
 
         public Container()
         {
-            EditingColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
+            EditingColors = SadConsole.UI.Colors.Default;
             //EditingColors = SadConsole.UI.Colors.CreateSadConsoleBlue();
 
             OptionsPanel = new ControlsConsole(6, 2);

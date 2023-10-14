@@ -3,23 +3,24 @@ using SadConsole.UI;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
-namespace ThemeEditor
+namespace ThemeEditor.Windows
 {
-    class SelectPaletteColor: Window
+    class SelectPaletteColorPopup : Window
     {
         ListBox colorItemsListBox;
 
         public Colors.ColorNames SelectedColor { get; private set; }
 
-        public SelectPaletteColor(Colors.ColorNames color): base(19, 20)
+        public SelectPaletteColorPopup(Colors.ColorNames color) : base(19, 20)
         {
             //Border.AddToWindow(this);
             Title = "Select color";
             CloseOnEscKey = true;
             CanDrag = false;
 
-            colorItemsListBox = new ListBox(Width - 2, Height - 4, new SadConsole.UI.Themes.ListBoxItemColorTheme());
+            colorItemsListBox = new ListBox(Width - 2, Height - 4);
             colorItemsListBox.Position = (1, 1);
+            colorItemsListBox.ItemTheme = new ListBoxItemColorTheme();
             Controls.Add(colorItemsListBox);
 
             colorItemsListBox.Items.Add((Container.EditingColors.White, "White"));
@@ -77,14 +78,12 @@ namespace ThemeEditor
         private void SelectColor(Color color)
         {
             foreach ((Color itemColor, string title) item in colorItemsListBox.Items)
-            {
                 if (item.itemColor == color)
                 {
                     colorItemsListBox.SelectedItem = item;
                     colorItemsListBox.ScrollToSelectedItem();
                     return;
                 }
-            }
         }
 
         protected override void DrawBorder()

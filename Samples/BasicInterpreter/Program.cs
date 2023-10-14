@@ -22,7 +22,7 @@ Builder startup = new Builder()
         return console;
     })
     .IsStartingScreenFocused(true)
-    .ConfigureFonts((config, game) => config.UseBuiltinFont())
+    .ConfigureFonts()
     .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
     ;
 
