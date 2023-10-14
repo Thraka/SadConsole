@@ -44,7 +44,7 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// Strongly typed version of <see cref="GameHost.Instance"/>.
     /// </summary>
-    public new static Game Instance
+    public static new Game Instance
     {
         get => (Game)GameHost.Instance;
         set => GameHost.Instance = value;
@@ -70,7 +70,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                .ConfigureFonts()
                 );
 
     /// <summary>
@@ -84,7 +84,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                .ConfigureFonts()
                 .OnStart(gameStarted)
                 );
 
@@ -100,7 +100,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseCustomFont(font))
+                .ConfigureFonts(font)
                 .OnStart(gameStarted)
                 );
 
@@ -141,7 +141,7 @@ public sealed partial class Game : GameHost
 
         // Configure the fonts
         FontConfig fontConfig = _configuration.Configs.OfType<FontConfig>().FirstOrDefault()
-            ?? throw new Exception($"Configuration object must have a {nameof(FontConfig)} configurator added to it.");
+            ?? new FontConfig();
 
         _configuration.Configs.Remove(fontConfig);
         fontConfig.Run(_configuration, this);

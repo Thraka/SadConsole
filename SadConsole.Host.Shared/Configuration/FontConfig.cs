@@ -10,13 +10,52 @@ public static partial class Extensions
     /// Configures which default font to use during game startup, as well as which other fonts to load for the game.
     /// </summary>
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
-    /// <param name="fontLoader">A method that provides access to the <see cref="FontConfig"/> object that loads fonts.
+    /// <param name="fontLoader">A method that provides access to the <see cref="FontConfig"/> object that loads fonts.</param>
     /// <returns>The configuration builder.</returns>
     public static Builder ConfigureFonts(this Builder configBuilder, Action<FontConfig, Game> fontLoader)
     {
         FontConfig config = configBuilder.GetOrCreateConfig<FontConfig>();
 
         config.FontLoader = fontLoader;
+
+        return configBuilder;
+    }
+
+    /// <summary>
+    /// Configures SadConsole to use the specified font file as the default font.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <param name="customDefaultFont">Creates the font config for SadConsole using this font file as the default.</param>
+    /// <param name="extraFonts">Extra fonts to load into SadConsole.</param>
+    /// <returns>The configuration builder.</returns>
+    public static Builder ConfigureFonts(this Builder configBuilder, string customDefaultFont, string[]? extraFonts = null)
+    {
+        FontConfig config = configBuilder.GetOrCreateConfig<FontConfig>();
+
+        if (extraFonts != null)
+            config.AddExtraFonts(extraFonts);
+        else
+            config.CustomFonts = Array.Empty<string>();
+
+        config.UseCustomFont(customDefaultFont);
+
+        return configBuilder;
+    }
+
+    /// <summary>
+    /// Configures SadConsole to use the built in default fonts.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <param name="useExtendedDefault">When <see langword="true"/>, SadConsole sets the default font to <see cref="GameHost.EmbeddedFontExtended"/>; otherwise <see cref="GameHost.EmbeddedFont"/> is used.</param>
+    /// <returns>The configuration builder.</returns>
+    public static Builder ConfigureFonts(this Builder configBuilder, bool useExtendedDefault = false)
+    {
+        FontConfig config = configBuilder.GetOrCreateConfig<FontConfig>();
+
+        if (useExtendedDefault)
+            config.UseBuiltinFontExtended();
+        else
+            config.UseBuiltinFont();
 
         return configBuilder;
     }
@@ -50,13 +89,16 @@ internal class OldFontNameConfig : IConfigurator
     }
 }
 
+/// <summary>
+/// The config settings for loading the default fonts when the game starts.
+/// </summary>
 public class FontConfig : IConfigurator
 {
-    internal Action<FontConfig, Game> FontLoader { get; set; }
+    internal Action<FontConfig, Game>? FontLoader { get; set; }
 
     internal string[] CustomFonts = Array.Empty<string>();
-    internal string? AlternativeDefaultFont;
-    internal bool UseExtendedFont;
+    internal string? AlternativeDefaultFont = null;
+    internal bool UseExtendedFont = false;
 
     /// <summary>
     /// Sets the default font to the SadConsole standard font, an IBM 8x16 font.
@@ -88,7 +130,7 @@ public class FontConfig : IConfigurator
     /// </summary>
     /// <param name="fontFiles">An array of font files to load.</param>
     public void AddExtraFonts(params string[] fontFiles) =>
-        CustomFonts = fontFiles;
+        CustomFonts = (string[])fontFiles.Clone();
 
     /// <summary>
     /// Invokes the <see cref="FontLoader"/> delegate.
@@ -97,7 +139,7 @@ public class FontConfig : IConfigurator
     /// <param name="game">The game being created.</param>
     public void Run(Builder config, Game game)
     {
-        FontLoader(this, game);
+        FontLoader?.Invoke(this, game);
         Settings.UseDefaultExtendedFont = UseExtendedFont;
     }
 }

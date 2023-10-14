@@ -30,12 +30,12 @@ public sealed partial class Game : GameHost
     private Mouse _mouse;
 
     /// <summary>
-    /// Static instance to the game after the <see cref="Create()"/> method has been called.
+    /// Strongly typed version of <see cref="GameHost.Instance"/>.
     /// </summary>
-    public new static Game Instance
+    public static new Game Instance
     {
         get => (Game)GameHost.Instance;
-        private set => GameHost.Instance = value;
+        set => GameHost.Instance = value;
     }
 
     internal string _font;
@@ -43,7 +43,9 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// Creates the game instance.
     /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private Game() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary>
     /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
@@ -55,7 +57,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                .ConfigureFonts()
                 );
 
     /// <summary>
@@ -69,7 +71,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseBuiltinFont())
+                .ConfigureFonts()
                 .OnStart(gameStarted)
                 );
 
@@ -85,7 +87,7 @@ public sealed partial class Game : GameHost
                 .SetScreenSize(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
-                .ConfigureFonts((loader, game) => loader.UseCustomFont(font))
+                .ConfigureFonts(font)
                 .OnStart(gameStarted)
                 );
 
@@ -115,7 +117,7 @@ public sealed partial class Game : GameHost
 
         // Configure the fonts
         FontConfig fontConfig = _configuration.Configs.OfType<FontConfig>().FirstOrDefault()
-            ?? throw new Exception($"Configuration object must have a {nameof(FontConfig)} configurator added to it.");
+            ?? new FontConfig();
 
         _configuration.Configs.Remove(fontConfig);
         fontConfig.Run(_configuration, this);
@@ -142,7 +144,7 @@ public sealed partial class Game : GameHost
 
         Global.GraphicsDevice.Closed += (o, e) =>
         {
-            ((SFML.Window.Window)o).Close();
+            ((SFML.Window.Window)o!).Close();
         };
 
         Global.GraphicsDevice.Resized += (o, e) =>
