@@ -1,4 +1,6 @@
-﻿namespace SadConsole;
+﻿using SadRogue.Primitives;
+
+namespace SadConsole;
 
 /// <summary>
 /// Defines the parameters for generating a shape with a border and fill glyphs.
@@ -84,4 +86,10 @@ public class ShapeParameters
                                                                 bool ignoreBorderForeground = false, bool ignoreBorderBackground = false, bool ignoreBorderGlyph = false, bool ignoreBorderMirror = true,
                                                                 bool ignoreFillForeground = false, bool ignoreFillBackground = false, bool ignoreFillGlyph = false, bool ignoreFillMirror = false) =>
         new ShapeParameters(true, null, ignoreBorderForeground, ignoreBorderBackground, ignoreBorderGlyph, ignoreBorderMirror, true, fillStyle, ignoreFillForeground, ignoreFillBackground, ignoreFillGlyph, ignoreFillMirror, null, borderGlyphs);
+
+    public static ShapeParameters CreateStyledBoxThin(Color foreground) =>
+        new ShapeParameters(true, new ColoredGlyph(foreground), false, true, false, false, false, null, false, false, false, false, ICellSurface.ConnectedLineThin, null);
+
+    public static ShapeParameters CreateStyledBoxThick(Color foreground) =>
+        new ShapeParameters(true, new ColoredGlyph(foreground), false, true, false, false, false, null, false, false, false, false, ICellSurface.ConnectedLineThick, null);
 }
