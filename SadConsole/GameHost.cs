@@ -24,6 +24,9 @@ namespace SadConsole;
 /// </remarks>
 public abstract partial class GameHost : IDisposable
 {
+    private GlobalState? _state;
+    private IFont _defaultFont; //TODO: Create a better prescriptive guidance on creating a gamehost that initializes everything correctly.
+
     /// <summary>
     /// Holds all of the <see cref="IRenderer"/> types.
     /// </summary>
@@ -88,6 +91,88 @@ public abstract partial class GameHost : IDisposable
     /// A frame number counter, incremented every game frame.
     /// </summary>
     public int FrameNumber { get; set; }
+
+    /// <summary>
+    /// The date and time the game was started.
+    /// </summary>
+    protected DateTime _gameStartedAt = DateTime.Now;
+
+    /// <summary>
+    /// Collection of fonts. Used mainly by the deserialization system.
+    /// </summary>
+    public Dictionary<string, IFont> Fonts { get; } = new Dictionary<string, IFont>();
+
+    /// <summary>
+    /// The font automatically loaded by SadConsole. Standard IBM style font.
+    /// </summary>
+    public SadFont EmbeddedFont { get; internal set; } = null!;
+
+    /// <summary>
+    /// The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
+    /// </summary>
+    public SadFont EmbeddedFontExtended { get; internal set; } = null!;
+
+    /// <summary>
+    /// The default font for any type that does not provide a font.
+    /// </summary>
+    public IFont DefaultFont
+    {
+        get => _defaultFont;
+        set
+        {
+            _defaultFont = value ?? throw new NullReferenceException("The default font can't be set to a null value.");
+        }
+    }
+
+    /// <summary>
+    /// The default font size to use with the <see cref="DefaultFont"/>.
+    /// </summary>
+    public IFont.Sizes DefaultFontSize { get; set; } = IFont.Sizes.One;
+
+    /// <summary>
+    /// Global keyboard object used by SadConsole during the update frame.
+    /// </summary>
+    public Input.Keyboard Keyboard { get; } = new Input.Keyboard();
+
+    /// <summary>
+    /// Global mouse object used by SadConsole during the update frame.
+    /// </summary>
+    public Input.Mouse Mouse { get; } = new Input.Mouse();
+
+    /// <summary>
+    /// The elapsed time between now and the last update call.
+    /// </summary>
+    public TimeSpan UpdateFrameDelta { get; set; }
+
+    /// <summary>
+    /// The elapsed time between now and the last draw call.
+    /// </summary>
+    public TimeSpan DrawFrameDelta { get; set; }
+
+    /// <summary>
+    /// The total time the game has been running.
+    /// </summary>
+    public TimeSpan GameRunningTotalTime => DateTime.Now - _gameStartedAt;
+
+    /// <summary>
+    /// The console created by the game and automatically assigned to <see cref="Screen"/>.
+    /// </summary>
+    public Console? StartingConsole { get; protected set; }
+
+    /// <summary>
+    /// The active screen processed by the game.
+    /// </summary>
+    public IScreenObject? Screen { get; set; }
+
+    /// <summary>
+    /// The stack of focused consoles used by the mouse and keyboard.
+    /// </summary>
+    public FocusedScreenObjectStack FocusedScreenObjects { get; set; } = new FocusedScreenObjectStack();
+
+    /// <summary>
+    /// A global random number generator.
+    /// </summary>
+    public Random Random { get; set; } = new Random();
 
     /// <summary>
     /// Raises the <see cref="Started"/> event.
@@ -368,6 +453,45 @@ public abstract partial class GameHost : IDisposable
         }
     }
 
+    /// <summary>
+    /// Resizes the window to the specified dimensions.
+    /// </summary>
+    /// <param name="width">The width of the window in pixels.</param>
+    /// <param name="height">The height of the window in pixels.</param>
+    public abstract void ResizeWindow(int width, int height);
+
+    /// <summary>
+    /// Resizes the window to the specified cell count along the X-axis and Y-axis.
+    /// </summary>
+    /// <param name="cellsX">The number of cells to fit horizontally.</param>
+    /// <param name="cellsY">The number of cells to fit vertically.</param>
+    /// <param name="cellSize">The size of the cells in pixels.</param>
+    public void ResizeWindow(int cellsX, int cellsY, Point cellSize) =>
+        ResizeWindow(cellsX * cellSize.X, cellsY * cellSize.Y);
+
+    /// <summary>
+    /// Saves the global state, mainly the <see cref="FocusedScreenObjects"/> and <see cref="Screen"/> objects.
+    /// </summary>
+    public void SaveGlobalState()
+    {
+        _state = new GlobalState(FocusedScreenObjects, Screen, DefaultFont, DefaultFontSize);
+    }
+
+    /// <summary>
+    /// Restores the global state that was saved with <see cref="SaveGlobalState"/>.
+    /// </summary>
+    public void RestoreGlobalState()
+    {
+        if (_state == null) return;
+
+        FocusedScreenObjects = _state.FocusedScreenObjects;
+        Screen = _state.Screen;
+        DefaultFont = _state.DefaultFont;
+        DefaultFontSize = _state.DefaultFontSize;
+
+        _state = null;
+    }
+
     #region IDisposable Support
     private bool _disposedValue = false; // To detect redundant calls
 
@@ -412,4 +536,20 @@ public abstract partial class GameHost : IDisposable
         // GC.SuppressFinalize(this);
     }
     #endregion
+
+    private class GlobalState
+    {
+        public FocusedScreenObjectStack FocusedScreenObjects;
+        public IScreenObject? Screen;
+        public IFont DefaultFont;
+        public IFont.Sizes DefaultFontSize;
+
+        public GlobalState(FocusedScreenObjectStack focusedScreenObjects, IScreenObject? screen, IFont defaultFont, IFont.Sizes defaultFontSize)
+        {
+            FocusedScreenObjects = focusedScreenObjects;
+            Screen = screen;
+            DefaultFont = defaultFont;
+            DefaultFontSize = defaultFontSize;
+        }
+    }
 }
