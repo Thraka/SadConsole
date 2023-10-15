@@ -15,6 +15,7 @@ namespace SadConsole.Components
         private bool _isAnimating;
         private readonly TimeSpan _defaultTime = new TimeSpan(0, 0, 0, 0, 200);
         private bool _isEntity;
+        private bool _isEnabled = true;
 
         /// <summary>
         /// <see langword="true"/> when this component currently is animating the movement of the host object; otherwise <see langword="false"/>.
@@ -35,6 +36,22 @@ namespace SadConsole.Components
         /// The size of the parent object's font.
         /// </summary>
         public Point FontSize { get; set; } = Point.None;
+
+        /// <summary>
+        /// <see langword="false"/> to pause this component and prevent it from animating movement; otherwise <see langword="true"/> to enable animating movement.
+        /// </summary>
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (value == _isEnabled) return;
+                if (_isAnimating)
+                    throw new InvalidOperationException("Can't change enabled while the component is animating movement.");
+
+                _isEnabled = value;
+            }
+        }
 
         /// <summary>
         /// The easing function applied to smoothing the objects movement.
@@ -116,7 +133,7 @@ namespace SadConsole.Components
 
         private void Host_PositionChanged(object sender, ValueChangedEventArgs<Point> e)
         {
-            if (_isAnimating || e.OldValue == e.NewValue)
+            if (!_isEnabled || _isAnimating || e.OldValue == e.NewValue)
                 return;
 
             _isAnimating = true;
@@ -167,7 +184,7 @@ namespace SadConsole.Components
             {
                 _animatedValueX.Update(null, delta);
                 _animatedValueY.Update(null, delta);
-                Point newPosition = new Point((int)_animatedValueX.Value, (int)_animatedValueY.Value);
+                Point newPosition = ((int)_animatedValueX.Value, (int)_animatedValueY.Value);
                 host.Position = newPosition;
 
                 if (_animatedValueX.IsFinished && _animatedValueY.IsFinished)

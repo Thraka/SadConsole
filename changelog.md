@@ -61,6 +61,7 @@ Normal changes
 - [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 - [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
+- [ExtendedLib] Added `SmoothMove.IsEnabled` to disable the component and prevent animation.
 
 Removed
 
