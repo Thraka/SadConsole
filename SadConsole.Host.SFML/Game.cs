@@ -192,7 +192,8 @@ public sealed partial class Game : GameHost
         SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered, typeof(Renderers.LayeredSurfaceRenderStep));
 
         // Load the mapped colors
-        LoadMappedColors();
+        if (Settings.AutomaticAddColorsToMappings)
+            LoadMappedColors();
 
         // Run all startup config objects, then destroy the config instance
         _configuration.Run(this);

@@ -177,7 +177,8 @@ public sealed partial class Game : GameHost
         SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered, typeof(Renderers.LayeredSurfaceRenderStep));
 
         // Load the mapped colors
-        LoadMappedColors();
+        if (Settings.AutomaticAddColorsToMappings)
+            LoadMappedColors();
 
         // Load special FPS visual
         FpsConfig? fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault();

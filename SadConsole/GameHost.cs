@@ -38,7 +38,7 @@ public abstract partial class GameHost : IDisposable
     protected Dictionary<string, System.Type> _rendererSteps = new(5);
 
     /// <summary>
-    /// The splashs screens to show on game startup.
+    /// The splash screens to show on game startup.
     /// </summary>
     protected internal Queue<IScreenSurface> _splashScreens { get; set; } = new Queue<IScreenSurface>();
 
@@ -324,8 +324,8 @@ public abstract partial class GameHost : IDisposable
                 throw new JsonSerializationException("Unable to load font. You either have a malformed json file, or you're missing the $type declaration as the first entry of the json content:\n \"$type\": \"SadConsole.SadFont, SadConsole\",", j);
             }
             
-            if (Fonts.ContainsKey(masterFont.Name))
-                return Fonts[masterFont.Name];
+            if (Fonts.TryGetValue(masterFont.Name, out IFont? value))
+                return value;
 
             Fonts.Add(masterFont.Name, masterFont);
 
@@ -442,15 +442,12 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Uses reflection to examine the <see cref="Color"/> type and add any predefined colors into <see cref="ColorExtensions2.ColorMappings"/>.
     /// </summary>
-    protected void LoadMappedColors()
+    protected static void LoadMappedColors()
     {
-        if (Settings.AutomaticAddColorsToMappings)
-        {
-            //ColorExtensions.ColorMappings.Add
-            Type colorType = typeof(Color);
-            foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
-                ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null)!);
-        }
+        //ColorExtensions.ColorMappings.Add
+        Type colorType = typeof(Color);
+        foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
+            ColorExtensions2.ColorMappings.Add(item.Name.ToLower(), (Color)item.GetValue(null)!);
     }
 
     /// <summary>
@@ -520,20 +517,16 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// Disposes this object.
     /// </summary>
-    ~GameHost()
-    {
+    ~GameHost() =>
         Dispose(false);
-    }
 
     /// <summary>
     /// Disposes this object.
     /// </summary>
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
         Dispose(true);
-        // TODO: uncomment the following line if the finalizer is overridden above.
-        // GC.SuppressFinalize(this);
+        GC.SuppressFinalize(this);
     }
     #endregion
 
