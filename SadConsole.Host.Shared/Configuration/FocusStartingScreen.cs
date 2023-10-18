@@ -5,7 +5,7 @@ namespace SadConsole.Configuration;
 public static partial class Extensions
 {
     /// <summary>
-    /// Sets the 
+    /// Either focuses or unfocuses the starting screen.
     /// </summary>
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="value">Indicates whether or not <see cref="GameHost.Screen"/> is focused.</param>
