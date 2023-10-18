@@ -158,22 +158,22 @@ public sealed partial class Game : GameHost
             if (Host.Settings.FPS > 0)
                 Global.GraphicsDevice.SetFramerateLimit((uint)Host.Settings.FPS);
 
-        SadConsole.Host.Global.SharedSpriteBatch = new SpriteBatch();
+        Global.SharedSpriteBatch = new SpriteBatch();
 
         //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
 
         // Setup rendering sizes
-        SadConsole.Settings.Rendering.RenderWidth = (int)SadConsole.Host.Global.GraphicsDevice.Size.X;
-        SadConsole.Settings.Rendering.RenderHeight = (int)SadConsole.Host.Global.GraphicsDevice.Size.Y;
+        Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
+        Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
         ResetRendering();
 
         // Configure input
-        _keyboard = new Keyboard(SadConsole.Host.Global.GraphicsDevice);
-        _mouse = new Mouse(SadConsole.Host.Global.GraphicsDevice);
+        _keyboard = new Keyboard(Global.GraphicsDevice);
+        _mouse = new Mouse(Global.GraphicsDevice);
 
         // Create game loop timers
-        Host.Global.UpdateTimer = new SFML.System.Clock();
-        Host.Global.DrawTimer = new SFML.System.Clock();
+        Global.UpdateTimer = new SFML.System.Clock();
+        Global.DrawTimer = new SFML.System.Clock();
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
@@ -213,16 +213,16 @@ public sealed partial class Game : GameHost
         Keyboard.Update(TimeSpan.Zero);
         Mouse.Update(TimeSpan.Zero);
 
-        while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
+        while (Global.GraphicsDevice.IsOpen)
         {
             // Update game loop part
-            if (SadConsole.Settings.DoUpdate)
+            if (Settings.DoUpdate)
             {
-                UpdateFrameDelta = TimeSpan.FromSeconds(Host.Global.UpdateTimer.ElapsedTime.AsSeconds());
+                UpdateFrameDelta = TimeSpan.FromSeconds(Global.UpdateTimer.ElapsedTime.AsSeconds());
 
-                if (SadConsole.Host.Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
+                if (Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
                 {
-                    if (SadConsole.Settings.Input.DoKeyboard)
+                    if (Settings.Input.DoKeyboard)
                     {
                         Keyboard.Update(UpdateFrameDelta);
 
@@ -233,7 +233,7 @@ public sealed partial class Game : GameHost
 
                     }
 
-                    if (SadConsole.Settings.Input.DoMouse)
+                    if (Settings.Input.DoMouse)
                     {
                         Mouse.Update(UpdateFrameDelta);
                         Mouse.Process();
@@ -242,51 +242,51 @@ public sealed partial class Game : GameHost
 
                 Screen?.Update(UpdateFrameDelta);
                 
-                ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
+                ((SadConsole.Game)Instance).InvokeFrameUpdate();
 
-                Host.Global.UpdateTimer.Restart();
+                Global.UpdateTimer.Restart();
             }
 
             // Draw game loop part
-            if (SadConsole.Settings.DoDraw)
+            if (Settings.DoDraw)
             {
-                SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
+                Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
 
-                DrawFrameDelta = TimeSpan.FromSeconds(Host.Global.DrawTimer.ElapsedTime.AsSeconds());
+                DrawFrameDelta = TimeSpan.FromSeconds(Global.DrawTimer.ElapsedTime.AsSeconds());
 
                 // Clear draw calls for next run
-                SadConsole.Game.Instance.DrawCalls.Clear();
+                Instance.DrawCalls.Clear();
 
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
                 Screen?.Render(DrawFrameDelta);
 
-                ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
+                ((SadConsole.Game)Instance).InvokeFrameDraw();
 
                 // Render to the global output texture
-                Host.Global.RenderOutput.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
+                Global.RenderOutput.Clear(Settings.ClearColor.ToSFMLColor());
 
                 // Render each draw call
-                Host.Global.SharedSpriteBatch.Reset(Host.Global.RenderOutput, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity);
+                Global.SharedSpriteBatch.Reset(Global.RenderOutput, Host.Settings.SFMLScreenBlendMode, Transform.Identity);
 
-                foreach (DrawCalls.IDrawCall call in SadConsole.Game.Instance.DrawCalls)
+                foreach (DrawCalls.IDrawCall call in Instance.DrawCalls)
                     call.Draw();
 
-                Host.Global.SharedSpriteBatch.End();
-                Host.Global.RenderOutput.Display();
+                Global.SharedSpriteBatch.End();
+                Global.RenderOutput.Display();
 
                 // If we're going to draw to the screen, do it.
-                if (SadConsole.Settings.DoFinalDraw)
+                if (Settings.DoFinalDraw)
                 {
-                    Host.Global.SharedSpriteBatch.Reset(Host.Global.GraphicsDevice, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity, SadConsole.Host.Settings.SFMLScreenShader);
-                    Host.Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Host.Global.RenderOutput.Size.X, (int)Host.Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Host.Global.RenderOutput.Texture);
-                    Host.Global.SharedSpriteBatch.End();
+                    Global.SharedSpriteBatch.Reset(Global.GraphicsDevice, Host.Settings.SFMLScreenBlendMode, Transform.Identity, Host.Settings.SFMLScreenShader);
+                    Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
+                    Global.SharedSpriteBatch.End();
                 }
             }
 
-            SadConsole.Host.Global.GraphicsDevice.Display();
-            SadConsole.Host.Global.GraphicsDevice.DispatchEvents();
+            Global.GraphicsDevice.Display();
+            Global.GraphicsDevice.DispatchEvents();
 
-            Host.Global.DrawTimer.Restart();
+            Global.DrawTimer.Restart();
         }
 
         OnGameEnding();
@@ -332,39 +332,60 @@ public sealed partial class Game : GameHost
     }
 
     /// <inheritdoc/>
-    public override void ResizeWindow(int width, int height) =>
-        Host.Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
+    public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
+    {
+        Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
+
+        if (resizeOutputSurface)
+        {
+            Settings.Rendering.RenderWidth = width;
+            Settings.Rendering.RenderHeight = height;
+        }
+    }
+
+    /// <summary>
+    /// Regenerates the <see cref="Global.RenderOutput"/> if the desired size doesn't match the current size.
+    /// </summary>
+    /// <param name="width">The width of the render output.</param>
+    /// <param name="height">The height of the render output.</param>
+    private void RecreateRenderOutput(uint width, uint height)
+    {
+        if (Global.RenderOutput == null || Global.RenderOutput.Size.X != width || Global.RenderOutput.Size.Y != height)
+        {
+            Global.RenderOutput?.Dispose();
+            Global.RenderOutput = new RenderTexture(width, height);
+        }
+    }
 
     /// <summary>
     /// Resets the <see cref="Host.Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
     /// </summary>
     public void ResetRendering()
     {
-        Host.Global.RenderOutput?.Dispose();
-
-        if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
+        if (Settings.ResizeMode == Settings.WindowResizeOptions.Center)
         {
-            Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
 
-            SadConsole.Settings.Rendering.RenderRect = new Rectangle(
-                                                        ((int)Host.Global.GraphicsDevice.Size.X - SadConsole.Settings.Rendering.RenderWidth) / 2,
-                                                        ((int)Host.Global.GraphicsDevice.Size.Y - SadConsole.Settings.Rendering.RenderHeight) / 2,
-                                                        SadConsole.Settings.Rendering.RenderWidth,
-                                                        SadConsole.Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderRect = new Rectangle(
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - Settings.Rendering.RenderWidth) / 2),
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - Settings.Rendering.RenderHeight) / 2),
+                                                        Settings.Rendering.RenderWidth,
+                                                        Settings.Rendering.RenderHeight);
 
-            Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
 
-            SadConsole.Settings.Rendering.RenderScale = (1, 1);
+            Settings.Rendering.RenderScale = (1, 1);
         }
-        else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.Scale)
         {
-            Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+
             int multiple = 2;
 
             // Find the bounds
             while (true)
             {
-                if (SadConsole.Settings.Rendering.RenderWidth * multiple > Host.Global.GraphicsDevice.Size.X || SadConsole.Settings.Rendering.RenderHeight * multiple > Host.Global.GraphicsDevice.Size.Y)
+                if (Settings.Rendering.RenderWidth * multiple > Global.GraphicsDevice.Size.X || Settings.Rendering.RenderHeight * multiple > Global.GraphicsDevice.Size.Y)
                 {
                     multiple--;
                     break;
@@ -373,64 +394,66 @@ public sealed partial class Game : GameHost
                 multiple++;
             }
 
-            SadConsole.Settings.Rendering.RenderRect = new Rectangle(((int)Host.Global.GraphicsDevice.Size.X - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2,
-                                                                     ((int)Host.Global.GraphicsDevice.Size.Y - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
-                                                                     SadConsole.Settings.Rendering.RenderWidth * multiple,
-                                                                     SadConsole.Settings.Rendering.RenderHeight * multiple);
-            SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
+            Settings.Rendering.RenderRect = new Rectangle(
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - (Settings.Rendering.RenderWidth * multiple)) / 2),
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - (Settings.Rendering.RenderHeight * multiple)) / 2),
+                                                        Settings.Rendering.RenderWidth * multiple,
+                                                        Settings.Rendering.RenderHeight * multiple);
 
-            Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / ((float)Settings.Rendering.RenderWidth * multiple), Settings.Rendering.RenderHeight / (float)(Settings.Rendering.RenderHeight * multiple));
+
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
-        else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
         {
-            Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            float heightRatio = Host.Global.GraphicsDevice.Size.Y / (float)SadConsole.Settings.Rendering.RenderHeight;
-            float widthRatio = Host.Global.GraphicsDevice.Size.X / (float)SadConsole.Settings.Rendering.RenderWidth;
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
 
-            float fitHeight = SadConsole.Settings.Rendering.RenderHeight * widthRatio;
-            float fitWidth = SadConsole.Settings.Rendering.RenderWidth * heightRatio;
+            float heightRatio = Global.GraphicsDevice.Size.Y / (float)Settings.Rendering.RenderHeight;
+            float widthRatio = Global.GraphicsDevice.Size.X / (float)Settings.Rendering.RenderWidth;
 
-            if (fitHeight <= Host.Global.GraphicsDevice.Size.Y)
+            float fitHeight = Settings.Rendering.RenderHeight * widthRatio;
+            float fitWidth = Settings.Rendering.RenderWidth * heightRatio;
+
+            if (fitHeight <= Global.GraphicsDevice.Size.Y)
             {
                 // Render width = window width, pad top and bottom
 
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle(0,
-                                                                        (int)((Host.Global.GraphicsDevice.Size.Y - fitHeight) / 2),
-                                                                        (int)Host.Global.GraphicsDevice.Size.X,
-                                                                        (int)fitHeight);
+                Settings.Rendering.RenderRect = new Rectangle(0,
+                                                            Math.Max(0, (int)((Global.GraphicsDevice.Size.Y - fitHeight) / 2)),
+                                                            (int)Global.GraphicsDevice.Size.X,
+                                                            (int)fitHeight);
 
-                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / fitHeight);
             }
             else
             {
                 // Render height = window height, pad left and right
+                Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (int)((Global.GraphicsDevice.Size.X - fitWidth) / 2)),
+                                                                0,
+                                                                (int)fitWidth,
+                                                                (int)Global.GraphicsDevice.Size.Y);
 
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle((int)((Host.Global.GraphicsDevice.Size.X - fitWidth) / 2),
-                                                                         0,
-                                                                         (int)fitWidth,
-                                                                         (int)Host.Global.GraphicsDevice.Size.Y);
-
-                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / fitWidth, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
             }
 
-            Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
-        else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.None)
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
         {
-            SadConsole.Settings.Rendering.RenderWidth = (int)Host.Global.GraphicsDevice.Size.X;
-            SadConsole.Settings.Rendering.RenderHeight = (int)Host.Global.GraphicsDevice.Size.Y;
-            Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
-            SadConsole.Settings.Rendering.RenderScale = (1, 1);
-            Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+            Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
+            Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderRect = new Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderScale = (1, 1);
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
         else
         {
-            Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-            Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
-            var view = Host.Global.GraphicsDevice.GetView();
-            SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
-            SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            var view = Global.GraphicsDevice.GetView();
+            Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
+            Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
         }
     }
 

@@ -1,4 +1,11 @@
-﻿/*
+﻿#nullable enable
+namespace SadConsole.FontEditing;
+
+public static class ExtensionsFontHost
+{
+
+}
+/*
 #nullable enable
 
 using System;

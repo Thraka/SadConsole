@@ -72,6 +72,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
                     Global.GraphicsDeviceManager.PreferredBackBufferWidth = SadConsole.Settings.WindowMinimumSize.X;
                     Global.GraphicsDeviceManager.PreferredBackBufferHeight = SadConsole.Settings.WindowMinimumSize.Y;
                     Global.GraphicsDeviceManager.ApplyChanges();
+                    _resizeBusy = false;
                 }
             }
         }
@@ -165,7 +166,6 @@ public partial class Game : Microsoft.Xna.Framework.Game
         SadConsole.Settings.Rendering.RenderHeight = Global.GraphicsDeviceManager.PreferredBackBufferHeight;
 
         Global.GraphicsDeviceManager.ApplyChanges();
-        
     }
 
     /// <summary>
@@ -191,8 +191,8 @@ public partial class Game : Microsoft.Xna.Framework.Game
         {
             RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
             SadConsole.Settings.Rendering.RenderRect = new Rectangle(
-                                                        (GraphicsDevice.PresentationParameters.BackBufferWidth - SadConsole.Settings.Rendering.RenderWidth) / 2,
-                                                        (GraphicsDevice.PresentationParameters.BackBufferHeight - SadConsole.Settings.Rendering.RenderHeight) / 2,
+                                                        Math.Max(0, (GraphicsDevice.PresentationParameters.BackBufferWidth - SadConsole.Settings.Rendering.RenderWidth) / 2),
+                                                        Math.Max(0, (GraphicsDevice.PresentationParameters.BackBufferHeight - SadConsole.Settings.Rendering.RenderHeight) / 2),
                                                         SadConsole.Settings.Rendering.RenderWidth,
                                                         SadConsole.Settings.Rendering.RenderHeight).ToRectangle();
 
@@ -215,10 +215,11 @@ public partial class Game : Microsoft.Xna.Framework.Game
                 multiple++;
             }
 
-            SadConsole.Settings.Rendering.RenderRect = new Rectangle((GraphicsDevice.PresentationParameters.BackBufferWidth - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2,
-                                                                     (GraphicsDevice.PresentationParameters.BackBufferHeight - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
+            SadConsole.Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (GraphicsDevice.PresentationParameters.BackBufferWidth - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2),
+                                                                     Math.Max(0, (GraphicsDevice.PresentationParameters.BackBufferHeight - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2),
                                                                      SadConsole.Settings.Rendering.RenderWidth * multiple,
                                                                      SadConsole.Settings.Rendering.RenderHeight * multiple).ToRectangle();
+
             SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
         }
         else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
@@ -235,7 +236,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
                 // Render width = window width, pad top and bottom
 
                 SadConsole.Settings.Rendering.RenderRect = new Rectangle(0,
-                                                                        (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2),
+                                                                        Math.Max(0, (int)((GraphicsDevice.PresentationParameters.BackBufferHeight - fitHeight) / 2)),
                                                                         GraphicsDevice.PresentationParameters.BackBufferWidth,
                                                                         (int)fitHeight).ToRectangle();
 
@@ -245,7 +246,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
             {
                 // Render height = window height, pad left and right
 
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle((int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2),
+                SadConsole.Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (int)((GraphicsDevice.PresentationParameters.BackBufferWidth - fitWidth) / 2)),
                                                                          0,
                                                                          (int)fitWidth,
                                                                          GraphicsDevice.PresentationParameters.BackBufferHeight).ToRectangle();
@@ -261,7 +262,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
             SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();
             SadConsole.Settings.Rendering.RenderScale = (1, 1);
         }
-        else
+        else // Stretch
         {
             RecreateRenderOutput(SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
             SadConsole.Settings.Rendering.RenderRect = GraphicsDevice.Viewport.Bounds.ToRectangle();

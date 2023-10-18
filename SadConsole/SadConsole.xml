@@ -4004,9 +4004,6 @@
              - Configure the `Screen` to a new console with `ScreenCellsX` and `ScreenCellsY`.
              - Prior to running the game, run `SplashScreens.SplashScreenManager.CheckRun()`.
              </remarks>
-            <summary>
-            Represents the SadConsole game engine.
-            </summary>
         </member>
         <member name="F:SadConsole.GameHost._renderers">
             <summary>
@@ -4020,7 +4017,7 @@
         </member>
         <member name="P:SadConsole.GameHost._splashScreens">
             <summary>
-            The splashs screens to show on game startup.
+            The splash screens to show on game startup.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.Instance">
@@ -4071,6 +4068,81 @@
         <member name="P:SadConsole.GameHost.FrameNumber">
             <summary>
             A frame number counter, incremented every game frame.
+            </summary>
+        </member>
+        <member name="F:SadConsole.GameHost._gameStartedAt">
+            <summary>
+            The date and time the game was started.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.Fonts">
+            <summary>
+            Collection of fonts. Used mainly by the deserialization system.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.EmbeddedFont">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.EmbeddedFontExtended">
+            <summary>
+            The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.DefaultFont">
+            <summary>
+            The default font for any type that does not provide a font.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.DefaultFontSize">
+            <summary>
+            The default font size to use with the <see cref="P:SadConsole.GameHost.DefaultFont"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.Keyboard">
+            <summary>
+            Global keyboard object used by SadConsole during the update frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.Mouse">
+            <summary>
+            Global mouse object used by SadConsole during the update frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.UpdateFrameDelta">
+            <summary>
+            The elapsed time between now and the last update call.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.DrawFrameDelta">
+            <summary>
+            The elapsed time between now and the last draw call.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.GameRunningTotalTime">
+            <summary>
+            The total time the game has been running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.StartingConsole">
+            <summary>
+            The console created by the game and automatically assigned to <see cref="P:SadConsole.GameHost.Screen"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.Screen">
+            <summary>
+            The active screen processed by the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.FocusedScreenObjects">
+            <summary>
+            The stack of focused consoles used by the mouse and keyboard.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.Random">
+            <summary>
+            A global random number generator.
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.OnGameStarted">
@@ -4218,6 +4290,33 @@
             Uses reflection to examine the <see cref="T:SadRogue.Primitives.Color"/> type and add any predefined colors into <see cref="F:SadRogue.Primitives.ColorExtensions2.ColorMappings"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.GameHost.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the window to the specified dimensions.
+            </summary>
+            <param name="width">The width of the window in pixels.</param>
+            <param name="height">The height of the window in pixels.</param>
+            <param name="resizeOutputSurface">When <see langword="true"/> resizes the screen output surface along with the window. Defaults to <see langword="false"/></param>
+        </member>
+        <member name="M:SadConsole.GameHost.ResizeWindow(System.Int32,System.Int32,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Resizes the window to the specified cell count along the X-axis and Y-axis.
+            </summary>
+            <param name="cellsX">The number of cells to fit horizontally.</param>
+            <param name="cellsY">The number of cells to fit vertically.</param>
+            <param name="cellSize">The size of the cells in pixels.</param>
+            <param name="resizeOutputSurface">When <see langword="true"/> resizes the screen output surface along with the window. Defaults to <see langword="false"/></param>
+        </member>
+        <member name="M:SadConsole.GameHost.SaveGlobalState">
+            <summary>
+            Saves the global state, mainly the <see cref="P:SadConsole.GameHost.FocusedScreenObjects"/> and <see cref="P:SadConsole.GameHost.Screen"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.RestoreGlobalState">
+            <summary>
+            Restores the global state that was saved with <see cref="M:SadConsole.GameHost.SaveGlobalState"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.GameHost.Dispose(System.Boolean)">
             <inheritdoc/> 
         </member>
@@ -4229,106 +4328,6 @@
         <member name="M:SadConsole.GameHost.Dispose">
             <summary>
             Disposes this object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.GameHost._gameStartedAt">
-            <summary>
-            The date and time the game was started.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.Fonts">
-            <summary>
-            Collection of fonts. Used mainly by the deserialization system.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.EmbeddedFont">
-            <summary>
-            The font automatically loaded by SadConsole. Standard IBM style font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.EmbeddedFontExtended">
-            <summary>
-            The font automatically loaded by SadConsole. Standard IBM style font. Extended with extra SadConsole characters.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.DefaultFont">
-            <summary>
-            The default font for any type that does not provide a font.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.DefaultFontSize">
-            <summary>
-            The default font size to use with the <see cref="P:SadConsole.GameHost.DefaultFont"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.Keyboard">
-            <summary>
-            Global keyboard object used by SadConsole during the update frame.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.Mouse">
-            <summary>
-            Global mouse object used by SadConsole during the update frame.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.UpdateFrameDelta">
-            <summary>
-            The elapsed time between now and the last update call.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.DrawFrameDelta">
-            <summary>
-            The elapsed time between now and the last draw call.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.GameRunningTotalTime">
-            <summary>
-            The total time the game has been running.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.StartingConsole">
-            <summary>
-            The console created by the game and automatically assigned to <see cref="P:SadConsole.GameHost.Screen"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.Screen">
-            <summary>
-            The active screen processed by the game.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.FocusedScreenObjects">
-            <summary>
-            The stack of focused consoles used by the mouse and keyboard.
-            </summary>
-        </member>
-        <member name="P:SadConsole.GameHost.Random">
-            <summary>
-            A global random number generator.
-            </summary>
-        </member>
-        <member name="M:SadConsole.GameHost.ResizeWindow(System.Int32,System.Int32)">
-            <summary>
-            Resizes the window to the specified dimensions.
-            </summary>
-            <param name="width">The width of the window in pixels.</param>
-            <param name="height">The height of the window in pixels.</param>
-        </member>
-        <member name="M:SadConsole.GameHost.ResizeWindow(System.Int32,System.Int32,SadRogue.Primitives.Point)">
-            <summary>
-            Resizes the window to the specified cell count along the X-axis and Y-axis.
-            </summary>
-            <param name="cellsX">The number of cells to fit horizontally.</param>
-            <param name="cellsY">The number of cells to fit vertically.</param>
-            <param name="cellSize">The size of the cells in pixels.</param>
-        </member>
-        <member name="M:SadConsole.GameHost.SaveGlobalState">
-            <summary>
-            Saves the global state, mainly the <see cref="P:SadConsole.GameHost.FocusedScreenObjects"/> and <see cref="P:SadConsole.GameHost.Screen"/> objects.
-            </summary>
-        </member>
-        <member name="M:SadConsole.GameHost.RestoreGlobalState">
-            <summary>
-            Restores the global state that was saved with <see cref="M:SadConsole.GameHost.SaveGlobalState"/>.
             </summary>
         </member>
         <member name="T:SadConsole.GlyphDefinition">

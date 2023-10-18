@@ -455,7 +455,8 @@ public abstract partial class GameHost : IDisposable
     /// </summary>
     /// <param name="width">The width of the window in pixels.</param>
     /// <param name="height">The height of the window in pixels.</param>
-    public abstract void ResizeWindow(int width, int height);
+    /// <param name="resizeOutputSurface">When <see langword="true"/> resizes the screen output surface along with the window. Defaults to <see langword="false"/></param>
+    public abstract void ResizeWindow(int width, int height, bool resizeOutputSurface = false);
 
     /// <summary>
     /// Resizes the window to the specified cell count along the X-axis and Y-axis.
@@ -463,8 +464,9 @@ public abstract partial class GameHost : IDisposable
     /// <param name="cellsX">The number of cells to fit horizontally.</param>
     /// <param name="cellsY">The number of cells to fit vertically.</param>
     /// <param name="cellSize">The size of the cells in pixels.</param>
-    public void ResizeWindow(int cellsX, int cellsY, Point cellSize) =>
-        ResizeWindow(cellsX * cellSize.X, cellsY * cellSize.Y);
+    /// <param name="resizeOutputSurface">When <see langword="true"/> resizes the screen output surface along with the window. Defaults to <see langword="false"/></param>
+    public void ResizeWindow(int cellsX, int cellsY, Point cellSize, bool resizeOutputSurface = false) =>
+        ResizeWindow(cellsX * cellSize.X, cellsY * cellSize.Y, resizeOutputSurface);
 
     /// <summary>
     /// Saves the global state, mainly the <see cref="FocusedScreenObjects"/> and <see cref="Screen"/> objects.

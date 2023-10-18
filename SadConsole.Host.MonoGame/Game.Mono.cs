@@ -290,11 +290,17 @@ public sealed partial class Game : GameHost
     }
     
     /// <inheritdoc/>
-    public override void ResizeWindow(int width, int height)
+    public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
     {
         Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth = width;
         Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight = height;
         Host.Global.GraphicsDeviceManager.ApplyChanges();
+
+        if (resizeOutputSurface)
+        {
+            SadConsole.Settings.Rendering.RenderWidth = Host.Global.GraphicsDeviceManager.PreferredBackBufferWidth;
+            SadConsole.Settings.Rendering.RenderHeight = Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight;
+        }
 
         Instance.MonoGameInstance.ResetRendering();
     }
