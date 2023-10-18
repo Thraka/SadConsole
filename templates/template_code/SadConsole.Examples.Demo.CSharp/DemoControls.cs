@@ -173,6 +173,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
             Text = "Click",
             Position = new Point(1, 10),
         };
+        button.Click += (s, a) => Game.Instance.ResizeWindow(1800, 980, true);
         Controls.Add(button);
 
         var checkbox = new CheckBox(13, 1)

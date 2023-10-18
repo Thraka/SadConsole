@@ -64,7 +64,12 @@ internal class FontEditingScreen : ControlsConsole
         // Transform the top-left position we want to draw the blown up glyph to a pixel location
         glyphDrawPosition = new Point(sourceFontArea.MaxExtentX + 3, sourceFontArea.Y).SurfaceLocationToPixel(FontSize);
         _selectedGlyph = new(Color.Yellow, Color.Black, 1);
+
+#if MONOGAME
         glyphDrawCall = new DrawCallGlyph(_selectedGlyph, new Rectangle(0, 0, Font.GlyphWidth * 10, Font.GlyphHeight * 10).ToMonoRectangle(), Font, false);
+#elif SFML
+        glyphDrawCall = new DrawCallGlyph(_selectedGlyph, new Rectangle(0, 0, Font.GlyphWidth * 10, Font.GlyphHeight * 10).ToIntRect(), Font, false);
+#endif
 
         UI.Controls.ColorBar barR = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 9), StartingColor = Color.Black, EndingColor = new Color(255,0,0), SelectedColor = _selectedGlyph.Foreground.RedOnly() };
         UI.Controls.ColorBar barG = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 11), StartingColor = Color.Black, EndingColor = new Color(0, 255, 0), SelectedColor = _selectedGlyph.Foreground.GreenOnly() };
