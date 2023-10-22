@@ -36,8 +36,9 @@ public class ColorBar : ControlBase
         get => _startingColor;
         set
         {
-            // TODO: Starting/Ending/Width should rebuild the barcolorsteps and it should be removed from the theme: bar._colorSteps = bar.StartingColor.LerpSteps(bar.EndingColor, control.Width);
             _startingColor = value;
+            _colorSteps = _startingColor.LerpSteps(_endingColor, Width);
+            SetClosestIndex(value);
             IsDirty = true;
         }
     }
@@ -51,6 +52,8 @@ public class ColorBar : ControlBase
         set
         {
             _endingColor = value;
+            _colorSteps = _startingColor.LerpSteps(_endingColor, Width);
+            SetClosestIndex(value);
             IsDirty = true;
         }
     }
@@ -69,6 +72,7 @@ public class ColorBar : ControlBase
             {
                 _selectedColor = value;
 
+                _colorSteps = _startingColor.LerpSteps(_endingColor, Width);
                 ColorChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -105,16 +109,16 @@ public class ColorBar : ControlBase
 
     private void SetClosestIndex(Color color)
     {
-        ColorMine.ColorSpaces.Rgb rgbColorStop = new ColorMine.ColorSpaces.Rgb() { R = color.R, G = color.G, B = color.B };
+        ColorMine.ColorSpaces.Rgb rgbColorStop = new() { R = color.R, G = color.G, B = color.B };
         Tuple<Color, double, int>[] colorWeights = new Tuple<Color, double, int>[Width];
 
         // Create a color weight for every cell compared to the color stop
         for (int x = 0; x < Width; x++)
         {
-            ColorMine.ColorSpaces.Rgb rgbColor = new ColorMine.ColorSpaces.Rgb() { R = Surface[x, 0].Foreground.R, G = Surface[x, 0].Foreground.G, B = Surface[x, 0].Foreground.B };
+            ColorMine.ColorSpaces.Rgb rgbColor = new ColorMine.ColorSpaces.Rgb() { R = _colorSteps[x].R, G = _colorSteps[x].G, B = _colorSteps[x].B };
             ColorMine.ColorSpaces.Cmy cmyColor = rgbColor.To<ColorMine.ColorSpaces.Cmy>();
 
-            colorWeights[x] = new Tuple<Color, double, int>(Surface[x, 0].Foreground, rgbColorStop.Compare(cmyColor, new ColorMine.ColorSpaces.Comparisons.Cie1976Comparison()), x);
+            colorWeights[x] = new Tuple<Color, double, int>(_colorSteps[x], rgbColorStop.Compare(cmyColor, new ColorMine.ColorSpaces.Comparisons.Cie1976Comparison()), x);
         }
 
         Tuple<Color, double, int> foundColor = colorWeights.OrderBy(t => t.Item2).First();
@@ -176,7 +180,6 @@ public class ColorBar : ControlBase
         Surface.Fill(Color.White, Color.Black, 0, null);
 
         _positions = Width;
-        _colorSteps = StartingColor.LerpSteps(EndingColor, Width);
 
         for (int x = 0; x < Width; x++)
         {

@@ -193,6 +193,11 @@
             The size of the parent object's font.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.SmoothMove.IsEnabled">
+            <summary>
+            <see langword="false"/> to pause this component and prevent it from animating movement; otherwise <see langword="true"/> to enable animating movement.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.SmoothMove.TransitionEasingFunction">
             <summary>
             The easing function applied to smoothing the objects movement.
