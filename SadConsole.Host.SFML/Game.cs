@@ -215,10 +215,12 @@ public sealed partial class Game : GameHost
 
         while (Global.GraphicsDevice.IsOpen)
         {
+            UpdateFrameDelta = Global.UpdateTimer.ElapsedTime.ToTimeSpan();
+            Global.UpdateTimer.Restart();
+
             // Update game loop part
             if (Settings.DoUpdate)
             {
-                UpdateFrameDelta = TimeSpan.FromSeconds(Global.UpdateTimer.ElapsedTime.AsSeconds());
 
                 if (Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
                 {
@@ -243,16 +245,16 @@ public sealed partial class Game : GameHost
                 Screen?.Update(UpdateFrameDelta);
                 
                 ((SadConsole.Game)Instance).InvokeFrameUpdate();
-
-                Global.UpdateTimer.Restart();
             }
+
+            DrawFrameDelta = Global.DrawTimer.ElapsedTime.ToTimeSpan();
+            Global.DrawTimer.Restart();
 
             // Draw game loop part
             if (Settings.DoDraw)
             {
                 Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
 
-                DrawFrameDelta = TimeSpan.FromSeconds(Global.DrawTimer.ElapsedTime.AsSeconds());
 
                 // Clear draw calls for next run
                 Instance.DrawCalls.Clear();
@@ -285,8 +287,6 @@ public sealed partial class Game : GameHost
 
             Global.GraphicsDevice.Display();
             Global.GraphicsDevice.DispatchEvents();
-
-            Global.DrawTimer.Restart();
         }
 
         OnGameEnding();
