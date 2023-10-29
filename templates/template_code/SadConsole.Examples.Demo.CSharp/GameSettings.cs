@@ -21,15 +21,11 @@ static class GameSettings
 
     public static IDemo[] Demos =
         {
-            new DemoFontManipulation(),
-            new DemoAcii(),
-            new DemoAnimations(),
-            new DemoCustomCellsRenderer(),
+            new DemoAutoTyping(),
+            new DemoStringParsing(),
             new DemoControls(),
             new DemoControls2(),
             new DemoScrollableViews(),
-            new DemoAutoTyping(),
-            new DemoStringParsing(),
             new DemoMultipleCursors(),
             new DemoEntitySurface(),
             new DemoKeyboardHandlers(),
@@ -37,6 +33,10 @@ static class GameSettings
             new DemoSurfaceOpacity(),
             new DemoRotatedSurface(),
             new DemoLayeredSurface(),
-            new DemoScrollableConsole()
+            new DemoScrollableConsole(),
+            new DemoFontManipulation(),
+            new DemoAcii(),
+            new DemoAnimations(),
+            new DemoCustomCellsRenderer(),
         };
 }

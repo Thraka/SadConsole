@@ -17,7 +17,7 @@
 
   <PropertyGroup>
     <!-- Choose which game host you want to use, monogame or sfml. -->
-    <GameHost>sfml</GameHost>
+    <GameHost>monogame</GameHost>
     
     <!-- Some constants for your game that can detect monogame or sfml. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>

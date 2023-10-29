@@ -12,7 +12,7 @@ internal class DemoFontManipulation : IDemo
 {
     public string Title => "Font manipulation";
 
-    public string Description => "Something";
+    public string Description => "Demonstrates some of the code to edit fonts while the game is running.";
 
     public string CodeFile => "DemoFontManipulation.cs";
 
@@ -30,11 +30,6 @@ internal class FontEditingScreen : ControlsConsole
     DrawCallGlyph glyphDrawCall;
     ColoredGlyph _selectedGlyph;
     Point glyphDrawPosition;
-
-    ColoredGlyph _targetMouseGlyph;
-    Point _targetMousePosition;
-    bool _targetMousePositionInUse;
-    SadConsole.SadFont newFont;
 
     public FontEditingScreen() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
@@ -61,11 +56,7 @@ internal class FontEditingScreen : ControlsConsole
         glyphDrawPosition = new Point(sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 1).SurfaceLocationToPixel(FontSize);
         _selectedGlyph = new(Color.Yellow, Color.Black, 1);
 
-#if MONOGAME
         glyphDrawCall = new DrawCallGlyph(_selectedGlyph, new Rectangle(0, 0, Font.GlyphWidth * 10, Font.GlyphHeight * 10).ToMonoRectangle(), Font, false);
-#elif SFML
-        glyphDrawCall = new DrawCallGlyph(_selectedGlyph, new Rectangle(0, 0, Font.GlyphWidth * 10, Font.GlyphHeight * 10).ToIntRect(), Font, false);
-#endif
 
         UI.Controls.ColorBar barR = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 12), StartingColor = Color.Black, EndingColor = new Color(255,0,0), SelectedColor = _selectedGlyph.Foreground.RedOnly() };
         UI.Controls.ColorBar barG = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 14), StartingColor = Color.Black, EndingColor = new Color(0, 255, 0), SelectedColor = _selectedGlyph.Foreground.GreenOnly() };
@@ -84,6 +75,8 @@ internal class FontEditingScreen : ControlsConsole
         UI.Controls.CharacterPicker charPicker = new(Color.White, Color.Transparent, Color.Orange, (SadFont)Font, sourceFontArea.Width, 16);
         charPicker.Position = sourceFontArea.Position;
         charPicker.SelectedCharacterChanged += CharPicker_SelectedCharacterChanged;
+        charPicker.SelectedCharacter = _selectedGlyph.Glyph;
+        //charPicker.SelectedGlyphEffect
         Controls.Add(charPicker);
 
         GameTexture newFontTexture = new GameTexture(256, 256);
@@ -98,37 +91,42 @@ internal class FontEditingScreen : ControlsConsole
         UI.Controls.CharacterPicker charPicker2 = new(Color.White, Color.Transparent, Color.Orange, newFont, targetFontArea.Width, 16);
         charPicker2.Position = targetFontArea.Position;
         charPicker2.SelectedCharacterChanged += CharPicker2_SelectedCharacterChanged;
+        charPicker2.HighlightSelectedCharacter = false;
+        charPicker2.HighlightSelectedCharacterWithEffect = false;
         Controls.Add(charPicker2);
-
-        SadConsole.Imaging.FontEditor.Test();
     }
 
-    private void CharPicker_SelectedCharacterChanged(object? sender, ValueChangedEventArgs<int> e)
-    {
+    private void CharPicker_SelectedCharacterChanged(object? sender, ValueChangedEventArgs<int> e) =>
         _selectedGlyph.Glyph = e.NewValue;
-    }
 
     private void CharPicker2_SelectedCharacterChanged(object? sender, ValueChangedEventArgs<int> e)
     {
         UI.Controls.CharacterPicker picker = (UI.Controls.CharacterPicker)sender!;
-        //picker.AlternateFont!.Edit_EnableEditing();
-        //picker.AlternateFont!.Edit_CopyGlyph_GPU(Game.Instance.DefaultFont, _selectedGlyph.Glyph, e.NewValue, _selectedGlyph.Foreground.ToMonoColor());
-        //picker.AlternateFont!.Edit_DisableEditing();
 
-        Color[]? throwAway = null;
-
-        Color[] pixels = Game.Instance.DefaultFont.Edit_GetGlyph_CPU(_selectedGlyph.Glyph, ref throwAway!);
-
-        // Recolor
-        for (int i = 0; i < pixels.Length; i++)
+        // GPU Editing
         {
-            Color pixel = pixels[i];
-            if (pixel != Color.Transparent)
-                pixels[i] = _selectedGlyph.Foreground;
+            //picker.AlternateFont!.Edit_EnableEditing();
+            //picker.AlternateFont!.Edit_CopyGlyph_GPU(Game.Instance.DefaultFont, _selectedGlyph.Glyph, e.NewValue, _selectedGlyph.Foreground.ToMonoColor());
+            //picker.AlternateFont!.Edit_DisableEditing();
         }
 
-        throwAway = null;
-        picker.AlternateFont!.Edit_SetGlyph_CPU(e.NewValue, pixels, true, ref throwAway!);
+        // CPU editing
+        {
+            Color[]? throwAway = null;
+
+            Color[] pixels = Game.Instance.DefaultFont.Edit_GetGlyph_CPU(_selectedGlyph.Glyph, ref throwAway!);
+
+            // Recolor
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color pixel = pixels[i];
+                if (pixel != Color.Transparent)
+                    pixels[i] = _selectedGlyph.Foreground;
+            }
+
+            throwAway = null;
+            picker.AlternateFont!.Edit_SetGlyph_CPU(e.NewValue, pixels, true, ref throwAway!);
+        }
     }
 
     private void BarR_ColorChanged(object? sender, EventArgs e)

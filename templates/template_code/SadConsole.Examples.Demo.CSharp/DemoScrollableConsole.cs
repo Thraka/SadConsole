@@ -82,6 +82,14 @@ class ScrollableConsole : ControlsConsole
         Controls.Add(_scrollBar);
 
         Children.Add(MessageBuffer);
+
+        foreach (string line in System.IO.File.ReadLines("./Res/text.txt"))
+        {
+            if (line.Length == 0)
+                Cursor.NewLine();
+            else
+                Cursor.Print(line).NewLine();
+        }
     }
 
     public void Clear()
