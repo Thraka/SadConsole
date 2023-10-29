@@ -322,6 +322,14 @@
             <param name="width">The width of the texture in pixels.</param>
             <param name="height">The height of the texture in pixels.</param>
         </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32,SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a new game texture with the specified width, height, and pixels.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+            <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture,System.Boolean)">
             <summary>
             Wraps a texture. Doesn't dispose it when this object is disposed!
@@ -382,7 +390,7 @@
             <summary>
             Sets all pixels in the texture to the provided colors.
             </summary>
-            <param name="colors">The colors to set every pixel to.</param>
+            <param name="pixels">The colors to set every pixel to.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">

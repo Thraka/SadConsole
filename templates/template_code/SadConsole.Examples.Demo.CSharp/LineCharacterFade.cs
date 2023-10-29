@@ -9,7 +9,6 @@ partial class RootScreen
         private Effects.ICellEffect _effect;
 
         private ColoredString[] _lines;
-        private Cursor[] _lineCursors;
         private Instructions.DrawString[] _lineDrawers;
         private TimeSpan _totalTimeToPrint;
 
@@ -35,8 +34,17 @@ partial class RootScreen
         {
             base.Update(componentHost, delta);
 
-            foreach(var instruction in _lineDrawers) 
-                instruction?.Update(componentHost, delta);
+            IsFinished = true;
+
+            foreach (var instruction in _lineDrawers)
+            {
+                if (instruction != null)
+                {
+                    instruction.Update(componentHost, delta);
+
+                    IsFinished &= instruction.IsFinished;
+                }
+            }
         }
 
         public override void OnAdded(IScreenObject host)
@@ -45,7 +53,6 @@ partial class RootScreen
 
             _lines = new ColoredString[obj.Surface.Height];
             _lineDrawers = new Instructions.DrawString[obj.Surface.Height];
-            _lineCursors = new Cursor[obj.Surface.Height];
 
             for (int i = 0; i < _lines.Length; i++)
             {
@@ -74,7 +81,6 @@ partial class RootScreen
         {
             _lines = Array.Empty<ColoredString>();
             _lineDrawers = Array.Empty<Instructions.DrawString>();
-            _lineCursors = Array.Empty<Cursor>();
         }
     }
 }

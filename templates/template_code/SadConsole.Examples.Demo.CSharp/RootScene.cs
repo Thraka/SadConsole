@@ -51,8 +51,7 @@ partial class RootScreen : ScreenObject
         demo.PostCreateDemoScreen(demoSurface);
 
         // Remove old description component
-        LineCharacterFade? component = _demoDescriptionsScreen.GetSadComponent<LineCharacterFade>();
-        if (component != null)
+        while (_demoDescriptionsScreen.HasSadComponent<LineCharacterFade>(out LineCharacterFade? component))
             _demoDescriptionsScreen.SadComponents.Remove(component);
 
         // Clear the description window and rewrite it
