@@ -10,7 +10,7 @@
     "identity": "SadConsole.Project.SFML.CSharp",
     "groupIdentity":"SadConsole.Project.SFML",
     "name": "SadConsole Game (SFML)",
-    "shortName": "sadconsole-sfml",
+    "shortName": "sadconsole.sfml",
     "preferNameDirectory": true,
     "tags": {
         "language": "C#",
