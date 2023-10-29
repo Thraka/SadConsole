@@ -1025,7 +1025,7 @@ public static class CellSurfaceEditor
             stringValue.SetForeground(appearance.Foreground);
             stringValue.SetBackground(appearance.Background);
             stringValue.SetMirror(appearance.Mirror);
-            stringValue.SetDecorators(appearance.Decorators);
+            stringValue.SetDecorators(appearance.Decorators is not null ? appearance.Decorators : Array.Empty<CellDecorator>());
 
             PrintNoCheck(obj, index, stringValue);
         }
@@ -2010,6 +2010,8 @@ public static class CellSurfaceEditor
     {
         ColoredGlyphBase cell;
 
+        obj.Surface.Effects.RemoveAll();
+
         for (int i = 0; i < obj.Surface.Count; i++)
         {
             cell = obj.Surface[i];
@@ -2019,7 +2021,6 @@ public static class CellSurfaceEditor
             cell.Glyph = obj.Surface.DefaultGlyph;
         }
 
-        obj.Surface.Effects.RemoveAll();
         obj.Surface.IsDirty = true;
     }
 
@@ -2059,23 +2060,19 @@ public static class CellSurfaceEditor
         if (index < 0 || index >= obj.Surface.Count) return;
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
-        var result = new ColoredGlyphBase[end - index];
-        int resultIndex = 0;
-        ColoredGlyphBase cell;
 
-        for (; index < end; index++)
+        ColoredGlyphBase[] result = obj.Surface[index..end];
+
+        obj.Surface.Effects.SetEffect(result, null);
+
+        foreach(ColoredGlyphBase cell in result)
         {
-            cell = obj.Surface[index];
             cell.Clear();
             cell.Foreground = obj.Surface.DefaultForeground;
             cell.Background = obj.Surface.DefaultBackground;
             cell.Glyph = obj.Surface.DefaultGlyph;
-
-            result[resultIndex] = cell;
-            resultIndex++;
         }
 
-        obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
     }
 
@@ -2090,26 +2087,21 @@ public static class CellSurfaceEditor
 
         if (area == Rectangle.Empty) return;
 
-        var result = new ColoredGlyphBase[area.Width * area.Height];
-        int resultIndex = 0;
         ColoredGlyphBase cell;
-
+        
         for (int x = area.X; x < area.X + area.Width; x++)
         {
             for (int y = area.Y; y < area.Y + area.Height; y++)
             {
                 cell = obj.Surface[x, y];
+                obj.Surface.Effects.SetEffect(cell, null);
                 cell.Clear();
                 cell.Foreground = obj.Surface.DefaultForeground;
                 cell.Background = obj.Surface.DefaultBackground;
                 cell.Glyph = obj.Surface.DefaultGlyph;
-
-                result[resultIndex] = cell;
-                resultIndex++;
             }
         }
 
-        obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
     }
 
@@ -2120,21 +2112,18 @@ public static class CellSurfaceEditor
     /// <param name="cellPositions">The cells to clear.</param>
     public static void Clear(this ISurface obj, IEnumerable<Point> cellPositions)
     {
-        List<ColoredGlyphBase> result = new List<ColoredGlyphBase>(5);
         ColoredGlyphBase cell;
 
         foreach (Point position in cellPositions)
         {
             cell = obj.Surface[position.X, position.Y];
+            obj.Surface.Effects.SetEffect(cell, null);
             cell.Clear();
             cell.Foreground = obj.Surface.DefaultForeground;
             cell.Background = obj.Surface.DefaultBackground;
             cell.Glyph = obj.Surface.DefaultGlyph;
-
-            result.Add(cell);
         }
 
-        obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
     }
 
@@ -2160,6 +2149,8 @@ public static class CellSurfaceEditor
     {
         ColoredGlyphBase[] glyphs = new ColoredGlyphBase[obj.Surface.Count];
 
+        obj.Surface.Effects.RemoveAll();
+
         for (int i = 0; i < obj.Surface.Count; i++)
         {
             if (background.HasValue)
@@ -2179,7 +2170,6 @@ public static class CellSurfaceEditor
             glyphs[i] = obj.Surface[i];
         }
 
-        obj.Surface.Effects.RemoveAll();
         obj.Surface.IsDirty = true;
 
         return obj.Surface.GetCells(obj.Surface.Area).ToArray();
@@ -2203,11 +2193,12 @@ public static class CellSurfaceEditor
             return Array.Empty<ColoredGlyphBase>();
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
-        ColoredGlyphBase[] result = new ColoredGlyphBase[end - index];
-        int resultIndex = 0;
-        for (; index < end; index++)
+        ColoredGlyphBase[] result = obj.Surface[index..end];
+
+        obj.Surface.Effects.SetEffect(result, null);
+
+        foreach(ColoredGlyphBase c in result)
         {
-            ColoredGlyphBase c = obj.Surface[index];
             if (background.HasValue)
                 c.Background = background.Value;
 
@@ -2221,12 +2212,8 @@ public static class CellSurfaceEditor
                 c.Mirror = mirror.Value;
 
             c.Decorators = null;
-
-            result[resultIndex] = c;
-            resultIndex++;
         }
 
-        obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
         return result;
     }
@@ -2257,6 +2244,8 @@ public static class CellSurfaceEditor
             {
                 ColoredGlyphBase cell = obj.Surface[y * obj.Surface.Width + x];
 
+                obj.Surface.Effects.SetEffect(cell, null);
+
                 if (background.HasValue)
                     cell.Background = background.Value;
 
@@ -2276,7 +2265,6 @@ public static class CellSurfaceEditor
             }
         }
 
-        obj.Surface.Effects.SetEffect(result, null);
         obj.Surface.IsDirty = true;
         return result;
     }

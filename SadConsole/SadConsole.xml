@@ -891,6 +891,9 @@
         <member name="P:SadConsole.CellSurface.Item(SadRogue.Primitives.Point)">
             <inheritdoc />
         </member>
+        <member name="P:SadConsole.CellSurface.Item(System.Range)">
+            <inheritdoc />
+        </member>
         <member name="M:SadConsole.CellSurface.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
@@ -4526,6 +4529,13 @@
             <summary>
             Gets or sets the visible width of the surface in cells.
             </summary>
+        </member>
+        <member name="P:SadConsole.ICellSurface.Item(System.Range)">
+            <summary>
+            Given a position, returns the "value" associated with that location.
+            </summary>
+            <param name="range">The cells to return from the array.</param>
+            <returns>The cells associated with the specified range.</returns>
         </member>
         <member name="P:SadConsole.ICellSurface.ConnectedLineThin">
             <summary>

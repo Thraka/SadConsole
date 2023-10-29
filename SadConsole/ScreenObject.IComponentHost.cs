@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
 using SadConsole.Components;
-using SadConsole.Input;
-using SadRogue.Primitives;
 
 namespace SadConsole;
 
@@ -66,7 +61,7 @@ public partial class ScreenObject : IScreenObject
     }
 
     /// <inheritdoc/>
-    public bool HasSadComponent<TComponent>(out TComponent? component)
+    public bool HasSadComponent<TComponent>([NotNullWhen(true)] out TComponent? component)
         where TComponent : class, IComponent =>
 
         (component = GetSadComponent<TComponent>()) == null ? false : true;

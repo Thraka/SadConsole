@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SadConsole.Effects;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -333,9 +334,11 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
             var region = new Rectangle(regionX, regionY, regionWidth, regionHeight);
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(region);
             PrintSurfaceGlyphs(surface1, "After:");
@@ -343,7 +346,10 @@ namespace SadConsole.Tests
             ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
 
             foreach (var item in Rectangle.GetIntersection(region, new Rectangle(0, 0, surface1.Width, surface1.Height)).Positions())
+            {
                 Assert.IsTrue(defaultGlyph.Matches(surface1[item]));
+                Assert.IsNull(surface1.Effects.GetEffect(surface1[item]));
+            }
         }
 
         [TestMethod]
@@ -355,8 +361,10 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(clearX, clearY);
             PrintSurfaceGlyphs(surface1, "After:");
@@ -365,6 +373,7 @@ namespace SadConsole.Tests
             {
                 ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
                 Assert.IsTrue(defaultGlyph.Matches(surface1[clearX, clearY]));
+                Assert.IsNull(surface1.GetEffect(clearX, clearY));
             }
         }
 
@@ -377,8 +386,10 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(clearX, clearY, length);
             PrintSurfaceGlyphs(surface1, "After:");
@@ -390,7 +401,10 @@ namespace SadConsole.Tests
                 for (int i = 0; i < length; i++)
                 {
                     if (surface1.IsValidCell(startingIndex + i))
+                    {
                         Assert.IsTrue(defaultGlyph.Matches(surface1[startingIndex + i]));
+                        Assert.IsNull(surface1.GetEffect(startingIndex + i));
+                    }
                 }
             }
         }
@@ -400,8 +414,11 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(7, 10);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
+            Assert.IsTrue(surface1.Effects.Count != 0);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear();
             PrintSurfaceGlyphs(surface1, "After:");
@@ -409,6 +426,8 @@ namespace SadConsole.Tests
             ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
             for (int i = 0; i < surface1.Count; i++)
                 Assert.IsTrue(defaultGlyph.Matches(surface1[i]));
+
+            Assert.IsTrue(surface1.Effects.Count == 0);
         }
 
         public void Surface_Equals(ICellSurface surface1, ICellSurface surface2)
