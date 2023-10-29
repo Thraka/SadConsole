@@ -885,6 +885,16 @@
             Gets or sets the mirror effect to apply in the theme.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacter">
+            <summary>
+            When true, highlights the selected character with <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphForeground"/> when <see cref="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacterWithEffect"/> is false;
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacterWithEffect">
+            <summary>
+            When true, uses <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphEffect"/> to highlight the character.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphForeground">
             <summary>
             Gets the foreground color used when drawing the glyphs.
@@ -928,6 +938,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.CreateControlSurface">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ColorBar">

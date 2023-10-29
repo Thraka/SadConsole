@@ -10,7 +10,7 @@ public class CharacterPicker : SurfaceViewer
 {
     Mirror _mirrorSetting;
 
-    private Effects.Fade _selectedCharEffect;
+    private Effects.ICellEffect? _selectedCharEffect;
     private int _selectedChar;
     
     /// <summary>
@@ -47,6 +47,16 @@ public class CharacterPicker : SurfaceViewer
     }
 
     /// <summary>
+    /// When true, highlights the selected character with <see cref="SelectedGlyphForeground"/> when <see cref="HighlightSelectedCharacterWithEffect"/> is false;
+    /// </summary>
+    public bool HighlightSelectedCharacter { get; set; }
+
+    /// <summary>
+    /// When true, uses <see cref="SelectedGlyphEffect"/> to highlight the character.
+    /// </summary>
+    public bool HighlightSelectedCharacterWithEffect { get; set; }
+
+    /// <summary>
     /// Gets the foreground color used when drawing the glyphs.
     /// </summary>
     public Color GlyphForeground { get; private set; }
@@ -64,7 +74,16 @@ public class CharacterPicker : SurfaceViewer
     /// <summary>
     /// Gets the effect to apply when drawing the selected glyph.
     /// </summary>
-    public Effects.ICellEffect SelectedGlyphEffect => _selectedCharEffect;
+    public Effects.ICellEffect? SelectedGlyphEffect
+    {
+        get => _selectedCharEffect;
+        set
+        {
+            _selectedCharEffect = value;
+            RefreshSelectedGlyph();
+            IsDirty = true;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the selected glyph character.
@@ -85,9 +104,7 @@ public class CharacterPicker : SurfaceViewer
 
             SelectedCharacterChanged?.Invoke(this, new ValueChangedEventArgs<int>(old, value));
 
-            Surface.SetEffect(OldCharacterLocation.X, OldCharacterLocation.Y, null);
-            _selectedCharEffect.Restart();
-            Surface.SetEffect(NewCharacterLocation.X, NewCharacterLocation.Y, _selectedCharEffect);
+            RefreshSelectedGlyph();
             IsDirty = true;
         }
     }
@@ -111,6 +128,8 @@ public class CharacterPicker : SurfaceViewer
         SelectedGlyphForeground = selectedCharacterColor;
         GlyphForeground = foreground;
         GlyphBackground = fill;
+        HighlightSelectedCharacter = true;
+        HighlightSelectedCharacterWithEffect = true;
 
         //_characterSurface = new SadConsole.UI.Controls.DrawingSurface(16, 16);
         //_characterSurface.DefaultBackground = fill;
@@ -134,6 +153,8 @@ public class CharacterPicker : SurfaceViewer
 
         for (int i = 0; i < Surface.Count; i++)
             Surface[i].Glyph = i;
+
+        RefreshSelectedGlyph();
     }
 
     /// <inheritdoc/>
@@ -169,5 +190,36 @@ public class CharacterPicker : SurfaceViewer
         
         surface.Clear();
         return surface;
+    }
+
+    private void RefreshSelectedGlyph()
+    {
+        if (_selectedCharEffect == null)
+        {
+            Surface.Effects.RemoveAll();
+
+            Surface.Fill(GlyphForeground, GlyphBackground);
+
+            if (HighlightSelectedCharacter)
+                Surface[_selectedChar].Foreground = SelectedGlyphForeground;
+                
+        }
+        else if (HighlightSelectedCharacterWithEffect)
+        {
+            Surface.Effects.RemoveAll();
+            Surface.SetEffect(_selectedChar, _selectedCharEffect);
+
+            _selectedCharEffect.Restart();
+        }
+
+
+    }
+
+    /// <inheritdoc/>
+    public override void UpdateAndRedraw(TimeSpan time)
+    {
+        Surface.Effects.UpdateEffects(time);
+
+        base.UpdateAndRedraw(time);
     }
 }
