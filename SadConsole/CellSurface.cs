@@ -181,6 +181,12 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         protected set { Cells[position.ToIndex(Width)] = value; IsDirty = true; }
     }
 
+    /// <inheritdoc />
+    public ColoredGlyphBase[] this[Range range]
+    {
+        get => Cells[range];
+    }
+
 
     /// <summary>
     /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.

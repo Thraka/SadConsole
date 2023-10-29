@@ -93,4 +93,11 @@ public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<
     /// Gets or sets the visible width of the surface in cells.
     /// </summary>
     int ViewWidth { get; set; }
+
+    /// <summary>
+    /// Given a position, returns the "value" associated with that location.
+    /// </summary>
+    /// <param name="range">The cells to return from the array.</param>
+    /// <returns>The cells associated with the specified range.</returns>
+    ColoredGlyphBase[] this[Range range] { get; }
 }
