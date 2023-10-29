@@ -24,7 +24,7 @@ public interface ITexture : IDisposable
     int Width { get; }
 
     /// <summary>
-    /// Size of the texture, generally, the count of pixels.
+    /// Size of the texture. Generally, the count of pixels.
     /// </summary>
     int Size { get; }
 

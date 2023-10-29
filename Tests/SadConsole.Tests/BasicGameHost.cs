@@ -134,7 +134,7 @@ namespace SadConsole.Tests
             return new RenderStep(name);
         }
 
-        public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
+        public override void ResizeWindow(int width, int height, bool resizeBack = false) => throw new NotImplementedException();
 
         public override void Run()
         {

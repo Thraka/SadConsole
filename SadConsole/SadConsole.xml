@@ -7782,7 +7782,7 @@
         </member>
         <member name="P:SadConsole.ITexture.Size">
             <summary>
-            Size of the texture, generally, the count of pixels.
+            Size of the texture. Generally, the count of pixels.
             </summary>
         </member>
         <member name="M:SadConsole.ITexture.GetPixels">

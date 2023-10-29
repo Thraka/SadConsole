@@ -1,4 +1,4 @@
-## v10.0.0 Beta 1 (10/09/2023)
+## v10.0.0 (10/28/2023)
 
 Major changes (possibly breaking)
 
@@ -62,6 +62,7 @@ Normal changes
 - [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
 - [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
 - [ExtendedLib] Added `SmoothMove.IsEnabled` to disable the component and prevent animation.
+- [ExtendedLib] Fixed `ColorBar` bug with selecting a color before it's first drawn.
 
 Removed
 
