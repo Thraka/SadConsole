@@ -7,7 +7,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Tests
 {
     [TestClass]
-    partial class ScreenSurface
+    public partial class ScreenSurface
     {
         [TestMethod]
         public void Create_SmallSize()

@@ -1,356 +1,469 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable enable
+using System;
 using System.IO;
-using System.Text;
 using SFML.Graphics;
 using SadRogue.Primitives;
 using SadConsole.Host;
+using SadConsole.Configuration;
+using System.Linq;
 
-namespace SadConsole
+namespace SadConsole;
+
+/// <summary>
+/// The SadConsole game object.
+/// </summary>
+public sealed partial class Game : GameHost
 {
     /// <summary>
-    /// The SadConsole game object.
+    /// The configuration used in creating the game object.
     /// </summary>
-    public class Game : GameHost
+    internal Builder? _configuration;
+
+    /// <summary>
+    /// The keyboard translation object.
+    /// </summary>
+    private Keyboard _keyboard;
+
+    /// <summary>
+    /// The mouse translation object.
+    /// </summary>
+    private Mouse _mouse;
+
+    /// <summary>
+    /// Strongly typed version of <see cref="GameHost.Instance"/>.
+    /// </summary>
+    public static new Game Instance
     {
-        /// <summary>
-        /// The keyboard translation object.
-        /// </summary>
-        protected Keyboard _keyboard;
+        get => (Game)GameHost.Instance;
+        set => GameHost.Instance = value;
+    }
 
-        /// <summary>
-        /// The mouse translation object.
-        /// </summary>
-        protected Mouse _mouse;
+    internal string _font;
 
-        /// <summary>
-        /// Static instance to the game after the <see cref="Create(int, int, string, RenderWindow)"/> method has been called.
-        /// </summary>
-        public new static Game Instance
+    /// <summary>
+    /// Creates the game instance.
+    /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    private Game() { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+    /// <summary>
+    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
+    /// </summary>
+    /// <param name="cellCountX">The width of the screen, in cells.</param>
+    /// <param name="cellCountY">The height of the screen, in cells.</param>
+    public static void Create(int cellCountX, int cellCountY) =>
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts()
+                );
+
+    /// <summary>
+    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
+    /// </summary>
+    /// <param name="cellCountX">The width of the screen, in cells.</param>
+    /// <param name="cellCountY">The height of the screen, in cells.</param>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts()
+                .OnStart(gameStarted)
+                );
+
+    /// <summary>
+    /// Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
+    /// </summary>
+    /// <param name="cellCountX">The width of the screen, in cells.</param>
+    /// <param name="cellCountY">The height of the screen, in cells.</param>
+    /// <param name="font">The font file to load.</param>
+    /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+    public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
+        Create(new Builder()
+                .SetScreenSize(cellCountX, cellCountY)
+                .UseDefaultConsole()
+                .IsStartingScreenFocused(true)
+                .ConfigureFonts(font)
+                .OnStart(gameStarted)
+                );
+
+    /// <summary>
+    /// Creates a new game and assigns it to the <see cref="Instance"/> property.
+    /// </summary>
+    /// <param name="configuration">The settings used in creating the game.</param>
+    public static void Create(Builder configuration)
+    {
+        if (Instance != null) throw new Exception("The game has already been created.");
+
+        var game = new Game();
+
+        game._configuration = configuration;
+
+        Instance = game;
+
+        game.Initialize();
+    }
+
+    /// <summary>
+    /// Initializes SadConsole and sets up the window events, based on the <see cref="_configuration"/> variable.
+    /// </summary>
+    private void Initialize()
+    {
+        if (_configuration == null) throw new Exception("Configuration must be set.");
+
+        // Configure the fonts
+        FontConfig fontConfig = _configuration.Configs.OfType<FontConfig>().FirstOrDefault()
+            ?? new FontConfig();
+
+        _configuration.Configs.Remove(fontConfig);
+        fontConfig.Run(_configuration, this);
+
+        LoadDefaultFonts(fontConfig.AlternativeDefaultFont);
+
+        foreach (string font in fontConfig.CustomFonts)
+            LoadFont(font);
+
+        // Load screen size
+        InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
+            ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
+
+        ScreenCellsX = startupData.ScreenCellsX;
+        ScreenCellsY = startupData.ScreenCellsY;
+
+        if (startupData.TargetWindow == null)
         {
-            get => (Game)GameHost.Instance;
-            protected set => GameHost.Instance = value;
+            Global.GraphicsDevice = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
+            Global.GraphicsDevice.SetTitle(Settings.WindowTitle);
         }
+        else
+            Global.GraphicsDevice = startupData.TargetWindow;
 
-        internal string _font;
-
-        /// <summary>
-        /// Creates the game instance.
-        /// </summary>
-        protected Game() { }
-
-        /// <summary>
-        /// Create's a new SadConsole game.
-        /// </summary>
-        /// <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
-        /// <param name="cellCountY">How many cells high the window should be based on the font used.</param>
-        /// <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
-        /// <param name="window">A optional window object; otherwise the window is created for you.</param>
-        public static void Create(int cellCountX, int cellCountY, string font = "", RenderWindow window = null)
+        Global.GraphicsDevice.Closed += (o, e) =>
         {
-            var game = new Game();
-            game.ScreenCellsX = cellCountX;
-            game.ScreenCellsY = cellCountY;
-            game._font = font;
+            ((SFML.Window.Window)o!).Close();
+        };
 
-            Instance = game;
-            game.Initialize(window);
-        }
-
-        /// <summary>
-        /// Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="GameHost.ScreenCellsX"/>, <see cref="GameHost.ScreenCellsY"/>, and the <see cref="GameHost.DefaultFontSize"/>.
-        /// </summary>
-        /// <param name="window"></param>
-        protected void Initialize(RenderWindow window)
+        Global.GraphicsDevice.Resized += (o, e) =>
         {
-            LoadDefaultFonts(_font);
-
-            if (window == null)
-            {
-                window = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
-                window.SetTitle(Settings.WindowTitle);
-                // SETUP RENDER vars for global screen size data.
-            }
-
-            window.Closed += (o, e) =>
-            {
-                ((SFML.Window.Window)o).Close();
-            };
-
-            window.Resized += (o, e) =>
-            {
-                ResetRendering();
-            };
-
-            if (!Settings.UnlimitedFPS)
-                if (Host.Settings.FPS > 0)
-                    window.SetFramerateLimit((uint)Host.Settings.FPS);
-
-            SadConsole.Host.Global.GraphicsDevice = window;
-            SadConsole.Host.Global.SharedSpriteBatch = new SpriteBatch();
-
-            //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
-
-            SadConsole.Settings.Rendering.RenderWidth = (int)window.Size.X;
-            SadConsole.Settings.Rendering.RenderHeight = (int)window.Size.Y;
             ResetRendering();
+        };
 
-            _keyboard = new Keyboard(window);
-            _mouse = new Mouse(window);
+        // Load FPS
+        FpsConfig? fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
+        if (fpsConfig != null && fpsConfig.UnlimitedFPS)
+            if (Host.Settings.FPS > 0)
+                Global.GraphicsDevice.SetFramerateLimit((uint)Host.Settings.FPS);
 
-            Host.Global.UpdateTimer = new SFML.System.Clock();
-            Host.Global.DrawTimer = new SFML.System.Clock();
+        Global.SharedSpriteBatch = new SpriteBatch();
 
-            SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
+        //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
 
-            SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.EntityRenderer, typeof(Renderers.EntityLiteRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.Output, typeof(Renderers.OutputSurfaceRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.Surface, typeof(Renderers.SurfaceRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.Tint, typeof(Renderers.TintSurfaceRenderStep));
-            SetRendererStep(Renderers.Constants.RenderStepNames.Window, typeof(Renderers.WindowRenderStep));
+        // Setup rendering sizes
+        Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
+        Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
+        ResetRendering();
 
+        // Configure input
+        _keyboard = new Keyboard(Global.GraphicsDevice);
+        _mouse = new Mouse(Global.GraphicsDevice);
+
+        // Create game loop timers
+        Global.UpdateTimer = new SFML.System.Clock();
+        Global.DrawTimer = new SFML.System.Clock();
+
+        // Setup renderers
+        SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.Window, typeof(Renderers.WindowRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface, typeof(Renderers.LayeredRenderer));
+
+        SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.EntityManager, typeof(Renderers.EntityRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.Output, typeof(Renderers.OutputSurfaceRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.Surface, typeof(Renderers.SurfaceRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceDirtyCells, typeof(Renderers.SurfaceDirtyCellsRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.Tint, typeof(Renderers.TintSurfaceRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.Window, typeof(Renderers.WindowRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered, typeof(Renderers.LayeredSurfaceRenderStep));
+
+        // Load the mapped colors
+        if (Settings.AutomaticAddColorsToMappings)
             LoadMappedColors();
 
-            // Create the default console.
-            StartingConsole = new Console(ScreenCellsX, ScreenCellsY);
-            StartingConsole.IsFocused = true;
-            Screen = StartingConsole;
-        }
+        // Run all startup config objects, then destroy the config instance
+        _configuration.Run(this);
 
-        /// <inheritdoc/>
-        public override void Run()
+        // NOTE: Compared to the monogame game, this init method is invoked at create, but the game isn't yet running.
+        // in monogame, this same method is invoked when the game starts running.
+    }
+
+    /// <inheritdoc/>
+    public override void Run()
+    {
+        OnGameStarted();
+        _configuration = null;
+        SplashScreens.SplashScreenManager.CheckRun();
+
+        // Update keyboard/mouse with base info
+        Keyboard.Update(TimeSpan.Zero);
+        Mouse.Update(TimeSpan.Zero);
+
+        while (Global.GraphicsDevice.IsOpen)
         {
-            OnStart?.Invoke();
+            UpdateFrameDelta = Global.UpdateTimer.ElapsedTime.ToTimeSpan();
+            Global.UpdateTimer.Restart();
 
-            SplashScreens.SplashScreenManager.CheckRun();
-
-            // Update keyboard/mouse with base info
-            Keyboard.Update(TimeSpan.Zero);
-            Mouse.Update(TimeSpan.Zero);
-
-            while (SadConsole.Host.Global.GraphicsDevice.IsOpen)
+            // Update game loop part
+            if (Settings.DoUpdate)
             {
-                // Update game loop part
-                if (SadConsole.Settings.DoUpdate)
+
+                if (Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
                 {
-                    UpdateFrameDelta = TimeSpan.FromSeconds(Host.Global.UpdateTimer.ElapsedTime.AsSeconds());
-
-                    if (SadConsole.Host.Global.GraphicsDevice.HasFocus())
+                    if (Settings.Input.DoKeyboard)
                     {
-                        if (SadConsole.Settings.Input.DoKeyboard)
+                        Keyboard.Update(UpdateFrameDelta);
+
+                        if (FocusedScreenObjects.ScreenObject != null && FocusedScreenObjects.ScreenObject.UseKeyboard)
                         {
-                            Keyboard.Update(UpdateFrameDelta);
-
-                            if (FocusedScreenObjects.ScreenObject != null && FocusedScreenObjects.ScreenObject.UseKeyboard)
-                            {
-                                FocusedScreenObjects.ScreenObject.ProcessKeyboard(Keyboard);
-                            }
-
+                            FocusedScreenObjects.ScreenObject.ProcessKeyboard(Keyboard);
                         }
 
-                        if (SadConsole.Settings.Input.DoMouse)
-                        {
-                            Mouse.Update(UpdateFrameDelta);
-                            Mouse.Process();
-                        }
                     }
 
-                    Screen?.Update(UpdateFrameDelta);
-                    
-                    ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameUpdate();
-
-                    Host.Global.UpdateTimer.Restart();
-                }
-
-                // Draw game loop part
-                if (SadConsole.Settings.DoDraw)
-                {
-                    SadConsole.Host.Global.GraphicsDevice.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
-
-                    DrawFrameDelta = TimeSpan.FromSeconds(Host.Global.DrawTimer.ElapsedTime.AsSeconds());
-
-                    // Clear draw calls for next run
-                    SadConsole.Game.Instance.DrawCalls.Clear();
-
-                    // Make sure all items in the screen are drawn. (Build a list of draw calls)
-                    Screen?.Render(DrawFrameDelta);
-
-                    ((SadConsole.Game)SadConsole.Game.Instance).InvokeFrameDraw();
-
-                    // Render to the global output texture
-                    Host.Global.RenderOutput.Clear(SadConsole.Settings.ClearColor.ToSFMLColor());
-
-                    // Render each draw call
-                    Host.Global.SharedSpriteBatch.Reset(Host.Global.RenderOutput, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity);
-
-                    foreach (DrawCalls.IDrawCall call in SadConsole.Game.Instance.DrawCalls)
-                        call.Draw();
-
-                    Host.Global.SharedSpriteBatch.End();
-                    Host.Global.RenderOutput.Display();
-
-                    // If we're going to draw to the screen, do it.
-                    if (SadConsole.Settings.DoFinalDraw)
+                    if (Settings.Input.DoMouse)
                     {
-                        Host.Global.SharedSpriteBatch.Reset(Host.Global.GraphicsDevice, SadConsole.Host.Settings.SFMLScreenBlendMode, Transform.Identity, SadConsole.Host.Settings.SFMLScreenShader);
-                        Host.Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Host.Global.RenderOutput.Size.X, (int)Host.Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Host.Global.RenderOutput.Texture);
-                        Host.Global.SharedSpriteBatch.End();
+                        Mouse.Update(UpdateFrameDelta);
+                        Mouse.Process();
                     }
                 }
 
-                SadConsole.Host.Global.GraphicsDevice.Display();
-                SadConsole.Host.Global.GraphicsDevice.DispatchEvents();
-
-                Host.Global.DrawTimer.Restart();
+                Screen?.Update(UpdateFrameDelta);
+                
+                ((SadConsole.Game)Instance).InvokeFrameUpdate();
             }
 
-            OnEnd?.Invoke();
+            DrawFrameDelta = Global.DrawTimer.ElapsedTime.ToTimeSpan();
+            Global.DrawTimer.Restart();
+
+            // Draw game loop part
+            if (Settings.DoDraw)
+            {
+                Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
+
+
+                // Clear draw calls for next run
+                Instance.DrawCalls.Clear();
+
+                // Make sure all items in the screen are drawn. (Build a list of draw calls)
+                Screen?.Render(DrawFrameDelta);
+
+                ((SadConsole.Game)Instance).InvokeFrameDraw();
+
+                // Render to the global output texture
+                Global.RenderOutput.Clear(Settings.ClearColor.ToSFMLColor());
+
+                // Render each draw call
+                Global.SharedSpriteBatch.Reset(Global.RenderOutput, Host.Settings.SFMLScreenBlendMode, Transform.Identity);
+
+                foreach (DrawCalls.IDrawCall call in Instance.DrawCalls)
+                    call.Draw();
+
+                Global.SharedSpriteBatch.End();
+                Global.RenderOutput.Display();
+
+                // If we're going to draw to the screen, do it.
+                if (Settings.DoFinalDraw)
+                {
+                    Global.SharedSpriteBatch.Reset(Global.GraphicsDevice, Host.Settings.SFMLScreenBlendMode, Transform.Identity, Host.Settings.SFMLScreenShader);
+                    Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
+                    Global.SharedSpriteBatch.End();
+                }
+            }
+
+            Global.GraphicsDevice.Display();
+            Global.GraphicsDevice.DispatchEvents();
         }
 
-        /// <inheritdoc/> 
-        public override ITexture GetTexture(string resourcePath) =>
-            new SadConsole.Host.GameTexture(resourcePath);
+        OnGameEnding();
+    }
 
-        /// <inheritdoc/> 
-        public override ITexture GetTexture(Stream textureStream) =>
-            new SadConsole.Host.GameTexture(textureStream);
+    /// <inheritdoc/> 
+    public override ITexture GetTexture(string resourcePath) =>
+        new SadConsole.Host.GameTexture(resourcePath);
 
-        /// <inheritdoc/> 
-        public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
-            _keyboard;
+    /// <inheritdoc/> 
+    public override ITexture GetTexture(Stream textureStream) =>
+        new SadConsole.Host.GameTexture(textureStream);
 
-        /// <inheritdoc/> 
-        public override SadConsole.Input.IMouseState GetMouseState() =>
-            _mouse;
+    /// <inheritdoc/>
+    public override ITexture CreateTexture(int width, int height) =>
+        new Host.GameTexture((uint)width, (uint)height);
+
+    /// <inheritdoc/> 
+    public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
+        _keyboard;
+
+    /// <inheritdoc/> 
+    public override SadConsole.Input.IMouseState GetMouseState() =>
+        _mouse;
 
 
-        /// <summary>
-        /// Opens a read-only stream with MonoGame.
-        /// </summary>
-        /// <param name="file">The file to open.</param>
-        /// <param name="mode">File open or create mode.</param>
-        /// <param name="access">Read or write access.</param>
-        /// <returns>The stream.</returns>
-        public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read) =>
-             File.Open(file, mode, access);
+    /// <summary>
+    /// Opens a read-only stream with MonoGame.
+    /// </summary>
+    /// <param name="file">The file to open.</param>
+    /// <param name="mode">File open or create mode.</param>
+    /// <param name="access">Read or write access.</param>
+    /// <returns>The stream.</returns>
+    public override Stream OpenStream(string file, FileMode mode = FileMode.Open, FileAccess access = FileAccess.Read) =>
+         File.Open(file, mode, access);
 
-        /// <summary>
-        /// Toggles between windowed and fullscreen rendering for SadConsole.
-        /// </summary>
-        public void ToggleFullScreen()
+    /// <summary>
+    /// Toggles between windowed and full screen rendering for SadConsole.
+    /// </summary>
+    public void ToggleFullScreen()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
+    {
+        Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
+
+        if (resizeOutputSurface)
         {
-            throw new NotImplementedException();
+            Settings.Rendering.RenderWidth = width;
+            Settings.Rendering.RenderHeight = height;
         }
+    }
 
-        /// <inheritdoc/>
-        public override void ResizeWindow(int width, int height) =>
-            Host.Global.GraphicsDevice.Size = new SFML.System.Vector2u((uint)width, (uint)height);
-
-        /// <summary>
-        /// Resets the <see cref="Host.Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
-        /// </summary>
-        public void ResetRendering()
+    /// <summary>
+    /// Regenerates the <see cref="Global.RenderOutput"/> if the desired size doesn't match the current size.
+    /// </summary>
+    /// <param name="width">The width of the render output.</param>
+    /// <param name="height">The height of the render output.</param>
+    private void RecreateRenderOutput(uint width, uint height)
+    {
+        if (Global.RenderOutput == null || Global.RenderOutput.Size.X != width || Global.RenderOutput.Size.Y != height)
         {
-            Host.Global.RenderOutput?.Dispose();
+            Global.RenderOutput?.Dispose();
+            Global.RenderOutput = new RenderTexture(width, height);
+        }
+    }
 
-            if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Center)
+    /// <summary>
+    /// Resets the <see cref="Host.Global.RenderOutput"/> target and determines the appropriate <see cref="SadConsole.Settings.Rendering.RenderRect"/> and <see cref="SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+    /// </summary>
+    public void ResetRendering()
+    {
+        if (Settings.ResizeMode == Settings.WindowResizeOptions.Center)
+        {
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+
+            Settings.Rendering.RenderRect = new Rectangle(
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - Settings.Rendering.RenderWidth) / 2),
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - Settings.Rendering.RenderHeight) / 2),
+                                                        Settings.Rendering.RenderWidth,
+                                                        Settings.Rendering.RenderHeight);
+
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+
+            Settings.Rendering.RenderScale = (1, 1);
+        }
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.Scale)
+        {
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+
+            int multiple = 2;
+
+            // Find the bounds
+            while (true)
             {
-                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle(
-                                                            ((int)Host.Global.GraphicsDevice.Size.X - SadConsole.Settings.Rendering.RenderWidth) / 2,
-                                                            ((int)Host.Global.GraphicsDevice.Size.Y - SadConsole.Settings.Rendering.RenderHeight) / 2,
-                                                            SadConsole.Settings.Rendering.RenderWidth,
-                                                            SadConsole.Settings.Rendering.RenderHeight);
-
-                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
-
-                SadConsole.Settings.Rendering.RenderScale = (1, 1);
-            }
-            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Scale)
-            {
-                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-                int multiple = 2;
-
-                // Find the bounds
-                while (true)
+                if (Settings.Rendering.RenderWidth * multiple > Global.GraphicsDevice.Size.X || Settings.Rendering.RenderHeight * multiple > Global.GraphicsDevice.Size.Y)
                 {
-                    if (SadConsole.Settings.Rendering.RenderWidth * multiple > Host.Global.GraphicsDevice.Size.X || SadConsole.Settings.Rendering.RenderHeight * multiple > Host.Global.GraphicsDevice.Size.Y)
-                    {
-                        multiple--;
-                        break;
-                    }
-
-                    multiple++;
+                    multiple--;
+                    break;
                 }
 
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle(((int)Host.Global.GraphicsDevice.Size.X - (SadConsole.Settings.Rendering.RenderWidth * multiple)) / 2,
-                                                                         ((int)Host.Global.GraphicsDevice.Size.Y - (SadConsole.Settings.Rendering.RenderHeight * multiple)) / 2,
-                                                                         SadConsole.Settings.Rendering.RenderWidth * multiple,
-                                                                         SadConsole.Settings.Rendering.RenderHeight * multiple);
-                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / ((float)SadConsole.Settings.Rendering.RenderWidth * multiple), SadConsole.Settings.Rendering.RenderHeight / (float)(SadConsole.Settings.Rendering.RenderHeight * multiple));
-
-                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+                multiple++;
             }
-            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.Fit)
+
+            Settings.Rendering.RenderRect = new Rectangle(
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - (Settings.Rendering.RenderWidth * multiple)) / 2),
+                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - (Settings.Rendering.RenderHeight * multiple)) / 2),
+                                                        Settings.Rendering.RenderWidth * multiple,
+                                                        Settings.Rendering.RenderHeight * multiple);
+
+            Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / ((float)Settings.Rendering.RenderWidth * multiple), Settings.Rendering.RenderHeight / (float)(Settings.Rendering.RenderHeight * multiple));
+
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+        }
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
+        {
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+
+            float heightRatio = Global.GraphicsDevice.Size.Y / (float)Settings.Rendering.RenderHeight;
+            float widthRatio = Global.GraphicsDevice.Size.X / (float)Settings.Rendering.RenderWidth;
+
+            float fitHeight = Settings.Rendering.RenderHeight * widthRatio;
+            float fitWidth = Settings.Rendering.RenderWidth * heightRatio;
+
+            if (fitHeight <= Global.GraphicsDevice.Size.Y)
             {
-                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-                float heightRatio = Host.Global.GraphicsDevice.Size.Y / (float)SadConsole.Settings.Rendering.RenderHeight;
-                float widthRatio = Host.Global.GraphicsDevice.Size.X / (float)SadConsole.Settings.Rendering.RenderWidth;
+                // Render width = window width, pad top and bottom
 
-                float fitHeight = SadConsole.Settings.Rendering.RenderHeight * widthRatio;
-                float fitWidth = SadConsole.Settings.Rendering.RenderWidth * heightRatio;
+                Settings.Rendering.RenderRect = new Rectangle(0,
+                                                            Math.Max(0, (int)((Global.GraphicsDevice.Size.Y - fitHeight) / 2)),
+                                                            (int)Global.GraphicsDevice.Size.X,
+                                                            (int)fitHeight);
 
-                if (fitHeight <= Host.Global.GraphicsDevice.Size.Y)
-                {
-                    // Render width = window width, pad top and bottom
-
-                    SadConsole.Settings.Rendering.RenderRect = new Rectangle(0,
-                                                                            (int)((Host.Global.GraphicsDevice.Size.Y - fitHeight) / 2),
-                                                                            (int)Host.Global.GraphicsDevice.Size.X,
-                                                                            (int)fitHeight);
-
-                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / fitHeight);
-                }
-                else
-                {
-                    // Render height = window height, pad left and right
-
-                    SadConsole.Settings.Rendering.RenderRect = new Rectangle((int)((Host.Global.GraphicsDevice.Size.X - fitWidth) / 2),
-                                                                             0,
-                                                                             (int)fitWidth,
-                                                                             (int)Host.Global.GraphicsDevice.Size.Y);
-
-                    SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / fitWidth, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
-                }
-
-                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
-            }
-            else if (SadConsole.Settings.ResizeMode == SadConsole.Settings.WindowResizeOptions.None)
-            {
-                SadConsole.Settings.Rendering.RenderWidth = (int)Host.Global.GraphicsDevice.Size.X;
-                SadConsole.Settings.Rendering.RenderHeight = (int)Host.Global.GraphicsDevice.Size.Y;
-                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, SadConsole.Settings.Rendering.RenderWidth, SadConsole.Settings.Rendering.RenderHeight);
-                SadConsole.Settings.Rendering.RenderScale = (1, 1);
-                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / fitHeight);
             }
             else
             {
-                Host.Global.RenderOutput = new RenderTexture((uint)SadConsole.Settings.Rendering.RenderWidth, (uint)SadConsole.Settings.Rendering.RenderHeight);
-                Host.Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Host.Global.GraphicsDevice.Size.X, Host.Global.GraphicsDevice.Size.Y)));
-                var view = Host.Global.GraphicsDevice.GetView();
-                SadConsole.Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
-                SadConsole.Settings.Rendering.RenderScale = (SadConsole.Settings.Rendering.RenderWidth / (float)Host.Global.GraphicsDevice.Size.X, SadConsole.Settings.Rendering.RenderHeight / (float)Host.Global.GraphicsDevice.Size.Y);
+                // Render height = window height, pad left and right
+                Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (int)((Global.GraphicsDevice.Size.X - fitWidth) / 2)),
+                                                                0,
+                                                                (int)fitWidth,
+                                                                (int)Global.GraphicsDevice.Size.Y);
+
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / fitWidth, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
             }
+
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
-
-        internal void InvokeFrameDraw() =>
-            OnFrameRender();
-
-        internal void InvokeFrameUpdate() =>
-            OnFrameUpdate();
+        else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
+        {
+            Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
+            Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderRect = new Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderScale = (1, 1);
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+        }
+        else
+        {
+            RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
+            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            var view = Global.GraphicsDevice.GetView();
+            Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
+            Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
+        }
     }
+
+    internal void InvokeFrameDraw() =>
+        OnFrameRender();
+
+    internal void InvokeFrameUpdate() =>
+        OnFrameUpdate();
+
+    internal void SetStartingConsole(Console? console) =>
+        StartingConsole = console;
 }
+#nullable disable

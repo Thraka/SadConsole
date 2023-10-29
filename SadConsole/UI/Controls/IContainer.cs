@@ -1,43 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using SadRogue.Primitives;
 
-namespace SadConsole.UI.Controls
+namespace SadConsole.UI.Controls;
+
+/// <summary>
+/// A simple container for controls.
+/// </summary>
+public interface IContainer : IList<ControlBase>
 {
     /// <summary>
-    /// A simple container for controls.
+    /// Gets the position of the container based on any parents position.
     /// </summary>
-    public interface IContainer : IReadOnlyList<ControlBase>
-    {
-        /// <summary>
-        /// Gets the position of the container based on any parents position.
-        /// </summary>
-        Point AbsolutePosition { get; }
+    Point AbsolutePosition { get; }
 
-        /// <summary>
-        /// The host owning this container.
-        /// </summary>
-        ControlHost Host { get; }
+    /// <summary>
+    /// The host owning this container.
+    /// </summary>
+    ControlHost? Host { get; }
 
-        /// <summary>
-        /// Adds a control to this container.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        void Add(ControlBase control);
+    /// <summary>
+    /// Gets a control by its <see cref="ControlBase.Name"/> property.
+    /// </summary>
+    /// <param name="name">The name of the control.</param>
+    /// <returns>The control.</returns>
+    ControlBase this[string name] { get; }
 
-        /// <summary>
-        /// Removes a control from this container.
-        /// </summary>
-        /// <param name="control">The control.</param>
-        /// <returns><see langword="true"/> if item was successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if item is not found.</returns>
-        bool Remove(ControlBase control);
+    /// <summary>
+    /// Checks whether or not the container has a control registered with the given name. 
+    /// </summary>
+    /// <param name="name">The name to check.</param>
+    /// <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+    bool HasNamedControl(string name);
 
-        /// <summary>
-        /// <see langword="true"/> when the control exists in the container; otherwise, <see langword="false"/>.
-        /// </summary>
-        /// <param name="control">The control to find.</param>
-        /// <returns>A value to indicate if this control is in this container.</returns>
-        bool Contains(ControlBase control);
-    }
+    /// <summary>
+    /// Checks whether or not the container has a control registered with the given name. If found, the instance is assigned to the <paramref name="control"/> parameter.
+    /// </summary>
+    /// <param name="name">The name to check.</param>
+    /// <param name="control">The control instance found.</param>
+    /// <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+    bool HasNamedControl(string name, out ControlBase? control);
 }

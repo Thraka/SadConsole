@@ -41,7 +41,7 @@ namespace FeatureDemo.CustomConsoles
             Font = GameHost.Instance.LoadFont("Res/Fonts/empty_font.font");
             FontSize = (110, 110);
 
-            DefaultBackground = Color.DarkCyan;
+            Surface.DefaultBackground = Color.DarkCyan;
             Surface.Clear();
 
             Children.Add(new OversizedFont());
@@ -197,7 +197,7 @@ namespace FeatureDemo.CustomConsoles
                     };
                 }
 
-                if (!s_surface.Positions().Contains(_start))
+                if (!s_surface.Positions().ToEnumerable().Contains(_start))
                     ChangeSide();
 
                 _end = GetOppositePoint(_start);

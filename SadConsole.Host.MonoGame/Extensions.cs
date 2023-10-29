@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole;
+﻿using SadConsole;
 
-namespace SadConsole.Host.MonoGame
+namespace SadConsole
 {
     public static class Extensions
     {
@@ -27,6 +24,12 @@ namespace SadConsole.Host.MonoGame
 
             return result;
         }
+
+#if FNA
+        public static Microsoft.Xna.Framework.Vector2 ToVector2(this Microsoft.Xna.Framework.Point point) =>
+            new Microsoft.Xna.Framework.Vector2(point.X, point.Y);
+#endif
+
     }
 }
 

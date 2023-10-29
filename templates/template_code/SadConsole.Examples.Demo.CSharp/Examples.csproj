@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SadConsole.Examples</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Choose which game host you want to use, monogame or sfml. -->
+    <GameHost>monogame</GameHost>
+    
+    <!-- Some constants for your game that can detect monogame or sfml. -->
+    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
+
+    <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
+    <!-- Most likely you always want this false. -->
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants Condition=" '$(UseProjectReferences)' == 'true' ">$(DefineConstants);PROJREFS</DefineConstants>
+  </PropertyGroup>
+
+  <!-- SadConsole related NuGet packages. -->
+  <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.0" />
+    <PackageReference Include="SadConsole" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- MonoGame host requires you to choose which library you want to use. -->
+  <!-- If you're using SFML, you don't need to add the sfml library as SadConsole adds it for you. -->
+  <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+
+    <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
+    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+  </ItemGroup>
+
+  <!-- Files related to compiling and running the demos. -->
+  <ItemGroup>
+    <None Update="Res\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="app.manifest">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!--
+  The following settings are related to running from the SadConsole git repo and not
+  related to when you create the project through the template.
+  -->
+  <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
+    <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    
+    <!-- MonoGame Debugging, only available when running from the git repo -->
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+
+    <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
+      <HintPath>..\..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

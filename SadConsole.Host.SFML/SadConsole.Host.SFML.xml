@@ -66,39 +66,234 @@
             Positions by the font of the host in cells.
             </summary>
         </member>
-        <member name="T:SadConsole.DrawCalls.DrawCallCell">
+        <member name="T:SadConsole.Components.FpsRenderer">
             <summary>
-            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            Draws an image on top of a console.
             </summary>
         </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.Font">
+        <member name="M:SadConsole.Components.FpsRenderer.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
-            The font to use when drawing the glyph.
+            Draws the image.
+            </summary>
+            <param name="host">The host of the component.</param>
+            <param name="delta">Unused.</param>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.Cell">
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontTexture">
             <summary>
-            The glyph to be drawn.
+            The texture, most likely a SadConsole font texture, containing the solid white rectangle referenced by <see cref="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect"/>.
             </summary>
         </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.TargetRect">
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="T:SFML.Graphics.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            The color of the target rectangle.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.TargetRect">
             <summary>
             Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
             </summary>
         </member>
-        <member name="F:SadConsole.DrawCalls.DrawCallCell.DrawBackground">
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(SFML.Graphics.Color,SFML.Graphics.Texture,SFML.Graphics.IntRect,SFML.Graphics.IntRect)">
             <summary>
-            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="color">The folor of the rectangle.</param>
+            <param name="texture">The texture containing a solid white rectangle referenced by <paramref name="fontSolidRect"/>.</param>
+            <param name="targetRect">The drawing location of the rectangle.</param>
+            <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallGlyph">
+            <summary>
+            Draws a glyph to active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallCell.#ctor(SadConsole.ColoredGlyph,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Font">
             <summary>
-            
+            The font to use when drawing the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.DrawBackground">
+            <summary>
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont,System.Boolean)">
+            <summary>
+            Creates a new instance of this draw call.
             </summary>
             <param name="cell">The glyph to be drawn.</param>
             <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
             <param name="font">The font to use when drawing the glyph.</param>
-            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyph.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws an image ot the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The image to draw.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            A color tint to apply when drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(SFML.Graphics.Texture,SFML.System.Vector2i,System.Nullable{SFML.Graphics.Color})">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="texture">The image to draw.</param>
+            <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
+            <param name="tint">A color tint to apply to the drawn image.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The SadConsole game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._configuration">
+            <summary>
+            The configuration used in creating the game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._keyboard">
+            <summary>
+            The keyboard translation object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._mouse">
+            <summary>
+            The mouse translation object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.#ctor">
+            <summary>
+            Creates the game instance.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32)">
+            <summary>
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="font">The font file to load.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(SadConsole.Configuration.Builder)">
+            <summary>
+            Creates a new game and assigns it to the <see cref="P:SadConsole.Game.Instance"/> property.
+            </summary>
+            <param name="configuration">The settings used in creating the game.</param>
+        </member>
+        <member name="M:SadConsole.Game.Initialize">
+            <summary>
+            Initializes SadConsole and sets up the window events, based on the <see cref="F:SadConsole.Game._configuration"/> variable.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc/> 
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            Opens a read-only stream with MonoGame.
+            </summary>
+            <param name="file">The file to open.</param>
+            <param name="mode">File open or create mode.</param>
+            <param name="access">Read or write access.</param>
+            <returns>The stream.</returns>
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and full screen rendering for SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.RecreateRenderOutput(System.UInt32,System.UInt32)">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
+        </member>
+        <member name="M:SadConsole.Game.ResetRendering">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
         </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
@@ -120,11 +315,27 @@
         <member name="P:SadConsole.Host.GameTexture.Size">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture)">
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32)">
+            <summary>
+            Creates a new game texture with the specified width and height.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32,SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a new game texture with the specified width, height, and pixels.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+            <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SFML.Graphics.Texture,System.Boolean)">
             <summary>
             Wraps a texture. Doesn't dispose it when this object is disposed!
             </summary>
             <param name="texture">The texture to wrap</param>
+            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
             <remarks>The only time the backing texture resource is disposed is when the <see cref="T:SadConsole.Host.GameTexture"/> object is created through <see cref="T:SadConsole.GameHost.GetTexture*"/>.</remarks>
         </member>
         <member name="M:SadConsole.Host.GameTexture.Dispose">
@@ -179,7 +390,7 @@
             <summary>
             Sets all pixels in the texture to the provided colors.
             </summary>
-            <param name="colors">The colors to set every pixel to.</param>
+            <param name="pixels">The colors to set every pixel to.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
         </member>
         <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
@@ -211,6 +422,46 @@
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the SFML host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
+            <summary>
+            When <see langword="true"/>, prevents the keyboard and mouse logic from running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDevice">
+            <summary>
+            The render window created by SFML.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SharedSpriteBatch">
+            <summary>
+            A sprite batch used by all of SadConsole to render objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutput">
+            <summary>
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateTimer">
+            <summary>
+            Reference to the game timer used in the update loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.DrawTimer">
+            <summary>
+            Reference to the game timer used in the render loop.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Settings">
+            <summary>
+            A settings class usually used when creating the host object.
+            </summary>
+        </member>
         <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
             <summary>
             Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
@@ -218,12 +469,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
+            The target frames per second for the game window. Set before calling <see cref="!:Game.Create()"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/>.
+            The game window title. Set before calling <see cref="!:Game.Create()"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
@@ -241,87 +492,105 @@
             A shader used when drawing the final texture to the screen.
             </summary>
         </member>
-        <member name="T:SadConsole.Game">
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
-            The SadConsole game object.
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
             </summary>
         </member>
-        <member name="F:SadConsole.Game._keyboard">
-            <summary>
-            The keyboard translation object.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Game._mouse">
-            <summary>
-            The mouse translation object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Game.Instance">
-            <summary>
-            Static instance to the game after the <see cref="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)"/> method has been called.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.#ctor">
-            <summary>
-            Creates the game instance.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,SFML.Graphics.RenderWindow)">
-            <summary>
-            Create's a new SadConsole game.
-            </summary>
-            <param name="cellCountX">How many cells wide the window should be based on the font used.</param>
-            <param name="cellCountY">How many cells high the window should be based on the font used.</param>
-            <param name="font">An optional font; otherwise a default 8x16 IBM font is used.</param>
-            <param name="window">A optional window object; otherwise the window is created for you.</param>
-        </member>
-        <member name="M:SadConsole.Game.Initialize(SFML.Graphics.RenderWindow)">
-            <summary>
-            Initializes SadConsole and sets up the window events. If the <paramref name="window"/> is <see langword="null"/>, a new window is created based on the <see cref="P:SadConsole.GameHost.ScreenCellsX"/>, <see cref="P:SadConsole.GameHost.ScreenCellsY"/>, and the <see cref="P:SadConsole.GameHost.DefaultFontSize"/>.
-            </summary>
-            <param name="window"></param>
-        </member>
-        <member name="M:SadConsole.Game.Run">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Game.GetTexture(System.String)">
-            <inheritdoc/> 
-        </member>
-        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
-            <inheritdoc/> 
-        </member>
-        <member name="M:SadConsole.Game.GetKeyboardState">
-            <inheritdoc/> 
-        </member>
-        <member name="M:SadConsole.Game.GetMouseState">
-            <inheritdoc/> 
-        </member>
-        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
             <summary>
-            Opens a read-only stream with MonoGame.
-            </summary>
-            <param name="file">The file to open.</param>
-            <param name="mode">File open or create mode.</param>
-            <param name="access">Read or write access.</param>
-            <returns>The stream.</returns>
-        </member>
-        <member name="M:SadConsole.Game.ToggleFullScreen">
-            <summary>
-            Toggles between windowed and fullscreen rendering for SadConsole.
+            Quick access to backing texture.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
+            <summary>
+            Render steps to process.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Game.ResetRendering">
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
             <summary>
-            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            Cached set of rectangles used in rendering each cell.
             </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the render steps this renderer uses.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Renderers.ControlHostRenderStep">
             <summary>
             Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.ControlHostRenderStep.BackingTexture">
             <summary>
@@ -360,7 +629,7 @@
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle,System.Int32)">
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle)">
             <summary>
             Renders the cells of a control.
             </summary>
@@ -369,7 +638,6 @@
             <param name="font">The font to render the cells with.</param>
             <param name="fontSize">The size of a cell in pixels.</param>
             <param name="parentViewRect">The view of the parent to cull cells from.</param>
-            <param name="bufferWidth">The width of the parent used to calculate the render rect.</param>
         </member>
         <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose(System.Boolean)">
             <summary>
@@ -389,6 +657,9 @@
             <summary>
             Renders a cursor.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
              <inheritdoc/>
@@ -414,50 +685,104 @@
         <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.EntityLiteRenderStep">
+        <member name="T:SadConsole.Renderers.EntityRenderStep">
             <summary>
-            Draws the entities of a <see cref="T:SadConsole.Entities.Renderer"/>.
+            Draws the entities of a <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.BackingTexture">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.BackingTexture">
             <summary>
             The cached texture of the drawn entities.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.CachedTexture">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.CachedTexture">
             <inheritdoc/>
         </member>
-        <member name="P:SadConsole.Renderers.EntityLiteRenderStep.SortOrder">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.Name">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.SetData(System.Object)">
+        <member name="P:SadConsole.Renderers.EntityRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.SetData(System.Object)">
             <summary>
-            Sets the <see cref="T:SadConsole.Entities.Renderer"/>.
+            Sets the <see cref="T:SadConsole.Entities.EntityManager"/>.
             </summary>
-            <param name="data">A <see cref="T:SadConsole.Entities.Renderer"/> object.</param>
+            <param name="data">A <see cref="T:SadConsole.Entities.EntityManager"/> object.</param>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Reset">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Reset">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose(System.Boolean)">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose(System.Boolean)">
             <summary>
             Disposes the object.
             </summary>
-            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose"/>.</param>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityRenderStep.Dispose"/>.</param>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Dispose">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.EntityLiteRenderStep.Finalize">
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredSurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.LayeredSurface"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.LayeredSurface"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Finalize">
             <summary>
             Finalizes the object for collection.
             </summary>
@@ -466,6 +791,9 @@
             <summary>
             A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
             </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
@@ -490,57 +818,55 @@
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
              <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+        <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
             <summary>
-            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
-            </summary>
-            <remarks>
-            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
-            </remarks>
-        </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
-            <summary>
-            Quick access to backing texture.
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
             </summary>
         </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.BackingTexture">
             <summary>
             The cached texture of the drawn surface.
             </summary>
         </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
-            <summary>
-            Color used with drawing the texture to the screen. Let's a surface become transparent.
-            </summary>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.CachedTexture">
+            <inheritdoc/>//
         </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.RenderSteps">
-            <summary>
-            Render steps to process.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.SFMLBlendState">
-            <summary>
-            The blend state used by this renderer.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
-            <summary>
-            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Name">
             <inheritdoc/>
         </member>
-        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SetData(System.Object)">
             <summary>
-            Cached set of rectangles used in rendering each cell.
+            Not used.
             </summary>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Reset">
              <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
              <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
         </member>
         <member name="T:SadConsole.Renderers.SurfaceRenderStep">
             <summary>
@@ -554,6 +880,9 @@
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
             <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
@@ -594,6 +923,9 @@
             Renders a tint on top of where the output texture is drawn.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -622,6 +954,9 @@
             Renders the dimmed background screen when a window is modal.
             </summary>
         </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.Name">
+            <inheritdoc/>
+        </member>
         <member name="P:SadConsole.Renderers.WindowRenderStep.SortOrder">
              <inheritdoc/>
         </member>
@@ -648,6 +983,286 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
              <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.Components.LayeredSurface"/> object by adding a <see cref="T:SadConsole.Renderers.LayeredSurfaceRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Configuration.Builder">
+            <summary>
+            Composes a game host object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.Builder.Configs">
+            <summary>
+            A collection of <see cref="T:SadConsole.Configuration.IConfigurator"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.GetOrCreateConfig``1">
+            <summary>
+            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection.
+            </summary>
+            <typeparam name="TConfig">The type of config object.</typeparam>
+            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection. If found in the collection, that instance is returned.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.Run(SadConsole.Game)">
+            <summary>
+            Runs each config object in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection with the specified game instance.
+            </summary>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.Extensions">
+            <summary>
+            Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnStart(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Started"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_Started">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnEnd(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Ending"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_Ending">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameUpdateEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameRenderEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.UseDefaultConsole(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.StartingConsole"/> and <see cref="P:SadConsole.GameHost.Screen"/> properties to new console when the game starts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Either focuses or unfocuses the starting screen.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.Game})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="fontLoader">A method that provides access to the <see cref="T:SadConsole.Configuration.FontConfig"/> object that loads fonts.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.String,System.String[])">
+            <summary>
+            Configures SadConsole to use the specified font file as the default font.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="customDefaultFont">Creates the font config for SadConsole using this font file as the default.</param>
+            <param name="extraFonts">Extra fonts to load into SadConsole.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Configures SadConsole to use the built in default fonts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="useExtendedDefault">When <see langword="true"/>, SadConsole sets the default font to <see cref="P:SadConsole.GameHost.EmbeddedFontExtended"/>; otherwise <see cref="P:SadConsole.GameHost.EmbeddedFont"/> is used.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.FixOldFontName(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds the embedded fonts to the font dictionary with the old incorrect name.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
+            <summary>
+            Sets the target window SadConsole renders to instead of building its own window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="window">The target window to render the game on.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the startup splash screen to the specified object.
+            </summary>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.Game,SadConsole.ScreenSurface[]})">
+            <summary>
+            Sets the startup splash screens to the array returned by the <paramref name="creator"/> delegate.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A delegate that returns an array of surface objects.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.Game,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.FontConfig">
+            <summary>
+            The config settings for loading the default fonts when the game starts.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.Game)">
+            <summary>
+            Invokes the <see cref="P:SadConsole.Configuration.FontConfig.FontLoader"/> delegate.
+            </summary>
+            <param name="config">The builder running this configurator.</param>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.IConfigurator">
+            <summary>
+            Configuration interface that's added to the <see cref="T:SadConsole.Configuration.Builder"/> object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.Builder,SadConsole.Game)">
+            <summary>
+            Called by the <see cref="T:SadConsole.Configuration.Builder"/>; Runs the specific config for this object.
+            </summary>
+            <param name="config">The builder configuration object.</param>
+            <param name="game">The game object being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.SplashScreenConfig">
+            <summary>
+            A config object that adds splash screen objects with the <see cref="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.SplashScreenConfig.GenerateSplashScreen">
+            <summary>
+            A delegate that returns a set of splash screens to use.
+            </summary>
+        </member>
+        <member name="T:SFML.Graphics.SpriteBatch">
+            <summary>
+            A sprite batching class.
+            </summary>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.Reset(SFML.Graphics.RenderTarget,SFML.Graphics.BlendMode,SFML.Graphics.Transform,SFML.Graphics.Shader)">
+            <summary>
+            Resets the batcher.
+            </summary>
+            <param name="target">The new rendering target.</param>
+            <param name="blend">The blending mode.</param>
+            <param name="renderingTransform">The transform.</param>
+            <param name="shader">An optional shader.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawQuad(SFML.Graphics.IntRect,SFML.Graphics.IntRect,SFML.Graphics.Color,SFML.Graphics.Texture)">
+            <summary>
+            Draws a textured quad to the render target.
+            </summary>
+            <param name="screenRect">The rectangle on the render target to draw the quad.</param>
+            <param name="textCoords">The texture coordinates used with <paramref name="texture"/>.</param>
+            <param name="color">A color to shade the quad. Use <see cref="F:SFML.Graphics.Color.White"/> to disable shading.</param>
+            <param name="texture">The texture to draw with.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCell(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,System.Boolean,SadConsole.IFont)">
+            <summary>
+            Draws a single glyph to the screen.
+            </summary>
+            <param name="cell">The glyph information.</param>
+            <param name="screenRect">The rectangle on the render target to draw the glyph.</param>
+            <param name="drawBackground">A boolean value to indicate that the background of the glyph should be drawn.</param>
+            <param name="font">The SadConsole font containing the glyph texture.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.DrawCellBackground(SadConsole.ColoredGlyphBase,SFML.Graphics.IntRect,SadConsole.IFont)">
+            <summary>
+            Draws the background color of a cell to the render target.
+            </summary>
+            <param name="cell">The cell information containing the background color.</param>
+            <param name="screenRect">The rectangle on the render target to draw the background color.</param>
+            <param name="font">The SadConsole font containing the solid color glyph used in drawing backgrounds.</param>
+        </member>
+        <member name="M:SFML.Graphics.SpriteBatch.End">
+            <summary>
+            Ends the sprite batch and draws the data to the screen.
+            </summary>
         </member>
     </members>
 </doc>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -11,10 +11,11 @@
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 

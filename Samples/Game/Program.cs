@@ -13,8 +13,7 @@ namespace Game
             //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
 
-            SadConsole.Game.Create(80, 25);
-            SadConsole.Game.Instance.OnStart = Init;
+            SadConsole.Game.Create(80, 25, Init);
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }

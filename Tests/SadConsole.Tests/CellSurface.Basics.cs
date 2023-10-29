@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SadConsole.Effects;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -23,14 +24,14 @@ namespace SadConsole.Tests
             Assert.IsTrue(surface1[1, 1].Background == background);
             Assert.IsTrue(surface1[1, 1].Glyph == (int)'T');
             Assert.IsTrue(surface1[1, 1].Mirror == mirror);
-            Assert.IsTrue(surface1[1, 1].Decorators.Length == 0);
+            Assert.IsNull(surface1[1, 1].Decorators);
 
             Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
-            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+            Assert.IsTrue(surface1[2, 1].Decorators.Count == 1);
 
             surface1.Print(1, 1, "Test me!", foreground, background, mirror);
             Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
-            Assert.IsTrue(surface1[2, 1].Decorators.Length == 1);
+            Assert.IsTrue(surface1[2, 1].Decorators.Count == 1);
 
             CellDecorator dec1 = new CellDecorator(Color.Wheat, 34, Mirror.None);
             CellDecorator dec2 = new CellDecorator(Color.Purple, 21, Mirror.Vertical);
@@ -38,11 +39,11 @@ namespace SadConsole.Tests
 
             surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, new[] { dec1, dec2, dec3 });
             Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
-            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 3);
+            Assert.IsTrue(surface1[(4, 1)].Decorators.Count == 3);
 
             surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, null);
             Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
-            Assert.IsTrue(surface1[(4, 1)].Decorators.Length == 0);
+            Assert.IsNull(surface1[(4, 1)].Decorators);
         }
 
         [TestMethod]
@@ -121,6 +122,211 @@ namespace SadConsole.Tests
         }
 
         [TestMethod]
+        public void Glyph_SetDecoratorSingle()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                          GameHost.Instance.Random.Next(255),
+                                          s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.SetDecorator((5, 5), decorator);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator));
+        }
+
+        [TestMethod]
+        public void Glyph_SetDecoratorMultiple()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator1 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator2 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator3 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.SetDecorator((5, 5), decorator1, decorator2, decorator3);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+        }
+
+        [TestMethod]
+        public void Glyph_SetDecoratorNull()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator1 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator2 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator3 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.SetDecorator((5, 5), decorator1, decorator2, decorator3);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+
+            surface1.SetDecorator((5, 5), null);
+            Assert.IsNull(surface1[5, 5].Decorators);
+        }
+
+        [TestMethod]
+        public void Glyph_AddDecoratorSingle()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                          GameHost.Instance.Random.Next(255),
+                                          s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.AddDecorator((5, 5), decorator);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator));
+        }
+
+        [TestMethod]
+        public void Glyph_AddDecoratorMultiple()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator1 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator2 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator3 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.AddDecorator((5, 5), decorator1, decorator2);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator3));
+
+            surface1.AddDecorator((5, 5), decorator3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+        }
+
+        [TestMethod]
+        public void Glyph_AddDecoratorNoDupes()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator1 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator2 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator3 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.AddDecorator((5, 5), decorator1, decorator2);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator3));
+
+            surface1.AddDecorator((5, 5), decorator3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+
+            surface1.AddDecorator((5, 5), decorator2);
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+        }
+
+        [TestMethod]
+        public void Glyph_RemoveDecorator()
+        {
+            new SadConsole.Tests.BasicGameHost();
+            var surface1 = new SadConsole.CellSurface(20, 20);
+
+            surface1.FillWithRandomGarbage(255);
+
+            CellDecorator decorator1 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            CellDecorator decorator2 = new(Color.AliceBlue.GetRandomColor(GameHost.Instance.Random),
+                                           GameHost.Instance.Random.Next(255),
+                                           s_mirrorValues[GameHost.Instance.Random.Next(100) % s_mirrorValues.Length]);
+
+            Assert.IsNull(surface1[5, 5].Decorators);
+
+            surface1.AddDecorator((5, 5), decorator1, decorator2);
+
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+
+            surface1.RemoveDecorator((5, 5), decorator1);
+            Assert.IsTrue(surface1[5, 5].Decorators.Count == 1);
+            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator1));
+            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+
+            surface1.RemoveDecorator((5, 5), decorator2);
+            Assert.IsNull(surface1[5, 5].Decorators);
+        }
+
+        [TestMethod]
         [DataRow(20, 20, 4, 4, 7, 7)]
         [DataRow(20, 20, -20, -20, 50, 50)]
         [DataRow(20, 20, 30, 30, 10, 10)]
@@ -128,17 +334,22 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
             var region = new Rectangle(regionX, regionY, regionWidth, regionHeight);
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(region);
             PrintSurfaceGlyphs(surface1, "After:");
 
-            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+            ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
 
             foreach (var item in Rectangle.GetIntersection(region, new Rectangle(0, 0, surface1.Width, surface1.Height)).Positions())
+            {
                 Assert.IsTrue(defaultGlyph.Matches(surface1[item]));
+                Assert.IsNull(surface1.Effects.GetEffect(surface1[item]));
+            }
         }
 
         [TestMethod]
@@ -150,16 +361,19 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(clearX, clearY);
             PrintSurfaceGlyphs(surface1, "After:");
 
             if (surface1.IsValidCell(clearX, clearY))
             {
-                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
                 Assert.IsTrue(defaultGlyph.Matches(surface1[clearX, clearY]));
+                Assert.IsNull(surface1.GetEffect(clearX, clearY));
             }
         }
 
@@ -172,20 +386,25 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(width, height);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear(clearX, clearY, length);
             PrintSurfaceGlyphs(surface1, "After:");
 
             if (surface1.IsValidCell(clearX, clearY))
             {
-                ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+                ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
                 int startingIndex = new Point(clearX, clearY).ToIndex(surface1.Width);
                 for (int i = 0; i < length; i++)
                 {
                     if (surface1.IsValidCell(startingIndex + i))
+                    {
                         Assert.IsTrue(defaultGlyph.Matches(surface1[startingIndex + i]));
+                        Assert.IsNull(surface1.GetEffect(startingIndex + i));
+                    }
                 }
             }
         }
@@ -195,15 +414,20 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
             var surface1 = new SadConsole.CellSurface(7, 10);
+            Fade effect1 = new Fade();
 
             surface1.FillWithRandomGarbage(255);
+            surface1.SetEffect(surface1, effect1);
+            Assert.IsTrue(surface1.Effects.Count != 0);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear();
             PrintSurfaceGlyphs(surface1, "After:");
 
-            ColoredGlyph defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
+            ColoredGlyphBase defaultGlyph = new ColoredGlyph(surface1.DefaultForeground, surface1.DefaultBackground, surface1.DefaultGlyph);
             for (int i = 0; i < surface1.Count; i++)
                 Assert.IsTrue(defaultGlyph.Matches(surface1[i]));
+
+            Assert.IsTrue(surface1.Effects.Count == 0);
         }
 
         public void Surface_Equals(ICellSurface surface1, ICellSurface surface2)

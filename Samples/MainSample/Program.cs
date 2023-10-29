@@ -23,7 +23,6 @@ namespace FeatureDemo
     internal class Program
     {
         private static Windows.CharacterViewer _characterWindow;
-        private static Container MainConsole;
 
         public static int MainWidth = 80;
         public static int MainHeight = 23;
@@ -32,25 +31,34 @@ namespace FeatureDemo
 
         private static void Main(string[] args)
         {
-            //SadConsole.Settings.UnlimitedFPS = true;
             //SadConsole.Settings.UseDefaultExtendedFont = true;
             //SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
 
+            Game.Configuration configuration = new Game.Configuration()
+                .ConfigureFonts(loader => loader.UseBuiltinFontExtended())
+                .SetScreenSize(80, 25)
+                .SetStartingScreen<Container>()
+                .OnStart(Init)
+                .UseFrameUpdateEvent(Instance_FrameUpdate)
+                ;
+
 #if MONOGAME
             Settings.WindowTitle = "Feature Demo (MonoGame)";
+            configuration
+                .ShowMonoGameFPS()
+                .UseUnlimitedFPS();
 #elif SFML
             Settings.WindowTitle = "Feature Demo (SFML)";
+            //configuration.UseUnlimitedFPS();
 #endif
-
-            SadConsole.Game.Create(80, 25); //, "Res/Fonts/C64.font");
-            SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
+            Game.Create(configuration);
+            Game.Instance.Run();
+            Game.Instance.Dispose();
         }
 
         private static void Instance_FrameUpdate(object sender, GameHost e)
         {
+            
             // Called each logic update.
             //if (!_characterWindow.IsVisible)
             {
@@ -58,14 +66,23 @@ namespace FeatureDemo
                 // at a time. This code is provided to support the custom consoles demo. If you want to enable the demo, uncomment one of the lines
                 // in the Initialize method above.
                 if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F1))
-                    MainConsole.MoveNextConsole();
+                    ((Container)Game.Instance.Screen).MoveNextConsole();
 
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F2))
                     _characterWindow.Show(true);
-
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F3))
+                {
+#if MONOGAME
+                    SadConsole.Host.Global.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
+                    SadConsole.Game.Instance.MonoGameInstance.IsFixedTimeStep = true;
+#endif
+                }
+                else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F10))
+                {
+                    SadConsole.Debug.Screen.Show();
+                }
                 else if (SadConsole.GameHost.Instance.Keyboard.IsKeyReleased(Keys.F9))
                 {
-                    //SadConsole.Debug.Screen.Show();
 #if MONOGAME
                     if (!SadConsole.Debug.MonoGame.Debugger.IsOpened)
                         SadConsole.Debug.MonoGame.Debugger.Start();
@@ -84,25 +101,115 @@ namespace FeatureDemo
         /// </summary>
         private static void Init()
         {
-#if MONOGAME
-            if (Settings.UnlimitedFPS)
-              SadConsole.Game.Instance.MonoGameInstance.Components.Add(new SadConsole.Host.Game.FPSCounterComponent(SadConsole.Game.Instance.MonoGameInstance));
-#endif
             // Register the types provided by the SadConsole.Extended library
             SadConsole.UI.RegistrarExtended.Register();
 
             // Splash screens show up at the start of the game.
-            //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.PCBoot());
+            //SadConsole.Game.Instance.SetSplashScreens(new SadConsole.SplashScreens.Ansi1());
 
             // Initialize the windows used by the global keyboard handler in Instance_FrameUpdate
             _characterWindow = new Windows.CharacterViewer(0);
 
             // The demo screen 
-            MainConsole = new Container();
+            //Game.Instance.Screen = new Container();
 
-            // By default SadConsole adds a blank ready-to-go console to the rendering system. 
-            // We don't want to use that for the sample project so we'll remove and then destroy it.
-            Game.Instance.Screen = MainConsole;
+            //return;
+            //SadConsole.Settings.ClearColor = Color.White;
+
+            return;
+            var panel1 = new SadConsole.UI.ControlsConsole(20, 10);
+            panel1.Surface.DefaultBackground = Color.LightGray;
+            panel1.Surface.DefaultForeground = Color.Black;
+            panel1.Surface.Clear();
+            panel1.Surface.Print(2, 2, "hello");
+            panel1.Position = (2, 5);
+            panel1.FocusOnMouseClick = true;
+
+            var borderParams = SadConsole.UI.Border.BorderParameters.GetDefault()
+                .ChangeBorderGlyph(ICellSurface.ConnectedLineThin)
+                .ChangeBorderColors(panel1.Surface.DefaultForeground, panel1.Surface.DefaultBackground)
+                .AddTitle("Panel 1", panel1.Surface.DefaultBackground, panel1.Surface.DefaultForeground)
+                .AddShadow(177, Color.Black, Color.White);
+
+            var border = new SadConsole.UI.Border(panel1, borderParams);
+
+            var label = new SadConsole.UI.Controls.Label(3);
+            label.Position = new Point(2, 4);
+
+            var scroll = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, 2);
+            scroll.Position = (1, 4);
+            scroll.Maximum = 10;
+            scroll.ValueChanged += (s,e) => { label.DisplayText = scroll.Value.ToString(); };
+
+            panel1.Controls.Add(label);
+            panel1.Controls.Add(scroll);
+
+            Game.Instance.Screen = new ScreenObject();
+            Game.Instance.Screen.Children.Add(panel1);
+
+
+
+
+
+            panel1 = new SadConsole.UI.ControlsConsole(20, 10);
+            panel1.Surface.DefaultBackground = Color.AnsiWhite;
+            panel1.Surface.DefaultForeground = Color.AnsiBlue;
+            panel1.Surface.Clear();
+            panel1.Surface.Print(2, 2, "hello");
+            panel1.Position = (27, 5);
+            panel1.FocusOnMouseClick = true;
+
+            borderParams = SadConsole.UI.Border.BorderParameters.GetDefault()
+                .ChangeBorderGlyph(ICellSurface.Connected3dBox)
+                .ChangeBorderColors(Color.AnsiWhiteBright, panel1.Surface.DefaultBackground)
+                .AddTitle("Panel 2", Color.AnsiWhiteBright, Color.AnsiBlue)
+                ;
+            
+
+            border = new SadConsole.UI.Border(panel1, borderParams);
+            for (int i = 1; i < border.Surface.Width; i++)
+                border.Surface[i, border.Surface.Height - 1].Foreground = Color.AnsiBlackBright;
+            for (int i = 0; i < border.Surface.Height; i++)
+                border.Surface[border.Surface.Width - 1, i].Foreground = Color.AnsiBlackBright;
+            border.Surface.IsDirty = true;
+
+            label = new SadConsole.UI.Controls.Label(3);
+            label.Position = new Point(2, 4);
+
+            scroll = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, 2);
+            scroll.Position = (1, 4);
+            scroll.Maximum = 10;
+            scroll.ValueChanged += (s, e) => { label.DisplayText = scroll.Value.ToString(); };
+
+            panel1.Controls.Add(label);
+            panel1.Controls.Add(scroll);
+
+            Game.Instance.Screen.Children.Add(panel1);
+
+
+            panel1 = new SadConsole.UI.ControlsConsole(20, 10);
+            panel1.Surface.DefaultBackground = Color.AnsiWhite;
+            panel1.Surface.DefaultForeground = Color.AnsiBlue;
+            panel1.Surface.Clear();
+            panel1.Surface.Print(2, 2, "hello");
+            panel1.Position = (49, 5);
+            panel1.FocusOnMouseClick = true;
+
+            SadConsole.UI.Border.Create3DForSurface(panel1, "Panel 3");
+
+
+            label = new SadConsole.UI.Controls.Label(3);
+            label.Position = new Point(2, 4);
+
+            scroll = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, 2);
+            scroll.Position = (1, 4);
+            scroll.Maximum = 10;
+            scroll.ValueChanged += (s, e) => { label.DisplayText = scroll.Value.ToString(); };
+
+            panel1.Controls.Add(label);
+            panel1.Controls.Add(scroll);
+
+            Game.Instance.Screen.Children.Add(panel1);
         }
     }
 

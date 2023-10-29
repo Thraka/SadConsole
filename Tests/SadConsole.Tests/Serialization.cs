@@ -34,7 +34,16 @@ namespace SadConsole.Tests
             obj2.UseKeyboard = false;
             obj2.UseMouse = true;
 
+            //SadConsole.ScreenSurface obj3 = new SadConsole.ScreenSurface(10, 10);
+            ScreenObject obj3 = new ScreenObject();
+            obj3.Position = (44, 44);
+            obj3.IsEnabled = true;
+            obj3.IsVisible = false;
+            obj3.UseKeyboard = false;
+            obj3.UseMouse = true;
+
             obj.Children.Add(obj2);
+            obj2.Children.Add(obj3);
 
             Component1 comp1 = new Component1() { Name = "component 1" };
             Component1 comp2 = new Component1() { Name = "component 2" };
@@ -59,14 +68,16 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
 
-            Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenObject));
-
             Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
             Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
+            Assert.AreEqual(obj3.SadComponents.Count, newObj.Children[0].Children[0].SadComponents.Count);
 
             Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
             Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
 
+            Assert.IsInstanceOfType(newObj.Children[0], typeof(ScreenObject));
+            Assert.IsInstanceOfType(newObj.SadComponents[0], typeof(Component1));
+            Assert.IsInstanceOfType(newObj.Children[0].Children[0], typeof(ScreenObject));
         }
 
         [TestMethod]
@@ -74,12 +85,16 @@ namespace SadConsole.Tests
         {
             new SadConsole.Tests.BasicGameHost();
 
+            Point decoratorSpot = (5, 5);
+            CellDecorator decorator = new(Color.Purple, 22, Mirror.Horizontal);
+
             var obj = new SadConsole.ScreenSurface(10, 10);
             obj.Surface.FillWithRandomGarbage(255);
             obj.Position = (10, 10);
             obj.IsEnabled = false;
             obj.IsVisible = false;
             obj.UseKeyboard = true;
+            obj.Surface.SetDecorator(decoratorSpot.X, decoratorSpot.Y, 1, decorator);
             obj.UseMouse = false;
 
             var obj2 = new SadConsole.ScreenSurface(20, 20);
@@ -88,6 +103,7 @@ namespace SadConsole.Tests
             obj2.IsEnabled = true;
             obj2.IsVisible = false;
             obj2.UseKeyboard = false;
+            obj2.Surface.SetDecorator(decoratorSpot.X, decoratorSpot.Y, 1, decorator);
             obj2.UseMouse = true;
 
             obj.Children.Add(obj2);
@@ -107,6 +123,8 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj.UseKeyboard, newObj.UseKeyboard);
             Assert.AreEqual(obj.UseMouse, newObj.UseMouse);
             Assert.AreEqual(obj.AbsolutePosition, newObj.AbsolutePosition);
+            Assert.AreEqual(obj.Surface[decoratorSpot].Decorators![0], decorator);
+            Assert.IsInstanceOfType(obj.Renderer, newObj.Renderer.GetType());
 
             Assert.AreEqual(obj2.Position, newObj.Children[0].Position);
             Assert.AreEqual(obj2.IsEnabled, newObj.Children[0].IsEnabled);
@@ -114,6 +132,8 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseKeyboard, newObj.Children[0].UseKeyboard);
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
+            Assert.AreEqual(obj2.Surface[decoratorSpot].Decorators![0], decorator);
+            Assert.IsInstanceOfType(obj2.Renderer, ((SadConsole.ScreenSurface)newObj.Children[0]).Renderer.GetType());
 
             for (int i = 0; i < 10; i++)
             {
@@ -134,7 +154,7 @@ namespace SadConsole.Tests
         }
 
         [TestMethod]
-        public void AnimatedScreenSurface_SaveLoad()
+        public void AnimatedScreenObject_SaveLoad()
         {
             new SadConsole.Tests.BasicGameHost();
 
@@ -143,11 +163,11 @@ namespace SadConsole.Tests
             //   Repeat = true;
             //   Name = "default";
 
-            AnimatedScreenSurface animation = AnimatedScreenSurface.CreateStatic(10, 10, 10, 0.5d);
+            AnimatedScreenObject animation = AnimatedScreenObject.CreateStatic(10, 10, 10, 0.5d);
             animation.Name = "Static Frames";
             animation.Center = (2, 2);
             animation.Save("test.file");
-            AnimatedScreenSurface animation2 = AnimatedScreenSurface.Load("test.file");
+            AnimatedScreenObject animation2 = AnimatedScreenObject.Load("test.file");
 
             Assert.AreEqual(animation.Width, animation2.Width);
             Assert.AreEqual(animation.Height, animation2.Height);
@@ -161,11 +181,10 @@ namespace SadConsole.Tests
             Assert.AreEqual(animation.CurrentFrameIndex, animation2.CurrentFrameIndex);
 
             var surfaceTest = new CellSurface();
-            var surface1Frames = animation.Frames.ToList();
-            var surface2Frames = animation2.Frames.ToList();
-            for (int i = 0; i < surface1Frames.Count; i++)
+
+            for (int i = 0; i < animation.Frames.Count; i++)
             {
-                surfaceTest.Surface_Equals(surface1Frames[i], surface2Frames[i]);
+                surfaceTest.Surface_Equals(animation.Frames[i], animation2.Frames[i]);
             }
         }
     }

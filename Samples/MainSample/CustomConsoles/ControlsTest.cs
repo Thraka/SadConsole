@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.UI;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
 using SadRogue.Primitives;
@@ -114,7 +115,7 @@ namespace FeatureDemo.CustomConsoles
 
             var input = new TextBox(10)
             {
-                Position = new Point(51, 9)
+                Position = new Point(51, 9), MaxLength = 5
             };
             Controls.Add(input);
 
@@ -154,9 +155,48 @@ namespace FeatureDemo.CustomConsoles
             var checkbox = new CheckBox(13, 1)
             {
                 Text = "Check box",
-                Position = new Point(51, 13)
+                Position = new Point(49, 13)
             };
             Controls.Add(checkbox);
+
+            var table = new Table(15, 9, 5, 1)
+            {
+                Position = new Point(64, 13),
+                DefaultBackground = Color.Lerp(Color.Gray, Color.Black, 0.85f),
+                DefaultForeground = Color.Cyan,
+            };
+            table.SetThemeColors(Colors.CreateSadConsoleBlue());
+            var headerOptions = new Table.Cell.Options(table)
+            {
+                HorizontalAlignment = Table.Cell.Options.HorizontalAlign.Center,
+                Interactable = false
+            };
+            table.Cells.Row(1).SetLayout(settings: headerOptions);
+            table.Cells.Column(0).SetLayout(settings: headerOptions);
+            table.Cells[0, 1].Value = "Table";
+            table.Cells[0, 1].Foreground = Color.Magenta;
+            table.Cells[0, 1].Settings.Interactable = false;
+            table.Cells[1, 1].Value = "A";
+            table.Cells[1, 2].Value = "B";
+
+            for (int row = 1; row < 9; row++)
+            {
+                if (row == 1) continue;
+                table.Cells[row, 0].Value = (row-1).ToString();
+            }
+
+            for (int x=0; x < 3; x++)
+            {
+                for (int y = 1; y < 9; y++)
+                {
+                    if (x == 0 || y == 1) continue;
+                    table.Cells[y, x].Background = Color.Lerp(Color.Gray, Color.Black, 0.65f);
+                    table.Cells[y, x].Foreground = Color.Yellow;
+                    table.Cells[y, x].Value = (x == 1 ? "A" : "B") + (y -1);
+                }
+            }
+
+            Controls.Add(table);
 
             Controls.FocusedControl = null;
             //DisableControlFocusing = true;

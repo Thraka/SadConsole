@@ -1,70 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using Console = SadConsole.Console;
 
-namespace SadConsole.Instructions
+namespace SadConsole.Instructions;
+
+/// <summary>
+/// Runs one or more instructions at the same time. This instruction completes when all added instructions have finished.
+/// </summary>
+[System.Diagnostics.DebuggerDisplay("Instruction: Concurrent")]
+public class ConcurrentInstructions : InstructionBase
 {
+    private List<InstructionBase> _instructions;
+
     /// <summary>
-    /// Runs one or more instructions at the same time. This instruction completes when all added instructions have finished.
+    /// The instructions to run concurrently.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Instruction: Concurrent")]
-    public class ConcurrentInstructions : InstructionBase
+    public IEnumerable<InstructionBase> Instructions
     {
-        private List<InstructionBase> _instructions;
+        get => _instructions;
+        set => _instructions = new List<InstructionBase>(value ?? throw new NullReferenceException("Instructions cannot be set to null."));
+    }
 
-        /// <summary>
-        /// The instructions to run concurrently.
-        /// </summary>
-        public IEnumerable<InstructionBase> Instructions
+    /// <summary>
+    /// Creates a new instruction that runs the provided instructions concurrently.
+    /// </summary>
+    /// <param name="instructions">The instructions</param>
+    public ConcurrentInstructions(IEnumerable<InstructionBase> instructions) =>
+        _instructions = new List<InstructionBase>(instructions);
+
+    /// <inheritdoc />
+    public override void Update(IScreenObject componentHost, TimeSpan delta)
+    {
+        bool stillRunning = false;
+
+        int count = _instructions.Count;
+        for (int i = 0; i < count; i++)
         {
-            get => _instructions;
-            set => _instructions = new List<InstructionBase>(value ?? throw new NullReferenceException("Instructions cannot be set to null."));
+            _instructions[i].Update(componentHost, delta);
+
+            if (!_instructions[i].IsFinished)
+                stillRunning = true;
         }
 
-        /// <summary>
-        /// Creates a new instruction that runs the provided instructions concurrently.
-        /// </summary>
-        /// <param name="instructions">The instructions</param>
-        public ConcurrentInstructions(IEnumerable<InstructionBase> instructions) =>
-            _instructions = new List<InstructionBase>(instructions);
+        IsFinished = !stillRunning;
 
-        /// <inheritdoc />
-        public override void Update(IScreenObject componentHost, TimeSpan delta)
-        {
-            bool stillRunning = false;
+        base.Update(componentHost, delta);
+    }
 
-            int count = _instructions.Count;
-            for (int i = 0; i < count; i++)
-            {
-                _instructions[i].Update(componentHost, delta);
+    /// <inheritdoc />
+    public override void Repeat()
+    {
+        int count = _instructions.Count;
+        for (int i = 0; i < count; i++)
+            _instructions[i].Repeat();
 
-                if (!_instructions[i].IsFinished)
-                    stillRunning = true;
-            }
+        base.Repeat();
+    }
 
-            IsFinished = !stillRunning;
+    /// <inheritdoc />
+    public override void Reset()
+    {
+        int count = _instructions.Count;
+        for (int i = 0; i < count; i++)
+            _instructions[i].Reset();
 
-            base.Update(componentHost, delta);
-        }
-
-        /// <inheritdoc />
-        public override void Repeat()
-        {
-            int count = _instructions.Count;
-            for (int i = 0; i < count; i++)
-                _instructions[i].Repeat();
-
-            base.Repeat();
-        }
-
-        /// <inheritdoc />
-        public override void Reset()
-        {
-            int count = _instructions.Count;
-            for (int i = 0; i < count; i++)
-                _instructions[i].Reset();
-
-            base.Reset();
-        }
+        base.Reset();
     }
 }

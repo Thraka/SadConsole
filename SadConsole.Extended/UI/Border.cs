@@ -10,6 +10,7 @@ namespace SadConsole.UI
     /// <summary>
     /// Creates a 3D border around a surface.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("Border")]
     public class Border: ScreenSurface
     {
         /// <summary>
@@ -264,11 +265,11 @@ namespace SadConsole.UI
             }
 
             /// <summary>
-            /// Fills the array of glyphs to be used as the border line with the given <see cref="ColoredGlyph"/>.
+            /// Fills the array of glyphs to be used as the border line with the given <see cref="ColoredGlyphBase"/>.
             /// </summary>
-            /// <param name="glyph">The <see cref="ColoredGlyph"/> to be used the border line.</param>
+            /// <param name="glyph">The <see cref="ColoredGlyphBase"/> to be used the border line.</param>
             /// <returns>The modified instance of <see cref="BorderParameters"/>.</returns>
-            public BorderParameters ChangeBorderGlyph(ColoredGlyph glyph)
+            public BorderParameters ChangeBorderGlyph(ColoredGlyphBase glyph)
             {
                 ChangeBorderGlyph(glyph.Glyph);
                 ChangeBorderColors(glyph.Foreground, glyph.Background);
@@ -317,8 +318,8 @@ namespace SadConsole.UI
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="parameters"><see cref="BorderParameters"/> to be used in creating the <see cref="Border"/>.</param>
         /// <param name="font">Optional <see cref="IFont"/> for the border <see cref="CellSurface"/>.</param>
-        public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.Width + GetSize(parameters),
-                                                                                                                        contents.Surface.Height + GetSize(parameters)),
+        public Border(IScreenSurface contents, BorderParameters parameters, IFont font = null) : base(new CellSurface(contents.Surface.ViewWidth + GetSize(parameters),
+                                                                                                                      contents.Surface.ViewHeight + GetSize(parameters)),
                                                                                                         font ?? contents.Font, contents.FontSize)
         {
             if (parameters.DrawBorder)
@@ -340,7 +341,7 @@ namespace SadConsole.UI
             {
                 // Draw the box first, in the smaller area, the other area gets the 3d shade.
                 if (parameters.DrawBorder)
-                    Surface.DrawBox(new Rectangle(0, 0, Surface.Width - 1, Surface.Height - 1), parameters.BorderBox);
+                    Surface.DrawBox(new Rectangle(0, 0, Surface.ViewWidth - 1, Surface.ViewHeight - 1), parameters.BorderBox);
 
                 Color foreground = parameters.UseDefaultShadedColors ? Color.AnsiWhite : parameters.ShadedGlyphForeground;
                 Color background = parameters.UseDefaultShadedColors ? Color.Transparent : parameters.ShadedGlyphBackground;
@@ -348,9 +349,9 @@ namespace SadConsole.UI
                 int bottomBar = parameters.UseDefaultShadedGlyphs ? 223 : parameters.ShadedGlyph; //▀
                 int corner = parameters.UseDefaultShadedGlyphs ? 220 : parameters.ShadedGlyph; //▄
 
-                Surface.DrawLine((Surface.Width - 1, 2), (Surface.Width - 1, Surface.Height - 2), rightSideBar, foreground, background);
-                Surface.DrawLine((1, Surface.Height - 1), (Surface.Width - 1, Surface.Height - 1), bottomBar, foreground, background);
-                Surface.SetGlyph(Surface.Width - 1, 1, corner, foreground, background);
+                Surface.DrawLine((Surface.ViewWidth - 1, 2), (Surface.ViewWidth - 1, Surface.ViewHeight - 2), rightSideBar, foreground, background);
+                Surface.DrawLine((1, Surface.ViewHeight - 1), (Surface.ViewWidth - 1, Surface.ViewHeight - 1), bottomBar, foreground, background);
+                Surface.SetGlyph(Surface.ViewWidth - 1, 1, corner, foreground, background);
             }
             else
                 Surface.DrawBox(Surface.Area, parameters.BorderBox);
@@ -358,7 +359,7 @@ namespace SadConsole.UI
             var title = parameters.Title;
 
             if (!string.IsNullOrEmpty(title))
-                Surface.Print(((Surface.Width - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(parameters.TitleAlignment, title.Length + 2, ' '), parameters.TitleBackground == Color.Transparent ? contents.Surface[0].Background : parameters.TitleBackground, parameters.TitleForeground);
+                Surface.Print(((Surface.ViewWidth - 1) / 2) - ((title.Length + 2) / 2), 0, title.Align(parameters.TitleAlignment, title.Length + 2, ' '), parameters.TitleBackground == Color.Transparent ? contents.Surface[0].Background : parameters.TitleBackground, parameters.TitleForeground);
 
             IsEnabled = false;
             UseMouse = false;
@@ -401,18 +402,59 @@ namespace SadConsole.UI
         }
 
         /// <summary>
+        /// Creates a chunky 3d border using <see cref="ICellSurface.Connected3dBox"/> glyphs.
+        /// </summary>
+        /// <param name="contents">The object the border will be around.</param>
+        /// <param name="title">Optional title to display on the border.</param>
+        /// <param name="titleForeground">Foreground color of the title. Defaults to a brighter version of the content's <see cref="ICellSurface.DefaultBackground"/>.</param>
+        /// <param name="titleBackground">Background color of the title. Defaults to the content's <see cref="ICellSurface.DefaultForeground"/>.</param>
+        /// <param name="borderBrightColor">The bright color of the 3D border. Defaults to <see cref="Color.AnsiWhiteBright"/>.</param>
+        /// <param name="borderDarkColor">The dark color of the 3D border. Defaults to <see cref="Color.AnsiBlackBright"/>.</param>
+        /// <param name="borderBetweenColor">The corner color of the 3D border. Defaults to the content's <see cref="ICellSurface.DefaultBackground"/>.</param>
+        /// <returns>The created border, attached to the content.</returns>
+        /// <remarks>
+        /// For a nice looking border, set the content's <see cref="ICellSurface.DefaultForeground"/> to <see cref="Color.AnsiWhite"/> and the <see cref="ICellSurface.DefaultBackground"/> to <see cref="Color.AnsiBlue"/>, before calling this method.
+        /// </remarks>
+        public static Border Create3DForSurface(IScreenSurface contents, string title, Color? titleForeground = null, Color? titleBackground = null,
+                                                                                       Color? borderBrightColor = null, Color? borderDarkColor = null, Color? borderBetweenColor = null)
+        {
+            if (titleForeground == null) { titleForeground = contents.Surface.DefaultBackground.GetBrighter(); }
+            if (titleBackground == null) { titleBackground = contents.Surface.DefaultForeground; }
+            if (borderBrightColor == null) { borderBrightColor = Color.AnsiWhiteBright; }
+            if (borderDarkColor == null) { borderDarkColor = Color.AnsiBlackBright; }
+            if (borderBetweenColor == null) { borderBetweenColor = contents.Surface.DefaultBackground; }
+
+            var borderParams = SadConsole.UI.Border.BorderParameters.GetDefault()
+                .ChangeBorderGlyph(ICellSurface.Connected3dBox)
+                .ChangeBorderColors(borderBrightColor.Value, borderBetweenColor.Value)
+                .AddTitle(title, titleForeground.Value, titleBackground.Value);
+
+            var border = new Border(contents, borderParams);
+
+            for (int i = 1; i < border.Surface.Width; i++)
+                border.Surface[i, border.Surface.Height - 1].Foreground = borderDarkColor.Value;
+
+            for (int i = 0; i < border.Surface.Height; i++)
+                border.Surface[border.Surface.Width - 1, i].Foreground = borderDarkColor.Value;
+
+            border.Surface.IsDirty = true;
+
+            return border;
+        }
+
+        /// <summary>
         /// Helper method to add a border to a surface.
         /// </summary>
         /// <param name="contents">The object the border will be around.</param>
         /// <param name="title">Optional title to display on the border.</param>
-        public static void AddToSurface(IScreenSurface contents, string title) =>
+        public static void CreateForSurface(IScreenSurface contents, string title) =>
             new Border(contents, title);
 
         /// <summary>
         /// Helper method to add a border to a window.
         /// </summary>
         /// <param name="contents">The window the border will be around.</param>
-        public static void AddToWindow(Window contents) =>
+        public static void CreateForWindow(Window contents) =>
             new Border(contents);
 
         private static int GetSize(BorderParameters parameters)

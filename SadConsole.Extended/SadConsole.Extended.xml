@@ -46,7 +46,7 @@
              <remarks>
              Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
             
-             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="!:IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
              </remarks>
         </member>
         <member name="M:SadConsole.Components.C64KeyboardHandler.PrintPrompt">
@@ -101,7 +101,7 @@
              <remarks>
              Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
             
-             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="P:SadConsole.IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="!:IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
              </remarks>
         </member>
         <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.PrintPrompt">
@@ -193,6 +193,11 @@
             The size of the parent object's font.
             </summary>
         </member>
+        <member name="P:SadConsole.Components.SmoothMove.IsEnabled">
+            <summary>
+            <see langword="false"/> to pause this component and prevent it from animating movement; otherwise <see langword="true"/> to enable animating movement.
+            </summary>
+        </member>
         <member name="P:SadConsole.Components.SmoothMove.TransitionEasingFunction">
             <summary>
             The easing function applied to smoothing the objects movement.
@@ -243,103 +248,123 @@
             <param name="host">The host object being moved.</param>
             <param name="delta">The time difference from the previous frame.</param>
         </member>
-        <member name="T:SadConsole.Entities.Manager">
+        <member name="T:SadConsole.Entities.EntityManagerZoned">
             <summary>
             Manages a set of entities. Adds a render step and only renders the entities that are in the parent <see cref="T:SadConsole.IScreenSurface"/> visible area.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.Manager.EnterZone">
+        <member name="E:SadConsole.Entities.EntityManagerZoned.EnterZone">
             <summary>
             An event to indicate that an entity entered a zone.
             </summary>
         </member>
-        <member name="E:SadConsole.Entities.Manager.ExitZone">
+        <member name="E:SadConsole.Entities.EntityManagerZoned.ExitZone">
             <summary>
             An event to indicate that an entity exited a zone.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager._zones">
+        <member name="F:SadConsole.Entities.EntityManagerZoned._zones">
             <summary>
             The zones in this manager.
             </summary>
         </member>
-        <member name="P:SadConsole.Entities.Manager.Zones">
+        <member name="P:SadConsole.Entities.EntityManagerZoned.Zones">
             <summary>
             The zones associated with this manager.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.#ctor">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.#ctor">
             <summary>
             Creates a new manager to handle entity movement within zones.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.Add(SadConsole.Entities.Zone)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.Add(SadConsole.Entities.Zone)">
             <summary>
             Adds a zone to this manager.
             </summary>
             <param name="zone">The zone to add.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.Remove(SadConsole.Entities.Zone)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.Remove(SadConsole.Entities.Zone)">
             <summary>
             Removes a zone from this manager.
             </summary>
             <param name="zone">The hotspot to remove.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetEntityAtPosition(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.Contains(SadConsole.Entities.Zone)">
             <summary>
-            Gets the first entity at the specified position or <see langword="null"/> if there is no entity.
+            Checks if the manager contains the specified zone.
+            </summary>
+            <param name="zone">The zone to check for.</param>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManagerZoned.GetEntityAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Returns an entity at the specified position or <see langword="null"/> if there is no entity. If there are multiple entities at the specified position, only one of them is returned.
             </summary>
             <param name="position">The position to get an entity at.</param>
-            <returns>The first entity if it exists; otherwise it returns <see langword="null"/>.</returns>
+            <returns>The entity if it exists; otherwise it returns <see langword="null"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.GetEntitiesAtPosition(SadRogue.Primitives.Point)">
             <summary>
-            Gets the entities at the specified position or <see langword="null"/> if there aren't any at the position.
+            Returns an enumerator containing the entities, if any, at the specified position.
             </summary>
             <param name="position">The position to get an entity at.</param>
             <returns>An array of entities if they exist; otherwise <see langword="null"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.HasEntityAt(SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.HasEntityAt(SadRogue.Primitives.Point)">
             <summary>
             Returns <see langword="true"/> when there is an entity at the specified position; otherwise <see langword="false"/>.
             </summary>
             <param name="position">The position to check.</param>
             <returns>A value indicating if an entity exists.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityChangedPosition(SadConsole.Entities.Entity,SadConsole.ValueChangedEventArgs{SadRogue.Primitives.Point})">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.GetZonesAtPosition(SadRogue.Primitives.Point)">
+            <summary>
+            Returns a collection of zones at the specified position.
+            </summary>
+            <param name="position">The position to check for zones.</param>
+            <returns>Every zone that contains the position.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManagerZoned.GetEntitiesInZone(SadConsole.Entities.Zone)">
+            <summary>
+            Returns a list of entities that are located in the specified zone.
+            </summary>
+            <param name="zone">The zone to filter entities by.</param>
+            <returns>A list of entities.</returns>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityChangedPosition(SadConsole.Entities.Entity,SadRogue.Primitives.ValueChangedEventArgs{SadRogue.Primitives.Point})">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityAdded(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityAdded(SadConsole.Entities.Entity)">
             <summary>
             Adds entity state information to an entity when it's added.
             </summary>
             <param name="entity">The entity that was added.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityRemoved(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityRemoved(SadConsole.Entities.Entity)">
             <summary>
             Removes the entity state information of an entity being removed.
             </summary>
             <param name="entity">The entity that was removed.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityEnterZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.EntityManagerZoned.EnterZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity entered.</param>
             <param name="entity">The entity that entered the zone.</param>
             <param name="triggeredPosition">The position the entity entered.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityExitZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
-            Called when an entity enters a zone.
+            Called when an entity enters a zone and raises the <see cref="E:SadConsole.Entities.EntityManagerZoned.ExitZone"/> event.
             </summary>
             <param name="host">The host that the zone and entity share.</param>
             <param name="zone">The zone the entity exited.</param>
             <param name="entity">The entity that exited the zone.</param>
             <param name="triggeredPosition">The new position the entity left.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.OnEntityMoveZone(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Called when an entity moves within a zone.
             </summary>
@@ -349,59 +374,59 @@
             <param name="newPosition">The position the entity moved to.</param>
             <param name="oldPosition">The position the entity moved from.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.OnEntityMoved(SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.GetZonesAtPosition(SadRogue.Primitives.Point@,System.Collections.Generic.HashSet{SadConsole.Entities.Zone}@)">
             <summary>
-            Creates a new event args for the entity movement.
+            Gets the zones that contain the specified position.
             </summary>
-            <param name="entity">The entity associated with the event.</param>
-            <param name="newPosition">The position the entity moved to.</param>
-            <param name="oldPosition">The position the entity moved from.</param>
+            <param name="point">The position to check.</param>
+            <param name="zones">The zones that contain this position.</param>
+            <returns><see langword="true"/> when at least one zone was found; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.DisableEntity(SadConsole.Entities.Entity)">
             <summary>
-            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
-            </summary>
-            <param name="entity">The entity to disable.</param>
-        </member>
-        <member name="M:SadConsole.Entities.Manager.EnableEntity(SadConsole.Entities.Entity)">
-            <summary>
-            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.Manager.Zones"/>.
+            Prevents an entity from being processed with the <see cref="P:SadConsole.Entities.EntityManagerZoned.Zones"/>.
             </summary>
             <param name="entity">The entity to disable.</param>
         </member>
-        <member name="M:SadConsole.Entities.Manager.IsEntityDisabled(SadConsole.Entities.Entity)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.EnableEntity(SadConsole.Entities.Entity)">
             <summary>
-            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.Manager.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
+            Enables the entity to be processed with with the <see cref="P:SadConsole.Entities.EntityManagerZoned.Zones"/>.
+            </summary>
+            <param name="entity">The entity to disable.</param>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManagerZoned.IsEntityDisabled(SadConsole.Entities.Entity)">
+            <summary>
+            Returns <see langword="true"/> when the entity has been disabled by <see cref="M:SadConsole.Entities.EntityManagerZoned.DisableEntity(SadConsole.Entities.Entity)"/>; otherwise <see langword="false"/>.
             </summary>
             <param name="entity">The entity to check.</param>
             <returns><see langword="true"/> when the entity is disabled.</returns>
         </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneEventArgs">
+        <member name="T:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs">
             <summary>
-            Contains event data for a <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity"/> interaction.
+            Contains event data for a <see cref="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.Zone"/> and <see cref="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.Entity"/> interaction.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Zone">
+        <member name="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.Zone">
             <summary>
             The zone associated with the event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Entity">
+        <member name="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.Entity">
             <summary>
             The entity associated with the event.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.Host">
+        <member name="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.Host">
             <summary>
             The host that the zone and entity share.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneEventArgs.TriggeredPosition">
+        <member name="F:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.TriggeredPosition">
             <summary>
             The position within the zone associated with the event.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.ZoneEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point)">
             <summary>
             Creates a new event args for a zone interaction.
             </summary>
@@ -410,17 +435,17 @@
             <param name="entity">The entity associated with the event.</param>
             <param name="triggeredPosition">The new position within the zone associated with the event.</param>
         </member>
-        <member name="T:SadConsole.Entities.Manager.ZoneMoveEventArgs">
+        <member name="T:SadConsole.Entities.EntityManagerZoned.ZoneMoveEventArgs">
             <summary>
             Contains event data for a <see cref="T:SadConsole.Entities.Zone"/> and <see cref="T:SadConsole.Entities.Entity"/> interaction.
             </summary>
         </member>
-        <member name="F:SadConsole.Entities.Manager.ZoneMoveEventArgs.MovedFromPosition">
+        <member name="F:SadConsole.Entities.EntityManagerZoned.ZoneMoveEventArgs.MovedFromPosition">
             <summary>
             The position within the zone that the entity moved from.
             </summary>
         </member>
-        <member name="M:SadConsole.Entities.Manager.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+        <member name="M:SadConsole.Entities.EntityManagerZoned.ZoneMoveEventArgs.#ctor(SadConsole.IScreenSurface,SadConsole.Entities.Zone,SadConsole.Entities.Entity,SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
             <summary>
             Creates a new event args for a zone movement event.
             </summary>
@@ -455,11 +480,28 @@
             Key-value pairs for the zone.
             </summary>
         </member>
+        <member name="P:SadConsole.Entities.Zone.Entities">
+            <summary>
+            A list of entities in the 
+            </summary>
+        </member>
         <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Area)">
             <summary>
             Creates a new zone object with the specified area.
             </summary>
             <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Creates a new zone object using the positions of a rectangle.
+            </summary>
+            <param name="area">The area of the zone.</param>
+        </member>
+        <member name="M:SadConsole.Entities.Zone.#ctor(System.Collections.Generic.IEnumerable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new zone object using the specified positions.
+            </summary>
+            <param name="positions">The positions that make up the zone.</param>
         </member>
         <member name="M:SadConsole.Entities.Zone.ToString">
             <summary>
@@ -479,6 +521,11 @@
             <param name="text">The string to convert</param>
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
+        </member>
+        <member name="T:SadConsole.SurfaceExtensions">
+            <summary>
+            Extensions for the <see cref="T:SadConsole.IScreenSurface"/> type
+            </summary>
         </member>
         <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
             <summary>
@@ -522,7 +569,7 @@
         </member>
         <member name="P:SadConsole.Transitions.Fade.RepositionToObject">
             <summary>
-            When <see langword="true"/>, sets <see cref="P:SadConsole.IScreenObject.Position"/> value on the "To" object to match the transition finishes.
+            When <see langword="true"/>, sets <see cref="!:IScreenObject.Position"/> value on the "To" object to match the transition finishes.
             </summary>
         </member>
         <member name="M:SadConsole.Transitions.Fade.#ctor(SadConsole.IScreenSurface,SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">
@@ -720,11 +767,11 @@
             <param name="backgroundColor">Border line background <see cref="T:SadRogue.Primitives.Color"/>.</param>
             <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
         </member>
-        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(SadConsole.ColoredGlyph)">
+        <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderGlyph(SadConsole.ColoredGlyphBase)">
             <summary>
-            Fills the array of glyphs to be used as the border line with the given <see cref="T:SadConsole.ColoredGlyph"/>.
+            Fills the array of glyphs to be used as the border line with the given <see cref="T:SadConsole.ColoredGlyphBase"/>.
             </summary>
-            <param name="glyph">The <see cref="T:SadConsole.ColoredGlyph"/> to be used the border line.</param>
+            <param name="glyph">The <see cref="T:SadConsole.ColoredGlyphBase"/> to be used the border line.</param>
             <returns>The modified instance of <see cref="T:SadConsole.UI.Border.BorderParameters"/>.</returns>
         </member>
         <member name="M:SadConsole.UI.Border.BorderParameters.ChangeBorderColors(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
@@ -779,14 +826,30 @@
             </summary>
             <param name="contents">The window the border will be around.</param>
         </member>
-        <member name="M:SadConsole.UI.Border.AddToSurface(SadConsole.IScreenSurface,System.String)">
+        <member name="M:SadConsole.UI.Border.Create3DForSurface(SadConsole.IScreenSurface,System.String,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
+            <summary>
+            Creates a chunky 3d border using <see cref="P:SadConsole.ICellSurface.Connected3dBox"/> glyphs.
+            </summary>
+            <param name="contents">The object the border will be around.</param>
+            <param name="title">Optional title to display on the border.</param>
+            <param name="titleForeground">Foreground color of the title. Defaults to a brighter version of the content's <see cref="P:SadConsole.ICellSurface.DefaultBackground"/>.</param>
+            <param name="titleBackground">Background color of the title. Defaults to the content's <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>.</param>
+            <param name="borderBrightColor">The bright color of the 3D border. Defaults to <see cref="F:SadRogue.Primitives.Color.AnsiWhiteBright"/>.</param>
+            <param name="borderDarkColor">The dark color of the 3D border. Defaults to <see cref="F:SadRogue.Primitives.Color.AnsiBlackBright"/>.</param>
+            <param name="borderBetweenColor">The corner color of the 3D border. Defaults to the content's <see cref="P:SadConsole.ICellSurface.DefaultBackground"/>.</param>
+            <returns>The created border, attached to the content.</returns>
+            <remarks>
+            For a nice looking border, set the content's <see cref="P:SadConsole.ICellSurface.DefaultForeground"/> to <see cref="F:SadRogue.Primitives.Color.AnsiWhite"/> and the <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> to <see cref="F:SadRogue.Primitives.Color.AnsiBlue"/>, before calling this method.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.UI.Border.CreateForSurface(SadConsole.IScreenSurface,System.String)">
             <summary>
             Helper method to add a border to a surface.
             </summary>
             <param name="contents">The object the border will be around.</param>
             <param name="title">Optional title to display on the border.</param>
         </member>
-        <member name="M:SadConsole.UI.Border.AddToWindow(SadConsole.UI.Window)">
+        <member name="M:SadConsole.UI.Border.CreateForWindow(SadConsole.UI.Window)">
             <summary>
             Helper method to add a border to a window.
             </summary>
@@ -822,6 +885,16 @@
             Gets or sets the mirror effect to apply in the theme.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacter">
+            <summary>
+            When true, highlights the selected character with <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphForeground"/> when <see cref="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacterWithEffect"/> is false;
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.CharacterPicker.HighlightSelectedCharacterWithEffect">
+            <summary>
+            When true, uses <see cref="P:SadConsole.UI.Controls.CharacterPicker.SelectedGlyphEffect"/> to highlight the character.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.CharacterPicker.GlyphForeground">
             <summary>
             Gets the foreground color used when drawing the glyphs.
@@ -847,7 +920,7 @@
             Gets or sets the selected glyph character.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.IFont)">
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.SadFont,System.Int32,System.Int32)">
             <summary>
             Creates a new picker control with the specified font.
             </summary>
@@ -855,19 +928,19 @@
             <param name="fill">The default backround for glyphs.</param>
             <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
             <param name="characterFont">The font to use with the control.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
-            <summary>
-            Creates a new picker control that uses the parent's font.
-            </summary>
-            <param name="foreground">The default foreground for glyphs.</param>
-            <param name="fill">The default backround for glyphs.</param>
-            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
+            <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
+            <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.CreateControlSurface">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ColorBar">
@@ -920,6 +993,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ColorBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ColorBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ColorPicker">
@@ -988,12 +1064,12 @@
         </member>
         <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new instance of the control and uses <see cref="T:SadConsole.UI.Themes.FileDirectoryListboxItem"/> as the item theme.
+            Creates a new instance of the control and uses <see cref="T:SadConsole.UI.Controls.FileDirectoryListboxItem"/> as the item theme.
             </summary>
             <param name="width">The width of the control.</param>
             <param name="height">The height of the control.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32,SadConsole.UI.Themes.ListBoxItemTheme)">
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32,SadConsole.UI.Controls.ListBoxItemTheme)">
             <summary>
             Creates a new instance of the control with the specified item theme.
             </summary>
@@ -1008,7 +1084,7 @@
         </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory">
             <summary>
-            A listbox item container that represents a fake directory, such as <code>..</code>.
+            A listbox item container that represents a fake directory, such as <c>..</c>.
             </summary>
         </member>
         <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory.Name">
@@ -1025,6 +1101,77 @@
             <summary>
             The name of the file.
             </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.FileDirectoryListboxItem">
+            <summary>
+            Displays files and directories in various colors.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppNormal">
+            <summary>
+            The appearance of a directory in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppMouseOver">
+            <summary>
+            The appearance of a directory when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppSelected">
+            <summary>
+            The appearance of a directory when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.DirectoryAppSelectedOver">
+            <summary>
+            The appearance of a directory when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppNormal">
+            <summary>
+            The appearance of a file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppMouseOver">
+            <summary>
+            The appearance of a file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppSelected">
+            <summary>
+            The appearance of a file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.FileAppSelectedOver">
+            <summary>
+            The appearance of a file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppNormal">
+            <summary>
+            The appearance of a highlighted file in normal state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppMouseOver">
+            <summary>
+            The appearance of a highlighted file when the mouse is over it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppSelected">
+            <summary>
+            The appearance of a highlighted file when selected.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.FileDirectoryListboxItem.HighExtAppSelectedOver">
+            <summary>
+            The appearance of a highlighted file when selected and the mouse is over it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ControlBase,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.HueBar">
             <summary>
@@ -1063,148 +1210,768 @@
         <member name="M:SadConsole.UI.Controls.HueBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.UI.RegistrarExtended">
-            <summary>
-            Registers the controls in SadConsole.Extended with a library.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.RegistrarExtended.Register">
-            <summary>
-            Registers the controls with the <see cref="P:SadConsole.UI.Themes.Library.Default"/> library.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.RegistrarExtended.Register(SadConsole.UI.Themes.Library)">
-            <summary>
-            Registers the controls with the provided library.
-            </summary>
-            <param name="library"></param>
-        </member>
-        <member name="T:SadConsole.UI.Themes.CharacterPicker">
-            <summary>
-            The theme used for the <see cref="T:SadConsole.UI.Controls.CharacterPicker"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.CharacterPicker.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.ColorBar">
-            <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.ColorBar"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorBar.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.ColorPicker">
-            <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.ColorPicker"/> control.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.Attached(SadConsole.UI.Controls.ControlBase)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Themes.ColorPicker.Clone">
-            <inheritdoc />
-        </member>
-        <member name="T:SadConsole.UI.Themes.FileDirectoryListboxItem">
-            <summary>
-            Displays files and directories in various colors.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppNormal">
-            <summary>
-            The appearance of a directory in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppMouseOver">
-            <summary>
-            The appearance of a directory when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelected">
-            <summary>
-            The appearance of a directory when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.DirectoryAppSelectedOver">
-            <summary>
-            The appearance of a directory when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppNormal">
-            <summary>
-            The appearance of a file in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppMouseOver">
-            <summary>
-            The appearance of a file when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelected">
-            <summary>
-            The appearance of a file when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.FileAppSelectedOver">
-            <summary>
-            The appearance of a file when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppNormal">
-            <summary>
-            The appearance of a highlighted file in normal state.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppMouseOver">
-            <summary>
-            The appearance of a highlighted file when the mouse is over it.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelected">
-            <summary>
-            The appearance of a highlighted file when selected.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Themes.FileDirectoryListboxItem.HighExtAppSelectedOver">
-            <summary>
-            The appearance of a highlighted file when selected and the mouse is over it.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.RefreshTheme(SadConsole.UI.Colors)">
+        <member name="M:SadConsole.UI.Controls.HueBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.UI.Themes.FileDirectoryListboxItem.Draw(SadConsole.UI.Controls.ListBox,SadRogue.Primitives.Rectangle,System.Object,SadConsole.UI.Controls.ControlStates)">
-            <inheritdoc/>
-        </member>
-        <member name="T:SadConsole.UI.Themes.HueBar">
+        <member name="T:SadConsole.UI.Controls.Table">
             <summary>
-            The theme for the <see cref="T:SadConsole.UI.Controls.HueBar"/> control.
+            A scrollable table control.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.Attached(SadConsole.UI.Controls.ControlBase)">
+        <member name="T:SadConsole.UI.Controls.Table.Cell">
+            <summary>
+            A basic cell used in the Table control
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Position">
+            <summary>
+            Contains the real position value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell._row">
+            <summary>
+            Contains the real row value and column value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell._column">
+            <summary>
+            Contains the real row value and column value when other cells are not being rendered
+            This is used to obtain the real cell from mouse interactions.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Row">
+            <summary>
+            The row this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Column">
+            <summary>
+            The column this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Height">
+            <summary>
+            The height of the row this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Width">
+            <summary>
+            The width of the column this cell is part of
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Foreground">
+            <summary>
+            The foreground color used by the cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Background">
+            <summary>
+            The background color used by the cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.StringValue">
+            <summary>
+            The text shown within the cell, empty string when no value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Value">
+            <summary>
+            The value of the cell, .ToString() method is shown as the text result within the cell.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.IsVisible">
+            <summary>
+            Set to false if the cell should not be rendered within the table (default IsVisible sadconsole behaviour),
+            If an entire row or column IsVislbe is set to false in the layout, it will skip this row/column entirely (differs from default behaviour)
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Settings">
+            <summary>
+            The setting options used by the cell to define its layout
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.InternalCreate(System.Int32,System.Int32,SadConsole.UI.Controls.Table,System.Object,System.Boolean)">
+            <summary>
+            Internal use only. This is used by the table and the theme to create new cell instances.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Equality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.op_Inequality(SadConsole.UI.Controls.Table.Cell,SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(SadConsole.UI.Controls.Table.Cell)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.CopyAppearanceFrom(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Copies the appearance of the cell passed to this method, onto the this cell.
+            </summary>
+            <param name="cell"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.SetFieldValue``1(SadConsole.UI.Controls.Table.Cell,``0,``0@,``0,System.Boolean)">
+            <summary>
+            Helper to set the underlying field value with some checks.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="cell"></param>
+            <param name="previousValue"></param>
+            <param name="field"></param>
+            <param name="newValue"></param>
+            <param name="usedForLayout"></param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options">
+            <summary>
+            A collection of settings that are used by <see cref="T:SadConsole.UI.Controls.Table.Cell"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlignment">
+            <summary>
+            The horizontal text alignment setting; Default: left
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlignment">
+            <summary>
+            The vertical text alignment setting; Default: left
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.UseFakeLayout">
+            <summary>
+            Defines if the cell should also trigger the fake layout event if the option is enabled on the table; Default: false
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.MaxCharactersPerLine">
+            <summary>
+            The maximum characters this cell can show per line; Default: cell width
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Interactable">
+            <summary>
+            Defines if the cell can interact with mouse events; Default: true
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.Selectable">
+            <summary>
+            Defines if the cell can be selected by the mouse; Default: true
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.SelectionMode">
+            <summary>
+            Defines the selection visual mode when the cell is selected; Default: single
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cell.Options.HoverMode">
+            <summary>
+            Defines the hover visual mode when the cell is hovered over by the mouse; Default: single
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.#ctor(SadConsole.UI.Controls.Table)">
+            <summary>
+            Creates new options based on the default values of the table
+            </summary>
+            <param name="table"></param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign">
+            <summary>
+            Alignment enum for the horizontal axis
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Left">
+            <summary>
+            Text will be aligned to the left side of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Center">
+            <summary>
+            Text will be aligned within the center of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign.Right">
+            <summary>
+            Text will be aligned to the right side of the cell
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign">
+            <summary>
+            Alignment enum for the vertical axis
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Top">
+            <summary>
+            Text will be aligned to the top of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Center">
+            <summary>
+            Text will be aligned in the center of the cell
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.Cell.Options.VerticalAlign.Bottom">
+            <summary>
+            Text will be aligned to the bottom of the cell
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Equality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.op_Inequality(SadConsole.UI.Controls.Table.Cell.Options,SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(SadConsole.UI.Controls.Table.Cell.Options)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.Cell.Options.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.Cells">
+            <summary>
+            The cells collection used to modify the table cells
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DefaultForeground">
+            <summary>
+            The default foreground color used for the table foreground and newly created cells
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DefaultBackground">
+            <summary>
+            The default background color used for the table background and newly created cells
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DefaultCellSize">
+            <summary>
+            The default size a cell gets when it is newly created
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DefaultHoverMode">
+            <summary>
+            The default visual hovering mode when hovering over cells
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DefaultSelectionMode">
+            <summary>
+            The default visual selection mode when selecting a cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.UseMouse">
+            <summary>
+            When <see langword="true"/>, this object will use the mouse; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.CurrentMouseCell">
+            <summary>
+            Returns the cell the mouse is over, if <see cref="P:SadConsole.UI.Controls.Table.UseMouse"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.SelectedCell">
+            <summary>
+            Returns the current selected cell
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.DrawFakeCells">
+            <summary>
+            By default, only cells that have been modified in anyway will be rendered on the table control.
+            Turn this off, if the whole table should draw as many cells as it fits with their default layout.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnCellEnter">
+            <summary>
+            Fires an event when a cell is entered by the mouse.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnCellExit">
+            <summary>
+            Fires an event when a cell is exited by the mouse.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.SelectedCellChanged">
+            <summary>
+            Fires an event when the selected cell has changed.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnCellLeftClick">
+            <summary>
+            Fires an event when a cell is left clicked.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnCellRightClick">
+            <summary>
+            Fires an event when a cell is right clicked.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnCellDoubleClick">
+            <summary>
+            Fires an event when a cell is double clicked.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.Table.OnDrawFakeCell">
+            <summary>
+            Called when a fake cells is being drawn, you can use this to modify the cell layout.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VerticalScrollBar">
+            <summary>
+            The vertical scrollbar, use the SetupScrollBar method with Vertical orientation to initialize it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.HorizontalScrollBar">
+            <summary>
+            The horizontal scrollbar, use the SetupScrollBar method with Horizontal orientation to initialize it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.IsVerticalScrollBarVisible">
+            <summary>
+            Returns true if the vertical scroll bar is currently visible.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.IsHorizontalScrollBarVisible">
+            <summary>
+            Returns true if the horizontal scroll bar is currently visible.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VerticalScrollBarMaximum">
+            <summary>
+            The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.HorizontalScrollBarMaximum">
+            <summary>
+            The updated maximum value, incase the scrollbar object's maximum value is not yet updated by the theme.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.AutoScrollOnCellSelection">
+            <summary>
+            By default the table will automatically scroll to the selected cell if possible.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VisibleRowsTotal">
+            <summary>
+            The total rows visible in the table.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VisibleRowsMax">
+            <summary>
+            The maximum amount of rows that can be shown in the table.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VisibleColumnsTotal">
+            <summary>
+            The total columns visible in the table.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.VisibleColumnsMax">
+            <summary>
+            The maximum amount of columns that can be shown in the table.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new table with the default SadConsole colors, and cell size of (1 width, 1 height)
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new table with custom cell width and cell height params; Uses the default SadConsole colors
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="cellWidth"></param>
+            <param name="cellHeight"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.#ctor(System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
+            <summary>
+            Creates a new table with extra params to set the base default values of the table
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="cellWidth"></param>
+            <param name="defaultForeground"></param>
+            <param name="defaultBackground"></param>
+            <param name="cellHeight"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.DrawFakeCell(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Called when a fake cell is being drawn, this fake cell cannot be added to the table when it is modified.
+            This method can only be used to modify the cell layout when drawn, and thus will not count as a new cell within the table.
+            </summary>
+            <param name="cell"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.SetupScrollBar(SadConsole.Orientation,System.Int32,SadRogue.Primitives.Point)">
+            <summary>
+            Configures the associated <see cref="P:SadConsole.UI.Controls.Table.VerticalScrollBar"/>.
+            </summary>
+            <param name="orientation">The orientation of the scrollbar.</param>
+            <param name="size"></param>
+            <param name="position">The position of the scrollbar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.ShowHideScrollBar(SadConsole.UI.Controls.ScrollBar)">
+            <summary>
+            Shows the scroll bar when there are too many items to display; otherwise, hides it.
+            </summary>
+            <param name="scrollBar"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.ScrollToSelectedItem">
+            <summary>
+            Scrolls the list to the item currently selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.SyncScrollAmountOnResize">
+            <summary>
+            When a cell is resized after the bar has been scrolled, it must be updated with the new values for the rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.StartRenderYPos">
+            <summary>
+            The row the rendering should start at
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.StartRenderXPos">
+            <summary>
+            The column the rendering should start at
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.OnRightMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.CellEventArgs">
+            <summary>
+            Cell args for a table event
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.CellEventArgs.Cell">
+            <summary>
+            The cell that triggered this event
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.CellChangedEventArgs">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.CellChangedEventArgs.PreviousCell">
+            <summary>
+            The original cell before the event was triggered
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.TableCells">
+            <summary>
+            A collection class that contains all the cells of the <see cref="T:SadConsole.UI.Controls.Table"/> and methods to modify them.
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.TableCells._hiddenIndexes">
+            <summary>
+            Contains all rows and columns that aren't rendered
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or creates a new cell on the specified row and column
+            </summary>
+            <param name="row"></param>
+            <param name="col"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.MaxRow">
+            <summary>
+            The maximum row in the table.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.MaxColumn">
+            <summary>
+            The maximum column in the table.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.HeaderRow">
+            <summary>
+            True if row 0 should be the header of the table, and remain at the top when vertical scrolling.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Count">
+            <summary>
+            The amount of cells currently in the table.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Row(System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility of the entire row
+            </summary>
+            <param name="row"></param>
+            <param name="visible"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Column(System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility of the entire column
+            </summary>
+            <param name="column"></param>
+            <param name="visible"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Column(System.Int32)">
+            <summary>
+            Get the layout for the given column
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Row(System.Int32)">
+            <summary>
+            Get the layout for the given row
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetCell(System.Int32,System.Int32)">
+            <summary>
+            Gets the cell at the given row and col
+            </summary>
+            <param name="row"></param>
+            <param name="col"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Select(System.Int32,System.Int32)">
+            <summary>
+            Sets the specified cell as the selected cell if it exists.
+            </summary>
+            <param name="row"></param>
+            <param name="column"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Deselect">
+            <summary>
+            Deselects the current selected cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Remove(System.Int32,System.Int32)">
+            <summary>
+            Removes a cell from the table.
+            </summary>
+            <param name="row"></param>
+            <param name="column"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Clear(System.Boolean)">
+            <summary>
+            Resets all the cells data
+            </summary>
+            <param name="clearLayoutOptions"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.ClearContent(System.Boolean)">
+            <summary>
+            Removes all rows and columns except the header if applicable
+            </summary>
+            <param name="clearLayoutOptionsForContent"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetCellPosition(System.Int32,System.Int32,System.Int32@,System.Int32@,System.Int32,System.Int32)">
+            <summary>
+            Get's the cell position on the control based on the row and column
+            </summary>
+            <param name="row"></param>
+            <param name="col"></param>
+            <param name="rowSize"></param>
+            <param name="columnSize"></param>
+            <param name="verticalScrollBarValue"></param>
+            <param name="horizontalScrollbarValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetSizeOrDefault(System.Int32,SadConsole.UI.Controls.Table.TableCells.Layout.LayoutType)">
+            <summary>
+            Get the size of the column or row or the default if no layout exists, without allocating a new layout object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout">
+            <summary>
+            Defines the layout for a row or a column defined in <see cref="P:SadConsole.UI.Controls.Table.Cells"/>
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Size">
+            <summary>
+            The size of the row or column
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Foreground">
+            <summary>
+            The foreground color used by the row or column
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Background">
+            <summary>
+            The background color used by the row or column
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.Settings">
+            <summary>
+            The setting options used by the row or column
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Table.TableCells.Layout.HasCustomSettings">
+            <summary>
+            True if the Settings property has been accessed before.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.Remove">
+            <summary>
+            Removes this entire layout from the table.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+            <summary>
+            Set a default layout to be used for each new cell
+            </summary>
+            <param name="size"></param>
+            <param name="foreground"></param>
+            <param name="background"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.SetLayoutInternal(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+            <summary>
+            Sets the layout without adjusting cells or setting the table dirty
+            </summary>
+            <param name="size"></param>
+            <param name="foreground"></param>
+            <param name="background"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout.Mode">
+            <summary>
+            Defines several visual modes
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.Single">
+            <summary>
+            Only a single cell will be visualized
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.None">
+            <summary>
+            Nothing will be visualized
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.EntireRow">
+            <summary>
+            The entire row of the cell will be visualized
+            </summary>
+        </member>
+        <member name="F:SadConsole.UI.Controls.Table.TableCells.Layout.Mode.EntireColumn">
+            <summary>
+            The entire column of the cell will be visualized
+            </summary>
+        </member>
+        <member name="T:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable">
+            <summary>
+            An enumerable range that contains the layouts of all the rows and columns defined by the size of the range method within <see cref="P:SadConsole.UI.Controls.Table.Cells"/>
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable.SetLayout(System.Nullable{System.Int32},System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+            <summary>
+            Sets the layout of all the columns and rows for the given params
+            </summary>
+            <param name="size"></param>
+            <param name="foreground"></param>
+            <param name="background"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.TableCells.Layout.RangeEnumerable.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc />
         </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.UpdateAndDraw(SadConsole.UI.Controls.ControlBase,System.TimeSpan)">
-            <inheritdoc />
+        <member name="T:SadConsole.UI.Controls.TableExtensions">
+            <summary>
+            Extensions used for the <see cref="T:SadConsole.UI.Controls.Table"/>
+            </summary>
         </member>
-        <member name="M:SadConsole.UI.Themes.HueBar.Clone">
-            <inheritdoc />
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Range(SadConsole.UI.Controls.Table.TableCells,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a range of cells that fits the given parameter values.
+            </summary>
+            <param name="cells"></param>
+            <param name="startRow"></param>
+            <param name="startCol"></param>
+            <param name="endRow"></param>
+            <param name="endCol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.ForEach(System.Collections.Generic.IEnumerable{SadConsole.UI.Controls.Table.Cell},System.Action{SadConsole.UI.Controls.Table.Cell})">
+            <summary>
+            Executes an action on each cell.
+            </summary>
+            <param name="range"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.SetLayout(SadConsole.UI.Controls.Table.Cell,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color},SadConsole.UI.Controls.Table.Cell.Options)">
+            <summary>
+            Sets the layout for the cell.
+            </summary>
+            <param name="cell"></param>
+            <param name="foreground"></param>
+            <param name="background"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Resize(SadConsole.UI.Controls.Table.Cell,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Resizes the entire column and row to the specified sizes.
+            If no sizes are specified for both row and column, the cell will be reset to the default size.
+            </summary>
+            <param name="cell"></param>
+            <param name="rowSize"></param>
+            <param name="columnSize"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Select(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Sets the cell as the selected cell.
+            </summary>
+            <param name="cell"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Deselect(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Incase this cell is the selected cell, it will unselect it.
+            </summary>
+            <param name="cell"></param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Column(SadConsole.UI.Controls.Table.TableCells,System.Int32[])">
+            <summary>
+            Get the layout for the given columns.
+            </summary>
+            <param name="cells"></param>
+            <param name="columns"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Row(SadConsole.UI.Controls.Table.TableCells,System.Int32[])">
+            <summary>
+            Get the layout for the given rows.
+            </summary>
+            <param name="cells"></param>
+            <param name="rows"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TableExtensions.Remove(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Removes the cell from its table.
+            </summary>
+            <param name="cell"></param>
         </member>
         <member name="T:SadConsole.UI.Windows.ColorPickerPopup">
             <summary>

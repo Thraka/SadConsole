@@ -3,7 +3,15 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
 
   <PropertyGroup>
     <GameHost>monogame</GameHost>
@@ -17,6 +25,7 @@
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.2.0" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">

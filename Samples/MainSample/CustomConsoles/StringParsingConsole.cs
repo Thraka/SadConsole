@@ -116,7 +116,7 @@ namespace FeatureDemo.CustomConsoles
                 // No exceptions, set the type
                 CommandType = CommandTypes.Glyph;
             }
-            public override void Build(ref ColoredString.ColoredGlyphEffect glyphState, ColoredString.ColoredGlyphEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
+            public override void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex, ICellSurface surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
             {
                 glyphState.Glyph = Glyph;
 

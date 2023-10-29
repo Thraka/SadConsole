@@ -1,6 +1,81 @@
-## v9.2.2 (01/XX/2022)
+## v10.0.0 (10/28/2023)
 
+Major changes (possibly breaking)
+
+- [Core] The default font's used the wrong name. It's been corrected from **IBM_16x8** to **IBM_8x16** and from **IBM_16x8_ext** to **IBM_8x16_ext**. If you've previously serialized a font with the wrong name, you'll need to change it in the json object. Or use the configuration extension `FixOldFontName()` which will add a name mapping.
+- [Core] The editor functions that changed glyphs and printed on consoles have moved from being extension methods for the `ICellSurface` interface to the `ISurface` interface. `Console`, `IScreenSurface`, and `ICellSurface`, all implement this new interface. This means you can now use the editing extensions directly on those objects.
+- [Core] Because `Console` no longer implements `ICellSurface`, and instead implements `ISurface`, some properties have been moved to the `Surface` property, such as `myConsole.TimesShiftedUp` is now `myConsole.Surface.TimesShiftedUp`.
+- [Core] Themes have been removed. Each control draws itself.
+- [Core] `IScreenObject` no longer implements `IEnumerable` to access the children. Use the `.Children` collection property instead.
+- [Core] `Update` and `Render` no longer check for `IsEnabled` and `IsVisible`, respectively. When those methods run, the properties are checked on the children before calling the respective method. This moves the check outside of the object itself, and relies on the parent object to do it. This eliminates the need for an object to check itself, and allows you to bypass the check when you want.
+- [Core] Decorators are no longer array's but rented from a list pool. Use the `CellDecoratorHelpers` class to manage them. SadConsole does its best to rent and return from the pool as you add or remove decorators.
+- [Core] The `OnStart` callback is now an event and not an `Action` delegate.
+
+New features
+
+- [Core] Added `Componenets.LayeredSurface` component. Add this component to a `ScreenSurface` to enable multiple surface layers. Use the `LayeredSurface` to manage the layers.
+- [Core] `StringParser` supports variables with the syntax of **$variable_name**. The parser has a dictionary that invokes a delegate which returns a value for the variable. So the value can be determined as the variable is used. See DemoStringParsing.cs in the sample template.
+- [Core] `EntityManager.AlternativeFont` added so entities can use a different font than the parent object.
+- [UI] New control, `TabControl`. Contributed by **arxae**.
+- [ExtendedLib.UI] New control, `Table`. Contributed by **Ven0maus**.
+
+Normal changes
+
+- Target .NET 6+ exclusively. Core library is nullable aware.
+- [Core] Splash screen printing wasn't being shown because of cursor changes.
+- [Core] `IFont` now defines glyph definitions.
+- [Core] Various `SadFont` properties and methods are now settable/callable.
+- [Core] Extensions methods added to hosts to allow manipulation of font textures.
+- [Core] `Settings.CreateStartingConsole` setting added to avoid creating the `StartingConsole`.
+- [Core] Cursor now has the property `DisablePrintAutomaticLineFeed` which, when true, prevents the cursor from moving to the next line if printing a character at the end of the current line.
+- [Core] `Ansi.AnsiWriter` handles sauce now by ignoring the rest of a document once character 26 (CTRL-Z) is encountered.
+- [Core] `Ansi.AnsiWriter` has always used a cursor to print, it now sets `UseLinuxLineEndings = true` and `DisablePrintAutomaticLineFeed = true`.
+- [Core] Added `SadConsole.SplashScreens.Ansi1` splashscreen, the new SadConsole logo, for use with games.
+- [Core] Added `ScreenSurface.QuietSurfaceHandling` property. When `true`, this property prevents the `.Surface` property from raising events and calling virtual methods when the instance changes. This is useful for `AnimatedScreenSurface` instances that have fast moving animations.
+- [Core] `Entities.Renderer` renamed `Entities.EntityRenderer`.
+- [Core] The `Entity` type now supports animated surfaces. When creating an entity, you must specify it as a **single cell** entity or **animated surface** entity.
+- [Core] The effects system had a bug where if you added the same effect with the same cell twice, and the effect should restore the cell state, it wouldn't.
+- [Core] `AsciiKey` used by the keyboard system now detects capslock and shifted state to produce capital or lowercase letters.
+- [Core] `AsciiKey` exposes a bunch of static dictionaries that help with remapping keys and characters.
+- [Core] `ColoredGlyph.IsVisible` now sets `ColoredGlyph.IsDirty` to true when its value changes.
+- [Core] `Surface.RenderSteps` moved to the renderer.
+- [Core] `RenderSteps` is now a `List` and you must call `RenderSteps.Sort(SadConsole.Renderers.RenderStepComparer.Instance)` when the collection is changed.
+- [Core] `Instructions.DrawString` uses `System.TimeSpan` now, and is more accurate.
+- [Core] Effects have a `RunEffectOnApply` property that will run the `effect.Update` method once, with a duration of zero, when the effect is added to a manager.
+- [Core] `EffectsManager` will apply the active effect to a cell right when the cell is added to the effect. This *was* happening on the next render frame.
+- [Core] Surface shifting is much more performant (Thanks Chris3606)
+- [Core] `Cursor` has some new methods for erasing: `Erase`, `EraseUp`, `EraseDown`, `EraseLeft`, `EraseRight`, `EraseColumn`, `EraseRow`.
+- [Core] Mouse state object now tracks `*ButtonDownDuration` times. When the button is down and the time is zero, this indicates the button was just pressed. Otherwise, you can detect how long the button has been held down.
+- [Core] Rename RexPaint `ToLayersComponent` to `ToCellSurface`.
+- [Core] Rework `Timer` with `Start/Stop/Restart` methods.
+- [Core] If you load a font that's already been loaded, the existing instance is returned and the recently deserialized font is discarded. Previously the old font was replaced in the `GameHost.Fonts` dictionary.
+- [Core] `ColoredGlyph.Decorators` are Poolable Lists now and don't need to be messed with as arrays. Use `SadConsole.CellDecoratorHelpers` to manage the property.
+- [UI] Scroll bar with a size of 3 now disables the middle area, and you can use a size of 2 now.
+- [UI] Scroll bar supports a thickness other than 1.
+- [UI] Control host would get stuck when tabbing to a control that was disabled. Now it skips the control.
+- [UI] `ControlBase.IsDirty` property now calls the protected `OnIsDirtyChanged` method which then raises the `IsDirtyChanged` event.
+- [UI] `Panel` control uses `CompositeControl` as a base class. Control can draw a border.
+- [UI] `ProgressBar` is easier to customize.
+- [UI] `Colors.Name` property added.
+- [UI] `ListBox.ItemsArea` property added which the mouse now watches for so that it knows it's interacting with the list items specifically.
+- [ExtendedLib] Border control uses view size now instead of full size of wrapping object.
+- [ExtendedLib] `Border.AddToSurface/Window` has been renamed to `Border.CreateForSurface/Window`.
+- [ExtendedLib] `Entities.EntityManager` renamed `Entities.EntityManagerZoned`.
+- [ExtendedLib] Added `SmoothMove.IsEnabled` to disable the component and prevent animation.
+- [ExtendedLib] Fixed `ColorBar` bug with selecting a color before it's first drawn.
+
+Removed
+
+- [Core] `Algorithms.Line\Circle\Ellipse` have been removed. The latest primitives library provides these methods.
+- [Core] `Shapes` namespace removed. The latest primitives library release that SadConsole uses, provides these.
+
+### Host changes
+
+- [MonoGame] NuGet package has a -windows framework target that targets DirectX and adds support for WPF.
 - [MonoGame] Fix conversion of Mirror to SpriteEffects.
+- [MonoGame\SFML] Surface renderers now skip the glyph if the glyph is 0.
+- [MonoGame\SFML] New `SurfaceDirtyCells` renderer added which only draws cells that are marked dirty.
+- [MonoGame\SFML] New `SadConsole.Configuration.Builder` object used for creating a SadConsole game.
 
 ## v9.2.1 (01/04/2022)
 
@@ -27,7 +102,7 @@
   - Print clears the effect over the glyphs printed.
   - Print that uses the string processor now processes the string and then sets the appropriate overloaded settings. For example, the overload that sets the foreground and background colors will process the string and then set the foreground and background of the entire string. This is a change from previous behavior which set the colors at the start of the string processor and allowed the processor to override the overload.
 
-## Host changes
+### Host changes
 
 - [MonoGame] Added DrawCallManager to allow injecting custom sprite batch rendering during final scene composition.
 - [MonoGame/SFML] Fixed a bug that caused all surfaces to redraw all cells 100% of the time even if nothing changed. Should bring 300%-400% fps increase in surfaces that aren't changing content.
@@ -35,7 +110,7 @@
 - [MonoGame/SFML] The game host now has a `FrameNumber` property that incremenets each frame cycle.
 - [SFML] Fixed `Settings.UnlimitedFPS`. This now works.
 
-## Other changes
+### Other changes
 
 - [Core] Fixed bug that caused redraws every frame even if nothing had changed.
 - [Core] Cursor didn't respect `Cursor.UseStringParser` because of how `ColoredString` was always using the string parser. This is fixed now.
@@ -702,12 +777,12 @@ Some methods and/or properties have been renamed. Here are some of them.
 | Old name              | New name |
 | --------------------- | -------- |
 | Input.Keyboard.ProcessKeys | Input.Keyboard.Process |
-| Input.Mouse.ProcessMouse   | Input.Mouse.Process |
+| InputIndicatesProcessMouse   | InputIndicatesProcess |
 | Engine.ActiveConsole       | Global.InputTargets -- This is a new type that allows a Push/Pop/Set system for who gets keyboard/exclusive mouse input |
 
 ### Input
 
-Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.Input.Mouse.Update` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
+Input has been overhauled a bit. Keyboard is mostly the same except for some minor method refactoring. Mouse has change a lot. Previously each console evaulated mouse state for itself. This is no longer how mouse input works. Instead mouse input is driven by the `SadConsole.InputIndicatesUpdate` method which cycles through the `SadConsole.Global.Screen` gathering all console types. Then, each console has the `ProcessMouse` method called. If `true` is returned, mouse processing stops. This happens unless the `Global.InputTargets.Console` has the `IsExclusiveMouse` property set to `true`. If `true`, mouse is always sent to this console and never to anything else.
 
 ### Startup code
 

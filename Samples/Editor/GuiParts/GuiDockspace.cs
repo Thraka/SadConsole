@@ -4,35 +4,78 @@ using System.Numerics;
 using System.Text;
 using ImGuiNET;
 using SadConsole.ImGuiSystem;
+using ImGuiInternal = ImGuiNET.Internal.ImGui;
 
-namespace SadConsole.Editor.GuiParts
+namespace SadConsole.Editor.GuiParts;
+
+public class GuiDockspace : ImGuiObjectBase
 {
-    public class GuiDockspace : ImGuiObjectBase
+    private bool p_open;
+    private bool runOnce = false;
+
+    public unsafe override void BuildUI(ImGuiRenderer renderer)
     {
-        private bool p_open;
+        ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+        ImGui.SetNextWindowPos(viewport.Pos);
+        ImGui.SetNextWindowSize(viewport.Size);
+        ImGui.SetNextWindowViewport(viewport.ID);
+        ImGui.SetNextWindowBgAlpha(0.0f);
 
-        public override void BuildUI(ImGuiRenderer renderer)
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+        window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
+        window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0.0f, 0.0f));
+        ImGui.Begin("RootDockspaceMain", ref p_open, window_flags);
+        ImGui.PopStyleVar(3);
+
+        var id = ImGui.GetID("RootDockspace");
+        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.PassthruCentralNode;
+        ImGui.DockSpace(id, new Vector2(0.0f, 0.0f), dockspace_flags);
+        ImGui.End();
+
+        if (!runOnce)
         {
-            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
-            ImGui.SetNextWindowPos(viewport.Pos);
-            ImGui.SetNextWindowSize(viewport.Size);
-            ImGui.SetNextWindowViewport(viewport.ID);
-            ImGui.SetNextWindowBgAlpha(0.0f);
+            runOnce = true;
 
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
-            window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
-            window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+            var workCenter = ImGui.GetMainViewport().GetWorkCenter();
 
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0.0f, 0.0f));
-            ImGui.Begin("DockSpace Demo", ref p_open, window_flags);
-            ImGui.PopStyleVar(3);
+            ImGuiInternal.DockBuilderRemoveNode(id);             // Clear any preexisting layouts associated with the ID we just chose
+            ImGuiInternal.DockBuilderAddNode(id, ImGuiDockNodeFlags.PassthruCentralNode);                // Create a new dock node to use
 
-            var dockspace_id = ImGui.GetID("RootDockspace");
-            ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.PassthruCentralNode;
-            ImGui.DockSpace(dockspace_id, new Vector2(0.0f, 0.0f), dockspace_flags);
-            ImGui.End();
+            var heightSpace = ImGui.GetFrameHeight();
+
+            var size = new Vector2(ImGui.GetMainViewport().WorkSize.X, ImGui.GetMainViewport().WorkSize.Y - heightSpace);
+            var nodePos = new Vector2(workCenter.X - size.X * 0.5f, workCenter.Y - size.Y * 0.5f + (heightSpace / 2));
+
+            ImGuiInternal.DockBuilderSetNodeSize(id, size);
+            ImGuiInternal.DockBuilderSetNodePos(id, nodePos);
+
+            uint documentsSide;
+            uint toolsSide;
+            uint singleDocSide;
+
+            ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Up, 0.5f, out documentsSide, out toolsSide);
+            singleDocSide = ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Right, 0.7f, out _, out _);
+            //var dock3 = ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Right, 0.5f, out _, out _);
+
+
+            ImGuiInternal.DockBuilderDockWindow("Active Documents", documentsSide);
+            ImGuiInternal.DockBuilderDockWindow("Tools", toolsSide);
+            ImGuiInternal.DockBuilderDockWindow("Open Document", singleDocSide);
+
+            ImGuiInternal.DockBuilderFinish(id);
         }
+
+        //ImGui.Begin("Tools");
+        //ImGui.End();
+
+        //ImGui.Begin("Active Documents");
+        //ImGui.End();
+        
+        //ImGui.Begin("Open Document");
+        //ImGui.End();
     }
 }

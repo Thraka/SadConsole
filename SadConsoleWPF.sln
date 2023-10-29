@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Extended", "SadC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFSadConsole", "Samples\WPFSadConsole\WPFSadConsole.csproj", "{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.MonoGame", "SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj", "{76E7879A-57EE-4479-843E-C58DDE8FB989}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,12 +33,17 @@ Global
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76E7879A-57EE-4479-843E-C58DDE8FB989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76E7879A-57EE-4479-843E-C58DDE8FB989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76E7879A-57EE-4479-843E-C58DDE8FB989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76E7879A-57EE-4479-843E-C58DDE8FB989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{28C36CBC-C9CF-4DBE-9486-7E047D4B51A0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
+		{76E7879A-57EE-4479-843E-C58DDE8FB989} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}

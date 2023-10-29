@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using SFMLKeys = SFML.Window.Keyboard.Key;
 
-namespace SadConsole.Host
+namespace SadConsole.Input
 {
     public static class Extensions
     {
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public static global::SFML.Graphics.IntRect ToSFML(this SadRogue.Primitives.Rectangle rectangle) =>
-        //    new global::SFML.Graphics.IntRect(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height);
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public static global::SFML.Graphics.Color ToSFML(this SadRogue.Primitives.Color color) =>
-        //    new global::SFML.Graphics.Color(color.R, color.G, color.B, color.A);
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public static SFML.System.Vector2i ToSFML(this SadRogue.Primitives.Point position) =>
-        //    new SFML.System.Vector2i(position.X, position.Y);
-
         public static SFMLKeys ToSFML(this Input.Keys key)
         {
             // A-Z
@@ -152,12 +137,6 @@ namespace SadConsole.Host
             */
         }
 
-        public static void SaveTexture(SFML.Graphics.Texture texture, string output)
-        {
-            using (var image = texture.CopyToImage())
-                image.SaveToFile(output);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Input.Keys ToSadConsole(this SFMLKeys key)
         {
@@ -223,6 +202,18 @@ namespace SadConsole.Host
                 SFMLKeys.Period => Input.Keys.OemPeriod,
                 SFMLKeys.Backslash => Input.Keys.OemBackslash,
             */
+        }
+    }
+}
+
+namespace SFML.Graphics
+{
+    public static class Extensions
+    {
+        public static void SaveTexture(Texture texture, string output)
+        {
+            using (var image = texture.CopyToImage())
+                image.SaveToFile(output);
         }
     }
 }

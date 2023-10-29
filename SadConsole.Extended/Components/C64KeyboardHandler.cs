@@ -76,7 +76,7 @@ namespace SadConsole.Components
             _attachedCursor.IsVisible = true;
             _attachedCursor.DisableWordBreak = true;
             _attachedCursor.UseStringParser = false;
-            _attachedCursor.CarriageReturn();
+            _attachedCursor.NewLine();
             PrintPrompt();
         }
 
@@ -89,9 +89,6 @@ namespace SadConsole.Components
         /// <inheritdoc/>
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
-            // Upcast this because we know we're only using it with a Console type.
-            var console = (Console)consoleObject;
-
             // Check each key pressed.
             for (int i = 0; i < info.KeysPressed.Count; i++)
             {
@@ -101,9 +98,9 @@ namespace SadConsole.Components
                 if (key.Character != '\0')
                 {
                     //if (_insertMode)
-                    // console.ShiftRight(console.Cursor.Column, console.Cursor.Row, 1);
+                    // console.ShiftRight(_attachedCursor.Column, _attachedCursor.Row, 1);
 
-                    console.Cursor.Print(key.Character.ToString());
+                    _attachedCursor.Print(key.Character.ToString());
                 }
 
                 else if (key.Key == Keys.Insert)
@@ -111,54 +108,54 @@ namespace SadConsole.Components
 
                 // Special character - BACKSPACE
                 else if (key.Key == Keys.Back)
-                    console.Cursor.LeftWrap(1).Print(new string(EraseGlyph, 1)).LeftWrap(1);
+                    _attachedCursor.LeftWrap(1).Print(new string(EraseGlyph, 1)).LeftWrap(1);
 
                 // Special character - ENTER
                 else if (key.Key == Keys.Enter)
                 {
                     // Get the prompt to exclude it in determining the total length of the string the user has typed.
-                    int startingIndex = new Point(0, console.Cursor.Row).ToIndex(console.Width);
-                    string data = console.GetString(startingIndex, console.Width).TrimEnd('\0').Replace('\0', ReplaceEmptyGlyph);
+                    int startingIndex = new Point(0, _attachedCursor.Row).ToIndex(_surface.Surface.Width);
+                    string data = _surface.Surface.GetString(startingIndex, _surface.Surface.Width).TrimEnd('\0').Replace('\0', ReplaceEmptyGlyph);
 
                     // Move the cursor to the next line before we send the string data to the processor
-                    console.Cursor.NewLine();
+                    _attachedCursor.NewLine();
 
                     // Send the string data
-                    if (EnterPressedAction(this, console.Cursor, data))
+                    if (EnterPressedAction(this, _attachedCursor, data))
                     {
                         // After they have processed the string, we will create a new line and display the prompt.
-                        console.Cursor.NewLine();
+                        _attachedCursor.NewLine();
                         PrintPrompt();
                     }
 
                     // Preparing the next lines could have scrolled the console, reset the counter
-                    console.TimesShiftedUp = 0;
+                    _surface.Surface.TimesShiftedUp = 0;
                 }
 
                 else if (key.Key == Keys.Down)
                 {
-                    if (console.Cursor.Row == console.Height - 1)
-                        console.ShiftUp();
+                    if (_attachedCursor.Row == _surface.Surface.Height - 1)
+                        _surface.Surface.ShiftUp();
                     else
-                        console.Cursor.Down(1);
+                        _attachedCursor.Down(1);
                 }
 
                 else if (key.Key == Keys.Right)
                 {
-                    if (console.Cursor.Row == console.Height - 1 && console.Cursor.Column == console.Width - 1)
+                    if (_attachedCursor.Row == _surface.Surface.Height - 1 && _attachedCursor.Column == _surface.Surface.Width - 1)
                     {
-                        console.ShiftUp();
-                        console.Cursor.CarriageReturn();
+                        _surface.Surface.ShiftUp();
+                        _attachedCursor.CarriageReturn();
                     }
                     else
-                        console.Cursor.RightWrap(1);
+                        _attachedCursor.RightWrap(1);
                 }
 
                 else if (key.Key == Keys.Left)
-                    console.Cursor.LeftWrap(1);
+                    _attachedCursor.LeftWrap(1);
 
                 else if (key.Key == Keys.Up)
-                    console.Cursor.Up(1);
+                    _attachedCursor.Up(1);
             }
 
             handled = true;

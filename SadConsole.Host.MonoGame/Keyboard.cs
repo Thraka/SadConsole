@@ -1,30 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Linq;
 
-namespace SadConsole.Host
+namespace SadConsole.Host;
+
+class Keyboard : SadConsole.Input.IKeyboardState
 {
-    class Keyboard : SadConsole.Input.IKeyboardState
-    {
-        Microsoft.Xna.Framework.Input.KeyboardState _keyboard;
+    Microsoft.Xna.Framework.Input.KeyboardState _keyboard;
 
-        public Keyboard()
-        {
-            _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
-        }
+    public Keyboard() =>
+        Refresh();
 
-        public bool CapsLock => _keyboard.CapsLock;
+#if !FNA
+    public bool CapsLock => _keyboard.CapsLock;
+#else
+    public bool CapsLock => false;
+#endif
 
-        public bool NumLock => _keyboard.NumLock;
+#if !FNA
+    public bool NumLock => _keyboard.NumLock;
+#else
+    public bool NumLock => false;
 
-        public SadConsole.Input.Keys[] GetPressedKeys() =>
-            _keyboard.GetPressedKeys().Cast<SadConsole.Input.Keys>().ToArray();
+#endif
 
-        public bool IsKeyDown(SadConsole.Input.Keys key) =>
-            _keyboard.IsKeyDown((Microsoft.Xna.Framework.Input.Keys)key);
+    public SadConsole.Input.Keys[] GetPressedKeys() =>
+        _keyboard.GetPressedKeys().Cast<SadConsole.Input.Keys>().ToArray();
 
-        public bool IsKeyUp(SadConsole.Input.Keys key) =>
-            _keyboard.IsKeyUp((Microsoft.Xna.Framework.Input.Keys)key);
-    }
+    public bool IsKeyDown(SadConsole.Input.Keys key) =>
+        _keyboard.IsKeyDown((Microsoft.Xna.Framework.Input.Keys)key);
+
+    public bool IsKeyUp(SadConsole.Input.Keys key) =>
+        _keyboard.IsKeyUp((Microsoft.Xna.Framework.Input.Keys)key);
+
+    public void Refresh() =>
+#if WPF
+        _keyboard = SadConsole.Game.Instance.MonoGameInstance.Keyboard.GetState();
+#else
+        _keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+#endif
 }

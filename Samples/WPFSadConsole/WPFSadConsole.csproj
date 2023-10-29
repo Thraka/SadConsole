@@ -15,13 +15,12 @@
 
   <ItemGroup>
 
-    <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.1" />
+    <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj">
+      <SetTargetFramework>TargetFramework=net6.0-windows</SetTargetFramework>
+    </ProjectReference>
 
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
-
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0-alpha1" />
     
     <!--
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\..\monogame-framework-wpfinterop\MonoGame.Framework.WpfInterop\MonoGame.Framework.WpfInterop.csproj" />

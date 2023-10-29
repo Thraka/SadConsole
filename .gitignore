@@ -51,6 +51,7 @@ build/
 [Bb]in/
 [Oo]bj/
 [Pp]ackages/
+experiments/
 
 !/FNA/library/[dD]ebug/
 !/FNA/library/[rR]elease/
@@ -230,3 +231,4 @@ pip-log.txt
 .vs/
 releases/
 nuget/
+.vscode/

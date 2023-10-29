@@ -13,6 +13,7 @@ namespace SadConsole.Debug.MonoGame
 
         public override void BuildUI(ImGuiRenderer renderer)
         {
+            
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
             ImGui.SetNextWindowPos(viewport.Pos);
             ImGui.SetNextWindowSize(viewport.Size);

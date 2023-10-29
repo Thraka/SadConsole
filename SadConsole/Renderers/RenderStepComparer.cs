@@ -1,22 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace SadConsole.Renderers
+namespace SadConsole.Renderers;
+
+/// <summary>
+/// Compares <see cref="IRenderStep"/> with the <see cref="IRenderStep.SortOrder"/> property.
+/// </summary>
+public class RenderStepComparer : IComparer<Renderers.IRenderStep>
 {
     /// <summary>
-    /// Compares <see cref="IRenderStep"/> with the <see cref="IRenderStep.SortOrder"/> property.
+    /// Shared instance of the <see cref="RenderStepComparer"/>.
     /// </summary>
-    public class RenderStepComparer : IComparer<Renderers.IRenderStep>
-    {
-        /// <inheritdoc/>
-        public int Compare(IRenderStep x, IRenderStep y)
-        {
-            if (x.SortOrder < y.SortOrder)
-                return -1;
+    public static RenderStepComparer Instance { get; } = new RenderStepComparer();
 
-            // default for if (x.SortOrder > y.SortOrder)
-            return 1;
-        }
+    /// <inheritdoc/>
+    public int Compare(IRenderStep? x, IRenderStep? y)
+    {
+        if (x == null && y == null) return 0;
+        if (x == null && y != null) return 1;
+        if (x != null && y == null) return -1;
+
+        if (x == y || x!.SortOrder == y!.SortOrder)
+            return 0;
+
+        if (x!.SortOrder < y!.SortOrder)
+            return -1;
+
+        // default for if (x.SortOrder > y.SortOrder)
+        return 1;
     }
 }

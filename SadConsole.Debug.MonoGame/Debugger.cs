@@ -30,11 +30,12 @@ namespace SadConsole.Debug.MonoGame
         public static void BasicInit()
         {
             _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            //_imGui.Font = "Roboto-Regular.ttf";
+            //_imGui.fontSize = 14f;
 
             Game.Instance.MonoGameInstance.Components.Add(_imGui);
             SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+            
         }
 
         public static void Start()
@@ -57,8 +58,8 @@ namespace SadConsole.Debug.MonoGame
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
             _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
-            _imGui.Font = "Roboto-Regular.ttf";
-            _imGui.fontSize = 14f;
+            //_imGui.Font = "Roboto-Regular.ttf";
+            //_imGui.fontSize = 14f;
             //ImGui.Theme = coolTheme;
             _imGui.HostClosed += _imGui_HostClosed;
             
@@ -70,8 +71,11 @@ namespace SadConsole.Debug.MonoGame
 
             _imGui.UIComponents.Add(new GuiTopBar());
             _imGui.UIComponents.Add(new GuiDockspace());
-            _imGui.UIComponents.Add(new GuiScreenObjects());
+            _imGui.UIComponents.Add(new ScreenObjectsPanel());
             _imGui.UIComponents.Add(new GuiSurfacePreview());
+
+            ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(SadConsole.UI.Window), new WindowConsolePanel());
+            ComponentsPanel.RegisteredPanels.Add(typeof(SadConsole.Components.Cursor), new ComponentEditorCursor());
 
             GuiState.GuiFinalOutputWindow = new FinalOutputWindow("Output preview", true);
             _imGui.UIComponents.Add(GuiState.GuiFinalOutputWindow);

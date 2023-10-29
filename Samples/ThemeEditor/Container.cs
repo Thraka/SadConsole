@@ -18,11 +18,11 @@ namespace ThemeEditor
 
         public Container()
         {
-            EditingColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
+            EditingColors = SadConsole.UI.Colors.Default;
             //EditingColors = SadConsole.UI.Colors.CreateSadConsoleBlue();
 
             OptionsPanel = new ControlsConsole(6, 2);
-            Border.AddToSurface(OptionsPanel, "");
+            Border.CreateForSurface(OptionsPanel, "");
             OptionsPanel.Position = (2, 1);
 
             Button button = new Button(6, 1) { Text = "Load", Position = (0, 0) };
@@ -34,11 +34,11 @@ namespace ThemeEditor
             OptionsPanel.Controls.Add(button);
 
             SettingsPanel = new SettingsConsole(30, 36);
-            Border.AddToSurface(SettingsPanel, "Settings");
+            Border.CreateForSurface(SettingsPanel, "Settings");
             SettingsPanel.Position = (4, 3);
             
             TestingPanel = new ControlsTest();
-            Border.AddToSurface(TestingPanel, "Preview");
+            Border.CreateForSurface(TestingPanel, "Preview");
             TestingPanel.Position = SettingsPanel.Position + (SettingsPanel.Surface.Area.Width, 0) + (4, 0);
             TestingPanel.Controls.ThemeColors = EditingColors;
 

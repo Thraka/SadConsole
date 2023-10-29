@@ -12,14 +12,39 @@ namespace SadConsole.Tests
     {
         public class RenderStep : IRenderStep
         {
+            public string Name { get; private set; }
             public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
 
+            public RenderStep(string name) =>
+                Name = name;
+
             public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
-            public void Dispose() => throw new NotImplementedException();
+            public void Dispose() { }
             public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
             public void Render(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
             public void Reset() => throw new NotImplementedException();
             public void SetData(object data) { }
+        }
+
+        public class RendererEmpty : IRenderer
+        {
+            public string Name { get; set; }
+            public ITexture Output => null;
+            public byte Opacity { get; set; }
+            public bool IsForced { get; set; }
+            public List<IRenderStep> Steps { get; set; } = new List<IRenderStep>();
+
+            public void Dispose()
+            {
+            }
+
+            public void Refresh(IScreenSurface surface, bool force = false)
+            {
+            }
+
+            public void Render(IScreenSurface surface)
+            {
+            }
         }
 
         public class Texture : ITexture
@@ -88,6 +113,9 @@ namespace SadConsole.Tests
 
         public override IRenderer GetRenderer(string name)
         {
+            if (name == Renderers.Constants.RendererNames.Default)
+                return new RendererEmpty() { Name = name };
+
             return null;
         }
 
@@ -103,12 +131,17 @@ namespace SadConsole.Tests
 
         public override IRenderStep GetRendererStep(string name)
         {
-            return new RenderStep();
+            return new RenderStep(name);
         }
 
-        public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
+        public override void ResizeWindow(int width, int height, bool resizeBack = false) => throw new NotImplementedException();
 
         public override void Run()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ITexture CreateTexture(int width, int height)
         {
             throw new NotImplementedException();
         }

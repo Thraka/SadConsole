@@ -7,75 +7,80 @@ You must add a host NuGet package to your project, either SadConsole.Host.SFML o
 
 Here is an example program.cs file that let's you get started with SadConsole quickly. If you're using Visual Basic, starter code is listed below the C# code.
 
-using System;
-using SadConsole;
-using SadConsole.Input;
-using SadRogue.Primitives;
+C#
+===============================
 using Console = SadConsole.Console;
+using SadConsole;
+using SadConsole.Configuration;
+using SadRogue.Primitives;
 
-namespace MyProject
+Settings.WindowTitle = "SadConsole Examples";
+
+// Configure how SadConsole starts up
+Builder startup = new Builder()
+    .SetScreenSize(90, 30)
+    .UseDefaultConsole()
+    .OnStart(Game_Started)
+    .IsStartingScreenFocused(true)
+    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
+    ;
+
+// Setup the engine and start the game
+Game.Create(startup);
+Game.Instance.Run();
+Game.Instance.Dispose();
+
+void Game_Started(object? sender, GameHost host)
 {
-    class Program
-    {
+    ColoredGlyph boxBorder = new(Color.White, Color.Black, 178);
+    ColoredGlyph boxFill = new(Color.White, Color.Black);
 
-        public const int Width = 80;
-        public const int Height = 25;
-
-        static void Main(string[] args)
-        {
-            // Setup the engine and create the main window.
-            SadConsole.Game.Create(Width, Height);
-
-            // Hook the start event so we can add consoles to the system.
-            SadConsole.Game.Instance.OnStart = Init;
-                        
-            // Start the game.
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
-        }
-
-        private static void Init()
-        {
-            // Any startup code for your game. We will use an example console for now
-            var startingConsole = (Console)GameHost.Instance.Screen;
-            startingConsole.FillWithRandomGarbage(255);
-            startingConsole.Fill(new Rectangle(3, 3, 27, 5), null, Color.Black, 0, Mirror.None);
-            startingConsole.Print(6, 5, "Hello from SadConsole", Color.AnsiCyanBright);
-        }
-    }
+    Game.Instance.StartingConsole.FillWithRandomGarbage(255);
+    Game.Instance.StartingConsole.DrawBox(new Rectangle(2, 2, 26, 5), ShapeParameters.CreateFilled(boxBorder, boxFill));
+    Game.Instance.StartingConsole.Print(4, 4, "Welcome to SadConsole!");
 }
+===============================
 
 
-Example program.vb:
-
+Visual Basic
+===============================
 Imports SadConsole
 Imports Console = SadConsole.Console
+Imports SadConsole.Configuration
 Imports SadRogue.Primitives
 
 Module Module1
 
     Sub Main()
 
-        ' Setup the engine And create the main window.
-        SadConsole.Game.Create(80, 25)
+        Dim startup As New Builder()
 
-        ' Hook the start event so we can add consoles to the system.
-        SadConsole.Game.Instance.OnStart = AddressOf Init
+        ' Configure how SadConsole starts up
+        startup.SetScreenSize(90, 30)
+        startup.UseDefaultConsole()
+        startup.OnStart(AddressOf Game_Started)
+        startup.IsStartingScreenFocused(True)
+        startup.ConfigureFonts(Sub(config As FontConfig, gameObject As Game)
+                                   config.UseBuiltinFontExtended()
+                               End Sub)
 
-        ' Start the game.
+        ' Setup the engine and start the game
+        SadConsole.Game.Create(startup)
         SadConsole.Game.Instance.Run()
         SadConsole.Game.Instance.Dispose()
 
     End Sub
 
-    Sub Init()
+    Sub Game_Started(sender As Object, host As GameHost)
 
-        Dim startingConsole = DirectCast(GameHost.Instance.Screen, Console)
+        Dim boxBorder = New ColoredGlyph(Color.White, Color.Black, 178)
+        Dim boxFill = New ColoredGlyph(Color.White, Color.Black)
 
-        startingConsole.FillWithRandomGarbage(255)
-        startingConsole.Fill(New Rectangle(3, 3, 27, 3), Color.Violet, Color.Black, 0, Mirror.None)
-        startingConsole.Print(6, 5, "Hello from SadConsole", Color.AnsiCyanBright)
+        Game.Instance.StartingConsole.FillWithRandomGarbage(255)
+        Game.Instance.StartingConsole.DrawBox(New Rectangle(2, 2, 26, 5), ShapeParameters.CreateFilled(boxBorder, boxFill))
+        Game.Instance.StartingConsole.Print(4, 4, "Welcome to SadConsole!")
 
     End Sub
 
 End Module
+===============================

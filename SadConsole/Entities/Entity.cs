@@ -1,232 +1,276 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 
-namespace SadConsole.Entities
+namespace SadConsole.Entities;
+
+/// <summary>
+/// A positioned and animated game object.
+/// </summary>
+//[JsonConverter(typeof(EntityJsonConverter))]
+[DataContract]
+public partial class Entity : ScreenObject, IHasID
 {
+    private static uint s_idGenerator;
+
+    // TODO Change this to where Position/Center/Absolute values all come from this object instead of the AnimatedScreenSurface
+    private SingleCell? _appearanceSingleCell;
+    private Animated? _appearanceSurface;
+    private bool _isSingleCell;
+    private bool _usePixelPositioning;
+
     /// <summary>
-    /// A positionable and animated game object.
+    /// Raised when the <see cref="IsDirty"/> property changes value.
     /// </summary>
-    //[JsonConverter(typeof(EntityJsonConverter))]
-    [DataContract]
-    public class Entity : ScreenObject
+    public event EventHandler? IsDirtyChanged;
+
+    /// <summary>
+    /// A friendly name of the game object.
+    /// </summary>
+    [DataMember]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The drawing layer this entity is drawn at
+    /// </summary>
+    [DataMember]
+    public int ZIndex { get; set; }
+
+    /// <summary>
+    /// Indicates this entity's visual appearance has changed.
+    /// </summary>
+    public bool IsDirty
+    {
+        get
+        {
+            if (IsSingleCell)
+                return _appearanceSingleCell.IsDirty;
+            else
+                return _appearanceSurface.IsDirty;
+        }
+        
+        set
+        {
+            if (IsSingleCell)
+                _appearanceSingleCell.IsDirty = value;
+            else
+                _appearanceSurface.IsDirty = value;
+
+            OnIsDirtyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Treats the <see cref="IScreenObject.Position"/> of the entity as if it is pixels and not cells.
+    /// </summary>
+    public bool UsePixelPositioning
+    {
+        get => _usePixelPositioning;
+        set
+        {
+            _usePixelPositioning = value;
+            UpdateAbsolutePosition();
+        }
+    }
+
+    /// <summary>
+    /// The appearance of the entity when <see cref="IsSingleCell"/> is <see langword="true"/>.
+    /// </summary>
+    public SingleCell? AppearanceSingle
+    {
+        get => _appearanceSingleCell;
+        set
+        {
+            if (IsSingleCell && value == null) throw new NullReferenceException($"Cannot set the {nameof(AppearanceSingle)} to null when {nameof(IsSingleCell)} is true. First set {nameof(IsSingleCell)} to false.");
+
+            _appearanceSingleCell = value;
+        }
+    }
+
+    /// <summary>
+    /// The appearance of the entity when <see cref="IsSingleCell"/> is <see langword="false"/>.
+    /// </summary>
+    public Animated? AppearanceSurface
+    {
+        get => _appearanceSurface;
+        set
+        {
+            if (!IsSingleCell && value == null) throw new NullReferenceException($"Cannot set the {nameof(AppearanceSurface)} to null when {nameof(IsSingleCell)} is false. First set {nameof(IsSingleCell)} to true.");
+
+            _appearanceSurface = value;
+            UpdateAbsolutePosition();
+        }
+    }
+
+    /// <summary>
+    /// When <see langword="true"/>, indicates that this entity is a single cell entity; otherwise <see langword="false"/> and it's an animated surface entity.
+    /// </summary>
+    public bool IsSingleCell
+    {
+        [MemberNotNullWhen(true, nameof(_appearanceSingleCell))]
+        [MemberNotNullWhen(true, nameof(AppearanceSingle))]
+        [MemberNotNullWhen(false, nameof(_appearanceSurface))]
+        [MemberNotNullWhen(false, nameof(AppearanceSurface))]
+        get => _isSingleCell;
+        set
+        {
+            if (value && _appearanceSingleCell == null) throw new Exception($"{nameof(AppearanceSurface)} must be set to an instance before settings this property to true.");
+            if (!value && _appearanceSurface == null) throw new Exception($"{nameof(AppearanceSurface)} must be set to an instance before settings this property to true.");
+
+            _isSingleCell = value;
+        }
+    }
+
+    uint IHasID.ID { get; } = s_idGenerator++;
+
+    /// <summary>
+    /// Creates a new entity as an animated surface.
+    /// </summary>
+    /// <param name="appearance">The surface appearance to use for the entity.</param>
+    /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+    public Entity(Animated appearance, int zIndex)
+    {
+        _appearanceSurface = appearance;
+        Children.IsLocked = true;
+        ZIndex = zIndex;
+    }
+
+    /// <summary>
+    /// Creates a new entity as an animated surface.
+    /// </summary>
+    /// <param name="appearance">The surface appearance to use for the entity.</param>
+    /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+    public Entity(AnimatedScreenObject appearance, int zIndex)
+    {
+        _appearanceSurface = new Animated(appearance);
+        Children.IsLocked = true;
+        ZIndex = zIndex;
+    }
+
+
+    /// <summary>
+    /// Creates a new entity as a single cell.
+    /// </summary>
+    /// <param name="appearance">The single cell appearance to use for the entity.</param>
+    /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
+    public Entity(SingleCell appearance, int zIndex)
+    {
+        _appearanceSingleCell = appearance;
+        _isSingleCell = true;
+        Children.IsLocked = true;
+        ZIndex = zIndex;
+    }
+
+    /// <summary>
+    /// Creates a new entity, copying the provided appearance to this entity.
+    /// </summary>
+    /// <param name="appearance">The appearance of the entity.</param>
+    /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+    public Entity(ColoredGlyphBase appearance, int zIndex) : this(new SingleCell(appearance), zIndex) { }
+
+    /// <summary>
+    /// Creates a new entity, copying the provided appearance to this entity.
+    /// </summary>
+    /// <param name="foreground">The foreground color of the entity.</param>
+    /// <param name="background">The background color of the entity.</param>
+    /// <param name="glyph">The glyph color of the entity.</param>
+    /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
+    public Entity(Color foreground, Color background, int glyph, int zIndex) : this(new SingleCell(foreground, background, glyph), zIndex) { }
+
+    [JsonConstructor]
+    private Entity(SingleCell? appearanceSingleCell, Animated? appearanceSurface, bool isSingleCell)
+    {
+        _appearanceSingleCell = appearanceSingleCell;
+        _appearanceSurface = appearanceSurface;
+        _isSingleCell = isSingleCell;
+    }
+
+    /// <inheritdoc />
+    protected override void OnPositionChanged(Point oldPosition, Point newPosition)
+    {
+        base.OnPositionChanged(oldPosition, newPosition);
+
+        IsDirty = true;
+
+        if (IsSingleCell)
+            _appearanceSingleCell.IsDirty = true;
+        else
+            _appearanceSurface.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Raises the <see cref="IsDirtyChanged"/> event.
+    /// </summary>
+    protected virtual void OnIsDirtyChanged() =>
+        IsDirtyChanged?.Invoke(this, EventArgs.Empty);
+
+    /// <inheritdoc />
+    public override void UpdateAbsolutePosition()
+    {
+        AbsolutePosition = Position;
+    }
+
+    /// <summary>
+    /// If an effect is applied to the cell, updates the effect.
+    /// </summary>
+    /// <param name="delta"></param>
+    public override void Update(TimeSpan delta)
+    {
+        base.Update(delta);
+
+        if (IsSingleCell)
+            _appearanceSingleCell.Update(delta);
+        else
+            _appearanceSurface.Update(delta);
+    }
+
+    /// <summary>
+    /// Returns the name of the entity prefixed with "Entity - ".
+    /// </summary>
+    /// <returns>The name.</returns>
+    public override string ToString() =>
+        Name;
+
+    /// <summary>
+    /// Saves the <see cref="Entity"/> to a file.
+    /// </summary>
+    /// <param name="file">The destination file.</param>
+    public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
+
+    /// <summary>
+    /// Loads a <see cref="Entity"/> from a file.
+    /// </summary>
+    /// <param name="file">The source file.</param>
+    /// <returns>The entity.</returns>
+    public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
+
+    /// <summary>
+    /// Arguments for the entity moved event.
+    /// </summary>
+    public class EntityMovedEventArgs : EventArgs
     {
         /// <summary>
-        /// Raised when the <see cref="IsDirty"/> property changes value.
+        /// The entity associated with the event.
         /// </summary>
-        public event EventHandler IsDirtyChanged;
-
-        private ColoredGlyph _glyph;
-
-        [DataMember(Name = "Effect")]
-        private ICellEffect _effect;
-
-        [DataMember(Name = "Appearance")]
-        private ColoredGlyphState _effectState;
+        public readonly Entity Entity;
 
         /// <summary>
-        /// A friendly name of the game object.
+        /// The position the <see cref="Entity"/> moved from.
         /// </summary>
-        [DataMember]
-        public string Name { get; set; }
+        public readonly Point FromPosition;
 
         /// <summary>
-        /// The drawing layer this entity is drawn at
+        /// Creates a new event args for the entity movement.
         /// </summary>
-        [DataMember]
-        public int ZIndex { get; set; }
-
-        /// <summary>
-        /// Represents what the entity looks like.
-        /// </summary>
-        public ColoredGlyph Appearance
+        /// <param name="entity">The entity associated with the event.</param>
+        /// <param name="oldPosition">The position the entity moved from.</param>
+        public EntityMovedEventArgs(Entity entity, Point oldPosition)
         {
-            get => _glyph;
-            protected set
-            {
-                _glyph = value ?? throw new System.NullReferenceException();
-                IsDirty = true;
-
-                _effectState = new ColoredGlyphState(value);
-            }
-        }
-
-        /// <summary>
-        /// Indidcates this entity's visual appearance has changed.
-        /// </summary>
-        public bool IsDirty
-        {
-            get => _glyph.IsDirty;
-            set
-            {
-                _glyph.IsDirty = value;
-                OnIsDirtyChanged();
-            }
-        }
-
-        /// <summary>
-        /// An effect that can be applied to the <see cref="Appearance"/>.
-        /// </summary>
-        public ICellEffect Effect
-        {
-            get => _effect;
-            set
-            {
-                if (_effect != null)
-                {
-                    if (_effect.RestoreCellOnRemoved)
-                        _effectState.RestoreState(ref _glyph);
-                    else
-                        // If we keep what the effect did to the cell, then replace the state of the cell
-                        // with its latest.
-                        _effectState = new ColoredGlyphState(_glyph);
-                }
-
-                if (value == null)
-                    _effect = null;
-                else
-                    _effect = value.CloneOnAdd ? value.Clone() : value;
-            }
-        }
-
-        /// <summary>
-        /// Treats the <see cref="IScreenObject.Position"/> of the entity as if it is pixels and not cells.
-        /// </summary>
-        public bool UsePixelPositioning { get; set; }
-
-        /// <summary>
-        /// Creates a new entity with the specified foreground, background, and glyph.
-        /// </summary>
-        /// <param name="foreground">The foreground color of the entity.</param>
-        /// <param name="background">The background color of the entity.</param>
-        /// <param name="glyph">The glyph color of the entity.</param>
-        /// <param name="zIndex">The rendering order. Higher values are drawn on top of lower values.</param>
-        public Entity(Color foreground, Color background, int glyph, int zIndex)
-        {
-            Appearance = new ColoredGlyph(foreground, background, glyph);
-            Children.IsLocked = true;
-            ZIndex = zIndex;
-        }
-
-        /// <summary>
-        /// Creates a new entity, references the provided glyph as the appearance.
-        /// </summary>
-        /// <param name="appearance">The appearance of the entity.</param>
-        /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
-        public Entity(ref ColoredGlyph appearance, int zIndex)
-        {
-            Appearance = appearance;
-            Children.IsLocked = true;
-            ZIndex = zIndex;
-        }
-
-        /// <summary>
-        /// Creates a new entity, copying the provided appearance to this entity.
-        /// </summary>
-        /// <param name="appearance">The appearance of the entity.</param>
-        /// <param name="zIndex">The rendering order. Lower values are under higher values.</param>
-        public Entity(ColoredGlyph appearance, int zIndex) : this(appearance.Foreground, appearance.Background, appearance.Glyph, zIndex) { }
-
-        [JsonConstructor]
-        private Entity(ColoredGlyphState appearance, ICellEffect effect)
-        {
-            Appearance = new ColoredGlyph(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror, appearance.IsVisible, appearance.Decorators);
-            Effect = effect;
-        }
-
-        /// <inheritdoc />
-        protected override void OnPositionChanged(Point oldPosition, Point newPosition)
-        {
-            base.OnPositionChanged(oldPosition, newPosition);
-            Appearance.IsDirty = true;
-        }
-
-        /// <summary>
-        /// Raises the <see cref="IsDirtyChanged"/> event.
-        /// </summary>
-        protected virtual void OnIsDirtyChanged() =>
-            IsDirtyChanged?.Invoke(this, EventArgs.Empty);
-
-        /// <inheritdoc />
-        public override void UpdateAbsolutePosition()
-        {
-            AbsolutePosition = Position;
-        }
-
-        /// <summary>
-        /// If an effect is applied to the cell, updates the effect.
-        /// </summary>
-        /// <param name="delta"></param>
-        public override void Update(TimeSpan delta)
-        {
-            base.Update(delta);
-
-            if (_effect != null && !_effect.IsFinished)
-            {
-                _effect.Update(delta);
-                _effect.ApplyToCell(Appearance, _effectState);
-
-                if (_effect.IsFinished)
-                {
-                    if (_effect.RemoveOnFinished)
-                    {
-                        if (_effect.RestoreCellOnRemoved)
-                            _effectState.RestoreState(ref _glyph);
-
-                        _effect = null;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the name of the entity prefixed with "Entity - ".
-        /// </summary>
-        /// <returns>The name.</returns>
-        public override string ToString() =>
-            $"Entity - {Name}";
-
-        /// <summary>
-        /// Saves the <see cref="Entity"/> to a file.
-        /// </summary>
-        /// <param name="file">The destination file.</param>
-        public void Save(string file) => Serializer.Save(this, file, Settings.SerializationIsCompressed);
-
-        /// <summary>
-        /// Loads a <see cref="Entity"/> from a file.
-        /// </summary>
-        /// <param name="file">The source file.</param>
-        /// <returns>The entity.</returns>
-        public static Entity Load(string file) => Serializer.Load<Entity>(file, Settings.SerializationIsCompressed);
-
-        /// <summary>
-        /// Arguments for the entity moved event.
-        /// </summary>
-        public class EntityMovedEventArgs: EventArgs
-        {
-            /// <summary>
-            /// The entity associated with the event.
-            /// </summary>
-            public readonly Entity Entity;
-
-            /// <summary>
-            /// The positiont the <see cref="Entity"/> moved from.
-            /// </summary>
-            public readonly Point FromPosition;
-
-            /// <summary>
-            /// Creates a new event args for the entity movement.
-            /// </summary>
-            /// <param name="entity">The entity associated with the event.</param>
-            /// <param name="oldPosition">The position the entity moved from.</param>
-            public EntityMovedEventArgs(Entity entity, Point oldPosition)
-            {
-                Entity = entity;
-                FromPosition = oldPosition;
-            }
+            Entity = entity;
+            FromPosition = oldPosition;
         }
     }
 }

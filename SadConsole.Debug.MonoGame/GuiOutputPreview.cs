@@ -38,7 +38,7 @@ namespace SadConsole.Debug.MonoGame
                         if (ImGui.RadioButton("2x", ref _mode, Mode2X)) { _mode = Mode2X; } ImGui.SameLine();
                         if (ImGui.RadioButton("Fit", ref _mode, ModeFit)) { _mode = ModeFit; }
 
-                        ImGuiExt.DrawTextureChild("output_preview_image", true, _mode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height));
+                        ImGuiExt.DrawTextureChild("output_preview_image", true, _mode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
                     }
                     else
                         ImGui.Text("Rendering output hasn't been created.");

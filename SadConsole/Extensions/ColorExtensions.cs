@@ -1,614 +1,616 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace SadRogue.Primitives
+namespace SadRogue.Primitives;
+
+/// <summary>
+/// Various extension methods to <see cref="Color"/> class.
+/// </summary>
+public static class ColorExtensions2
 {
     /// <summary>
-    /// Various extension methods to <see cref="Color"/> class.
+    /// Custom color mappings for the <see cref="FromName(string)"/> and <see cref="FromParser(Color, string, out bool, out bool, out bool, out bool, out bool)"/> methods. Key names should be lowercase.
     /// </summary>
-    public static class ColorExtensions2
+    public static Dictionary<string, Color> ColorMappings = new Dictionary<string, Color>(162);
+
+    /// <summary>
+    /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
+    /// </summary>
+    /// <param name="color">The starting color which will be at index 0 in the array.</param>
+    /// <param name="endingColor">The ending color which will be at index `steps - 1` in the array.</param>
+    /// <param name="steps">The gradient steps in the array which uses <see cref="Color.Lerp(Color, Color, float)"/>.</param>
+    /// <returns>An array of colors.</returns>
+    public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
     {
-        /// <summary>
-        /// Custom color mappings for the <see cref="FromName(string)"/> and <see cref="FromParser(Color, string, out bool, out bool, out bool, out bool, out bool)"/> methods. Key names should be lowercase.
-        /// </summary>
-        public static Dictionary<string, Color> ColorMappings = new Dictionary<string, Color>(162);
+        Color[] colors = new Color[steps];
 
-        /// <summary>
-        /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
-        /// </summary>
-        /// <param name="color">The starting color which will be at index 0 in the array.</param>
-        /// <param name="endingColor">The ending color which will be at index `steps - 1` in the array.</param>
-        /// <param name="steps">The gradient steps in the array which uses <see cref="Color.Lerp(Color, Color, float)"/>.</param>
-        /// <returns>An array of colors.</returns>
-        public static Color[] LerpSteps(this Color color, Color endingColor, int steps)
+        float stopStrength = 1f / (steps - 1);
+
+        float lerpTotal = 0f;
+
+        colors[0] = color;
+        colors[steps - 1] = endingColor;
+
+        for (int i = 1; i < steps - 1; i++)
         {
-            Color[] colors = new Color[steps];
+            lerpTotal += stopStrength;
 
-            float stopStrength = 1f / (steps - 1);
-
-            float lerpTotal = 0f;
-
-            colors[0] = color;
-            colors[steps - 1] = endingColor;
-
-            for (int i = 1; i < steps - 1; i++)
-            {
-                lerpTotal += stopStrength;
-
-                colors[i] = Color.Lerp(color, endingColor, lerpTotal);
-            }
-
-            return colors;
+            colors[i] = Color.Lerp(color, endingColor, lerpTotal);
         }
 
-        /// <summary>
-        /// Sets the color values based on HSL instead of RGB.
-        /// </summary>
-        /// <param name="color">The color to change.</param>
-        /// <param name="h">The hue amount.</param>
-        /// <param name="s">The saturation amount.</param>
-        /// <param name="l">The luminance amount.</param>
-        /// <remarks>Taken from http://www.easyrgb.com/index.php?X=MATH&amp;H=19#text19 </remarks>
-        public static Color SetHSL(this Color color, float h, float s, float l)
-        {
-            byte r = 0;
-            byte g = 0;
-            byte b = 0;
+        return colors;
+    }
 
-            if (s == 0f)
+    /// <summary>
+    /// Sets the color values based on HSL instead of RGB.
+    /// </summary>
+    /// <param name="color">The color to change.</param>
+    /// <param name="h">The hue amount.</param>
+    /// <param name="s">The saturation amount.</param>
+    /// <param name="l">The luminance amount.</param>
+    /// <remarks>Taken from http://www.easyrgb.com/index.php?X=MATH&amp;H=19#text19 </remarks>
+    public static Color SetHSL(this Color color, float h, float s, float l)
+    {
+        byte r = 0;
+        byte g = 0;
+        byte b = 0;
+
+        if (s == 0f)
+        {
+            r = (byte)(l * 255);
+            g = (byte)(l * 255);
+            b = (byte)(l * 255);
+        }
+        else
+        {
+            float var_2;
+            float var_1;
+
+            if (l < 0.5)
             {
-                r = (byte)(l * 255);
-                g = (byte)(l * 255);
-                b = (byte)(l * 255);
+                var_2 = l * (1 + s);
             }
             else
             {
-                float var_2;
-                float var_1;
+                var_2 = (l + s) - (s * l);
+            }
 
-                if (l < 0.5)
+            var_1 = 2 * l - var_2;
+
+            r = (byte)(255 * Hue_2_RGB(var_1, var_2, h + (1 / 3)));
+            g = (byte)(255 * Hue_2_RGB(var_1, var_2, h));
+            b = (byte)(255 * Hue_2_RGB(var_1, var_2, h - (1 / 3)));
+        }
+
+        return new Color(r, g, b);
+    }
+
+    private static float Hue_2_RGB(float v1, float v2, float vH)
+    {
+        if (vH < 0)
+        {
+            vH += 1;
+        }
+
+        if (vH > 1)
+        {
+            vH -= 1;
+        }
+
+        if ((6 * vH) < 1)
+        {
+            return (v1 + (v2 - v1) * 6 * vH);
+        }
+
+        if ((2 * vH) < 1)
+        {
+            return (v2);
+        }
+
+        if ((3 * vH) < 2)
+        {
+            return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6);
+        }
+
+        return (v1);
+    }
+
+    /// <summary>
+    /// Gets a random color.
+    /// </summary>
+    /// <param name="color">The color object to start with. Will be overridden.</param>
+    /// <param name="random">A random object to get numbers from.</param>
+    /// <returns>A new color.</returns>
+    public static Color GetRandomColor(this Color color, Random random) => new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
+
+    /// <summary>
+    /// Gets a darker version of the color. R,G,B channels are * 0.25f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetDark(this Color color) =>
+        (color * 0.75f).FillAlpha();
+
+    /// <summary>
+    /// Gets a darker version of the color. R,G,B channels are * 0.50f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetDarker(this Color color) =>
+        (color * 0.50f).FillAlpha();
+
+    /// <summary>
+    /// Gets a darker version of the color. R,G,B channels are * 0.75f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetDarkest(this Color color) =>
+        (color * 0.25f).FillAlpha();
+
+    /// <summary>
+    /// Gets a brighter version of the color. R,G,B channels are * 1.25f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetBright(this Color color) =>
+        (color * 1.25f).FillAlpha();
+
+    /// <summary>
+    /// Gets a brighter version of the color. R,G,B channels are * 1.50f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetBrighter(this Color color) =>
+        (color * 1.50f).FillAlpha();
+
+    /// <summary>
+    /// Gets a brighter version of the color. R,G,B channels are * 1.75f.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A darker color.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GetBrightest(this Color color) =>
+        (color * 1.75f).FillAlpha();
+
+    /// <summary>
+    /// Returns a new Color using only the Red value of this color.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with only the red channel set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color RedOnly(this Color color) => new Color(color.R, 0, 0);
+
+    /// <summary>
+    /// Returns a new Color using only the Green value of this color.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with only the green channel set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color GreenOnly(this Color color) => new Color(0, color.G, 0);
+
+    /// <summary>
+    /// Returns a new Color using only the Blue value of this color.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with only the blue channel set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color BlueOnly(this Color color) => new Color(0, 0, color.B);
+
+    /// <summary>
+    /// Returns a new Color using only the Alpha value of this color.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with only the alpha channel set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color AlphaOnly(this Color color) => new Color((byte)0, (byte)0, (byte)0, color.A);
+
+    /// <summary>
+    /// Returns a new color with the red channel set to 0.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the red channel cleared.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color ClearRed(this Color color) => new Color((byte)0, color.G, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the green channel set to 0.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the green channel cleared.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color ClearGreen(this Color color) => new Color(color.R, (byte)0, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the blue channel set to 0.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the blue channel cleared.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color ClearBlue(this Color color) => new Color(color.R, color.G, (byte)0, color.A);
+
+    /// <summary>
+    /// Returns a new color with the alpha channel set to 0.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the alpha channel cleared.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
+
+    /// <summary>
+    /// Returns a new color with the red channel set to 255.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the red channel fully set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color FillRed(this Color color) => new Color((byte)255, color.G, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the green channel set to 255.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the green channel fully set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color FillGreen(this Color color) => new Color(color.R, (byte)255, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the blue channel set to 255.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the blue channel fully set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color FillBlue(this Color color) => new Color(color.R, color.G, (byte)255, color.A);
+
+    /// <summary>
+    /// Returns a new color with the alpha channel set to 255.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <returns>A color with the alpha channel fully set.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
+
+    /// <summary>
+    /// Returns a new color with the red channel set to the specified value.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <param name="value">The new value for the red channel.</param>
+    /// <returns>A color with the red channel altered.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color SetRed(this Color color, byte value) => new Color(value, color.G, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the green channel set to the specified value.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <param name="value">The new value for the green channel.</param>
+    /// <returns>A color with the green channel altered.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color SetGreen(this Color color, byte value) => new Color(color.R, value, color.B, color.A);
+
+    /// <summary>
+    /// Returns a new color with the blue channel set to the specified value.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <param name="value">The new value for the blue channel.</param>
+    /// <returns>A color with the blue channel altered.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color SetBlue(this Color color, byte value) => new Color(color.R, color.G, value, color.A);
+
+    /// <summary>
+    /// Returns a new color with the alpha channel set to the specified value.
+    /// </summary>
+    /// <param name="color">Object instance.</param>
+    /// <param name="value">The new value for the alpha channel.</param>
+    /// <returns>A color with the alpha channel altered.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color SetAlpha(this Color color, byte value) => new Color(color.R, color.G, color.B, value);
+
+
+    /// <summary>
+    /// Gets the luma of an existing color.
+    /// </summary>
+    /// <param name="color">The color to calculate the luma from.</param>
+    /// <returns>A value based on this code: (color.R + color.R + color.B + color.G + color.G + color.G) / 6f</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float GetLuma(this Color color) => (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
+
+    /// <summary>
+    /// Gets the brightness of a color.
+    /// </summary>
+    /// <param name="color">The color to process.</param>
+    /// <returns>The brightness value.</returns>
+    /// <remarks>Taken from the mono source code.</remarks>
+    public static float GetBrightness(this Color color)
+    {
+        byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
+        byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
+
+        return (float)(maxval + minval) / 510;
+    }
+
+    /// <summary>
+    /// Gets the saturation of a color.
+    /// </summary>
+    /// <param name="color">The color to process.</param>
+    /// <returns>The saturation value.</returns>
+    /// <remarks>Taken from the mono source code.</remarks>
+    public static float GetSaturation(this Color color)
+    {
+        byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
+        byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
+
+
+        if (maxval == minval)
+        {
+            return 0.0f;
+        }
+
+        int sum = maxval + minval;
+        if (sum > 255)
+        {
+            sum = 510 - sum;
+        }
+
+        return (float)(maxval - minval) / sum;
+    }
+
+    /// <summary>
+    /// Gets the hue of a color.
+    /// </summary>
+    /// <param name="color">The color to process.</param>
+    /// <returns>The hue value.</returns>
+    /// <remarks>Taken from the mono source code.</remarks>
+    public static float GetHue(this Color color)
+    {
+        int r = color.R;
+        int g = color.G;
+        int b = color.B;
+        byte minval = (byte)Math.Min(r, Math.Min(g, b));
+        byte maxval = (byte)Math.Max(r, Math.Max(g, b));
+
+
+        if (maxval == minval)
+        {
+            return 0.0f;
+        }
+
+        float diff = maxval - minval;
+        float rnorm = (maxval - r) / diff;
+        float gnorm = (maxval - g) / diff;
+        float bnorm = (maxval - b) / diff;
+
+
+        float hue = 0.0f;
+        if (r == maxval)
+        {
+            hue = 60.0f * (6.0f + bnorm - gnorm);
+        }
+
+        if (g == maxval)
+        {
+            hue = 60.0f * (2.0f + rnorm - bnorm);
+        }
+
+        if (b == maxval)
+        {
+            hue = 60.0f * (4.0f + gnorm - rnorm);
+        }
+
+        if (hue > 360.0f)
+        {
+            hue = hue - 360.0f;
+        }
+
+        return hue;
+    }
+
+    /// <summary>
+    /// Converts a color to the format used by <see cref="SadConsole.StringParser.ParseCommandRecolor"/> command.
+    /// </summary>
+    /// <param name="color">The color to convert.</param>
+    /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
+    public static string ToParser(this Color color) => $"{color.R},{color.G},{color.B},{color.A}";
+
+    /// <summary>
+    /// Gets a color in the format of <see cref="SadConsole.StringParser.ParseCommandRecolor"/>.
+    /// </summary>
+    /// <param name="color">The color to use as a base.</param>
+    /// <param name="value">The string parser color command.</param>
+    /// <param name="keepR">Indicates that command wanted to keep the Red color channel.</param>
+    /// <param name="keepG">Indicates that command wanted to keep the Green color channel.</param>
+    /// <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
+    /// <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
+    /// <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
+    /// <returns></returns>
+    public static Color FromParser(this Color color, string value, out bool keepR, out bool keepG, out bool keepB, out bool keepA, out bool useDefault)
+    {
+        useDefault = false;
+        keepR = false;
+        keepG = false;
+        keepB = false;
+        keepA = false;
+
+        string exceptionMessage = $"Cannot parse color string: {value}";
+
+        byte r = color.R;
+        byte g = color.G;
+        byte b = color.B;
+        byte a = color.A;
+
+        if (value.Contains(","))
+        {
+            string[] channels = value.Trim(' ').Split(',');
+
+            if (channels.Length >= 3)
+            {
+
+                byte colorValue;
+
+                // Red
+                if (channels[0] == "x")
                 {
-                    var_2 = l * (1 + s);
+                    keepR = true;
                 }
-                else
+                else if (byte.TryParse(channels[0], out colorValue))
                 {
-                    var_2 = (l + s) - (s * l);
-                }
-
-                var_1 = 2 * l - var_2;
-
-                r = (byte)(255 * Hue_2_RGB(var_1, var_2, h + (1 / 3)));
-                g = (byte)(255 * Hue_2_RGB(var_1, var_2, h));
-                b = (byte)(255 * Hue_2_RGB(var_1, var_2, h - (1 / 3)));
-            }
-
-            return new Color(r, g, b);
-        }
-
-        private static float Hue_2_RGB(float v1, float v2, float vH)
-        {
-            if (vH < 0)
-            {
-                vH += 1;
-            }
-
-            if (vH > 1)
-            {
-                vH -= 1;
-            }
-
-            if ((6 * vH) < 1)
-            {
-                return (v1 + (v2 - v1) * 6 * vH);
-            }
-
-            if ((2 * vH) < 1)
-            {
-                return (v2);
-            }
-
-            if ((3 * vH) < 2)
-            {
-                return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6);
-            }
-
-            return (v1);
-        }
-
-        /// <summary>
-        /// Gets a random color.
-        /// </summary>
-        /// <param name="color">The color object to start with. Will be overridden.</param>
-        /// <param name="random">A random object to get numbers from.</param>
-        /// <returns>A new color.</returns>
-        public static Color GetRandomColor(this Color color, Random random) => new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
-
-        /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 0.25f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetDark(this Color color) =>
-            (color * 0.75f).FillAlpha();
-
-        /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 0.50f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetDarker(this Color color) =>
-            (color * 0.50f).FillAlpha();
-
-        /// <summary>
-        /// Gets a darker version of the color. R,G,B channels are * 0.75f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetDarkest(this Color color) =>
-            (color * 0.25f).FillAlpha();
-
-        /// <summary>
-        /// Gets a brighter version of the color. R,G,B channels are * 1.25f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetBright(this Color color) =>
-            (color * 1.25f).FillAlpha();
-
-        /// <summary>
-        /// Gets a brighter version of the color. R,G,B channels are * 1.50f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetBrighter(this Color color) =>
-            (color * 1.50f).FillAlpha();
-
-        /// <summary>
-        /// Gets a brighter version of the color. R,G,B channels are * 1.75f.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A darker color.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetBrightest(this Color color) =>
-            (color * 1.75f).FillAlpha();
-
-        /// <summary>
-        /// Returns a new Color using only the Red value of this color.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with only the red channel set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color RedOnly(this Color color) => new Color(color.R, 0, 0);
-
-        /// <summary>
-        /// Returns a new Color using only the Green value of this color.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with only the green channel set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GreenOnly(this Color color) => new Color(0, color.G, 0);
-
-        /// <summary>
-        /// Returns a new Color using only the Blue value of this color.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with only the blue channel set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color BlueOnly(this Color color) => new Color(0, 0, color.B);
-
-        /// <summary>
-        /// Returns a new Color using only the Alpha value of this color.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with only the alpha channel set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color AlphaOnly(this Color color) => new Color((byte)0, (byte)0, (byte)0, color.A);
-
-        /// <summary>
-        /// Returns a new color with the red channel set to 0.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the red channel cleared.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color ClearRed(this Color color) => new Color((byte)0, color.G, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the green channel set to 0.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the green channel cleared.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color ClearGreen(this Color color) => new Color(color.R, (byte)0, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the blue channel set to 0.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the blue channel cleared.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color ClearBlue(this Color color) => new Color(color.R, color.G, (byte)0, color.A);
-
-        /// <summary>
-        /// Returns a new color with the alpha channel set to 0.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the alpha channel cleared.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
-
-        /// <summary>
-        /// Returns a new color with the red channel set to 255.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the red channel fully set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color FillRed(this Color color) => new Color((byte)255, color.G, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the green channel set to 255.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the green channel fully set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color FillGreen(this Color color) => new Color(color.R, (byte)255, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the blue channel set to 255.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the blue channel fully set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color FillBlue(this Color color) => new Color(color.R, color.G, (byte)255, color.A);
-
-        /// <summary>
-        /// Returns a new color with the alpha channel set to 255.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <returns>A color with the alpha channel fully set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
-
-        /// <summary>
-        /// Returns a new color with the red channel set to the specified value.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <param name="value">The new value for the red channel.</param>
-        /// <returns>A color with the red channel altered.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color SetRed(this Color color, byte value) => new Color(value, color.G, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the green channel set to the specified value.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <param name="value">The new value for the green channel.</param>
-        /// <returns>A color with the green channel altered.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color SetGreen(this Color color, byte value) => new Color(color.R, value, color.B, color.A);
-
-        /// <summary>
-        /// Returns a new color with the blue channel set to the specified value.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <param name="value">The new value for the blue channel.</param>
-        /// <returns>A color with the blue channel altered.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color SetBlue(this Color color, byte value) => new Color(color.R, color.G, value, color.A);
-
-        /// <summary>
-        /// Returns a new color with the alpha channel set to the specified value.
-        /// </summary>
-        /// <param name="color">Object instance.</param>
-        /// <param name="value">The new value for the alpha channel.</param>
-        /// <returns>A color with the alpha channel altered.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color SetAlpha(this Color color, byte value) => new Color(color.R, color.G, color.B, value);
-
-
-        /// <summary>
-        /// Gets the luma of an existing color.
-        /// </summary>
-        /// <param name="color">The color to calculate the luma from.</param>
-        /// <returns>A value based on this code: (color.R + color.R + color.B + color.G + color.G + color.G) / 6f</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetLuma(this Color color) => (color.R + color.R + color.B + color.G + color.G + color.G) / 6f;
-
-        /// <summary>
-        /// Gets the brightness of a color.
-        /// </summary>
-        /// <param name="color">The color to process.</param>
-        /// <returns>The brightness value.</returns>
-        /// <remarks>Taken from the mono source code.</remarks>
-        public static float GetBrightness(this Color color)
-        {
-            byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
-            byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
-
-            return (float)(maxval + minval) / 510;
-        }
-
-        /// <summary>
-        /// Gets the saturation of a color.
-        /// </summary>
-        /// <param name="color">The color to process.</param>
-        /// <returns>The saturation value.</returns>
-        /// <remarks>Taken from the mono source code.</remarks>
-        public static float GetSaturation(this Color color)
-        {
-            byte minval = Math.Min(color.R, Math.Min(color.G, color.B));
-            byte maxval = Math.Max(color.R, Math.Max(color.G, color.B));
-
-
-            if (maxval == minval)
-            {
-                return 0.0f;
-            }
-
-            int sum = maxval + minval;
-            if (sum > 255)
-            {
-                sum = 510 - sum;
-            }
-
-            return (float)(maxval - minval) / sum;
-        }
-
-        /// <summary>
-        /// Gets the hue of a color.
-        /// </summary>
-        /// <param name="color">The color to process.</param>
-        /// <returns>The hue value.</returns>
-        /// <remarks>Taken from the mono source code.</remarks>
-        public static float GetHue(this Color color)
-        {
-            int r = color.R;
-            int g = color.G;
-            int b = color.B;
-            byte minval = (byte)Math.Min(r, Math.Min(g, b));
-            byte maxval = (byte)Math.Max(r, Math.Max(g, b));
-
-
-            if (maxval == minval)
-            {
-                return 0.0f;
-            }
-
-            float diff = maxval - minval;
-            float rnorm = (maxval - r) / diff;
-            float gnorm = (maxval - g) / diff;
-            float bnorm = (maxval - b) / diff;
-
-
-            float hue = 0.0f;
-            if (r == maxval)
-            {
-                hue = 60.0f * (6.0f + bnorm - gnorm);
-            }
-
-            if (g == maxval)
-            {
-                hue = 60.0f * (2.0f + rnorm - bnorm);
-            }
-
-            if (b == maxval)
-            {
-                hue = 60.0f * (4.0f + gnorm - rnorm);
-            }
-
-            if (hue > 360.0f)
-            {
-                hue = hue - 360.0f;
-            }
-
-            return hue;
-        }
-
-        /// <summary>
-        /// Converts a color to the format used by <see cref="SadConsole.StringParser.ParseCommandRecolor"/> command.
-        /// </summary>
-        /// <param name="color">The color to convert.</param>
-        /// <returns>A string in this format R,G,B,A so for <see cref="Color.Green"/> you would get <code>0,128,0,255</code>.</returns>
-        public static string ToParser(this Color color) => $"{color.R},{color.G},{color.B},{color.A}";
-
-        /// <summary>
-        /// Gets a color in the format of <see cref="SadConsole.StringParser.ParseCommandRecolor"/>.
-        /// </summary>
-        /// <param name="color">The color to use as a base.</param>
-        /// <param name="value">The string parser color command.</param>
-        /// <param name="keepR">Indicates that command wanted to keep the Red color channel.</param>
-        /// <param name="keepG">Indicates that command wanted to keep the Green color channel.</param>
-        /// <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
-        /// <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
-        /// <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
-        /// <returns></returns>
-        public static Color FromParser(this Color color, string value, out bool keepR, out bool keepG, out bool keepB, out bool keepA, out bool useDefault)
-        {
-            useDefault = false;
-            keepR = false;
-            keepG = false;
-            keepB = false;
-            keepA = false;
-
-            string exceptionMessage = $"Cannot parse color string: {value}";
-
-            byte r = color.R;
-            byte g = color.G;
-            byte b = color.B;
-            byte a = color.A;
-
-            if (value.Contains(","))
-            {
-                string[] channels = value.Trim(' ').Split(',');
-
-                if (channels.Length >= 3)
-                {
-
-                    byte colorValue;
-
-                    // Red
-                    if (channels[0] == "x")
-                    {
-                        keepR = true;
-                    }
-                    else if (byte.TryParse(channels[0], out colorValue))
-                    {
-                        r = colorValue;
-                    }
-                    else
-                    {
-                        throw new ArgumentException(exceptionMessage);
-                    }
-
-                    // Green
-                    if (channels[1] == "x")
-                    {
-                        keepG = true;
-                    }
-                    else if (byte.TryParse(channels[1], out colorValue))
-                    {
-                        g = colorValue;
-                    }
-                    else
-                    {
-                        throw new ArgumentException(exceptionMessage);
-                    }
-
-                    // Blue
-                    if (channels[2] == "x")
-                    {
-                        keepB = true;
-                    }
-                    else if (byte.TryParse(channels[2], out colorValue))
-                    {
-                        b = colorValue;
-                    }
-                    else
-                    {
-                        throw new ArgumentException(exceptionMessage);
-                    }
-
-                    if (channels.Length == 4)
-                    {
-                        // Alpha
-                        if (channels[3] == "x")
-                        {
-                            keepA = true;
-                        }
-                        else if (byte.TryParse(channels[3], out colorValue))
-                        {
-                            a = colorValue;
-                        }
-                        else
-                        {
-                            throw new ArgumentException(exceptionMessage);
-                        }
-                    }
-                    else
-                    {
-                        a = 255;
-                    }
-
-                    return new Color(r, g, b, a);
+                    r = colorValue;
                 }
                 else
                 {
                     throw new ArgumentException(exceptionMessage);
                 }
-            }
-            else if (value == "default")
-            {
-                useDefault = true;
+
+                // Green
+                if (channels[1] == "x")
+                {
+                    keepG = true;
+                }
+                else if (byte.TryParse(channels[1], out colorValue))
+                {
+                    g = colorValue;
+                }
+                else
+                {
+                    throw new ArgumentException(exceptionMessage);
+                }
+
+                // Blue
+                if (channels[2] == "x")
+                {
+                    keepB = true;
+                }
+                else if (byte.TryParse(channels[2], out colorValue))
+                {
+                    b = colorValue;
+                }
+                else
+                {
+                    throw new ArgumentException(exceptionMessage);
+                }
+
+                if (channels.Length == 4)
+                {
+                    // Alpha
+                    if (channels[3] == "x")
+                    {
+                        keepA = true;
+                    }
+                    else if (byte.TryParse(channels[3], out colorValue))
+                    {
+                        a = colorValue;
+                    }
+                    else
+                    {
+                        throw new ArgumentException(exceptionMessage);
+                    }
+                }
+                else
+                {
+                    a = 255;
+                }
+
                 return new Color(r, g, b, a);
             }
             else
             {
-                value = value.ToLowerInvariant();
-
-                if (ColorMappings.ContainsKey(value))
-                    return ColorMappings[value];
-                else
-                    throw new ArgumentException(exceptionMessage);
+                throw new ArgumentException(exceptionMessage);
             }
         }
-
-        /// <summary>
-        /// Searches <see cref="ColorMappings"/> for a defined color.
-        /// </summary>
-        /// <param name="name">The name of a color.</param>
-        /// <returns>A color.</returns>
-        public static Color FromName(string name)
+        else if (value == "default")
         {
-            name = name.ToLowerInvariant();
-            if (ColorMappings.ContainsKey(name))
-                return ColorMappings[name];
-            throw new ArgumentException($"Unable to find a color with the name {name}.");
+            useDefault = true;
+            return new Color(r, g, b, a);
+        }
+        else if (value == "rand")
+        {
+            return GetRandomColor(Color.White, SadConsole.GameHost.Instance.Random);
+        }
+        else
+        {
+            value = value.ToLowerInvariant();
+
+            if (ColorMappings.ContainsKey(value))
+                return ColorMappings[value];
+            else
+                throw new ArgumentException(exceptionMessage);
+        }
+    }
+
+    /// <summary>
+    /// Searches <see cref="ColorMappings"/> for a defined color.
+    /// </summary>
+    /// <param name="name">The name of a color.</param>
+    /// <returns>A color.</returns>
+    public static Color FromName(string name)
+    {
+        name = name.ToLowerInvariant();
+        if (ColorMappings.ContainsKey(name))
+            return ColorMappings[name];
+        throw new ArgumentException($"Unable to find a color with the name {name}.");
+    }
+
+    /// <summary>
+    /// Searches <see cref="ColorMappings"/> for a defined color. If color is not defined, the color specified by <paramref name="defaultColor"/> is returned.
+    /// </summary>
+    /// <param name="name">The name of a color.</param>
+    /// <param name="defaultColor">Fallback color.</param>
+    /// <returns>A color.</returns>
+    public static Color FromName(string name, Color defaultColor)
+    {
+        name = name.ToLowerInvariant();
+        if (ColorMappings.ContainsKey(name))
+            return ColorMappings[name];
+        return defaultColor;
+    }
+
+    /// <summary>
+    /// Creates a <see cref="SadConsole.ColoredString"/> object using the current gradient.
+    /// </summary>
+    /// <param name="gradient">The gradient to work with.</param>
+    /// <param name="text">The text to use for the colored string.</param>
+    /// <returns>A new colored string object.</returns>
+    public static SadConsole.ColoredString ToColoredString(this Gradient gradient, string text)
+    {
+        SadConsole.ColoredString stringObject = new SadConsole.ColoredString(text);
+
+        switch (gradient.Stops.Length)
+        {
+            case 0:
+                throw new IndexOutOfRangeException(
+                    "The ColorGradient object does not have any gradient stops defined.");
+            case 1:
+                stringObject.SetForeground(gradient.Stops[0].Color);
+                return stringObject;
         }
 
-        /// <summary>
-        /// Searches <see cref="ColorMappings"/> for a defined color. If color is not defined, the color specified by <paramref name="defaultColor"/> is returned.
-        /// </summary>
-        /// <param name="name">The name of a color.</param>
-        /// <param name="defaultColor">Fallback color.</param>
-        /// <returns>A color.</returns>
-        public static Color FromName(string name, Color defaultColor)
-        {
-            name = name.ToLowerInvariant();
-            if (ColorMappings.ContainsKey(name))
-                return ColorMappings[name];
-            return defaultColor;
-        }
+        float lerp = 1f / (text.Length - 1);
+        float lerpTotal = 0f;
 
-        /// <summary>
-        /// Creates a <see cref="SadConsole.ColoredString"/> object using the current gradient.
-        /// </summary>
-        /// <param name="gradient">The gradient to work with.</param>
-        /// <param name="text">The text to use for the colored string.</param>
-        /// <returns>A new colored string object.</returns>
-        public static SadConsole.ColoredString ToColoredString(this Gradient gradient, string text)
-        {
-            SadConsole.ColoredString stringObject = new SadConsole.ColoredString(text);
+        stringObject[0].Foreground = gradient.Stops[0].Color;
+        stringObject[text.Length - 1].Foreground = gradient.Stops[gradient.Stops.Length - 1].Color;
 
-            switch (gradient.Stops.Length)
+        for (int i = 1; i < text.Length - 1; i++)
+        {
+            lerpTotal += lerp;
+            int counter;
+            for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < lerpTotal; counter++)
             {
-                case 0:
-                    throw new IndexOutOfRangeException(
-                        "The ColorGradient object does not have any gradient stops defined.");
-                case 1:
-                    stringObject.SetForeground(gradient.Stops[0].Color);
-                    return stringObject;
+                ;
             }
 
-            float lerp = 1f / (text.Length - 1);
-            float lerpTotal = 0f;
+            counter--;
+            counter = MathHelpers.Clamp(counter, 0, gradient.Stops.Length - 2);
 
-            stringObject[0].Foreground = gradient.Stops[0].Color;
-            stringObject[text.Length - 1].Foreground = gradient.Stops[gradient.Stops.Length - 1].Color;
+            float newLerp = (gradient.Stops[counter].Stop - lerpTotal) / (gradient.Stops[counter].Stop - gradient.Stops[counter + 1].Stop);
 
-            for (int i = 1; i < text.Length - 1; i++)
-            {
-                lerpTotal += lerp;
-                int counter;
-                for (counter = 0; counter < gradient.Stops.Length && gradient.Stops[counter].Stop < lerpTotal; counter++)
-                {
-                    ;
-                }
-
-                counter--;
-                counter = MathHelpers.Clamp(counter, 0, gradient.Stops.Length - 2);
-
-                float newLerp = (gradient.Stops[counter].Stop - lerpTotal) / (gradient.Stops[counter].Stop - gradient.Stops[counter + 1].Stop);
-
-                stringObject[i].Foreground = Color.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp);
-            }
-
-            return stringObject;
+            stringObject[i].Foreground = Color.Lerp(gradient.Stops[counter].Color, gradient.Stops[counter + 1].Color, newLerp);
         }
+
+        return stringObject;
     }
 }

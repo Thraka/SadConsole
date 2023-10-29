@@ -1,5 +1,5 @@
 {
-    "Name": "IBM_16x8_ext",
+    "Name": "IBM_8x16_ext",
     "FilePath": "res:SadConsole.Resources.IBM8x16_NoPadding_extended.png",
     "GlyphHeight": 16,
     "GlyphWidth": 8,
@@ -271,6 +271,38 @@
         "box-fill+left8": {
             "Glyph": 319,
             "Mirror": 0
+        },
+        "ui-arrow-up+left": {
+            "Glyph": 320,
+            "Mirror": 0
+        },
+        "ui-arrow-up+right": {
+            "Glyph": 321,
+            "Mirror": 0
+        },
+        "ui-arrow-down+left": {
+            "Glyph": 320,
+            "Mirror": 1
+        },
+        "ui-arrow-down+right": {
+            "Glyph": 321,
+            "Mirror": 1
+        },
+        "ui-arrow-left+top": {
+            "Glyph": 322,
+            "Mirror": 0
+        },
+        "ui-arrow-left+bottom": {
+            "Glyph": 322,
+            "Mirror": 1
+        },
+        "ui-arrow-right+top": {
+            "Glyph": 322,
+            "Mirror": 2
+        },
+        "ui-arrow-right+bottom": {
+            "Glyph": 322,
+            "Mirror": 3
         }
     }
 }

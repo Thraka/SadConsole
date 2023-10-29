@@ -4,25 +4,24 @@
 using System.Runtime.Serialization;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace SadConsole.EasingFunctions
+namespace SadConsole.EasingFunctions;
+
+[DataContract]
+public class Linear : EasingBase
 {
-    [DataContract]
-    public class Linear : EasingBase
+    public override double Ease(double time, double startingValue, double currentValue, double duration)
     {
-        public override double Ease(double time, double startingValue, double currentValue, double duration)
+        switch (Mode)
         {
-            switch (Mode)
-            {
-                case EasingMode.In:
-                case EasingMode.Out:
-                case EasingMode.InOut:
-                case EasingMode.OutIn:
+            case EasingMode.In:
+            case EasingMode.Out:
+            case EasingMode.InOut:
+            case EasingMode.OutIn:
 
-                default:
-                    return currentValue * time / duration + startingValue;
-            }
-
+            default:
+                return currentValue * time / duration + startingValue;
         }
+
     }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

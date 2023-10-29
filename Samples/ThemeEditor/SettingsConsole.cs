@@ -7,6 +7,7 @@ using SadConsole;
 using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole.UI.Windows;
+using ThemeEditor.Windows;
 
 namespace ThemeEditor
 {
@@ -31,7 +32,7 @@ namespace ThemeEditor
 
         private RadioButton _themePartSettingIsCustomColor;
         private RadioButton _themePartSettingIsPredefinedColor;
-        private Button _themePartSettingColorSet;
+        private ButtonBox _themePartSettingColorSet;
 
         private CheckBox _isThemeLight;
 
@@ -43,10 +44,11 @@ namespace ThemeEditor
 
             // =================================
             // List box for color definitions
-            _colorsListBox = new ListBox(17, 8, new SadConsole.UI.Themes.ListBoxItemColorTheme());
+            _colorsListBox = new ListBox(17, 8);
             _colorsListBox.Position = (2, 3);
             Controls.Add(_colorsListBox);
-            ((SadConsole.UI.Themes.ListBoxTheme)_colorsListBox.Theme).DrawBorder = true;
+            _colorsListBox.DrawBorder = true;
+            _colorsListBox.ItemTheme = new ListBoxItemColorTheme();
             _colorsListBox.SelectedItemChanged += colorsListBox_SelectedItemChanged;
 
             // =================================
@@ -94,10 +96,10 @@ namespace ThemeEditor
                 IsVisible = false
             };
             _themePartSettingIsPredefinedColor.IsSelectedChanged += ThemePartSettingColorRadio_IsSelectedChanged;
-            _themePartSettingColorSet = new Button(11, 1)
+            _themePartSettingColorSet = new ButtonBox(11, 1)
             {
                 Text = "Set Color",
-                Theme = new SadConsole.UI.Themes.ButtonLinesTheme(),
+                UseExtended = true,
                 IsVisible = false
             };
             _themePartSettingColorSet.Click += themePartSettingColorSet_Click;
@@ -156,7 +158,7 @@ namespace ThemeEditor
             }
             else
             {
-                SelectPaletteColor window = new SelectPaletteColor(setting.UIColor);
+                SelectPaletteColorPopup window = new SelectPaletteColorPopup(setting.UIColor);
                 window.Center();
                 window.Closed += (s, e) =>
                 {
@@ -198,7 +200,7 @@ namespace ThemeEditor
             window.Show(true);
         }
 
-        private void colorsListBox_SelectedItemChanged(object sender, ListBox.SelectedItemEventArgs e)
+        private void colorsListBox_SelectedItemChanged(object? sender, ListBox.SelectedItemEventArgs e)
         {
             if (e.Item != null)
             {
@@ -284,7 +286,7 @@ namespace ThemeEditor
         }
 
         string GetThemePartString(Color color, string part) =>
-            $"[c:r f:{color.ToParser()}:2][c:sg 301]m[c:sg 302]m[c:r f:{DefaultForeground.ToParser()}] {part}";
+            $"[c:r f:{color.ToParser()}:2][c:sg 301]m[c:sg 302]m[c:r f:{Surface.DefaultForeground.ToParser()}] {part}";
 
         private void UpdateColors()
         {

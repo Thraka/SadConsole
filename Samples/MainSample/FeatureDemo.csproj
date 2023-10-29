@@ -12,10 +12,11 @@
     <Compile Remove="CustomConsoles\SceneProjectionConsole.cs" />
     <Compile Remove="CustomConsoles\TextCursorConsole.cs" />
     <Compile Remove="CustomConsoles\WorldGenerationConsole.cs" />
+    <Compile Remove="HostSpecific\MonoGame\SceneProjectionConsole.cs" />
   </ItemGroup>
 
   <PropertyGroup>
-    <GameHost>monogame</GameHost>
+    <GameHost>sfml</GameHost>
     <UseProjectReferences>true</UseProjectReferences>
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>

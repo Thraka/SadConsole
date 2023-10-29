@@ -15,7 +15,7 @@ namespace FeatureDemo.CustomConsoles
         public EntityConsole()
             : base(80, 23, 160, 46)
         {
-            player = new Entity(Color.Yellow, Color.Black, 1, 10)
+            player = new Entity(new Entity.SingleCell(Color.Yellow, Color.Black, 1), 10)
             {
                 Position = new Point(Surface.Width / 2, Surface.Height / 2),
                 

@@ -37,7 +37,7 @@ namespace SadConsole.UI.Windows
         public OtherColorsPopup()
             : base(40, 20)
         {
-            Border.AddToWindow(this);
+            Border.CreateForWindow(this);
             Title = "Pick known color";
             Center();
             CloseOnEscKey = true;
@@ -62,121 +62,105 @@ namespace SadConsole.UI.Windows
             int ansiButtonStartX = 3;
             int ansiButtonStartBrightX = 20;
 
-            _ansiButtons[0] = new Button(15, 1);
+            _ansiButtons[0] = new AnsiButton(Color.AnsiRed, Color.AnsiRedBright, 15, 1);
             _ansiButtons[0].Position = new Point(ansiButtonStartX, ansiButtonStartY);
             _ansiButtons[0].Text = "Red Dark";
-            _ansiButtons[0].Theme = new AnsiButtonTheme(Color.AnsiRed, Color.AnsiRedBright);
             _ansiButtons[0].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[0]);
 
-            _ansiButtons[1] = new Button(15, 1);
+            _ansiButtons[1] = new AnsiButton(Color.AnsiRedBright, Color.AnsiRed, 15, 1);
             _ansiButtons[1].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY);
             _ansiButtons[1].Text = "Red Bright";
-            _ansiButtons[1].Theme = new AnsiButtonTheme(Color.AnsiRedBright, Color.AnsiRed);
             _ansiButtons[1].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[1]);
 
-            _ansiButtons[2] = new Button(15, 1);
+            _ansiButtons[2] = new AnsiButton(Color.AnsiYellow, Color.AnsiYellowBright, 15, 1);
             _ansiButtons[2].Position = new Point(ansiButtonStartX, ansiButtonStartY + 1);
             _ansiButtons[2].Text = "Yellow Dark";
-            _ansiButtons[2].Theme = new AnsiButtonTheme(Color.AnsiYellow, Color.AnsiYellowBright);
             _ansiButtons[2].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[2]);
 
-            _ansiButtons[3] = new Button(15, 1);
+            _ansiButtons[3] = new AnsiButton(Color.AnsiYellowBright, Color.AnsiYellow, 15, 1);
             _ansiButtons[3].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 1);
             _ansiButtons[3].Text = "Yellow Bright";
-            _ansiButtons[3].Theme = new AnsiButtonTheme(Color.AnsiYellowBright, Color.AnsiYellow);
             _ansiButtons[3].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[3]);
 
-            _ansiButtons[4] = new Button(15, 1);
+            _ansiButtons[4] = new AnsiButton(Color.AnsiGreen, Color.AnsiGreenBright, 15, 1);
             _ansiButtons[4].Position = new Point(ansiButtonStartX, ansiButtonStartY + 2);
             _ansiButtons[4].Text = "Green Dark";
-            _ansiButtons[4].Theme = new AnsiButtonTheme(Color.AnsiGreen, Color.AnsiGreenBright);
             _ansiButtons[4].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[4]);
 
-            _ansiButtons[5] = new Button(15, 1);
+            _ansiButtons[5] = new AnsiButton(Color.AnsiGreenBright, Color.AnsiGreen, 15, 1);
             _ansiButtons[5].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 2);
             _ansiButtons[5].Text = "Green Bright";
-            _ansiButtons[5].Theme = new AnsiButtonTheme(Color.AnsiGreenBright, Color.AnsiGreen);
             _ansiButtons[5].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[5]);
 
-            _ansiButtons[6] = new Button(15, 1);
+            _ansiButtons[6] = new AnsiButton(Color.AnsiCyan, Color.AnsiCyanBright, 15, 1);
             _ansiButtons[6].Position = new Point(ansiButtonStartX, ansiButtonStartY + 3);
             _ansiButtons[6].Text = "Cyan Dark";
-            _ansiButtons[6].Theme = new AnsiButtonTheme(Color.AnsiCyan, Color.AnsiCyanBright);
             _ansiButtons[6].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[6]);
 
-            _ansiButtons[7] = new Button(15, 1);
+            _ansiButtons[7] = new AnsiButton(Color.AnsiCyanBright, Color.AnsiCyan, 15, 1);
             _ansiButtons[7].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 3);
             _ansiButtons[7].Text = "Cyan Bright";
-            _ansiButtons[7].Theme = new AnsiButtonTheme(Color.AnsiCyanBright, Color.AnsiCyan);
             _ansiButtons[7].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[7]);
 
-            _ansiButtons[8] = new Button(15, 1);
+            _ansiButtons[8] = new AnsiButton(Color.AnsiBlue, Color.AnsiBlueBright, 15, 1);
             _ansiButtons[8].Position = new Point(ansiButtonStartX, ansiButtonStartY + 4);
             _ansiButtons[8].Text = "Blue Dark";
-            _ansiButtons[8].Theme = new AnsiButtonTheme(Color.AnsiBlue, Color.AnsiBlueBright);
             _ansiButtons[8].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[8]);
 
-            _ansiButtons[9] = new Button(15, 1);
+            _ansiButtons[9] = new AnsiButton(Color.AnsiBlueBright, Color.AnsiBlue, 15, 1);
             _ansiButtons[9].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 4);
             _ansiButtons[9].Text = "Blue Bright";
-            _ansiButtons[9].Theme = new AnsiButtonTheme(Color.AnsiBlueBright, Color.AnsiBlue);
             _ansiButtons[9].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[9]);
 
-            _ansiButtons[10] = new Button(15, 1);
+            _ansiButtons[10] = new AnsiButton(Color.AnsiMagenta, Color.AnsiMagentaBright, 15, 1);
             _ansiButtons[10].Position = new Point(ansiButtonStartX, ansiButtonStartY + 5);
             _ansiButtons[10].Text = "Magenta Dark";
-            _ansiButtons[10].Theme = new AnsiButtonTheme(Color.AnsiMagenta, Color.AnsiMagentaBright);
             _ansiButtons[10].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[10]);
 
-            _ansiButtons[11] = new Button(15, 1);
+            _ansiButtons[11] = new AnsiButton(Color.AnsiMagentaBright, Color.AnsiMagenta, 15, 1);
             _ansiButtons[11].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 5);
             _ansiButtons[11].Text = "Magenta Bright";
-            _ansiButtons[11].Theme = new AnsiButtonTheme(Color.AnsiMagentaBright, Color.AnsiMagenta);
             _ansiButtons[11].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[11]);
 
-            _ansiButtons[12] = new Button(15, 1);
+            _ansiButtons[12] = new AnsiButton(Color.AnsiBlack, Color.AnsiBlackBright, 15, 1);
             _ansiButtons[12].Position = new Point(ansiButtonStartX, ansiButtonStartY + 6);
             _ansiButtons[12].Text = "Black Dark";
-            _ansiButtons[12].Theme = new AnsiButtonTheme(Color.AnsiBlack, Color.AnsiBlackBright);
             _ansiButtons[12].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[12]);
 
-            _ansiButtons[13] = new Button(15, 1);
+            _ansiButtons[13] = new AnsiButton(Color.AnsiBlackBright, Color.AnsiBlack, 15, 1);
             _ansiButtons[13].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 6);
             _ansiButtons[13].Text = "Black Bright";
-            _ansiButtons[13].Theme = new AnsiButtonTheme(Color.AnsiBlackBright, Color.AnsiBlack);
             _ansiButtons[13].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[13]);
 
-            _ansiButtons[14] = new Button(15, 1);
+            _ansiButtons[14] = new AnsiButton(Color.AnsiWhite, Color.AnsiWhiteBright, 15, 1);
             _ansiButtons[14].Position = new Point(ansiButtonStartX, ansiButtonStartY + 7);
             _ansiButtons[14].Text = "White Dark";
-            _ansiButtons[14].Theme = new AnsiButtonTheme(Color.AnsiWhite, Color.AnsiWhiteBright);
             _ansiButtons[14].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[14]);
 
-            _ansiButtons[15] = new Button(15, 1);
+            _ansiButtons[15] = new AnsiButton(Color.AnsiWhiteBright, Color.AnsiWhite, 15, 1);
             _ansiButtons[15].Position = new Point(ansiButtonStartBrightX, ansiButtonStartY + 7);
             _ansiButtons[15].Text = "White Bright";
-            _ansiButtons[15].Theme = new AnsiButtonTheme(Color.AnsiWhiteBright, Color.AnsiWhite);
             _ansiButtons[15].Click += AnsiColorButton_Click;
             Controls.Add(_ansiButtons[15]);
             #endregion
 
             #region Named Color Control
-            _namedColorsList = new ListBox(Width - 4, Height - 3 - ansiButtonStartY, new SadConsole.UI.Themes.ListBoxItemColorTheme());
+            _namedColorsList = new ListBox(Width - 4, Height - 3 - ansiButtonStartY, new ListBoxItemColorTheme());
             _namedColorsList.Position = new Point(ansiButtonStartX - 1, ansiButtonStartY);
             Controls.Add(_namedColorsList);
 
@@ -190,7 +174,7 @@ namespace SadConsole.UI.Windows
             }
 
             _namedColorsList.SelectedItem = _namedColorsList.Items[0];
-            _namedColorsList.SelectedItemChanged += (s, e) => { var a = _namedColorsList.Theme; };
+            _namedColorsList.SelectedItemChanged += (s, e) => { var a = _namedColorsList.ThemeState; };
             #endregion
 
             _cancelButton = new Button(12, 1);
@@ -235,7 +219,7 @@ namespace SadConsole.UI.Windows
         {
             if (sender is Button)
             {
-                _selectedAnsiColor = ((Button)sender).Theme.ControlThemeState.Normal.Background;
+                _selectedAnsiColor = ((Button)sender).ThemeState.Normal.Background;
                 _selectedAnsiColorIconPrevious = _selectedAnsiColorIcon;
                 _selectedAnsiColorIcon = new Point(((Button)sender).Position.X - 1, ((Button)sender).Position.Y);
 
@@ -244,12 +228,12 @@ namespace SadConsole.UI.Windows
                     var colors = Controls.GetThemeColors();
 
                     if (_selectedAnsiColorIconPrevious != Point.None)
-                        this[_selectedAnsiColorIconPrevious.X, _selectedAnsiColorIconPrevious.Y].Glyph = 0;
+                        Surface[_selectedAnsiColorIconPrevious.X, _selectedAnsiColorIconPrevious.Y].Glyph = 0;
 
                     if (_selectedAnsiColorIcon != Point.None)
                     {
-                        this[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Glyph = 16;
-                        this[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Foreground = colors.Title;
+                        Surface[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Glyph = 16;
+                        Surface[_selectedAnsiColorIcon.X, _selectedAnsiColorIcon.Y].Foreground = colors.Title;
                     }
                 }
 
@@ -268,33 +252,27 @@ namespace SadConsole.UI.Windows
             this.ConnectLines(BorderLineStyle);
         }
 
-        private class AnsiButtonTheme : SadConsole.UI.Themes.ButtonTheme
+        private class AnsiButton : SadConsole.UI.Controls.Button
         {
-            Color colorValue;
-            Color textColor;
+            private Color _colorValue;
+            private Color _textColor;
 
-            public AnsiButtonTheme(Color color, Color textColor)
+            public AnsiButton(Color assignedColor, Color textColor, int width, int height) : base(width, height)
             {
-                this.textColor = textColor;
-                this.colorValue = color;
+                _textColor = textColor;
+                _colorValue = assignedColor;
 
-                
                 ShowEnds = false;
             }
 
-            public override void RefreshTheme(SadConsole.UI.Colors colors, ControlBase control)
+            protected override void RefreshThemeStateColors(Colors colors)
             {
-                if (colors == null) colors = control.FindThemeColors();
-
-                ControlThemeState.Normal =
-                    ControlThemeState.MouseOver =
-                    ControlThemeState.MouseDown =
-                    ControlThemeState.Focused =
-                    ControlThemeState.Disabled =
-                    new SadConsole.ColoredGlyph(textColor, colorValue );
-
-                _colorsLastUsed = colors;
-
+                ThemeState.Normal =
+                    ThemeState.MouseOver =
+                    ThemeState.MouseDown =
+                    ThemeState.Focused =
+                    ThemeState.Disabled =
+                    new ColoredGlyph(_textColor, _colorValue);
             }
         }
     }

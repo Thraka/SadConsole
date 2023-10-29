@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>9.2.1</Version>
+    <Version>10.0.0</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
-    <Description>A graphics hosting library for SadConsole. Targets SFML and .NET Standard 2.1.</Description>
-    <Copyright>Copyright © 2022 Steve De George JR (Thraka)</Copyright>
+    <AssemblyTitle>SadConsole SFML</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
+    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -25,21 +25,25 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>Various little fixes. Updates for SadConsole 9.2.1</PackageReleaseNotes>
+    <PackageReleaseNotes>...</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
+    <DefineConstants>$(DefineConstants);SFML</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseProjectReferences>true</UseProjectReferences>
+    <SadConsoleVersion>10.0.0</SadConsoleVersion>
+    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.1" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.1.1" />
-    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.0.0" />
-    <PackageReference Include="SFML.Net" Version="2.5.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    
+    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.0" />
+    
+    <PackageReference Include="SFML.Net" Version="2.5.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,5 +55,7 @@
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
   </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
 
 </Project>

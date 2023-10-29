@@ -6,7 +6,7 @@ namespace SadConsole.ImGuiSystem
 {
     public abstract class ImGuiWindow : ImGuiObjectBase
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
         public bool IsOpen;
 

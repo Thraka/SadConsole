@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>595434c5-2192-495b-903c-7922d7e8b149</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SadConsole.Host.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\Builder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\Callbacks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\DefaultStartingConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\FocusStartingScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\FontConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\Fps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\IConfigurator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\InternalStartupData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\SplashScreens.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\StartingScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
+  </ItemGroup>
+</Project>

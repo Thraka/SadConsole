@@ -102,7 +102,7 @@ namespace FeatureDemo.CustomConsoles
                         break;
 
                     var surfaceCharacter = _selectedFont.GetSurface(item);
-                    surfaceCharacter.Copy(this, xPos, yPos);
+                    surfaceCharacter.Copy(Surface, xPos, yPos);
 
                     if (surfaceCharacter.Height > tempHeight)
                         tempHeight = surfaceCharacter.Height;
