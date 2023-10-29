@@ -61,6 +61,20 @@ public class GameTexture : ITexture
     }
 
     /// <summary>
+    /// Creates a new game texture with the specified width, height, and pixels.
+    /// </summary>
+    /// <param name="width">The width of the texture in pixels.</param>
+    /// <param name="height">The height of the texture in pixels.</param>
+    /// <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+    public GameTexture(uint width, uint height, Color[] pixels)
+    {
+        _skipDispose = false;
+        _texture = new Texture(width, height);
+        Size = (int)(width * height);
+        SetPixels(pixels);
+    }
+
+    /// <summary>
     /// Wraps a texture. Doesn't dispose it when this object is disposed!
     /// </summary>
     /// <param name="texture">The texture to wrap</param>
@@ -143,17 +157,17 @@ public class GameTexture : ITexture
     }
 
     /// <inheritdoc />
-    public void SetPixels(Color[] colors)
+    public void SetPixels(Color[] pixels)
     {
-        if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
-        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors.AsSpan()).ToArray());
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException(nameof(pixels), "Pixels array length must match the texture size.");
+        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(pixels.AsSpan()).ToArray());
     }
 
     /// <inheritdoc />
-    public void SetPixels(ReadOnlySpan<Color> colors)
+    public void SetPixels(ReadOnlySpan<Color> pixels)
     {
-        if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
-        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors).ToArray());
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(pixels).ToArray());
     }
 
     /// <summary>
@@ -166,12 +180,12 @@ public class GameTexture : ITexture
     /// <summary>
     /// Sets all pixels in the texture to the provided colors.
     /// </summary>
-    /// <param name="colors">The colors to set every pixel to.</param>
+    /// <param name="pixels">The colors to set every pixel to.</param>
     /// <exception cref="ArgumentOutOfRangeException">The length of the colors array doesn't match the size of the texture.</exception>
-    public void SetPixels(SFMLColor[] colors)
+    public void SetPixels(SFMLColor[] pixels)
     {
-        if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
-        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(colors.AsSpan()).ToArray());
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+        _texture.Update(System.Runtime.InteropServices.MemoryMarshal.AsBytes(pixels.AsSpan()).ToArray());
     }
 
     /// <inheritdoc />

@@ -45,7 +45,7 @@ public partial interface ICellSurface : SadRogue.Primitives.GridViews.IGridView<
     public Effects.EffectsManager Effects { get; }
 
     /// <summary>
-    /// Returns a rectangle that represents the maximum size of the surface.
+    /// Returns a rectangle that represents the entire size of the surface.
     /// </summary>
     Rectangle Area { get; }
 

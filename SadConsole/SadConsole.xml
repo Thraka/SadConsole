@@ -775,6 +775,12 @@
             <param name="decorators">The decorators to remove.</param>
             <param name="glyph">The glyph to alter.</param>
         </member>
+        <member name="M:SadConsole.CellDecoratorHelpers.RemoveAllDecorators(SadConsole.ColoredGlyphBase)">
+            <summary>
+            Removes all decorators from a glyph, returns the list to the pool, and sets the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> collection to <see langword="null"/>.
+            </summary>
+            <param name="glyph">The glyph to alter.</param>
+        </member>
         <member name="M:SadConsole.CellDecoratorHelpers.RemoveDecorator(SadConsole.CellDecorator,SadConsole.ColoredGlyphBase)">
             <summary>
             Removes the specified decorator from a glyph. If no decorators remain on the glyph, the <see cref="P:SadConsole.ColoredGlyphBase.Decorators"/> collection is set to <see langword="null"/>.
@@ -2971,7 +2977,7 @@
         </member>
         <member name="T:SadConsole.Effects.Fade">
             <summary>
-            Fades both the background and foreground to seperate colors.
+            Fades both the background and foreground to separate colors.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.Fade.DestinationBackground">
@@ -4473,7 +4479,7 @@
         </member>
         <member name="P:SadConsole.ICellSurface.Area">
             <summary>
-            Returns a rectangle that represents the maximum size of the surface.
+            Returns a rectangle that represents the entire size of the surface.
             </summary>
         </member>
         <member name="P:SadConsole.ICellSurface.DefaultBackground">
@@ -5309,7 +5315,7 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.Erase(SadConsole.ISurface,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of obj.Surface. Doesn't clear the effect.
+            Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of obj.Surface. Doesn't clear the effect, foreground, or background.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="x">The x position.</param>

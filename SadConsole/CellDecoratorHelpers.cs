@@ -126,6 +126,18 @@ public static class CellDecoratorHelpers
     }
 
     /// <summary>
+    /// Removes all decorators from a glyph, returns the list to the pool, and sets the <see cref="ColoredGlyphBase.Decorators"/> collection to <see langword="null"/>.
+    /// </summary>
+    /// <param name="glyph">The glyph to alter.</param>
+    public static void RemoveAllDecorators(ColoredGlyphBase glyph)
+    {
+        if (glyph.Decorators is null) return;
+
+        Pool.Return(glyph.Decorators);
+        glyph.Decorators = null;
+    }
+
+    /// <summary>
     /// Removes the specified decorator from a glyph. If no decorators remain on the glyph, the <see cref="ColoredGlyphBase.Decorators"/> collection is set to <see langword="null"/>.
     /// </summary>
     /// <param name="decorator">The decorator to remove.</param>

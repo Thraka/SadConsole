@@ -4,7 +4,7 @@ using SadRogue.Primitives;
 namespace SadConsole.Effects;
 
 /// <summary>
-/// Fades both the background and foreground to seperate colors.
+/// Fades both the background and foreground to separate colors.
 /// </summary>
 [DataContract]
 public class Fade : CellEffectBase

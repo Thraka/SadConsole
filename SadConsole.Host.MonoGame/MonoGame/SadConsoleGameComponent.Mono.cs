@@ -29,6 +29,7 @@ public partial class Game
         /// <param name="gameTime">Time between drawing frames.</param>
         public override void Draw(GameTime gameTime)
         {
+            
             if (SadConsole.Settings.DoDraw)
             {
 #if NOESIS

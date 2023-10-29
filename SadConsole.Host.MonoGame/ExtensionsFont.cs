@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
 using System;
-using MonoColor = Microsoft.Xna.Framework.Color;
-using System.Collections.Generic;
+using HostColor = Microsoft.Xna.Framework.Color;
+using HostRectangle = Microsoft.Xna.Framework.Rectangle;
 using SadRogue.Primitives;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Host;
@@ -14,24 +14,46 @@ namespace SadConsole.FontEditing;
 /// </summary>
 public static class ExtensionsFontHost
 {
+    
     /// <summary>
     /// Converts the font's backing texture into a render target, if it isn't one.
     /// </summary>
     /// <param name="font">The font being edited.</param>
     public static void Edit_EnableEditing(this IFont font)
     {
-        var oldTexture = (SadConsole.Host.GameTexture)font.Image;
+        GameTexture oldTexture = (GameTexture)font.Image;
 
         // Failed conversion, we need to enable editing by converting to a RenderTarget2D
-        if (!(oldTexture.Texture is RenderTarget2D))
+        if (oldTexture.Texture is not RenderTarget2D)
         {
-            RenderTarget2D newTexture = new RenderTarget2D(Host.Global.GraphicsDevice, font.Image.Width, font.Image.Height,
-                                                                          false,
-                                                                          SadConsole.Host.Global.GraphicsDevice.DisplayMode.Format,
-                                                                          Microsoft.Xna.Framework.Graphics.DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            newTexture.SetData<MonoColor>(oldTexture.GetPixelsMonoColor());
+            RenderTarget2D newTexture = new(Global.GraphicsDevice, font.Image.Width, font.Image.Height,
+                                                                   false,
+                                                                   Global.GraphicsDevice.DisplayMode.Format,
+                                                                   DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            
+            newTexture.SetData(oldTexture.GetPixelsMonoColor());
 
-            font.Image = new Host.GameTexture(newTexture, true);
+            font.Image = new GameTexture(newTexture, true);
+            oldTexture.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Converts the font's backing texture from a render target to a normal texture.
+    /// </summary>
+    /// <param name="font">The font being edited.</param>
+    public static void Edit_DisableEditing(this IFont font)
+    {
+        GameTexture oldTexture = (GameTexture)font.Image;
+
+        // Failed conversion, we need to enable editing by converting to a RenderTarget2D
+        if (oldTexture.Texture is RenderTarget2D)
+        {
+            Texture2D newTexture = new(Global.GraphicsDevice, oldTexture.Width, oldTexture.Height, false, Global.GraphicsDevice.DisplayMode.Format);
+
+            newTexture.SetData(oldTexture.GetPixelsMonoColor());
+
+            font.Image = new GameTexture(newTexture, true);
             oldTexture.Dispose();
         }
     }
@@ -44,36 +66,36 @@ public static class ExtensionsFontHost
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
     public static void Edit_AddRows(this SadFont font, int count)
     {
-        if (count <= 0) throw new ArgumentOutOfRangeException("You must pass a positive number of rows to add.", nameof(count));
+        if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count), "You must pass a positive number of rows to add.");
 
-        var oldTexture = (SadConsole.Host.GameTexture)font.Image;
-        var newTexture = new Microsoft.Xna.Framework.Graphics.RenderTarget2D(SadConsole.Host.Global.GraphicsDevice,
-                                                                          oldTexture.Width,
-                                                                          oldTexture.Height + (count * font.GlyphHeight) + ((count + 1) * font.GlyphPadding),
-                                                                          false,
-                                                                          SadConsole.Host.Global.GraphicsDevice.DisplayMode.Format,
-                                                                          Microsoft.Xna.Framework.Graphics.DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+        var oldTexture = (GameTexture)font.Image;
+        var newTexture = new RenderTarget2D(Global.GraphicsDevice,
+                                            oldTexture.Width,
+                                            oldTexture.Height + (count * font.GlyphHeight) + ((count + 1) * font.GlyphPadding),
+                                            false,
+                                            Global.GraphicsDevice.DisplayMode.Format,
+                                            DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
 
         // render old texture on the new texture
-        SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(newTexture);
-        SadConsole.Host.Global.GraphicsDevice.Clear(MonoColor.Transparent);
-        SadConsole.Host.Global.SharedSpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
-                                                           SadConsole.Host.Settings.MonoGameSurfaceBlendState,
-                                                           Microsoft.Xna.Framework.Graphics.SamplerState.AnisotropicClamp,
-                                                           Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
-                                                           Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone);
+        Global.GraphicsDevice.SetRenderTarget(newTexture);
+        Global.GraphicsDevice.Clear(HostColor.Transparent);
+        Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate,
+                                                           Host.Settings.MonoGameSurfaceBlendState,
+                                                           SamplerState.AnisotropicClamp,
+                                                           DepthStencilState.None,
+                                                           RasterizerState.CullNone);
 
-        SadConsole.Host.Global.SharedSpriteBatch.Draw(oldTexture.Texture, new Microsoft.Xna.Framework.Vector2(0, 0), MonoColor.White);
+        Global.SharedSpriteBatch.Draw(oldTexture.Texture, new Microsoft.Xna.Framework.Vector2(0, 0), HostColor.White);
 
-        SadConsole.Host.Global.SharedSpriteBatch.End();
-        SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(null);
+        Global.SharedSpriteBatch.End();
+        Global.GraphicsDevice.SetRenderTarget(null);
 
         oldTexture.Dispose();
         
-        // pack old texture into the font
-        font.Image = new Host.GameTexture(newTexture, true);
-        font.Columns = (int)System.Math.Floor((double)font.Image.Width / (font.GlyphWidth + font.GlyphPadding));
-        font.Rows = (int)System.Math.Floor((double)font.Image.Height / (font.GlyphHeight + font.GlyphPadding));
+        // pack new texture into the font
+        font.Image = new GameTexture(newTexture, true);
+        font.Columns = (int)Math.Floor((double)font.Image.Width / (font.GlyphWidth + font.GlyphPadding));
+        font.Rows = (int)Math.Floor((double)font.Image.Height / (font.GlyphHeight + font.GlyphPadding));
         
         // Add new glyph rects
         for (int i = (font.Rows * font.Columns) - (count * font.Columns); i < font.Rows * font.Columns; i++)
@@ -83,42 +105,73 @@ public static class ExtensionsFontHost
 
             if (font.GlyphPadding != 0)
             {
-                font.GlyphRectangles.Add(i, new SadRogue.Primitives.Rectangle((cx * font.GlyphWidth) + ((cx + 1) * font.GlyphPadding),
+                font.GlyphRectangles.Add(i, new Rectangle((cx * font.GlyphWidth) + ((cx + 1) * font.GlyphPadding),
                                                  (cy * font.GlyphHeight) + ((cy + 1) * font.GlyphPadding),
                                                  font.GlyphWidth, font.GlyphHeight));
             }
             else
             {
-                font.GlyphRectangles.Add(i, new SadRogue.Primitives.Rectangle(cx * font.GlyphWidth, cy * font.GlyphHeight, font.GlyphWidth, font.GlyphHeight));
+                font.GlyphRectangles.Add(i, new Rectangle(cx * font.GlyphWidth, cy * font.GlyphHeight, font.GlyphWidth, font.GlyphHeight));
             }
         }
     }
 
     /// <summary>
-    /// Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
+    /// Copies a glyph from one font index to another. Is hardware accelerated.
     /// </summary>
     /// <param name="font">The font being edited.</param>
+    /// <param name="source">The font that contains the source texture.</param>
     /// <param name="glyphIndexFrom">The source glyph index.</param>
     /// <param name="glyphIndexTo">The target glyph index.</param>
-    public static void Edit_CopyGlyph_Texture(this IFont font, int glyphIndexFrom, int glyphIndexTo)
+    public static void Edit_CopyGlyph_GPU(this IFont font, IFont source, int glyphIndexFrom, int glyphIndexTo) =>
+        Edit_CopyGlyph_GPU(font, source, source.GetGlyphSourceRectangle(glyphIndexFrom).ToMonoRectangle(), font.GetGlyphSourceRectangle(glyphIndexTo).ToMonoRectangle(), HostColor.White);
+
+    /// <summary>
+    /// Copies a glyph from one font index to another. Is hardware accelerated.
+    /// </summary>
+    /// <param name="font">The font being edited.</param>
+    /// <param name="source">The font that contains the source texture.</param>
+    /// <param name="glyphIndexFrom">The source glyph index.</param>
+    /// <param name="glyphIndexTo">The target glyph index.</param>
+    /// <param name="blendColor">Color to apply while copying the glyph.</param>
+    public static void Edit_CopyGlyph_GPU(this IFont font, IFont source, int glyphIndexFrom, int glyphIndexTo, HostColor blendColor) =>
+        Edit_CopyGlyph_GPU(font, source, source.GetGlyphSourceRectangle(glyphIndexFrom).ToMonoRectangle(), font.GetGlyphSourceRectangle(glyphIndexTo).ToMonoRectangle(), blendColor);
+
+    /// <summary>
+    /// Copies a glyph from one font index to another.  Is hardware accelerated.
+    /// </summary>
+    /// <param name="font">The font being edited.</param>
+    /// <param name="source">The font that contains the source texture.</param>
+    /// <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+    /// <param name="glyphRectangleTo">The target glyph rectangle.</param>
+    public static void Edit_CopyGlyph_GPU(this IFont font, IFont source, HostRectangle glyphRectangleFrom, HostRectangle glyphRectangleTo) =>
+        Edit_CopyGlyph_GPU(font, source, glyphRectangleFrom, glyphRectangleTo, HostColor.White);
+
+    /// <summary>
+    /// Copies a glyph from one font index to another. Is hardware accelerated.
+    /// </summary>
+    /// <param name="font">The font being edited.</param>
+    /// <param name="source">The font that contains the source texture.</param>
+    /// <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+    /// <param name="glyphRectangleTo">The target glyph rectangle.</param>
+    /// <param name="blendColor">Color to apply while copying the glyph.</param>
+    public static void Edit_CopyGlyph_GPU(this IFont font, IFont source, HostRectangle glyphRectangleFrom, HostRectangle glyphRectangleTo, HostColor blendColor)
     {
-        if (glyphIndexFrom == glyphIndexTo) return;
+        if (font == source && glyphRectangleFrom == glyphRectangleTo) return;
 
-        Edit_EnableEditing(font);
+        var target = (RenderTarget2D)((GameTexture)font.Image).Texture;
 
-        var target = (RenderTarget2D)((Host.GameTexture)font.Image).Texture;
+        Global.GraphicsDevice.SetRenderTarget(target);
+        Global.SharedSpriteBatch.Begin(SpriteSortMode.Immediate,
+                                                           Host.Settings.MonoGameSurfaceBlendState,
+                                                           SamplerState.AnisotropicClamp,
+                                                           DepthStencilState.None,
+                                                           RasterizerState.CullNone);
 
-        SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(target);
-        SadConsole.Host.Global.SharedSpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
-                                                           SadConsole.Host.Settings.MonoGameSurfaceBlendState,
-                                                           Microsoft.Xna.Framework.Graphics.SamplerState.AnisotropicClamp,
-                                                           Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
-                                                           Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone);
+        Global.SharedSpriteBatch.Draw(((GameTexture)source.Image).Texture, glyphRectangleTo, glyphRectangleFrom, blendColor);
 
-        SadConsole.Host.Global.SharedSpriteBatch.Draw(((Host.GameTexture)font.Image).Texture, font.GetGlyphSourceRectangle(glyphIndexTo).ToMonoRectangle(), font.GetGlyphSourceRectangle(glyphIndexFrom).ToMonoRectangle(), MonoColor.White);
-
-        SadConsole.Host.Global.SharedSpriteBatch.End();
-        SadConsole.Host.Global.GraphicsDevice.SetRenderTarget(null);
+        Global.SharedSpriteBatch.End();
+        Global.GraphicsDevice.SetRenderTarget(null);
     }
 
     /// <summary>
@@ -128,8 +181,8 @@ public static class ExtensionsFontHost
     /// <param name="glyphIndex">The glyph index to erase.</param>
     /// <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
     /// <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
-    public static void Edit_EraseGlyph_Pixel(this IFont font, int glyphIndex, bool doSetPixels, ref Color[] cachedFontTexturePixels) =>
-        Edit_SetGlyph_Pixel(font, glyphIndex, new Color[font.GlyphWidth * font.GlyphHeight], doSetPixels, ref cachedFontTexturePixels);
+    public static void Edit_EraseGlyph_CPU(this IFont font, int glyphIndex, bool doSetPixels, ref Color[] cachedFontTexturePixels) =>
+        Edit_SetGlyph_CPU(font, glyphIndex, new Color[font.GlyphWidth * font.GlyphHeight], doSetPixels, ref cachedFontTexturePixels);
 
     /// <summary>
     /// Sets the pixels of a font glyph by index.
@@ -140,18 +193,19 @@ public static class ExtensionsFontHost
     /// <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
     /// <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
     /// <exception cref="ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
-    public static void Edit_SetGlyph_Pixel(this IFont font, int glyphIndex, Color[] pixels, bool doSetPixels, ref Color[] cachedFontTexturePixels)
+    public static void Edit_SetGlyph_CPU(this IFont font, int glyphIndex, Color[] pixels, bool doSetPixels, ref Color[] cachedFontTexturePixels)
     {
-        if (pixels.Length != font.GlyphWidth * font.GlyphHeight) throw new ArgumentOutOfRangeException($"Amount of pixels must match font glyph width * height: {font.GlyphWidth * font.GlyphHeight}.", nameof(pixels));
+        if (pixels.Length != font.GlyphWidth * font.GlyphHeight)
+            throw new ArgumentOutOfRangeException(nameof(pixels), $"Amount of pixels must match font glyph width * height: {font.GlyphWidth * font.GlyphHeight}.");
 
         cachedFontTexturePixels ??= font.Image.GetPixels();
 
         Rectangle rect = font.GetGlyphSourceRectangle(glyphIndex);
 
-        int indexCounter = 0;
-        for (int y = rect.MinExtentY; y != rect.MaxExtentY; y++)
+        int indexCounter = 0; 
+        for (int y = rect.MinExtentY; y <= rect.MaxExtentY; y++)
         {
-            for (int x = rect.MinExtentX; x != rect.MaxExtentX; x++)
+            for (int x = rect.MinExtentX; x <= rect.MaxExtentX; x++)
             {
                 cachedFontTexturePixels[y * font.Image.Width + x] = pixels[indexCounter];
                 indexCounter++;
@@ -163,26 +217,26 @@ public static class ExtensionsFontHost
     }
 
     /// <summary>
-    /// 
+    /// Returns a glyph's pixels packaged into a <see cref="Color"/> array.
     /// </summary>
     /// <param name="font">The font being edited.</param>
     /// <param name="glyphIndex">The index of the glyph to get.</param>
     /// <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
     /// <returns>The pixels of the glyph.</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static Color[] Edit_GetGlyph_Pixel(this IFont font, int glyphIndex, ref Color[] cachedFontTexturePixels)
+    public static Color[] Edit_GetGlyph_CPU(this IFont font, int glyphIndex, ref Color[] cachedFontTexturePixels)
     {
-        if (glyphIndex < 0 || glyphIndex > font.TotalGlyphs - 1) throw new ArgumentOutOfRangeException("Glyph index is out of range.", nameof(glyphIndex));
+        if (glyphIndex < 0 || glyphIndex > font.TotalGlyphs - 1) throw new ArgumentOutOfRangeException(nameof(glyphIndex), "Glyph index is out of range.");
 
-        var rect = font.GetGlyphSourceRectangle(glyphIndex);
-        var newPixels = new Color[rect.Width * rect.Height];
+        Rectangle rect = font.GetGlyphSourceRectangle(glyphIndex);
+        Color[] newPixels = new Color[rect.Width * rect.Height];
 
         cachedFontTexturePixels ??= font.Image.GetPixels();
 
         int indexCounter = 0;
-        for (int y = rect.MinExtentY; y != rect.MaxExtentY; y++)
+        for (int y = rect.MinExtentY; y <= rect.MaxExtentY; y++)
         {
-            for (int x = rect.MinExtentX; x != rect.MaxExtentX; x++)
+            for (int x = rect.MinExtentX; x <= rect.MaxExtentX; x++)
             {
                 newPixels[indexCounter] = cachedFontTexturePixels[y * font.Image.Width + x];
                 indexCounter++;
@@ -191,4 +245,5 @@ public static class ExtensionsFontHost
 
         return newPixels;
     }
+
 }

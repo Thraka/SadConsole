@@ -5,6 +5,7 @@ using MonoColor = Microsoft.Xna.Framework.Color;
 using Microsoft.Xna.Framework;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
+using System.Runtime.InteropServices;
 
 namespace SadConsole.Host;
 
@@ -66,6 +67,19 @@ public class GameTexture : ITexture
     }
 
     /// <summary>
+    /// Creates a new game texture with the specified width, height, and pixels.
+    /// </summary>
+    /// <param name="width">The width of the texture in pixels.</param>
+    /// <param name="height">The height of the texture in pixels.</param>
+    /// <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+    public GameTexture(int width, int height, Color[] pixels)
+    {
+        _texture = new Microsoft.Xna.Framework.Graphics.Texture2D(Global.GraphicsDevice, width, height);
+        Size = width * height;
+        SetPixels(pixels);
+    }
+
+    /// <summary>
     /// Wraps an existing texture.
     /// </summary>
     /// <param name="texture">The texture being wrapped by this object.</param>
@@ -112,11 +126,11 @@ public class GameTexture : ITexture
     /// <summary>
     /// Sets colors in the texture from an array of pixels. Row-major ordered.
     /// </summary>
-    /// <param name="colors">The individual pixel colors to set. Row-major ordered.</param>
-    public void SetPixels(Color[] colors)
+    /// <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
+    public void SetPixels(Color[] pixels)
     {
-        if (colors.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
-        _texture.SetData(System.Runtime.InteropServices.MemoryMarshal.Cast<Color, MonoColor>(colors).ToArray());
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException(nameof(pixels), "Pixels array length must match the texture size.");
+        _texture.SetData(System.Runtime.InteropServices.MemoryMarshal.Cast<Color, MonoColor>(pixels).ToArray());
     }
 
     /// <summary>
@@ -125,19 +139,19 @@ public class GameTexture : ITexture
     /// <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
     public void SetPixels(ReadOnlySpan<Color> pixels)
     {
-        if (pixels.Length != Size) throw new ArgumentOutOfRangeException("Pixels array length must match the texture size.");
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException(nameof(pixels), "Pixels array length must match the texture size.");
         _texture.SetData(System.Runtime.InteropServices.MemoryMarshal.Cast<Color, MonoColor>(pixels).ToArray());
     }
 
     /// <summary>
     /// Replaces texture colors with the array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.
     /// </summary>
-    /// <param name="colors">Array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.</param>
+    /// <param name="pixels">Array of <see cref="Microsoft.Xna.Framework.Color"/> pixels.</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void SetPixels(MonoColor[] colors)
+    public void SetPixels(MonoColor[] pixels)
     {
-        if (colors.Length != Size) throw new ArgumentOutOfRangeException("Colors array length must match the texture size.");
-        _texture.SetData(colors);
+        if (pixels.Length != Size) throw new ArgumentOutOfRangeException("Colors array length must match the texture size.");
+        _texture.SetData(pixels);
     }
 
     /// <inheritdoc />

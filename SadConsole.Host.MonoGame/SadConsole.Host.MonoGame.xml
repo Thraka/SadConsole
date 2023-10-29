@@ -211,6 +211,12 @@
             </summary>
             <param name="font">The font being edited.</param>
         </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_DisableEditing(SadConsole.IFont)">
+            <summary>
+            Converts the font's backing texture from a render target to a normal texture.
+            </summary>
+            <param name="font">The font being edited.</param>
+        </member>
         <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_AddRows(SadConsole.SadFont,System.Int32)">
             <summary>
             Adds the specified number of rows to the font. Creates a new backing texture object that is a render target. Is hardware accelerated.
@@ -219,15 +225,45 @@
             <param name="count">The number of rows.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_Texture(SadConsole.IFont,System.Int32,System.Int32)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,System.Int32,System.Int32)">
             <summary>
-            Copies a glyph from one font index to another. Converts the backing texture to a render target. Is hardware accelerated.
+            Copies a glyph from one font index to another. Is hardware accelerated.
             </summary>
             <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
             <param name="glyphIndexFrom">The source glyph index.</param>
             <param name="glyphIndexTo">The target glyph index.</param>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_Pixel(SadConsole.IFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Copies a glyph from one font index to another. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphIndexFrom">The source glyph index.</param>
+            <param name="glyphIndexTo">The target glyph index.</param>
+            <param name="blendColor">Color to apply while copying the glyph.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Copies a glyph from one font index to another.  Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+            <param name="glyphRectangleTo">The target glyph rectangle.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Copies a glyph from one font index to another. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+            <param name="glyphRectangleTo">The target glyph rectangle.</param>
+            <param name="blendColor">Color to apply while copying the glyph.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_CPU(SadConsole.IFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
             <summary>
             Erases a glyph in the font by index.
             </summary>
@@ -236,7 +272,7 @@
             <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
             <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_CPU(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
             <summary>
             Sets the pixels of a font glyph by index.
             </summary>
@@ -247,9 +283,9 @@
             <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
         </member>
-        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_Pixel(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_CPU(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
             <summary>
-            
+            Returns a glyph's pixels packaged into a <see cref="T:SadRogue.Primitives.Color"/> array.
             </summary>
             <param name="font">The font being edited.</param>
             <param name="glyphIndex">The index of the glyph to get.</param>
@@ -365,7 +401,7 @@
             Toggles between windowed and full screen rendering for SadConsole.
             </summary>
         </member>
-        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32)">
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.Host.GameTexture">
@@ -407,6 +443,14 @@
             <param name="width">The width of the texture in pixels.</param>
             <param name="height">The height of the texture in pixels.</param>
         </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32,SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a new game texture with the specified width, height, and pixels.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+            <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,System.Boolean)">
             <summary>
             Wraps an existing texture.
@@ -435,7 +479,7 @@
             <summary>
             Sets colors in the texture from an array of pixels. Row-major ordered.
             </summary>
-            <param name="colors">The individual pixel colors to set. Row-major ordered.</param>
+            <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
             <summary>
@@ -447,7 +491,7 @@
             <summary>
             Replaces texture colors with the array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
             </summary>
-            <param name="colors">Array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.</param>
+            <param name="pixels">Array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.</param>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
         <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
@@ -1300,7 +1344,7 @@
         </member>
         <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
             <summary>
-            Sets the 
+            Either focuses or unfocuses the starting screen.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>

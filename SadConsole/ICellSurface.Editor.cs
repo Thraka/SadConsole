@@ -459,12 +459,8 @@ public static class CellSurfaceEditor
     /// <param name="x">The x location of the cell.</param>
     /// <param name="y">The y location of the cell.</param>
     /// <returns>The appearance.</returns>
-    public static ColoredGlyphBase GetCellAppearance(this ISurface obj, int x, int y)
-    {
-        var appearance = new ColoredGlyph();
-        obj.Surface[y * obj.Surface.Width + x].CopyAppearanceTo(appearance);
-        return appearance;
-    }
+    public static ColoredGlyphBase GetCellAppearance(this ISurface obj, int x, int y) =>
+        obj.Surface[y * obj.Surface.Width + x].Clone();
 
     /// <summary>
     /// Gets an enumerable of cells over a specific area.
@@ -479,9 +475,17 @@ public static class CellSurfaceEditor
         if (area == Rectangle.Empty)
             yield break;
 
-        for (int y = 0; y < area.Height; y++)
-            for (int x = 0; x < area.Width; x++)
-                yield return obj.Surface[(y + area.Y) * obj.Surface.Width + (x + area.X)];
+        if (area == obj.Surface.Area)
+        {
+            for (int i = 0; i < obj.Surface.Width * obj.Surface.Height; i++)
+                yield return obj.Surface[i];
+        }
+        else
+        {
+            for (int y = 0; y < area.Height; y++)
+                for (int x = 0; x < area.Width; x++)
+                    yield return obj.Surface[(y + area.Y) * obj.Surface.Width + (x + area.X)];
+        }
     }
 
     /// <summary>
@@ -1918,7 +1922,7 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
-    /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of obj.Surface. Doesn't clear the effect.
+    /// Starting at the specified coordinate, clears the glyph, mirror, and decorators, for the specified count of obj.Surface. Doesn't clear the effect, foreground, or background.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="x">The x position.</param>
@@ -1945,7 +1949,7 @@ public static class CellSurfaceEditor
 
             c.Glyph = obj.Surface.DefaultGlyph;
             c.Mirror = Mirror.None;
-            c.Decorators = null;
+            CellDecoratorHelpers.RemoveAllDecorators(c);
 
             result[resultIndex] = c;
             resultIndex++;
@@ -2175,10 +2179,10 @@ public static class CellSurfaceEditor
             glyphs[i] = obj.Surface[i];
         }
 
-        obj.Surface.Effects.SetEffect(glyphs, null);
+        obj.Surface.Effects.RemoveAll();
         obj.Surface.IsDirty = true;
 
-        return glyphs;
+        return obj.Surface.GetCells(obj.Surface.Area).ToArray();
     }
 
     /// <summary>
