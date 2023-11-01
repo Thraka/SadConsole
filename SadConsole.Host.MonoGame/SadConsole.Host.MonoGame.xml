@@ -193,7 +193,12 @@
         <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Extensions.ToMonoGame(SadConsole.Mirror)">
+        <member name="T:SadConsole.MonoGame_MirrorExtensions">
+            <summary>
+            Extensions for <see cref="T:SadConsole.Mirror"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.MonoGame_MirrorExtensions.ToMonoGame(SadConsole.Mirror)">
             <summary>
             Converts a <see cref="T:SadConsole.Mirror"/> type to a MonoGame <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
             </summary>
@@ -1493,12 +1498,12 @@
             A delegate that returns a set of splash screens to use.
             </summary>
         </member>
-        <member name="T:Microsoft.Xna.Framework.Graphics.TextureExtensions">
+        <member name="T:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions">
             <summary>
             Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
             </summary>
         </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
             <summary>
             Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
             </summary>
@@ -1508,7 +1513,7 @@
             <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
             <summary>
             Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
             </summary>
@@ -1519,7 +1524,7 @@
             <param name="fontSize">The size of the font.</param>
             <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
         </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
             <summary>
             Saves a texture to a png file.
             </summary>

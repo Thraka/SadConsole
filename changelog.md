@@ -1,3 +1,8 @@
+## v10.0.1
+
+- [Core] Adjust the description and parameter names for the Resize method.
+- [MonoGame] Minor adjustment to monogame extension method class names to avoid doc conflicts.
+
 ## v10.0.0 (10/28/2023)
 
 Major changes (possibly breaking)

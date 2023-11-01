@@ -2,7 +2,10 @@
 
 namespace SadConsole
 {
-    public static class Extensions
+    /// <summary>
+    /// Extensions for <see cref="Mirror"/>.
+    /// </summary>
+    public static class MonoGame_MirrorExtensions
     {
         /// <summary>
         /// Converts a <see cref="Mirror"/> type to a MonoGame <see cref="Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
@@ -38,7 +41,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Extensions for the <see cref="Texture2D"/> type.
     /// </summary>
-    public static class TextureExtensions
+    public static class MonoGame_TextureExtensions
     {
         /// <summary>
         /// Converts a texture's pixels to a <see cref="ICellSurface"/>.
@@ -212,7 +215,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
 
-                    float sbri = newColor.GetBrightness() * 255;
+                    float sbri = newColor.GetHSLLightness() * 255;
 
                     if (blockMode)
                     {
