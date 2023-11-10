@@ -2061,12 +2061,10 @@ public static class CellSurfaceEditor
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
 
-        ColoredGlyphBase[] result = obj.Surface[index..end];
-
-        obj.Surface.Effects.SetEffect(result, null);
-
-        foreach(ColoredGlyphBase cell in result)
+        for (int i = index; i < end; i++)
         {
+            ColoredGlyphBase cell = obj.Surface[i];
+            obj.Surface.Effects.SetEffect(cell, null);
             cell.Clear();
             cell.Foreground = obj.Surface.DefaultForeground;
             cell.Background = obj.Surface.DefaultBackground;
@@ -2193,12 +2191,16 @@ public static class CellSurfaceEditor
             return Array.Empty<ColoredGlyphBase>();
 
         int end = index + length > obj.Surface.Count ? obj.Surface.Count : index + length;
-        ColoredGlyphBase[] result = obj.Surface[index..end];
 
-        obj.Surface.Effects.SetEffect(result, null);
+        ColoredGlyphBase[] result = new ColoredGlyphBase[end - index];
+        int counter = 0;
 
-        foreach(ColoredGlyphBase c in result)
+        for (int i = index; i < end; i++)
         {
+            ColoredGlyphBase c = obj.Surface[i];
+
+            obj.Surface.Effects.SetEffect(c, null);
+
             if (background.HasValue)
                 c.Background = background.Value;
 
@@ -2212,6 +2214,9 @@ public static class CellSurfaceEditor
                 c.Mirror = mirror.Value;
 
             c.Decorators = null;
+
+            result[counter] = c;
+            counter++;
         }
 
         obj.Surface.IsDirty = true;
