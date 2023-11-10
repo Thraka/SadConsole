@@ -66,16 +66,16 @@ namespace SadConsole.Components
             // Upcast this because we know we're only using it with a Console type.
             var console = (IScreenSurface)consoleObject;
 
-            if (info.IsKeyDown(Keys.Left))
+            if (info.IsKeyDown(Left))
                 console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((-1, 0));
 
-            if (info.IsKeyDown(Keys.Right))
+            if (info.IsKeyDown(Right))
                 console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((1, 0));
 
-            if (info.IsKeyDown(Keys.Up))
+            if (info.IsKeyDown(Up))
                 console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, -1));
 
-            if (info.IsKeyDown(Keys.Down))
+            if (info.IsKeyDown(Down))
                 console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, 1));
 
             handled = true;

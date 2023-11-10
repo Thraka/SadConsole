@@ -26,7 +26,6 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
     /// </summary>
     public event EventHandler<ZoneEventArgs> ExitZone;
 
-
     /// <summary>
     /// The zones in this manager.
     /// </summary>

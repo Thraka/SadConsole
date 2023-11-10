@@ -569,7 +569,7 @@
         </member>
         <member name="P:SadConsole.Transitions.Fade.RepositionToObject">
             <summary>
-            When <see langword="true"/>, sets <see cref="!:IScreenObject.Position"/> value on the "To" object to match the transition finishes.
+            When <see langword="true"/>, sets the position of the "To" object to match the "From" object when the transition finishes.
             </summary>
         </member>
         <member name="M:SadConsole.Transitions.Fade.#ctor(SadConsole.IScreenSurface,SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">

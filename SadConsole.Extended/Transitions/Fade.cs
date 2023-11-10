@@ -27,7 +27,7 @@ namespace SadConsole.Transitions
         public bool HideFromObject { get; set; }
 
         /// <summary>
-        /// When <see langword="true"/>, sets <see cref="IScreenObject.Position"/> value on the "To" object to match the transition finishes.
+        /// When <see langword="true"/>, sets the position of the "To" object to match the "From" object when the transition finishes.
         /// </summary>
         public bool RepositionToObject { get; set; }
 
