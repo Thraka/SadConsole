@@ -50,26 +50,11 @@ while ($timer.elapsed -lt $timeout){
 # Found the SadConsole package, start building and pushing the other packages
 if ($foundPackage){
 
-    $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML"
-
-    foreach ($project in $projects) {
-            
-        # SadConsole Extended
-        Write-Output "Building $project Debug and Release"
-        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
-        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Release -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
-
-        # Push packages to nuget
-        Write-Output "Pushing SadConsole packages"
-        $sadConsolePackages = Get-ChildItem "$project*.nupkg" | Select-Object -ExpandProperty Name
-
-        foreach ($package in $sadConsolePackages) {
-            $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
-            $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
-        }
-
-    }
+    Write-Output "Finished"
 
     # Archive the packages
     Move-Item "*.nupkg","*.snupkg" .\archive\ -force
+}
+else {
+    Write-Output "Package not found on NuGet"
 }
