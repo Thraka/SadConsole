@@ -37,7 +37,7 @@ public static partial class Extensions
 
 public class FpsConfig : IConfigurator
 {
-    public bool UnlimitedFPS { get; set; }
+    public bool UnlimitedFPS { get; set; } = false;
 
 #if MONOGAME
     public bool ShowFPSVisual { get; set; }
