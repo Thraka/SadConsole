@@ -33,9 +33,7 @@ public class OutputSurfaceRenderStep : IRenderStep
     public void Render(IRenderer renderer, IScreenSurface screenObject)
     {
         var monoRenderer = (ScreenSurfaceRenderer)renderer;
-
-        if (screenObject.Tint.A != 255)
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(monoRenderer._backingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), monoRenderer._finalDrawColor));
+        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(monoRenderer._backingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), monoRenderer._finalDrawColor));
     }
 
     ///  <inheritdoc/>

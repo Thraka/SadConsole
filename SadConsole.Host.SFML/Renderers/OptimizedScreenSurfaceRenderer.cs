@@ -7,12 +7,12 @@ using System.Collections.Generic;
 namespace SadConsole.Renderers;
 
 /// <summary>
-/// Draws a <see cref="IScreenSurface"/>.
+/// Draws a <see cref="IScreenSurface"/> with tint. Doesn't allow render steps.
 /// </summary>
 /// <remarks>
 /// This renderer caches the entire drawing of the surface's cells, including the tint of the object.
 /// </remarks>
-public class ScreenSurfaceRenderer : IRenderer
+public sealed class OptimizedScreenSurfaceRenderer : IRenderer
 {
     private Host.GameTexture _renderTexture;
 
@@ -40,11 +40,6 @@ public class ScreenSurfaceRenderer : IRenderer
     public Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
 
     /// <summary>
-    /// Render steps to process.
-    /// </summary>
-    protected List<IRenderStep> RenderSteps = new List<IRenderStep>();
-
-    /// <summary>
     /// The blend state used by this renderer.
     /// </summary>
     public BlendMode SFMLBlendState { get; set; } = SadConsole.Host.Settings.SFMLSurfaceBlendMode;
@@ -62,8 +57,7 @@ public class ScreenSurfaceRenderer : IRenderer
     public bool IsForced { get; set; }
 
     /// <inheritdoc/>
-    public List<IRenderStep> Steps { get; set; } = new();
-
+    List<IRenderStep> IRenderer.Steps { get; set; } = null;
 
     /// <summary>
     /// Cached set of rectangles used in rendering each cell.
@@ -73,23 +67,23 @@ public class ScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Creates a new instance of this renderer with the default steps.
     /// </summary>
-    public ScreenSurfaceRenderer()
+    public OptimizedScreenSurfaceRenderer()
     {
-        AddDefaultSteps();
-        Steps.Sort(RenderStepComparer.Instance);
+    }
+
+    void IRenderer.OnHostUpdated(IScreenObject host)
+    {
     }
 
     ///  <inheritdoc/>
-    public virtual void Refresh(IScreenSurface screen, bool force = false)
+    public void Refresh(IScreenSurface screen, bool force = false)
     {
-        bool backingTextureChanged = false;
         IsForced = force;
 
         // Update texture if something is out of size.
         if (_backingTexture == null || screen.AbsoluteArea.Width != (int)_backingTexture.Size.X || screen.AbsoluteArea.Height != (int)_backingTexture.Size.Y)
         {
             IsForced = true;
-            backingTextureChanged = true;
             _backingTexture?.Dispose();
             _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
             _renderTexture?.Dispose();
@@ -111,72 +105,77 @@ public class ScreenSurfaceRenderer : IRenderer
             IsForced = true;
         }
 
-        bool composeRequested = IsForced;
-
         // Let everything refresh before compose.
-        foreach (IRenderStep step in Steps)
-            composeRequested |= step.Refresh(this, screen, backingTextureChanged, IsForced);
-
-        // If any step (or IsForced) requests a compose, process them.
-        if (composeRequested)
-        {
-            // Setup spritebatch for compose
-            _backingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(_backingTexture, SFMLBlendState, Transform.Identity);
-
-            // Compose each step
-            foreach (IRenderStep step in Steps)
-                step.Composing(this, screen);
-
-            // End sprite batch
-            Host.Global.SharedSpriteBatch.End();
-            _backingTexture.Display();
-        }
+        if (screen.IsDirty || IsForced)
+            RedrawSurface(screen);
     }
 
     ///  <inheritdoc/>
-    public virtual void Render(IScreenSurface screen)
-    {
-        foreach (IRenderStep step in Steps)
-            step.Render(this, screen);
-    }
+    public void Render(IScreenSurface screenObject) =>
+        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_backingTexture.Texture, new SFML.System.Vector2i(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), _finalDrawColor));
 
-    /// <summary>
-    /// Adds the render steps this renderer uses.
-    /// </summary>
-    protected virtual void AddDefaultSteps()
+    void RedrawSurface(IScreenSurface screenObject)
     {
-        Steps.Add(new SurfaceRenderStep());
-        Steps.Add(new OutputSurfaceRenderStep());
-        Steps.Add(new TintSurfaceRenderStep());
+        _backingTexture.Clear(Color.Transparent);
+        Host.Global.SharedSpriteBatch.Reset(_backingTexture, SFMLBlendState, Transform.Identity);
+
+        int rectIndex = 0;
+        ColoredGlyphBase cell;
+        IFont font = screenObject.Font;
+
+        if (screenObject.Surface.DefaultBackground.A != 0)
+            Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)_backingTexture.Size.X, (int)_backingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+
+        for (int y = 0; y < screenObject.Surface.View.Height; y++)
+        {
+            int i = ((y + screenObject.Surface.ViewPosition.Y) * screenObject.Surface.Width) + screenObject.Surface.ViewPosition.X;
+
+            for (int x = 0; x < screenObject.Surface.View.Width; x++)
+            {
+                cell = screenObject.Surface[i];
+
+                cell.IsDirty = false;
+
+                if (cell.IsVisible)
+                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
+
+                i++;
+                rectIndex++;
+            }
+        }
+
+        if (screenObject.Tint.A != 0)
+            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screenObject.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screenObject.Font.Image).Texture, screenObject.AbsoluteArea.ToIntRect(), screenObject.Font.SolidGlyphRectangle.ToIntRect()));
+
+        Host.Global.SharedSpriteBatch.End();
+        _backingTexture.Display();
+
+        screenObject.IsDirty = false;
     }
 
     #region IDisposable Support
     /// <summary>
     /// Detects redundant calls.
     /// </summary>
-    protected bool disposedValue = false;
+    bool disposedValue = false;
 
     /// <summary>
     /// Release the backing texture and the render texture target.
     /// </summary>
     /// <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
-    protected virtual void Dispose(bool disposing)
+    void Dispose(bool disposing)
     {
         if (!disposedValue)
         {
             _backingTexture?.Dispose();
             _renderTexture?.Dispose();
 
-            foreach (IRenderStep step in Steps)
-                step.Dispose();
-
             disposedValue = true;
         }
 
         if (disposing)
         {
-            Steps = null;
+            ((IRenderer)this).Steps = null;
             CachedRenderRects = null;
         }
     }
@@ -184,7 +183,7 @@ public class ScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Disposes the object.
     /// </summary>
-    ~ScreenSurfaceRenderer() =>
+    ~OptimizedScreenSurfaceRenderer() =>
         Dispose(false);
 
     /// <inheritdoc/>
