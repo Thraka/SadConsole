@@ -153,8 +153,8 @@ public sealed partial class Game : GameHost
         };
 
         // Load FPS
-        FpsConfig? fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
-        if (fpsConfig != null && fpsConfig.UnlimitedFPS)
+        FpsConfig fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault() ?? new FpsConfig();
+        if (!fpsConfig.UnlimitedFPS)
             if (Host.Settings.FPS > 0)
                 Global.GraphicsDevice.SetFramerateLimit((uint)Host.Settings.FPS);
 
