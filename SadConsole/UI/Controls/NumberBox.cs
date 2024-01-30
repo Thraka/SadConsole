@@ -101,7 +101,7 @@ public partial class NumberBox : TextBox
             if (!double.TryParse(_text, NumberStyles.Any, GetCulture(), out double value))
                 value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : DefaultDecimalValue) : DefaultDecimalValue;
             else
-                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultDecimalValue;
+                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : value;
 
             Text = value.ToString(GetCulture());
         }
@@ -110,7 +110,7 @@ public partial class NumberBox : TextBox
             if (!long.TryParse(_text, out long value))
                 value = UseMinMax ? (NumberMinimum >= 0 ? NumberMinimum : DefaultValue) : DefaultValue;
             else
-                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : DefaultValue;
+                value = UseMinMax ? Math.Clamp(value, NumberMinimum, NumberMaximum) : value;
 
             Text = value.ToString(GetCulture());
         }
