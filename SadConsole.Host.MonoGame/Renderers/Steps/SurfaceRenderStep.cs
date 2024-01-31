@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
@@ -13,15 +14,16 @@ namespace SadConsole.Renderers;
 [System.Diagnostics.DebuggerDisplay("Surface")]
 public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
 {
-    private Host.GameTexture _cachedTexture;
+    private Host.GameTexture? _cachedTexture;
+    private IScreenSurface? _screenSurface;
 
     /// <summary>
     /// The cached texture of the drawn surface.
     /// </summary>
-    public RenderTarget2D BackingTexture { get; private set; }
+    public RenderTarget2D? BackingTexture { get; private set; }
 
-    /// <inheritdoc/>//
-    public ITexture CachedTexture => _cachedTexture;
+    /// <inheritdoc/>
+    public ITexture? CachedTexture => _cachedTexture;
 
     /// <inheritdoc/>
     public string Name => Constants.RenderStepNames.Surface;
@@ -30,9 +32,17 @@ public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
 
     /// <summary>
-    /// Not used.
+    /// Sets an alternative <see cref="IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
     /// </summary>
-    public void SetData(object data) { }
+    public void SetData(object data)
+    {
+        if (data is null)
+            _screenSurface = null;
+        else if (data is IScreenSurface surface)
+            _screenSurface = surface;
+        else
+            throw new InvalidCastException($"Data must be {nameof(IScreenSurface)}");
+    }
 
     ///  <inheritdoc/>
     public void Reset()
@@ -47,6 +57,9 @@ public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
     {
         bool result = false;
+
+        // Swap references if data was set
+        screenObject = _screenSurface ?? screenObject;
 
         // Update texture if something is out of size.
         if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != BackingTexture.Width || screenObject.AbsoluteArea.Height != BackingTexture.Height)
