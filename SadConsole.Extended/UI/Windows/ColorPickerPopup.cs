@@ -94,21 +94,21 @@ namespace SadConsole.UI.Windows
             _redInput.NumberMaximum = 255;
             _redInput.MaxLength = 3;
             _redInput.Position = new Point(Width - 7, Height - 14);
-            _redInput.TextChanged += (sender, e) => { _barR.SelectedColor = new Color(int.Parse(_redInput.Text), 0, 0); };
+            _redInput.TextChanged += _redInput_TextChanged;
             Controls.Add(_redInput);
 
             _greenInput = new NumberBox(5);
             _greenInput.NumberMaximum = 255;
             _greenInput.MaxLength = 3;
             _greenInput.Position = new Point(Width - 7, Height - 13);
-            _greenInput.TextChanged += (sender, e) => { _barG.SelectedColor = new Color(0, int.Parse(_greenInput.Text), 0); };
+            _greenInput.TextChanged += _greenInput_TextChanged;
             Controls.Add(_greenInput);
 
             _blueInput = new NumberBox(5);
             _blueInput.NumberMaximum = 255;
             _blueInput.MaxLength = 3;
             _blueInput.Position = new Point(Width - 7, Height - 12);
-            _blueInput.TextChanged += (sender, e) => { _barB.SelectedColor = new Color(0, 0, int.Parse(_blueInput.Text)); };
+            _blueInput.TextChanged += _blueInput_TextChanged;
             Controls.Add(_blueInput);
 
             _alphaInput = new NumberBox(5);
@@ -205,6 +205,30 @@ namespace SadConsole.UI.Windows
 
             // Previous Colors
             this.Print(Width - RideSideX + 2, _previousColors.Position.Y - 1, "Prior Colors");
+        }
+
+        private void _blueInput_TextChanged(object sender, EventArgs e)
+        {
+            if (!int.TryParse(_blueInput.Text, out int number))
+                number = 0;
+
+            _barB.SelectedColor = new Color(0, 0, number);
+        }
+
+        private void _greenInput_TextChanged(object sender, EventArgs e)
+        {
+            if (!int.TryParse(_greenInput.Text, out int number))
+                number = 0;
+
+            _barG.SelectedColor = new Color(0, number, 0);
+        }
+
+        private void _redInput_TextChanged(object sender, EventArgs e)
+        {
+            if (!int.TryParse(_redInput.Text, out int number))
+                number = 0;
+
+            _barR.SelectedColor = new Color(number, 0, 0);
         }
 
         void _picker_SelectedColorChanged(object sender, EventArgs e)
