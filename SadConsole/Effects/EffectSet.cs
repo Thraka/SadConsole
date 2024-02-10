@@ -12,6 +12,8 @@ namespace SadConsole.Effects;
 public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
 {
     private LinkedListNode<ICellEffect>? _currentEffectNode;
+    private bool _moveNextNode = false;
+    private bool _restartFlag = false;
 
     /// <summary>
     /// The list of effects to process.
@@ -62,6 +64,19 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
         if (!IsFinished && _currentEffectNode == null)
             _currentEffectNode = Effects.First;
 
+        // Moving to next node this frame
+        if (_moveNextNode)
+        {
+            _currentEffectNode = _currentEffectNode!.Next;
+            _moveNextNode = false;
+        }
+
+        if (_restartFlag)
+        {
+            Restart();
+            _restartFlag = false;
+        }
+
         // Handles updating _timeElapsed and _delayFinished
         base.Update(delta);
 
@@ -80,19 +95,19 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
                     // Restart time
                     _timeElapsed = System.TimeSpan.Zero;
 
-                    // Get next node
-                    _currentEffectNode = _currentEffectNode.Next;
-
                     // If no node, check for repeat or end.
-                    if (_currentEffectNode == null)
+                    if (_currentEffectNode.Next == null)
                     {
                         if (Repeat)
-                            Restart();
+                            _restartFlag = true;
                         else
                             IsFinished = true;
                     }
                     else
                     {
+                        // We're moving to the next node
+                        _moveNextNode = true;
+
                         // When moving to the next effect, check and see if we have a delay. If so, flag and wait.
                         if (DelayBetweenEffects != System.TimeSpan.Zero)
                             _inChainDelay = true;
