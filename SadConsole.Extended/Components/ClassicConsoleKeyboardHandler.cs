@@ -12,6 +12,31 @@ namespace SadConsole.Components
         private Cursor _attachedCursor;
         private IScreenSurface _surface;
 
+        private bool _isReady = true;
+
+        /// <summary>
+        /// A flag that when set to true prints a new line and the prompt.
+        /// </summary>
+        public bool IsReady
+        {
+            get => _isReady;
+            set
+            {
+                // Changing to true
+                if (_isReady == false && value)
+                {
+                    // After they have processed the string, we will create a new line and display the prompt.
+                    _attachedCursor.NewLine();
+                    PrintPrompt();
+
+                    // Preparing the next lines could have scrolled the console, reset the counter
+                    _surface.Surface.TimesShiftedUp = 0;
+                }
+
+                _isReady = value;
+            }
+        }
+
         /// <summary>
         /// The prompt to display to the user.
         /// </summary>
@@ -90,6 +115,8 @@ namespace SadConsole.Components
         /// <inheritdoc/>
         public override void ProcessKeyboard(IScreenObject consoleObject, Keyboard info, out bool handled)
         {
+            if (!_isReady) { handled = false; return; }
+
             // Check each key pressed.
             for (int i = 0; i < info.KeysPressed.Count; i++)
             {
@@ -134,12 +161,15 @@ namespace SadConsole.Components
                     // Send the string data
                     EnterPressedAction(this, _attachedCursor, data);
 
-                    // After they have processed the string, we will create a new line and display the prompt.
-                    _attachedCursor.NewLine();
-                    PrintPrompt();
+                    if (_isReady)
+                    {
+                        // After they have processed the string, we will create a new line and display the prompt.
+                        _attachedCursor.NewLine();
+                        PrintPrompt();
 
-                    // Preparing the next lines could have scrolled the console, reset the counter
-                    _surface.Surface.TimesShiftedUp = 0;
+                        // Preparing the next lines could have scrolled the console, reset the counter
+                        _surface.Surface.TimesShiftedUp = 0;
+                    }
                 }
             }
 
