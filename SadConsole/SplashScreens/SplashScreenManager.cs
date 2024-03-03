@@ -3,7 +3,7 @@
 namespace SadConsole.SplashScreens;
 
 /// <summary>
-/// GameHost use only. Use the <see cref="CheckRun"/> method to show any splash screens after <see cref="GameHost.OnStart"/> was called.
+/// GameHost use only. Use the <see cref="CheckRun"/> method to show any splash screens after <see cref="GameHost.OnGameStarted"/> was called.
 /// </summary>
 [System.Diagnostics.DebuggerDisplay("Splashscreen Manager")]
 public class SplashScreenManager : ScreenObject
@@ -14,17 +14,20 @@ public class SplashScreenManager : ScreenObject
     public static event EventHandler? SplashScreenFinished;
 
     /// <summary>
-    /// Checks if any splash screens have been added with <see cref="GameHost.SetSplashScreens(ScreenSurface[])"/>, if so, starts them.
+    /// Checks if any splash screens have been added with <see cref="GameHost.SetSplashScreens(IScreenSurface[])"/>, if so, starts them.
     /// </summary>
     public static void CheckRun()
     {
-        if (GameHost.Instance._splashScreens.Count != 0)
+        if (GameHost.Instance._splashScreens != null &&
+           GameHost.Instance._splashScreens.Count != 0)
         {
             GameHost.Instance.SaveGlobalState();
             GameHost.Instance.FocusedScreenObjects = new FocusedScreenObjectStack();
             GameHost.Instance.Screen = new ScreenObject();
             GameHost.Instance.Screen.Children.Add(new SplashScreenManager());
         }
+        else
+            GameHost.Instance._splashScreens = null;
     }
 
     /// <summary>
@@ -32,7 +35,7 @@ public class SplashScreenManager : ScreenObject
     /// </summary>
     internal SplashScreenManager()
     {
-        _activeScreen = GameHost.Instance._splashScreens.Dequeue();
+        _activeScreen = GameHost.Instance._splashScreens!.Dequeue();
         Children.Add(_activeScreen);
         GameHost.Instance.FocusedScreenObjects.Set(_activeScreen);
     }
@@ -48,7 +51,7 @@ public class SplashScreenManager : ScreenObject
         {
             Children.Remove(_activeScreen);
 
-            if (GameHost.Instance._splashScreens.Count != 0)
+            if (GameHost.Instance._splashScreens!.Count != 0)
             {
                 _activeScreen = GameHost.Instance._splashScreens.Dequeue();
                 Children.Add(_activeScreen);
@@ -58,6 +61,7 @@ public class SplashScreenManager : ScreenObject
             {
                 GameHost.Instance.RestoreGlobalState();
                 SplashScreenFinished?.Invoke(this, EventArgs.Empty);
+                GameHost.Instance._splashScreens = null;
             }
         }
     }
