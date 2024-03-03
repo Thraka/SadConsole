@@ -40,7 +40,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The splash screens to show on game startup.
     /// </summary>
-    protected internal Queue<IScreenSurface> _splashScreens { get; set; } = new Queue<IScreenSurface>();
+    protected internal Queue<IScreenSurface>? _splashScreens { get; set; } = new Queue<IScreenSurface>();
 
     /// <summary>
     /// Instance of the game host.
@@ -163,6 +163,11 @@ public abstract partial class GameHost : IDisposable
     /// The active screen processed by the game.
     /// </summary>
     public IScreenObject? Screen { get; set; }
+
+    /// <summary>
+    /// Update components that run before the <see cref="Screen"/> is processed.
+    /// </summary>
+    public List<Components.RootComponent> RootComponents { get; set; } = new();
 
     /// <summary>
     /// The stack of focused consoles used by the mouse and keyboard.

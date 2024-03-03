@@ -221,6 +221,9 @@ public sealed partial class Game : GameHost
             // Update game loop part
             if (Settings.DoUpdate)
             {
+                // Process any pre-Screen logic components
+                foreach (SadConsole.Components.RootComponent item in SadConsole.Game.Instance.RootComponents)
+                    item.Run(UpdateFrameDelta);
 
                 if (Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
                 {
@@ -254,7 +257,6 @@ public sealed partial class Game : GameHost
             if (Settings.DoDraw)
             {
                 Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
-
 
                 // Clear draw calls for next run
                 Instance.DrawCalls.Clear();

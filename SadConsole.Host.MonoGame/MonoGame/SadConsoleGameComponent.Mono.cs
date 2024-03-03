@@ -29,7 +29,9 @@ public partial class Game
         /// <param name="gameTime">Time between drawing frames.</param>
         public override void Draw(GameTime gameTime)
         {
-            
+            SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
+            Global.RenderLoopGameTime = gameTime;
+
             if (SadConsole.Settings.DoDraw)
             {
 #if NOESIS
@@ -38,9 +40,6 @@ public partial class Game
 #endif
 
                 Host.Game game = (Host.Game)Game;
-
-                SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
-                Global.RenderLoopGameTime = gameTime;
 
                 // Clear draw calls for next run
                 SadConsole.Game.Instance.DrawCalls.Clear();
@@ -84,9 +83,17 @@ public partial class Game
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
+            Global.UpdateLoopGameTime = gameTime;
+
             if (SadConsole.Settings.DoUpdate)
             {
+                // Process any pre-Screen logic components
+                foreach (SadConsole.Components.RootComponent item in SadConsole.Game.Instance.RootComponents)
+                    item.Run(GameHost.Instance.UpdateFrameDelta);
+
                 var game = (Game)Game;
+
 
 #if NOESIS
                 bool blockInput = false;
@@ -97,14 +104,9 @@ public partial class Game
                     || NoesisManager.noesisGUIWrapper.Input.ConsumedMouseButtons.Count != 0
                     || NoesisManager.noesisGUIWrapper.Input.ConsumedMouseDeltaWheel != 0;
 
-                SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
-
                 if (Game.IsActive && !blockInput)
                 {
 #else
-                SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
-                Global.UpdateLoopGameTime = gameTime;
-
                 if (Game.IsActive && !Global.BlockSadConsoleInput)
                 {
 #endif
