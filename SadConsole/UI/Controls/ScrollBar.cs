@@ -100,25 +100,11 @@ public partial class ScrollBar : ControlBase
     /// <param name="orientation">Sets the control to either horizontal or vertical.</param>
     /// <param name="size">The height or width of the control, based on the <paramref name="orientation"/>, with a thickness of 0.</param>
     /// <exception cref="ArgumentOutOfRangeException">Size of the control must be 2 or more</exception>
-    public ScrollBar(Orientation orientation, int size) : base(orientation == Orientation.Horizontal ? size : 1,
-                                                               orientation == Orientation.Vertical ? size : 1)
+    public ScrollBar(Orientation orientation, int size) : this(orientation,
+                                                               orientation == Orientation.Horizontal ? size : 1, // width
+                                                               orientation == Orientation.Vertical ? size : 1)   // height
     {
-        Orientation = orientation;
 
-        if (size < 2) throw new ArgumentOutOfRangeException("Size of the control must be 2 or more");
-
-        SliderBarSize = size - 2;
-
-        SetSliderPositionFromValue();
-
-        //TODO add states for ends. Bar should use base state.
-        StartButtonVerticalGlyph = 30;
-        EndButtonVerticalGlyph = 31;
-        StartButtonHorizontalGlyph = 17;
-        EndButtonHorizontalGlyph = 16;
-        SliderGlyph = 219;
-        BarGlyph = 176;
-        UseExtended = true;
     }
 
     /// <summary>
