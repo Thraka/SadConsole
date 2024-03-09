@@ -163,7 +163,7 @@ public partial class Table : CompositeControl
         {
             if (VerticalScrollBar == null) return 0;
             UpdateScrollBarMaximum(Orientation.Vertical);
-            return VerticalScrollBar.Maximum;
+            return VerticalScrollBar.MaximumValue;
         }
     }
 
@@ -176,7 +176,7 @@ public partial class Table : CompositeControl
         {
             if (HorizontalScrollBar == null) return 0;
             UpdateScrollBarMaximum(Orientation.Horizontal);
-            return HorizontalScrollBar.Maximum;
+            return HorizontalScrollBar.MaximumValue;
         }
     }
 
@@ -301,7 +301,7 @@ public partial class Table : CompositeControl
         {
             existingScrollBar.ValueChanged -= ScrollBar_ValueChanged;
             value = existingScrollBar.Value;
-            max = existingScrollBar.Maximum;
+            max = existingScrollBar.MaximumValue;
             RemoveControl(existingScrollBar);
             scrollBarExists = true;
         }
@@ -310,7 +310,7 @@ public partial class Table : CompositeControl
 
         if (scrollBarExists)
         {
-            existingScrollBar.Maximum = max;
+            existingScrollBar.MaximumValue = max;
             existingScrollBar.Value = value;
         }
 
@@ -371,7 +371,7 @@ public partial class Table : CompositeControl
         if (scrollBar != null)
         {
             int scrollItems = GetScrollBarItems(orientation);
-            scrollBar.Maximum = scrollItems < 0 ? 0 : scrollItems;
+            scrollBar.MaximumValue = scrollItems < 0 ? 0 : scrollItems;
         }
     }
 
@@ -411,12 +411,12 @@ public partial class Table : CompositeControl
         int scrollbarItems = GetScrollBarItems(scrollBar.Orientation);
         if (scrollbarItems > 0)
         {
-            scrollBar.Maximum = scrollbarItems;
+            scrollBar.MaximumValue = scrollbarItems;
             return true;
         }
         else
         {
-            scrollBar.Maximum = 0;
+            scrollBar.MaximumValue = 0;
             return false;
         }
     }
@@ -465,7 +465,7 @@ public partial class Table : CompositeControl
                 int defaultIndexSize = orientation == Orientation.Vertical ? DefaultCellSize.Y : DefaultCellSize.X;
 
                 var indexSize = (totalIndexSize - total) / defaultIndexSize;
-                scrollBar.Value = totalIndexSize < max ? 0 : indexSize > scrollBar.Maximum ? scrollBar.Maximum : indexSize;
+                scrollBar.Value = totalIndexSize < max ? 0 : indexSize > scrollBar.MaximumValue ? scrollBar.MaximumValue : indexSize;
             }
         }
     }

@@ -243,7 +243,7 @@ public partial class ListBox : CompositeControl
         {
             ScrollBar.ValueChanged -= _scrollbar_ValueChanged;
             value = ScrollBar.Value;
-            max = ScrollBar.Maximum;
+            max = ScrollBar.MaximumValue;
             RemoveControl(ScrollBar);
             scrollBarExists = true;
         }
@@ -253,7 +253,7 @@ public partial class ListBox : CompositeControl
 
         if (scrollBarExists)
         {
-            ScrollBar.Maximum = max;
+            ScrollBar.MaximumValue = max;
             ScrollBar.Value = value;
         }
 
@@ -278,7 +278,7 @@ public partial class ListBox : CompositeControl
             if (_selectedIndex < VisibleItemsMax)
                 ScrollBar.Value = 0;
             else if (SelectedIndex > Items.Count - VisibleItemsTotal)
-                ScrollBar.Value = ScrollBar.Maximum;
+                ScrollBar.Value = ScrollBar.MaximumValue;
             else
                 ScrollBar.Value = _selectedIndex - VisibleItemsTotal + 1;
         }

@@ -108,12 +108,12 @@ class ScrollableConsole : ControlsConsole
 
         // Adjust the scroll bar
         _scrollBar.IsEnabled = _scrollOffset != 0;
-        _scrollBar.Maximum = _scrollOffset;
+        _scrollBar.MaximumValue = _scrollOffset;
 
         // If autoscrolling is enabled, scroll
         if (_scrollBar.IsEnabled && AutomaticScroll && _lastCursorY != MessageBuffer.Cursor.Position.Y)
         {
-            _scrollBar.Value = _scrollBar.Maximum;
+            _scrollBar.Value = _scrollBar.MaximumValue;
             _lastCursorY = MessageBuffer.Cursor.Position.Y;
         }
 

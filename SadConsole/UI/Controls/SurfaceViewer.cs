@@ -189,12 +189,12 @@ public class SurfaceViewer : CompositeControl
 
         if (Surface.ViewWidth != Surface.Width)
         {
-            HorizontalScroller.Maximum = Surface.Width - Surface.ViewWidth;
+            HorizontalScroller.MaximumValue = Surface.Width - Surface.ViewWidth;
             HorizontalScroller.IsEnabled = true;
         }
         if (Surface.ViewHeight != Surface.Height)
         {
-            VerticalScroller.Maximum = Surface.Height - Surface.ViewHeight;
+            VerticalScroller.MaximumValue = Surface.Height - Surface.ViewHeight;
             VerticalScroller.IsEnabled = true;
         }
 

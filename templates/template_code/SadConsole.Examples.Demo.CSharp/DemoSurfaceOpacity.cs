@@ -86,11 +86,13 @@ internal class SurfaceOpacity : ControlsConsole
 
         _opacitySlider = new ScrollBar(Orientation.Horizontal, Width - 4);
         _opacitySlider.Position = (2, Height - 2);
-        _opacitySlider.BarGlyph = ICellSurface.ConnectedLineThin[(int)ICellSurface.ConnectedLineIndex.Top];
-        _opacitySlider.StartButtonHorizontalGlyph = '<';
-        _opacitySlider.EndButtonHorizontalGlyph = '>';
-        _opacitySlider.Maximum = 255;
+        _opacitySlider.Style.BarGlyph = ICellSurface.ConnectedLineThin[(int)ICellSurface.ConnectedLineIndex.Top];
+        _opacitySlider.Style.StartButtonHorizontalGlyph = '<';
+        _opacitySlider.Style.EndButtonHorizontalGlyph = '>';
+        _opacitySlider.MaximumValue = 255;
         _opacitySlider.Value = 255;
+        _opacitySlider.ArrowsMoveGrip = true;
+        _opacitySlider.MouseWheelStep = 10;
         _opacitySlider.ValueChanged += OpacitySlider_ValueChanged;
         Controls.Add(_opacitySlider);
     }
@@ -126,6 +128,9 @@ internal class SurfaceOpacity : ControlsConsole
     private void AnimatedOpacity_ValueChanged(object? sender, double e) =>
         _opacitySlider.Value = (int)e;
 
-    private void OpacitySlider_ValueChanged(object? sender, EventArgs e) =>
+    private void OpacitySlider_ValueChanged(object? sender, EventArgs e)
+    {
+        Surface.Print(((Width - 5 + 2) / 2) + 1, Height - 1, string.Format("{0,3}", (byte)_opacitySlider.Value));
         ((Renderers.ScreenSurfaceRenderer)_fadingSurface.Renderer!).Opacity = (byte)_opacitySlider.Value;
+    }
 }
