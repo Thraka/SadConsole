@@ -172,10 +172,31 @@ internal class KeyboardHandlers : ControlsConsole
             cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
             cursor.DisableWordBreak = true;
         }
+        else if (value == "ready_test")
+        {
+            string text = string.Join("\r\n", "This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..");
+            var _typingInstruction = new SadConsole.Instructions
+                .DrawString(SadConsole.ColoredString.Parser.Parse(text));
+
+            _typingInstruction.Position = cursor.Position;
+            _typingInstruction.Cursor = cursor;
+            _typingInstruction.TotalTimeToPrint = TimeSpan.FromMilliseconds(500);
+            _typingInstruction.Finished += _typingInstruction_Finished;
+            _typingInstruction.RemoveOnFinished = true;
+            keyboardComponent.IsReady = false;
+            _promptScreen.SadComponents.Add(_typingInstruction);
+
+            cursor.Position = new(_typingInstruction.Position.X, _typingInstruction.Position.Y + text.Length);
+        }
         else
         {
             cursor.Print("  Unknown command").NewLine();
         }
+    }
+
+    private void _typingInstruction_Finished(object? sender, EventArgs e)
+    {
+        _keyboardHandlerDOS.IsReady = true;
     }
 
     private bool C64HandlerEnterPressed(C64KeyboardHandler keyboardComponent, Cursor cursor, string value)

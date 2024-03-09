@@ -1,3 +1,20 @@
+## v10.0.3
+
+- [UI] `ScrollBar` has been completely rewritten. Minor breaking changes.
+  - `.Maximum` has been changed to `.MaximumValue`.
+  - Properties related to the style, such as `BarGlyph`, were moved to a `Style` property which controls how the control looks. Some property names have changed
+- [UI] `ControlBase.FindThemeFont` helper method added.
+- [UI] Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
+- [Core] `GlyphDefinition` has an init accessor now.
+- [Core] Added `ShapeParameter` docs and `CreateFilled` supports ignoring the border.
+- [Core] Added `RootComponent` class that can be added to `SadConsole.Game.Instance.RootComponents`. These components run logic before the keyboard and screen updates.
+- [Core] Splash screen collection is nulled after it runs, freeing memory.
+- [Extended] Classic keyboard handler has `IsReady` flag now to control when it's active.
+
+## v10.0.2
+
+- [UI] `NumberBox` incorrectly applied `DefaultValue` instead of the actual value when `Min\Max` properties were 0.
+
 ## v10.0.1
 
 - [Core] Adjust the description and parameter names for the Resize method.
