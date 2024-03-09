@@ -305,7 +305,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if ((state.ScreenObject == host && state.IsOnScreenObject) || host.IsExclusiveMouse)
         {
-            if (CapturedControl != null && CapturedControl.Parent == this)
+            if (CapturedControl != null)
                 CapturedControl.ProcessMouse(state);
             else
             {
