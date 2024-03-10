@@ -292,6 +292,51 @@ public partial class ScrollBar : ControlBase
         }
     }
 
+    /// <summary>
+    /// Processes the mouse wheel values regardless of if the mouse is over the scrollbar or not.
+    /// </summary>
+    /// <param name="state">The mouse state.</param>
+    /// <returns>True if the mouse wheel was processed.</returns>
+    public bool ProcessMouseWheel(MouseScreenObjectState state)
+    {
+        // Scroll wheel
+        if (state.Mouse.ScrollWheelValueChange != 0)
+        {
+            // Bar with a grip
+            if (Style.BarSize > 1)
+            {
+                if (state.Mouse.ScrollWheelValueChange < 0)
+                {
+                    if (!MouseWheelMovesGrip || Style.BarSize < 2)
+                        DecreaseValue(_mouseWheelStep);
+                    else
+                        DecreaseGripByOne();
+                }
+                else
+                {
+                    if (!MouseWheelMovesGrip || Style.BarSize < 2)
+                        IncreaseValue(_mouseWheelStep);
+                    else
+                        IncreaseGripByOne();
+                }
+            }
+
+            // Small control with no bar
+            else
+            {
+                if (state.Mouse.ScrollWheelValueChange < 0)
+                    DecreaseValue(_mouseWheelStep);
+                else
+                    IncreaseValue(_mouseWheelStep);
+            }
+
+            IsDirty = true;
+            return true;
+        }
+
+        return false;
+    }
+
     /// <inheritdoc/>
     public override bool ProcessMouse(MouseScreenObjectState state)
     {
@@ -409,28 +454,11 @@ public partial class ScrollBar : ControlBase
                 if (Style.BarSize > 1)
                 {
                     // Scroll wheel
-                    if (state.Mouse.ScrollWheelValueChange != 0)
-                    {
-                        if (state.Mouse.ScrollWheelValueChange < 0)
-                        {
-                            if (!MouseWheelMovesGrip || Style.BarSize < 2)
-                                DecreaseValue(_mouseWheelStep);
-                            else
-                                DecreaseGripByOne();
-                        }
-                        else
-                        {
-                            if (!MouseWheelMovesGrip || Style.BarSize < 2)
-                                IncreaseValue(_mouseWheelStep);
-                            else
-                                IncreaseGripByOne();
-                        }
-
-                        IsDirty = true;
+                    if (ProcessMouseWheel(state))
                         return true;
-                    }
 
-                    if (cell >= Style.GripStart && cell <= Style.GripEnd)
+                    // Clicking on gripper
+                    else if (cell >= Style.GripStart && cell <= Style.GripEnd)
                     {
                         Style.IsMouseOverGripper = true;
 
@@ -451,7 +479,7 @@ public partial class ScrollBar : ControlBase
                         }
                     }
 
-                    // Bar
+                    // Normal clicking on bar
                     else
                     {
                         Style.IsMouseOverBar = true;
@@ -482,23 +510,17 @@ public partial class ScrollBar : ControlBase
                 }
                 else
                 {
-                    if (Style.BarSize > 1 && state.Mouse.LeftClicked)
+                    // Scroll wheel
+                    if (ProcessMouseWheel(state))
+                        return true;
+
+                    // Normal clicking on bar
+                    else if (Style.BarSize > 1 && state.Mouse.LeftClicked)
                     {
                         if (cell == 1)
                             SetValue(0);
                         else
                             SetValue(MaximumValue);
-
-                        return true;
-                    }
-
-                    // Small control with no bar, so enable scroll wheel
-                    if (state.Mouse.ScrollWheelValueChange != 0)
-                    {
-                        if (state.Mouse.ScrollWheelValueChange < 0)
-                            DecreaseValue(_mouseWheelStep);
-                        else
-                            IncreaseValue(_mouseWheelStep);
 
                         return true;
                     }

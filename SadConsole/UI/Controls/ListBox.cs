@@ -377,10 +377,7 @@ public partial class ListBox : CompositeControl
 
         if (state.OriginalMouseState.Mouse.ScrollWheelValueChange != 0)
         {
-            if (state.OriginalMouseState.Mouse.ScrollWheelValueChange < 0)
-                ScrollBar.Value -= 1;
-            else
-                ScrollBar.Value += 1;
+            ScrollBar.ProcessMouseWheel(state.OriginalMouseState);
         }
     }
 
