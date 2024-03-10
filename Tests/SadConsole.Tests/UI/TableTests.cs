@@ -275,12 +275,12 @@ public class TableTests : TableTestsBase
 
         Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-        Assert.AreEqual(Table.VerticalScrollBar.Maximum, extraRowsOffScreen);
+        Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, extraRowsOffScreen);
         Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
 
         // Increment
         int totalHeight = 0;
-        int maximum = Table.VerticalScrollBar.Maximum;
+        int maximum = Table.VerticalScrollBar.MaximumValue;
         for (int i = 0; i < maximum; i++)
         {
             totalHeight += GetLastVisibleCellSize(Table, Orientation.Vertical, true);
@@ -288,7 +288,7 @@ public class TableTests : TableTestsBase
             Table.VerticalScrollBar.Value += 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         }
 
         // Decrement
@@ -299,7 +299,7 @@ public class TableTests : TableTestsBase
             Table.VerticalScrollBar.Value -= 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         }
 
         Assert.AreEqual(Table.StartRenderYPos, 0);
@@ -319,12 +319,12 @@ public class TableTests : TableTestsBase
 
         Table.UpdateAndRedraw(new System.TimeSpan());
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, extraColumnsOffScreen);
+        Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, extraColumnsOffScreen);
         Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
 
         // Increment
         int totalWidth = 0;
-        int maximum = Table.HorizontalScrollBar.Maximum;
+        int maximum = Table.HorizontalScrollBar.MaximumValue;
         for (int i = 0; i < maximum; i++)
         {
             totalWidth += GetLastVisibleCellSize(Table, Orientation.Horizontal, true);
@@ -332,7 +332,7 @@ public class TableTests : TableTestsBase
             Table.HorizontalScrollBar.Value += 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         }
 
         // Decrement
@@ -343,7 +343,7 @@ public class TableTests : TableTestsBase
             Table.HorizontalScrollBar.Value -= 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         }
 
         Assert.AreEqual(Table.StartRenderXPos, 0);
@@ -370,7 +370,7 @@ public class TableTests : TableTestsBase
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         Assert.AreEqual(Table.VerticalScrollBar.Value, 0);
 
         // Increment
@@ -382,7 +382,7 @@ public class TableTests : TableTestsBase
             Table.VerticalScrollBar.Value += 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         }
 
         // Decrement
@@ -393,7 +393,7 @@ public class TableTests : TableTestsBase
             Table.VerticalScrollBar.Value -= 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderYPos, totalHeight);
-            Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         }
 
         Assert.AreEqual(Table.StartRenderYPos, 0);
@@ -420,7 +420,7 @@ public class TableTests : TableTestsBase
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         Assert.AreEqual(Table.HorizontalScrollBar.Value, 0);
 
         // Increment
@@ -432,7 +432,7 @@ public class TableTests : TableTestsBase
             Table.HorizontalScrollBar.Value += 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         }
 
         for (int i = maximum; i > 0; i--)
@@ -442,7 +442,7 @@ public class TableTests : TableTestsBase
             Table.HorizontalScrollBar.Value -= 1;
             Table.UpdateAndRedraw(new System.TimeSpan());
             Assert.AreEqual(Table.StartRenderXPos, totalWidth);
-            Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+            Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         }
 
         Assert.AreEqual(Table.StartRenderXPos, 0);
@@ -470,18 +470,18 @@ public class TableTests : TableTestsBase
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
         Assert.AreEqual(Table.IsHorizontalScrollBarVisible, true);
-        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
         Assert.AreEqual(Table.HorizontalScrollBar.Value, 1);
 
         // Resize existing cell
         Table.Cells[0, 1].Resize(columnSize: 9);
         Table.Cells[0, 2].Resize(columnSize: 16);
         Table.UpdateAndRedraw(new System.TimeSpan());
-        Assert.AreNotEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreNotEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
 
         // Update max
         maximum = GetMaximumScrollBarItems(Table, Orientation.Horizontal);
-        Assert.AreEqual(Table.HorizontalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.HorizontalScrollBar.MaximumValue, maximum);
     }
 
     [TestMethod]
@@ -506,18 +506,18 @@ public class TableTests : TableTestsBase
 
         int maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
         Assert.AreEqual(Table.IsVerticalScrollBarVisible, true);
-        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
         Assert.AreEqual(Table.VerticalScrollBar.Value, 1);
 
         // Resize existing cell
         Table.Cells[1, 0].Resize(rowSize: 9);
         Table.Cells[2, 0].Resize(rowSize: 16);
         Table.UpdateAndRedraw(new System.TimeSpan());
-        Assert.AreNotEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreNotEqual(Table.VerticalScrollBar.MaximumValue, maximum);
 
         // Update max
         maximum = GetMaximumScrollBarItems(Table, Orientation.Vertical);
-        Assert.AreEqual(Table.VerticalScrollBar.Maximum, maximum);
+        Assert.AreEqual(Table.VerticalScrollBar.MaximumValue, maximum);
     }
 
     [TestMethod]
@@ -606,7 +606,7 @@ public abstract class TableTestsBase
             foreach (Table.Cell cell in group)
             {
                 bool partialOverlap = false;
-                int indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
+                int indexSizeCell = isRowType ? cell._position.Y : cell._position.X;
                 if (!increment)
                 {
                     // Check if cell position is the last cell on screen
@@ -622,7 +622,7 @@ public abstract class TableTestsBase
                     {
                         // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                         // which means its not off screen
-                        int realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+                        int realCellPosition = isRowType ? (cell._position.Y + cell.Height) : (cell._position.X + cell.Width);
                         if (realCellPosition > (isRowType ? table.Height : table.Width))
                         {
                             partialOverlap = true;

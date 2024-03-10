@@ -143,6 +143,8 @@ public partial class Table
         }
 
         IsDirty = false;
+
+        base.UpdateAndRedraw(time);
     }
 
     protected void GetOldRowAndColumnValues(List<((int x, int y), (int row, int col))>? fakeCells, Point cellPosition, ref int oldRow, ref int oldCol)
