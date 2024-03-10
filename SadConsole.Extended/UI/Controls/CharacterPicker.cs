@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using SadConsole.Input;
+using SadRogue.Primitives;
 using System;
 
 namespace SadConsole.UI.Controls;
@@ -109,6 +110,28 @@ public class CharacterPicker : SurfaceViewer
         }
     }
 
+    public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, IFont characterFont, int visibleColumns, int visibleRows, int fontColumns)
+    : base(visibleColumns, visibleRows, new CellSurface(fontColumns, characterFont.TotalGlyphs / fontColumns) { })
+    {
+        AlternateFont = characterFont;
+        UseMouse = true;
+
+        SelectedGlyphForeground = selectedCharacterColor;
+        GlyphForeground = foreground;
+        GlyphBackground = fill;
+        HighlightSelectedCharacter = true;
+        HighlightSelectedCharacterWithEffect = true;
+
+        SetupEffect();
+
+        ScrollBarMode = ScrollBarModes.AsNeeded;
+
+        for (int i = 0; i < Surface.Count; i++)
+            Surface[i].Glyph = i;
+
+        RefreshSelectedGlyph();
+    }
+
     /// <summary>
     /// Creates a new picker control with the specified font.
     /// </summary>
@@ -121,7 +144,6 @@ public class CharacterPicker : SurfaceViewer
     public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, SadFont characterFont, int visibleColumns, int visibleRows)
         : base(visibleColumns, visibleRows, new CellSurface(characterFont.Columns, characterFont.Rows) { })
     {
-        //_characterSurface.AlternateFont = characterFont;
         AlternateFont = characterFont;
         UseMouse = true;
 
@@ -131,11 +153,18 @@ public class CharacterPicker : SurfaceViewer
         HighlightSelectedCharacter = true;
         HighlightSelectedCharacterWithEffect = true;
 
-        //_characterSurface = new SadConsole.UI.Controls.DrawingSurface(16, 16);
-        //_characterSurface.DefaultBackground = fill;
-        //_characterSurface.DefaultForeground = foreground;
-        //_characterSurface.Clear();
+        SetupEffect();
 
+        ScrollBarMode = ScrollBarModes.AsNeeded;
+
+        for (int i = 0; i < Surface.Count; i++)
+            Surface[i].Glyph = i;
+
+        RefreshSelectedGlyph();
+    }
+
+    private void SetupEffect()
+    {
         _selectedCharEffect = new SadConsole.Effects.Fade()
         {
             FadeForeground = true,
@@ -148,24 +177,22 @@ public class CharacterPicker : SurfaceViewer
             Repeat = true,
             RestoreCellOnRemoved = true
         };
-
-        ScrollBarMode = ScrollBarModes.AsNeeded;
-
-        for (int i = 0; i < Surface.Count; i++)
-            Surface[i].Glyph = i;
-
-        RefreshSelectedGlyph();
     }
 
     /// <inheritdoc/>
     protected override void OnMouseIn(ControlMouseState info)
     {
         // If the mouse is in the area of the child surface content, check for click
-        if (!MouseState_EnteredWithButtonDown && info.IsMouseOver && info.OriginalMouseState.Mouse.LeftButtonDown)
+        if ((!MouseState_EnteredWithButtonDown || Parent.Host.CapturedControl == this) && info.IsMouseOver && info.OriginalMouseState.Mouse.LeftButtonDown)
         {
             if (!UseFullClick)
+            {
+                Parent.Host.CaptureControl(this);
                 SelectedCharacter = Surface[info.MousePosition.Add(Surface.ViewPosition).ToIndex(Surface.Width)].Glyph;
+            }
         }
+        else if (Parent.Host.CapturedControl == this)
+            Parent.Host.ReleaseControl();
 
         base.OnMouseIn(info);
     }
@@ -177,6 +204,18 @@ public class CharacterPicker : SurfaceViewer
             SelectedCharacter = Surface[info.MousePosition.Add(Surface.ViewPosition).ToIndex(Surface.Width)].Glyph;
 
         base.OnLeftMouseClicked(info);
+    }
+
+    /// <inheritdoc/>
+    public override bool ProcessMouse(MouseScreenObjectState state)
+    {
+        if (Parent?.Host?.CapturedControl == this && !state.Mouse.LeftButtonDown)
+            Parent.Host.ReleaseControl();
+
+        if (state.Mouse.ScrollWheelValueChange != 0)
+            return VerticalScroller.ProcessMouseWheel(state);
+
+        return base.ProcessMouse(state);
     }
 
     /// <inheritdoc/>

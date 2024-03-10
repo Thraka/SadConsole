@@ -241,10 +241,9 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public override bool ProcessKeyboard(Keyboard keyboard)
     {
-        if (keyboard.IsKeyDown(Keys.F2))
+        if (keyboard.IsKeyPressed(Keys.F2))
         {
-            CharacterSelectWindow window = new(15, 20);
-            window.Show(true);
+            UI.Windows.GlyphSelectPopup.Show(Font, FontSize);
             return true;
         }
 
