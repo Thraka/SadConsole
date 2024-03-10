@@ -44,7 +44,7 @@ public partial class Table
             int columns = 0;
 
             // Check if entire row is !IsVisible, then skip this row index entirely
-            var entireRowNotVisible = IsEntireRowOrColumnNotVisible(rowIndex, Table.TableCells.Layout.LayoutType.Row);
+            bool entireRowNotVisible = IsEntireRowOrColumnNotVisible(rowIndex, Table.TableCells.Layout.LayoutType.Row);
 
             int colIndexPos = Cells.GetIndexAtCellPosition(StartRenderXPos, Table.TableCells.Layout.LayoutType.Column, out _);
             int colIndex = IsHorizontalScrollBarVisible ? colIndexPos : 0;
@@ -103,13 +103,13 @@ public partial class Table
                 if (cell == null && DrawFakeCells)
                 {
                     cell = Table.Cell.InternalCreate(rowIndex, colIndex, this, string.Empty, addToTableIfModified: false);
-                    cell.Position = cellPosition;
+                    cell._position = cellPosition;
                     cell._row = oldRow != -1 ? oldRow : rowIndex;
                     cell._column = oldCol != -1 ? oldCol : colIndex;
                 }
                 else if (cell != null)
                 {
-                    cell.Position = cellPosition;
+                    cell._position = cellPosition;
                     cell._row = oldRow != -1 ? oldRow : rowIndex;
                     cell._column = oldCol != -1 ? oldCol : colIndex;
                 }
@@ -151,7 +151,7 @@ public partial class Table
         {
             foreach (Table.Cell cellV in Cells)
             {
-                if (cellV.Position == cellPosition)
+                if (cellV._position == cellPosition)
                 {
                     oldRow = cellV.Row;
                     oldCol = cellV.Column;
@@ -265,8 +265,8 @@ public partial class Table
         {
             for (int y = 0; y < height; y++)
             {
-                int colIndex = cell.Position.X + x;
-                int rowIndex = cell.Position.Y + y;
+                int colIndex = cell._position.X + x;
+                int rowIndex = cell._position.Y + y;
                 if (!Surface.IsValidCell(colIndex, rowIndex)) continue;
                 if (adjustVisibility)
                     Surface[colIndex, rowIndex].IsVisible = cell.IsVisible;
@@ -345,7 +345,7 @@ public partial class Table
                     index = 0;
                     continue;
                 }
-                Surface.SetGlyph(startPosX + cell.Position.X + index++, startPosY + cell.Position.Y + yIndex, character);
+                Surface.SetGlyph(startPosX + cell._position.X + index++, startPosY + cell._position.Y + yIndex, character);
             }
             if (index != 0)
                 yIndex++;
@@ -354,10 +354,10 @@ public partial class Table
 
     protected static void GetTotalCellSize(Table.Cell cell, int width, int height, out int totalWidth, out int totalHeight)
     {
-        int startX = cell.Position.X;
-        int startY = cell.Position.Y;
-        int endX = cell.Position.X + width;
-        int endY = cell.Position.Y + height;
+        int startX = cell._position.X;
+        int startY = cell._position.Y;
+        int endX = cell._position.X + width;
+        int endY = cell._position.Y + height;
         totalWidth = endX - startX;
         totalHeight = endY - startY;
     }

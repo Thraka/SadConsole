@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -16,7 +15,8 @@ public partial class Table
         /// Contains the real position value when other cells are not being rendered
         /// This is used to obtain the real cell from mouse interactions.
         /// </summary>
-        internal Point Position;
+        internal Point _position;
+
         /// <summary>
         /// Contains the real row value and column value when other cells are not being rendered
         /// This is used to obtain the real cell from mouse interactions.

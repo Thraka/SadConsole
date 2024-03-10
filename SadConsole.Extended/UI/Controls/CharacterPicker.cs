@@ -17,7 +17,7 @@ public class CharacterPicker : SurfaceViewer
     /// <summary>
     /// Raised when the <see cref="SelectedCharacter"/> property changes.
     /// </summary>
-    public event EventHandler<ValueChangedEventArgs<int>> SelectedCharacterChanged;
+    public event EventHandler<ValueChangedEventArgs<int>>? SelectedCharacterChanged;
 
     /// <summary>
     /// When <see langword="true"/>, indicates that the control should use a mouse click to select a new character; otherwise <see langword="false"/> to indicate that just having the mouse down will select a new character.
@@ -97,7 +97,7 @@ public class CharacterPicker : SurfaceViewer
             if (_selectedChar == value) return;
             if (value < 0 || value >= Surface.Count) return;
 
-            var old = _selectedChar;
+            int old = _selectedChar;
             _selectedChar = value;
 
             OldCharacterLocation = Point.FromIndex(old, Surface.Width);
@@ -110,6 +110,16 @@ public class CharacterPicker : SurfaceViewer
         }
     }
 
+    /// <summary>
+    /// Creates a new character picker control.
+    /// </summary>
+    /// <param name="foreground">Foreground color of all the glyphs.</param>
+    /// <param name="fill">Background color of all the glyphs.</param>
+    /// <param name="selectedCharacterColor">The foreground color displayed on the selected glyph.</param>
+    /// <param name="characterFont">The font used to display the glyphs.</param>
+    /// <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
+    /// <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
+    /// <param name="fontColumns">How many columns are defined in the font file.</param>
     public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, IFont characterFont, int visibleColumns, int visibleRows, int fontColumns)
     : base(visibleColumns, visibleRows, new CellSurface(fontColumns, characterFont.TotalGlyphs / fontColumns) { })
     {
@@ -135,10 +145,10 @@ public class CharacterPicker : SurfaceViewer
     /// <summary>
     /// Creates a new picker control with the specified font.
     /// </summary>
-    /// <param name="foreground">The default foreground for glyphs.</param>
-    /// <param name="fill">The default backround for glyphs.</param>
-    /// <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
-    /// <param name="characterFont">The font to use with the control.</param>
+    /// <param name="foreground">Foreground color of all the glyphs.</param>
+    /// <param name="fill">Background color of all the glyphs.</param>
+    /// <param name="selectedCharacterColor">The foreground color displayed on the selected glyph.</param>
+    /// <param name="characterFont">The font used to display the glyphs.</param>
     /// <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
     /// <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
     public CharacterPicker(Color foreground, Color fill, Color selectedCharacterColor, SadFont characterFont, int visibleColumns, int visibleRows)
@@ -183,15 +193,15 @@ public class CharacterPicker : SurfaceViewer
     protected override void OnMouseIn(ControlMouseState info)
     {
         // If the mouse is in the area of the child surface content, check for click
-        if ((!MouseState_EnteredWithButtonDown || Parent.Host.CapturedControl == this) && info.IsMouseOver && info.OriginalMouseState.Mouse.LeftButtonDown)
+        if ((!MouseState_EnteredWithButtonDown || Parent!.Host!.CapturedControl == this) && info.IsMouseOver && info.OriginalMouseState.Mouse.LeftButtonDown)
         {
             if (!UseFullClick)
             {
-                Parent.Host.CaptureControl(this);
+                Parent!.Host!.CaptureControl(this);
                 SelectedCharacter = Surface[info.MousePosition.Add(Surface.ViewPosition).ToIndex(Surface.Width)].Glyph;
             }
         }
-        else if (Parent.Host.CapturedControl == this)
+        else if (Parent?.Host?.CapturedControl == this)
             Parent.Host.ReleaseControl();
 
         base.OnMouseIn(info);
@@ -221,7 +231,7 @@ public class CharacterPicker : SurfaceViewer
     /// <inheritdoc/>
     protected override ICellSurface CreateControlSurface()
     {
-        CellSurface surface = new CellSurface(Width, Height)
+        CellSurface surface = new(Width, Height)
         {
             DefaultForeground = GlyphForeground,
             DefaultBackground = GlyphBackground

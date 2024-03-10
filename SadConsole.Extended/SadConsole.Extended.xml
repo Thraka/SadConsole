@@ -46,7 +46,10 @@
              <remarks>
              Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
             
-             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="!:IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.C64KeyboardHandler._attachedCursor"/> property, caching reference to it.
+             You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>,
+             the first instance of a cursor in the <see cref="P:SadConsole.Components.IComponentHost.SadComponents"/> collection is used.
+             If there is no cursor, an exception is thrown.
              </remarks>
         </member>
         <member name="M:SadConsole.Components.C64KeyboardHandler.PrintPrompt">
@@ -60,6 +63,11 @@
         <member name="T:SadConsole.Components.ClassicConsoleKeyboardHandler">
             <summary>
             A classic console/terminal prompt keyboard handler.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.IsReady">
+            <summary>
+            A flag that when set to true prints a new line and the prompt.
             </summary>
         </member>
         <member name="P:SadConsole.Components.ClassicConsoleKeyboardHandler.Prompt">
@@ -935,6 +943,9 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.CreateControlSurface">
@@ -2006,6 +2017,46 @@
         </member>
         <member name="M:SadConsole.UI.Windows.ColorPickerPopup.Show(System.Boolean)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Windows.GlyphSelectPopup">
+            <summary>
+            A popup window that displays the glyphs of a font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Windows.GlyphSelectPopup.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Shows a modal version of this popup.
+            </summary>
+            <param name="font">The font to display.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.GlyphSelectPopup.AddRootComponent(SadConsole.Input.Keys)">
+            <summary>
+            Adds a root component to SadConsole that displays the popup window when the specified key is pressed.
+            </summary>
+            <param name="key">The key to display the popup with.</param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.GlyphSelectPopup.AddRootComponent(SadConsole.Input.Keys,SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Adds a root component to SadConsole that displays the popup window with a specific font and font size, when the specified key is pressed.
+            </summary>
+            <param name="key">The key to display the popup with.</param>
+            <param name="font">The font to display.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.GlyphSelectPopup.#ctor(System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new instance of this popup with the specified width, height, font, and font size.
+            </summary>
+            <param name="width">The width of the window.</param>
+            <param name="height">The height of the window.</param>
+            <param name="font">The font to use for the window and character picker.</param>
+            <param name="fontSize">The font size of the window.</param>
+        </member>
+        <member name="M:SadConsole.UI.Windows.GlyphSelectPopup.DrawBorder">
+            <summary>
+            Redraws the border, title, and lines.
+            </summary>
         </member>
         <member name="T:SadConsole.UI.Windows.OtherColorsPopup">
             <summary>

@@ -76,10 +76,8 @@ public class GlyphSelectPopup : Window
 
         Colors themeColors = Controls.GetThemeColors();
 
-        ColoredGlyph fillStyle = new ColoredGlyph(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
-        ColoredGlyph borderStyle = new ColoredGlyph(themeColors.Lines, fillStyle.Background, 0);
-
-        CharacterPicker picker = (CharacterPicker)Controls["picker"];
+        ColoredGlyph fillStyle = new(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
+        ColoredGlyph borderStyle = new(themeColors.Lines, fillStyle.Background, 0);
 
         Surface.DrawLine((1, Height - 3), (Width - 2, Height - 3), BorderLineStyle[0], borderStyle.Foreground, borderStyle.Background);
         Surface.ConnectLines(BorderLineStyle);
@@ -89,7 +87,7 @@ public class GlyphSelectPopup : Window
     {
         // Clear the text area
         Colors themeColors = Controls.GetThemeColors();
-        ColoredGlyph fillStyle = new ColoredGlyph(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
+        ColoredGlyph fillStyle = new(themeColors.ControlHostForeground, themeColors.ControlHostBackground);
         Surface.DrawLine((1, Height - 2), (Width - 2, Height - 2), 0, fillStyle.Foreground, fillStyle.Background);
 
         // Print the text
@@ -102,11 +100,9 @@ public class GlyphSelectPopup : Window
     {
         private GlyphSelectPopup _popup;
         private Input.Keys _key;
-        //private Input.Keyboard _keyboard;
 
         public GlyphSelectRootComponent(Input.Keys key, IFont font, Point fontSize)
         {
-            //_keyboard = new();
             _key = key;
             _popup = new(19, 19, font, fontSize);
         }

@@ -1,5 +1,6 @@
 ﻿using SadRogue.Primitives;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SadConsole.UI.Controls;
@@ -12,7 +13,7 @@ public class ColorBar : ControlBase
     /// <summary>
     /// Raised when the <see cref="SelectedColor"/> value changes.
     /// </summary>
-    public event EventHandler ColorChanged;
+    public event EventHandler? ColorChanged;
 
     /// <summary>
     /// Internal use by theme.
@@ -34,6 +35,8 @@ public class ColorBar : ControlBase
     public Color StartingColor
     {
         get => _startingColor;
+
+        [MemberNotNull(nameof(_colorSteps))]
         set
         {
             _startingColor = value;
@@ -49,6 +52,8 @@ public class ColorBar : ControlBase
     public Color EndingColor
     {
         get => _endingColor;
+
+        [MemberNotNull(nameof(_colorSteps))]
         set
         {
             _endingColor = value;
@@ -115,7 +120,7 @@ public class ColorBar : ControlBase
         // Create a color weight for every cell compared to the color stop
         for (int x = 0; x < Width; x++)
         {
-            ColorMine.ColorSpaces.Rgb rgbColor = new ColorMine.ColorSpaces.Rgb() { R = _colorSteps[x].R, G = _colorSteps[x].G, B = _colorSteps[x].B };
+            ColorMine.ColorSpaces.Rgb rgbColor = new() { R = _colorSteps[x].R, G = _colorSteps[x].G, B = _colorSteps[x].B };
             ColorMine.ColorSpaces.Cmy cmyColor = rgbColor.To<ColorMine.ColorSpaces.Cmy>();
 
             colorWeights[x] = new Tuple<Color, double, int>(_colorSteps[x], rgbColorStop.Compare(cmyColor, new ColorMine.ColorSpaces.Comparisons.Cie1976Comparison()), x);
@@ -131,7 +136,7 @@ public class ColorBar : ControlBase
     {
         base.OnMouseIn(info);
 
-        if (Parent.Host.CapturedControl == null)
+        if (Parent!.Host!.CapturedControl == null)
         {
             if (info.OriginalMouseState.Mouse.LeftButtonDown)
             {
@@ -149,7 +154,7 @@ public class ColorBar : ControlBase
     /// <inheritdoc/>
     public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
     {
-        if (Parent.Host.CapturedControl == this)
+        if (Parent?.Host?.CapturedControl == this)
         {
             if (info.Mouse.LeftButtonDown == false)
                 Parent.Host.ReleaseControl();

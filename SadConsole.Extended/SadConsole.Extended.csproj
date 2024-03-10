@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
     <Version>10.0.2</Version>
@@ -41,6 +42,8 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +55,10 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>SadConsole.Tests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

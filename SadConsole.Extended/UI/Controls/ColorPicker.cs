@@ -15,7 +15,7 @@ public class ColorPicker : ControlBase
     /// <summary>
     /// Raised when <see cref="SelectedColor"/> changes value.
     /// </summary>
-    public event EventHandler SelectedColorChanged;
+    public event EventHandler? SelectedColorChanged;
 
     /// <summary>
     /// The color selected by the user. A shade of <see cref="MasterColor"/>.
@@ -85,7 +85,7 @@ public class ColorPicker : ControlBase
         _selectedColorPosition = new Point(Width - 1, 0);
         Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Glyph = 4;
 
-        this.IsDirty = true;
+        IsDirty = true;
     }
 
     /// <inheritdoc/>
@@ -93,7 +93,7 @@ public class ColorPicker : ControlBase
     {
         base.OnMouseIn(info);
 
-        if (Parent.Host.CapturedControl == null)
+        if (Parent!.Host!.CapturedControl == null)
         {
             if (info.OriginalMouseState.Mouse.LeftButtonDown)
             {
@@ -112,20 +112,20 @@ public class ColorPicker : ControlBase
     /// <inheritdoc/>
     public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
     {
-        if (Parent.Host.CapturedControl == this)
+        if (Parent?.Host?.CapturedControl == this)
         {
             if (info.Mouse.LeftButtonDown == false)
                 Parent.Host.ReleaseControl();
             else
             {
-                var newState = new ControlMouseState(this, info);
-                var location = newState.MousePosition;
+                ControlMouseState newState = new(this, info);
+                Point location = newState.MousePosition;
 
                 //if (info.ConsolePosition.X >= Position.X && info.ConsolePosition.X < Position.X + Width)
                 if (location.X >= -6 && location.X <= Width + 5 && location.Y > -4 && location.Y < Height + 3)
                 {
                     Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Glyph = 0;
-                    _selectedColorPosition = new Point(Math.Clamp(location.X, 0, Width - 1), Math.Clamp(location.Y, 0, Height - 1));
+                    _selectedColorPosition = (Math.Clamp(location.X, 0, Width - 1), Math.Clamp(location.Y, 0, Height - 1));
                     SelectedColorSafe = Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Background;
                     Surface[_selectedColorPosition.X, _selectedColorPosition.Y].Glyph = 4;
                 }
@@ -137,6 +137,7 @@ public class ColorPicker : ControlBase
         return base.ProcessMouse(info);
     }
 
+    /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         if (!IsDirty) return;

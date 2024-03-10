@@ -333,7 +333,7 @@ public partial class Table : CompositeControl
         if (Cells.Count == 0)
             return new HashSet<int>();
 
-        HashSet<int> indexes = new HashSet<int>();
+        HashSet<int> indexes = new();
 
         if (indexType == TableCells.Layout.LayoutType.Row)
             foreach (Cell item in Cells)
@@ -423,7 +423,7 @@ public partial class Table : CompositeControl
 
     internal bool IsEntireRowOrColumnNotVisible(int index, TableCells.Layout.LayoutType type)
     {
-        Cells._hiddenIndexes.TryGetValue(type, out var indexes);
+        Cells._hiddenIndexes.TryGetValue(type, out HashSet<int>? indexes);
         return indexes != null && indexes.Contains(index);
     }
 
@@ -464,7 +464,7 @@ public partial class Table : CompositeControl
                 int total = orientation == Orientation.Vertical ? VisibleRowsTotal : VisibleColumnsTotal;
                 int defaultIndexSize = orientation == Orientation.Vertical ? DefaultCellSize.Y : DefaultCellSize.X;
 
-                var indexSize = (totalIndexSize - total) / defaultIndexSize;
+                int indexSize = (totalIndexSize - total) / defaultIndexSize;
                 scrollBar.Value = totalIndexSize < max ? 0 : indexSize > scrollBar.MaximumValue ? scrollBar.MaximumValue : indexSize;
             }
         }
@@ -541,7 +541,7 @@ public partial class Table : CompositeControl
             foreach (Cell cell in group)
             {
                 bool partialOverlap = false;
-                int indexSizeCell = isRowType ? cell.Position.Y : cell.Position.X;
+                int indexSizeCell = isRowType ? cell._position.Y : cell._position.X;
                 if (!increment)
                 {
                     // Check if cell position is the last cell on screen
@@ -557,7 +557,7 @@ public partial class Table : CompositeControl
                     {
                         // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                         // which means its not off screen
-                        int realCellPosition = isRowType ? (cell.Position.Y + cell.Height) : (cell.Position.X + cell.Width);
+                        int realCellPosition = isRowType ? (cell._position.Y + cell.Height) : (cell._position.X + cell.Width);
 
                         if (realCellPosition > (isRowType ? Height : Width))
                             partialOverlap = true;
@@ -608,7 +608,7 @@ public partial class Table : CompositeControl
                 {
                     // A fake cell doesn't know if it should be selected if the row is hidden
                     cell = Cell.InternalCreate(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, this, string.Empty);
-                    cell.Position = Cells.GetCellPosition(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, out _, out _,
+                    cell._position = Cells.GetCellPosition(mousePosCellIndex.Value.Y, mousePosCellIndex.Value.X, out _, out _,
                                                 IsVerticalScrollBarVisible ? StartRenderYPos : 0,
                                                 IsHorizontalScrollBarVisible ? StartRenderXPos : 0);
                 }
@@ -736,7 +736,7 @@ public partial class Table : CompositeControl
                     IsVerticalScrollBarVisible ? StartRenderYPos : 0, IsHorizontalScrollBarVisible ? StartRenderXPos : 0);
                 if (IsMouseWithinCell(mousePosition, position.Y, position.X, columnSize, rowSize))
                 {
-                    var cell = Cells.GetIfExists(rowValue, colValue, false);
+                    Cell? cell = Cells.GetIfExists(rowValue, colValue, false);
                     if (cell == null || (cell._row == rowValue && cell._column == colValue && cell.IsVisible))
                         return cell != null ? (cell.Column, cell.Row) : (colValue, rowValue);
                 }
