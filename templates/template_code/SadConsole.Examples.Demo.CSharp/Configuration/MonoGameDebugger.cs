@@ -2,15 +2,18 @@
 
 internal static class MonoGameDebuggerExtensions
 {
-    public static Builder KeyhookMonoGameDebugger(this Builder builder)
+    public static Input.Keys Key { get; set; }
+
+    public static Builder KeyhookMonoGameDebugger(this Builder builder, Input.Keys key)
     {
+        Key = key;
         builder.GetOrCreateConfig<MonoGameDebugger>();
         return builder;
     }
 
     internal static void Game_FrameUpdate(object? sender, GameHost e)
     {
-        if (e.Keyboard.IsKeyPressed(Input.Keys.F12))
+        if (e.Keyboard.IsKeyPressed(Key))
         {
 #if PROJREFS && MONOGAME && !FNA
             SadConsole.Debug.MonoGame.Debugger.Start();

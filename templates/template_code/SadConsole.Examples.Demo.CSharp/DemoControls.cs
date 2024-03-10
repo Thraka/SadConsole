@@ -239,18 +239,6 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         OnInvalidated();
     }
 
-    public override bool ProcessKeyboard(Keyboard keyboard)
-    {
-        if (keyboard.IsKeyPressed(Keys.F2))
-        {
-            UI.Windows.GlyphSelectPopup.Show(Font, FontSize);
-            return true;
-        }
-
-        // Allow the controls to process the keyboard
-        return base.ProcessKeyboard(keyboard);
-    }
-
     protected void OnInvalidated()
     {
         var colors = Controls.GetThemeColors();
