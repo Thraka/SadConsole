@@ -146,12 +146,16 @@ public abstract class CompositeControl : ControlBase, IContainer
     }
 
     /// <inheritdoc/>
-    public bool HasNamedControl(string name) =>
-        HasNamedControl(name, out _);
+    bool IContainer.HasNamedControl(string name) =>
+        NamedControls.TryGetValue(name, out _);
 
     /// <inheritdoc/>
-    public bool HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
+    bool IContainer.HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
         NamedControls.TryGetValue(name, out control);
+
+    /// <inheritdoc/>
+    ControlBase IContainer.GetNamedControl(string name) =>
+        NamedControls[name];
 
     ControlHost? IContainer.Host => Parent?.Host;
 
