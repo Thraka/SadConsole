@@ -12,6 +12,8 @@ namespace SadConsole.UI.Controls;
 [DataContract]
 public partial class NumberBox : TextBox
 {
+    private bool _showUpDownButtons;
+
     /// <summary>
     /// Indicates that the input box (when numeric) will accept decimal points.
     /// </summary>
@@ -57,6 +59,45 @@ public partial class NumberBox : TextBox
     [DataMember]
     public double DefaultDecimalValue { get; set; }
 
+    /// <summary>
+    /// When true, displays up and down buttons at the end of the box.
+    /// </summary>
+    [DataMember]
+    public bool ShowUpDownButtons
+    {
+        get => _showUpDownButtons;
+        set
+        {
+            _showUpDownButtons = value;
+            UseDifferentTextAreaWidth = value;
+            TextAreaWidth = Width - 2;
+        }
+    }
+
+    /// <summary>
+    /// Sets the up button's value step.
+    /// </summary>
+    [DataMember]
+    public long UpButtonStep { get; set; } = 1;
+
+    /// <summary>
+    /// Sets the down button's value step.
+    /// </summary>
+    [DataMember]
+    public long DownButtonStep { get; set; } = 1;
+
+    /// <summary>
+    /// Sets the up button's value step when <see cref="AllowDecimal"/> is on.
+    /// </summary>
+    [DataMember]
+    public double UpButtonStepDecimal { get; set; } = 1;
+
+    /// <summary>
+    /// Sets the down button's value step when <see cref="AllowDecimal"/> is on.
+    /// </summary>
+    [DataMember]
+    public double DownButtonStepDecimal { get; set; } = 1;
+
     private bool UseMinMax => NumberMaximum != 0 || NumberMinimum != 0;
 
     /// <summary>
@@ -91,7 +132,7 @@ public partial class NumberBox : TextBox
     /// Creates a new instance of the input box.
     /// </summary>
     /// <param name="width">The width of the input box.</param>
-    public NumberBox(int width) : base(width) { }
+    public NumberBox(int width) : base(width) { Text = "0"; }
     #endregion
 
     private void FixNumber()
@@ -116,6 +157,62 @@ public partial class NumberBox : TextBox
         }
 
         IsDirty = true;
+    }
+
+    public void IncreaseNumber(long amount)
+    {
+        if (!long.TryParse(_text, out long value))
+        {
+            FixNumber();
+            long.TryParse(_text, out value);
+        }
+
+        value += amount;
+        Text = value.ToString();
+        FixNumber();
+    }
+
+    public void IncreaseNumber(double amount)
+    {
+        if (!AllowDecimal) throw new Exception($"Number box doesn't allow decimals. Set {nameof(AllowDecimal)} to true.");
+
+        if (!double.TryParse(_text, out double value))
+        {
+            FixNumber();
+            double.TryParse(_text, out value);
+        }
+
+        value += amount;
+        Text = value.ToString();
+        FixNumber();
+    }
+
+    public void DecreaseNumber(long amount)
+    {
+        if (!long.TryParse(_text, out long value))
+        {
+            FixNumber();
+            long.TryParse(_text, out value);
+        }
+
+        value -= amount;
+        Text = value.ToString();
+        FixNumber();
+    }
+
+    public void DecreaseNumber(double amount)
+    {
+        if (!AllowDecimal) throw new Exception($"Number box doesn't allow decimals. Set {nameof(AllowDecimal)} to true.");
+
+        if (!double.TryParse(_text, out double value))
+        {
+            FixNumber();
+            double.TryParse(_text, out value);
+        }
+
+        value -= amount;
+        Text = value.ToString();
+        FixNumber();
     }
 
     /// <inheritdoc/>
@@ -218,6 +315,65 @@ public partial class NumberBox : TextBox
         }
 
         return false;
+    }
+
+    public override bool ProcessMouse(MouseScreenObjectState state)
+    {
+        State_IsMouseOverUpButton = false;
+        State_IsMouseOverDownButton = false;
+
+        if (ShowUpDownButtons)
+        {
+            ControlMouseState controlMouseState = new(this, state);
+
+            if (controlMouseState.IsMouseOver)
+            {
+                State_IsMouseOverUpButton = controlMouseState.MousePosition.X == Width - 1;
+                State_IsMouseOverDownButton = controlMouseState.MousePosition.X == Width - 2;
+
+                if (state.Mouse.LeftClicked)
+                {
+                    // Unfocus if interacting with the control
+                    if (IsFocused) IsFocused = false;
+
+                    if (State_IsMouseOverUpButton)
+                    {
+                        if (AllowDecimal)
+                            IncreaseNumber(UpButtonStepDecimal);
+                        else
+                            IncreaseNumber(UpButtonStep);
+
+                        return true;
+                    }
+                    else if (State_IsMouseOverDownButton)
+                    {
+                        if (AllowDecimal)
+                            DecreaseNumber(UpButtonStepDecimal);
+                        else
+                            DecreaseNumber(UpButtonStep);
+
+                        return true;
+                    }
+                    else
+                        return base.ProcessMouse(state);
+                }
+
+                return base.ProcessMouse(state); ;
+            }
+            else
+                return base.ProcessMouse(state);
+        }
+        else
+            return base.ProcessMouse(state);
+    }
+
+    protected override void OnResized()
+    {
+        if (ShowUpDownButtons)
+        {
+            TextAreaWidth = Width - 2;
+        }
+        base.OnResized();
     }
 
     /// <summary>

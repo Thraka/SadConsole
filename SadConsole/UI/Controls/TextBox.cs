@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Text;
 using SadConsole.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SadConsole.UI.Controls;
 
@@ -153,8 +154,8 @@ public partial class TextBox : ControlBase
             _caretPos = text.Length;
 
         // Test to see if caret is off edge of box
-        if (_caretPos >= Width)
-            LeftDrawOffset = _caretPos - Width + 1;
+        if (_caretPos >= (UseDifferentTextAreaWidth ? TextAreaWidth : Width))
+            LeftDrawOffset = _caretPos - (UseDifferentTextAreaWidth ? TextAreaWidth : Width) + 1;
         else
             LeftDrawOffset = 0;
 
@@ -285,6 +286,7 @@ public partial class TextBox : ControlBase
     protected override void OnFocused()
     {
         base.OnFocused();
+        _caretPos = _text.Length;
         ValidateCursorPosition(_text);
         IsDirty = true;
     }

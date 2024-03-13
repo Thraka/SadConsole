@@ -6,26 +6,38 @@ using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
-public partial class TextBox
+public partial class NumberBox
 {
     private int _oldCaretPosition;
     private ControlStates _oldState;
     private string _editingText = string.Empty;
 
+    public bool State_IsMouseOverUpButton = false;
+    public bool State_IsMouseOverDownButton = false;
+
     /// <summary>
-    /// The style to use for the carrot.
+    /// The color to use with a <see cref="NumberBox"/> control when <see cref="NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
     /// </summary>
     [DataMember]
-    public Effects.ICellEffect CaretEffect { get; set; }
+    public Color? NumberBoxInvalidNumberForeground { get; set; }
 
-    public bool UseDifferentTextAreaWidth = false;
-    public int TextAreaWidth;
+    /// <summary>
+    /// The glyph for the up button.
+    /// </summary>
+    [DataMember]
+    public int UpButtonGlyph { get; set; } = 30;
+
+    /// <summary>
+    /// The glyph for the down button.
+    /// </summary>
+    [DataMember]
+    public int DownButtonGlyph { get; set; } = 31;
 
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
         // IMPORTANT:
-        // Code fixed here should go into the NumberBox control
+        // Code fixed here should go into the TextBox control
 
         if (Surface.Effects.Count != 0)
         {
@@ -54,6 +66,13 @@ public partial class TextBox
         ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
 
         ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+
+        // TODO: Fix this hack...
+        if (Text.Length != 0 || (Text.Length == 1 && Text[0] != '-'))
+        {
+            if (IsEditingNumberInvalid)
+                appearance.Foreground = NumberBoxInvalidNumberForeground ?? colors.Red;
+        }
 
         if (IsFocused && (Parent?.Host?.ParentConsole?.IsFocused).GetValueOrDefault(false) && !DisableKeyboard)
         {
@@ -92,20 +111,66 @@ public partial class TextBox
                 _editingText = Text;
             }
 
+            if (ShowUpDownButtons)
+            {
+                ColoredGlyphBase normal = ThemeState.GetStateAppearance(State);
+
+                Surface[^1].Glyph = UpButtonGlyph;
+                Surface[^2].Glyph = DownButtonGlyph;
+                Surface[^1].Foreground = normal.Foreground;
+                Surface[^1].Background = normal.Background;
+                Surface[^2].Foreground = normal.Foreground;
+                Surface[^2].Background = normal.Background;
+            }
+
             IsDirty = true;
         }
         else
         {
-            Surface.Effects.RemoveAll();
-            Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
-            _oldState = State;
+            if (ShowUpDownButtons && !Helpers.HasFlag((int)State, (int)ControlStates.Disabled))
+            {
+                ColoredGlyphBase textAreaAppearance = appearance;
 
-            if (Mask == null)
-                Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+                if (State_IsMouseOverUpButton || State_IsMouseOverDownButton)
+                    textAreaAppearance = ThemeState.GetStateAppearance(ControlStates.Normal);
+
+                Surface.Effects.RemoveAll();
+                Surface.Fill(textAreaAppearance.Foreground, textAreaAppearance.Background, textAreaAppearance.Glyph, textAreaAppearance.Mirror);
+
+                if (Mask == null)
+                    Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+                else
+                    Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+
+                Surface[^1].Glyph = UpButtonGlyph;
+                Surface[^2].Glyph = DownButtonGlyph;
+
+                if (State_IsMouseOverUpButton)
+                {
+                    Surface[^1].Foreground = appearance.Foreground;
+                    Surface[^1].Background = appearance.Background;
+                }
+                else if (State_IsMouseOverDownButton)
+                {
+                    Surface[^2].Foreground = appearance.Foreground;
+                    Surface[^2].Background = appearance.Background;
+                }
+            }
             else
-                Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+            {
+                appearance = ThemeState.GetStateAppearance(ControlStates.Normal);
+                Surface.Effects.RemoveAll();
+                Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
+
+                if (Mask == null)
+                    Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+                else
+                    Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+            }
 
             IsDirty = false;
+
+            _oldState = State;
         }
     }
 }

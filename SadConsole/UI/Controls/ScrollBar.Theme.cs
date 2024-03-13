@@ -22,41 +22,44 @@ public partial class ScrollBar : ControlBase
     public override void UpdateAndRedraw(TimeSpan time) =>
         Style.UpdateAndRedraw(this, time);
 
+    /// <summary>
+    /// The drawing code for the scrollbar
+    /// </summary>
     [DataContract]
     public class ThemeStyle
     {
         /// <summary>
-        /// The theme part fot the start button.
+        /// The glyph for the start button when the control is vertical.
         /// </summary>
         [DataMember]
         public int StartButtonVerticalGlyph { get; set; } = 30;
 
         /// <summary>
-        /// The theme part fot the start button.
+        /// The glyph for the end button when the control is vertical.
         /// </summary>
         [DataMember]
         public int EndButtonVerticalGlyph { get; set; } = 31;
 
         /// <summary>
-        /// The theme part fot the start button.
+        /// The glyph for the start button when the control is horizontal.
         /// </summary>
         [DataMember]
         public int StartButtonHorizontalGlyph { get; set; } = 17;
 
         /// <summary>
-        /// The theme part fot the start button.
+        /// The glyph for the end button when the control is horizontal.
         /// </summary>
         [DataMember]
         public int EndButtonHorizontalGlyph { get; set; } = 16;
 
         /// <summary>
-        /// The theme part for the scroll bar bar where the slider is not located.
+        /// The glyph for the scroll bar bar where the slider is not located.
         /// </summary>
         [DataMember]
         public int BarGlyph { get; set; } = 176;
 
         /// <summary>
-        /// The theme part for the scroll bar icon.
+        /// The glyph for the scroll bar icon.
         /// </summary>
         [DataMember]
         public int GripGlyph { get; set; } = 219;
