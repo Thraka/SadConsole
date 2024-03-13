@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using SadConsole.Input;
-using SadConsole.StringParser;
+﻿using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
@@ -127,5 +125,13 @@ class ScrollableConsole : ControlsConsole
             return MessageBuffer.ProcessKeyboard(keyboard);
 
         return false;
+    }
+
+    public override bool ProcessMouse(MouseScreenObjectState state)
+    {
+        if (state.Mouse.ScrollWheelValueChange != 0)
+            return _scrollBar.ProcessMouseWheel(state);
+
+        return base.ProcessMouse(state);
     }
 }

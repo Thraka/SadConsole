@@ -146,10 +146,12 @@ internal class KeyboardHandlers : ControlsConsole
             cursor.NewLine().
                           Print("  Advanced Example: Command Prompt - HELP").NewLine().
                           Print("  =======================================").NewLine().NewLine().
-                          Print("  help      - Display this help info").NewLine().
-                          Print("  ver       - Display version info").NewLine().
-                          Print("  cls       - Clear the screen").NewLine().
-                          Print("  look      - Example adventure game command").NewLine().
+                          Print("  help       - Display this help info").NewLine().
+                          Print("  ver        - Display version info").NewLine().
+                          Print("  cls        - Clear the screen").NewLine().
+                          Print("  look       - Example adventure game command").NewLine().
+                          Print("  ready_test - Displays multiple lines of text printed over time. Input").NewLine().
+                          Print("               processing is disabled while the text is printed").NewLine().
                           Print("  ").NewLine();
         }
         else if (value == "ver")
@@ -180,7 +182,7 @@ internal class KeyboardHandlers : ControlsConsole
 
             _typingInstruction.Position = cursor.Position;
             _typingInstruction.Cursor = cursor;
-            _typingInstruction.TotalTimeToPrint = TimeSpan.FromMilliseconds(500);
+            _typingInstruction.TotalTimeToPrint = TimeSpan.FromMilliseconds(1000);
             _typingInstruction.Finished += _typingInstruction_Finished;
             _typingInstruction.RemoveOnFinished = true;
             keyboardComponent.IsReady = false;
