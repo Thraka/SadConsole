@@ -133,19 +133,32 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         selButton2.PreviousSelection = selButton1;
         selButton2.NextSelection = selButton;
 
-        var input = new NumberBox(10)
+        var txt = new TextBox(10)
         {
             Position = new Point(51, 9),
-            MaxLength = 6,
-            NumberMaximum = 255,
-            AllowDecimal = true
+            Text = "text",
+            Name = "textbox"
+        };
+        Controls.Add(txt);
+
+        var input = new NumberBox(10)
+        {
+            Position = new Point(txt.Position.X, txt.Position.Y + 1),
+            //MaxLength = 6,
+            ShowUpDownButtons = true,
+            //NumberMaximum = 255,
+            AllowDecimal = true,
+            //Text = "25",
+            Name = "numberbox"
         };
         Controls.Add(input);
 
         var password = new TextBox(10)
         {
             Mask = '*',
-            Position = new Point(65, 9)
+            Position = new Point(txt.Position.X, txt.Position.Y + 2),
+            Text = "text",
+            Name = "passwordbox"
         };
         Controls.Add(password);
 
@@ -179,7 +192,8 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         var checkbox = new CheckBox(13, 1)
         {
             Text = "Check box",
-            Position = new Point(51, 13)
+            Position = new Point(51, 15),
+            Name = "checkbox"
         };
         Controls.Add(checkbox);
 
@@ -187,6 +201,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         ComboBox box = new ComboBox(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
         {
             Position = (checkbox.Bounds.MaxExtentX + 4, checkbox.Position.Y),
+            Name = "combobox"
         };
         Controls.Add(box);
 
@@ -245,17 +260,27 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
         Surface.Fill(colors.ControlHostForeground, colors.ControlHostBackground, 0, 0);
 
+        TextBox textbox = (TextBox)Controls.GetNamedControl("textbox");
+        NumberBox numberbox = (NumberBox)Controls.GetNamedControl("numberbox");
+        TextBox passbox = (TextBox)Controls.GetNamedControl("passwordbox");
+
+        this.Print(textbox.Position.X, textbox.Position.Y - 2, "TEXTBOX", colors.YellowDark);
+        this.Print(textbox.Position.X + textbox.Width + 1, textbox.Position.Y, "<- Normal", colors.YellowDark);
+        this.Print(numberbox.Position.X + numberbox.Width + 1, numberbox.Position.Y, "<- Numbers", colors.YellowDark);
+        this.Print(passbox.Position.X + passbox.Width + 1, passbox.Position.Y, "<- Masked", colors.YellowDark);
+
+
         this.Print(1, 1, "BUTTONS", colors.YellowDark);
         this.Print(16, 1, "BARS", colors.YellowDark);
         this.Print(28, 1, "LISTBOX", colors.YellowDark);
         this.Print(28, 10, "RADIO BUTTON", colors.YellowDark);
 
         this.Print(51, 1, "SELECTION BUTTON (UP/DN KEYS)", colors.YellowDark);
-        this.Print(51, 7, "TEXTBOX", colors.YellowDark);
-        this.Print(65, 7, "(WITH MASK)", colors.YellowDark);
 
-        this.Print(51, 11, "CHECKBOX", colors.YellowDark);
-        this.Print(67, 11, "COMBOBOX", colors.YellowDark);
+        CheckBox checkbox = (CheckBox)Controls.GetNamedControl("checkbox");
+        this.Print(checkbox.Position.X, checkbox.Position.Y - 2, "CHECKBOX", colors.YellowDark);
+        ComboBox combo = (ComboBox)Controls.GetNamedControl("combobox");
+        this.Print(combo.Position.X, combo.Position.Y - 2, "COMBOBOX", colors.YellowDark);
 
         int colorsStartY = 17;
 
