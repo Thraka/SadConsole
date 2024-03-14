@@ -50,7 +50,7 @@ while ($timer.elapsed -lt $timeout){
 # Found the SadConsole package, start building and pushing the other packages
 if ($foundPackage){
 
-    $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML"
+    $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML", "SadConsole.Host.FNA"
 
     foreach ($project in $projects) {
             
