@@ -20,7 +20,7 @@ namespace SadConsole.Debug.MonoGame
             {
                 ImGui.SetNextWindowBgAlpha(1f);
                 //ImGui.SetNextWindowSizeConstraints(new Vector2(200, 200), new Vector2(10000, 10000));
-                if (ImGui.Begin("Surface preview", ref GuiState.ShowSurfacePreview))
+                if (ImGui.Begin("Surface preview", ref GuiState.ShowSurfacePreview, ImGuiWindowFlags.HorizontalScrollbar))
                 {
                     // TODO:
                     // New window that is an editor type for the parent object
@@ -55,7 +55,7 @@ namespace SadConsole.Debug.MonoGame
                             }
 
                             // Render the target texture
-                            ImGuiExt.DrawTextureChild("output_preview_surface1", true, _zoom ? ImGuiExt.Zoom2x : ImGuiExt.ZoomNormal, targetTexture, renderer, out var isActive, out var isHovered);
+                            ImGuiExt.DrawTextureChild("output_preview_surface1", false, _zoom ? ImGuiExt.Zoom2x : ImGuiExt.ZoomNormal, targetTexture, renderer, out var isActive, out var isHovered);
 
                             // Peek the cell if the target type is the final
                             if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)

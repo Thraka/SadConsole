@@ -9,6 +9,19 @@
             Initializes the debugger.
             </summary>
         </member>
+        <member name="T:SadConsole.Configuration.DebugExtensions">
+            <summary>
+            Extensions to enable the ImGui debug UI.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensions.EnableImGuiDebug(SadConsole.Configuration.Builder,SadConsole.Input.Keys)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that uses the specified hotkey to invoke <see cref="M:SadConsole.Debug.MonoGame.Debugger.Start"/>.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <param name="hotkey">The keyboard key to start the debugger.</param>
+            <returns>The config builder.</returns>
+        </member>
         <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
             <summary>
             Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
