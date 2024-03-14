@@ -2455,23 +2455,6 @@
             </summary>
             <returns>The string "Console".</returns>
         </member>
-        <member name="T:SadConsole.Debug.Screen">
-            <summary>
-            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
-            <summary>
-            Displays the debugger.
-            </summary>
-            <param name="font">The font to use the debugging screen.</param>
-            <param name="fontSize">The size of the font.</param>
-        </member>
-        <member name="M:SadConsole.Debug.Screen.Show">
-            <summary>
-            Shows the debug screen with the default font and size.
-            </summary>
-        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
             A draw call that invokes an <see cref="T:System.Action"/> delegate.
@@ -10654,6 +10637,14 @@
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
         </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
+        </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
             A color that can be adjusted by brightness and mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
@@ -14654,13 +14645,6 @@
             <param name="text">The text to use for the colored string.</param>
             <returns>A new colored string object.</returns>
         </member>
-    </members>
-</doc>
-       </summary>
-            <param name="gradient">The gradient to work with.</param>
-            <param name="text">The text to use for the colored string.</param>
-            <returns>A new colored string object.</returns>
-        </member>
         <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
             <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
         </member>
@@ -14696,6 +14680,13 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+    </members>
+</doc>
+ite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
+            <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
 </doc>

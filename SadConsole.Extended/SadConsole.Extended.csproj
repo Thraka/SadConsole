@@ -38,7 +38,7 @@
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.2</SadConsoleVersion>
+    <SadConsoleVersion>10.0.3</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
   
