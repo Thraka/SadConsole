@@ -33,6 +33,7 @@ public class Delay : CellEffectBase
         _timeElapsed = _timeElapsed,
     };
 
+    /// <inheritdoc/>
     public override string ToString() =>
         string.Format("DELAY-{0}", StartDelay);
 }

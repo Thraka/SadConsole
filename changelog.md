@@ -3,13 +3,27 @@
 - [UI] `ScrollBar` has been completely rewritten. Minor breaking changes.
   - `.Maximum` has been changed to `.MaximumValue`.
   - Properties related to the style, such as `BarGlyph`, were moved to a `Style` property which controls how the control looks. Some property names have changed
+- [UI] `NumberBox` improvements.
+  - Rendering code split from `Textbox`.
+  - Added `ShowUpDownButtons` to show up\down buttons.
+  - Fixed bug with `UseMinMax` messing up the value and setting it back to 0 when the control loses focus.
 - [UI] `ControlBase.FindThemeFont` helper method added.
 - [UI] Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
+- [Core] Fixed `EffectSet` bug where the last effect wasn't applied.
 - [Core] `GlyphDefinition` has an init accessor now.
 - [Core] Added `ShapeParameter` docs and `CreateFilled` supports ignoring the border.
 - [Core] Added `RootComponent` class that can be added to `SadConsole.Game.Instance.RootComponents`. These components run logic before the keyboard and screen updates.
 - [Core] Splash screen collection is nulled after it runs, freeing memory.
 - [Extended] Classic keyboard handler has `IsReady` flag now to control when it's active.
+- [Extended] `ColorPickerPopup` would crash on invalid textbox values.
+- [Extended] `GlyphSelectPopup` added. You can use this to display a list of glyphs in your font while debugging your app.
+- [Extended] Fixed a bug in the table control that prevented the scroll bars from being displayed.
+- [Extended] Cleaned up code and enabled nullable.
+- [Host - SFML] Fix bug where it was always running at unlimited FPS.
+- [Host - MonoGame] Renderers can set backing texture usage.
+- [Host - FNA] Fix bug where the screen clear wasn't working and would default to violet.
+- [Host - All] Add `OptimizedScreenSurfaceRenderer` which renders.
+- [Host - All] Surface render step can accept an alternative surface with the `SetData` method.
 
 ## v10.0.2
 

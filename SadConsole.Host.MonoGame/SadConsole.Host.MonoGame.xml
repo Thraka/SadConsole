@@ -1233,7 +1233,7 @@
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
-            <inheritdoc/>//
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
             <inheritdoc/>

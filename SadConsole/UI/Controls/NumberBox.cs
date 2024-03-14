@@ -159,6 +159,10 @@ public partial class NumberBox : TextBox
         IsDirty = true;
     }
 
+    /// <summary>
+    /// Increases the number stored in the <see cref="TextBox.Text"/> property by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount.</param>
     public void IncreaseNumber(long amount)
     {
         if (!long.TryParse(_text, out long value))
@@ -172,6 +176,11 @@ public partial class NumberBox : TextBox
         FixNumber();
     }
 
+    /// <summary>
+    /// Increases the number stored in the <see cref="TextBox.Text"/> property by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount.</param>
+    /// <exception cref="Exception">Thrown when this method is used and the <see cref="AllowDecimal"/> property is set to false.</exception>
     public void IncreaseNumber(double amount)
     {
         if (!AllowDecimal) throw new Exception($"Number box doesn't allow decimals. Set {nameof(AllowDecimal)} to true.");
@@ -187,6 +196,10 @@ public partial class NumberBox : TextBox
         FixNumber();
     }
 
+    /// <summary>
+    /// Decreases the number stored in the <see cref="TextBox.Text"/> property by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount.</param>
     public void DecreaseNumber(long amount)
     {
         if (!long.TryParse(_text, out long value))
@@ -200,6 +213,11 @@ public partial class NumberBox : TextBox
         FixNumber();
     }
 
+    /// <summary>
+    /// Decreases the number stored in the <see cref="TextBox.Text"/> property by the specified amount.
+    /// </summary>
+    /// <param name="amount">The amount.</param>
+    /// <exception cref="Exception">Thrown when this method is used and the <see cref="AllowDecimal"/> property is set to false.</exception>
     public void DecreaseNumber(double amount)
     {
         if (!AllowDecimal) throw new Exception($"Number box doesn't allow decimals. Set {nameof(AllowDecimal)} to true.");
@@ -317,6 +335,7 @@ public partial class NumberBox : TextBox
         return false;
     }
 
+    /// <inheritdoc/>
     public override bool ProcessMouse(MouseScreenObjectState state)
     {
         State_IsMouseOverUpButton = false;
@@ -367,6 +386,7 @@ public partial class NumberBox : TextBox
             return base.ProcessMouse(state);
     }
 
+    /// <inheritdoc/>
     protected override void OnResized()
     {
         if (ShowUpDownButtons)

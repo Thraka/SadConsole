@@ -12,8 +12,15 @@ public partial class NumberBox
     private ControlStates _oldState;
     private string _editingText = string.Empty;
 
-    public bool State_IsMouseOverUpButton = false;
-    public bool State_IsMouseOverDownButton = false;
+    /// <summary>
+    /// Used by the mouse logic.
+    /// </summary>
+    public bool State_IsMouseOverUpButton { get; set; } = false;
+
+    /// <summary>
+    /// Used by the mouse logic.
+    /// </summary>
+    public bool State_IsMouseOverDownButton { get; set; } = false;
 
     /// <summary>
     /// The color to use with a <see cref="NumberBox"/> control when <see cref="NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.

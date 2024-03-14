@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>10.0.2</Version>
+    <Version>10.0.3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -17,6 +17,7 @@
     <PackageId>SadConsole.Extended</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
@@ -26,7 +27,13 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>...</PackageReleaseNotes>
+    <PackageReleaseNotes>
+- Classic keyboard handler has IsReady flag now to control when it's active.
+- ColorPickerPopup would crash on invalid textbox values.
+- GlyphSelectPopup added. You can use this to display a list of glyphs in your font while debugging your app.
+- Fixed a bug in the table control that prevented the scroll bars from being displayed.
+- Cleaned up code and enabled nullable.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,15 +46,16 @@
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' == 'false' " Include="SadConsole" Version="$(SadConsoleVersion)" />
 
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
 
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
     <None Remove="SadConsole.Extended.xml" />
   </ItemGroup>
 

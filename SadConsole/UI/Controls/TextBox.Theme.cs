@@ -18,8 +18,15 @@ public partial class TextBox
     [DataMember]
     public Effects.ICellEffect CaretEffect { get; set; }
 
-    public bool UseDifferentTextAreaWidth = false;
-    public int TextAreaWidth;
+    /// <summary>
+    /// Enables displaying the text area at a different width than the width of the control.
+    /// </summary>
+    public bool UseDifferentTextAreaWidth { get; set; } = false;
+
+    /// <summary>
+    /// The width to display the text area at when <see cref="UseDifferentTextAreaWidth"/> is true.
+    /// </summary>
+    public int TextAreaWidth { get; set; }
 
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)

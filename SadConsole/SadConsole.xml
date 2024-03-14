@@ -447,7 +447,16 @@
             <param name="name">The name of the animation.</param>
             <param name="frames">The frames that make up the animation.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)" -->
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new animation with the specified name, width, and height.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="width">The width of each frame this animation will have.</param>
+            <param name="height">The height of each frame this animation will have.</param>
+            <param name="font">The font used with this animation.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
         <member name="M:SadConsole.AnimatedScreenObject.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
@@ -2252,6 +2261,17 @@
         <member name="M:SadConsole.Components.RenderComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.RootComponent">
+            <summary>
+            A component used only with <see cref="P:SadConsole.GameHost.RootComponents"/>. Runs logic before the <see cref="P:SadConsole.GameHost.Screen"/> is processed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.RootComponent.Run(System.TimeSpan)">
+            <summary>
+            Code to run during update.
+            </summary>
+            <param name="delta">The time that has elapsed since the last frame.</param>
+        </member>
         <member name="T:SadConsole.Components.SurfaceComponentFollowTarget">
             <summary>
             Add to a <see cref="T:SadConsole.IScreenSurface"/> to have the <see cref="P:SadConsole.ICellSurface.ViewPosition"/> center on a specific object.
@@ -2434,6 +2454,23 @@
             Returns the value "Console".
             </summary>
             <returns>The string "Console".</returns>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -2766,6 +2803,9 @@
         </member>
         <member name="M:SadConsole.Effects.Delay.Clone">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Effects.Delay.ToString">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Effects.EffectSet">
             <summary>
@@ -3151,7 +3191,7 @@
         </member>
         <member name="T:SadConsole.Entities.AnimatedAppearanceComponent">
             <summary>
-            A component for <see cref="T:SadConsole.Entities.Entity"/> that animates the <see cref="!:Entity.Appearance"/> and <see cref="!:Entity.Effect"/> properties.
+            A component for <see cref="T:SadConsole.Entities.Entity"/> that animates the <see cref="P:SadConsole.Entities.Entity.AppearanceSingle"/> property.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.AnimatedAppearanceComponent.Frames">
@@ -3272,7 +3312,7 @@
         </member>
         <member name="P:SadConsole.Entities.Entity.UsePixelPositioning">
             <summary>
-            Treats the <see cref="!:IScreenObject.Position"/> of the entity as if it is pixels and not cells.
+            Treats the <see cref="P:SadRogue.Primitives.IPositionable.Position"/> of the entity as if it is pixels and not cells.
             </summary>
         </member>
         <member name="P:SadConsole.Entities.Entity.AppearanceSingle">
@@ -3705,6 +3745,20 @@
             <param name="width">The width to use in converting each index to a point.</param>
             <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="T:SadRogue.Primitives.Direction.Types"/> enumeration.</returns>
         </member>
+        <member name="T:SadConsole.Extensions.ReadOnlySpan">
+            <summary>
+            Extensions for the <see cref="T:System.ReadOnlySpan`1"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Extensions.ReadOnlySpan.Next(System.ReadOnlySpan{System.Char},System.Char,System.Int32@)">
+            <summary>
+            Gets the next instnace of the specified character in a <see cref="T:System.Char"/> span.
+            </summary>
+            <param name="span">The span.</param>
+            <param name="value">The character to find.</param>
+            <param name="index">The index of the character.</param>
+            <returns>True when the character is found.</returns>
+        </member>
         <member name="T:SadConsole.RectangleExtensions">
             <summary>
             Extensions for the <see cref="T:SadRogue.Primitives.Rectangle"/> type.
@@ -4129,6 +4183,11 @@
         <member name="P:SadConsole.GameHost.Screen">
             <summary>
             The active screen processed by the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.GameHost.RootComponents">
+            <summary>
+            Update components that run before the <see cref="P:SadConsole.GameHost.Screen"/> is processed.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.FocusedScreenObjects">
@@ -7314,7 +7373,7 @@
         </member>
         <member name="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished">
             <summary>
-            When true, this instruction will automatically remove itself from the parent's <see cref="!:SadConsole.IScreenObject.SadComponents"/> collection.
+            When true, this instruction will automatically remove itself from the parent's <see cref="P:SadConsole.Components.IComponentHost.SadComponents"/> collection.
             </summary>
         </member>
         <member name="P:SadConsole.Instructions.InstructionBase.IsFinished">
@@ -7620,14 +7679,14 @@
         </member>
         <member name="M:SadConsole.IScreenObject.Update(System.TimeSpan)">
             <summary>
-            Updates all <see cref="!:SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
+            Updates all <see cref="P:SadConsole.Components.IComponentHost.SadComponents"/> and <see cref="P:SadConsole.IScreenObject.Children"/>.
             </summary>
             <param name="delta">The time that has elapsed since the last call.</param>
             <remarks>Only processes if <see cref="P:SadConsole.IScreenObject.IsEnabled"/> is <see langword="true"/>.</remarks>
         </member>
         <member name="M:SadConsole.IScreenObject.UpdateAbsolutePosition">
             <summary>
-            Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="!:Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
+            Sets a value for <see cref="P:SadConsole.IScreenObject.AbsolutePosition"/> based on the <see cref="P:SadRogue.Primitives.IPositionable.Position"/> of this instance and the <see cref="P:SadConsole.IScreenObject.Parent"/> instance.
             </summary>
         </member>
         <member name="T:SadConsole.IScreenSurface">
@@ -8452,6 +8511,63 @@
             <param name="alternateForeground">Foreground color used to draw the glyph.</param>
             <param name="alternateBackground">Background color used to draw the glyph.</param>
             <returns>A surface of just the glyph. Width and height of the surface is based on the TheDraw's font.</returns>
+        </member>
+        <member name="M:SadConsole.Readers.TheDrawFont.ReadFonts(System.String)">
+            <summary>
+            Returns a collection of fonts from a TheDraw font file.
+            </summary>
+            <param name="file">The file to read.</param>
+            <returns>A collection of TheDraw fonts.</returns>
+        </member>
+        <member name="T:SadConsole.Readers.TheDrawFont.CharacterSpot">
+            <summary>
+            A individual glyph character.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.CharacterSpot.Character">
+            <summary>
+            The glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.CharacterSpot.Foreground">
+            <summary>
+            The foreground color of the character.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.CharacterSpot.Background">
+            <summary>
+            The background color of the character.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.TheDrawFont.CharacterRow">
+            <summary>
+            A set of glyph characters.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.CharacterRow.Characters">
+            <summary>
+            An array of characters.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.TheDrawFont.Character">
+            <summary>
+            A character defined by the font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.Character.GlyphIndex">
+            <summary>
+            The glyph this character represents.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.Character.Width">
+            <summary>
+            How wide the font character.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Readers.TheDrawFont.Character.Rows">
+            <summary>
+            Each row of the font character.
+            </summary>
         </member>
         <member name="T:SadConsole.Renderers.Constants.RendererNames">
             <summary>
@@ -9776,24 +9892,188 @@
             Defines the parameters for generating a shape with a border and fill glyphs.
             </summary>
         </member>
+        <member name="P:SadConsole.ShapeParameters.HasBorder">
+            <summary>
+            When true, to indicate the shape contains a border.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.HasFill">
+            <summary>
+            When true, indicates this shape is filled.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreFillForeground">
+            <summary>
+            When true, ignores the fill foreground color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreFillBackground">
+            <summary>
+            When true, ignores the fill background color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreFillGlyph">
+            <summary>
+            When true, ignores the fill glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreFillMirror">
+            <summary>
+            When true, ignores the fill mirror.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreBorderForeground">
+            <summary>
+            When true, ignores the border foreground color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreBorderBackground">
+            <summary>
+            When true, ignores the border background color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreBorderGlyph">
+            <summary>
+            When true, ignores the border glyph.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.IgnoreBorderMirror">
+            <summary>
+            When true, ignores the border mirror.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.FillGlyph">
+            <summary>
+            The fill appearance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.BoxBorderStyle">
+            <summary>
+            The connected lines used for the border.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.BoxBorderStyleGlyphs">
+            <summary>
+            The appearances used for each part of the connected line.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ShapeParameters.BorderGlyph">
+            <summary>
+            A single glyph used for drawing the border.
+            </summary>
+        </member>
         <member name="M:SadConsole.ShapeParameters.#ctor(System.Boolean,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32[],SadConsole.ColoredGlyphBase[])">
             <summary>
-            
+            A set of parameters that defines how a shape should be drawn.
             </summary>
-            <param name="hasBorder"></param>
-            <param name="borderGlyph"></param>
-            <param name="ignoreBorderForeground"></param>
-            <param name="ignoreBorderBackground"></param>
-            <param name="ignoreBorderGlyph"></param>
-            <param name="ignoreBorderMirror"></param>
-            <param name="hasFill"></param>
-            <param name="fillGlyph"></param>
-            <param name="ignoreFillForeground"></param>
-            <param name="ignoreFillBackground"></param>
-            <param name="ignoreFillGlyph"></param>
-            <param name="ignoreFillMirror"></param>
-            <param name="boxBorderStyle"></param>
-            <param name="boxBorderStyleGlyphs"></param>
+            <param name="hasBorder">When true, indicates the shape has a border.</param>
+            <param name="borderGlyph">When not null, uses a single glyph to draw the border.</param>
+            <param name="ignoreBorderForeground">When true, ignores the border foreground color.</param>
+            <param name="ignoreBorderBackground">When true, ignores the border background color.</param>
+            <param name="ignoreBorderGlyph">When true, ignores the border glyph.</param>
+            <param name="ignoreBorderMirror">When true, ignores the border mirror.</param>
+            <param name="hasFill">When true, indicates this shape is filled.</param>
+            <param name="fillGlyph">When not null, this is the appearance of the fill.</param>
+            <param name="ignoreFillForeground">When true, ignores the fill foreground color.</param>
+            <param name="ignoreFillBackground">When true, ignores the fill background color.</param>
+            <param name="ignoreFillGlyph">When true, ignores the fill glyph.</param>
+            <param name="ignoreFillMirror">When true, ignores the fill mirror.</param>
+            <param name="boxBorderStyle">When not null, the connected lines used for the border.</param>
+            <param name="boxBorderStyleGlyphs">When not null, the appearances used for each part of the connected line.</param>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateBorder(SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes a border.
+            </summary>
+            <param name="borderStyle">The appearance of the border.</param>
+            <param name="ignoreForeground">When true, ignores the foreground of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreBackground">When true, ignores the background of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreGlyph">When true, ignores the glyph of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreMirror">When true, ignores the mirror of the <paramref name="borderStyle"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateFilled(SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes a filled object with an optional border.
+            </summary>
+            <param name="borderStyle">When not null, creates a border with this appearance.</param>
+            <param name="fillStyle">The fill appearance.</param>
+            <param name="ignoreBorderForeground">When true, ignores the foreground of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreBorderBackground">When true, ignores the background of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreBorderGlyph">When true, ignores the glyph of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreBorderMirror">When true, ignores the mirror of the <paramref name="borderStyle"/> value.</param>
+            <param name="ignoreFillForeground">When true, ignores the foreground of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillBackground">When true, ignores the background of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillGlyph">When true, ignores the glyph of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillMirror">When true, ignores the mirror of the <paramref name="fillStyle"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBox(System.Int32[],SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes a border using a connected line glyph set.
+            </summary>
+            <param name="borderStyle">The connected line glyphs that make up the border.</param>
+            <param name="borderColors">The appearance colors of the border.</param>
+            <param name="ignoreBorderForeground">When true, ignores the foreground of the <paramref name="borderColors"/> value.</param>
+            <param name="ignoreBorderBackground">When true, ignores the background of the <paramref name="borderColors"/> value.</param>
+            <param name="ignoreBorderMirror">When true, ignores the mirror of the <paramref name="borderColors"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBoxFilled(System.Int32[],SadConsole.ColoredGlyphBase,SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes a filled box using a connected line line glyph set for the border.
+            </summary>
+            <param name="borderStyle">The connected line glyphs that make up the border.</param>
+            <param name="borderColors">The appearance colors of the border.</param>
+            <param name="fillStyle">The appearance colors of the fill.</param>
+            <param name="ignoreBorderForeground">When true, ignores the foreground of the <paramref name="borderColors"/> value.</param>
+            <param name="ignoreBorderBackground">When true, ignores the background of the <paramref name="borderColors"/> value.</param>
+            <param name="ignoreBorderMirror">When true, ignores the mirror of the <paramref name="borderColors"/> value.</param>
+            <param name="ignoreFillForeground">When true, ignores the foreground of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillBackground">When true, ignores the background of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillGlyph">When true, ignores the glyph of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillMirror">When true, ignores the mirror of the <paramref name="fillStyle"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBoxExplicit(SadConsole.ColoredGlyphBase[],System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes an unfilled box using a connected line line glyph set for the border.
+            </summary>
+            <param name="borderGlyphs">The appearances used for each part of a connected line, specifically the glyph.</param>
+            <param name="ignoreBorderForeground">When true, ignores the foreground of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreBorderBackground">When true, ignores the background of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreBorderMirror">When true, ignores the mirror of the <paramref name="borderGlyphs"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBoxExplicitFilled(SadConsole.ColoredGlyphBase[],SadConsole.ColoredGlyphBase,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a shape parameters object that describes a filled box using a connected line line glyph set for the border.
+            </summary>
+            <param name="borderGlyphs">The appearances used for each part of a connected line, specifically the glyph.</param>
+            <param name="fillStyle">The appearance colors of the fill.</param>
+            <param name="ignoreBorderForeground">When true, ignores the foreground of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreBorderBackground">When true, ignores the background of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreBorderGlyph">When true, ignores the glyph of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreBorderMirror">When true, ignores the mirror of the <paramref name="borderGlyphs"/> value.</param>
+            <param name="ignoreFillForeground">When true, ignores the foreground of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillBackground">When true, ignores the background of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillGlyph">When true, ignores the glyph of the <paramref name="fillStyle"/> value.</param>
+            <param name="ignoreFillMirror">When true, ignores the mirror of the <paramref name="fillStyle"/> value.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBoxThin(SadRogue.Primitives.Color)">
+            <summary>
+            Creates a box using the <see cref="P:SadConsole.ICellSurface.ConnectedLineThin"/> connected line style.
+            </summary>
+            <param name="foreground">The foreground color of the box.</param>
+            <returns>The shape parameters.</returns>
+        </member>
+        <member name="M:SadConsole.ShapeParameters.CreateStyledBoxThick(SadRogue.Primitives.Color)">
+            <summary>
+            Creates a box using the <see cref="P:SadConsole.ICellSurface.ConnectedLineThick"/> connected line style.
+            </summary>
+            <param name="foreground">The foreground color of the box.</param>
+            <returns>The shape parameters.</returns>
         </member>
         <member name="T:SadConsole.SplashScreens.Ansi1">
             <summary>
@@ -9861,7 +10141,7 @@
         </member>
         <member name="T:SadConsole.SplashScreens.SplashScreenManager">
             <summary>
-            GameHost use only. Use the <see cref="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun"/> method to show any splash screens after <see cref="!:GameHost.OnStart"/> was called.
+            GameHost use only. Use the <see cref="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun"/> method to show any splash screens after <see cref="M:SadConsole.GameHost.OnGameStarted"/> was called.
             </summary>
         </member>
         <member name="E:SadConsole.SplashScreens.SplashScreenManager.SplashScreenFinished">
@@ -9871,7 +10151,7 @@
         </member>
         <member name="M:SadConsole.SplashScreens.SplashScreenManager.CheckRun">
             <summary>
-            Checks if any splash screens have been added with <see cref="!:GameHost.SetSplashScreens(ScreenSurface[])"/>, if so, starts them.
+            Checks if any splash screens have been added with <see cref="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])"/>, if so, starts them.
             </summary>
         </member>
         <member name="M:SadConsole.SplashScreens.SplashScreenManager.#ctor">
@@ -9885,6 +10165,11 @@
         <member name="T:SadConsole.StringParser.Default">
             <summary>
             The default string parser.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.Default.Variables">
+            <summary>
+            A dictionary of variable resolution methods.
             </summary>
         </member>
         <member name="F:SadConsole.StringParser.Default.CustomProcessor">
@@ -10931,6 +11216,9 @@
         <member name="M:SadConsole.UI.ControlHost.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.UI.ControlHost.GetNamedControl(System.String)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.ControlHost.TabNextControl">
             <summary>
             Gives the focus to the next control in the tab order.
@@ -11539,10 +11827,13 @@
             </summary>
             <param name="time">The game frame time delta.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.CompositeControl.HasNamedControl(System.String)">
+        <member name="M:SadConsole.UI.Controls.CompositeControl.SadConsole#UI#Controls#IContainer#HasNamedControl(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.UI.Controls.CompositeControl.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+        <member name="M:SadConsole.UI.Controls.CompositeControl.SadConsole#UI#Controls#IContainer#HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.SadConsole#UI#Controls#IContainer#GetNamedControl(System.String)">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ControlBase">
@@ -11816,6 +12107,12 @@
             <param name="oldSurface">The previous surface instance.</param>
             <param name="newSurface">The new surface instance.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.FindThemeFont">
+            <summary>
+            Returns the <see cref="P:SadConsole.UI.Controls.ControlBase.AlternateFont"/>. If null, returns the host's console font or the default engine font.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.FindThemeColors">
             <summary>
             Returns the colors assigned to this control, the parent, or the library default.
@@ -12045,6 +12342,13 @@
             <param name="name">The name to check.</param>
             <param name="control">The control instance found.</param>
             <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.IContainer.GetNamedControl(System.String)">
+            <summary>
+            Gets a control by its <see cref="P:SadConsole.UI.Controls.ControlBase.Name"/> property.
+            </summary>
+            <param name="name">The name of the control.</param>
+            <returns>The control.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.Label">
             <summary>
@@ -12404,6 +12708,31 @@
             The default value to use when the current value is invalid and <see cref="P:SadConsole.UI.Controls.NumberBox.AllowDecimal"/> is <see langword="true"/>.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.ShowUpDownButtons">
+            <summary>
+            When true, displays up and down buttons at the end of the box.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.UpButtonStep">
+            <summary>
+            Sets the up button's value step.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.DownButtonStep">
+            <summary>
+            Sets the down button's value step.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.UpButtonStepDecimal">
+            <summary>
+            Sets the up button's value step when <see cref="P:SadConsole.UI.Controls.NumberBox.AllowDecimal"/> is on.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.DownButtonStepDecimal">
+            <summary>
+            Sets the down button's value step when <see cref="P:SadConsole.UI.Controls.NumberBox.AllowDecimal"/> is on.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.Controls.NumberBox.IsEditingNumberInvalid">
             <summary>
             When <see langword="true"/>, indicates that the number is either out of bounds of the <see cref="P:SadConsole.UI.Controls.NumberBox.NumberMinimum"/> and <see cref="P:SadConsole.UI.Controls.NumberBox.NumberMaximum"/> range, or it can't be property parsed. Otherwise, <see langword="false"/>
@@ -12417,6 +12746,32 @@
             Creates a new instance of the input box.
             </summary>
             <param name="width">The width of the input box.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.IncreaseNumber(System.Int64)">
+            <summary>
+            Increases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
+            </summary>
+            <param name="amount">The amount.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.IncreaseNumber(System.Double)">
+            <summary>
+            Increases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
+            </summary>
+            <param name="amount">The amount.</param>
+            <exception cref="T:System.Exception">Thrown when this method is used and the <see cref="P:SadConsole.UI.Controls.NumberBox.AllowDecimal"/> property is set to false.</exception>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.DecreaseNumber(System.Int64)">
+            <summary>
+            Decreases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
+            </summary>
+            <param name="amount">The amount.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.DecreaseNumber(System.Double)">
+            <summary>
+            Decreases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
+            </summary>
+            <param name="amount">The amount.</param>
+            <exception cref="T:System.Exception">Thrown when this method is used and the <see cref="P:SadConsole.UI.Controls.NumberBox.AllowDecimal"/> property is set to false.</exception>
         </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.OnFocused">
             <inheritdoc/>
@@ -12443,6 +12798,12 @@
             <param name="info">The keyboard information.</param>
             <returns>True if the keyboard was handled by this control.</returns>
         </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.OnResized">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.GetCultureDecimalSeperator">
             <summary>
             Gets the current culture's decimal separator.
@@ -12454,6 +12815,34 @@
             Returns the current culture.
             </summary>
             <returns>The current culture.</returns>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.State_IsMouseOverUpButton">
+            <summary>
+            Used by the mouse logic.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.State_IsMouseOverDownButton">
+            <summary>
+            Used by the mouse logic.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.NumberBoxInvalidNumberForeground">
+            <summary>
+            The color to use with a <see cref="T:SadConsole.UI.Controls.NumberBox"/> control when <see cref="P:SadConsole.UI.Controls.NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.UpButtonGlyph">
+            <summary>
+            The glyph for the up button.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.NumberBox.DownButtonGlyph">
+            <summary>
+            The glyph for the down button.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.NumberBox.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.Panel">
             <summary>
@@ -12467,6 +12856,9 @@
             <param name="index">The index of the control.</param>
             <returns>The control at the specified index.</returns>
             <exception cref="T:System.IndexOutOfRangeException">Thrown when the index doesn't exist in the collection.</exception>
+        </member>
+        <member name="P:SadConsole.UI.Controls.Panel.Item(System.String)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.#ctor(System.Int32,System.Int32)">
             <summary>
@@ -12522,6 +12914,15 @@
             <summary>
             When <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> is set to <see langword="true"/>, changes the child controls to also be dirty.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.HasNamedControl(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Panel.GetNamedControl(System.String)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.GetEnumerator">
             <summary>
@@ -12805,117 +13206,209 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ScrollBar.Orientation">
             <summary>
-            Indicates if the scroll bar is horizontal or vertical.
+            Indicates if the slider is horizontal or vertical.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.SliderBarSize">
+        <member name="P:SadConsole.UI.Controls.ScrollBar.IsGripped">
             <summary>
-            Used by the theme. The size of the slider bar portion.
+            When true, indicates that the mouse is gripping the slider to scroll.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.CurrentSliderPosition">
-            <summary>
-            Used by the theme. The position of the slider glyph in the bar.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.IsSliding">
-            <summary>
-            When <see langword="true"/>, indicates this control is captured and the slider button is being used; otherwise, <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.Value">
-            <summary>
-            Gets or sets the value of the scrollbar between the minimum and maximum values.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.Maximum">
+        <member name="P:SadConsole.UI.Controls.ScrollBar.MaximumValue">
             <summary>
             Gets or sets the maximum value for the scrollbar.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.Minimum">
-            <summary>
-            Reserved for future use. This is always 0.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.Step">
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ArrowStep">
             <summary>
             Gets or sets the amount of values to add or subtract to the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> when the up or down arrows are used.
             </summary>
         </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.MouseWheelStep">
+            <summary>
+            Gets or sets the amount of values to add or subtract to the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> when the up or down arrows are used.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.Value">
+            <summary>
+            Gets or sets the value of the slider between the minimum and maximum values.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ArrowsMoveGrip">
+            <summary>
+            When true, the arrow buttons simply move the grip instead of using the <see cref="P:SadConsole.UI.Controls.ScrollBar.ArrowStep"/> value to adjust the value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.MouseWheelMovesGrip">
+            <summary>
+            When true, the mouse wheelsimply moves the grip instead of using the <see cref="P:SadConsole.UI.Controls.ScrollBar.MouseWheelStep"/> value to adjust the value.
+            </summary>
+        </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.#ctor(SadConsole.Orientation,System.Int32)">
             <summary>
-            Creates a new ScrollBar control.
+            Creates a new Slider control
             </summary>
             <param name="orientation">Sets the control to either horizontal or vertical.</param>
-            <param name="size">The height or width of the control, based on the <paramref name="orientation"/>, with a thickness of 0.</param>
+            <param name="size">The height or width of the control, based on the <paramref name="orientation"/>, with a thickness of 1.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Size of the control must be 2 or more</exception>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.#ctor(SadConsole.Orientation,System.Int32,System.Int32)">
             <summary>
-            Creates a new ScrollBar control with the specified width and height.
+            Creates a new Slider control with the specified width and height.
             </summary>
             <param name="orientation">Sets the control to either horizontal or vertical.</param>
             <param name="width">The width the control.</param>
             <param name="height">The height of the control.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">With a horizontal scroll bar, width must be 2 or more. With a vertical scroll bar, height must be 2 or more.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">With a horizontal Slider, width must be 2 or more. With a vertical Slider, height must be 2 or more.</exception>
         </member>
-        <member name="M:SadConsole.UI.Controls.ScrollBar.Resize(System.Int32,System.Int32)">
-            <inheritdoc/>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.OnValueChanged">
+            <summary>
+            Invokes the <see cref="E:SadConsole.UI.Controls.ScrollBar.ValueChanged"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.CalculateGripSize">
+            <summary>
+            Sets the bar and grip sizes of the control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.SetGripToValue">
+            <summary>
+            Moves the grip position based on the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> property.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.OnResized">
+            <summary>
+            Resizes the control and recalculates the grip size.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.SetValue(System.Int32,System.Boolean)">
+            <summary>
+            Sets the value of the control without using the <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/> property. Optionally calls <see cref="M:SadConsole.UI.Controls.ScrollBar.SetGripToValue"/>.
+            </summary>
+            <param name="value">The value to set.</param>
+            <param name="setGrip">Moves the grip when true.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.IncreaseValue(System.Int32)">
+            <summary>
+            Increases the value by the specified amount.
+            </summary>
+            <param name="value">The value to add to <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/>.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.DecreaseValue(System.Int32)">
+            <summary>
+            Decreases the value by the specified amount.
+            </summary>
+            <param name="value">The value to subract from <see cref="P:SadConsole.UI.Controls.ScrollBar.Value"/>.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.IncreaseGripByOne">
+            <summary>
+            Increases the grip position by one and sets the value.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.DecreaseGripByOne">
+            <summary>
+            Decreases the grip position by one and sets the value.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessMouseWheel(SadConsole.Input.MouseScreenObjectState)">
+            <summary>
+            Processes the mouse wheel values regardless of if the mouse is over the scrollbar or not.
+            </summary>
+            <param name="state">The mouse state.</param>
+            <returns>True if the mouse wheel was processed.</returns>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.UI.Controls.ScrollBar.ProcessKeyboard(SadConsole.Input.Keyboard)">
+        <member name="P:SadConsole.UI.Controls.ScrollBar.Style">
             <summary>
-            Uses the arrow keys to move the scroll bar value.
+            The style applied to drawing the control.
             </summary>
-            <param name="state">The state of the keyboard.</param>
-            <returns><see langword="true"/> when the keyboard was handled; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.UseExtended">
-            <summary>
-            When <see langword="true"/>, indicates that the start and end glyph buttons sohuld use the extended SadConsole font characters if available.
-            </summary>
-            <remarks>
-            This only affects scrollbars that have a width of two when vertical, and a height of two when horizontal.
-            </remarks>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.StartButtonVerticalGlyph">
-            <summary>
-            The theme part fot the start button.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.EndButtonVerticalGlyph">
-            <summary>
-            The theme part fot the start button.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.StartButtonHorizontalGlyph">
-            <summary>
-            The theme part fot the start button.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.EndButtonHorizontalGlyph">
-            <summary>
-            The theme part fot the start button.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.BarGlyph">
-            <summary>
-            The theme part for the scroll bar bar where the slider is not located.
-            </summary>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ScrollBar.SliderGlyph">
-            <summary>
-            The theme part for the scroll bar icon.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ScrollBar.RefreshThemeStateColors(SadConsole.UI.Colors)">
-            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.ScrollBar.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ScrollBar.ThemeStyle">
+            <summary>
+            The drawing code for the scrollbar
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonVerticalGlyph">
+            <summary>
+            The glyph for the start button when the control is vertical.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonVerticalGlyph">
+            <summary>
+            The glyph for the end button when the control is vertical.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonHorizontalGlyph">
+            <summary>
+            The glyph for the start button when the control is horizontal.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonHorizontalGlyph">
+            <summary>
+            The glyph for the end button when the control is horizontal.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarGlyph">
+            <summary>
+            The glyph for the scroll bar bar where the slider is not located.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripGlyph">
+            <summary>
+            The glyph for the scroll bar icon.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarSize">
+            <summary>
+            The size of the bar area. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripSize">
+            <summary>
+            The size of the grip. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripStart">
+            <summary>
+            The cell the grip starts at. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripEnd">
+            <summary>
+            The cell the grip ends at. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverUpButton">
+            <summary>
+            Indicates that the mouse is above the up arrow button. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverDownButton">
+            <summary>
+            Indicates that the mouse is above the down arrow button. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverGripper">
+            <summary>
+            Indicates that the mouse is above the gripper. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverBar">
+            <summary>
+            Indicates that the mouse is not above the empty part of the bar. Calculated automatically by the control.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ScrollBar.ThemeStyle.UpdateAndRedraw(SadConsole.UI.Controls.ScrollBar,System.TimeSpan)">
+            <summary>
+            Redraws the control.
+            </summary>
+            <param name="control">The control instance.</param>
+            <param name="time">Time of the update frame.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.SelectionButton">
             <summary>
@@ -13409,9 +13902,14 @@
             The style to use for the carrot.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.TextBox.NumberBoxInvalidNumberForeground">
+        <member name="P:SadConsole.UI.Controls.TextBox.UseDifferentTextAreaWidth">
             <summary>
-            The color to use with a <see cref="T:SadConsole.UI.Controls.NumberBox"/> control when <see cref="P:SadConsole.UI.Controls.NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
+            Enables displaying the text area at a different width than the width of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextBox.TextAreaWidth">
+            <summary>
+            The width to display the text area at when <see cref="P:SadConsole.UI.Controls.TextBox.UseDifferentTextAreaWidth"/> is true.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.TextBox.UpdateAndRedraw(System.TimeSpan)">

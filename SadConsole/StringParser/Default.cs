@@ -11,7 +11,10 @@ namespace SadConsole.StringParser;
 /// </summary>
 public class Default : IParser
 {
-    public Dictionary<string, Func<string>> Variables { get; } = new Dictionary<string, Func<string>>();
+    /// <summary>
+    /// A dictionary of variable resolution methods.
+    /// </summary>
+    public Dictionary<string, Func<string>> Variables { get; } = new();
 
     /// <summary>
     /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).

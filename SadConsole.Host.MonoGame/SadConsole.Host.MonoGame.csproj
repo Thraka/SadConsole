@@ -1,31 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
     <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>10.0.1</Version>
+    <Version>10.0.3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole MonoGame</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
-    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>...</PackageReleaseNotes>
+    <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>
+- Renderers can set backing texture usage.
+- Add OptimizedScreenSurfaceRenderer which renders.
+- Surface render step can accept an alternative surface with the SetData method.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,7 +50,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +60,7 @@
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

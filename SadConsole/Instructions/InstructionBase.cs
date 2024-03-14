@@ -24,7 +24,7 @@ public abstract class InstructionBase : UpdateComponent
     public event EventHandler? Repeating;
 
     /// <summary>
-    /// When true, this instruction will automatically remove itself from the parent's <see cref="SadConsole.IScreenObject.SadComponents"/> collection.
+    /// When true, this instruction will automatically remove itself from the parent's <see cref="IComponentHost.SadComponents"/> collection.
     /// </summary>
     public bool RemoveOnFinished { get; set; }
 

@@ -109,7 +109,10 @@
              <remarks>
              Makes the cursor visible, disables word breaks and the string parser, and prints the prompt.
             
-             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it. You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>, the first instance of a cursor in the <see cref="!:IScreenObject.SadComponents"/> collection is used. If there is no cursor, an exception is thrown.
+             If the host is a <see cref="T:SadConsole.Console"/>, it uses the <see cref="F:SadConsole.Components.ClassicConsoleKeyboardHandler._attachedCursor"/> property, caching reference to it.
+             You can't change the cursor reference unless you re-add this component. If the host is a <see cref="T:SadConsole.IScreenObject"/>,
+             the first instance of a cursor in the <see cref="P:SadConsole.Components.IComponentHost.SadComponents"/> collection is used.
+             If there is no cursor, an exception is thrown.
              </remarks>
         </member>
         <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.PrintPrompt">
@@ -517,12 +520,12 @@
             </summary>
             <returns>The name of the zone.</returns>
         </member>
-        <member name="T:SadConsole.StringExtensions2">
+        <member name="T:SadConsole.ExtendedLib_StringExtensions2">
             <summary>
             Extensions for the <see cref="T:System.String"/> type.
             </summary>
         </member>
-        <member name="M:SadConsole.StringExtensions2.ToAscii(System.String,System.Int32)">
+        <member name="M:SadConsole.ExtendedLib_StringExtensions2.ToAscii(System.String,System.Int32)">
             <summary>
             Converts a string into codepage 437.
             </summary>
@@ -530,12 +533,12 @@
             <param name="codepage">Optional codepage to provide.</param>
             <returns>A transformed string.</returns>
         </member>
-        <member name="T:SadConsole.SurfaceExtensions">
+        <member name="T:SadConsole.ExtendedLib_SurfaceExtensions">
             <summary>
             Extensions for the <see cref="T:SadConsole.IScreenSurface"/> type
             </summary>
         </member>
-        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.ExtendedLib_SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,System.String,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
             <summary>
             Prints text that blinks out the characters each after the specified time, using the default foreground and background colors of the surface.
             </summary>
@@ -545,7 +548,7 @@
             <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
             <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
         </member>
-        <member name="M:SadConsole.SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,SadConsole.ColoredString,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
+        <member name="M:SadConsole.ExtendedLib_SurfaceExtensions.PrintFadingText(SadConsole.IScreenSurface,SadConsole.ColoredString,SadRogue.Primitives.Point,System.TimeSpan,SadConsole.Effects.ICellEffect)">
             <summary>
             
             </summary>
@@ -559,6 +562,21 @@
             <summary>
             Animates drawing a box. It can either 
             </summary>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedBoxGrow.#ctor(SadRogue.Primitives.Rectangle,System.TimeSpan,SadConsole.ShapeParameters)">
+            <summary>
+            Creates a new animated box defined by the <paramref name="area"/>. The box is animated over time and drawn with the set of shape parameters provided.
+            </summary>
+            <param name="area">The final area the box is shown on the screen.</param>
+            <param name="duration">How long it takes to animate.</param>
+            <param name="shapeParameters">The shape parameters that define how the box looks.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedBoxGrow.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Instructions.AnimatedBoxGrow.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
         </member>
         <member name="T:SadConsole.Transitions.Fade">
             <summary>
@@ -928,14 +946,26 @@
             Gets or sets the selected glyph character.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.IFont,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new character picker control.
+            </summary>
+            <param name="foreground">Foreground color of all the glyphs.</param>
+            <param name="fill">Background color of all the glyphs.</param>
+            <param name="selectedCharacterColor">The foreground color displayed on the selected glyph.</param>
+            <param name="characterFont">The font used to display the glyphs.</param>
+            <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
+            <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
+            <param name="fontColumns">How many columns are defined in the font file.</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.CharacterPicker.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadConsole.SadFont,System.Int32,System.Int32)">
             <summary>
             Creates a new picker control with the specified font.
             </summary>
-            <param name="foreground">The default foreground for glyphs.</param>
-            <param name="fill">The default backround for glyphs.</param>
-            <param name="selectedCharacterColor">The foreground for the selected glyph.</param>
-            <param name="characterFont">The font to use with the control.</param>
+            <param name="foreground">Foreground color of all the glyphs.</param>
+            <param name="fill">Background color of all the glyphs.</param>
+            <param name="selectedCharacterColor">The foreground color displayed on the selected glyph.</param>
+            <param name="characterFont">The font used to display the glyphs.</param>
             <param name="visibleColumns">The number of columns to show. The control will be this wide plus 1.</param>
             <param name="visibleRows">The number of rows to show. The control will be this high plus 1.</param>
         </member>
@@ -1043,6 +1073,9 @@
         <member name="M:SadConsole.UI.Controls.ColorPicker.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.UI.Controls.ColorPicker.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox">
             <summary>
             A listbox control that displays the file system.
@@ -1103,6 +1136,12 @@
             The name of the directory.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the class.
+            </summary>
+            <param name="name">The name to display.</param>
+        </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtFile">
             <summary>
             A listbox item container that represents a highlighted file.
@@ -1112,6 +1151,12 @@
             <summary>
             The name of the file.
             </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtFile.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the class.
+            </summary>
+            <param name="name">The name to display.</param>
         </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListboxItem">
             <summary>
@@ -1234,7 +1279,7 @@
             A basic cell used in the Table control
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.Table.Cell.Position">
+        <member name="F:SadConsole.UI.Controls.Table.Cell._position">
             <summary>
             Contains the real position value when other cells are not being rendered
             This is used to obtain the real cell from mouse interactions.

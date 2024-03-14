@@ -11,21 +11,27 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole FNA</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
-    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.FNA</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>...</PackageReleaseNotes>
+    <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>
+- Fix bug where the screen clear wasn't working and would default to violet.
+- Add OptimizedScreenSurfaceRenderer which renders.
+- Surface render step can accept an alternative surface with the SetData method.
+    </PackageReleaseNotes>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -50,7 +56,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +66,7 @@
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">
