@@ -4,7 +4,9 @@ Remove-Item "*.nupkg","*.snupkg" -Force
 
 # Build SadConsole
 Write-Output "Building SadConsole Debug and Release"
+$output = Invoke-Expression "dotnet restore ..\SadConsole\SadConsole.csproj -c Debug --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 $output = Invoke-Expression "dotnet build ..\SadConsole\SadConsole.csproj -c Debug"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+$output = Invoke-Expression "dotnet restore ..\SadConsole\SadConsole.csproj -c Release --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 $output = Invoke-Expression "dotnet build ..\SadConsole\SadConsole.csproj -c Release"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 
 # Find the version we're using
@@ -56,7 +58,9 @@ if ($foundPackage){
             
         # SadConsole Extended
         Write-Output "Building $project Debug and Release"
+        $output = Invoke-Expression "dotnet restore ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
         $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+        $output = Invoke-Expression "dotnet restore ..\$project\$project.csproj -c Release -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
         $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Release -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 
         # Push packages to nuget
@@ -64,7 +68,6 @@ if ($foundPackage){
         $sadConsolePackages = Get-ChildItem "$project*.nupkg" | Select-Object -ExpandProperty Name
 
         foreach ($package in $sadConsolePackages) {
-            $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
             $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
         }
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Examples</RootNamespace>
@@ -27,10 +27,10 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup>
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0" />
-    <PackageReference Include="SadConsole" Version="10.0.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.3" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.3" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.3" />
+    <PackageReference Include="SadConsole" Version="10.0.3" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
