@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using ImGuiNET;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 
-namespace SadConsole.Debug.MonoGame;
+namespace SadConsole.Debug.MonoGame.ScreenObjectEditors;
 
 internal class WindowConsolePanel : ImGuiObjectBase
 {

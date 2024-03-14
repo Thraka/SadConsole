@@ -29,12 +29,12 @@ public partial class Game
                 ((SadConsole.Host.Game)Game).ResetRendering();
             }
 
+            SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
+            Global.RenderLoopGameTime = gameTime;
+
             if (SadConsole.Settings.DoDraw)
             {
                 Host.Game game = (Host.Game)Game;
-
-                SadConsole.GameHost.Instance.DrawFrameDelta = gameTime.ElapsedGameTime;
-                Global.RenderLoopGameTime = gameTime;
 
                 // Clear draw calls for next run
                 SadConsole.Game.Instance.DrawCalls.Clear();
@@ -74,12 +74,16 @@ public partial class Game
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
+            Global.UpdateLoopGameTime = gameTime;
+
             if (SadConsole.Settings.DoUpdate)
             {
-                var game = (Game)Game;
+                // Process any pre-Screen logic components
+                foreach (SadConsole.Components.RootComponent item in SadConsole.Game.Instance.RootComponents)
+                    item.Run(GameHost.Instance.UpdateFrameDelta);
 
-                SadConsole.GameHost.Instance.UpdateFrameDelta = gameTime.ElapsedGameTime;
-                Global.UpdateLoopGameTime = gameTime;
+                var game = (Game)Game;
 
                 if (Game.IsActive)
                 {

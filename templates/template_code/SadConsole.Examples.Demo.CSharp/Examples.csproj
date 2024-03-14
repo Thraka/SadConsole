@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Examples</RootNamespace>
@@ -16,26 +16,21 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- Choose which game host you want to use, monogame or sfml. -->
+    <!-- Choose which game host you want to use, monogame, sfml, or fna. -->
     <GameHost>monogame</GameHost>
     
-    <!-- Some constants for your game that can detect monogame or sfml. -->
+    <!-- Some constants for your game that can detect monogame, sfml, or FNA. -->
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
-
-    <!-- Use project references instead of NuGet packages. This assumes you're running from the git repo. -->
-    <!-- Most likely you always want this false. -->
-    <UseProjectReferences>true</UseProjectReferences>
-    <DefineConstants Condition=" '$(UseProjectReferences)' == 'true' ">$(DefineConstants);PROJREFS</DefineConstants>
   </PropertyGroup>
 
   <!-- SadConsole related NuGet packages. -->
-  <ItemGroup Condition=" '$(UseProjectReferences)' != 'true' ">
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.0" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.0" />
-    <PackageReference Include="SadConsole" Version="10.0.0" />
+  <ItemGroup>
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.3" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.3" />
+    <PackageReference Include="SadConsole.Extended" Version="10.0.3" />
+    <PackageReference Include="SadConsole" Version="10.0.3" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
@@ -45,6 +40,13 @@
 
     <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+  </ItemGroup>
+
+  <!-- If you're using the FNA host, set this path to the FNA.dll file. -->
+  <ItemGroup Condition=" '$(GameHost)' == 'fna' ">
+    <Reference Include="FNA">
+      <HintPath>..\..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <!-- Files related to compiling and running the demos. -->
@@ -57,24 +59,6 @@
     <None Update="app.manifest">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <!--
-  The following settings are related to running from the SadConsole git repo and not
-  related to when you create the project through the template.
-  -->
-  <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
-    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
-    <ProjectReference Include="..\..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
-    
-    <!-- MonoGame Debugging, only available when running from the git repo -->
-    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
-
-    <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
-      <HintPath>..\..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

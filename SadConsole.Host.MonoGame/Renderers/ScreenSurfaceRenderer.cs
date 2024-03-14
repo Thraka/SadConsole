@@ -51,7 +51,12 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
     public BlendState MonoGameBlendState { get; set; } = SadConsole.Host.Settings.MonoGameSurfaceBlendState;
 
     /// <summary>
-    /// A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+    /// Used when creating the <see cref="_backingTexture"/> variable.
+    /// </summary>
+    public RenderTargetUsage BackingTextureUsageMode { get; set; } = RenderTargetUsage.DiscardContents;
+
+    /// <summary>
+    /// A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
     /// </summary>
     public byte Opacity
     {
@@ -89,7 +94,7 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
             IsForced = true;
             backingTextureChanged = true;
             _backingTexture?.Dispose();
-            _backingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            _backingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screen.AbsoluteArea.Width, screen.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24, 0, BackingTextureUsageMode);
             _renderTexture?.Dispose();
             _renderTexture = new Host.GameTexture(_backingTexture);
             BackingTextureRecreated?.Invoke(this, EventArgs.Empty);

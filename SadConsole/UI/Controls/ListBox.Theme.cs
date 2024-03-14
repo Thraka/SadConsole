@@ -73,12 +73,12 @@ public partial class ListBox
 
         if (scrollbarItems > 0)
         {
-            ScrollBar.Maximum = scrollbarItems;
+            ScrollBar.MaximumValue = scrollbarItems;
             IsScrollBarVisible = true;
         }
         else
         {
-            ScrollBar.Maximum = 0;
+            ScrollBar.MaximumValue = 0;
             IsScrollBarVisible = false;
         }
     }

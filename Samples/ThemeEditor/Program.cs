@@ -1,11 +1,14 @@
 ﻿using SadConsole.Configuration;
 
+Settings.WindowTitle = "Theme Editor";
+
 Builder startup = new Builder()
     .SetScreenSize(122, 42)
     .SetStartingScreen<ThemeEditor.Container>()
     .IsStartingScreenFocused(true)
     .ConfigureFonts(true)
     .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
+    .EnableImGuiDebug(SadConsole.Input.Keys.F12)
     ;
 
 Game.Create(startup);

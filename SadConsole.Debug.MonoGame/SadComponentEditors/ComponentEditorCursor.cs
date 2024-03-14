@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
+﻿using ImGuiNET;
 using SadConsole.Components;
 using SadConsole.Debug.MonoGame.ImGuiTypes;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
-namespace SadConsole.Debug.MonoGame;
+namespace SadConsole.Debug.MonoGame.SadComponentEditors;
 
 internal class ComponentEditorCursor : ImGuiObjectBase
 {
@@ -23,7 +16,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
     private bool _printAppearanceMatchesHost;
 
     private ImGuiColoredGlyphEditor _cursorAppearanceEditor;
-    private SadConsole.ColoredGlyphBase _cursorAppearance;
+    private ColoredGlyphBase _cursorAppearance;
 
     private int _positionX;
     private int _positionY;
@@ -53,7 +46,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
 
         ImGui.BeginGroup();
         {
-            
+
             // Print appearance
             ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
@@ -72,10 +65,8 @@ internal class ComponentEditorCursor : ImGuiObjectBase
             ImGui.BulletText("Render Appearance");
             ImGui.Indent();
             if (_cursorAppearanceEditor.BuildUI("comp_cur_edit_renderappearance", renderer, _cursorAppearance, ((IScreenSurface)_screenObject).Font, ImGuiColoredGlyphEditor.Modes.Glyph | ImGuiColoredGlyphEditor.Modes.Fore | ImGuiColoredGlyphEditor.Modes.Back))
-            {
                 // was edited, apply it back to cursor
                 _stateComponent.CursorRenderCell.CopyAppearanceFrom(_cursorAppearance);
-            }
             ImGui.Unindent();
 
             // Position
@@ -87,19 +78,15 @@ internal class ComponentEditorCursor : ImGuiObjectBase
                 ImGui.OpenPopup("comp_cur_edit_position");
 
             if (XYPopup.BuildUI("comp_cur_edit_position", renderer, ref _positionX, ref _positionY, "X", "Y"))
-            {
                 _stateComponent.Position = (_positionX, _positionY);
-            }
             else
-            {
                 if (!ImGui.IsPopupOpen("comp_cur_edit_position"))
                 {
                     _positionX = _stateComponent.Position.X;
                     _positionY = _stateComponent.Position.Y;
                 }
-            }
         }
         ImGui.EndGroup();
-        
+
     }
 }

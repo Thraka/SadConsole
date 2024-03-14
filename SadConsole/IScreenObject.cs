@@ -138,14 +138,14 @@ public interface IScreenObject : IPositionable, IComponentHost
     void LostMouse(MouseScreenObjectState state);
 
     /// <summary>
-    /// Updates all <see cref="SadComponents"/> and <see cref="Children"/>.
+    /// Updates all <see cref="IComponentHost.SadComponents"/> and <see cref="Children"/>.
     /// </summary>
     /// <param name="delta">The time that has elapsed since the last call.</param>
     /// <remarks>Only processes if <see cref="IsEnabled"/> is <see langword="true"/>.</remarks>
     void Update(TimeSpan delta);
 
     /// <summary>
-    /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="Position"/> of this instance and the <see cref="Parent"/> instance.
+    /// Sets a value for <see cref="AbsolutePosition"/> based on the <see cref="IPositionable.Position"/> of this instance and the <see cref="Parent"/> instance.
     /// </summary>
     void UpdateAbsolutePosition();
 }

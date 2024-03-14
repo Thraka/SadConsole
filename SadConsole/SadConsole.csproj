@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <AssemblyName>SadConsole</AssemblyName>
     <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>10.0.0</Version>
+    <Version>10.0.3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole (.NET Standard)</AssemblyTitle>
-    <Description>A library that emulates old-school console and command prompt style graphics. Targets .NET 6.</Description>
-    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
+    <AssemblyTitle>SadConsole</AssemblyTitle>
+    <Description>A library that emulates old-school console and command prompt style graphics.</Description>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
@@ -26,22 +26,17 @@
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
+    <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- OnStart startup config is no longer an Action but is now an event.
-- Startup config changed again from the last alpha. Types were renamed and rewritten to be extensible. It works the same way as before except that everything is in the SadConsole.Configuration namespace. You must import that namespace to enable the extension methods that build the config. The type to build the config is Builder.
-- Tabs orientated left/right didn't display the text properly.
-- ColoredGlyph was renamed to ColoredGlyphBase and a new ColoredGlyph that inherits from the base class was added.
-- Scrollbars didn't behave properly when in a CompositeControl.
-- ListBox mouse logic was improved to use an "ItemsArea" property that designates when the mouse is over the items list specifically.
-- StringParser supports variables. There's a dictionary that invokes a delegate which returns a value for the variable. So the value can be determined as the variable is used. See DemoStringParsing.cs in the sample template.
-- AnimatedScreenObject's weren't rendering correctly.
-- Decorators are no longer array's but rented from a list pool. Use the CellDecoratorHelpers class to manage them. SadConsole does its best to rent and return from the pool as you add or remove decorators.
-- Default font used the wrong name. It's been corrected from "IBM_16x8" to "IBM_8x16".
-- The ToggleSwitch control wasn't drawing properly.
-- NumberBox supports cultured number parsing.
-- CellDecorator, as a readonly struct, now declares the properties with "get; init;" which allows mutation with the the "with" keyword.
-- EntityManager.AlternativeFont added to support different fonts for entities.
+      - ScrollBar has been completely rewritten. Minor breaking changes.
+      - NumberBox has been improved.
+      - Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
+      - ControlBase.FindThemeFont helper method added.
+      - Fixed EffectSet bug where the last effect wasn't applied.
+      - GlyphDefinition has an init accessor now.
+      - Added ShapeParameter docs and CreateFilled supports ignoring the border.
+      - Added RootComponent class that can be added to SadConsole.Game.Instance.RootComponents. These components run logic before the keyboard and screen updates.
+      - Splash screen collection is nulled after it runs, freeing memory.
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -75,7 +70,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
     <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0-rc3" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

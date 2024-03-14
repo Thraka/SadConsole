@@ -19,14 +19,21 @@ public partial class TextBox
     public Effects.ICellEffect CaretEffect { get; set; }
 
     /// <summary>
-    /// The color to use with a <see cref="NumberBox"/> control when <see cref="NumberBox.IsEditingNumberInvalid"/> is <see langword="true"/>.
+    /// Enables displaying the text area at a different width than the width of the control.
     /// </summary>
-    [DataMember]
-    public Color? NumberBoxInvalidNumberForeground { get; set; }
+    public bool UseDifferentTextAreaWidth { get; set; } = false;
+
+    /// <summary>
+    /// The width to display the text area at when <see cref="UseDifferentTextAreaWidth"/> is true.
+    /// </summary>
+    public int TextAreaWidth { get; set; }
 
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
+        // IMPORTANT:
+        // Code fixed here should go into the NumberBox control
+
         if (Surface.Effects.Count != 0)
         {
             Surface.Effects.UpdateEffects(time);
@@ -54,13 +61,6 @@ public partial class TextBox
         ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
 
         ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
-
-        // TODO: Fix this hack...
-        if (this is NumberBox numberBox && (numberBox.Text.Length != 0 || (numberBox.Text.Length == 1 && numberBox.Text[0] != '-')))
-        {
-            if (numberBox.IsEditingNumberInvalid)
-                appearance.Foreground = NumberBoxInvalidNumberForeground ?? colors.Red;
-        }
 
         if (IsFocused && (Parent?.Host?.ParentConsole?.IsFocused).GetValueOrDefault(false) && !DisableKeyboard)
         {
@@ -108,9 +108,9 @@ public partial class TextBox
             _oldState = State;
 
             if (Mask == null)
-                Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, Width));
+                Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
             else
-                Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, Width));
+                Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
 
             IsDirty = false;
         }

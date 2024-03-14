@@ -40,4 +40,11 @@ public interface IContainer : IList<ControlBase>
     /// <param name="control">The control instance found.</param>
     /// <returns><see langword="true"/> when the control is found; otherwise <see langword="false"/>.</returns>
     bool HasNamedControl(string name, out ControlBase? control);
+
+    /// <summary>
+    /// Gets a control by its <see cref="ControlBase.Name"/> property.
+    /// </summary>
+    /// <param name="name">The name of the control.</param>
+    /// <returns>The control.</returns>
+    ControlBase GetNamedControl(string name);
 }

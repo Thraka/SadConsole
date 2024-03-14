@@ -21,7 +21,7 @@ class RotatedSurface : ScreenSurface
 {
     public RotatedSurface() : base(GameSettings.ScreenDemoBounds.Height, GameSettings.ScreenDemoBounds.Height / 2)
     {
-
+        Surface.Print(0, 0, "Not supported in SFML");
     }
 }
 #endif

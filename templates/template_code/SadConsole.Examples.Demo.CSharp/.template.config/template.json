@@ -10,7 +10,7 @@
     "identity": "SadConsole.Examples.Demo.CSharp",
     "groupIdentity":"SadConsole.Examples.Demo",
     "name": "SadConsole Demo",
-    "shortName": "sadconsole-demo",
+    "shortName": "sadconsole.demo",
     "preferNameDirectory": true,
     "tags": {
         "language": "C#",

@@ -19,13 +19,12 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
     /// <summary>
     /// An event to indicate that an entity entered a zone.
     /// </summary>
-    public event EventHandler<ZoneEventArgs> EnterZone;
+    public event EventHandler<ZoneEventArgs>? EnterZone;
 
     /// <summary>
     /// An event to indicate that an entity exited a zone.
     /// </summary>
-    public event EventHandler<ZoneEventArgs> ExitZone;
-
+    public event EventHandler<ZoneEventArgs>? ExitZone;
 
     /// <summary>
     /// The zones in this manager.
@@ -63,7 +62,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
             if (zone.Area.Contains(ent.Position))
             {
                 _entityStates[ent].Zones.Add(zone);
-                OnEntityEnterZone(_screen, zone, ent, ent.Position);
+                OnEntityEnterZone(_screen!, zone, ent, ent.Position);
             }
         }
     }
@@ -84,7 +83,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
             EntityState state = _entityStates[ent];
 
             if (state.Zones.Remove(zone))
-                OnEntityExitZone(_screen, zone, ent, ent.Position);
+                OnEntityExitZone(_screen!, zone, ent, ent.Position);
         }
     }
 
@@ -100,7 +99,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
     /// </summary>
     /// <param name="position">The position to get an entity at.</param>
     /// <returns>The entity if it exists; otherwise it returns <see langword="null"/>.</returns>
-    public Entity GetEntityAtPosition(Point position)
+    public Entity? GetEntityAtPosition(Point position)
     {
         ListEnumerator<Entity> items = _spatialMap.GetItemsAt(position);
         return items.MoveNext() ? items.Current : null;
@@ -179,7 +178,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
             foreach (Zone zone in zones)
             {
                 zone._members.Add(entity);
-                OnEntityEnterZone(_screen, zone, entity, entity.Position);
+                OnEntityEnterZone(_screen!, zone, entity, entity.Position);
             }
         }
     }
@@ -193,7 +192,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
         foreach (Zone zone in _entityStates[entity].Zones)
         {
             zone._members.Remove(entity);
-            OnEntityExitZone(_screen, zone, entity, entity.Position);
+            OnEntityExitZone(_screen!, zone, entity, entity.Position);
         }
 
         _entityStates.Remove(entity);
@@ -214,19 +213,19 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
             {
                 state.Zones.Remove(zone);
                 zone._members.Remove(entity);
-                OnEntityExitZone(_screen, zone, entity, entity.Position);
+                OnEntityExitZone(_screen!, zone, entity, entity.Position);
             }
 
             foreach (Zone zone in newZones.Except(state.Zones))
             {
                 state.Zones.Add(zone);
                 zone._members.Add(entity);
-                OnEntityEnterZone(_screen, zone, entity, entity.Position);
+                OnEntityEnterZone(_screen!, zone, entity, entity.Position);
             }
 
             foreach (Zone zone in sameZones)
             {
-                OnEntityMoveZone(_screen, zone, entity, entity.Position, oldPosition);
+                OnEntityMoveZone(_screen!, zone, entity, entity.Position, oldPosition);
             }
         }
     }
@@ -239,7 +238,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
     /// <param name="entity">The entity that entered the zone.</param>
     /// <param name="triggeredPosition">The position the entity entered.</param>
     protected virtual void OnEntityEnterZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) =>
-        EnterZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, entity.Position));
+        EnterZone?.Invoke(this, new ZoneEventArgs(_screen!, zone, entity, entity.Position));
 
     /// <summary>
     /// Called when an entity enters a zone and raises the <see cref="ExitZone"/> event.
@@ -249,7 +248,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
     /// <param name="entity">The entity that exited the zone.</param>
     /// <param name="triggeredPosition">The new position the entity left.</param>
     protected virtual void OnEntityExitZone(IScreenSurface host, Zone zone, Entity entity, Point triggeredPosition) =>
-        ExitZone?.Invoke(this, new ZoneEventArgs(_screen, zone, entity, triggeredPosition));
+        ExitZone?.Invoke(this, new ZoneEventArgs(_screen!, zone, entity, triggeredPosition));
 
 
     /// <summary>
@@ -298,7 +297,7 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
         {
             zone._members.Remove(entity);
             state.Zones.Remove(zone);
-            OnEntityExitZone(_screen, zone, entity, entity.Position);
+            OnEntityExitZone(_screen!, zone, entity, entity.Position);
         }
 
     }
@@ -323,15 +322,21 @@ public class EntityManagerZoned : EntityManager, Components.IComponent
         return _entityStates[entity].IsDisabled;
     }
 
-    [OnDeserialized]
-    private void OnDeserialized(StreamingContext context)
-    {
-    }
+    //[OnDeserialized]
+    //private void OnDeserialized(StreamingContext context)
+    //{
+    //    List<Entity> entitiesBackup = _entities;
+    //    _entities = new List<Entity>(entitiesBackup.Count);
 
-    [OnSerializing]
-    private void OnSerializing(StreamingContext context)
-    {
-    }
+    //    AddRange(entitiesBackup);
+
+    //    IsDirty = true;
+    //}
+
+    //[OnSerializing]
+    //private void OnSerializing(StreamingContext context)
+    //{
+    //}
 
     [DataContract]
     private class EntityState

@@ -1,7 +1,5 @@
-﻿#nullable disable
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

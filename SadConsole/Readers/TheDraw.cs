@@ -167,6 +167,11 @@ public class TheDrawFont
         return null;
     }
 
+    /// <summary>
+    /// Returns a collection of fonts from a TheDraw font file.
+    /// </summary>
+    /// <param name="file">The file to read.</param>
+    /// <returns>A collection of TheDraw fonts.</returns>
     public static IEnumerable<TheDrawFont> ReadFonts(string file)
     {
         List<TheDrawFont> fonts = new List<TheDrawFont>();
@@ -378,22 +383,56 @@ public class TheDrawFont
         }
     }
 
+    /// <summary>
+    /// A individual glyph character.
+    /// </summary>
     public struct CharacterSpot
     {
+        /// <summary>
+        /// The glyph.
+        /// </summary>
         public int Character;
+
+        /// <summary>
+        /// The foreground color of the character.
+        /// </summary>
         public Color Foreground;
+
+        /// <summary>
+        /// The background color of the character.
+        /// </summary>
         public Color Background;
     }
 
+    /// <summary>
+    /// A set of glyph characters.
+    /// </summary>
     public struct CharacterRow
     {
+        /// <summary>
+        /// An array of characters.
+        /// </summary>
         public CharacterSpot[] Characters;
     }
 
+    /// <summary>
+    /// A character defined by the font.
+    /// </summary>
     public struct Character
     {
+        /// <summary>
+        /// The glyph this character represents.
+        /// </summary>
         public int GlyphIndex;
+
+        /// <summary>
+        /// How wide the font character.
+        /// </summary>
         public int Width;
+
+        /// <summary>
+        /// Each row of the font character.
+        /// </summary>
         public CharacterRow[] Rows;
     }
 }

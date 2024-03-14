@@ -60,17 +60,18 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         //
         // Table control 
         //
-        Table tableControl = new Table(20, 10, 3);
+        Table tableControl = new Table(20, 10, 4);
 
         int counter = 0;
+        tableControl.SetupScrollBar(Orientation.Vertical, 10, (tableControl.Width - 1, 0));
+        tableControl.SetupScrollBar(Orientation.Horizontal, 10, (1, 0));
 
-        for (int y = 0; y < 10; y++)
+        for (int y = 0; y < 15; y++)
             for (int x = 0; x < 20; x++)
                 tableControl.Cells[y, x].Value = ++counter;
+        tableControl.Position = (22, 2);
 
-        tableControl.Position = (1, 8);
-
-        //Controls.Add(tableControl);
+        Controls.Add(tableControl);
 
         //
         // Tab control showing two tabs
@@ -121,7 +122,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
                                               },
                                               35, 15) { Name = "tab" };
         tab.Position = (22, 2);
-        Controls.Add(tab);
+        //Controls.Add(tab);
 
         // Create the radio buttons for blue/black themes
         RadioButton colorsBlack = new("Ansi Black")
@@ -181,10 +182,10 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Surface.Fill(colors.ControlHostForeground, colors.ControlHostBackground, 0, 0);
 
         Panel panel = (Panel)Controls["label panel"];
-        TabControl tab = (TabControl)Controls["tab"];
+        //TabControl tab = (TabControl)Controls["tab"];
 
         this.Print(panel.Position.X, panel.Position.Y - 1, "PANEL WITH LABEL", colors.YellowDark);
-        this.Print(tab.Position.X, tab.Position.Y - 1, "TAB CONTROL", colors.YellowDark);
+        //this.Print(tab.Position.X, tab.Position.Y - 1, "TAB CONTROL", colors.YellowDark);
         this.Print(1, 21, "COLOR THEME", colors.YellowDark);
         this.Print(1, panel.Bounds.MaxExtentY + 1, "TOGGLE SWITCH", colors.YellowDark);
     }

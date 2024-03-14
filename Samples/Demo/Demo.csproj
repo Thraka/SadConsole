@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SadConsole.Examples</RootNamespace>
+    <ApplicationManifest>..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- monogame, sfml, or fna -->
+    <GameHost>monogame</GameHost>
+    
+    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
+    <ProjectReference Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+
+    <!-- MonoGame Debugging lib -->
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+
+    <!-- FNA lib -->
+    <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
+      <HintPath>..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- MonoGame host requires you to choose which rendering library you want to use. -->
+  <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+
+    <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
+    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+  </ItemGroup>
+
+  <!-- Files related to compiling and running the demos. -->
+  <ItemGroup>
+    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\*.cs" />
+    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Configuration\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Res\**">
+      <Link>Res\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\app.manifest">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

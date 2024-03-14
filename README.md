@@ -4,11 +4,11 @@
 [![NuGet](https://img.shields.io/nuget/v/SadConsole.svg)][nuget]
 [![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/csharp/Thraka/SadConsole)
 
-SadConsole is a generic library that emulates old-school console game systems. It provides command prompt-style graphics where one or more tile textures are used to represent an ASCII character set. Console's are made up of a grid of cells, each of which can have its own foreground, background, glyph, and special effect applied to it.
+SadConsole is a C#-based .NET cross-platform terminal, ascii, console, game engine. It simulates these types of programs and with it you can make ascii-styled games for modern platforms. At its heart, SadConsole is really a giant tile-based game engine. However, its object model is conceptually similar to a traditional console app.
 
-While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for **MonoGame** and **SFML**.
+While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for **SadConsole.Host.MonoGame** and **SadConsole.Host.SFML**. When adding a host library to your project, you don't need to reference the base **SadConsole** package. If you use MonoGame, you'll also need to add a rendering NuGet package, such as **MonoGame.Framework.DesktopGL**.
 
-_SadConsole currently targets .NET 6 and .NET 7_
+_SadConsole currently targets .NET 6, .NET 7, and .NET 8_
 
 For the latest changes in this release, see the [notes below](#latest-changes)
 
@@ -16,15 +16,17 @@ For the latest changes in this release, see the [notes below](#latest-changes)
 
 Here are some of the features SadConsole supports:
 
-- Show any number of consoles.
+- Show any number of consoles of any size.
 - Uses graphical tile-based images to build out an ASCII-character font with support for more than 256 characters.
+- Fonts are simply sprite sheet tilesets tied to ascii codes, you can use full graphical tiles if you want.
 - Use more than one font file. However, each console is restricted to a single font.
-- Independently controlled entities for game objects.
-- Keyboard and Mouse support.
-- Text UI control framework with windowing support.
+- Full GUI system for interactive controls such as list boxes, buttons, and text fields.
 - Importers for [DOS ANSI files](https://wikipedia.org/wiki/ANSI_art), [TheDraw text fonts](https://en.wikipedia.org/wiki/TheDraw), [RexPaint](https://www.gridsagegames.com/rexpaint/), and [Playscii](http://vectorpoem.com/playscii/).
-- Animated consoles.
+- Animated consoles and instruction system to chain commands together.
+- String encoding system for colors and effects while printing.
+- Entity support for drawing thousands of movable objects on the screen
 - Translating images to text-blocks.
+- Keyboard and mouse support.
 - Highly customizable framework.
 
 #### String display and parsing
@@ -64,7 +66,7 @@ Builder startup = new Builder()
     .UseDefaultConsole()
     .OnStart(Game_Started)
     .IsStartingScreenFocused(true)
-    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
+    .ConfigureFonts(true)
     ;
 
 // Setup the engine and start the game
@@ -100,9 +102,7 @@ Module Module1
         startup.UseDefaultConsole()
         startup.OnStart(AddressOf Game_Started)
         startup.IsStartingScreenFocused(True)
-        startup.ConfigureFonts(Sub(config As FontConfig, gameObject As Game)
-                                   config.UseBuiltinFontExtended()
-                               End Sub)
+        startup.ConfigureFonts(True)
 
         ' Setup the engine and start the game
         SadConsole.Game.Create(startup)
@@ -125,19 +125,31 @@ Module Module1
 End Module
 ```
 
-## Latest changes v10.0.0 Beta 1 and 2 (10/11/2023)
+## Latest changes
 
-- OnStart startup config is no longer an Action but is now an event.
-- Startup config changed again from the last alpha. Types were renamed and rewritten to be extensible. It works the same way as before except that everything is in the SadConsole.Configuration namespace. You must import that namespace to enable the extension methods that build the config. The type to build the config is Builder.
-- Tabs orientated left/right didn't display the text properly.
-- ColoredGlyph was renamed to ColoredGlyphBase and a new ColoredGlyph that inherits from the base class was added.
-- Scrollbars didn't behave properly when in a CompositeControl.
-- ListBox mouse logic was improved to use an "ItemsArea" property that designates when the mouse is over the items list specifically.
-- StringParser supports variables. There's a dictionary that invokes a delegate which returns a value for the variable. So the value can be determined as the variable is used. See DemoStringParsing.cs in the sample template.
-- AnimatedScreenObject's weren't rendering correctly.
-- Decorators are no longer array's but rented from a list pool. Use the CellDecoratorHelpers class to manage them. SadConsole does its best to rent and return from the pool as you add or remove decorators.
-- Default font used the wrong name. It's been corrected from "IBM_16x8" to "IBM_8x16".
-- The ToggleSwitch control wasn't drawing properly.
-- NumberBox supports cultured number parsing.
-- CellDecorator, as a readonly struct, now declares the properties with "get; init;" which allows mutation with the the "with" keyword.
-- EntityManager.AlternativeFont added to support different fonts for entities.
+v10.0.3 (03/13/2024)
+
+- [UI] `ScrollBar` has been completely rewritten. Minor breaking changes.
+  - `.Maximum` has been changed to `.MaximumValue`.
+  - Properties related to the style, such as `BarGlyph`, were moved to a `Style` property which controls how the control looks. Some property names have changed
+- [UI] `NumberBox` improvements.
+  - Rendering code split from `Textbox`.
+  - Added `ShowUpDownButtons` to show up\down buttons.
+  - Fixed bug with `UseMinMax` messing up the value and setting it back to 0 when the control loses focus.
+- [UI] `ControlBase.FindThemeFont` helper method added.
+- [UI] Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
+- [Core] Fixed `EffectSet` bug where the last effect wasn't applied.
+- [Core] `GlyphDefinition` has an init accessor now.
+- [Core] Added `ShapeParameter` docs and `CreateFilled` supports ignoring the border.
+- [Core] Added `RootComponent` class that can be added to `SadConsole.Game.Instance.RootComponents`. These components run logic before the keyboard and screen updates.
+- [Core] Splash screen collection is nulled after it runs, freeing memory.
+- [Extended] Classic keyboard handler has `IsReady` flag now to control when it's active.
+- [Extended] `ColorPickerPopup` would crash on invalid textbox values.
+- [Extended] `GlyphSelectPopup` added. You can use this to display a list of glyphs in your font while debugging your app.
+- [Extended] Fixed a bug in the table control that prevented the scroll bars from being displayed.
+- [Extended] Cleaned up code and enabled nullable.
+- [Host - SFML] Fix bug where it was always running at unlimited FPS.
+- [Host - MonoGame] Renderers can set backing texture usage.
+- [Host - FNA] Fix bug where the screen clear wasn't working and would default to violet.
+- [Host - All] Add `OptimizedScreenSurfaceRenderer` which renders.
+- [Host - All] Surface render step can accept an alternative surface with the `SetData` method.

@@ -203,6 +203,10 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     public bool HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
         NamedControls.TryGetValue(name, out control);
 
+    /// <inheritdoc/>
+    public ControlBase GetNamedControl(string name) =>
+        NamedControls[name];
+
     void Components.IComponent.OnAdded(IScreenObject host)
     {
         if (ParentConsole != null) throw new Exception("Component has already been added to a host.");
@@ -305,7 +309,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if ((state.ScreenObject == host && state.IsOnScreenObject) || host.IsExclusiveMouse)
         {
-            if (CapturedControl != null && CapturedControl.Parent == this)
+            if (CapturedControl != null)
                 CapturedControl.ProcessMouse(state);
             else
             {

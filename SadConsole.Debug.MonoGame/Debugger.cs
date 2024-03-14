@@ -74,8 +74,8 @@ namespace SadConsole.Debug.MonoGame
             _imGui.UIComponents.Add(new ScreenObjectsPanel());
             _imGui.UIComponents.Add(new GuiSurfacePreview());
 
-            ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(SadConsole.UI.Window), new WindowConsolePanel());
-            ComponentsPanel.RegisteredPanels.Add(typeof(SadConsole.Components.Cursor), new ComponentEditorCursor());
+            ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(SadConsole.UI.Window), new ScreenObjectEditors.WindowConsolePanel());
+            ComponentsPanel.RegisteredPanels.Add(typeof(SadConsole.Components.Cursor), new SadComponentEditors.ComponentEditorCursor());
 
             GuiState.GuiFinalOutputWindow = new FinalOutputWindow("Output preview", true);
             _imGui.UIComponents.Add(GuiState.GuiFinalOutputWindow);

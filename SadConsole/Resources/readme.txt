@@ -3,9 +3,11 @@ Welcome to SadConsole.
 Questions? Join the Discord channel
 https://discord.gg/pAFNKYjczM
 
-You must add a host NuGet package to your project, either SadConsole.Host.SFML or SadConsole.Host.MonoGame.
+You must add a host NuGet package to your project, either SadConsole.Host.SFML or SadConsole.Host.MonoGame. If you use MonoGame, you'll also need to add a rendering NuGet package, such as MonoGame.Framework.DesktopGL.
 
-Here is an example program.cs file that let's you get started with SadConsole quickly. If you're using Visual Basic, starter code is listed below the C# code.
+If you're new to SadConsole, read the getting started tutorial at https://sadconsole.com/articles/tutorials/getting-started/part-1-drawing.html
+
+Here is an example program file that let's you get started with SadConsole quickly. If you're using Visual Basic, starter code is listed below the C# code.
 
 C#
 ===============================
@@ -22,7 +24,7 @@ Builder startup = new Builder()
     .UseDefaultConsole()
     .OnStart(Game_Started)
     .IsStartingScreenFocused(true)
-    .ConfigureFonts((config, game) => config.UseBuiltinFontExtended())
+    .ConfigureFonts(true)
     ;
 
 // Setup the engine and start the game
@@ -60,9 +62,7 @@ Module Module1
         startup.UseDefaultConsole()
         startup.OnStart(AddressOf Game_Started)
         startup.IsStartingScreenFocused(True)
-        startup.ConfigureFonts(Sub(config As FontConfig, gameObject As Game)
-                                   config.UseBuiltinFontExtended()
-                               End Sub)
+        startup.ConfigureFonts(True)
 
         ' Setup the engine and start the game
         SadConsole.Game.Create(startup)

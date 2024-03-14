@@ -13,7 +13,7 @@ public class HueBar : ControlBase
     /// <summary>
     /// Raised when the <see cref="SelectedColor"/> value changes.
     /// </summary>
-    public event EventHandler ColorChanged;
+    public event EventHandler? ColorChanged;
 
     /// <summary>
     /// The selected color.
@@ -69,13 +69,13 @@ public class HueBar : ControlBase
 
     private void SetClosestIndex(Color color)
     {
-        ColorMine.ColorSpaces.Rgb rgbColorStop = new ColorMine.ColorSpaces.Rgb() { R = color.R, G = color.G, B = color.B };
+        ColorMine.ColorSpaces.Rgb rgbColorStop = new() { R = color.R, G = color.G, B = color.B };
         Tuple<Color, double, int>[] colorWeights = new Tuple<Color, double, int>[Width];
 
         // Create a color weight for every cell compared to the color stop
         for (int x = 0; x < Width; x++)
         {
-            ColorMine.ColorSpaces.Rgb rgbColor = new ColorMine.ColorSpaces.Rgb() { R = Surface[x, 0].Foreground.R, G = Surface[x, 0].Foreground.G, B = Surface[x, 0].Foreground.B };
+            ColorMine.ColorSpaces.Rgb rgbColor = new() { R = Surface[x, 0].Foreground.R, G = Surface[x, 0].Foreground.G, B = Surface[x, 0].Foreground.B };
             ColorMine.ColorSpaces.Cmy cmyColor = rgbColor.To<ColorMine.ColorSpaces.Cmy>();
 
             colorWeights[x] = new Tuple<Color, double, int>(Surface[x, 0].Foreground, rgbColorStop.Compare(cmyColor, new ColorMine.ColorSpaces.Comparisons.Cie1976Comparison()), x);
@@ -92,7 +92,7 @@ public class HueBar : ControlBase
     {
         base.OnMouseIn(info);
 
-        if (Parent.Host.CapturedControl == null)
+        if (Parent!.Host!.CapturedControl == null)
         {
             if (info.OriginalMouseState.Mouse.LeftButtonDown)
             {
@@ -109,7 +109,7 @@ public class HueBar : ControlBase
     /// <inheritdoc/>
     public override bool ProcessMouse(SadConsole.Input.MouseScreenObjectState info)
     {
-        if (Parent.Host.CapturedControl == this)
+        if (Parent?.Host?.CapturedControl == this)
         {
             if (info.Mouse.LeftButtonDown == false)
                 Parent.Host.ReleaseControl();
@@ -140,7 +140,7 @@ public class HueBar : ControlBase
         Surface.Fill(Color.White, Color.Black, 0, null);
 
         _positions = Width;
-        Gradient gradient = new Gradient(Color.Red, Color.Yellow, Color.Green, Color.Turquoise, Color.Blue, Color.Purple, Color.Red);
+        Gradient gradient = new(Color.Red, Color.Yellow, Color.Green, Color.Turquoise, Color.Blue, Color.Purple, Color.Red);
 
         for (int x = 0; x < Width; x++)
         {
@@ -156,11 +156,11 @@ public class HueBar : ControlBase
         for (int x = 0; x < Width; x++)
             colors[x] = Surface[x, 0].Foreground;
 
-        List<int> colorIndexesFinished = new List<int>(Width);
+        List<int> colorIndexesFinished = new(Width);
 
-        foreach (var stop in gradient.Stops)
+        foreach (GradientStop stop in gradient.Stops)
         {
-            ColorMine.ColorSpaces.Rgb rgbColorStop = new ColorMine.ColorSpaces.Rgb() { R = stop.Color.R, G = stop.Color.G, B = stop.Color.B };
+            ColorMine.ColorSpaces.Rgb rgbColorStop = new() { R = stop.Color.R, G = stop.Color.G, B = stop.Color.B };
             Tuple<Color, double, int>[] colorWeights = new Tuple<Color, double, int>[Width];
 
             // Create a color weight for every cell compared to the color stop
@@ -168,7 +168,7 @@ public class HueBar : ControlBase
             {
                 if (!colorIndexesFinished.Contains(x))
                 {
-                    ColorMine.ColorSpaces.Rgb rgbColor = new ColorMine.ColorSpaces.Rgb() { R = colors[x].R, G = colors[x].G, B = colors[x].B };
+                    ColorMine.ColorSpaces.Rgb rgbColor = new() { R = colors[x].R, G = colors[x].G, B = colors[x].B };
                     ColorMine.ColorSpaces.Cmy cmyColor = rgbColor.To<ColorMine.ColorSpaces.Cmy>();
 
                     colorWeights[x] = new Tuple<Color, double, int>(colors[x], rgbColorStop.Compare(cmyColor, new ColorMine.ColorSpaces.Comparisons.Cie1976Comparison()), x);
@@ -177,7 +177,7 @@ public class HueBar : ControlBase
                     colorWeights[x] = new Tuple<Color, double, int>(colors[x], 10000, x);
             }
 
-            var foundColor = colorWeights.OrderBy(t => t.Item2).First();
+            Tuple<Color, double, int> foundColor = colorWeights.OrderBy(t => t.Item2).First();
 
             Surface[foundColor.Item3, 0].Foreground = stop.Color;
             colorIndexesFinished.Add(foundColor.Item3);

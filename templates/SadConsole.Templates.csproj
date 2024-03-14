@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>10.0.9</PackageVersion>
+    <PackageVersion>10.0.14</PackageVersion>
     <PackageId>SadConsole.Templates</PackageId>
     <Title>SadConsole Game Templates</Title>
     <Authors>Thraka</Authors>
     <Description>Templates to create new SadConsole projects</Description>
     <PackageTags>dotnet-new;templates;template;sadconsole;roguelike;roguelikes;sadrogue;thesadrogue</PackageTags>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>

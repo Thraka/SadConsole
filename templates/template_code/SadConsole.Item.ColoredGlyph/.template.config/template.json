@@ -9,7 +9,7 @@
     "identity": "SadConsole.Item.ColoredGlyph",
     "groupIdentity":"SadConsole.Item",
     "name": "ColoredGlyph Type",
-    "shortName": "sc-coloredglyph",
+    "shortName": "sadconsole.coloredglyph",
     "preferNameDirectory": true,
     "tags": {
         "language": "C#",

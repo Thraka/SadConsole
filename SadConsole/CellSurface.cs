@@ -181,12 +181,15 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         protected set { Cells[position.ToIndex(Width)] = value; IsDirty = true; }
     }
 
-    /// <inheritdoc />
-    public ColoredGlyphBase[] this[Range range]
+    /// <summary>
+    /// Given a position, returns the "value" associated with that location.
+    /// </summary>
+    /// <param name="range">The cells to return from the array.</param>
+    /// <returns>The cells associated with the specified range.</returns>
+    public Span<ColoredGlyphBase> this[Range range]
     {
-        get => Cells[range];
+        get => Cells.AsSpan(range);
     }
-
 
     /// <summary>
     /// Creates a new surface with the specified width and height, with <see cref="Color.Transparent"/> for the background and <see cref="Color.White"/> for the foreground.
@@ -389,8 +392,6 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         IsDirty = true;
         OnCellsReset();
     }
-
-
 
     /// <summary>
     /// Sets <see cref="IsDirty"/> to <see langword="true"/> without triggering <see cref="OnIsDirtyChanged"/>.

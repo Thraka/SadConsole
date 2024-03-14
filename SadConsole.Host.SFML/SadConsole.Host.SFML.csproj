@@ -1,38 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <RootNamespace>SadConsole.Host.SFML</RootNamespace>
     <DocumentationFile>SadConsole.Host.SFML.xml</DocumentationFile>
-    <Version>10.0.0</Version>
+    <Version>10.0.3</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyTitle>SadConsole SFML</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
-    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageIcon>nugeticon.png</PackageIcon>
     <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <PackageTags>sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;sadconsole</PackageTags>
-    <PackageReleaseNotes>...</PackageReleaseNotes>
+    <PackageTags>sadconsole;sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>
+- Fix bug where it was always running at unlimited FPS.
+- Add OptimizedScreenSurfaceRenderer which renders.
+- Surface render step can accept an alternative surface with the SetData method.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);SFML</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.0</SadConsoleVersion>
+    <SadConsoleVersion>10.0.3</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
 
@@ -43,12 +48,13 @@
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.0" />
     
     <PackageReference Include="SFML.Net" Version="2.5.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

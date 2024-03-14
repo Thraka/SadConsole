@@ -64,7 +64,7 @@ public partial class Entity : ScreenObject, IHasID
     }
 
     /// <summary>
-    /// Treats the <see cref="IScreenObject.Position"/> of the entity as if it is pixels and not cells.
+    /// Treats the <see cref="IPositionable.Position"/> of the entity as if it is pixels and not cells.
     /// </summary>
     public bool UsePixelPositioning
     {

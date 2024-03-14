@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace SadConsole.UI.Controls;
@@ -9,14 +10,14 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public class FileDirectoryListbox : ListBox
 {
-    private string _currentFolder = null;
+    private string? _currentFolder = null;
+    private string? _originalRootFolder;
     private string _extFilter = "*.*";
-    private string _originalRootFolder;
 
     /// <summary>
     /// The current folder displayed by the listbox.
     /// </summary>
-    public string CurrentFolder
+    public string? CurrentFolder
     {
         get { return _currentFolder; }
         set
@@ -37,6 +38,8 @@ public class FileDirectoryListbox : ListBox
     public string FileFilter
     {
         get { return _extFilter; }
+
+        [MemberNotNull(nameof(_extFilter))]
         set
         {
             if (string.IsNullOrEmpty(value))
@@ -61,7 +64,7 @@ public class FileDirectoryListbox : ListBox
     /// <summary>
     /// When <see langword="true"/>, only displays files that match <see cref="FileFilter"/>; otherwise <see langword="false"/> to display all files.
     /// </summary>
-    public string HighlightedExtentions { get; set; }
+    public string? HighlightedExtentions { get; set; }
 
     /// <summary>
     /// Creates a new instance of the control and uses <see cref="FileDirectoryListboxItem"/> as the item theme.
@@ -79,42 +82,42 @@ public class FileDirectoryListbox : ListBox
     public FileDirectoryListbox(int width, int height, ListBoxItemTheme itemTheme) : base(width, height, itemTheme) { }
 
 
-    private bool DisplayFolder(string folder)
+    private bool DisplayFolder(string? folder)
     {
-        if (System.IO.Directory.Exists(folder))
+        if (!string.IsNullOrEmpty(folder) && System.IO.Directory.Exists(folder))
         {
             try
             {
-                List<object> newItems = new List<object>(20);
-                var dir = new System.IO.DirectoryInfo(folder);
+                List<object> newItems = new(20);
+                System.IO.DirectoryInfo dir = new(folder);
 
                 if (dir.Parent != null && (!OnlyRootAndSubDirs || (OnlyRootAndSubDirs && System.IO.Path.GetFullPath(folder).ToLower() != System.IO.Path.GetFullPath(_originalRootFolder).ToLower())))
-                    newItems.Add(new FauxDirectory { Name = ".." });
+                    newItems.Add(new FauxDirectory(".."));
 
-                foreach (var item in System.IO.Directory.GetDirectories(folder))
+                foreach (string item in System.IO.Directory.GetDirectories(folder))
                     newItems.Add(new System.IO.DirectoryInfo(item));
-                var highlightExts = HighlightedExtentions?.Trim(';').Split(';') ?? Array.Empty<string>();
-                var filterExts = _extFilter.Trim(';').Split(';');
 
-                foreach (var filter in filterExts)
+                string[] highlightExts = HighlightedExtentions?.Trim(';').Split(';') ?? Array.Empty<string>();
+                string[] filterExts = _extFilter.Trim(';').Split(';');
+
+                foreach (string filter in filterExts)
                 {
-                    foreach (var item in System.IO.Directory.GetFiles(folder, filter))
+                    foreach (string item in System.IO.Directory.GetFiles(folder, filter))
                     {
-                        var fileInfo = new System.IO.FileInfo(item);
-
+                        System.IO.FileInfo fileInfo = new(item);
 
                         if (highlightExts.Contains(fileInfo.Extension.ToLower()))
-                            newItems.Add(new HighlightedExtFile() { Name = fileInfo.Name });
+                            newItems.Add(new HighlightedExtFile(fileInfo.Name));
                         else
                             newItems.Add(fileInfo);
                     }
                 }
                 
 
-                base.Items.Clear();
+                Items.Clear();
 
-                foreach (var item in newItems)
-                    base.Items.Add(item);
+                foreach (object item in newItems)
+                    Items.Add(item);
 
                 return true;
             }
@@ -123,8 +126,8 @@ public class FileDirectoryListbox : ListBox
                 return false;
             }
         }
-        else
-            return false;
+
+        return false;
     }
 
     /// <summary>
@@ -144,7 +147,7 @@ public class FileDirectoryListbox : ListBox
         {
             if (((FauxDirectory)SelectedItem).Name == "..")
             {
-                CurrentFolder = System.IO.Directory.GetParent(_currentFolder).FullName;
+                CurrentFolder = System.IO.Directory.GetParent(_currentFolder!)!.FullName;
                 if (Items.Count > 0)
                     SelectedItem = Items[0];
             }
@@ -163,7 +166,14 @@ public class FileDirectoryListbox : ListBox
         /// <summary>
         /// The name of the directory.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
+
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
+        /// <param name="name">The name to display.</param>
+        public FauxDirectory(string name) =>
+            Name = name;
     }
 
     /// <summary>
@@ -174,6 +184,13 @@ public class FileDirectoryListbox : ListBox
         /// <summary>
         /// The name of the file.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
+
+        /// <summary>
+        /// Creates a new instance of the class.
+        /// </summary>
+        /// <param name="name">The name to display.</param>
+        public HighlightedExtFile(string name) =>
+            Name = name;
     }
 }

@@ -94,10 +94,19 @@ public partial class ScreenObject : IScreenObject
         {
             if (_position == value) return;
 
-            OnPositionChanging(_position, value);
             Point oldPosition = _position;
-            _position = value;
-            OnPositionChanged(oldPosition, _position);
+
+            try
+            {
+                OnPositionChanging(_position, value);
+                _position = value;
+                OnPositionChanged(oldPosition, _position);
+            }
+            catch (Exception)
+            {
+                _position = oldPosition;
+                throw;
+            }
         }
     }
 
@@ -311,6 +320,7 @@ public partial class ScreenObject : IScreenObject
     protected virtual void OnPositionChanged(Point oldPosition, Point newPosition)
     {
         UpdateAbsolutePosition();
+
         PositionChanged?.Invoke(this, new ValueChangedEventArgs<Point>(oldPosition, newPosition));
     }
 

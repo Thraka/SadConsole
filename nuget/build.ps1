@@ -1,10 +1,12 @@
 # Delete any NuGet packages
 Write-Output "Removing old nupkg files"
-Remove-Item *.nupkg -Force
+Remove-Item "*.nupkg","*.snupkg" -Force
 
 # Build SadConsole
 Write-Output "Building SadConsole Debug and Release"
+$output = Invoke-Expression "dotnet restore ..\SadConsole\SadConsole.csproj -c Debug --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 $output = Invoke-Expression "dotnet build ..\SadConsole\SadConsole.csproj -c Debug"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+$output = Invoke-Expression "dotnet restore ..\SadConsole\SadConsole.csproj -c Release --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 $output = Invoke-Expression "dotnet build ..\SadConsole\SadConsole.csproj -c Release"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 
 # Find the version we're using
@@ -50,14 +52,16 @@ while ($timer.elapsed -lt $timeout){
 # Found the SadConsole package, start building and pushing the other packages
 if ($foundPackage){
 
-    $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML"
+    $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML", "SadConsole.Host.FNA"
 
     foreach ($project in $projects) {
             
         # SadConsole Extended
         Write-Output "Building $project Debug and Release"
-        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Debug -p:UseProjectReferences=False"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
-        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Release -p:UseProjectReferences=False"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+        $output = Invoke-Expression "dotnet restore ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+        $output = Invoke-Expression "dotnet restore ..\$project\$project.csproj -c Release -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+        $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Release -p:UseProjectReferences=false"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 
         # Push packages to nuget
         Write-Output "Pushing SadConsole packages"
@@ -70,5 +74,5 @@ if ($foundPackage){
     }
 
     # Archive the packages
-    Move-Item *.nupkg .\archive\ -force
+    Move-Item "*.nupkg","*.snupkg" .\archive\ -force
 }

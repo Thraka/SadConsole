@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace SadConsole.Entities;
 
 /// <summary>
-/// A component for <see cref="Entity"/> that animates the <see cref="Entity.Appearance"/> and <see cref="Entity.Effect"/> properties.
+/// A component for <see cref="Entity"/> that animates the <see cref="Entity.AppearanceSingle"/> property.
 /// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]

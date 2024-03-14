@@ -31,9 +31,7 @@ public class OutputSurfaceRenderStep : IRenderStep
     public void Render(IRenderer renderer, IScreenSurface screenObject)
     {
         var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
-
-        if (screenObject.Tint.A != 255)
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(sfmlRenderer._backingTexture.Texture, new SFML.System.Vector2i(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), sfmlRenderer._finalDrawColor));
+        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(sfmlRenderer._backingTexture.Texture, new SFML.System.Vector2i(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), sfmlRenderer._finalDrawColor));
     }
 
     ///  <inheritdoc/>

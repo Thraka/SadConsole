@@ -50,7 +50,7 @@ public class ScreenSurfaceRenderer : IRenderer
     public BlendMode SFMLBlendState { get; set; } = SadConsole.Host.Settings.SFMLSurfaceBlendMode;
 
     /// <summary>
-    /// A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+    /// A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
     /// </summary>
     public byte Opacity
     {

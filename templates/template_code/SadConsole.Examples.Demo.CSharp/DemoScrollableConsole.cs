@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using SadConsole.Input;
-using SadConsole.StringParser;
+﻿using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
@@ -108,12 +106,12 @@ class ScrollableConsole : ControlsConsole
 
         // Adjust the scroll bar
         _scrollBar.IsEnabled = _scrollOffset != 0;
-        _scrollBar.Maximum = _scrollOffset;
+        _scrollBar.MaximumValue = _scrollOffset;
 
         // If autoscrolling is enabled, scroll
         if (_scrollBar.IsEnabled && AutomaticScroll && _lastCursorY != MessageBuffer.Cursor.Position.Y)
         {
-            _scrollBar.Value = _scrollBar.Maximum;
+            _scrollBar.Value = _scrollBar.MaximumValue;
             _lastCursorY = MessageBuffer.Cursor.Position.Y;
         }
 
@@ -127,5 +125,13 @@ class ScrollableConsole : ControlsConsole
             return MessageBuffer.ProcessKeyboard(keyboard);
 
         return false;
+    }
+
+    public override bool ProcessMouse(MouseScreenObjectState state)
+    {
+        if (state.Mouse.ScrollWheelValueChange != 0)
+            return _scrollBar.ProcessMouseWheel(state);
+
+        return base.ProcessMouse(state);
     }
 }

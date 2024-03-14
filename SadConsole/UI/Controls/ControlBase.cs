@@ -549,6 +549,13 @@ public abstract class ControlBase
     protected virtual void OnSurfaceChanged(ICellSurface oldSurface, ICellSurface newSurface) { }
 
     /// <summary>
+    /// Returns the <see cref="AlternateFont"/>. If null, returns the host's console font or the default engine font.
+    /// </summary>
+    /// <returns></returns>
+    public IFont FindThemeFont() =>
+        AlternateFont ?? Parent?.Host?.ParentConsole?.Font ?? GameHost.Instance.DefaultFont;
+
+    /// <summary>
     /// Returns the colors assigned to this control, the parent, or the library default.
     /// </summary>
     /// <returns>The found colors.</returns>

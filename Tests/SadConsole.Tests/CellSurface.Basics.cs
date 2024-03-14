@@ -382,6 +382,7 @@ namespace SadConsole.Tests
         [DataRow(5, 5, 4, 4, 6)]
         [DataRow(5, 5, 3, 3, 8)]
         [DataRow(5, 5, -1, -1, 8)]
+        [DataRow(5, 5, 3, 4, 10)]
         public void Clear_Length(int width, int height, int clearX, int clearY, int length)
         {
             new SadConsole.Tests.BasicGameHost();

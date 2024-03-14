@@ -39,7 +39,7 @@ Builder startup = new Builder()
     .IsStartingScreenFocused(false) // Dont want RootScreen to be focused because RootScreen automatically focuses the selected demo console
     .ConfigureFonts(true)
     //.SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
-    .KeyhookMonoGameDebugger()
+    .KeyhookMonoGameDebugger(SadConsole.Input.Keys.F12)
     ;
 
 Game.Create(startup);

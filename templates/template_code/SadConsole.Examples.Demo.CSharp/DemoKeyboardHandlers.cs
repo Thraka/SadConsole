@@ -146,10 +146,12 @@ internal class KeyboardHandlers : ControlsConsole
             cursor.NewLine().
                           Print("  Advanced Example: Command Prompt - HELP").NewLine().
                           Print("  =======================================").NewLine().NewLine().
-                          Print("  help      - Display this help info").NewLine().
-                          Print("  ver       - Display version info").NewLine().
-                          Print("  cls       - Clear the screen").NewLine().
-                          Print("  look      - Example adventure game command").NewLine().
+                          Print("  help       - Display this help info").NewLine().
+                          Print("  ver        - Display version info").NewLine().
+                          Print("  cls        - Clear the screen").NewLine().
+                          Print("  look       - Example adventure game command").NewLine().
+                          Print("  ready_test - Displays multiple lines of text printed over time. Input").NewLine().
+                          Print("               processing is disabled while the text is printed").NewLine().
                           Print("  ").NewLine();
         }
         else if (value == "ver")
@@ -172,10 +174,31 @@ internal class KeyboardHandlers : ControlsConsole
             cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
             cursor.DisableWordBreak = true;
         }
+        else if (value == "ready_test")
+        {
+            string text = string.Join("\r\n", "This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..");
+            var _typingInstruction = new SadConsole.Instructions
+                .DrawString(SadConsole.ColoredString.Parser.Parse(text));
+
+            _typingInstruction.Position = cursor.Position;
+            _typingInstruction.Cursor = cursor;
+            _typingInstruction.TotalTimeToPrint = TimeSpan.FromMilliseconds(1000);
+            _typingInstruction.Finished += _typingInstruction_Finished;
+            _typingInstruction.RemoveOnFinished = true;
+            keyboardComponent.IsReady = false;
+            _promptScreen.SadComponents.Add(_typingInstruction);
+
+            cursor.Position = new(_typingInstruction.Position.X, _typingInstruction.Position.Y + text.Length);
+        }
         else
         {
             cursor.Print("  Unknown command").NewLine();
         }
+    }
+
+    private void _typingInstruction_Finished(object? sender, EventArgs e)
+    {
+        _keyboardHandlerDOS.IsReady = true;
     }
 
     private bool C64HandlerEnterPressed(C64KeyboardHandler keyboardComponent, Cursor cursor, string value)

@@ -15,12 +15,12 @@ public readonly struct GlyphDefinition
     /// <summary>
     /// The glyph of the decorator.
     /// </summary>
-    public int Glyph { get; }
+    public int Glyph { get; init; }
 
     /// <summary>
     /// The mirror effect of the decorator.
     /// </summary>
-    public Mirror Mirror { get; }
+    public Mirror Mirror { get; init; }
 
     /// <summary>
     /// Creates a new cell decorator instance.

@@ -176,7 +176,7 @@ public partial class AnimatedScreenObject
     /// Creates a new animation with the specified name, width, and height.
     /// </summary>
     /// <param name="name">The name of the animation.</param>
-    /// <param name="width">The width of each frame this animation will have.<  /param>
+    /// <param name="width">The width of each frame this animation will have.</param>
     /// <param name="height">The height of each frame this animation will have.</param>
     /// <param name="font">The font used with this animation.</param>
     /// <param name="fontSize">The size of the font.</param>

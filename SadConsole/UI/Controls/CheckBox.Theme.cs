@@ -170,6 +170,6 @@ public partial class CheckBox : ToggleButtonBase
         return surface;
     }
 
-    private Rectangle EstimateControlSurface() =>
+    protected Rectangle EstimateControlSurface() =>
         new(0, 0, Text.Length + 3 + 2, 1);
 }

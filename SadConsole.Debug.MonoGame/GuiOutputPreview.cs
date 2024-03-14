@@ -28,7 +28,7 @@ namespace SadConsole.Debug.MonoGame
             {
                 ImGui.SetNextWindowBgAlpha(1f);
 
-                if (ImGui.Begin(Title, ref IsOpen))
+                if (ImGui.Begin(Title, ref IsOpen, ImGuiWindowFlags.HorizontalScrollbar))
                 {
                     if (SadConsole.Host.Global.RenderOutput != null)
                     {

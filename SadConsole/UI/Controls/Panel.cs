@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 
@@ -27,10 +28,15 @@ public partial class Panel : CompositeControl, IList<ControlBase>
                 throw new IndexOutOfRangeException();
 
             RemoveAt(index);
-            Insert(index, value);
+
+            if (value != null)
+                Insert(index, value);
         }
     }
-    
+
+    /// <inheritdoc/>
+    public ControlBase this[string name] => NamedControls[name];
+
     /// <summary>
     /// Creates a new drawing surface control with the specified width and height.
     /// </summary>
@@ -178,6 +184,18 @@ public partial class Panel : CompositeControl, IList<ControlBase>
         if (((ControlBase)sender).IsDirty)
             IsDirty = true;
     }
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name) =>
+        HasNamedControl(name, out _);
+
+    /// <inheritdoc/>
+    public bool HasNamedControl(string name, [NotNullWhen(true)] out ControlBase? control) =>
+        NamedControls.TryGetValue(name, out control);
+
+    /// <inheritdoc/>
+    public ControlBase GetNamedControl(string name) =>
+        NamedControls[name];
 
     bool ICollection<ControlBase>.IsReadOnly => false;
 

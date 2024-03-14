@@ -492,6 +492,88 @@
             A shader used when drawing the final texture to the screen.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.OptimizedScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> with tint. Doesn't allow render steps.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="E:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.SFMLBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.SadConsole#Renderers#IRenderer#Steps">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.CachedRenderRects">
+            <summary>
+            Cached set of rectangles used in rendering each cell.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -535,7 +617,7 @@
         </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
             <summary>
-            A 0 to 255 value represening how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
@@ -879,7 +961,7 @@
             </summary>
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
-            <inheritdoc/>//
+            <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
             <inheritdoc/>
@@ -889,7 +971,7 @@
         </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
             <summary>
-            Not used.
+            Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
             </summary>
         </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.Reset">

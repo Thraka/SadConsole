@@ -1,0 +1,1 @@
+The project is crafted to load the content of the ..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\ folder. New code and changes should always go into that folder. This project file exists only for dev work so that the template's project file isn't altered unnecessarily.

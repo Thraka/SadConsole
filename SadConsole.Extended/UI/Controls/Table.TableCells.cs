@@ -189,7 +189,7 @@ public partial class Table
         {
             // Set existing cell, or a fake one if it does not yet exists, but modifying this fake cell with add it to the table
             _table.SelectedCell = GetIfExists(row, column, false) ?? Cell.InternalCreate(row, column, _table, string.Empty);
-            _table.SelectedCell.Position = GetCellPosition(row, column, out _, out _,
+            _table.SelectedCell._position = GetCellPosition(row, column, out _, out _,
                     _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0,
                     _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
         }
@@ -317,7 +317,7 @@ public partial class Table
             if (!_cells.TryGetValue((row, col), out Cell? cell))
             {
                 cell = Cell.InternalCreate(row, col, _table, string.Empty);
-                cell.Position = GetCellPosition(row, col, out _, out _,
+                cell._position = GetCellPosition(row, col, out _, out _,
                         _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0,
                         _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
 
@@ -416,7 +416,7 @@ public partial class Table
         internal void AdjustCellPositionsAfterResize()
         {
             foreach (KeyValuePair<Point, Cell> cell in _cells)
-                cell.Value.Position = GetCellPosition(cell.Value.Row, cell.Value.Column, out _, out _,
+                cell.Value._position = GetCellPosition(cell.Value.Row, cell.Value.Column, out _, out _,
                     _table.IsVerticalScrollBarVisible ? _table.StartRenderYPos : 0, _table.IsHorizontalScrollBarVisible ? _table.StartRenderXPos : 0);
             _table._checkScrollBarVisibility = true;
             _table.IsDirty = true;
