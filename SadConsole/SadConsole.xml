@@ -2455,6 +2455,23 @@
             </summary>
             <returns>The string "Console".</returns>
         </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
+        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
             A draw call that invokes an <see cref="T:System.Action"/> delegate.
@@ -10639,7 +10656,9 @@
         </member>
         <member name="M:SadConsole.StringValidation.LettersOnly">
             <remarks>
-            Pattern explanation:<br/>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
             <code>
             ○ Match a character in the set [A-Za-z].<br/>
             </code>
@@ -13324,47 +13343,47 @@
             The drawing code for the scrollbar
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonVerticalGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonVerticalGlyph">
             <summary>
             The glyph for the start button when the control is vertical.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonVerticalGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonVerticalGlyph">
             <summary>
             The glyph for the end button when the control is vertical.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonHorizontalGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.StartButtonHorizontalGlyph">
             <summary>
             The glyph for the start button when the control is horizontal.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonHorizontalGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.EndButtonHorizontalGlyph">
             <summary>
             The glyph for the end button when the control is horizontal.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarGlyph">
             <summary>
             The glyph for the scroll bar bar where the slider is not located.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripGlyph">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripGlyph">
             <summary>
             The glyph for the scroll bar icon.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarSize">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.BarSize">
             <summary>
             The size of the bar area. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripSize">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripSize">
             <summary>
             The size of the grip. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripStart">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.GripStart">
             <summary>
             The cell the grip starts at. Calculated automatically by the control.
             </summary>
@@ -13374,22 +13393,22 @@
             The cell the grip ends at. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverUpButton">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverUpButton">
             <summary>
             Indicates that the mouse is above the up arrow button. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverDownButton">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverDownButton">
             <summary>
             Indicates that the mouse is above the down arrow button. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverGripper">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverGripper">
             <summary>
             Indicates that the mouse is above the gripper. Calculated automatically by the control.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverBar">
+        <member name="F:SadConsole.UI.Controls.ScrollBar.ThemeStyle.IsMouseOverBar">
             <summary>
             Indicates that the mouse is not above the empty part of the bar. Calculated automatically by the control.
             </summary>
@@ -14680,10 +14699,6 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
-        </member>
-    </members>
-</doc>
-ite.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>

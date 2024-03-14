@@ -190,6 +190,8 @@ public partial class ScrollBar : ControlBase
     /// </summary>
     protected void SetGripToValue()
     {
+        int originalStart = Style.GripStart;
+
         // Check for start vs end
         if (_value == 0)
             Style.GripStart = 1;
@@ -204,6 +206,9 @@ public partial class ScrollBar : ControlBase
             else
                 Style.GripStart = _value + 1;
         }
+
+        if (originalStart != Style.GripStart)
+            IsDirty = true;
     }
 
     /// <summary>
@@ -346,11 +351,6 @@ public partial class ScrollBar : ControlBase
 
             ControlMouseState controlMouseState = new(this, state);
 
-            Style.IsMouseOverUpButton = false;
-            Style.IsMouseOverDownButton = false;
-            Style.IsMouseOverGripper = false;
-            Style.IsMouseOverBar = false;
-
             // Dragging the gripper around
             if (IsGripped)
             {
@@ -397,6 +397,7 @@ public partial class ScrollBar : ControlBase
                             SetValue(_barValues[cell - 1], false);
                         else
                             SetValue(Style.GripStart - 1, false);
+
                         IsDirty = true;
                     }
                 }
@@ -411,7 +412,10 @@ public partial class ScrollBar : ControlBase
                 // Up button
                 if (cell == 0)
                 {
-                    Style.IsMouseOverUpButton = true;
+                    SetPropWithDirty(ref Style.IsMouseOverUpButton, true);
+                    SetPropWithDirty(ref Style.IsMouseOverDownButton, false);
+                    SetPropWithDirty(ref Style.IsMouseOverGripper, false);
+                    SetPropWithDirty(ref Style.IsMouseOverBar, false);
 
                     if (state.Mouse.LeftClicked)
                     {
@@ -433,7 +437,10 @@ public partial class ScrollBar : ControlBase
                 // Down button
                 else if (cell == (Orientation == Orientation.Horizontal ? Width - 1 : Height - 1))
                 {
-                    Style.IsMouseOverDownButton = true;
+                    SetPropWithDirty(ref Style.IsMouseOverUpButton, false);
+                    SetPropWithDirty(ref Style.IsMouseOverDownButton, true);
+                    SetPropWithDirty(ref Style.IsMouseOverGripper, false);
+                    SetPropWithDirty(ref Style.IsMouseOverBar, false);
 
                     if (state.Mouse.LeftClicked)
                     {
@@ -449,91 +456,116 @@ public partial class ScrollBar : ControlBase
                         return true;
                     }
                 }
-
-                // Gripper/Bar
-                if (Style.BarSize > 1)
+                else
                 {
-                    // Scroll wheel
-                    if (ProcessMouseWheel(state))
-                        return true;
-
-                    // Clicking on gripper
-                    else if (cell >= Style.GripStart && cell <= Style.GripEnd)
+                    SetPropWithDirty(ref Style.IsMouseOverUpButton, false);
+                    SetPropWithDirty(ref Style.IsMouseOverDownButton, false);
+                    
+                    // Gripper/Bar
+                    if (Style.BarSize > 1)
                     {
-                        Style.IsMouseOverGripper = true;
-
-                        // Grab the gripper
-                        if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown)
-                        {
-                            IsGripped = true;
-                            Parent.Host.CaptureControl(this);
-                            IsDirty = true;
-                            _gripGrabStart = cell - Style.GripStart;
-
-                            if (Orientation == Orientation.Vertical)
-                                MouseArea = new Rectangle(-2, -1, Width + 4, Height + 2);
-                            else
-                                MouseArea = new Rectangle(-1, -2, Width + 2, Height + 4);
-
+                        
+                        // Scroll wheel
+                        if (ProcessMouseWheel(state))
                             return true;
+
+                        // Clicking on gripper
+                        else if (cell >= Style.GripStart && cell <= Style.GripEnd)
+                        {
+                            SetPropWithDirty(ref Style.IsMouseOverGripper, true);
+                            SetPropWithDirty(ref Style.IsMouseOverBar, false);
+
+                            // Grab the gripper
+                            if (state.Mouse.LeftButtonDown && !MouseState_EnteredWithButtonDown)
+                            {
+                                IsGripped = true;
+                                Parent.Host.CaptureControl(this);
+                                IsDirty = true;
+                                _gripGrabStart = cell - Style.GripStart;
+
+                                if (Orientation == Orientation.Vertical)
+                                    MouseArea = new Rectangle(-2, -1, Width + 4, Height + 2);
+                                else
+                                    MouseArea = new Rectangle(-1, -2, Width + 2, Height + 4);
+
+                                return true;
+                            }
+                        }
+
+                        // Normal clicking on bar
+                        else
+                        {
+                            SetPropWithDirty(ref Style.IsMouseOverGripper, false);
+                            SetPropWithDirty(ref Style.IsMouseOverBar, true);
+
+                            if (state.Mouse.LeftClicked)
+                            {
+                                if (cell == 1)
+                                    SetValue(0);
+
+                                else if (cell == size - 2)
+                                    SetValue(MaximumValue);
+
+                                else if (cell < Style.GripStart || cell > Style.GripStart)
+                                {
+                                    // Move the top of the grip to the spot clicked
+                                    if (Style.GripSize == 1)
+                                    {
+                                        SetValue(_barValues[cell - 1], false);
+                                        Style.GripStart = cell;
+                                    }
+                                    else
+                                        SetValue(cell - 1);
+                                }
+
+                                IsDirty = true;
+                                return true;
+                            }
                         }
                     }
-
-                    // Normal clicking on bar
                     else
                     {
-                        Style.IsMouseOverBar = true;
+                        SetPropWithDirty(ref Style.IsMouseOverGripper, false);
+                        SetPropWithDirty(ref Style.IsMouseOverBar, false);
 
-                        if (state.Mouse.LeftClicked)
+                        // Scroll wheel
+                        if (ProcessMouseWheel(state))
+                            return true;
+
+                        // Normal clicking on bar
+                        else if (Style.BarSize > 1 && state.Mouse.LeftClicked)
                         {
                             if (cell == 1)
                                 SetValue(0);
-
-                            else if (cell == size - 2)
+                            else
                                 SetValue(MaximumValue);
 
-                            else if (cell < Style.GripStart || cell > Style.GripStart)
-                            {
-                                // Move the top of the grip to the spot clicked
-                                if (Style.GripSize == 1)
-                                {
-                                    SetValue(_barValues[cell - 1], false);
-                                    Style.GripStart = cell;
-                                }
-                                else
-                                    SetValue(cell - 1);
-                            }
-
+                            IsDirty = true;
                             return true;
                         }
                     }
                 }
-                else
-                {
-                    // Scroll wheel
-                    if (ProcessMouseWheel(state))
-                        return true;
-
-                    // Normal clicking on bar
-                    else if (Style.BarSize > 1 && state.Mouse.LeftClicked)
-                    {
-                        if (cell == 1)
-                            SetValue(0);
-                        else
-                            SetValue(MaximumValue);
-
-                        return true;
-                    }
-                }
-
-                IsDirty = true;
-
-                base.ProcessMouse(state);
 
                 return true;
+            }
+            else
+            {
+                SetPropWithDirty(ref Style.IsMouseOverUpButton, false);
+                SetPropWithDirty(ref Style.IsMouseOverDownButton, false);
+                SetPropWithDirty(ref Style.IsMouseOverGripper, false);
+                SetPropWithDirty(ref Style.IsMouseOverBar, false);
             }
         }
 
         return false;
+    }
+
+    private void SetPropWithDirty(ref bool styleProperty, bool value)
+    {
+        if (styleProperty != value)
+        {
+            IsDirty = true;
+            styleProperty = value;
+        }
     }
 }

@@ -32,52 +32,52 @@ public partial class ScrollBar : ControlBase
         /// The glyph for the start button when the control is vertical.
         /// </summary>
         [DataMember]
-        public int StartButtonVerticalGlyph { get; set; } = 30;
+        public int StartButtonVerticalGlyph = 30;
 
         /// <summary>
         /// The glyph for the end button when the control is vertical.
         /// </summary>
         [DataMember]
-        public int EndButtonVerticalGlyph { get; set; } = 31;
+        public int EndButtonVerticalGlyph = 31;
 
         /// <summary>
         /// The glyph for the start button when the control is horizontal.
         /// </summary>
         [DataMember]
-        public int StartButtonHorizontalGlyph { get; set; } = 17;
+        public int StartButtonHorizontalGlyph = 17;
 
         /// <summary>
         /// The glyph for the end button when the control is horizontal.
         /// </summary>
         [DataMember]
-        public int EndButtonHorizontalGlyph { get; set; } = 16;
+        public int EndButtonHorizontalGlyph = 16;
 
         /// <summary>
         /// The glyph for the scroll bar bar where the slider is not located.
         /// </summary>
         [DataMember]
-        public int BarGlyph { get; set; } = 176;
+        public int BarGlyph = 176;
 
         /// <summary>
         /// The glyph for the scroll bar icon.
         /// </summary>
         [DataMember]
-        public int GripGlyph { get; set; } = 219;
+        public int GripGlyph = 219;
 
         /// <summary>
         /// The size of the bar area. Calculated automatically by the control.
         /// </summary>
-        public int BarSize { get; set; }
+        public int BarSize;
 
         /// <summary>
         /// The size of the grip. Calculated automatically by the control.
         /// </summary>
-        public int GripSize { get; set; }
+        public int GripSize;
 
         /// <summary>
         /// The cell the grip starts at. Calculated automatically by the control.
         /// </summary>
-        public int GripStart { get; set; }
+        public int GripStart;
 
         /// <summary>
         /// The cell the grip ends at. Calculated automatically by the control.
@@ -87,22 +87,22 @@ public partial class ScrollBar : ControlBase
         /// <summary>
         /// Indicates that the mouse is above the up arrow button. Calculated automatically by the control.
         /// </summary>
-        public bool IsMouseOverUpButton { get; set; }
+        public bool IsMouseOverUpButton;
 
         /// <summary>
         /// Indicates that the mouse is above the down arrow button. Calculated automatically by the control.
         /// </summary>
-        public bool IsMouseOverDownButton { get; set; }
+        public bool IsMouseOverDownButton;
 
         /// <summary>
         /// Indicates that the mouse is above the gripper. Calculated automatically by the control.
         /// </summary>
-        public bool IsMouseOverGripper { get; set; }
+        public bool IsMouseOverGripper;
 
         /// <summary>
         /// Indicates that the mouse is not above the empty part of the bar. Calculated automatically by the control.
         /// </summary>
-        public bool IsMouseOverBar { get; set; }
+        public bool IsMouseOverBar;
 
         /// <summary>
         /// Redraws the control.
