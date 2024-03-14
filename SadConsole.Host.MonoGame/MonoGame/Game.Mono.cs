@@ -108,6 +108,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         Global.GraphicsDevice = GraphicsDevice;
+        Global.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
 
         // Unlimited FPS setting
         FpsConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
