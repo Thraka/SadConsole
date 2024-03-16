@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MonoGame.Framework.WpfInterop;
 using SadConsole;
+using SadConsole.Configuration;
 using Console = SadConsole.Console;
 
 namespace WPFSadConsole
@@ -33,29 +34,24 @@ namespace WPFSadConsole
             SadConsole.Settings.ResizeMode = Settings.WindowResizeOptions.None;
             //SadConsole.Settings.CreateStartingConsole = false;
 
-            SadConsole.Game.Instance.OnStart = Init;
-            SadConsole.Game.Instance.FrameUpdate += Instance_FrameUpdate;
-        }
-
-        private void Init()
-        {
-            SadConsole.Game.Instance.StartingConsole.DrawBox(new SadRogue.Primitives.Rectangle(2, 1, 28, 3),
+            Builder builder = new Builder()
+                .SetScreenSize(80, 25)
+                .SetStartingScreen(game =>
+                {
+                    ScreenSurface obj = new ScreenSurface(game.ScreenCellsX, game.ScreenCellsY);
+                    obj.DrawBox(new SadRogue.Primitives.Rectangle(2, 1, 28, 3),
                                                     ShapeParameters.CreateStyledBoxFilled(ICellSurface.ConnectedLineThick,
                                                     new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan),
                                                     new ColoredGlyph(SadRogue.Primitives.Color.AnsiCyanBright, SadRogue.Primitives.Color.AnsiCyan)
                                                     ));
+                    obj.Print(4, 2, "Welcome to SadConsole WPF");
 
-            SadConsole.Game.Instance.StartingConsole.Print(4, 2, "Welcome to SadConsole WPF");
+                    //lstScreenObjects.Items.Add(SadConsole.Game.Instance.StartingConsole.ToString());
+                    return obj;
+                });
 
-
-            lstScreenObjects.Items.Add(SadConsole.Game.Instance.StartingConsole.ToString());
+            Game.Create(builder);
         }
-
-        private void Instance_FrameUpdate(object? sender, GameHost e)
-        {
-            
-        }
-
 
         private void Game_WindowResized(object sender, EventArgs e)
         {
