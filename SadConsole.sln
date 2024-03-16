@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.FNA", "SadC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Samples\Demo\Demo.csproj", "{DCA1D25E-2FFA-4904-AB66-36015C2E9817}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Host.MonoGameWPF", "SadConsole.Host.MonoGameWPF\SadConsole.Host.MonoGameWPF.csproj", "{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,14 @@ Global
 		{DCA1D25E-2FFA-4904-AB66-36015C2E9817}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCA1D25E-2FFA-4904-AB66-36015C2E9817}.Release|x64.ActiveCfg = Release|Any CPU
 		{DCA1D25E-2FFA-4904-AB66-36015C2E9817}.Release|x64.Build.0 = Release|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,12 +197,14 @@ Global
 		{595434C5-2192-495B-903C-7922D7E8B149} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 		{8989332D-847B-4A86-8E54-2D97291541C4} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 		{DCA1D25E-2FFA-4904-AB66-36015C2E9817} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
+		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{595434c5-2192-495b-903c-7922d7e8b149}*SharedItemsImports = 13
+		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{7a784a5a-f311-4180-b1c7-df3a950ed0cf}*SharedItemsImports = 5
 		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{8989332d-847b-4a86-8e54-2d97291541c4}*SharedItemsImports = 5
 		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{b1de0b37-435d-453c-bbc9-7ace7e514e7f}*SharedItemsImports = 5
 		SadConsole.Host.Shared\SadConsole.Host.Shared.projitems*{f02a2b3b-706e-4277-9ce2-b47733ccb22f}*SharedItemsImports = 5

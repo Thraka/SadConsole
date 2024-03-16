@@ -1,10 +1,13 @@
 ﻿using System;
+using System.CodeDom;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.WpfInterop;
 using MonoGame.Framework.WpfInterop.Input;
+using SadConsole.Configuration;
+using SadConsole.Extensions;
 
 namespace SadConsole.Host;
 
@@ -65,8 +68,6 @@ public sealed partial class Game : WpfGame
 
     public Game()
     {
-        SadConsole.Game.Instance = new SadConsole.Game();
-        SadConsole.Game.Instance.MonoGameInstance = this;
     }
 
     /// <inheritdoc/>
@@ -111,10 +112,16 @@ public sealed partial class Game : WpfGame
 
             Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice, 5000);
 
-            if (_initMain && _initFirstSize)
-                SadConsolePreInit?.Invoke(this, EventArgs.Empty);
+            if (SadConsolePreInit == null)
+                throw new NullReferenceException($"The {nameof(SadConsolePreInit)} event must be handled and invoke the Game.Create method");
 
-            SadConsole.Game.Instance.MonoGameInit((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height, (string)GetValue(FontPathProperty));
+            SadConsolePreInit.Invoke(this, EventArgs.Empty);
+            SadConsole.Game.Instance.MonoGameInstance = this;
+
+
+            SadConsole.Game.Instance._configuration.SetInitialRenderPixels((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            SadConsole.Game.Instance._configuration.ConfigureFonts((string)GetValue(FontPathProperty));
+            SadConsole.Game.Instance.MonoGameInit(this);
         }
 
         ResetRendering();

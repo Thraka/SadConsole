@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
+    <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
+    <Version>10.0.3</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>SadConsole MonoGameWPF</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets MonoGame and WPF.</Description>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SadConsole.Host.MonoGameWPF</PackageId>
+    <PackageIcon>nugeticon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
+    <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
+    <PackageReleaseNotes>
+  - Renderers can set backing texture usage.
+  - Add OptimizedScreenSurfaceRenderer which renders.
+  - Surface render step can accept an alternative surface with the SetData method.
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MONOGAME;WPF</DefineConstants>
+    <UseProjectReferences>true</UseProjectReferences>
+    <SadConsoleVersion>10.0.3</SadConsoleVersion>
+    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
+  </PropertyGroup>
+
+  <!-- Handle WPF and non WPF versions -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
+
+    <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.cs" />
+    <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Mono.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

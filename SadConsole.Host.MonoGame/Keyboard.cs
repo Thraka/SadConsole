@@ -6,8 +6,12 @@ class Keyboard : SadConsole.Input.IKeyboardState
 {
     Microsoft.Xna.Framework.Input.KeyboardState _keyboard;
 
-    public Keyboard() =>
+    public Keyboard()
+    {
+#if !WPF
         Refresh();
+#endif
+    }
 
 #if !FNA
     public bool CapsLock => _keyboard.CapsLock;
