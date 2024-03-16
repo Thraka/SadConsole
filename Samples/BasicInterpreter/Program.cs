@@ -2,7 +2,7 @@
 using ClassicBasic.Interpreter;
 using SadConsole.Configuration;
 
-Settings.WindowTitle = "SadConsole Examples";
+Settings.WindowTitle = "SadConsole Examples - BASIC interpreter";
 
 Builder startup = new Builder()
     .SetScreenSize(80, 25)

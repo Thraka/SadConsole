@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <GameHost>monogame</GameHost>
-    <UseProjectReferences>true</UseProjectReferences>
+    <UseProjectReferences>false</UseProjectReferences>
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -24,14 +24,14 @@
 
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.0.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <!--    <ProjectReference Include="..\..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />-->
   </ItemGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="10.0.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="10.*" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'fna' ">
@@ -43,13 +43,17 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.0.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="ClassicBasic.Interpreter">
-      <HintPath>..\..\..\ClassicBasic\ClassicBasic.Interpreter\bin\Debug\netstandard2.0\ClassicBasic.Interpreter.dll</HintPath>
+      <HintPath>ClassicBasic\ClassicBasic.Interpreter.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClassicBasic\" />
   </ItemGroup>
 
 </Project>

@@ -94,6 +94,13 @@ namespace BasicTerminal
                 }
             }
 
+            // Previous statement killed the program, just exit
+            if (_runEnvironment.CurrentLine == null)
+            {
+                IsExecuting = false;
+                return false;
+            }
+
             // End of line get next line.
             if (_runEnvironment.CurrentLine.EndOfLine)
             {
