@@ -1,291 +1,284 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Game.ObjectComponents;
-using Game.Tiles;
-using SadConsole;
-using SadRogue.Primitives;
+﻿using ZZTGame.ObjectComponents;
 
-namespace Game.Factories
+namespace ZZTGame.Factories;
+
+class GameObjectConfig: SadConsole.Factory.BlueprintConfig
 {
-    class GameObjectConfig: SadConsole.Factory.BlueprintConfig
+    public readonly Color? Foreground;
+    public readonly Color? Background;
+    public readonly int? Glyph;
+
+    public GameObjectConfig(Color? foreground, Color? background, int? glyph) =>
+        (Foreground, Background, Glyph) = (foreground, background, glyph);
+
+    public AppearanceComponent GetAppearanceComponent(Color defaultForeground, Color defaultBackground, int defaultGlyph) =>
+        new AppearanceComponent(Foreground ?? defaultForeground, Background ?? defaultBackground, Glyph ?? defaultGlyph);
+
+    public static GameObjectConfig Empty => new GameObjectConfig(null, null, null);
+}
+
+class GameObjectInvalidBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "dead";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public readonly Color? Foreground;
-        public readonly Color? Background;
-        public readonly int? Glyph;
+        GameObject obj = new GameObject();
 
-        public GameObjectConfig(Color? foreground, Color? background, int? glyph) =>
-            (Foreground, Background, Glyph) = (foreground, background, glyph);
+        obj.AddComponent(config.GetAppearanceComponent(Color.Black, Color.Red, 'X'));
 
-        public AppearanceComponent GetAppearanceComponent(Color defaultForeground, Color defaultBackground, int defaultGlyph) =>
-            new AppearanceComponent(Foreground ?? defaultForeground, Background ?? defaultBackground, Glyph ?? defaultGlyph);
-
-        public static GameObjectConfig Empty => new GameObjectConfig(null, null, null);
+        return obj;
     }
+}
 
-    class GameObjectInvalidBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPusherBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "pusher-idle";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "dead";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(new Pusher() { Direction = Direction.Types.None });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.Black, Color.Red, 'X'));
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPusherBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPusherNorthBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "pusher-north";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "pusher-idle";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(new Pusher() { Direction = Direction.Types.Up });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(new Pusher() { Direction = Direction.Types.None });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPusherNorthBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPusherSouthBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "pusher-south";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "pusher-north";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(new Pusher() { Direction = Direction.Types.Down });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(new Pusher() { Direction = Direction.Types.Up });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPusherSouthBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPusherEastBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "pusher-east";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "pusher-south";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(new Pusher() { Direction = Direction.Types.Right });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(new Pusher() { Direction = Direction.Types.Down });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPusherEastBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPusherWestBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "pusher-west";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "pusher-east";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(new Pusher() { Direction = Direction.Types.Left });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(new Pusher() { Direction = Direction.Types.Right });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPusherWestBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectBoulderBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "boulder";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "pusher-west";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0xFE));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x10));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(new Pusher() { Direction = Direction.Types.Left });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectBoulderBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectSliderVerticalBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "slider-vertical";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "boulder";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x12));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.Vertical });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0xFE));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectSliderVerticalBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectSliderHorizontalBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "slider-horizontal";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "slider-vertical";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x1D));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.Horizontal });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x12));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.Vertical });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectSliderHorizontalBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectPlayerBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "player";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "slider-horizontal";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0xDB));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All });
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0x1D));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.Horizontal });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectPlayerBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectAmmoBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "ammo";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "player";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiCyan, Color.Black, 0x84));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
+        obj.AddComponent(DestroyOnPlayerTouch.Singleton);
 
-            obj.AddComponent(config.GetAppearanceComponent(Color.White, Color.Black, 0xDB));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All });
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectAmmoBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectTorchBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "torch";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "ammo";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiYellow, Color.Black, 0x9D));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
+        obj.AddComponent(DestroyOnPlayerTouch.Singleton);
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiCyan, Color.Black, 0x84));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
-            obj.AddComponent(DestroyOnPlayerTouch.Singleton);
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectTorchBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectGemBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "gem";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "torch";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x04));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
+        obj.AddComponent(DestroyOnPlayerTouch.Singleton);
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiYellow, Color.Black, 0x9D));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
-            obj.AddComponent(DestroyOnPlayerTouch.Singleton);
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectGemBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectKeyBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "key";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "gem";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0C));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
+        obj.AddComponent(DestroyOnPlayerTouch.Singleton);
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x04));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
-            obj.AddComponent(DestroyOnPlayerTouch.Singleton);
-
-            return obj;
-        }
+        return obj;
     }
+}
 
-    class GameObjectKeyBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+class GameObjectDoorBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
+{
+    public string Id => "door";
+
+    public GameObject Create(GameObjectConfig config)
     {
-        public string Id => "key";
+        GameObject obj = new GameObject();
 
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
+        obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0A));
+        obj.AddComponent(BlockingMove.Singleton);
+        obj.AddComponent(Movable.Singleton);
+        obj.AddComponent(Touchable.Singleton);
+        obj.AddComponent(DestroyOnPlayerTouch.Singleton);
 
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0C));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(new Pushable() { Direction = Pushable.Directions.All, Mode = Pushable.Modes.CreatureOnly });
-            obj.AddComponent(DestroyOnPlayerTouch.Singleton);
-
-            return obj;
-        }
-    }
-
-    class GameObjectDoorBlueprint : SadConsole.Factory.IBlueprint<GameObjectConfig, GameObject>
-    {
-        public string Id => "door";
-
-        public GameObject Create(GameObjectConfig config)
-        {
-            GameObject obj = new GameObject();
-
-            obj.AddComponent(config.GetAppearanceComponent(SadRogue.Primitives.Color.AnsiWhite, Color.Black, 0x0A));
-            obj.AddComponent(BlockingMove.Singleton);
-            obj.AddComponent(Movable.Singleton);
-            obj.AddComponent(Touchable.Singleton);
-            obj.AddComponent(DestroyOnPlayerTouch.Singleton);
-
-            return obj;
-        }
+        return obj;
     }
 }
 

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.ObjectComponents;
 
-namespace Game.ObjectComponents
+interface IGameObjectComponent
 {
-    interface IGameObjectComponent
-    {
-        void Added(GameObject obj);
-        void Removed(GameObject obj);
-    }
+    void Added(GameObject obj);
+    void Removed(GameObject obj);
 }

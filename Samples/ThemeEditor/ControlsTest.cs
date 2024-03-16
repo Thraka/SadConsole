@@ -38,14 +38,14 @@ namespace ThemeEditor
             var slider = new ScrollBar(Orientation.Horizontal, 10)
             {
                 Position = new Point(16, 3),
-                Maximum = 18
+                MaximumValue = 18
             };
             Controls.Add(slider);
 
             slider = new ScrollBar(Orientation.Vertical, 6)
             {
                 Position = new Point(16, 7),
-                Maximum = 6
+                MaximumValue = 6
             };
             Controls.Add(slider);
 

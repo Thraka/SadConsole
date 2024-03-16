@@ -44,7 +44,6 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" PrivateAssets="all" />
 
     <Compile Remove="**\*.Wpf.cs" />
-    <None Include="**\*.Wpf.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
   <ItemGroup>

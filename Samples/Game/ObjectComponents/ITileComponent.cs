@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.ObjectComponents;
 
-namespace Game.ObjectComponents
+interface ITileComponent
 {
-    interface ITileComponent
-    {
-        void Added(Tiles.BasicTile obj);
-        void Removed(Tiles.BasicTile obj);
-    }
+    void Added(Tiles.BasicTile obj);
+    void Removed(Tiles.BasicTile obj);
 }

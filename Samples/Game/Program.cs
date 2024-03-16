@@ -1,65 +1,55 @@
-﻿using System;
-using SadConsole;
+﻿using SadConsole.Configuration;
 using SadConsole.Input;
-using SadRogue.Primitives;
-using Console = SadConsole.Console;
 
-namespace Game
+Settings.WindowTitle = "SadConsole Examples - ZZT";
+
+Builder startup = new Builder()
+    .SetScreenSize(80, 25)
+    .SetStartingScreen(game => {
+        using var reader = System.IO.File.OpenRead("DEMO.ZZT");
+        var world = ZReader.ZWorld.Load(reader);
+
+        var worldScreen = new ZZTGame.Screens.WorldPlay();
+        worldScreen.SadComponents.Add(new KeyboardChangeBoard(world, worldScreen));
+        worldScreen.UseKeyboard = true;
+
+        return worldScreen;
+    })
+    .IsStartingScreenFocused(true)
+    .ConfigureFonts()
+    .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
+    ;
+
+Game.Create(startup);
+Game.Instance.Run();
+Game.Instance.Dispose();
+
+
+class KeyboardChangeBoard : SadConsole.Components.KeyboardConsoleComponent
 {
-    internal class Program
+    int mapIndex = 0;
+    ZReader.ZWorld world;
+
+    public KeyboardChangeBoard(ZReader.ZWorld world, ZZTGame.Screens.WorldPlay screen)
     {
-        private static void Main(string[] args)
-        {
-            //SadConsole.Settings.UnlimitedFPS = true;
-            //SadConsole.Settings.UseDefaultExtendedFont = true;
+        this.world = world;
+        LoadNextMap(screen);
+    }
 
-            SadConsole.Game.Create(80, 25, Init);
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
-        }
+    public override void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
+    {
+        if (keyboard.IsKeyPressed(Keys.Space))
+            LoadNextMap((ZZTGame.Screens.WorldPlay)host);
 
-        /// <summary>
-        /// <c>test</c>
-        /// </summary>
-        private static void Init()
-        {
-            //SadConsole.Settings.gam.Window.Title = "DemoProject Core";
-            using var reader = System.IO.File.OpenRead("DEMO.ZZT");
-            var world = ZReader.ZWorld.Load(reader);
-            
-            var worldScreen = new Screens.WorldPlay();
-            GameHost.Instance.Screen = worldScreen;
-            GameHost.Instance.DestroyDefaultStartingConsole();
-            worldScreen.SadComponents.Add(new KeyboardChangeBoard(world));
-            worldScreen.UseKeyboard = true;
-            worldScreen.IsFocused = true;
-        }
+        handled = true;
+    }
 
+    private void LoadNextMap(ZZTGame.Screens.WorldPlay worldScreen)
+    {
+        worldScreen.SetActiveBoard(worldScreen.ImportZZTBoard(world.Boards[mapIndex]).Name);
+        mapIndex++;
 
-        private class KeyboardChangeBoard : SadConsole.Components.KeyboardConsoleComponent
-        {
-            int mapIndex = 0;
-            ZReader.ZWorld world;
-
-            public KeyboardChangeBoard(ZReader.ZWorld world) =>
-                this.world = world;
-
-            public override void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
-            {
-                if (keyboard.IsKeyPressed(Keys.Space))
-                    LoadNextMap((Screens.WorldPlay)host);
-
-                handled = true;
-            }
-
-            private void LoadNextMap(Screens.WorldPlay worldScreen)
-            {
-                worldScreen.SetActiveBoard(worldScreen.ImportZZTBoard(world.Boards[mapIndex]).Name);
-                mapIndex++;
-
-                if (mapIndex >= world.Boards.Length)
-                    mapIndex = 0;
-            }
-        }
+        if (mapIndex >= world.Boards.Length)
+            mapIndex = 0;
     }
 }

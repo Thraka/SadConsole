@@ -7,8 +7,12 @@ class Mouse : SadConsole.Input.IMouseState
 {
     Microsoft.Xna.Framework.Input.MouseState _mouse;
 
-    public Mouse() =>
+    public Mouse()
+    {
+#if !WPF
         Refresh();
+#endif
+    }
 
     public bool IsLeftButtonDown => _mouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
 
