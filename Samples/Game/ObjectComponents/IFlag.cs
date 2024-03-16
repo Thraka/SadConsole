@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.ObjectComponents;
 
-namespace Game.ObjectComponents
+interface IFlag
 {
-    interface IFlag
-    {
-    }
 }

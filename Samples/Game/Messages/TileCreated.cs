@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.Messages;
 
-namespace Game.Messages
+class TileCreated
 {
-    class TileCreated
-    {
-        public readonly Screens.Board Board;
-        public readonly Tiles.BasicTile SourceTile;
+    public readonly Screens.Board Board;
+    public readonly Tiles.BasicTile SourceTile;
 
-        public TileCreated(Tiles.BasicTile sourceTile, Screens.Board board)
-        {
-            SourceTile = sourceTile;
-            Board = board;
-        }
+    public TileCreated(Tiles.BasicTile sourceTile, Screens.Board board)
+    {
+        SourceTile = sourceTile;
+        Board = board;
     }
 }

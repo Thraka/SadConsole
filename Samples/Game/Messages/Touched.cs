@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Game.Tiles;
+﻿using ZZTGame.Tiles;
 
-namespace Game.Messages
+namespace ZZTGame.Messages;
+
+class Touched
 {
-    class Touched
-    {
-        public readonly GameObject SourceObject;
-        public readonly GameObject TargetObject;
-        public readonly Tiles.BasicTile TargetTile;
-        public readonly Screens.Board Board;
+    public readonly GameObject SourceObject;
+    public readonly GameObject TargetObject;
+    public readonly Tiles.BasicTile TargetTile;
+    public readonly Screens.Board Board;
 
-        public Touched(GameObject sourceObject, GameObject targetObject, BasicTile targetTile, Screens.Board board)
-        {
-            SourceObject = sourceObject;
-            TargetObject = targetObject;
-            TargetTile = targetTile;
-            Board = board;
-        }
+    public Touched(GameObject sourceObject, GameObject targetObject, BasicTile targetTile, Screens.Board board)
+    {
+        SourceObject = sourceObject;
+        TargetObject = targetObject;
+        TargetTile = targetTile;
+        Board = board;
     }
 }

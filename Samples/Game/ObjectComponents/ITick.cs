@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.ObjectComponents;
 
-namespace Game.ObjectComponents
+interface ITick
 {
-    interface ITick
-    {
-        int Tick { get; set;  }
+    int Tick { get; set;  }
 
-        void Action(Screens.Board board, GameObject obj);
-    }
+    void Action(Screens.Board board, GameObject obj);
 }

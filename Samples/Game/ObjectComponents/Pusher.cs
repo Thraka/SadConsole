@@ -1,40 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadRogue.Primitives;
+﻿namespace ZZTGame.ObjectComponents;
 
-namespace Game.ObjectComponents
+class Pusher : ITick, IGameObjectComponent
 {
-    class Pusher : ITick, IGameObjectComponent
+    public Direction.Types Direction { get; set; } = SadRogue.Primitives.Direction.Types.None;
+
+    public int Tick { get; set; } = 5;
+
+    private int _tickCounter = 0;
+
+    public void Action(Screens.Board board, GameObject obj)
     {
-        public Direction.Types Direction { get; set; } = SadRogue.Primitives.Direction.Types.None;
+        _tickCounter++;
 
-        public int Tick { get; set; } = 5;
-
-        private int _tickCounter = 0;
-
-        public void Action(Screens.Board board, GameObject obj)
+        if (_tickCounter >= Tick)
         {
-            _tickCounter++;
-
-            if (_tickCounter >= Tick)
+            if (obj.HasComponent<ObjectComponents.Movable>())
             {
-                if (obj.HasComponent<ObjectComponents.Movable>())
-                {
-                    var movable = obj.GetComponent<ObjectComponents.Movable>();
-                    movable.RequestMove((SadRogue.Primitives.Direction)Direction, board, obj);
-                }
-
-                _tickCounter = 0;
+                var movable = obj.GetComponent<ObjectComponents.Movable>();
+                movable.RequestMove((SadRogue.Primitives.Direction)Direction, board, obj);
             }
-        }
 
-        public void Added(GameObject obj)
-        {
+            _tickCounter = 0;
         }
+    }
 
-        public void Removed(GameObject obj)
-        {
-        }
+    public void Added(GameObject obj)
+    {
+    }
+
+    public void Removed(GameObject obj)
+    {
     }
 }

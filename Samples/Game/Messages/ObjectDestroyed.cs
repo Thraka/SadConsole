@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ZZTGame.Messages;
 
-namespace Game.Messages
+class ObjectDestroyed
 {
-    class ObjectDestroyed
-    {
-        public readonly Screens.Board Board;
-        public readonly GameObject SourceObject;
+    public readonly Screens.Board Board;
+    public readonly GameObject SourceObject;
 
-        public ObjectDestroyed(GameObject sourceObject, Screens.Board board)
-        {
-            SourceObject = sourceObject;
-            Board = board;
-        }
+    public ObjectDestroyed(GameObject sourceObject, Screens.Board board)
+    {
+        SourceObject = sourceObject;
+        Board = board;
     }
 }

@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E9C40F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole.Tests", "Tests\SadConsole.Tests\SadConsole.Tests.csproj", "{2793C173-F5EB-4CC8-86BE-A8A84BDC3893}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Samples\Game\Game.csproj", "{EBCFC071-76C0-4A7A-933E-822C8E133CD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZZTGame", "Samples\Game\ZZTGame.csproj", "{EBCFC071-76C0-4A7A-933E-822C8E133CD0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicInterpreter", "Samples\BasicInterpreter\BasicInterpreter.csproj", "{D413FA92-01C8-412B-8AF0-416423582EC3}"
 EndProject

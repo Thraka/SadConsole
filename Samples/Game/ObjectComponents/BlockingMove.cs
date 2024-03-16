@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadRogue.Primitives;
-using SadConsole;
-using Game.Tiles;
+﻿using ZZTGame.Tiles;
 
-namespace Game.ObjectComponents
+namespace ZZTGame.ObjectComponents;
+
+class BlockingMove : IFlag, IGameObjectComponent, ITileComponent
 {
-    class BlockingMove : IFlag, IGameObjectComponent, ITileComponent
+    public static BlockingMove Singleton { get; } = new BlockingMove();
+
+    public void Added(GameObject obj)
     {
-        public static BlockingMove Singleton { get; } = new BlockingMove();
+    }
 
-        public void Added(GameObject obj)
-        {
-        }
+    public void Added(BasicTile obj)
+    {
+    }
 
-        public void Added(BasicTile obj)
-        {
-        }
+    public void Removed(GameObject obj)
+    {
+    }
 
-        public void Removed(GameObject obj)
-        {
-        }
-
-        public void Removed(BasicTile obj)
-        {
-        }
+    public void Removed(BasicTile obj)
+    {
     }
 }
