@@ -10162,6 +10162,87 @@
         <member name="M:SadConsole.SplashScreens.SplashScreenManager.Update(System.TimeSpan)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.StringParser.BBCode.Parser">
+            <summary>
+            A BBCode string parser.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.BBCode.Parser.Tags">
+            <summary>
+            A collection of tags used by the parser.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Parser.#ctor">
+            <summary>
+            Creates a new instanace of the class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Parser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+            <summary>
+            Creates a colored string by parsing BBCode commands embedded in the string.
+            </summary>
+            <param name="value">The string to parse.</param>
+            <param name="surfaceIndex">Index of where this string will be printed.</param>
+            <param name="surface">The surface the string will be printed to.</param>
+            <param name="initialBehaviors">Any initial defaults.</param>
+            <returns>The finalized string.</returns>
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.BBCodeCommandBase">
+            <summary>
+            The base class for a BBCode command.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.BBCode.BBCodeCommandBase.Tag">
+            <summary>
+            The tag used to create this command.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.BBCodeCommandBase.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Provides the information about the tag that triggered this command.
+            </summary>
+            <param name="tag">The BBCode tag condition that triggered the command.</param>
+            <param name="value">Optional value provided by the BBCode.</param>
+            <param name="parameters">Optional parameters provided by the BBCode.</param>
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Strikethrough.Glyph">
+            <summary>
+            The glyph used for the strikethrough decorator.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Strikethrough.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Underline.Glyph">
+            <summary>
+            The glyph used for the underline decorator.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Underline.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Bold.GlyphOffset">
+            <summary>
+            The offset applied to the glyph to get the emboldened variant.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Bold.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Italic.GlyphOffset">
+            <summary>
+            The offset applied to the glyph to get the italicized variant.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Italic.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Upper.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Lower.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
         <member name="T:SadConsole.StringParser.Default">
             <summary>
             The default string parser.
@@ -10653,16 +10734,6 @@
             </summary>
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
-        </member>
-        <member name="M:SadConsole.StringValidation.LettersOnly">
-            <remarks>
-            Pattern:<br/>
-            <code>[a-zA-Z]</code><br/>
-            Explanation:<br/>
-            <code>
-            ○ Match a character in the set [A-Za-z].<br/>
-            </code>
-            </remarks>
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
@@ -12757,6 +12828,12 @@
             </summary>
             <param name="width">The width of the input box.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.Nuls.NumberBox.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the input box.
+            </summary>
+            <param name="width">The width of the input box.</param>
+        </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.IncreaseNumber(System.Int64)">
             <summary>
             Increases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
@@ -14699,6 +14776,10 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+    </members>
+</doc>
+ite.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
