@@ -40,21 +40,6 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "T:SadConsole.ImGuiSystem.ImGuiRenderer" -->
-        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsMouseCapture">
-            <summary>
-            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsKeyboardCapture">
-            <summary>
-            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.HideRequested">
-            <summary>
-            When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
-            </summary>
-        </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RebuildFontAtlas">
             <summary>
             Creates a texture and loads the font data from ImGui. Should be called when the <see cref="T:Microsoft.Xna.Framework.Graphics.GraphicsDevice" /> is initialized but before any rendering is done
@@ -103,6 +88,21 @@
         <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(ImGuiNET.ImDrawDataPtr)">
             <summary>
             Gets the geometry as set up by ImGui and sends it to the graphics device
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsMouseCapture">
+            <summary>
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsKeyboardCapture">
+            <summary>
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.HideRequested">
+            <summary>
+            When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
             </summary>
         </member>
         <member name="T:System.Numerics.ExtensionsColorNumerics">

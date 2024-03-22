@@ -1,10 +1,8 @@
 ﻿// Taken from https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/ImGuiRenderer.cs
-
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -14,7 +12,7 @@ namespace SadConsole.ImGuiSystem
     /// <summary>
     /// ImGui renderer for use with XNA-likes (FNA & MonoGame)
     /// </summary>
-    public class ImGuiRenderer
+    public partial class ImGuiRenderer
     {
         private Microsoft.Xna.Framework.Game _game;
 
@@ -44,21 +42,6 @@ namespace SadConsole.ImGuiSystem
 
         private List<int> _keys = new List<int>();
 
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool WantsMouseCapture { get; private set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool WantsKeyboardCapture { get; private set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
-        /// </summary>
-        public bool HideRequested { get; set; }
-
         internal ImGuiRenderer(Microsoft.Xna.Framework.Game game)
         {
             IntPtr context = ImGui.CreateContext();
@@ -81,7 +64,7 @@ namespace SadConsole.ImGuiSystem
             };
 
             SetupInput();
-            RebuildFontAtlas();
+            RebuildFontAtlas(); //Thraka: this was added
         }
 
         #region ImGuiRenderer
@@ -425,16 +408,6 @@ namespace SadConsole.ImGuiSystem
                 idxOffset += cmdList.IdxBuffer.Size;
             }
         }
-
-        public ImFontPtr AddFontTTF(string file, float size) =>
-            ImGui.GetIO().Fonts.AddFontFromFileTTF(file, size);
-
-        public unsafe void SetDefaultFont(ImFontPtr value)
-        {
-            ImGui.GetIO().NativePtr->FontDefault = value;
-            RebuildFontAtlas();
-        }
-
         #endregion Internals
     }
 }
