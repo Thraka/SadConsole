@@ -72,7 +72,7 @@
         </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.SetupInput">
             <summary>
-            Maps ImGui keys to XNA keys. We use this later on to tell ImGui what keys were pressed
+            Setup key input event handler.
             </summary>
         </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateEffect(Microsoft.Xna.Framework.Graphics.Texture2D)">

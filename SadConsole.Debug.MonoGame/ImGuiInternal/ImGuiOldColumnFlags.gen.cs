@@ -1,4 +1,4 @@
-namespace ImGuiNET
+namespace ImGuiNET.Internal
 {
     [System.Flags]
     public enum ImGuiOldColumnFlags

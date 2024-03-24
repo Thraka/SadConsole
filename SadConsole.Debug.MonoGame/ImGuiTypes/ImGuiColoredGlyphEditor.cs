@@ -53,7 +53,7 @@ internal class ImGuiColoredGlyphEditor
             {
                 ImGui.TextColored(TextColor, $"Glyph: (#{_imGuiGlyph.Glyph})");
                 ImGui.SameLine();
-                if (ImGui.ImageButton(fontTexture, font.GetFontSize(IFont.Sizes.One).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize)))
+                if (ImGui.ImageButton("##glyphbutton", fontTexture, font.GetFontSize(IFont.Sizes.One).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize)))
                 { }
                 ImGui.SameLine();
             }

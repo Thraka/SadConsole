@@ -82,17 +82,5 @@ namespace ImGuiNET.Internal
         {
             ImGuiNative.ImGuiTabBar_destroy((ImGuiTabBar*)(NativePtr));
         }
-        public string GetTabName(ImGuiTabItemPtr tab)
-        {
-            ImGuiTabItem* native_tab = tab.NativePtr;
-            byte* ret = ImGuiNative.ImGuiTabBar_GetTabName((ImGuiTabBar*)(NativePtr), native_tab);
-            return Util.StringFromPtr(ret);
-        }
-        public int GetTabOrder(ImGuiTabItemPtr tab)
-        {
-            ImGuiTabItem* native_tab = tab.NativePtr;
-            int ret = ImGuiNative.ImGuiTabBar_GetTabOrder((ImGuiTabBar*)(NativePtr), native_tab);
-            return ret;
-        }
     }
 }
