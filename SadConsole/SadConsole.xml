@@ -2238,6 +2238,30 @@
             <param name="keyboard"></param>
             <param name="handled"></param>
         </member>
+        <member name="T:SadConsole.Components.Overlay">
+            <summary>
+            A surface that's rendered on top of a host surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Overlay.Surface">
+            <summary>
+            A surface that's sized to match.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Overlay.ClearOnAdd">
+            <summary>
+            When true, clears the <see cref="P:SadConsole.Components.Overlay.Surface"/> property when this object is added to a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.RenderComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -10735,6 +10759,16 @@
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
         </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
+        </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
             A color that can be adjusted by brightness and mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
@@ -12828,12 +12862,6 @@
             </summary>
             <param name="width">The width of the input box.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.Nuls.NumberBox.#ctor(System.Int32)">
-            <summary>
-            Creates a new instance of the input box.
-            </summary>
-            <param name="width">The width of the input box.</param>
-        </member>
         <member name="M:SadConsole.UI.Controls.NumberBox.IncreaseNumber(System.Int64)">
             <summary>
             Increases the number stored in the <see cref="P:SadConsole.UI.Controls.TextBox.Text"/> property by the specified amount.
@@ -14776,10 +14804,6 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
-        </member>
-    </members>
-</doc>
-ite.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
