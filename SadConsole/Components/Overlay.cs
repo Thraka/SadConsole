@@ -15,6 +15,11 @@ public class Overlay : UpdateComponent
     /// </summary>
     public ScreenSurface Surface { get; private set; }
 
+    /// <summary>
+    /// When true, clears the <see cref="Surface"/> property when this object is added to a <see cref="IScreenSurface"/>.
+    /// </summary>
+    public bool ClearOnAdd { get; set; }
+
     /// <inheritdoc/>
     public override void OnAdded(IScreenObject host)
     {
@@ -27,10 +32,20 @@ public class Overlay : UpdateComponent
             RenderStep = null;
         }
 
-        Surface = new(hostObj.Surface.ViewWidth, hostObj.Surface.ViewHeight);
-        Surface.Surface.DefaultBackground = Color.Transparent;
-        Surface.Clear();
-        MatchSurface(hostObj);
+        if (Surface != null)
+        {
+            MatchSurface(hostObj);
+
+            if (ClearOnAdd)
+                Surface.Clear();
+        }
+        else
+        {
+            Surface = new(hostObj.Surface.ViewWidth, hostObj.Surface.ViewHeight);
+            Surface.Surface.DefaultBackground = Color.Transparent;
+            Surface.Clear();
+            MatchSurface(hostObj);
+        }
 
         RenderStep = GameHost.Instance.GetRendererStep(Renderers.Constants.RenderStepNames.Surface);
         RenderStep.SetData(Surface);
@@ -38,6 +53,7 @@ public class Overlay : UpdateComponent
 
         hostObj.Renderer?.Steps.Add(RenderStep);
         hostObj.Renderer?.Steps.Sort(Renderers.RenderStepComparer.Instance);
+        hostObj.IsDirty = true;
     }
 
     /// <inheritdoc/>
@@ -48,6 +64,7 @@ public class Overlay : UpdateComponent
             ((IScreenSurface)host).Renderer?.Steps.Remove(RenderStep);
             RenderStep.Dispose();
             RenderStep = null;
+            ((IScreenSurface)host).IsDirty = true;
         }
     }
 
