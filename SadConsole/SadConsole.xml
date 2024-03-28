@@ -95,6 +95,11 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.AnimatedScreenObject">
+            <summary>
+            A <see cref="T:SadConsole.ScreenObject"/> that displays an animated set of <see cref="T:SadConsole.ICellSurface"/> surfaces.
+            </summary>
+        </member>
         <member name="E:SadConsole.AnimatedScreenObject.AnimationStateChanged">
             <summary>
             Raised when the <see cref="T:SadConsole.AnimatedScreenObject.AnimationState"/> changes.

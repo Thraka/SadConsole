@@ -6,6 +6,9 @@ using SadRogue.Primitives;
 
 namespace SadConsole;
 
+/// <summary>
+/// A <see cref="ScreenObject"/> that displays an animated set of <see cref="ICellSurface"/> surfaces.
+/// </summary>
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
