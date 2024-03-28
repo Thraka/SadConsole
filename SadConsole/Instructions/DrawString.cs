@@ -1,4 +1,5 @@
 ﻿using System;
+using Coroutine;
 using SadRogue.Primitives;
 
 namespace SadConsole.Instructions;
@@ -11,6 +12,8 @@ public class DrawString : InstructionBase
 {
     private ColoredString _text;
     private Components.Cursor? _privateCursor;
+    CoroutineHandlerInstance? _coroutineHandler;
+    ActiveCoroutine? _runningCoroutine;
 
     /// <summary>
     /// Gets or sets the text to print.
@@ -85,8 +88,6 @@ public class DrawString : InstructionBase
             _textCopy = Text.ToString();
             _textIndex = 0;
 
-            cursor.DisableWordBreak = true;
-
             if (_textCopy.Length == 0)
             {
                 IsFinished = true;
@@ -94,7 +95,7 @@ public class DrawString : InstructionBase
                 return;
             }
 
-            _tempLocation = Position;
+            cursor.Position = Position;
 
             if (TotalTimeToPrint > TimeSpan.Zero)
             {
@@ -105,7 +106,6 @@ public class DrawString : InstructionBase
 
         if (TotalTimeToPrint == TimeSpan.Zero)
         {
-            cursor.Position = Position;
             cursor.Print(Text);
             IsFinished = true;
         }
@@ -118,39 +118,32 @@ public class DrawString : InstructionBase
                 int charsLeft = _textCopy.Length - _textIndex;
                 _timeElapsed = TimeSpan.FromTicks(_timeElapsed.Ticks - _timePerCharacter.Ticks * charCount);
 
-                cursor.Position = _tempLocation;
-
                 if (charCount >= charsLeft)
                 {
                     charCount = charsLeft;
                     IsFinished = true;
                 }
-                else
+
+                for (int i = 0; i < charCount; i++)
                 {
-                    // TODO: Change drawstring to look for \r or \n and when found, loop and consume all of them until something else is found.
-
-                    // If we happen to end near a \r\n sequence, consume both.
-                    if (Text[_textIndex + charCount].GlyphCharacter == '\r' && charsLeft > 2 && Text[_textIndex + charCount + 1].GlyphCharacter == '\n')
+                    if (_coroutineHandler == null)
                     {
-                        charCount += 2;
-
-                        if (charCount >= charsLeft)
-                            IsFinished = true;
+                        _coroutineHandler = new CoroutineHandlerInstance();
+                        _runningCoroutine = _coroutineHandler.Start(cursor.PrintCoroutine(Text));
                     }
-                    else if (Text[_textIndex + charCount - 1].GlyphCharacter == '\r' && Text[_textIndex + charCount].GlyphCharacter == '\n')
+                    else
                     {
-                        charCount++;
-
-                        if (charCount >= charsLeft)
-                            IsFinished = true;
+                        _coroutineHandler.Tick(delta);
                     }
                 }
 
-                ColoredString textToPrint = Text.SubString(_textIndex, charCount);
-                cursor.Print(textToPrint);
                 _textIndex += (short)charCount;
 
-                _tempLocation = cursor.Position;
+                if (IsFinished)
+                {
+                    _coroutineHandler = null;
+                    _runningCoroutine = null;
+                }
             }
         }
 
@@ -162,6 +155,8 @@ public class DrawString : InstructionBase
     {
         _started = false;
         _textIndex = 0;
+        _coroutineHandler = null;
+        _runningCoroutine = null;
 
         base.Reset();
     }

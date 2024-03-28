@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using SadConsole.Effects;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SadConsole.Components;
 
@@ -365,7 +364,7 @@ public class Cursor : IComponent
                 cell.Decorators = CellDecoratorHelpers.CloneDecorators(glyph);
 
             if (!settings.IgnoreEffect)
-                _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);
+               _editor.SetEffect(_position.Y * _editor.Width + _position.X, glyph.Effect);
         }
         else if (!settings.IgnoreGlyph)
             cell.Glyph = glyph.GlyphCharacter;
@@ -437,12 +436,189 @@ public class Cursor : IComponent
     }
 
     /// <summary>
+    /// Prints text to the console using the appearance of the colored string, but with coroutine.
+    /// </summary>
+    /// <param name="text">The text to print.</param>
+    /// <returns>An enumerator that returns at each character printed.</returns>
+    public IEnumerator<Coroutine.Wait> PrintCoroutine(ColoredString text)
+    {
+        // This is a copy of the code in Print. Updates in one should happen in the other.
+        // TODO: Find a better way to do this and share code.
+        if (_editor == null) throw new Exception("A host is not attached, cannot print.");
+
+        if (text.Length == 0) yield break;
+
+        _cursorCellEffect?.Restart();
+        _cursorCellEffect?.ApplyToCell(_cursorCell, _cursorCellOriginal);
+
+        // If we don't want the pretty print, or we're printing a single character (for example, from keyboard input)
+        // Then use the pretty print system.
+        if (!DisableWordBreak && text.String.Length != 1)
+        {
+            // Prep
+            ColoredGlyphAndEffect glyph;
+            ColoredGlyphAndEffect spaceGlyph = (ColoredGlyphAndEffect)text[0].Clone();
+
+            spaceGlyph.GlyphCharacter = ' ';
+            string stringText = text.String.TrimEnd(' ');
+
+            // Pull any starting spaces off
+            string newStringText = stringText.TrimStart(' ');
+            int spaceCount = stringText.Length - newStringText.Length;
+
+            for (int i = 0; i < spaceCount; i++)
+            {
+                PrintGlyph(spaceGlyph, text);
+                yield return new();
+            }
+
+            if (spaceCount != 0)
+                text = text.SubString(spaceCount, text.Length - spaceCount);
+
+            stringText = newStringText;
+            string[] parts = stringText.Split(' ');
+
+            // Start processing the string
+            int c = 0;
+
+            for (int wordMajor = 0; wordMajor < parts.Length; wordMajor++)
+            {
+                // Words broken up by spaces = parts
+                if (parts[wordMajor].Length != 0)
+                {
+                    // Parts broken by new lines = newLineParts
+                    string[] newlineParts = parts[wordMajor].Split('\n');
+
+                    for (int indexNL = 0; indexNL < newlineParts.Length; indexNL++)
+                    {
+                        if (newlineParts[indexNL].Length != 0)
+                        {
+                            int currentLine = _position.Y;
+
+                            // New line parts broken up by carriage returns = returnParts
+                            string[] returnParts = newlineParts[indexNL].Split('\r');
+
+                            for (int indexR = 0; indexR < returnParts.Length; indexR++)
+                            {
+                                // If the text we'll print will move off the edge, fill with spaces to get a fresh line
+                                if (returnParts[indexR].Length > _editor.Width - _position.X && _position.X != 0)
+                                {
+                                    int spaces = _editor.Width - _position.X;
+
+                                    // Fill rest of line with spaces
+                                    for (int i = 0; i < spaces; i++)
+                                    {
+                                        PrintGlyph(spaceGlyph, text);
+                                    }
+                                }
+
+                                // Print the rest of the text as normal.
+                                for (int i = 0; i < returnParts[indexR].Length; i++)
+                                {
+                                    glyph = text[c];
+
+                                    PrintGlyph(glyph, text);
+
+                                    // Update the space glyph with the last character printed.
+                                    glyph.CopyAppearanceTo(spaceGlyph);
+                                    spaceGlyph.GlyphCharacter = ' ';
+
+                                    c++;
+                                    yield return new();
+                                }
+
+                                // If we had a \r in the string, handle it by going back
+                                if (returnParts.Length != 1 && indexR != returnParts.Length - 1)
+                                {
+                                    // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
+                                    if (_position.X == 0 && _position.Y != currentLine)
+                                        _position = new Point(_position.X, _position.Y - 1);
+                                    else
+                                        CarriageReturn();
+
+                                    c++;
+                                    yield return new();
+                                }
+                            }
+                        }
+
+                        // We had \n in the string, handle them.
+                        if (newlineParts.Length != 1 && indexNL != newlineParts.Length - 1)
+                        {
+                            if (!UseLinuxLineEndings)
+                                LineFeed();
+                            else
+                                NewLine();
+
+                            c++;
+                            yield return new();
+                        }
+                    }
+                }
+
+                // Not last part
+                if (wordMajor != parts.Length - 1 && _position.X != 0)
+                {
+                    PrintGlyph(spaceGlyph, text);
+                    yield return new();
+                    c++;
+                }
+                else
+                    c++;
+            }
+        }
+        else
+        {
+            bool movedLines = false;
+            int oldLine = _position.Y;
+
+            int count = text.Length;
+            for (int i = 0; i < count; i++)
+            {
+                ColoredGlyphAndEffect glyph = text[i];
+                // Check if the previous print moved us down a line (from print at end of the line) and move us back for the \r
+                if (movedLines)
+                {
+                    if (_position.X == 0 && glyph.GlyphCharacter == '\r')
+                    {
+                        _position = new Point(_position.X, _position.Y - 1);
+                        continue;
+                    }
+                    else
+                        movedLines = false;
+                }
+
+                if (glyph.GlyphCharacter == '\r')
+                    CarriageReturn();
+
+                else if (glyph.GlyphCharacter == '\n')
+                {
+                    if (!UseLinuxLineEndings)
+                        LineFeed();
+                    else
+                        NewLine();
+                }
+                else
+                {
+                    PrintGlyph(glyph, text);
+
+                    // Lines changed and it wasn't a \n that caused it, so it was a print that did it.
+                    movedLines = _position.Y != oldLine;
+                    yield return new();
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Prints text to the console using the appearance of the colored string.
     /// </summary>
     /// <param name="text">The text to print.</param>
     /// <returns>Returns this cursor object.</returns>
     public Cursor Print(ColoredString text)
     {
+        // This is a copy of the code in PrintCoroutine. Updates in one should happen in the other.
+        // TODO: Find a better way to do this and share code.
         if (_editor == null) throw new Exception("A host is not attached, cannot print.");
 
         if (text.Length == 0) return this;
