@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole</RootNamespace>
     <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>10.0.3</Version>
+    <Version>10.0.4</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
     <Authors>Thraka</Authors>
     <Company>SadLogic</Company>
@@ -38,7 +38,7 @@
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.3</SadConsoleVersion>
+    <SadConsoleVersion>10.0.4</SadConsoleVersion>
     <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
   </PropertyGroup>
   
