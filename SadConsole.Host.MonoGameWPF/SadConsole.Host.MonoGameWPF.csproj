@@ -1,43 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
-    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
-    <DocumentationFile>SadConsole.Host.MonoGame.xml</DocumentationFile>
-    <Version>10.0.4</Version>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_MonoGameWPF_Version)</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole MonoGameWPF</AssemblyTitle>
+    <AssemblyTitle>SadConsole WPF/MonoGame Host</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets MonoGame and WPF.</Description>
-    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.MonoGameWPF</PackageId>
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
-    <PackageReleaseNotes>
-  - Renderers can set backing texture usage.
-  - Add OptimizedScreenSurfaceRenderer which renders.
-  - Surface render step can accept an alternative surface with the SetData method.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MONOGAME;WPF</DefineConstants>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.4</SadConsoleVersion>
-    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
+    <DefineConstants>$(DefineConstants);MONOGAME;WPF</DefineConstants>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
   </PropertyGroup>
 
   <!-- Handle WPF and non WPF versions -->
@@ -51,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 

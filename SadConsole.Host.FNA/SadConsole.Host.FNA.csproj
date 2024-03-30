@@ -1,46 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
-    <DocumentationFile>SadConsole.Host.FNA.xml</DocumentationFile>
-    <Version>10.0.4</Version>
-    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyTitle>SadConsole FNA</AssemblyTitle>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_FNA_Version)</Version>
+    <AssemblyTitle>SadConsole FNA Host</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
-    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Host.FNA</PackageId>
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>
-- Fix bug where the screen clear wasn't working and would default to violet.
-- Add OptimizedScreenSurfaceRenderer which renders.
-- Surface render step can accept an alternative surface with the SetData method.
-    </PackageReleaseNotes>
-    <Platforms>AnyCPU;x64</Platforms>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!-- Custom properties -->
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MONOGAME;FNA</DefineConstants>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.4</SadConsoleVersion>
-    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
+    <DefineConstants>$(DefineConstants);MONOGAME;FNA</DefineConstants>
+    <Platforms>AnyCPU;x64</Platforms>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
   </PropertyGroup>
 
+  <!-- FNA references -->
+  
   <ItemGroup>
     <Reference Include="FNA">
       <HintPath>.\FNA\FNA.dll</HintPath>
@@ -49,17 +30,23 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 
+  </ItemGroup>
+
+  <ItemGroup>
+      <!-- Make sure none of the monogame project compiles -->
     <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.*;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Wpf.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Get rid of the WPF-specific files -->
+    <Compile Remove="**\*.Wpf.cs" />
     <Compile Remove="Xaml\**" />
   </ItemGroup>
 

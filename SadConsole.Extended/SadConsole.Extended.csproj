@@ -1,50 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <RootNamespace>SadConsole</RootNamespace>
-    <DocumentationFile>SadConsole.Extended.xml</DocumentationFile>
-    <Version>10.0.4</Version>
-    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>$(SadConsole_Extended_Version)</Version>
     <AssemblyTitle>SadConsole Extended - Common Helpers</AssemblyTitle>
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
-    <Copyright>Copyright © 2023 Steve De George JR (Thraka)</Copyright>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole.Extended</PackageId>
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>
-- Classic keyboard handler has IsReady flag now to control when it's active.
-- ColorPickerPopup would crash on invalid textbox values.
-- GlyphSelectPopup added. You can use this to display a list of glyphs in your font while debugging your app.
-- Fixed a bug in the table control that prevented the scroll bars from being displayed.
-- Cleaned up code and enabled nullable.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!-- Custom properties -->
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
-    <SadConsoleVersion>10.0.4</SadConsoleVersion>
-    <SadConsoleVersion Condition="'$(Configuration)'=='Debug'">$(SadConsoleVersion)-debug</SadConsoleVersion>
+    <RootNamespace>SadConsole</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' == 'false' " Include="SadConsole" Version="$(SadConsoleVersion)" />
+    <PackageReference Condition=" '$(UseProjectReferences)' == 'false' " Include="SadConsole" Version="$(SadConsole_Version)" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
@@ -56,7 +32,6 @@
     <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
-    <None Remove="SadConsole.Extended.xml" />
   </ItemGroup>
 
   <ItemGroup>

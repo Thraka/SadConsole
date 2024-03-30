@@ -1,0 +1,50 @@
+<Project>
+  <PropertyGroup>
+    
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+
+    <!-- The current package versions -->
+    <SadConsole_Version>10.4.0</SadConsole_Version>
+    <SadConsole_Extended_Version>10.4.0</SadConsole_Extended_Version>
+    <SadConsole_Host_MonoGameWPF_Version>10.4.0</SadConsole_Host_MonoGameWPF_Version>
+    <SadConsole_Host_MonoGame_Version>10.4.0</SadConsole_Host_MonoGame_Version>
+    <SadConsole_Host_SFML_Version>10.4.0</SadConsole_Host_SFML_Version>
+    <SadConsole_Host_FNA_Version>10.4.0</SadConsole_Host_FNA_Version>
+    <SadConsole_Debug_MonoGame_Version>10.4.0</SadConsole_Debug_MonoGame_Version>
+
+    <!-- Author information -->
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <!-- Build settings that ensure source/symbols included -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
+
+    <!-- NuGet stuff -->
+    <PackageIcon>nugeticon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <!-- Debug versioning -->
+    <SadConsole_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Version)-debug</SadConsole_Version>
+    <SadConsole_Extended_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Extended_Version)-debug</SadConsole_Extended_Version>
+    <SadConsole_Host_MonoGame_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Host_MonoGame_Version)-debug</SadConsole_Host_MonoGame_Version>
+    <SadConsole_Host_SFML_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Host_SFML_Version)-debug</SadConsole_Host_SFML_Version>
+    <SadConsole_Host_FNA_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Host_FNA_Version)-debug</SadConsole_Host_FNA_Version>
+    <SadConsole_Debug_MonoGame_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Debug_MonoGame_Version)-debug</SadConsole_Debug_MonoGame_Version>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="$(DocumentationFile)" />
+  </ItemGroup>
+</Project>

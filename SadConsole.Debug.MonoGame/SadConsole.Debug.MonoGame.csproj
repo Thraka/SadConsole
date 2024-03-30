@@ -1,33 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-    <RootNamespace>SadConsole.Debug.MonoGame</RootNamespace>
-    <DocumentationFile>SadConsole.Debugger.MonoGame.xml</DocumentationFile>
-    <Version>10.0.3</Version>
-    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
-    <Description>.</Description>
-    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
     <PackageId>SadConsole.Debugger.MonoGame</PackageId>
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!-- Custom properties -->
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -46,6 +31,7 @@
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
   </ItemGroup>
 
   <ItemGroup>
