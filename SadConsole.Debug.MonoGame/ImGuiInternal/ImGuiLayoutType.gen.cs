@@ -1,4 +1,4 @@
-namespace ImGuiNET
+namespace ImGuiNET.Internal
 {
     public enum ImGuiLayoutType
     {

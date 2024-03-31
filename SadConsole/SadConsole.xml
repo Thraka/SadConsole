@@ -95,6 +95,11 @@
             Creates a new instance of this object with all connections set to <see langword="null"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.AnimatedScreenObject">
+            <summary>
+            A <see cref="T:SadConsole.ScreenObject"/> that displays an animated set of <see cref="T:SadConsole.ICellSurface"/> surfaces.
+            </summary>
+        </member>
         <member name="E:SadConsole.AnimatedScreenObject.AnimationStateChanged">
             <summary>
             Raised when the <see cref="T:SadConsole.AnimatedScreenObject.AnimationState"/> changes.
@@ -1485,6 +1490,21 @@
             The string parser to use for transforming strings into <see cref="T:SadConsole.ColoredString"/>.
             </summary>
         </member>
+        <member name="T:SadConsole.Components.CoroutineHandlerComponent">
+            <summary>
+            An implementation of <see cref="T:Coroutine.CoroutineHandlerInstance"/> that calls <see cref="M:Coroutine.CoroutineHandlerInstance.Tick(System.TimeSpan)"/> every time <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> is called.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.CoroutineHandlerComponent.SortOrder">
+            <summary>
+            The sort order for this component.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.CoroutineHandlerComponent.#ctor">
+            <summary>
+            Creates a new instance of the coroutine handler.
+            </summary>
+        </member>
         <member name="T:SadConsole.Components.Cursor">
             <summary>
             A cursor that is attached to a <see cref="T:SadConsole.Console"/> used for printing.
@@ -1681,6 +1701,13 @@
             <param name="template">The way the text will look when it is printed.</param>
             <param name="templateEffect">Effect to apply to the text as its printed. Can be <see langword="null"/>.</param>
             <returns>Returns this cursor object.</returns>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.PrintCoroutine(SadConsole.ColoredString)">
+            <summary>
+            Prints text to the console using the appearance of the colored string, but with coroutine.
+            </summary>
+            <param name="text">The text to print.</param>
+            <returns>An enumerator that returns at each character printed.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Print(SadConsole.ColoredString)">
             <summary>
@@ -2238,6 +2265,30 @@
             <param name="keyboard"></param>
             <param name="handled"></param>
         </member>
+        <member name="T:SadConsole.Components.Overlay">
+            <summary>
+            A surface that's rendered on top of a host surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Overlay.Surface">
+            <summary>
+            A surface that's sized to match.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.Overlay.ClearOnAdd">
+            <summary>
+            When true, clears the <see cref="P:SadConsole.Components.Overlay.Surface"/> property when this object is added to a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.RenderComponent">
             <summary>
             A base class that implements <see cref="M:SadConsole.Components.IComponent.Render(SadConsole.IScreenObject,System.TimeSpan)"/> of <see cref="T:SadConsole.Components.IComponent"/>.
@@ -2378,6 +2429,210 @@
         </member>
         <member name="M:SadConsole.Components.UpdateComponent.OnRemoved(SadConsole.IScreenObject)">
             <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Configuration.Builder">
+            <summary>
+            Composes a game host object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.Builder.Configs">
+            <summary>
+            A collection of <see cref="T:SadConsole.Configuration.IConfigurator"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.GetOrCreateConfig``1">
+            <summary>
+            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection.
+            </summary>
+            <typeparam name="TConfig">The type of config object.</typeparam>
+            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection. If found in the collection, that instance is returned.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Builder.Run(SadConsole.GameHost)">
+            <summary>
+            Runs each config object in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection with the specified game instance.
+            </summary>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.Extensions">
+            <summary>
+            Extensions to the <see cref="T:SadConsole.Configuration.Builder"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnStart(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Started"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_Started">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.OnEnd(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.Ending"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_Ending">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameUpdateEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameUpdate">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.AddFrameRenderEvent(SadConsole.Configuration.Builder,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Sets an event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="instance_FrameRender">The event handler</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.UseDefaultConsole(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.StartingConsole"/> and <see cref="P:SadConsole.GameHost.Screen"/> properties to new console when the game starts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Either focuses or unfocuses the starting screen.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.GameHost})">
+            <summary>
+            Configures which default font to use during game startup, as well as which other fonts to load for the game.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="fontLoader">A method that provides access to the <see cref="T:SadConsole.Configuration.FontConfig"/> object that loads fonts.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.String,System.String[])">
+            <summary>
+            Configures SadConsole to use the specified font file as the default font.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="customDefaultFont">Creates the font config for SadConsole using this font file as the default.</param>
+            <param name="extraFonts">Extra fonts to load into SadConsole.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Boolean)">
+            <summary>
+            Configures SadConsole to use the built in default fonts.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="useExtendedDefault">When <see langword="true"/>, SadConsole sets the default font to <see cref="P:SadConsole.GameHost.EmbeddedFontExtended"/>; otherwise <see cref="P:SadConsole.GameHost.EmbeddedFont"/> is used.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.FixOldFontName(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds the embedded fonts to the font dictionary with the old incorrect name.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the startup splash screen to the specified object.
+            </summary>
+            <typeparam name="TSplashScreen">A parameterless <see cref="T:SadConsole.IScreenSurface"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.GameHost,SadConsole.ScreenSurface[]})">
+            <summary>
+            Sets the startup splash screens to the array returned by the <paramref name="creator"/> delegate.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A delegate that returns an array of surface objects.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen``1(SadConsole.Configuration.Builder)">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the specified type.
+            </summary>
+            <typeparam name="TRootObject">A parameterless <see cref="T:SadConsole.IScreenObject"/> object.</typeparam>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.GameHost,SadConsole.IScreenObject})">
+            <summary>
+            Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="creator">A method that returns an object as the starting screen.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.FontConfig">
+            <summary>
+            The config settings for loading the default fonts when the game starts.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
+            <summary>
+            Sets the default font to the SadConsole standard font, an IBM 8x16 font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFontExtended">
+            <summary>
+            Sets the default font to the SadConsole extended font, an IBM 8x16 font with SadConsole specific characters past index 255.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.UseCustomFont(System.String)">
+            <summary>
+            Sets the default font in SadConsole to the specified font file.
+            </summary>
+            <param name="fontFile"></param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.AddExtraFonts(System.String[])">
+            <summary>
+            Loads the provided font files into SadConsole.
+            </summary>
+            <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+            <summary>
+            Invokes the <see cref="P:SadConsole.Configuration.FontConfig.FontLoader"/> delegate.
+            </summary>
+            <param name="config">The builder running this configurator.</param>
+            <param name="game">The game being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.IConfigurator">
+            <summary>
+            Configuration interface that's added to the <see cref="T:SadConsole.Configuration.Builder"/> object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+            <summary>
+            Called by the <see cref="T:SadConsole.Configuration.Builder"/>; Runs the specific config for this object.
+            </summary>
+            <param name="config">The builder configuration object.</param>
+            <param name="game">The game object being created.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.SplashScreenConfig">
+            <summary>
+            A config object that adds splash screen objects with the <see cref="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.SplashScreenConfig.GenerateSplashScreen">
+            <summary>
+            A delegate that returns a set of splash screens to use.
+            </summary>
         </member>
         <member name="T:SadConsole.Console">
             <summary>
@@ -10161,6 +10416,87 @@
         </member>
         <member name="M:SadConsole.SplashScreens.SplashScreenManager.Update(System.TimeSpan)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Parser">
+            <summary>
+            A BBCode string parser.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.BBCode.Parser.Tags">
+            <summary>
+            A collection of tags used by the parser.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Parser.#ctor">
+            <summary>
+            Creates a new instanace of the class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Parser.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
+            <summary>
+            Creates a colored string by parsing BBCode commands embedded in the string.
+            </summary>
+            <param name="value">The string to parse.</param>
+            <param name="surfaceIndex">Index of where this string will be printed.</param>
+            <param name="surface">The surface the string will be printed to.</param>
+            <param name="initialBehaviors">Any initial defaults.</param>
+            <returns>The finalized string.</returns>
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.BBCodeCommandBase">
+            <summary>
+            The base class for a BBCode command.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.BBCode.BBCodeCommandBase.Tag">
+            <summary>
+            The tag used to create this command.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.BBCodeCommandBase.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Provides the information about the tag that triggered this command.
+            </summary>
+            <param name="tag">The BBCode tag condition that triggered the command.</param>
+            <param name="value">Optional value provided by the BBCode.</param>
+            <param name="parameters">Optional parameters provided by the BBCode.</param>
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Strikethrough.Glyph">
+            <summary>
+            The glyph used for the strikethrough decorator.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Strikethrough.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Underline.Glyph">
+            <summary>
+            The glyph used for the underline decorator.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Underline.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Bold.GlyphOffset">
+            <summary>
+            The offset applied to the glyph to get the emboldened variant.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Bold.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.StringParser.BBCode.Italic.GlyphOffset">
+            <summary>
+            The offset applied to the glyph to get the italicized variant.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Italic.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Upper.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Lower.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.Default">
             <summary>

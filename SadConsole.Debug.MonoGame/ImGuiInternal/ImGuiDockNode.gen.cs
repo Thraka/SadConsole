@@ -35,6 +35,7 @@ namespace ImGuiNET.Internal
         public uint LastFocusedNodeId;
         public uint SelectedTabId;
         public uint WantCloseTabId;
+        public uint RefViewportId;
         public ImGuiDataAuthority AuthorityForPos;
         public ImGuiDataAuthority AuthorityForSize;
         public ImGuiDataAuthority AuthorityForViewport;
@@ -85,6 +86,7 @@ namespace ImGuiNET.Internal
         public ref uint LastFocusedNodeId => ref Unsafe.AsRef<uint>(&NativePtr->LastFocusedNodeId);
         public ref uint SelectedTabId => ref Unsafe.AsRef<uint>(&NativePtr->SelectedTabId);
         public ref uint WantCloseTabId => ref Unsafe.AsRef<uint>(&NativePtr->WantCloseTabId);
+        public ref uint RefViewportId => ref Unsafe.AsRef<uint>(&NativePtr->RefViewportId);
         public ref ImGuiDataAuthority AuthorityForPos => ref Unsafe.AsRef<ImGuiDataAuthority>(&NativePtr->AuthorityForPos);
         public ref ImGuiDataAuthority AuthorityForSize => ref Unsafe.AsRef<ImGuiDataAuthority>(&NativePtr->AuthorityForSize);
         public ref ImGuiDataAuthority AuthorityForViewport => ref Unsafe.AsRef<ImGuiDataAuthority>(&NativePtr->AuthorityForViewport);

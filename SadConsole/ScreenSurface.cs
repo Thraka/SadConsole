@@ -117,8 +117,14 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
         {
             if (_font == value) return;
 
+            IFont oldFont = _font;
+            Point oldSize = _fontSize;
+
             _font = value;
-            FontSize = _font.GetFontSize(IFont.Sizes.One);
+            _fontSize = _font.GetFontSize(IFont.Sizes.One);
+
+            OnFontChanged(oldFont, oldSize);
+
             IsDirty = true;
         }
     }
@@ -131,7 +137,12 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
         {
             if (_fontSize == value) return;
 
+            Point oldSize = _fontSize;
+
             _fontSize = value;
+
+            OnFontChanged(_font, oldSize);
+
             IsDirty = true;
         }
     }

@@ -34,6 +34,8 @@ internal class KeyboardHandlers : ControlsConsole
     // This console domonstrates a classic MS-DOS or Windows Command Prompt style console.
     public KeyboardHandlers() : base(28, 4)
     {
+        FocusOnMouseClick = false;
+
         // This is our custom keyboard handlers we'll be using to process the cursor on this console.
         _keyboardHandlerDOS = new ClassicConsoleKeyboardHandler("Prompt> ");
         _keyboardHandlerC64 = new C64KeyboardHandler("READY.\r\n");
@@ -114,7 +116,6 @@ internal class KeyboardHandlers : ControlsConsole
         }
     }
 
-
     public override void OnFocused()
     {
         // If this object is focused, move focus to the child object: _promptScreen.
@@ -150,7 +151,7 @@ internal class KeyboardHandlers : ControlsConsole
                           Print("  ver        - Display version info").NewLine().
                           Print("  cls        - Clear the screen").NewLine().
                           Print("  look       - Example adventure game command").NewLine().
-                          Print("  ready_test - Displays multiple lines of text printed over time. Input").NewLine().
+                          Print("  look2      - Displays multiple lines of text printed over time.").NewLine().
                           Print("               processing is disabled while the text is printed").NewLine().
                           Print("  ").NewLine();
         }
@@ -171,15 +172,17 @@ internal class KeyboardHandlers : ControlsConsole
         {
             // In this case we want word breaks to be nice when the cursor prints the next string.
             cursor.DisableWordBreak = false;
-            cursor.Print("  Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
+            cursor.Print("     Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.").NewLine();
             cursor.DisableWordBreak = true;
         }
-        else if (value == "ready_test")
+        else if (value == "look2")
         {
-            string text = string.Join("\r\n", "This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..This is some text..");
+            string text = "    Looking around you discover that you are in a dark and empty room. To your left there is a computer monitor in front of you and Visual Studio is opened, waiting for your next command.";
+
             var _typingInstruction = new SadConsole.Instructions
                 .DrawString(SadConsole.ColoredString.Parser.Parse(text));
 
+            cursor.DisableWordBreak = false;
             _typingInstruction.Position = cursor.Position;
             _typingInstruction.Cursor = cursor;
             _typingInstruction.TotalTimeToPrint = TimeSpan.FromMilliseconds(1000);
@@ -187,8 +190,6 @@ internal class KeyboardHandlers : ControlsConsole
             _typingInstruction.RemoveOnFinished = true;
             keyboardComponent.IsReady = false;
             _promptScreen.SadComponents.Add(_typingInstruction);
-
-            cursor.Position = new(_typingInstruction.Position.X, _typingInstruction.Position.Y + text.Length);
         }
         else
         {
@@ -198,6 +199,10 @@ internal class KeyboardHandlers : ControlsConsole
 
     private void _typingInstruction_Finished(object? sender, EventArgs e)
     {
+        // One alternative would be to have two cursors on _promptScreen. One for the
+        // typing of responses and the other for input. This avoids having to flip flags
+        // on and off based on when the cursor is being used for input or output.
+        _promptScreen.GetSadComponent<Cursor>()!.DisableWordBreak = true;
         _keyboardHandlerDOS.IsReady = true;
     }
 

@@ -53,7 +53,7 @@ public static partial class ImGuiWidgets
 
         var window = ImGuiInternal.GetCurrentWindow();
 
-        window.ContentRegionRect.Max.X -= frameHeight * 0.5f;
+        //window.ContentRegionRect.Max.X -= frameHeight * 0.5f;
         window.WorkRect.Max.X -= frameHeight * 0.5f;
         window.InnerRect.Max.X -= frameHeight * 0.5f;
         window.Size.X -= frameHeight;
@@ -122,7 +122,7 @@ public static partial class ImGuiWidgets
         ImGui.PopStyleVar(2);
 
         var window = ImGuiInternal.GetCurrentWindow();
-        window.ContentRegionRect.Max.X += frameHeight * 0.5f;
+        //window.ContentRegionRect.Max.X += frameHeight * 0.5f;
         window.WorkRect.Max.X += frameHeight * 0.5f;
         window.InnerRect.Max.X += frameHeight * 0.5f;
         window.Size.X += frameHeight;

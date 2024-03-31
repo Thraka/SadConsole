@@ -1,42 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <AssemblyName>SadConsole</AssemblyName>
-    <DocumentationFile>SadConsole.xml</DocumentationFile>
-    <Version>10.0.3</Version>
-    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>$(SadConsole_Version)</Version>
     <AssemblyTitle>SadConsole</AssemblyTitle>
     <Description>A library that emulates old-school console and command prompt style graphics.</Description>
-    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SadConsole</PackageId>
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-      - ScrollBar has been completely rewritten. Minor breaking changes.
-      - NumberBox has been improved.
-      - Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
-      - ControlBase.FindThemeFont helper method added.
-      - Fixed EffectSet bug where the last effect wasn't applied.
-      - GlyphDefinition has an init accessor now.
-      - Added ShapeParameter docs and CreateFilled supports ignoring the border.
-      - Added RootComponent class that can be added to SadConsole.Game.Instance.RootComponents. These components run logic before the keyboard and screen updates.
-      - Splash screen collection is nulled after it runs, freeing memory.
+- Reversioned to follow new versioning scheme.
+- Configuration namespace and related types was moved here from the hosts.
+- Added Components.Overlay which displays a surface on top of an existing console/surface object as a top layer.
+- Bug: Font.OnFontChanged wasn't actually being called. It is now.
+- Added Coroutine NuGet library. This is included now with SadConsole.
+- Added CoroutineHandlerComponent which is a manager that you can add to an object and coroutines to.
+- Cursor.PrintCoroutine which prints as a coroutine, pausing at each character.
+- Instructions.DrawString updated to use Cursor.PrintCoroutine which lets it pretty print word breaks.
+- XML docs didn't genereate correctly for the last build.
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -67,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Coroutine" Version="2.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
     <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0-rc3" />
@@ -82,7 +65,6 @@
     <None Include="Resources\readme.txt" pack="true" PackagePath="." />
     <None Include="Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
-    <None Remove="SadConsole.xml" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

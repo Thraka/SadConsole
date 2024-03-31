@@ -8,16 +8,16 @@ namespace ImGuiNET.Internal
     public unsafe partial struct ImGuiViewportP
     {
         public ImGuiViewport _ImGuiViewport;
+        public ImGuiWindow* Window;
         public int Idx;
         public int LastFrameActive;
-        public int LastFrontMostStampCount;
+        public int LastFocusedStampCount;
         public uint LastNameHash;
         public Vector2 LastPos;
         public float Alpha;
         public float LastAlpha;
+        public byte LastFocusedHadNavWindow;
         public short PlatformMonitor;
-        public byte PlatformWindowCreated;
-        public ImGuiWindow* Window;
         public fixed int DrawListsLastFrame[2];
         public ImDrawList* DrawLists_0;
         public ImDrawList* DrawLists_1;
@@ -40,16 +40,16 @@ namespace ImGuiNET.Internal
         public static implicit operator ImGuiViewportP* (ImGuiViewportPPtr wrappedPtr) => wrappedPtr.NativePtr;
         public static implicit operator ImGuiViewportPPtr(IntPtr nativePtr) => new ImGuiViewportPPtr(nativePtr);
         public ref ImGuiViewport _ImGuiViewport => ref Unsafe.AsRef<ImGuiViewport>(&NativePtr->_ImGuiViewport);
+        public ImGuiWindowPtr Window => new ImGuiWindowPtr(NativePtr->Window);
         public ref int Idx => ref Unsafe.AsRef<int>(&NativePtr->Idx);
         public ref int LastFrameActive => ref Unsafe.AsRef<int>(&NativePtr->LastFrameActive);
-        public ref int LastFrontMostStampCount => ref Unsafe.AsRef<int>(&NativePtr->LastFrontMostStampCount);
+        public ref int LastFocusedStampCount => ref Unsafe.AsRef<int>(&NativePtr->LastFocusedStampCount);
         public ref uint LastNameHash => ref Unsafe.AsRef<uint>(&NativePtr->LastNameHash);
         public ref Vector2 LastPos => ref Unsafe.AsRef<Vector2>(&NativePtr->LastPos);
         public ref float Alpha => ref Unsafe.AsRef<float>(&NativePtr->Alpha);
         public ref float LastAlpha => ref Unsafe.AsRef<float>(&NativePtr->LastAlpha);
+        public ref bool LastFocusedHadNavWindow => ref Unsafe.AsRef<bool>(&NativePtr->LastFocusedHadNavWindow);
         public ref short PlatformMonitor => ref Unsafe.AsRef<short>(&NativePtr->PlatformMonitor);
-        public ref bool PlatformWindowCreated => ref Unsafe.AsRef<bool>(&NativePtr->PlatformWindowCreated);
-        public ImGuiWindowPtr Window => new ImGuiWindowPtr(NativePtr->Window);
         public RangeAccessor<int> DrawListsLastFrame => new RangeAccessor<int>(NativePtr->DrawListsLastFrame, 2);
         public RangeAccessor<ImDrawListPtr> DrawLists => new RangeAccessor<ImDrawListPtr>(&NativePtr->DrawLists_0, 2);
         public ref ImDrawData DrawDataP => ref Unsafe.AsRef<ImDrawData>(&NativePtr->DrawDataP);

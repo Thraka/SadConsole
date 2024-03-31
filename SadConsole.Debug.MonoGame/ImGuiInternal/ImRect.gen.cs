@@ -1,16 +1,14 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ImGuiNET.Internal
 {
-    [StructLayout(LayoutKind.Sequential)]
     public unsafe partial struct ImRect
     {
-        public Vector2 Max;
         public Vector2 Min;
+        public Vector2 Max;
     }
     public unsafe partial struct ImRectPtr
     {

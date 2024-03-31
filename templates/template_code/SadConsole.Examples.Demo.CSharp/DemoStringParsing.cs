@@ -27,6 +27,20 @@ class StringParsingConsole : ScreenSurface
 {
     public StringParsingConsole() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
+        //Surface.UsePrintProcessor = true;
+        //UseKeyboard = false;
+        //Surface.DefaultForeground = Color.AnsiWhite;
+        //Surface.Clear();
+
+        //ColoredString.Parser = new StringParser.BBCode.Parser();
+        //Surface.Print(1, 1, "[color=ansibluebright]String [color=yellow]p[s]arsi[/s]ng[/color] [u]supports[/u]...");
+        //Surface.Print(1, 2, "[b]abcdef[/b]");
+        //Surface.Print(1, 3, "[i]abcdef[/b]");
+        //Surface.Print(1, 4, "This is forced [upper]uppercase[/upper] characters");
+        //Surface.Print(1, 5, "THIS IS FORCED [lower]LOWERCASE[/lower] CHARACTERS");
+        //ColoredString.Parser = new StringParser.Default();
+
+        //return;
         Surface.UsePrintProcessor = true;
         UseKeyboard = false;
         Surface.DefaultForeground = Color.AnsiWhite;

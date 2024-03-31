@@ -2,7 +2,6 @@
 
 [![Chat on discord](https://img.shields.io/discord/501465397518925843.svg)](https://discord.gg/pAFNKYjczM)
 [![NuGet](https://img.shields.io/nuget/v/SadConsole.svg)][nuget]
-[![kandi X-Ray](https://kandi.openweaver.com/badges/xray.svg)](https://kandi.openweaver.com/csharp/Thraka/SadConsole)
 
 SadConsole is a C#-based .NET cross-platform terminal, ascii, console, game engine. It simulates these types of programs and with it you can make ascii-styled games for modern platforms. At its heart, SadConsole is really a giant tile-based game engine. However, its object model is conceptually similar to a traditional console app.
 
@@ -40,13 +39,6 @@ Here are some of the features SadConsole supports:
 #### Scrolling
 
 ![scrolling console](https://raw.githubusercontent.com/Thraka/SadConsole/master/images/scrolling-example2.gif)
-
-## Dependencies
-
-SadConsole uses NuGet for its .NET dependencies:
-
-- [Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) (>= 13.0.3)
-- [TheSadRogue.Primitives](https://www.nuget.org/packages/TheSadRogue.Primitives/) (>= 1.6.0)
 
 [nuget]: http://www.nuget.org/packages/SadConsole/
 
@@ -127,29 +119,20 @@ End Module
 
 ## Latest changes
 
-v10.0.3 (03/13/2024)
+v10.4.0 (03/31/2024)
 
-- [UI] `ScrollBar` has been completely rewritten. Minor breaking changes.
-  - `.Maximum` has been changed to `.MaximumValue`.
-  - Properties related to the style, such as `BarGlyph`, were moved to a `Style` property which controls how the control looks. Some property names have changed
-- [UI] `NumberBox` improvements.
-  - Rendering code split from `Textbox`.
-  - Added `ShowUpDownButtons` to show up\down buttons.
-  - Fixed bug with `UseMinMax` messing up the value and setting it back to 0 when the control loses focus.
-- [UI] `ControlBase.FindThemeFont` helper method added.
-- [UI] Minor bug fixed where captured controls (such as a scroll bar) wouldn't process the mouse if the control was parented to a composite control and the mouse left the parent area.
-- [Core] Fixed `EffectSet` bug where the last effect wasn't applied.
-- [Core] `GlyphDefinition` has an init accessor now.
-- [Core] Added `ShapeParameter` docs and `CreateFilled` supports ignoring the border.
-- [Core] Added `RootComponent` class that can be added to `SadConsole.Game.Instance.RootComponents`. These components run logic before the keyboard and screen updates.
-- [Core] Splash screen collection is nulled after it runs, freeing memory.
-- [Extended] Classic keyboard handler has `IsReady` flag now to control when it's active.
-- [Extended] `ColorPickerPopup` would crash on invalid textbox values.
-- [Extended] `GlyphSelectPopup` added. You can use this to display a list of glyphs in your font while debugging your app.
-- [Extended] Fixed a bug in the table control that prevented the scroll bars from being displayed.
-- [Extended] Cleaned up code and enabled nullable.
-- [Host - SFML] Fix bug where it was always running at unlimited FPS.
-- [Host - MonoGame] Renderers can set backing texture usage.
-- [Host - FNA] Fix bug where the screen clear wasn't working and would default to violet.
-- [Host - All] Add `OptimizedScreenSurfaceRenderer` which renders.
-- [Host - All] Surface render step can accept an alternative surface with the `SetData` method.
+New versioning system. Versions for SadConsole will be in the following format: [all libs major].[all libs minor].[individual lib revision]
+
+When patches come out for the indvidual libraries, the X in 10.0.X would increment. These would be like host updates, or the extended library, but not public facing changes in SadConsole itself. If SadConsole itself updates, the X in 10.X.0 would increment. All libraries would increment with SadConsole, and the individual lib revisions would reset to 0. The X on X.0.0 would indicate a major change to SadConsole with most likely a lot of bigger breaking changes.
+
+That said, SadConsole is resetting all versions to v10.4.0 for this release. From now on, the new versioning system is in place.
+
+- [Breaking] A minor breaking change. If you were creating your own `IConfigurator` startup configs, the `Run` method's parameter changed from `Game` to `GameHost`.
+
+- [Core] Added `Components.Overlay` which displays a surface on top of an existing console/surface object as a top layer.
+- [Core] Bug: `Font.OnFontChanged` wasn't actually being called. It is now.
+- [Core] Added `Coroutine` NuGet library. This is included now with SadConsole.
+- [Core] Added `CoroutineHandlerComponent` which is a manager that you can add to an object and coroutines to.
+- [Core] `Cursor.PrintCoroutine` which prints as a coroutine, pausing at each character.
+- [Core] `Instructions.DrawString` updated to use `Cursor.PrintCoroutine` which lets it pretty print word breaks.
+- [Core] XML docs didn't genereate correctly for the last build.

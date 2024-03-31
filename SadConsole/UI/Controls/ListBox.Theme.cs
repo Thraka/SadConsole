@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadRogue.Primitives;
 
@@ -48,6 +49,7 @@ public partial class ListBox
     /// <summary>
     /// Sets up the scroll bar for the listbox.
     /// </summary>
+    [MemberNotNull("ScrollBar")]
     protected void SetupScrollBar()
     {
         if (DrawBorder && Height < 4)

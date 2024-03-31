@@ -1,4 +1,4 @@
-namespace ImGuiNET
+namespace ImGuiNET.Internal
 {
     [System.Flags]
     public enum ImGuiItemStatusFlags
@@ -13,5 +13,6 @@ namespace ImGuiNET
         Deactivated = 64,
         HoveredWindow = 128,
         FocusedByTabbing = 256,
+        Visible = 512,
     }
 }

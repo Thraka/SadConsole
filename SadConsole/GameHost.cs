@@ -157,7 +157,7 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// The console created by the game and automatically assigned to <see cref="Screen"/>.
     /// </summary>
-    public Console? StartingConsole { get; protected set; }
+    public Console? StartingConsole { get; protected internal set; }
 
     /// <summary>
     /// The active screen processed by the game.

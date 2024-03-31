@@ -1,10 +1,8 @@
 ﻿// Taken from https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/ImGuiRenderer.cs
-
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -14,7 +12,7 @@ namespace SadConsole.ImGuiSystem
     /// <summary>
     /// ImGui renderer for use with XNA-likes (FNA & MonoGame)
     /// </summary>
-    public class ImGuiRenderer
+    public partial class ImGuiRenderer
     {
         private Microsoft.Xna.Framework.Game _game;
 
@@ -41,27 +39,13 @@ namespace SadConsole.ImGuiSystem
 
         // Input
         private int _scrollWheelValue;
-
-        private List<int> _keys = new List<int>();
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool WantsMouseCapture { get; private set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
-        /// </summary>
-        public bool WantsKeyboardCapture { get; private set; }
-
-        /// <summary>
-        /// When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
-        /// </summary>
-        public bool HideRequested { get; set; }
+        private int _horizontalScrollWheelValue;
+        private readonly float WHEEL_DELTA = 120;
+        private Keys[] _allKeys = Enum.GetValues<Keys>();
 
         internal ImGuiRenderer(Microsoft.Xna.Framework.Game game)
         {
-            IntPtr context = ImGui.CreateContext();
+            nint context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
 
             _game = game ?? throw new ArgumentNullException(nameof(game));
@@ -81,7 +65,6 @@ namespace SadConsole.ImGuiSystem
             };
 
             SetupInput();
-            RebuildFontAtlas();
         }
 
         #region ImGuiRenderer
@@ -93,7 +76,6 @@ namespace SadConsole.ImGuiSystem
         {
             // Get font texture from ImGui
             ImGuiIOPtr io = ImGui.GetIO();
-
             io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
 
             // Copy the data to a managed array
@@ -184,40 +166,19 @@ namespace SadConsole.ImGuiSystem
         #region Setup & Update
 
         /// <summary>
-        /// Maps ImGui keys to XNA keys. We use this later on to tell ImGui what keys were pressed
+        /// Setup key input event handler.
         /// </summary>
         protected virtual void SetupInput()
         {
             ImGuiIOPtr io = ImGui.GetIO();
 
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Back);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Space] = (int)Keys.Space);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y);
-            _keys.Add(io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z);
-
             // MonoGame-specific //////////////////////
             _game.Window.TextInput += (s, a) =>
             {
                 if (a.Character == '\t') return;
-
                 io.AddInputCharacter(a.Character);
             };
+
             ///////////////////////////////////////////
 
             // FNA-specific ///////////////////////////
@@ -228,8 +189,6 @@ namespace SadConsole.ImGuiSystem
             //    ImGui.GetIO().AddInputCharacter(c);
             //};
             ///////////////////////////////////////////
-
-            ImGui.GetIO().Fonts.AddFontDefault();
         }
 
         /// <summary>
@@ -266,26 +225,93 @@ namespace SadConsole.ImGuiSystem
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
 
-            for (int i = 0; i < _keys.Count; i++)
-                io.KeysDown[_keys[i]] = keyboard.IsKeyDown((Keys)_keys[i]);
+            io.MousePos = new System.Numerics.Vector2(mouse.X, mouse.Y);
+            io.AddMousePosEvent(mouse.X, mouse.Y);
+            io.AddMouseButtonEvent(0, mouse.LeftButton == ButtonState.Pressed);
+            io.AddMouseButtonEvent(1, mouse.RightButton == ButtonState.Pressed);
+            io.AddMouseButtonEvent(2, mouse.MiddleButton == ButtonState.Pressed);
+            io.AddMouseButtonEvent(3, mouse.XButton1 == ButtonState.Pressed);
+            io.AddMouseButtonEvent(4, mouse.XButton2 == ButtonState.Pressed);
 
-            io.KeyShift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
-            io.KeyCtrl = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
-            io.KeyAlt = keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt);
-            io.KeySuper = keyboard.IsKeyDown(Keys.LeftWindows) || keyboard.IsKeyDown(Keys.RightWindows);
+            io.AddMouseWheelEvent(
+                (mouse.HorizontalScrollWheelValue - _horizontalScrollWheelValue) / WHEEL_DELTA,
+                (mouse.ScrollWheelValue - _scrollWheelValue) / WHEEL_DELTA);
+            _scrollWheelValue = mouse.ScrollWheelValue;
+            _horizontalScrollWheelValue = mouse.HorizontalScrollWheelValue;
+
+            foreach (Keys key in _allKeys)
+            {
+                if (TryMapKeys(key, out ImGuiKey imguikey))
+                {
+                    io.AddKeyEvent(imguikey, keyboard.IsKeyDown(key));
+                }
+            }
 
             io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
-            
-            io.MousePos = new System.Numerics.Vector2(mouse.X, mouse.Y);
+        }
 
-            io.MouseDown[0] = mouse.LeftButton == ButtonState.Pressed;
-            io.MouseDown[1] = mouse.RightButton == ButtonState.Pressed;
-            io.MouseDown[2] = mouse.MiddleButton == ButtonState.Pressed;
+        private bool TryMapKeys(Keys key, out ImGuiKey imguikey)
+        {
+            //Special case not handed in the switch...
+            //If the actual key we put in is "None", return none and true. 
+            //otherwise, return none and false.
+            if (key == Keys.None)
+            {
+                imguikey = ImGuiKey.None;
+                return true;
+            }
 
-            int scrollDelta = mouse.ScrollWheelValue - _scrollWheelValue;
-            io.MouseWheel = scrollDelta > 0 ? 1 : scrollDelta < 0 ? -1 : 0;
-            _scrollWheelValue = mouse.ScrollWheelValue;
+            imguikey = key switch
+            {
+                Keys.Back => ImGuiKey.Backspace,
+                Keys.Tab => ImGuiKey.Tab,
+                Keys.Enter => ImGuiKey.Enter,
+                Keys.CapsLock => ImGuiKey.CapsLock,
+                Keys.Escape => ImGuiKey.Escape,
+                Keys.Space => ImGuiKey.Space,
+                Keys.PageUp => ImGuiKey.PageUp,
+                Keys.PageDown => ImGuiKey.PageDown,
+                Keys.End => ImGuiKey.End,
+                Keys.Home => ImGuiKey.Home,
+                Keys.Left => ImGuiKey.LeftArrow,
+                Keys.Right => ImGuiKey.RightArrow,
+                Keys.Up => ImGuiKey.UpArrow,
+                Keys.Down => ImGuiKey.DownArrow,
+                Keys.PrintScreen => ImGuiKey.PrintScreen,
+                Keys.Insert => ImGuiKey.Insert,
+                Keys.Delete => ImGuiKey.Delete,
+                >= Keys.D0 and <= Keys.D9 => ImGuiKey._0 + (key - Keys.D0),
+                >= Keys.A and <= Keys.Z => ImGuiKey.A + (key - Keys.A),
+                >= Keys.NumPad0 and <= Keys.NumPad9 => ImGuiKey.Keypad0 + (key - Keys.NumPad0),
+                Keys.Multiply => ImGuiKey.KeypadMultiply,
+                Keys.Add => ImGuiKey.KeypadAdd,
+                Keys.Subtract => ImGuiKey.KeypadSubtract,
+                Keys.Decimal => ImGuiKey.KeypadDecimal,
+                Keys.Divide => ImGuiKey.KeypadDivide,
+                >= Keys.F1 and <= Keys.F24 => ImGuiKey.F1 + (key - Keys.F1),
+                Keys.NumLock => ImGuiKey.NumLock,
+                Keys.Scroll => ImGuiKey.ScrollLock,
+                Keys.LeftShift => ImGuiKey.ModShift,
+                Keys.LeftControl => ImGuiKey.ModCtrl,
+                Keys.LeftAlt => ImGuiKey.ModAlt,
+                Keys.OemSemicolon => ImGuiKey.Semicolon,
+                Keys.OemPlus => ImGuiKey.Equal,
+                Keys.OemComma => ImGuiKey.Comma,
+                Keys.OemMinus => ImGuiKey.Minus,
+                Keys.OemPeriod => ImGuiKey.Period,
+                Keys.OemQuestion => ImGuiKey.Slash,
+                Keys.OemTilde => ImGuiKey.GraveAccent,
+                Keys.OemOpenBrackets => ImGuiKey.LeftBracket,
+                Keys.OemCloseBrackets => ImGuiKey.RightBracket,
+                Keys.OemPipe => ImGuiKey.Backslash,
+                Keys.OemQuotes => ImGuiKey.Apostrophe,
+                //Keys.BrowserBack => ImGuiKey.AppBack,
+                //Keys.BrowserForward => ImGuiKey.AppForward,
+                _ => ImGuiKey.None,
+            };
+
+            return imguikey != ImGuiKey.None;
         }
 
         #endregion Setup & Update
@@ -425,16 +451,6 @@ namespace SadConsole.ImGuiSystem
                 idxOffset += cmdList.IdxBuffer.Size;
             }
         }
-
-        public ImFontPtr AddFontTTF(string file, float size) =>
-            ImGui.GetIO().Fonts.AddFontFromFileTTF(file, size);
-
-        public unsafe void SetDefaultFont(ImFontPtr value)
-        {
-            ImGui.GetIO().NativePtr->FontDefault = value;
-            RebuildFontAtlas();
-        }
-
         #endregion Internals
     }
 }

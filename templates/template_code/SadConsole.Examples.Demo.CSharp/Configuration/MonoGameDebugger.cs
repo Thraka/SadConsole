@@ -24,6 +24,6 @@ internal static class MonoGameDebuggerExtensions
 
 internal class MonoGameDebugger : IConfigurator
 {
-    public void Run(Builder config, Game game) =>
+    public void Run(Builder config, GameHost game) =>
         game.FrameUpdate += MonoGameDebuggerExtensions.Game_FrameUpdate;
 }

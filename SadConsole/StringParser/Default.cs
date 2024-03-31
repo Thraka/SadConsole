@@ -31,6 +31,7 @@ public class Default : IParser
     /// <returns>The finalized string.</returns>
     public ColoredString Parse(ReadOnlySpan<char> value, int surfaceIndex = -1, ICellSurface? surface = null, ParseCommandStacks? initialBehaviors = null)
     {
+        bool hasDecorator = false;
         ParseCommandStacks commandStacks = initialBehaviors ?? new ParseCommandStacks();
 
         // Variable expansion
@@ -211,7 +212,10 @@ public class Default : IParser
 
             // Decorator
             if (commandStacks.Decorator.Count != 0)
+            {
                 commandStacks.Decorator.Peek().Build(ref newGlyph, existingGlyphs, fixedSurfaceIndex, surface, ref i, value, commandStacks);
+                hasDecorator = true;
+            }
 
             // Effect
             if (commandStacks.Effect.Count != 0)
@@ -220,7 +224,7 @@ public class Default : IParser
             glyphs.Add(newGlyph);
         }
 
-        return new ColoredString(glyphs.ToArray());
+        return new ColoredString(glyphs.ToArray()) { IgnoreDecorators = !hasDecorator };
     }
 
 

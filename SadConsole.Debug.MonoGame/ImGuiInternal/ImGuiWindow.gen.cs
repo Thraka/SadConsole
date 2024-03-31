@@ -7,6 +7,7 @@ namespace ImGuiNET.Internal
 {
     public unsafe partial struct ImGuiWindow
     {
+        public IntPtr Ctx;
         public byte* Name;
         public uint ID;
         public ImGuiWindowFlags Flags;
@@ -25,6 +26,12 @@ namespace ImGuiNET.Internal
         public Vector2 WindowPadding;
         public float WindowRounding;
         public float WindowBorderSize;
+        public float DecoOuterSizeX1;
+        public float DecoOuterSizeY1;
+        public float DecoOuterSizeX2;
+        public float DecoOuterSizeY2;
+        public float DecoInnerSizeX1;
+        public float DecoInnerSizeY1;
         public int NameBufLen;
         public uint MoveId;
         public uint TabId;
@@ -51,6 +58,7 @@ namespace ImGuiNET.Internal
         public byte HasCloseButton;
         public sbyte ResizeBorderHeld;
         public short BeginCount;
+        public short BeginCountPreviousFrame;
         public short BeginOrderWithinParent;
         public short BeginOrderWithinContext;
         public short FocusOrder;
@@ -103,6 +111,9 @@ namespace ImGuiNET.Internal
         public fixed uint NavLastIds[2];
         public ImRect NavRectRel_0;
         public ImRect NavRectRel_1;
+        public Vector2 NavPreferredScoringPosRel_0;
+        public Vector2 NavPreferredScoringPosRel_1;
+        public uint NavRootFocusScopeId;
         public int MemoryDrawListIdxCapacity;
         public int MemoryDrawListVtxCapacity;
         public byte MemoryCompacted;
@@ -126,6 +137,7 @@ namespace ImGuiNET.Internal
         public static implicit operator ImGuiWindowPtr(ImGuiWindow* nativePtr) => new ImGuiWindowPtr(nativePtr);
         public static implicit operator ImGuiWindow* (ImGuiWindowPtr wrappedPtr) => wrappedPtr.NativePtr;
         public static implicit operator ImGuiWindowPtr(IntPtr nativePtr) => new ImGuiWindowPtr(nativePtr);
+        public ref IntPtr Ctx => ref Unsafe.AsRef<IntPtr>(&NativePtr->Ctx);
         public NullTerminatedString Name => new NullTerminatedString(NativePtr->Name);
         public ref uint ID => ref Unsafe.AsRef<uint>(&NativePtr->ID);
         public ref ImGuiWindowFlags Flags => ref Unsafe.AsRef<ImGuiWindowFlags>(&NativePtr->Flags);
@@ -144,6 +156,12 @@ namespace ImGuiNET.Internal
         public ref Vector2 WindowPadding => ref Unsafe.AsRef<Vector2>(&NativePtr->WindowPadding);
         public ref float WindowRounding => ref Unsafe.AsRef<float>(&NativePtr->WindowRounding);
         public ref float WindowBorderSize => ref Unsafe.AsRef<float>(&NativePtr->WindowBorderSize);
+        public ref float DecoOuterSizeX1 => ref Unsafe.AsRef<float>(&NativePtr->DecoOuterSizeX1);
+        public ref float DecoOuterSizeY1 => ref Unsafe.AsRef<float>(&NativePtr->DecoOuterSizeY1);
+        public ref float DecoOuterSizeX2 => ref Unsafe.AsRef<float>(&NativePtr->DecoOuterSizeX2);
+        public ref float DecoOuterSizeY2 => ref Unsafe.AsRef<float>(&NativePtr->DecoOuterSizeY2);
+        public ref float DecoInnerSizeX1 => ref Unsafe.AsRef<float>(&NativePtr->DecoInnerSizeX1);
+        public ref float DecoInnerSizeY1 => ref Unsafe.AsRef<float>(&NativePtr->DecoInnerSizeY1);
         public ref int NameBufLen => ref Unsafe.AsRef<int>(&NativePtr->NameBufLen);
         public ref uint MoveId => ref Unsafe.AsRef<uint>(&NativePtr->MoveId);
         public ref uint TabId => ref Unsafe.AsRef<uint>(&NativePtr->TabId);
@@ -170,6 +188,7 @@ namespace ImGuiNET.Internal
         public ref bool HasCloseButton => ref Unsafe.AsRef<bool>(&NativePtr->HasCloseButton);
         public ref sbyte ResizeBorderHeld => ref Unsafe.AsRef<sbyte>(&NativePtr->ResizeBorderHeld);
         public ref short BeginCount => ref Unsafe.AsRef<short>(&NativePtr->BeginCount);
+        public ref short BeginCountPreviousFrame => ref Unsafe.AsRef<short>(&NativePtr->BeginCountPreviousFrame);
         public ref short BeginOrderWithinParent => ref Unsafe.AsRef<short>(&NativePtr->BeginOrderWithinParent);
         public ref short BeginOrderWithinContext => ref Unsafe.AsRef<short>(&NativePtr->BeginOrderWithinContext);
         public ref short FocusOrder => ref Unsafe.AsRef<short>(&NativePtr->FocusOrder);
@@ -221,6 +240,8 @@ namespace ImGuiNET.Internal
         public ImGuiWindowPtr NavLastChildNavWindow => new ImGuiWindowPtr(NativePtr->NavLastChildNavWindow);
         public RangeAccessor<uint> NavLastIds => new RangeAccessor<uint>(NativePtr->NavLastIds, 2);
         public RangeAccessor<ImRect> NavRectRel => new RangeAccessor<ImRect>(&NativePtr->NavRectRel_0, 2);
+        public RangeAccessor<Vector2> NavPreferredScoringPosRel => new RangeAccessor<Vector2>(&NativePtr->NavPreferredScoringPosRel_0, 2);
+        public ref uint NavRootFocusScopeId => ref Unsafe.AsRef<uint>(&NativePtr->NavRootFocusScopeId);
         public ref int MemoryDrawListIdxCapacity => ref Unsafe.AsRef<int>(&NativePtr->MemoryDrawListIdxCapacity);
         public ref int MemoryDrawListVtxCapacity => ref Unsafe.AsRef<int>(&NativePtr->MemoryDrawListVtxCapacity);
         public ref bool MemoryCompacted => ref Unsafe.AsRef<bool>(&NativePtr->MemoryCompacted);
@@ -244,6 +265,35 @@ namespace ImGuiNET.Internal
         {
             ImGuiNative.ImGuiWindow_destroy((ImGuiWindow*)(NativePtr));
         }
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        public uint GetID(ReadOnlySpan<char> str)
+        {
+            byte* native_str;
+            int str_byteCount = 0;
+            if (str != null)
+            {
+                str_byteCount = Encoding.UTF8.GetByteCount(str);
+                if (str_byteCount > Util.StackAllocationSizeLimit)
+                {
+                    native_str = Util.Allocate(str_byteCount + 1);
+                }
+                else
+                {
+                    byte* native_str_stackBytes = stackalloc byte[str_byteCount + 1];
+                    native_str = native_str_stackBytes;
+                }
+                int native_str_offset = Util.GetUtf8(str, native_str, str_byteCount);
+                native_str[native_str_offset] = 0;
+            }
+            else { native_str = null; }
+            uint ret = ImGuiNative.ImGuiWindow_GetID_Str((ImGuiWindow*)(NativePtr), native_str, native_str+str_byteCount);
+            if (str_byteCount > Util.StackAllocationSizeLimit)
+            {
+                Util.Free(native_str);
+            }
+            return ret;
+        }
+#endif
         public uint GetID(string str)
         {
             byte* native_str;
@@ -264,8 +314,7 @@ namespace ImGuiNET.Internal
                 native_str[native_str_offset] = 0;
             }
             else { native_str = null; }
-            byte* native_str_end = null;
-            uint ret = ImGuiNative.ImGuiWindow_GetID_Str((ImGuiWindow*)(NativePtr), native_str, native_str_end);
+            uint ret = ImGuiNative.ImGuiWindow_GetID_Str((ImGuiWindow*)(NativePtr), native_str, native_str+str_byteCount);
             if (str_byteCount > Util.StackAllocationSizeLimit)
             {
                 Util.Free(native_str);
