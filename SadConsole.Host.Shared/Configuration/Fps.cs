@@ -2,7 +2,7 @@
 
 namespace SadConsole.Configuration;
 
-public static partial class Extensions
+public static partial class ExtensionsHost
 {
     /// <summary>
     /// Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
@@ -43,7 +43,7 @@ public class FpsConfig : IConfigurator
     public bool ShowFPSVisual { get; set; }
 #endif
 
-    public void Run(Builder configBuilder, Game game)
+    public void Run(Builder configBuilder, GameHost game)
     {
     }
 }

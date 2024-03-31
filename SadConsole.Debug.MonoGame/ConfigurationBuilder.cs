@@ -27,7 +27,7 @@ internal class ImGuiDebugConfig : RootComponent, IConfigurator
 {
     public Keys HotKey { get; set; }
 
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
         game.RootComponents.Add(this);
     }

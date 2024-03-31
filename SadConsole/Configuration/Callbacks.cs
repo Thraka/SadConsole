@@ -65,38 +65,6 @@ public static partial class Extensions
 
         return configBuilder;
     }
-
-#if MONOGAME
-    /// <summary>
-    /// The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
-    /// </summary>
-    /// <param name="configBuilder">The builder object that composes the game startup.</param>
-    /// <param name="monogameCtorCallback">A method.</param>
-    /// <returns>The configuration object.</returns>
-    public static Builder WithMonoGameCtor(this Builder configBuilder, Action<Host.Game> monogameCtorCallback)
-    {
-        CallbackConfig config = configBuilder.GetOrCreateConfig<CallbackConfig>();
-
-        config.MonoGameCtorCallback = monogameCtorCallback;
-
-        return configBuilder;
-    }
-
-    /// <summary>
-    /// Internal only. Called by the MonoGame game to finish configuring SadConsole.
-    /// </summary>
-    /// <param name="configBuilder">The builder object that composes the game startup.</param>
-    /// <param name="monogameInitCallback">A method.</param>
-    /// <returns>The configuration object.</returns>
-    internal static Builder WithMonoGameInit(this Builder configBuilder, Action<Host.Game> monogameInitCallback)
-    {
-        CallbackConfig config = configBuilder.GetOrCreateConfig<CallbackConfig>();
-
-        config.MonoGameInitCallback = monogameInitCallback;
-
-        return configBuilder;
-    }
-#endif
 }
 
 public class CallbackConfig : IConfigurator
@@ -107,12 +75,7 @@ public class CallbackConfig : IConfigurator
     public EventHandler<GameHost>? event_FrameUpdate { get; set; }
     public EventHandler<GameHost>? event_FrameRender { get; set; }
 
-#if MONOGAME
-    public Action<Host.Game>? MonoGameCtorCallback { get; set; }
-    public Action<Host.Game>? MonoGameInitCallback { get; set; }
-#endif
-
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
         if (event_Started != null)
             game.Started += event_Started;

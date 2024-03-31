@@ -12,5 +12,5 @@ public interface IConfigurator
     /// </summary>
     /// <param name="config">The builder configuration object.</param>
     /// <param name="game">The game object being created.</param>
-    void Run(Builder config, Game game);
+    void Run(Builder config, GameHost game);
 }

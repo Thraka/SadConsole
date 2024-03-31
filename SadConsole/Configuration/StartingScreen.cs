@@ -26,7 +26,7 @@ public static partial class Extensions
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="creator">A method that returns an object as the starting screen.</param>
     /// <returns>The configuration builder.</returns>
-    public static Builder SetStartingScreen(this Builder configBuilder, Func<Game, IScreenObject> creator)
+    public static Builder SetStartingScreen(this Builder configBuilder, Func<GameHost, IScreenObject> creator)
     {
         StartingScreenConfig startup = configBuilder.GetOrCreateConfig<StartingScreenConfig>();
         startup.GenerateStartingObject = creator;
@@ -54,9 +54,9 @@ public static partial class Extensions
 
 public class StartingScreenConfig : IConfigurator
 {
-    public Func<Game, IScreenObject> GenerateStartingObject { get; set; }
+    public Func<GameHost, IScreenObject> GenerateStartingObject { get; set; }
 
-    public void Run(Builder configBuilder, Game game)
+    public void Run(Builder configBuilder, GameHost game)
     {
         game.FocusedScreenObjects.Clear();
         game.Screen = GenerateStartingObject(game);

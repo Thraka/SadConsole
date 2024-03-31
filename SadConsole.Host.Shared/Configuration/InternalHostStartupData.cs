@@ -5,7 +5,7 @@ using System;
 namespace SadConsole.Configuration;
 
 #if SFML
-public static partial class Extensions
+public static partial class ExtensionsHost
 {
     /// <summary>
     /// Sets the target window SadConsole renders to instead of building its own window.
@@ -15,7 +15,7 @@ public static partial class Extensions
     /// <returns>The configuration builder.</returns>
     public static Builder SetTargetWindow(this Builder configBuilder, SFML.Graphics.RenderWindow window)
     {
-        InternalStartupData config = configBuilder.GetOrCreateConfig<InternalStartupData>();
+        InternalHostStartupData config = configBuilder.GetOrCreateConfig<InternalHostStartupData>();
 
         config.TargetWindow = window;
 
@@ -23,7 +23,7 @@ public static partial class Extensions
     }
 }
 #elif WPF
-public static partial class Extensions
+public static partial class ExtensionsHost
 {
     /// <summary>
     /// Sets the <see cref="Settings.Rendering.RenderWidth"/> and <see cref="Settings.Rendering.RenderHeight"/> values.
@@ -34,7 +34,7 @@ public static partial class Extensions
     /// <returns>The configuration builder.</returns>
     public static Builder SetInitialRenderPixels(this Builder configBuilder, int width, int height)
     {
-        InternalStartupData config = configBuilder.GetOrCreateConfig<InternalStartupData>();
+        InternalHostStartupData config = configBuilder.GetOrCreateConfig<InternalHostStartupData>();
 
         config.InitialRenderWidth = width;
         config.InitialRenderHeight = height;
@@ -44,13 +44,8 @@ public static partial class Extensions
 }
 #endif
 
-public class InternalStartupData : IConfigurator
+public class InternalHostStartupData : IConfigurator
 {
-    public int ScreenCellsX { get; set; } = 80;
-    public int ScreenCellsY { get; set; } = 25;
-
-    public bool? FocusStartingScreen { get; set; } = null;
-
 #if SFML
     public SFML.Graphics.RenderWindow? TargetWindow { get; set; }
 #elif WPF
@@ -58,9 +53,7 @@ public class InternalStartupData : IConfigurator
     public int InitialRenderHeight { get; set; }
 #endif
 
-
-
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
     }
 }

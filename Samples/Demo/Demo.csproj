@@ -17,7 +17,7 @@
 
   <PropertyGroup>
     <!-- monogame, sfml, or fna -->
-    <GameHost>monogame</GameHost>
+    <GameHost>sfml</GameHost>
     
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>

@@ -55,7 +55,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
         Global.GraphicsDeviceManager.HardwareModeSwitch = Settings.UseHardwareFullScreen;
 #endif
 
-        CallbackConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();
+        MonoGameCallbackConfig config = SadConsole.Game.Instance._configuration.Configs.OfType<MonoGameCallbackConfig>().FirstOrDefault();
         config?.MonoGameCtorCallback?.Invoke(this);
     }
 
@@ -141,7 +141,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
         Global.SharedSpriteBatch = new SpriteBatch(GraphicsDevice);
 
         // Invoke the monogame init callback
-        CallbackConfig monoGameConfig = SadConsole.Game.Instance._configuration.Configs.OfType<CallbackConfig>().FirstOrDefault();
+        MonoGameCallbackConfig monoGameConfig = SadConsole.Game.Instance._configuration.Configs.OfType<MonoGameCallbackConfig>().FirstOrDefault();
         monoGameConfig?.MonoGameInitCallback?.Invoke(this);
 
         ResetRendering();

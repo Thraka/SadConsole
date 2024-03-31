@@ -134,13 +134,15 @@ public sealed partial class Game : GameHost
         ScreenCellsX = startupData.ScreenCellsX;
         ScreenCellsY = startupData.ScreenCellsY;
 
-        if (startupData.TargetWindow == null)
+        InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
+
+        if (hostStartupData.TargetWindow == null)
         {
             Global.GraphicsDevice = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
             Global.GraphicsDevice.SetTitle(Settings.WindowTitle);
         }
         else
-            Global.GraphicsDevice = startupData.TargetWindow;
+            Global.GraphicsDevice = hostStartupData.TargetWindow;
 
         Global.GraphicsDevice.Closed += (o, e) =>
         {

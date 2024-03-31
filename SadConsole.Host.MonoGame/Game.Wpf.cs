@@ -135,14 +135,16 @@ public partial class Game : GameHost
         InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
             ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
 
-        if (startupData.InitialRenderWidth == 0 || startupData.InitialRenderHeight == 0)
-            throw new Exception($"You must call {nameof(Configuration.Extensions.SetInitialRenderPixels)} and set values greater than 0.");
+        InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
+
+        if (hostStartupData.InitialRenderWidth == 0 || hostStartupData.InitialRenderHeight == 0)
+            throw new Exception($"You must call {nameof(Configuration.ExtensionsHost.SetInitialRenderPixels)} and set values greater than 0.");
 
         ScreenCellsX = startupData.ScreenCellsX;
         ScreenCellsY = startupData.ScreenCellsY;
 
-        SadConsole.Settings.Rendering.RenderWidth = startupData.InitialRenderWidth;
-        SadConsole.Settings.Rendering.RenderHeight = startupData.InitialRenderHeight;
+        SadConsole.Settings.Rendering.RenderWidth = hostStartupData.InitialRenderWidth;
+        SadConsole.Settings.Rendering.RenderHeight = hostStartupData.InitialRenderHeight;
 
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
@@ -172,7 +174,7 @@ public partial class Game : GameHost
         _configuration.Run(this);
 
         var fontSize = DefaultFont.GetFontSize(DefaultFontSize);
-        if (fontSize.X > startupData.InitialRenderWidth || fontSize.Y > startupData.InitialRenderHeight)
+        if (fontSize.X > hostStartupData.InitialRenderWidth || fontSize.Y > hostStartupData.InitialRenderHeight)
             throw new Exception("WPF control is too small to present a single cell in the font size.");
 
         // Normal start

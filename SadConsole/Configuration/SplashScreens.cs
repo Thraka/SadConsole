@@ -29,7 +29,7 @@ public static partial class Extensions
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="creator">A delegate that returns an array of surface objects.</param>
     /// <returns>The configuration builder.</returns>
-    public static Builder SetSplashScreen(this Builder configBuilder, Func<Game, ScreenSurface[]> creator)
+    public static Builder SetSplashScreen(this Builder configBuilder, Func<GameHost, ScreenSurface[]> creator)
     {
         SplashScreenConfig screens = configBuilder.GetOrCreateConfig<SplashScreenConfig>();
         screens.GenerateSplashScreen = creator;
@@ -46,9 +46,9 @@ public class SplashScreenConfig : IConfigurator
     /// <summary>
     /// A delegate that returns a set of splash screens to use.
     /// </summary>
-    public Func<Game, IScreenSurface[]> GenerateSplashScreen { get; set; }
+    public Func<GameHost, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
         game.SetSplashScreens(GenerateSplashScreen(game));
     }

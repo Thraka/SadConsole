@@ -12,7 +12,7 @@ public static partial class Extensions
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="fontLoader">A method that provides access to the <see cref="FontConfig"/> object that loads fonts.</param>
     /// <returns>The configuration builder.</returns>
-    public static Builder ConfigureFonts(this Builder configBuilder, Action<FontConfig, Game> fontLoader)
+    public static Builder ConfigureFonts(this Builder configBuilder, Action<FontConfig, GameHost> fontLoader)
     {
         FontConfig config = configBuilder.GetOrCreateConfig<FontConfig>();
 
@@ -75,7 +75,7 @@ public static partial class Extensions
 
 internal class OldFontNameConfig : IConfigurator
 {
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
         game.Started += Game_Started;
     }
@@ -94,11 +94,11 @@ internal class OldFontNameConfig : IConfigurator
 /// </summary>
 public class FontConfig : IConfigurator
 {
-    internal Action<FontConfig, Game>? FontLoader { get; set; }
+    public Action<FontConfig, GameHost>? FontLoader { get; set; }
 
-    internal string[] CustomFonts = Array.Empty<string>();
-    internal string? AlternativeDefaultFont = null;
-    internal bool UseExtendedFont = false;
+    public string[] CustomFonts = Array.Empty<string>();
+    public string? AlternativeDefaultFont = null;
+    public bool UseExtendedFont = false;
 
     /// <summary>
     /// Sets the default font to the SadConsole standard font, an IBM 8x16 font.
@@ -137,7 +137,7 @@ public class FontConfig : IConfigurator
     /// </summary>
     /// <param name="config">The builder running this configurator.</param>
     /// <param name="game">The game being created.</param>
-    public void Run(Builder config, Game game)
+    public void Run(Builder config, GameHost game)
     {
         FontLoader?.Invoke(this, game);
         Settings.UseDefaultExtendedFont = UseExtendedFont;
