@@ -12,6 +12,7 @@
     <PackageReleaseNotes>
 - Reversioned to follow new versioning scheme.
 - Configuration namespace was moved to SadConsole directly. Only library specific config options are here now.
+- Package contains all dependencies now.
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -32,9 +33,17 @@
     <None Update=".\FNA\*\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net8.0" />
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net7.0" />
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net6.0" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net8.0\FNA" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net7.0\FNA" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net6.0\FNA" />
+  </ItemGroup>
+  
   <ItemGroup>
       <!-- Make sure none of the monogame project compiles -->
     <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.*;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
