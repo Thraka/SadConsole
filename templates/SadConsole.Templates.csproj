@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageType>Template</PackageType>
-    <PackageVersion>10.0.14</PackageVersion>
+    <PackageVersion>10.4.0</PackageVersion>
     <PackageId>SadConsole.Templates</PackageId>
     <Title>SadConsole Game Templates</Title>
     <Authors>Thraka</Authors>
@@ -18,6 +18,7 @@
   <ItemGroup>
     <Content Include="template_code\**\*" Exclude="template_code\**\bin\**;template_code\**\obj\**" />
     <Compile Remove="**\*" />
+    <None Include="README.md" pack="true" PackagePath="." />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

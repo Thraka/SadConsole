@@ -27,10 +27,9 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup>
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.0.3" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.0.3" />
-    <PackageReference Include="SadConsole.Extended" Version="10.0.3" />
-    <PackageReference Include="SadConsole" Version="10.0.3" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.4.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.4.0" />
+    <PackageReference Include="SadConsole.Extended" Version="10.4.0" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
@@ -45,7 +44,7 @@
   <!-- If you're using the FNA host, set this path to the FNA.dll file. -->
   <ItemGroup Condition=" '$(GameHost)' == 'fna' ">
     <Reference Include="FNA">
-      <HintPath>..\..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
+      <HintPath>bin\net8.0\FNA.dll</HintPath>
     </Reference>
   </ItemGroup>
 
