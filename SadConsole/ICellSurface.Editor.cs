@@ -2488,7 +2488,7 @@ public static class CellSurfaceEditor
 
         if (parameters.BorderGlyph == null) throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
-        foreach (var location in Shapes.GetEllipse(area.Position, area.MaxExtent))
+        foreach (Point location in Shapes.GetEllipse(area.Position, area.MaxExtent))
         {
             if (parameters.HasBorder && obj.Surface.IsValidCell(location.X, location.Y))
             {
@@ -2552,6 +2552,8 @@ public static class CellSurfaceEditor
 
             Algorithms.FloodFill(area.Center.ToIndex(obj.Surface.Width), isTargetCell, fillCell, getConnectedCells);
         }
+
+        obj.Surface.IsDirty = true;
     }
 
     /// <summary>
