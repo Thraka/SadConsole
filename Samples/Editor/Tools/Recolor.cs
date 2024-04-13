@@ -2,6 +2,7 @@
 using ImGuiNET;
 using SadConsole.Editor.GuiParts.Tools;
 using SadConsole.Editor.Model;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
@@ -60,6 +61,14 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##foreground_edit", ref _matchForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
+            ImGui.SameLine();
+            if (ImGui.Button($"Palette##foreground_edit"))
+                ImGuiCore.State.OpenPopup($"palettepopup##foreground_edit");
+
+            Color col = _matchForeground.ToColor();
+            if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
+                _matchForeground = col.ToVector4();
+
             if (!_isMatchForeground) ImGui.EndDisabled();
         }
 
@@ -76,6 +85,14 @@ internal class Recolor : ITool
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##background_edit", ref _matchBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
+
+            ImGui.SameLine();
+            if (ImGui.Button($"Palette##background_edit"))
+                ImGuiCore.State.OpenPopup($"palettepopup##background_edit");
+
+            Color col = _matchBackground.ToColor();
+            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
+                _matchBackground = col.ToVector4();
 
             if (!_isMatchBackground) ImGui.EndDisabled();
         }
@@ -137,6 +154,14 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##foreground_edit", ref _applyForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
+            ImGui.SameLine();
+            if (ImGui.Button($"Palette##foreground_edit"))
+                ImGuiCore.State.OpenPopup($"palettepopup##foreground_edit");
+
+            Color col = _applyForeground.ToColor();
+            if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
+                _applyForeground = col.ToVector4();
+
             if (!_isApplyForeground) ImGui.EndDisabled();
         }
 
@@ -153,6 +178,14 @@ internal class Recolor : ITool
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##background_edit", ref _applyBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
+
+            ImGui.SameLine();
+            if (ImGui.Button($"Palette##background_edit"))
+                ImGuiCore.State.OpenPopup($"palettepopup##background_edit");
+
+            Color col = _applyBackground.ToColor();
+            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
+                _applyBackground = col.ToVector4();
 
             if (!_isApplyBackground) ImGui.EndDisabled();
         }

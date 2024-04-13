@@ -58,9 +58,7 @@ internal static partial class SettingsTable
 
         ImGui.SameLine();
         if (ImGui.Button($"Palette{id}"))
-        {
             ImGuiCore.State.OpenPopup($"palettepopup##{id}");
-        }
 
         Color col = color.ToColor();
         if (PalettePopup.Show($"palettepopup##{id}", ref col))

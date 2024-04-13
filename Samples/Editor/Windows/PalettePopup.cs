@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Reflection;
 using ImGuiNET;
-using Microsoft.Xna.Framework.Audio;
-using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
@@ -12,6 +9,7 @@ public static class PalettePopup
     static Color s_ansiColor = Color.AnsiRed;
     static int s_themeColorIndex = 0;
     static string[] s_themeColorNames = Enum.GetNames(typeof(SadConsole.UI.Colors.ColorNames));
+    static string s_filter = string.Empty;
 
     public static bool Show(string popupId, ref Color color)
     {
@@ -19,6 +17,9 @@ public static class PalettePopup
 
         if (ImGui.BeginPopup(popupId))
         {
+            Vector2 padding = ImGui.GetStyle().FramePadding;
+            Vector2 spacing = ImGui.GetStyle().ItemSpacing;
+
             if (ImGui.BeginTabBar("tabs"))
             {
                 if (ImGui.BeginTabItem("Ansi"))
@@ -78,7 +79,7 @@ public static class PalettePopup
 
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("SadConsole Theme"))
+                if (ImGui.BeginTabItem("SadConsole"))
                 {
                     if (ImGui.BeginListBox("##themelist"))
                     {
@@ -88,50 +89,48 @@ public static class PalettePopup
                         {
                             Vector2 pos = ImGui.GetCursorPos();
                             Color parsedColor = UI.Colors.Default.FromColorName(Enum.Parse<UI.Colors.ColorNames>(colorname));
-                            if (ImGui.Selectable($"##{colorname}"))
+
+                            if (GenerateSelectableColor(colorname, parsedColor, drawData, ref color))
                             {
                                 color = parsedColor;
                                 returnValue = true;
                                 ImGui.CloseCurrentPopup();
-
                             }
-                            drawData.AddRectFilled(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), parsedColor.PackedValue);
-                            ImGui.SetCursorPos(pos);
-
-                            
-                            ImGui.TextColored(new Color(255 - parsedColor.R, 255 - parsedColor.G, 255 - parsedColor.B).ToVector4(), colorname);
                         }
 
                         ImGui.EndListBox();
                     }
 
-                    //if (ImGui.ListBox("##themelist", ref s_themeColorIndex, s_themeColorNames, 8))
-
                     ImGui.EndTabItem();
                 }
                 if (ImGui.BeginTabItem("Primitives"))
                 {
+                    Vector2 area = ImGui.GetItemRectSize();
+
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Filter:");
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth(area.Y - ImGui.GetCursorPosY() - spacing.Y - area.Y);
+                    ImGui.InputText("##Filter", ref s_filter, 50);
+                    ImGui.SameLine();
+                    if (ImGui.Button("X"))
+                        s_filter = string.Empty;
+
                     if (ImGui.BeginListBox("##primcolorlist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
 
                         Type colorType = typeof(Color);
-                        foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name))
+                        foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name && t.Name.Contains(s_filter, StringComparison.OrdinalIgnoreCase)))
                         {
-                            Vector2 pos = ImGui.GetCursorPos();
                             Color parsedColor = (Color)item.GetValue(null)!;
-                            if (ImGui.Selectable($"##{item.Name}"))
+
+                            if (GenerateSelectableColor(item.Name, parsedColor, drawData, ref color))
                             {
                                 color = parsedColor;
                                 returnValue = true;
                                 ImGui.CloseCurrentPopup();
-
                             }
-                            drawData.AddRectFilled(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), parsedColor.PackedValue);
-                            ImGui.SetCursorPos(pos);
-
-
-                            ImGui.TextColored(new Color(255 - parsedColor.R, 255 - parsedColor.G, 255 - parsedColor.B).ToVector4(), item.Name);
                         }
 
                         ImGui.EndListBox();
@@ -145,6 +144,40 @@ public static class PalettePopup
                 }
 
                 ImGui.EndTabBar();
+            }
+
+            bool GenerateSelectableColor(string name, Color color, ImDrawListPtr drawData, ref Color selectedColor)
+            {
+                bool returnValue = false;
+                Vector2 pos = ImGui.GetCursorPos();
+                returnValue = ImGui.Selectable($"##{name}");
+
+                Vector2 topLeft = ImGui.GetItemRectMin();
+                Vector2 bottomRight = ImGui.GetItemRectMax();
+                Vector2 bottomRightMax = ImGui.GetItemRectMax();
+
+                bottomRight = topLeft + new Vector2(bottomRight.Y - topLeft.Y, bottomRight.Y - topLeft.Y);
+
+                topLeft += padding;
+                bottomRight.Y -= padding.Y;
+                bottomRight.X = topLeft.X + bottomRight.Y - topLeft.Y;
+
+                pos += new Vector2(bottomRight.X - topLeft.X + spacing.X, 0f);
+
+                ImGui.SetCursorPos(pos);
+                ImGui.Text(name);
+
+                drawData.AddRectFilled(topLeft, bottomRight, color.PackedValue);
+
+                pos += new Vector2(bottomRight.X - topLeft.X + spacing.X, 0f);
+
+                topLeft.X = ImGui.CalcTextSize(name).X + bottomRight.X + spacing.X + spacing.X;
+                bottomRight = bottomRightMax;
+                bottomRight -= padding;
+
+                drawData.AddRectFilled(topLeft, bottomRight, color.PackedValue);
+
+                return returnValue;
             }
 
             ImGui.EndPopup();
