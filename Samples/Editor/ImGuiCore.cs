@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
-using SadConsole;
-using SadConsole.Editor.GuiParts;
+﻿using SadConsole.Editor.GuiParts;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor;
@@ -29,6 +23,7 @@ public static partial class ImGuiCore
 
     //private static CoolTheme coolTheme = new CoolTheme();
 
+    public static GuiStartup GuiStartup;
     public static GuiTopBar GuiTopBar;
     public static GuiDockspace GuiDockspace;
     public static WindowActiveDocuments GuiSidePane;
@@ -42,12 +37,12 @@ public static partial class ImGuiCore
     /// </summary>
     public static void BasicInit()
     {
-        _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+        _imGui = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
         //_imGui.Font = "Roboto-Regular.ttf";
         //_imGui.fontSize = 14f;
 
         Game.Instance.MonoGameInstance.Components.Add(_imGui);
-        SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
     }
 
     public static void Start()
@@ -57,19 +52,19 @@ public static partial class ImGuiCore
             _imGui.Visible = true;
             _imGui.Enabled = true;
 
-            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
-            SadConsole.Settings.DoFinalDraw = false;
+            Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+            Settings.DoFinalDraw = false;
 
             return;
         }
 
-        SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
-        SadConsole.Settings.DoFinalDraw = false;
+        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        Settings.DoFinalDraw = false;
 
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
-        _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+        _imGui = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
 
         var value = _imGui.ImGuiRenderer.AddFontTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 16f);
         _imGui.ImGuiRenderer.SetDefaultFont(value);
@@ -82,10 +77,11 @@ public static partial class ImGuiCore
 
         //ImGuiNET.ImGui.GetStyle().ScaleAllSizes(2f);
 
+        GuiStartup = new();
         GuiTopBar = new();
         GuiDockspace = new();
-        GuiSidePane = new();
         GuiDocumentsHost = new();
+        GuiSidePane = new();
         GuiToolsWindow = new();
         _debuggingTools = new();
 
@@ -100,14 +96,15 @@ public static partial class ImGuiCore
         //ImGuiNET.ImGui.
 
         // Test code
-        var doc = Model.SurfaceDocument.FromSettings(280, 225, SadRogue.Primitives.Color.White, SadRogue.Primitives.Color.Black);
-        State.OpenDocuments = State.OpenDocuments.Append(doc).ToArray();
-        ((Model.SurfaceDocument)State.OpenDocuments[0]).Surface.Surface.View = new SadRogue.Primitives.Rectangle(0, 0, 10, 10);
+        var doc = Model.SurfaceDocument.FromSettings(280, 225, Color.White, Color.Black);
+        State.OpenDocuments = [.. State.OpenDocuments, doc];
+        ((Model.SurfaceDocument)State.OpenDocuments[0]).Surface.Surface.View = new Rectangle(0, 0, 10, 10);
     }
 
     public static void ResetUIList()
     {
         _imGui.UIComponents.Clear();
+        _imGui.UIComponents.Add(GuiStartup);
         _imGui.UIComponents.Add(GuiTopBar);
         _imGui.UIComponents.Add(GuiDockspace);
         _imGui.UIComponents.Add(GuiSidePane);
@@ -118,26 +115,29 @@ public static partial class ImGuiCore
 
     public static void ShowCreateDocument()
     {
-        PopupNewFileWindow window = new PopupNewFileWindow();
-        window.IsOpen = true;
-        ImGuiCore.GuiComponents.Add(window);
+        NewFile window = new();
         window.Closed += (s, e) =>
         {
             if (window.DialogResult)
-            {
-                State.OpenDocuments = State.OpenDocuments.Append(window.Document).ToArray();
-            }
+                State.OpenDocuments = [.. State.OpenDocuments, window.Document];
         };
+        window.Show();
     }
 
-    private static void _imGui_HostClosed(object sender, EventArgs e) =>
+    public static void Alert(string message)
+    {
+        SaveFileError window = new(message);
+        window.Show();
+    }
+
+    private static void _imGui_HostClosed(object? sender, EventArgs e) =>
         Stop();
 
     public static void Stop()
     {
-        SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Visible = true;
-        SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = true;
-        SadConsole.Settings.DoFinalDraw = true;
+        Game.Instance.MonoGameInstance.SadConsoleComponent.Visible = true;
+        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = true;
+        Settings.DoFinalDraw = true;
 
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = true;

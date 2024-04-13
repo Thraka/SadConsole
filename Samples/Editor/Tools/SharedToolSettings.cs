@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SadConsole.Editor.Tools;
 
-internal static class CommonToolSettings
+internal static class SharedToolSettings
 {
     public static ColoredGlyph Tip { get; set; }
 
-    static CommonToolSettings()
+    static SharedToolSettings()
     {
-        Tip = new ColoredGlyph();
+        Tip = new ColoredGlyph() { Glyph = 1 };
     }
 }

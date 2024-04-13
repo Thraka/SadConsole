@@ -1,44 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
+﻿using ImGuiNET;
+using SadConsole.Editor.Model;
 using SadConsole.ImGuiSystem;
-using SadConsole.UI;
 
-namespace SadConsole.Editor.GuiParts;
+namespace SadConsole.Editor.Windows;
 
-public class PopupNewFileWindow: ImGuiWindow
+public class NewFile : ImGuiWindow
 {
-    private int _documentSelectedIndex = -1;
+    private int _documentSelectedIndex = 0;
     private string _documentName = "";
-    public Model.Document Document;
+    public Document? Document;
 
-    public PopupNewFileWindow()
+    public NewFile()
     {
         Title = "New file";
     }
+
+    public void Show()
+    {
+        IsOpen = true;
+
+        if (!ImGuiCore.GuiComponents.Contains(this))
+            ImGuiCore.GuiComponents.Add(this);
+    }
+
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
         if (IsOpen)
         {
             ImGui.OpenPopup(Title);
-            
+
             ImGuiExt.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, -1));
             if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
                 ImGui.Text("Document Type:");
                 ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-                if (ImGui.ListBox("##Document Type", ref _documentSelectedIndex, new[] { "Surface", "Scene", "Animation" }, 3))
-                {
-                    Document = _documentSelectedIndex switch
-                    {
-                        _ => new Model.SurfaceDocument(),
-                    };
-                }
+                DocumentTypeListControl.DrawListBox("##Document Type", 3, ref _documentSelectedIndex, ref Document);
 
                 if (Document != null)
                 {
@@ -61,14 +59,12 @@ public class PopupNewFileWindow: ImGuiWindow
                     ImGui.EndDisabled();
                 }
                 else
-                {
                     if (ImGui.Button("Create"))
                     {
                         Document.Create();
                         DialogResult = true;
                         IsOpen = false;
                     }
-                }
 
                 ImGui.EndPopup();
             }
@@ -78,6 +74,5 @@ public class PopupNewFileWindow: ImGuiWindow
             OnClosed();
             ImGuiCore.GuiComponents.Remove(this);
         }
-            
     }
 }

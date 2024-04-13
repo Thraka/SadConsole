@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using ImGuiNET;
 using SadConsole.Editor.Model;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Editor.GuiParts;
 
@@ -31,8 +24,32 @@ public class WindowTools : ImGuiObjectBase
                     ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
                     if (docTools.State.ToolObjects.Length != 0)
                     {
-                        ImGui.ListBox("##toolsList", ref docTools.State.SelectedToolIndex, docTools.State.ToolNames, docTools.State.ToolObjects.Length, docTools.State.ToolObjects.Length <= 4 ? 4 : 10);
-                        ImGui.Separator();
+                        int selectedToolIndex = docTools.State.SelectedToolIndex;
+
+                        ImGui.TextDisabled("(?)");
+                        if (ImGui.IsItemHovered())
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25.0f);
+                            ImGui.TextUnformatted(docTools.State.SelectedTool.Description);
+                            ImGui.PopTextWrapPos();
+                            ImGui.EndTooltip();
+                        }
+                        ImGui.SameLine();
+
+                        if (ImGui.Combo("##toolsList", ref selectedToolIndex, docTools.State.ToolNames, docTools.State.ToolObjects.Length, docTools.State.ToolObjects.Length <= 4 ? 4 : 6))
+                        {
+                            if (docTools.State.SelectedToolIndex != selectedToolIndex)
+                            {
+                                Editor.Tools.ITool oldTool = docTools.State.SelectedTool!;
+
+                                docTools.State.SelectedTool.OnDeselected();
+                                docTools.State.SelectedToolIndex = selectedToolIndex;
+                                docTools.ToolChanged(oldTool, docTools.State.SelectedTool);
+                                docTools.State.SelectedTool.OnSelected();
+                            }
+                        }
+
                         docTools.State.SelectedTool.BuildSettingsPanel(renderer);
                     }
                     else

@@ -2,11 +2,19 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Editor</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
 
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>
@@ -14,15 +22,15 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="9.2.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="9.2.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="10.*" />
     
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="9.2.0" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
 
     <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
   </ItemGroup>
@@ -35,6 +43,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+    <Reference Include="GumCommon">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="GumDataTypesNet6">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumDataTypesNet6.dll</HintPath>
+    </Reference>
+    <Reference Include="ToolsUtilitiesStandard">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\ToolsUtilitiesStandard.dll</HintPath>
+    </Reference>
+    -->
+    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
+    <PackageReference Include="MonoGame.Extended.Graphics" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Fonts\DejaVuSansMono-msdf.fnt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
