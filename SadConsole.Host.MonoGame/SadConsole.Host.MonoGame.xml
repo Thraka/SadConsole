@@ -151,10 +151,11 @@
             Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch">
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch(System.Boolean)">
             <summary>
             Resumes rendering to <see cref="P:SadConsole.Host.Global.RenderOutput"/> with SadConsole's default settings.
             </summary>
+            <param name="skipSetRenderTarget">When true, skips assinging <see cref="P:SadConsole.Host.Global.RenderOutput"/> as the render target.</param>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
             <summary>
@@ -171,6 +172,11 @@
             The image to draw.
             </summary>
         </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.ShaderEffect">
+            <summary>
+            The shader to use when drawing the texture.
+            </summary>
+        </member>
         <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
             <summary>
             Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
@@ -181,13 +187,14 @@
             A color tint to apply when drawn.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color})">
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color},Microsoft.Xna.Framework.Graphics.Effect)">
             <summary>
             Creates a new instance of this draw call.
             </summary>
             <param name="texture">The image to draw.</param>
             <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
             <param name="tint">A color tint to apply to the drawn image.</param>
+            <param name="effect">A shader to apply to the texture being drawn.</param>
             <exception cref="T:System.NullReferenceException">Thrown when <paramref name="texture"/> is null.</exception>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
@@ -1151,6 +1158,11 @@
         </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.ShaderEffect">
+            <summary>
+            The shader to use when drawing the surface.
+            </summary>
         </member>
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
             <summary>
