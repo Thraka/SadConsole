@@ -28,7 +28,7 @@ public static partial class ExtensionsHost
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="monogameInitCallback">A method.</param>
     /// <returns>The configuration object.</returns>
-    internal static Builder WithMonoGameInit(this Builder configBuilder, Action<Host.Game> monogameInitCallback)
+    public static Builder WithMonoGameInit(this Builder configBuilder, Action<Host.Game> monogameInitCallback)
     {
         MonoGameCallbackConfig config = configBuilder.GetOrCreateConfig<MonoGameCallbackConfig>();
 

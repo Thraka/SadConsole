@@ -42,7 +42,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
     /// <summary>
     /// Creates the new MonoGame game object.
     /// </summary>
-    internal Game()
+    public Game()
     {
         Global.GraphicsDeviceManager = new GraphicsDeviceManager(this)
         {
