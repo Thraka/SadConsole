@@ -39,6 +39,13 @@
 
     <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+
+    <!-- Compile the MonoGame Shaders -->
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <MonoGameContentReference Include="Content\Assets.mgcb" />
+    <None Remove="Content\bin\**\*" />
+    <None Remove="Content\obj\**\*" />
+    
   </ItemGroup>
 
   <!-- If you're using the FNA host, set this path to the FNA.dll file. -->
@@ -46,6 +53,11 @@
     <Reference Include="FNA">
       <HintPath>bin\net8.0\FNA.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <!-- FNA and SFML can't use MonoGame shaders -->
+  <ItemGroup Condition=" '$(GameHost)' != 'monogame' ">
+    <None Remove="Content\**\*" />
   </ItemGroup>
 
   <!-- Files related to compiling and running the demos. -->
