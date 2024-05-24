@@ -43,7 +43,7 @@ catch (Exception e1)
     Game.Create(80, 20, new(StartupCrash));
     Game.Instance!.Run();
     Game.Instance.Dispose();
-    
+
     void StartupCrash(object? sender, GameHost gameHost)
     {
         gameHost.StartingConsole!.Clear();
