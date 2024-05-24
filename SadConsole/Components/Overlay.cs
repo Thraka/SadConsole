@@ -69,8 +69,11 @@ public class Overlay : UpdateComponent
     }
 
     /// <inheritdoc/>
-    public override void Update(IScreenObject host, TimeSpan delta) =>
+    public override void Update(IScreenObject host, TimeSpan delta)
+    {
         MatchSurface((IScreenSurface)host);
+        Surface.Update(delta);
+    }
 
     private void MatchSurface(IScreenSurface host)
     {
