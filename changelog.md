@@ -1,3 +1,7 @@
+## v10.5.0
+
+- [Renderers] Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
+
 ## v10.4.0 (03/31/2024)
 
 New versioning system. Versions for SadConsole will be in the following format: [all libs major].[all libs minor].[individual lib revision]
