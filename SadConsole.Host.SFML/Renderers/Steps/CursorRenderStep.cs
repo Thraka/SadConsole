@@ -1,5 +1,6 @@
 ﻿using System;
 using SadRogue.Primitives;
+using SFML.Graphics;
 
 namespace SadConsole.Renderers;
 
@@ -36,36 +37,39 @@ public class CursorRenderStep : IRenderStep
     }
 
     ///  <inheritdoc/>
-    public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) =>
-        false;
-
-    ///  <inheritdoc/>
-    public void Composing(IRenderer renderer, IScreenSurface screenObject) { }
-
-    ///  <inheritdoc/>
-    public void Render(IRenderer renderer, IScreenSurface screenObject)
+    public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
     {
-        // If the tint isn't covering everything
-        if (screenObject.Tint.A != 255)
+        foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
         {
-            // Draw any cursors
-            foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
-            {
-                if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
-                {
-                    Point cursorPosition = screenObject.AbsoluteArea.Position + screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X, cursor.Position.Y - screenObject.Surface.ViewPosition.Y, screenObject.FontSize).Position;
+            if (cursor.CursorRenderCellActiveState.IsDirty)
+                return true;
+        }
 
-                    GameHost.Instance.DrawCalls.Enqueue(
-                        new DrawCalls.DrawCallGlyph(cursor.CursorRenderCellActiveState,
-                                                    new Rectangle(cursorPosition.X, cursorPosition.Y, screenObject.FontSize.X, screenObject.FontSize.Y).ToIntRect(),
-                                                    screenObject.Font,
-                                                    true
-                                                    )
-                        );
-                }
+        return false;
+    }
+
+    ///  <inheritdoc/>
+    public void Composing(IRenderer renderer, IScreenSurface screenObject)
+    {
+        // Draw any cursors
+        foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
+        {
+            if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
+            {
+                IntRect rect = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
+                                                                       cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
+                                                                       screenObject.FontSize).ToIntRect();
+
+                Host.Global.SharedSpriteBatch.DrawCell(cursor.CursorRenderCellActiveState, rect,
+                                                       cursor.CursorRenderCellActiveState.Background != SadRogue.Primitives.Color.Transparent
+                                                       && cursor.CursorRenderCellActiveState.Background != screenObject.Surface.DefaultBackground,
+                                                       screenObject.Font);
             }
         }
     }
+
+    ///  <inheritdoc/>
+    public void Render(IRenderer renderer, IScreenSurface screenObject) { }
 
     ///  <inheritdoc/>
     public void Dispose() =>
