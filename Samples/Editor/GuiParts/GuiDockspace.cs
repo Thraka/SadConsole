@@ -53,14 +53,11 @@ public class GuiDockspace : ImGuiObjectBase
             ImGuiInternal.DockBuilderSetNodeSize(id, size);
             ImGuiInternal.DockBuilderSetNodePos(id, nodePos);
 
-            uint documentsSide;
-            uint toolsSide;
             uint singleDocSide;
 
-            ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Up, 0.5f, out documentsSide, out toolsSide);
+            ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Up, 0.5f, out uint documentsSide, out uint toolsSide);
             singleDocSide = ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Right, 0.7f, out _, out _);
             //var dock3 = ImGuiInternal.DockBuilderSplitNode(id, ImGuiDir.Right, 0.5f, out _, out _);
-
 
             ImGuiInternal.DockBuilderDockWindow("Active Documents", documentsSide);
             ImGuiInternal.DockBuilderDockWindow("Tools", toolsSide);

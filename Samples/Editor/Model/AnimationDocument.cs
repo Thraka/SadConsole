@@ -7,13 +7,14 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
 
-internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
+internal partial class AnimationDocument : Document, IDocumentTools, IFileHandler
 {
     private int _sliderValueY;
     private int _sliderValueX;
 
-    public int Width = 80;
-    public int Height = 25;
+    public int Width = 40;
+    public int Height = 20;
+    public int FrameCount;
 
     public int ViewX;
     public int ViewY;
@@ -23,24 +24,25 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
     [DataMember]
     public Point SurfaceFontSize;
+
     [DataMember]
     public Point EditorFontSize;
 
     [DataMember]
-    public IScreenSurface Surface { get => base.Surface; set => base.Surface = value; }
+    AnimatedScreenObject _animatedScreenObject;
 
-    public SurfaceDocument()
+    public AnimationDocument()
     {
         //DocumentType = Types.Surface;
-
+        
         Options.UseToolsWindow = true;
         Options.ToolsWindowShowToolsList = true;
 
         ((IDocumentTools)this).ShowToolsList = true;
-        ((IDocumentTools)this).State.ToolObjects = [ new Tools.Info(), new Tools.Empty(), new Tools.Pencil(), new Tools.Recolor(),
-                                                     new Tools.Fill(), new Tools.Box(), new Tools.Circle(), new Tools.Line(),
-                                                     new Tools.Text(), new Tools.Selection() ];
+        ((IDocumentTools)this).State.ToolObjects = [ new Tools.Info(), new Tools.Empty(), new Tools.Pencil(), new Tools.Recolor(), new Tools.Fill(), new Tools.Box(), new Tools.Circle(), new Tools.Line() ];
         ((IDocumentTools)this).State.ToolNames = ((IDocumentTools)this).State.ToolObjects.Select(t => t.Name).ToArray();
+
+        Name = GenerateName("Animation");
     }
 
     public override void BuildUINew(ImGuiRenderer renderer)
@@ -54,12 +56,17 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         ImGui.Separator();
 
         ImGui.Text("Width: ");
-        ImGui.SameLine(ImGui.CalcTextSize("Height: ").X + (ImGui.GetStyle().ItemSpacing.X * 2));
+        ImGui.SameLine(ImGui.CalcTextSize("Frames: ").X + (ImGui.GetStyle().ItemSpacing.X * 2));
         ImGui.InputInt("##docwidth", ref Width);
 
         ImGui.Text("Height: ");
         ImGui.SameLine();
         ImGui.InputInt("##docheight", ref Height);
+
+        ImGui.Text("Frames: ");
+        ImGui.SameLine();
+        ImGui.InputInt("##frames", ref FrameCount, 1);
+        FrameCount = Math.Clamp(FrameCount, 1, 25);
 
         ImGui.Text("Def. Foreground: ");
         ImGui.SameLine(windowWidth - paddingX - ImGuiCore.State.LayoutInfo.ColorEditBoxWidth);
@@ -75,7 +82,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
     public override void BuildUIEdit(ImGuiRenderer renderer, bool readOnly)
     {
-        ImGuiWidgets.BeginGroupPanel("Document Settings");
+        ImGuiWidgets.BeginGroupPanel("Animation Settings");
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Name:");
@@ -116,6 +123,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
                     if (Surface.Surface.ViewHeight > Height)
                         Surface.Surface.ViewHeight = Height;
 
+                    //TODO: TEST
                     ((ICellSurfaceResize)Surface.Surface).Resize(Surface.Surface.ViewWidth, Surface.Surface.ViewHeight, Width, Height, false);
                     Surface.IsDirty = true;
                 }
@@ -128,24 +136,6 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
             ImGui.EndTable();
         }
-
-        ImGui.Separator();
-
-        DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-        ImGui.AlignTextToFramePadding();
-        ImGui.Text("Def. Foreground: ");
-        ImGui.SameLine();
-        if (ImGui.ColorEdit4("##fore", ref DefaultForeground, ImGuiColorEditFlags.NoInputs))
-            Surface.Surface.DefaultForeground = DefaultForeground.ToColor();
-        ImGuiCore.State.CheckSetPopupOpen("##forepicker");
-
-        DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-        ImGui.AlignTextToFramePadding();
-        ImGui.Text("Def. Background: ");
-        ImGui.SameLine();
-        if (ImGui.ColorEdit4("##back", ref DefaultBackground, ImGuiColorEditFlags.NoInputs))
-            Surface.Surface.DefaultBackground = DefaultBackground.ToColor();
-        ImGuiCore.State.CheckSetPopupOpen("##backpicker");
 
         ImGui.Separator();
 
@@ -224,89 +214,24 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
     public override bool HydrateFromFileHandler(IFileHandler handler, string file)
     {
-        if (handler is SurfaceDocument documentHandler)
-        {
-            documentHandler = (SurfaceDocument)handler.Load(file);
-            //TODO: Should most of the these ... = documentHandler.value calls just go to the surface directly??
-            Surface = documentHandler.Surface;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-            DocumentType = documentHandler.DocumentType;
-            Height = documentHandler.Height;
-            Width = documentHandler.Width;
-            Name = documentHandler.Name;
-            Options = documentHandler.Options;
-            ViewX = 0;
-            ViewY = 0;
-            EditorFontSize = documentHandler.EditorFontSize;
-            SurfaceFontSize = documentHandler.SurfaceFontSize;
-            Surface.FontSize = EditorFontSize;
-            Surface.Render(TimeSpan.Zero);
-            return true;
-        }
-        else if (handler is SurfaceFileCompressed compressedHandler)
-        {
-            Surface = (ScreenSurface)compressedHandler.Load(file);
-            Width = Surface.Surface.Width;
-            Height = Surface.Surface.Height;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-            EditorFontSize = Surface.FontSize;
-            SurfaceFontSize = Surface.FontSize;
-            Surface.Render(TimeSpan.Zero);
-            return true;
-        }
-        else if (handler is SurfaceFile surfaceHandler)
-        {
-            Surface = (ScreenSurface)surfaceHandler.Load(file);
-            Width = Surface.Surface.Width;
-            Height = Surface.Surface.Height;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-            EditorFontSize = Surface.FontSize;
-            SurfaceFontSize = Surface.FontSize;
-            Surface.Render(TimeSpan.Zero);
-            return true;
-        }
-        else
-            return false;
+        return false;
     }
 
     public override object DehydrateToFileHandler(IFileHandler handler, string file)
     {
-        if (handler is SurfaceFileCompressed || handler is SurfaceFile)
-        {
-            ScreenSurface newSurface = new(Surface.Surface, Surface.Font, SurfaceFontSize);
-            return newSurface;
-        }
-
         return this;
     }
 
-
     public override void Create()
     {
-        Surface = new ScreenSurface(Width, Height);
+        _animatedScreenObject = new(Name, Width, Height);
+        for (int i = 0; i < FrameCount; i++)
+            _animatedScreenObject.CreateFrame();
         Surface.Surface.DefaultBackground = DefaultBackground.ToColor();
         Surface.Surface.DefaultForeground = DefaultForeground.ToColor();
         Surface.Surface.Clear();
         EditorFontSize = Surface.FontSize;
         SurfaceFontSize = Surface.FontSize;
-        Surface.Render(TimeSpan.Zero);
-    }
-
-    public static SurfaceDocument FromSettings(int width, int height, Color foreground, Color background)
-    {
-        SurfaceDocument doc = new SurfaceDocument()
-        {
-            Width = width,
-            Height = height,
-            DefaultForeground = foreground.ToVector4(),
-            DefaultBackground = background.ToVector4(),
-        };
-
-        doc.Create();
-
-        return doc;
+        _animatedScreenObject.Render(TimeSpan.Zero);
     }
 }

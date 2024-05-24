@@ -19,7 +19,7 @@ namespace SadConsole.ImGuiSystem
             Closed?.Invoke(this, EventArgs.Empty);
 
 
-        public static bool DrawButtons(out bool result)
+        public static bool DrawButtons(out bool result, bool acceptDisabled = false)
         {
             bool buttonClicked = false;
             result = false;
@@ -32,11 +32,13 @@ namespace SadConsole.ImGuiSystem
             float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
             ImGui.SameLine(ImGui.GetWindowWidth() - pos);
 
+            ImGui.BeginDisabled(acceptDisabled);
             if (ImGui.Button("Accept"))
             {
                 buttonClicked = true;
                 result = true;
             }
+            ImGui.EndDisabled();
 
             return buttonClicked;
         }

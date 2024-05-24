@@ -9,7 +9,6 @@ namespace SadConsole.Editor.Tools;
 
 internal class Box : ITool, IOverlay
 {
-    private bool _isDrawing = false;
     private bool _isFirstPointSelected = false;
     private Rectangle _boxArea;
     private Point _firstPoint;
@@ -37,7 +36,7 @@ internal class Box : ITool, IOverlay
     {
         ImGuiWidgets.BeginGroupPanel("Settings");
 
-        IScreenSurface surface = ((IDocumentSurface)ImGuiCore.State.GetOpenDocument()).Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
 
         //GuiParts.Tools.SettingsTable.BeginTable("toolsettings");
 
@@ -159,54 +158,50 @@ internal class Box : ITool, IOverlay
 
         GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
 
-        if (!_isDrawing)
+        // No settings to draw, exit
+        if (!_shapeSettings.HasFill && !_shapeSettings.HasBorder)
+            return;
+
+        // Cancelled but left mouse finally released, exit cancelled
+        if (_isCancelled && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+            _isCancelled = false;
+
+        // Cancelled
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
         {
-            // No settings to draw, exit
-            if (!_shapeSettings.HasFill && !_shapeSettings.HasBorder)
-                return;
+            OnDeselected();
+            _isCancelled = true;
+        }
 
-            // Cancelled but left mouse finally released, exit cancelled
-            if (_isCancelled && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-                _isCancelled = false;
+        if (_isCancelled)
+            return;
 
-            // Cancelled
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        {
+            if (!_isFirstPointSelected)
             {
-                OnDeselected();
-                _isCancelled = true;
+                _isFirstPointSelected = true;
+
+                _firstPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+            }
+
+            _secondPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+
+            _boxArea = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                            new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
+
+            Overlay.Surface.Clear();
+            Overlay.Surface.DrawBox(_boxArea, _shapeSettings.ToShapeParameters());
+        }
+        else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+        {
+            if (_boxArea != Rectangle.Empty)
+            {
+                surface.Surface.DrawBox(_boxArea.Translate(surface.Surface.ViewPosition), _shapeSettings.ToShapeParameters());
                 Overlay.Surface.Clear();
             }
 
-            if (_isCancelled)
-                return;
-
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
-            {
-                if (!_isFirstPointSelected)
-                {
-                    _isFirstPointSelected = true;
-
-                    _firstPoint = hoveredCellPosition - surface.Surface.ViewPosition;
-                }
-
-                _secondPoint = hoveredCellPosition - surface.Surface.ViewPosition;
-
-                _boxArea = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
-                               new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
-
-                Overlay.Surface.Clear();
-                Overlay.Surface.DrawBox(_boxArea, _shapeSettings.ToShapeParameters());
-            }
-            else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-            {
-                if (_boxArea != Rectangle.Empty)
-                {
-                    surface.Surface.DrawBox(_boxArea.Translate(surface.Surface.ViewPosition), _shapeSettings.ToShapeParameters());
-                    Overlay.Surface.Clear();
-                }
-
-                OnDeselected();
-            }
+            OnDeselected();
         }
     }
 
@@ -217,8 +212,8 @@ internal class Box : ITool, IOverlay
 
     public void OnDeselected()
     {
+        Overlay.Surface.Clear();
         _isCancelled = false;
-        _isDrawing = false;
         _boxArea = Rectangle.Empty;
         _isFirstPointSelected = false;
     }

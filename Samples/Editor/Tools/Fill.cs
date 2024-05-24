@@ -26,7 +26,7 @@ internal class Fill : ITool
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         Mirror mirror = SharedToolSettings.Tip.Mirror;
         int glyph = SharedToolSettings.Tip.Glyph;
-        IScreenSurface surface = ((IDocumentSurface)ImGuiCore.State.GetOpenDocument()).Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
 
         SettingsTable.DrawCommonSettings("fillsettings", true, true, true, true, true,
                                  ref foreground, surface.Surface.DefaultForeground.ToVector4(),

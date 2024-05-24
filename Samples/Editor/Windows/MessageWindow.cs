@@ -4,11 +4,11 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
-public class SaveFileError : ImGuiWindow
+public class MessageWindow : ImGuiWindow
 {
     private string _message;
 
-    public SaveFileError(string message)
+    public MessageWindow(string message)
     {
         Title = "Unable to save file";
         _message = message;

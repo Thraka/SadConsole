@@ -3,7 +3,7 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
 
-internal partial class SurfaceDocument : IDocumentTools
+internal partial class AnimationDocument : IDocumentTools
 {
     IDocumentToolsState IDocumentTools.State { get; } = new IDocumentToolsState();
 

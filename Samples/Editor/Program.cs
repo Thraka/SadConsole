@@ -30,7 +30,7 @@ Game.Instance.Dispose();
 
 static void StartHandler(object? sender, GameHost host)
 {
-    SadConsole.Editor.ImGuiCore.Start();
+    ImGuiCore.Start();
 }
 
 public class KeyboardScreen : ScreenObject

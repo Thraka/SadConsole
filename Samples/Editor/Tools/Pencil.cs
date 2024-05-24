@@ -26,7 +26,7 @@ internal class Pencil : ITool
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
         Mirror mirror = SharedToolSettings.Tip.Mirror;
-        IScreenSurface surface = ((IDocumentSurface)ImGuiCore.State.GetOpenDocument()).Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
 
         SettingsTable.DrawCommonSettings("pencilsettings", true, true, true, true, true,
                                          ref foreground, surface.Surface.DefaultForeground.ToVector4(),

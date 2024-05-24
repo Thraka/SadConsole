@@ -94,23 +94,18 @@ public class SaveFile : ImGuiWindow
                 float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
                 ImGui.SameLine(ImGui.GetWindowWidth() - pos);
 
-                if (string.IsNullOrEmpty(_selectedFileName))
+                ImGui.BeginDisabled(string.IsNullOrEmpty(_selectedFileName));
+
+                if (ImGui.Button("Save"))
                 {
-                    ImGui.BeginDisabled();
-                    ImGui.Button("Save");
-                    ImGui.EndDisabled();
+                    string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
+                    object savableInstance = Document!.DehydrateToFileHandler(_fileLoaders[_fileLoaderSelectedIndex], file);
+                    _fileLoaders[_fileLoaderSelectedIndex].Save(savableInstance, file);
+                    DialogResult = true;
+                    IsOpen = false;
                 }
-                else
-                {
-                    if (ImGui.Button("Save"))
-                    {
-                        string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
-                        object savableInstance = Document!.DehydrateToFileHandler(_fileLoaders[_fileLoaderSelectedIndex], file);
-                        _fileLoaders[_fileLoaderSelectedIndex].Save(savableInstance, file);
-                        DialogResult = true;
-                        IsOpen = false;
-                    }
-                }
+
+                ImGui.EndDisabled();
 
                 ImGui.EndPopup();
             }

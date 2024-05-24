@@ -31,7 +31,7 @@ public static partial class ImGuiCore
         {
             unsafe
             {
-                fixed(ImGuiWindowClass* pointer = &_noTabBarWindowClassPtr)
+                fixed (ImGuiWindowClass* pointer = &_noTabBarWindowClassPtr)
                     NoTabBarWindowClass = new ImGuiWindowClassPtr(pointer);
 
                 NoTabBarWindowClass.DockNodeFlagsOverrideSet = (ImGuiDockNodeFlags)(1 << 12)  // ImGuiDockNodeFlags_NoTabBar

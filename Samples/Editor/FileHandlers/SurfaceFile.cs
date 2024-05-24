@@ -24,8 +24,7 @@ internal class SurfaceFile : IFileHandler
 
     public bool Save(object instance, string file)
     {
-        if (instance is Model.IDocumentSurface)
-            instance = ((Model.IDocumentSurface)instance).Surface;
+        instance = instance as Model.Document ?? instance;
 
         if (!file.EndsWith(ExtensionsSaving[0], StringComparison.InvariantCulture))
             file += "." + ExtensionsSaving[0];

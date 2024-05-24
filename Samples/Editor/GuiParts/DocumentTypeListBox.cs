@@ -16,6 +16,8 @@ public class DocumentTypeListControl
         {
             selectedDocument = selectedIndex switch
             {
+                0 => new SurfaceDocument(),
+                2 => new AnimationDocument(),
                 _ => new SurfaceDocument(),
             };
 
@@ -32,6 +34,8 @@ public class DocumentTypeListControl
         {
             selectedDocument = selectedIndex switch
             {
+                0 => new SurfaceDocument(),
+                2 => new AnimationDocument(),
                 _ => new SurfaceDocument(),
             };
 

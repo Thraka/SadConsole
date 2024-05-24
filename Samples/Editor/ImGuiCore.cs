@@ -27,8 +27,8 @@ public static partial class ImGuiCore
     public static GuiTopBar GuiTopBar;
     public static GuiDockspace GuiDockspace;
     public static WindowActiveDocuments GuiSidePane;
-    public static WindowDocumentsHost GuiDocumentsHost;
     public static WindowTools GuiToolsWindow;
+    public static WindowDocumentsHost GuiDocumentsHost;
 
     private static DebuggingTools _debuggingTools;
 
@@ -47,22 +47,11 @@ public static partial class ImGuiCore
 
     public static void Start()
     {
-        if (_imGui != null)
-        {
-            _imGui.Visible = true;
-            _imGui.Enabled = true;
-
-            Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
-            Settings.DoFinalDraw = false;
-
-            return;
-        }
-
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
         Settings.DoFinalDraw = false;
 
-        //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
-        //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
+        //Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        //Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
+        //Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
         _imGui = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
 
@@ -80,9 +69,9 @@ public static partial class ImGuiCore
         GuiStartup = new();
         GuiTopBar = new();
         GuiDockspace = new();
-        GuiDocumentsHost = new();
         GuiSidePane = new();
         GuiToolsWindow = new();
+        GuiDocumentsHost = new();
         _debuggingTools = new();
 
         ResetUIList();
@@ -126,7 +115,7 @@ public static partial class ImGuiCore
 
     public static void Alert(string message)
     {
-        SaveFileError window = new(message);
+        MessageWindow window = new(message);
         window.Show();
     }
 

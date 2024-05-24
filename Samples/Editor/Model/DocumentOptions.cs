@@ -13,4 +13,6 @@ public class DocumentOptions
     public bool UseToolsWindow { get; set; }
 
     public bool ToolsWindowShowToolsList { get; set; }
+
+    public bool DisableScrolling { get; set; }
 }

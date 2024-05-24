@@ -2,7 +2,6 @@
 using SadConsole.Editor;
 using SadConsole.ImGuiSystem;
 using SadConsole.Host;
-using static Microsoft.Xna.Framework.Graphics.SpriteFont;
 using SadConsole.Editor.Windows;
 
 namespace ImGuiNET;
@@ -44,7 +43,7 @@ public static class FontGlyph
     {
         nint fontTexture = renderer.BindTexture(((GameTexture)font.Image).Texture);
         Rectangle rect = font.GetGlyphSourceRectangle(glyph);
-        Point fontTextureSize = new Point(font.Image.Width, font.Image.Height);
+        Point fontTextureSize = new(font.Image.Width, font.Image.Height);
 
         Vector2 renderAreaSize = font.GetFontSize(IFont.Sizes.Two).ToVector2();
 

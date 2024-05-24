@@ -9,7 +9,7 @@ public static class ResizeSurfacePopup
     public static int MaxWidth = 2000;
     public static int MaxHeight = 2000;
 
-    public static bool Show(ImGuiRenderer renderer, string popupId, ref int width, ref int height, out bool dialogResult)
+    public static bool Show(string popupId, ref int width, ref int height, out bool dialogResult)
     {
         bool returnValue = false;
         dialogResult = false;

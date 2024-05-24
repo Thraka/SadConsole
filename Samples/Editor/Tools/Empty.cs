@@ -50,7 +50,7 @@ internal class Empty : ITool, IOverlay
 
     public void DocumentViewChanged()
     {
-        IScreenSurface surface = ((IDocumentSurface)ImGuiCore.State.GetOpenDocument()).Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
 
         Overlay.Update(surface, TimeSpan.Zero);
 

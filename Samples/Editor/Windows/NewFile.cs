@@ -52,19 +52,16 @@ public class NewFile : ImGuiWindow
                 float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
                 ImGui.SameLine(ImGui.GetWindowWidth() - pos);
 
-                if (Document == null)
+                ImGui.BeginDisabled(Document == null);
+
+                if (ImGui.Button("Create"))
                 {
-                    ImGui.BeginDisabled();
-                    ImGui.Button("Create");
-                    ImGui.EndDisabled();
+                    Document!.Create();
+                    DialogResult = true;
+                    IsOpen = false;
                 }
-                else
-                    if (ImGui.Button("Create"))
-                    {
-                        Document.Create();
-                        DialogResult = true;
-                        IsOpen = false;
-                    }
+
+                ImGui.EndDisabled();
 
                 ImGui.EndPopup();
             }

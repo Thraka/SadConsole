@@ -114,24 +114,20 @@ public class OpenFile : ImGuiWindow
                 float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
                 ImGui.SameLine(ImGui.GetWindowWidth() - pos);
 
-                if (_fileListBox.SelectedItem != null && _fileListBox.IsSelectedItemDirectory == false)
+
+                ImGui.BeginDisabled(_fileListBox.HighlightedItem == null || _fileListBox.IsHighlightedItemDirectory);
+
+                if (ImGui.Button("Open"))
                 {
-                    ImGui.BeginDisabled();
-                    ImGui.Button("Open");
-                    ImGui.EndDisabled();
+                    SelectedHandler = _fileLoaders[_fileLoaderSelectedIndex];
+                    SelectedFile = (FileInfo)_fileListBox.HighlightedItem!;
+                    DialogResult = Document!.HydrateFromFileHandler(SelectedHandler, SelectedFile.FullName);
+                    if (!DialogResult)
+                        ImGuiCore.Alert("Unable to load file.");
+                    IsOpen = false;
                 }
-                else
-                {
-                    if (ImGui.Button("Open"))
-                    {
-                        SelectedHandler = _fileLoaders[_fileLoaderSelectedIndex];
-                        SelectedFile = (FileInfo)_fileListBox.HighlightedItem!;
-                        DialogResult = Document!.HydrateFromFileHandler(SelectedHandler, SelectedFile.FullName);
-                        if (!DialogResult)
-                            ImGuiCore.Alert("Unable to load file.");
-                        IsOpen = false;
-                    }
-                }
+
+                ImGui.EndDisabled();
 
                 ImGui.EndPopup();
             }
