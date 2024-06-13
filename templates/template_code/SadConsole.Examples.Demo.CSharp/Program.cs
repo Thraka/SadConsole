@@ -4,9 +4,7 @@ Welcome to the SadConsole demo template! This template is the project I use to t
 SadConsole as I create new features. It's also a great way to see how to write code
 that uses different SadConsole features.
 
-This template will be updated with each release of SadConsole. For the v10 Alpha 1
-release, this template is a little small and will almost double in size by the
-time v10 is completed.
+This template will be updated with each release of SadConsole.
 
 =========================================================
 Important things you should know about this template
@@ -31,7 +29,13 @@ demo code, which you can reuse in your own project.
 using SadConsole.Examples;
 using SadConsole.Configuration;
 
-Settings.WindowTitle = "SadConsole Examples";
+#if FNA
+Settings.WindowTitle = "SadConsole Examples (FNA)";
+#elif MONOGAME
+Settings.WindowTitle = "SadConsole Examples (MONOGAME)";
+#elif SFML
+Settings.WindowTitle = "SadConsole Examples (SFML)";
+#endif
 
 Builder startup = new Builder()
     .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)

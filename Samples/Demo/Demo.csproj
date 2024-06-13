@@ -17,7 +17,7 @@
 
   <PropertyGroup>
     <!-- monogame, sfml, or fna -->
-    <GameHost>MonoGame</GameHost>
+    <GameHost>fna</GameHost>
     
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
@@ -46,7 +46,7 @@
     <None Remove="Content\**\*" />
   </ItemGroup>
 
-    <!-- MonoGame host requires you to choose which rendering library you want to use. -->
+  <!-- MonoGame host requires you to choose which rendering library you want to use. -->
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
 

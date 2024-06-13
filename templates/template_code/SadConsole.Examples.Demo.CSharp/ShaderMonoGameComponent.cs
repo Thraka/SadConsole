@@ -16,7 +16,7 @@ public class PostProcessingFX : DrawableGameComponent
     private static int width = 960;
     private static int height = 720;
 
-    public PostProcessingFX() : base(SadConsole.Game.Instance.MonoGameInstance)
+    public PostProcessingFX() : base((Microsoft.Xna.Framework.Game)SadConsole.Game.Instance.MonoGameInstance)
     {
         DrawOrder = 6;
 
