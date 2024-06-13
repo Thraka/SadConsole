@@ -4,13 +4,13 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
 
     <!-- The current package versions -->
-    <SadConsole_Version>10.4.0</SadConsole_Version>
+    <SadConsole_Version>10.4.1</SadConsole_Version>
     <SadConsole_Extended_Version>10.4.0</SadConsole_Extended_Version>
-    <SadConsole_Host_MonoGameWPF_Version>10.4.0</SadConsole_Host_MonoGameWPF_Version>
-    <SadConsole_Host_MonoGame_Version>10.4.0</SadConsole_Host_MonoGame_Version>
-    <SadConsole_Host_SFML_Version>10.4.0</SadConsole_Host_SFML_Version>
-    <SadConsole_Host_FNA_Version>10.4.0</SadConsole_Host_FNA_Version>
-    <SadConsole_Debug_MonoGame_Version>10.4.0</SadConsole_Debug_MonoGame_Version>
+    <SadConsole_Host_MonoGameWPF_Version>10.4.1</SadConsole_Host_MonoGameWPF_Version>
+    <SadConsole_Host_MonoGame_Version>10.4.1</SadConsole_Host_MonoGame_Version>
+    <SadConsole_Host_SFML_Version>10.4.1</SadConsole_Host_SFML_Version>
+    <SadConsole_Host_FNA_Version>10.4.1</SadConsole_Host_FNA_Version>
+    <SadConsole_Debug_MonoGame_Version>10.4.1</SadConsole_Debug_MonoGame_Version>
 
     <!-- Author information -->
     <Authors>Thraka</Authors>

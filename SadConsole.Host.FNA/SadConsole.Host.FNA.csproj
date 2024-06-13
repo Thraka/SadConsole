@@ -10,9 +10,7 @@
     <PackageId>SadConsole.Host.FNA</PackageId>
     <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Reversioned to follow new versioning scheme.
-- Configuration namespace was moved to SadConsole directly. Only library specific config options are here now.
-- Package contains all dependencies now.
+Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
     </PackageReleaseNotes>
   </PropertyGroup>
 

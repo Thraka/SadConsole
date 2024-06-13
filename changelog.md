@@ -1,6 +1,15 @@
-## v10.5.0
+## v10.4.1 (06/12/2024)
 
+- [Core] When a Cursor is removed from a host object, the object is set to dirty now.
+- [Core] Overlay component now calls update on the attached visual.
+- [Core] Fix bug with DrawCircle not setting dirty.
+- [Core] Fix bug with DrawBox not respecting ignore glyph setting.
+
+- [MonoGame] Change host to be a lot more friendly towards running from an existing MonoGame Game instead of SadConsole's game.
 - [Renderers] Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
+
+- [Misc] Added MonoGame-first game sample.
+- [Misc] Added Python sample.
 
 ## v10.4.0 (03/31/2024)
 
