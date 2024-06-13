@@ -39,7 +39,7 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
     /// </summary>
-    public Host.Game MonoGameInstance { get; private set; }
+    public Microsoft.Xna.Framework.Game MonoGameInstance { get; set; }
 
     /// <summary>
     /// Strongly typed version of <see cref="GameHost.Instance"/>.
@@ -115,7 +115,9 @@ public sealed partial class Game : GameHost
         var game = new Game();
 
         // Make sure the MonoGame Game instance calls back to SadConsole config after it's initialized.
-        configuration.WithMonoGameInit(game.MonoGameInit);
+        MonoGameCallbackConfig config = configuration.GetOrCreateConfig<MonoGameCallbackConfig>();
+        if (config.MonoGameInitCallback == null)
+            configuration.WithMonoGameInit(game.MonoGameInit);
 
         game._configuration = configuration;
 
@@ -128,14 +130,15 @@ public sealed partial class Game : GameHost
         // When the user then calls this object's .Run method, monogame initializes itself
         // and after it's done, calls back to game.MonoGameInit to finish SadConsole
         // init.
-        game.MonoGameInstance = new Host.Game();
+        if (!config.SkipMonoGameGameCreation)
+            game.MonoGameInstance = new Host.Game();
     }
 
     /// <summary>
     /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Host.Game.ResetRendering"/>.
     /// </summary>
     /// <param name="game">The game instance.</param>
-    private void MonoGameInit(Host.Game game)
+    private void MonoGameInit(Microsoft.Xna.Framework.Game game)
     {
         if (_configuration == null) throw new Exception("Configuration must be set.");
 
@@ -158,7 +161,7 @@ public sealed partial class Game : GameHost
         ScreenCellsX = startupData.ScreenCellsX;
         ScreenCellsY = startupData.ScreenCellsY;
 
-        MonoGameInstance.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
+        SadConsole.Host.Global.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
@@ -183,7 +186,7 @@ public sealed partial class Game : GameHost
         // Load special FPS visual
         FpsConfig? fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault();
         if (fpsConfig != null && fpsConfig.ShowFPSVisual)
-            Instance.MonoGameInstance.Components.Add(new Host.Game.FPSCounterComponent(Instance.MonoGameInstance));
+            Instance.MonoGameInstance.Components.Add(new Host.FPSCounterComponent((Microsoft.Xna.Framework.Game)Instance.MonoGameInstance));
 
         // Run all startup config objects
         _configuration.Run(this);
@@ -286,7 +289,7 @@ public sealed partial class Game : GameHost
             }
         }
 
-        Instance.MonoGameInstance.ResetRendering();
+        SadConsole.Host.Global.ResetRendering();
     }
     
     /// <inheritdoc/>
@@ -302,7 +305,7 @@ public sealed partial class Game : GameHost
             SadConsole.Settings.Rendering.RenderHeight = Host.Global.GraphicsDeviceManager.PreferredBackBufferHeight;
         }
 
-        Instance.MonoGameInstance.ResetRendering();
+        SadConsole.Host.Global.ResetRendering();
     }
 
     internal void InvokeFrameDraw() =>

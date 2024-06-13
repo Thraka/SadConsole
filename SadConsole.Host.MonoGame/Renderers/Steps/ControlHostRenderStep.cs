@@ -65,7 +65,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
             BackingTexture?.Dispose();
             _cachedTexture?.Dispose();
 
-            BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            BackingTexture = new RenderTarget2D(Host.Global.GraphicsDevice, screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
             _cachedTexture = new Host.GameTexture(BackingTexture);
             result = true;
         }

@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using MonoGame.Framework.WpfInterop;
 using SadConsole.Configuration;
 using SadRogue.Primitives;
 
@@ -115,7 +116,7 @@ public partial class Game : GameHost
     /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Host.Game.ResetRendering"/>.
     /// </summary>
     /// <param name="game">The game instance.</param>
-    internal void MonoGameInit(Host.Game game)
+    internal void MonoGameInit(WpfGame game)
     {
         if (_configuration == null) throw new Exception("Configuration must be set.");
 

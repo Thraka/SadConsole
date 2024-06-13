@@ -3,6 +3,12 @@
 
 using System;
 
+#if WPF
+using MonoGameGame = MonoGame.Framework.WpfInterop.WpfGame;
+#else
+using MonoGameGame = Microsoft.Xna.Framework.Game;
+#endif
+
 namespace SadConsole.Configuration;
 
 public static partial class ExtensionsHost
@@ -13,7 +19,7 @@ public static partial class ExtensionsHost
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="monogameCtorCallback">A method.</param>
     /// <returns>The configuration object.</returns>
-    public static Builder WithMonoGameCtor(this Builder configBuilder, Action<Host.Game> monogameCtorCallback)
+    public static Builder WithMonoGameCtor(this Builder configBuilder, Action<MonoGameGame> monogameCtorCallback)
     {
         MonoGameCallbackConfig config = configBuilder.GetOrCreateConfig<MonoGameCallbackConfig>();
 
@@ -28,7 +34,7 @@ public static partial class ExtensionsHost
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="monogameInitCallback">A method.</param>
     /// <returns>The configuration object.</returns>
-    public static Builder WithMonoGameInit(this Builder configBuilder, Action<Host.Game> monogameInitCallback)
+    public static Builder WithMonoGameInit(this Builder configBuilder, Action<MonoGameGame> monogameInitCallback)
     {
         MonoGameCallbackConfig config = configBuilder.GetOrCreateConfig<MonoGameCallbackConfig>();
 
@@ -36,12 +42,28 @@ public static partial class ExtensionsHost
 
         return configBuilder;
     }
+
+    /// <summary>
+    /// When called, tells the game host not to create the monogame game instance at <see cref="Game.MonoGameInstance"/>.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <returns>The configuration object.</returns>
+    public static Builder SkipMonoGameGameCreation(this Builder configBuilder)
+    {
+        MonoGameCallbackConfig config = configBuilder.GetOrCreateConfig<MonoGameCallbackConfig>();
+
+        config.SkipMonoGameGameCreation = true;
+
+        return configBuilder;
+    }
 }
 
 public class MonoGameCallbackConfig : IConfigurator
 {
-    public Action<Host.Game>? MonoGameCtorCallback { get; set; }
-    public Action<Host.Game>? MonoGameInitCallback { get; set; }
+    public Action<MonoGameGame>? MonoGameCtorCallback { get; set; }
+    public Action<MonoGameGame>? MonoGameInitCallback { get; set; }
+
+    public bool SkipMonoGameGameCreation { get; set; }
 
     public void Run(Builder config, GameHost game)
     {
