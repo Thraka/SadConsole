@@ -16,7 +16,7 @@ Write-Output "Pushing template package"
 $sadConsolePackages = Get-ChildItem "SadConsole.Templates.$version.nupkg" | Select-Object -ExpandProperty Name
 
 foreach ($package in $sadConsolePackages) {
-    $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+    $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey --skip-duplicate"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
     
     # Archive the package
     Move-Item *.nupkg .\archive\ -force

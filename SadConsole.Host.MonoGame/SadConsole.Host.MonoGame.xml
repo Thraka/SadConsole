@@ -151,10 +151,11 @@
             Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch">
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch(System.Boolean)">
             <summary>
             Resumes rendering to <see cref="P:SadConsole.Host.Global.RenderOutput"/> with SadConsole's default settings.
             </summary>
+            <param name="skipSetRenderTarget">When true, skips assinging <see cref="P:SadConsole.Host.Global.RenderOutput"/> as the render target.</param>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
             <summary>
@@ -171,6 +172,11 @@
             The image to draw.
             </summary>
         </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.ShaderEffect">
+            <summary>
+            The shader to use when drawing the texture.
+            </summary>
+        </member>
         <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
             <summary>
             Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
@@ -181,13 +187,14 @@
             A color tint to apply when drawn.
             </summary>
         </member>
-        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color})">
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color},Microsoft.Xna.Framework.Graphics.Effect)">
             <summary>
             Creates a new instance of this draw call.
             </summary>
             <param name="texture">The image to draw.</param>
             <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
             <param name="tint">A color tint to apply to the drawn image.</param>
+            <param name="effect">A shader to apply to the texture being drawn.</param>
             <exception cref="T:System.NullReferenceException">Thrown when <paramref name="texture"/> is null.</exception>
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
@@ -368,9 +375,9 @@
             </summary>
             <param name="configuration">The settings used in creating the game.</param>
         </member>
-        <member name="M:SadConsole.Game.MonoGameInit(SadConsole.Host.Game)">
+        <member name="M:SadConsole.Game.MonoGameInit(Microsoft.Xna.Framework.Game)">
             <summary>
-            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="M:SadConsole.Host.Game.ResetRendering"/>.
+            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="!:Host.Game.ResetRendering"/>.
             </summary>
             <param name="game">The game instance.</param>
         </member>
@@ -546,41 +553,34 @@
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Host.Game">
-            <summary>
-            A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
-            </summary>
-        </member>
-        <member name="T:SadConsole.Host.Game.ClearScreenGameComponent">
+        <member name="T:SadConsole.Host.ClearScreenGameComponent">
             <summary>
             A MonoGame component that clears the screen with the <see cref="F:SadConsole.Settings.ClearColor"/> color.
             </summary>
         </member>
-        <member name="M:SadConsole.Host.Game.ClearScreenGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+        <member name="M:SadConsole.Host.ClearScreenGameComponent.#ctor(Microsoft.Xna.Framework.Game)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Host.Game.FPSCounterComponent">
+        <member name="M:SadConsole.Host.ClearScreenGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Host.FPSCounterComponent">
             <summary>
             A component to draw how many frames per second the engine is performing at.
             </summary>
         </member>
-        <member name="M:SadConsole.Host.Game.FPSCounterComponent.#ctor(Microsoft.Xna.Framework.Game)">
+        <member name="M:SadConsole.Host.FPSCounterComponent.#ctor(Microsoft.Xna.Framework.Game)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Host.Game.FPSCounterComponent.Update(Microsoft.Xna.Framework.GameTime)">
+        <member name="M:SadConsole.Host.FPSCounterComponent.Update(Microsoft.Xna.Framework.GameTime)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Host.Game.FPSCounterComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+        <member name="M:SadConsole.Host.FPSCounterComponent.Draw(Microsoft.Xna.Framework.GameTime)">
             <inheritdoc/>
         </member>
-        <member name="F:SadConsole.Host.Game.SadConsoleComponent">
+        <member name="T:SadConsole.Host.Game">
             <summary>
-            The game component to control SadConsole updates, input, and rendering.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Host.Game.ClearScreenComponent">
-            <summary>
-            The game component that clears the render output before each frame draw.
+            A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Game.WindowWidth">
@@ -606,7 +606,12 @@
         <member name="M:SadConsole.Host.Game.Initialize">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Host.Game.ResizeGraphicsDeviceManager(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the MonoGame host.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Global.ResizeGraphicsDeviceManagerDelegate">
             <summary>
             Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
             </summary>
@@ -616,39 +621,12 @@
             <param name="additionalWidth">Additional pixel width to add to the resize.</param>
             <param name="additionalHeight">Additional pixel height to add to the resize.</param>
         </member>
-        <member name="M:SadConsole.Host.Game.RecreateRenderOutput(System.Int32,System.Int32)">
+        <member name="T:SadConsole.Host.Global.RecreateRenderOutputDelegate">
             <summary>
             Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
             </summary>
             <param name="width">The width of the render output.</param>
             <param name="height">The height of the render output.</param>
-        </member>
-        <member name="M:SadConsole.Host.Game.ResetRendering">
-            <summary>
-            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
-            </summary>
-        </member>
-        <member name="T:SadConsole.Host.Game.SadConsoleGameComponent">
-            <summary>
-            A game component that handles updating, input, and rendering of SadConsole.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Host.Game.SadConsoleGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Draws the SadConsole frame through draw calls when <see cref="F:SadConsole.Settings.DoDraw"/> is true.
-            </summary>
-            <param name="gameTime">Time between drawing frames.</param>
-        </member>
-        <member name="M:SadConsole.Host.Game.SadConsoleGameComponent.Update(Microsoft.Xna.Framework.GameTime)">
-            <summary>
-            Updates the SadConsole game objects and handles input. Only runs when <see cref="F:SadConsole.Settings.DoUpdate"/> is true.
-            </summary>
-            <param name="gameTime"></param>
-        </member>
-        <member name="T:SadConsole.Host.Global">
-            <summary>
-            Global variables used by the MonoGame host.
-            </summary>
         </member>
         <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
             <summary>
@@ -680,6 +658,31 @@
             Reference to the game timer used in the MonoGame render loop.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Global.RecreateRenderOutput">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.ResizeGraphicsDeviceManager">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.ResetRendering">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SadConsoleComponent">
+            <summary>
+            The game component to control SadConsole updates, input, and rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.ClearScreenComponent">
+            <summary>
+            The game component that clears the render output before each frame draw.
+            </summary>
+        </member>
         <member name="P:SadConsole.Host.Global.GraphicsDeviceManager">
             <summary>
             The graphics device manager created by MonoGame.
@@ -689,6 +692,48 @@
             <summary>
             Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to <see langword="null"/>, targeting the app window.
             </summary>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResizeGraphicsDeviceManagerHandler(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+            <param name="fontSize">The size of the font to base the final values on.</param>
+            <param name="width">The count of glyphs along the X-axis.</param>
+            <param name="height">The count of glyphs along the Y-axis.</param>
+            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="M:SadConsole.Host.Global.RecreateRenderOutputHandler(System.Int32,System.Int32)">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResetRenderingHandler">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.SadConsoleGameComponent">
+            <summary>
+            A game component that handles updating, input, and rendering of SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.#ctor(Microsoft.Xna.Framework.Game)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Draws the SadConsole frame through draw calls when <see cref="F:SadConsole.Settings.DoDraw"/> is true.
+            </summary>
+            <param name="gameTime">Time between drawing frames.</param>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates the SadConsole game objects and handles input. Only runs when <see cref="F:SadConsole.Settings.DoUpdate"/> is true.
+            </summary>
+            <param name="gameTime"></param>
         </member>
         <member name="T:SadConsole.Host.Settings">
             <summary>
@@ -1016,7 +1061,7 @@
             <inheritdoc/>
         </member>
         <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
-             <inheritdoc/>
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Renderers.CursorRenderStep.SetData(System.Object)">
             <summary>
@@ -1151,6 +1196,11 @@
         </member>
         <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
              <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.ShaderEffect">
+            <summary>
+            The shader to use when drawing the surface.
+            </summary>
         </member>
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
             <summary>
@@ -1370,7 +1420,7 @@
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration builder.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameCtor(SadConsole.Configuration.Builder,System.Action{SadConsole.Host.Game})">
+        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameCtor(SadConsole.Configuration.Builder,System.Action{Microsoft.Xna.Framework.Game})">
             <summary>
             The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
             </summary>
@@ -1378,12 +1428,19 @@
             <param name="monogameCtorCallback">A method.</param>
             <returns>The configuration object.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameInit(SadConsole.Configuration.Builder,System.Action{SadConsole.Host.Game})">
+        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameInit(SadConsole.Configuration.Builder,System.Action{Microsoft.Xna.Framework.Game})">
             <summary>
             Internal only. Called by the MonoGame game to finish configuring SadConsole.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="monogameInitCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.SkipMonoGameGameCreation(SadConsole.Configuration.Builder)">
+            <summary>
+            When called, tells the game host not to create the monogame game instance at <see cref="P:SadConsole.Game.MonoGameInstance"/>.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration object.</returns>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions">

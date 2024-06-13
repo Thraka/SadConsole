@@ -29,12 +29,12 @@ namespace SadConsole.Debug.MonoGame
         /// </summary>
         public static void BasicInit()
         {
-            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, (Microsoft.Xna.Framework.Game)Game.Instance.MonoGameInstance, true);
             //_imGui.Font = "Roboto-Regular.ttf";
             //_imGui.fontSize = 14f;
 
             Game.Instance.MonoGameInstance.Components.Add(_imGui);
-            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+            Host.Global.SadConsoleComponent.Enabled = false;
             
         }
 
@@ -45,19 +45,19 @@ namespace SadConsole.Debug.MonoGame
                 _imGui.Visible = true;
                 _imGui.Enabled = true;
 
-                SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+                Host.Global.SadConsoleComponent.Enabled = false;
                 SadConsole.Settings.DoFinalDraw = GuiState.ShowSadConsoleRendering;
 
                 return;
             }
 
-            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+            Host.Global.SadConsoleComponent.Enabled = false;
             SadConsole.Settings.DoFinalDraw = GuiState.ShowSadConsoleRendering;
 
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
 
-            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+            _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, (Microsoft.Xna.Framework.Game)Game.Instance.MonoGameInstance, true);
             //_imGui.Font = "Roboto-Regular.ttf";
             //_imGui.fontSize = 14f;
             //ImGui.Theme = coolTheme;
@@ -91,8 +91,8 @@ namespace SadConsole.Debug.MonoGame
 
         public static void Stop()
         {
-            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Visible = true;
-            SadConsole.Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = true;
+            Host.Global.SadConsoleComponent.Visible = true;
+            Host.Global.SadConsoleComponent.Enabled = true;
             SadConsole.Settings.DoFinalDraw = true;
 
             //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;

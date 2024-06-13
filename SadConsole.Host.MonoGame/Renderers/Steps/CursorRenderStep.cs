@@ -2,6 +2,7 @@
 using SadRogue.Primitives;
 using XnaRectangle = Microsoft.Xna.Framework.Rectangle;
 using XnaPoint = Microsoft.Xna.Framework.Point;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Renderers;
 
@@ -16,7 +17,7 @@ public class CursorRenderStep : IRenderStep
     /// <inheritdoc/>
     public string Name => Constants.RenderStepNames.Cursor;
 
-    ///  <inheritdoc/>
+    /// <inheritdoc/>
     public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Cursor;
 
     /// <summary>
@@ -38,39 +39,39 @@ public class CursorRenderStep : IRenderStep
     }
 
     ///  <inheritdoc/>
-    public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) =>
-        false;
-
-    ///  <inheritdoc/>
-    public void Composing(IRenderer renderer, IScreenSurface screenObject) { }
-
-    ///  <inheritdoc/>
-    public void Render(IRenderer renderer, IScreenSurface screenObject)
+    public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced)
     {
-        // If the tint isn't covering everything
-        if (screenObject.Tint.A != 255)
+        foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
         {
-            // Draw any cursors
-            foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
-            {
-                if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
-                {
-                    XnaPoint position = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
-                                                                        cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
-                                                                        screenObject.FontSize).Translate(screenObject.AbsolutePosition).Position.ToMonoPoint();
+            if (cursor.CursorRenderCellActiveState.IsDirty)
+                return true;
+        }
 
-                    GameHost.Instance.DrawCalls.Enqueue(
-                        new DrawCalls.DrawCallGlyph(cursor.CursorRenderCellActiveState,
-                                                    new XnaRectangle(position.X, position.Y, screenObject.FontSize.X, screenObject.FontSize.Y),
-                                                    screenObject.Font,
-                                                    true
-                                                    )
-                        );
-                }
+        return false;
+    }
+
+    ///  <inheritdoc/>
+    public void Composing(IRenderer renderer, IScreenSurface screenObject)
+    {
+        // Draw any cursors
+        foreach (Components.Cursor cursor in screenObject.GetSadComponents<Components.Cursor>())
+        {
+            if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
+            {
+                XnaRectangle rect = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
+                                                                    cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
+                                                                    screenObject.FontSize).ToMonoRectangle();
+
+                Host.Global.SharedSpriteBatch.Draw(((Host.GameTexture)screenObject.Font.Image).Texture, rect,
+                                                   screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCellActiveState.Glyph).ToMonoRectangle(),
+                                                   cursor.CursorRenderCellActiveState.Foreground.ToMonoColor(),
+                                                   0f, Microsoft.Xna.Framework.Vector2.Zero, SpriteEffects.None, 0.2f);
             }
         }
     }
 
+    ///  <inheritdoc/>
+    public void Render(IRenderer renderer, IScreenSurface screenObject) { }
 
     ///  <inheritdoc/>
     public void Dispose() =>

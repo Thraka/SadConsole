@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
@@ -14,6 +10,8 @@ internal interface IDocumentTools
     bool ShowToolsList { get; set; }
 
     void BuildUI(ImGuiRenderer renderer);
+
+    void ToolChanged(ITool? oldTool, ITool newTool);
 }
 
 public class IDocumentToolsState
@@ -23,5 +21,5 @@ public class IDocumentToolsState
     public string[] ToolNames;
     public Tools.ITool[] ToolObjects;
 
-    public Tools.ITool SelectedTool => SelectedToolIndex != -1 ? ToolObjects[SelectedToolIndex] : null;
+    public Tools.ITool? SelectedTool => SelectedToolIndex != -1 ? ToolObjects[SelectedToolIndex] : null;
 }

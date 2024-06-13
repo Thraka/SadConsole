@@ -18,7 +18,7 @@ public static partial class ImGuiWidgets
     public static void BeginGroupPanel(string name, Vector2 size)
     {
         ImGui.BeginGroup();
-
+        ImGui.PushID($"panel_{name}");
         var cursorPos = ImGui.GetCursorScreenPos();
         var itemSpacing = ImGui.GetStyle().ItemSpacing;
         var framePadding = ImGui.GetStyle().FramePadding;
@@ -129,6 +129,7 @@ public static partial class ImGuiWidgets
 
         ImGui.Dummy(new Vector2(0.0f, 0.0f));
 
+        ImGui.PopID();
         ImGui.EndGroup();
     }
 }

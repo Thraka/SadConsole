@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
-using Microsoft.Xna.Framework.Graphics;
+﻿using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Model;
 
@@ -20,5 +12,14 @@ internal partial class SurfaceDocument : IDocumentTools
     void IDocumentTools.BuildUI(ImGuiRenderer renderer)
     {
         
+    }
+
+    void IDocumentTools.ToolChanged(ITool? oldTool, ITool newTool)
+    {
+        if (oldTool != null && oldTool is IOverlay overlay)
+            Surface.SadComponents.Remove(overlay.Overlay);
+
+        if (newTool is IOverlay)
+            Surface.SadComponents.Add(((IOverlay)newTool).Overlay);
     }
 }

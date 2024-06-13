@@ -10,15 +10,10 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Reversioned to follow new versioning scheme.
-- Configuration namespace and related types was moved here from the hosts.
-- Added Components.Overlay which displays a surface on top of an existing console/surface object as a top layer.
-- Bug: Font.OnFontChanged wasn't actually being called. It is now.
-- Added Coroutine NuGet library. This is included now with SadConsole.
-- Added CoroutineHandlerComponent which is a manager that you can add to an object and coroutines to.
-- Cursor.PrintCoroutine which prints as a coroutine, pausing at each character.
-- Instructions.DrawString updated to use Cursor.PrintCoroutine which lets it pretty print word breaks.
-- XML docs didn't genereate correctly for the last build.
+- When a Cursor is removed from a host object, the object is set to dirty now.
+- Overlay component now calls update on the attached visual.
+- Fix bug with DrawCircle not setting dirty.
+- Fix bug with DrawBox not respecting ignore glyph setting.
     </PackageReleaseNotes>
   </PropertyGroup>
 

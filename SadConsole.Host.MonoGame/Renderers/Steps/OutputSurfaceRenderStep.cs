@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.Renderers;
 
@@ -13,6 +14,11 @@ public class OutputSurfaceRenderStep : IRenderStep
 
     ///  <inheritdoc/>
     public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Output;
+
+    /// <summary>
+    /// The shader to use when drawing the surface.
+    /// </summary>
+    public Effect ShaderEffect { get; set; }
 
     /// <summary>
     /// Not used.
@@ -33,7 +39,7 @@ public class OutputSurfaceRenderStep : IRenderStep
     public void Render(IRenderer renderer, IScreenSurface screenObject)
     {
         var monoRenderer = (ScreenSurfaceRenderer)renderer;
-        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(monoRenderer._backingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), monoRenderer._finalDrawColor));
+        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(monoRenderer._backingTexture, new Vector2(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), monoRenderer._finalDrawColor, ShaderEffect));
     }
 
     ///  <inheritdoc/>

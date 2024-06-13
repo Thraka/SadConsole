@@ -21,6 +21,7 @@ static class GameSettings
 
     public static IDemo[] Demos =
         {
+            new DemoShader(),
             new DemoSecondSurfaceRenderer(),
             new DemoRandomScrolling(),
             new DemoAutoTyping(),

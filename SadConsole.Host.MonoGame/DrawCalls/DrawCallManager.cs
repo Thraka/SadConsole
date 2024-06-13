@@ -12,10 +12,13 @@ public static class DrawCallManager
     /// <summary>
     /// Resumes rendering to <see cref="Global.RenderOutput"/> with SadConsole's default settings.
     /// </summary>
+    /// <param name="skipSetRenderTarget">When true, skips assinging <see cref="Global.RenderOutput"/> as the render target.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ResumeBatch()
+    public static void ResumeBatch(bool skipSetRenderTarget = false)
     {
-        Global.GraphicsDevice.SetRenderTarget(Global.RenderOutput);
+        if (!skipSetRenderTarget)
+            Global.GraphicsDevice.SetRenderTarget(Global.RenderOutput);
+
         Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, SadConsole.Host.Settings.MonoGameScreenBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
     }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using ImGuiNET;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.GuiParts
@@ -23,6 +25,8 @@ namespace SadConsole.Editor.GuiParts
         public bool ShowMetrics;
         private bool _debug;
 
+        public List<(Vector4 Color, string Text)> StatusItems = new();
+
         public override void BuildUI(ImGuiRenderer renderer)
         {
             if (_debug)
@@ -39,9 +43,31 @@ namespace SadConsole.Editor.GuiParts
                     {
                         ImGuiCore.ShowCreateDocument();
                     }
-                    if (ImGui.MenuItem("Close", "c"))
+                    if (ImGui.MenuItem("Open", "o"))
                     {
-                        
+                        OpenFile window = new();
+                        window.Closed += (s, e) =>
+                        {
+                            if (window.DialogResult)
+                            {
+                                ImGuiCore.State.OpenDocuments = [.. ImGuiCore.State.OpenDocuments, window.Document!];
+                                ImGuiCore.State.SelectedDocumentIndex = ImGuiCore.State.OpenDocuments.Length - 1;
+                            }
+                        };
+                        window.Show();
+                    }
+                    if (ImGuiCore.State.SelectedDocumentIndex != -1)
+                    {
+                        ImGui.Separator();
+                        if (ImGui.MenuItem("Save", "s"))
+                        {
+                            SaveFile window = new();
+                            window.Show(ImGuiCore.State.GetOpenDocument());
+                        }
+                        if (ImGui.MenuItem("Close", "c"))
+                        {
+
+                        }
                     }
 
                     ImGui.EndMenu();
@@ -67,6 +93,15 @@ namespace SadConsole.Editor.GuiParts
                     ImGui.EndMenu();
                 }
 
+                // Write status items at the top
+                foreach ((Vector4 Color, string Text) item in StatusItems)
+                {
+                    if (item.Color == Vector4.Zero)
+                        ImGui.Text(item.Text);
+                    else
+                        ImGui.TextColored(item.Color, item.Text);
+                }
+                StatusItems.Clear();
                 ImGui.EndMainMenuBar();
             }
         }

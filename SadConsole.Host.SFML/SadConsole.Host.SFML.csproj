@@ -10,8 +10,7 @@
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageTags>sadconsole;sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Reversioned to follow new versioning scheme.
-- Configuration namespace was moved to SadConsole directly. Only library specific config options are here now.
+Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
     </PackageReleaseNotes>
   </PropertyGroup>
 

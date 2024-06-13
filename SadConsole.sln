@@ -56,6 +56,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{EFF6
 		MSBuild\Common.props = MSBuild\Common.props
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGameFirst", "Samples\MonoGameFirst\MonoGameFirst.csproj", "{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -184,6 +186,14 @@ Global
 		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|x64.ActiveCfg = Release|Any CPU
 		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF}.Release|x64.Build.0 = Release|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Debug|x64.Build.0 = Debug|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Release|x64.ActiveCfg = Release|Any CPU
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +214,7 @@ Global
 		{DCA1D25E-2FFA-4904-AB66-36015C2E9817} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 		{7A784A5A-F311-4180-B1C7-DF3A950ED0CF} = {C08D04C0-B57A-448B-A312-2A9A8E3CA435}
 		{EFF675F4-080A-406C-9FBC-F0FC0E05B94E} = {897D0FB7-4163-4C23-A938-31C06F8E84FF}
+		{F7FF382F-BE4F-4233-BF02-0BBB4DB9AB00} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}

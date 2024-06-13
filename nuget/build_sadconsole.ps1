@@ -17,7 +17,7 @@ Write-Output "Pushing SadConsole packages"
 $sadConsolePackages = Get-ChildItem "SadConsole.*.nupkg" | Select-Object -ExpandProperty Name
 
 foreach ($package in $sadConsolePackages) {
-    $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
+    $output = Invoke-Expression "dotnet nuget push `"$package`" -s nuget.org -k $nugetKey --skip-duplicate"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
 }
 
 Write-Output "Query NuGet for 10 minutes to find the new package"

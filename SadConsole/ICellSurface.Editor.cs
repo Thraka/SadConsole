@@ -2357,7 +2357,7 @@ public static class CellSurfaceEditor
     {
         Rectangle fillRect = area.Expand(-1, -1);
 
-        if (parameters.HasFill && parameters.FillGlyph != null)
+        if (parameters.HasFill && parameters.FillGlyph != null && fillRect.Area > 0)
         {
             obj.Surface.Fill(fillRect,
                          parameters.IgnoreFillForeground ? (Color?)null : parameters.FillGlyph.Foreground,
@@ -2380,19 +2380,23 @@ public static class CellSurfaceEditor
                 ColoredGlyphBase border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
                 // Draw the major sides
-                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top],
+                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0),
+                            parameters.IgnoreBorderGlyph ? (int?)null : connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top],
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom],
+                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom],
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left],
+                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left],
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right],
+                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right],
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
@@ -2413,22 +2417,26 @@ public static class CellSurfaceEditor
 
                 // Draw the major sides
                 ColoredGlyphBase border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Top];
-                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
+                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
                 border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Bottom];
-                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
                 border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Left];
-                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
                 border = connectedLineStyle[(int)ICellSurface.ConnectedLineIndex.Right];
-                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
@@ -2444,19 +2452,23 @@ public static class CellSurfaceEditor
             {
                 // Draw the major sides
                 ColoredGlyphBase border = parameters.BorderGlyph ?? throw new NullReferenceException("Shape parameters is missing the border glyph.");
-                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0), border.Glyph,
+                DrawLine(obj, area.Position, area.Position + new Point(area.Width - 1, 0),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position + new Point(0, area.Height - 1), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position, area.Position + new Point(0, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
-                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1), border.Glyph,
+                DrawLine(obj, area.Position + new Point(area.Width - 1, 0), area.Position + new Point(area.Width - 1, area.Height - 1),
+                            parameters.IgnoreBorderGlyph ? (int?)null : border.Glyph,
                             parameters.IgnoreBorderForeground ? (Color?)null : border.Foreground,
                             parameters.IgnoreBorderBackground ? (Color?)null : border.Background,
                             parameters.IgnoreBorderMirror ? (Mirror?)null : border.Mirror);
@@ -2476,7 +2488,7 @@ public static class CellSurfaceEditor
 
         if (parameters.BorderGlyph == null) throw new NullReferenceException("Shape parameters is missing the border glyph.");
 
-        foreach (var location in Shapes.GetEllipse(area.Position, area.MaxExtent))
+        foreach (Point location in Shapes.GetEllipse(area.Position, area.MaxExtent))
         {
             if (parameters.HasBorder && obj.Surface.IsValidCell(location.X, location.Y))
             {
@@ -2540,6 +2552,8 @@ public static class CellSurfaceEditor
 
             Algorithms.FloodFill(area.Center.ToIndex(obj.Surface.Width), isTargetCell, fillCell, getConnectedCells);
         }
+
+        obj.Surface.IsDirty = true;
     }
 
     /// <summary>

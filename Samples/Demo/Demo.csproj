@@ -17,11 +17,12 @@
 
   <PropertyGroup>
     <!-- monogame, sfml, or fna -->
-    <GameHost>sfml</GameHost>
+    <GameHost>fna</GameHost>
     
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +38,12 @@
     <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
       <HintPath>..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
     </Reference>
+
+  </ItemGroup>
+
+  <!-- FNA and SFML can't use MonoGame shaders -->
+  <ItemGroup Condition=" '$(GameHost)' != 'monogame' ">
+    <None Remove="Content\**\*" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which rendering library you want to use. -->
@@ -45,6 +52,13 @@
 
     <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+
+    <!-- Compile the MonoGame Shaders -->
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <MonoGameContentReference Include="Content\Assets.mgcb" />
+    <None Remove="Content\bin\**\*" />
+    <None Remove="Content\obj\**\*" />
+
   </ItemGroup>
 
   <!-- Files related to compiling and running the demos. -->

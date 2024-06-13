@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadConsole.ImGuiSystem;
+﻿using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
 
@@ -11,7 +6,17 @@ public interface ITool
 {
     string Name { get; }
 
+    string Description { get; }
+
     void BuildSettingsPanel(ImGuiRenderer renderer);
 
-    void MouseOver(IScreenSurface surface, SadRogue.Primitives.Point hoveredCellPosition, ImGuiRenderer renderer);
+    void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer);
+
+    void OnSelected();
+
+    void OnDeselected();
+
+    void DocumentViewChanged();
+
+    void DrawOverDocument();
 }

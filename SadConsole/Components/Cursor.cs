@@ -1231,6 +1231,7 @@ public class Cursor : IComponent
         if (_cursorRenderStep != null)
         {
             ((IScreenSurface)host).Renderer?.Steps.Remove(_cursorRenderStep);
+            ((IScreenSurface)host).IsDirty = true;
             _cursorRenderStep.Dispose();
             _cursorRenderStep = null;
         }

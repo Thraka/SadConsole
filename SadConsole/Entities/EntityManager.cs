@@ -277,7 +277,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
             RenderStep.Dispose();
             RenderStep = null;
         }
-
+        
         _screen = null;
         _screenCachedFont = null;
         _screenCachedFontSize = Point.None;

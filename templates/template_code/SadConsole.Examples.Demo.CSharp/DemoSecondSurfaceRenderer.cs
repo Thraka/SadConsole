@@ -26,7 +26,7 @@ internal class SurfaceSecondRenderer : ControlsConsole
 
     public SurfaceSecondRenderer() : base(28, 4)
     {
-        // Create the other console where the keyboard handler will be set
+        // Create the other console where the extra render step will draw something
         _otherSurface = new ScreenSurface(GameSettings.SCREEN_DEMO_WIDTH - 8, GameSettings.SCREEN_DEMO_HEIGHT - this.Height - 3)
         {
             Position = (8, this.Height + 3),
