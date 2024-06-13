@@ -27,8 +27,8 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup>
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.4.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.4.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.4.1" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.4.1" />
     <PackageReference Include="SadConsole.Extended" Version="10.4.0" />
   </ItemGroup>
 
