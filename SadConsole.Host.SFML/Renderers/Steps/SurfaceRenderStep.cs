@@ -30,6 +30,11 @@ public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     public uint SortOrder { get; set; } = Constants.RenderStepSortValues.Surface;
 
     /// <summary>
+    /// The color applied when the sprite batch draws this surface on the renderer.
+    /// </summary>
+    public Color ComposeTint { get; set; } = Color.White;
+
+    /// <summary>
     /// Sets an alternative <see cref="IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
     /// </summary>
     public void SetData(object data)
@@ -115,8 +120,8 @@ public class SurfaceRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture!.Size.X, (int)BackingTexture.Size.Y);
-        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+        IntRect outputArea = new(0, 0, (int)BackingTexture!.Size.X, (int)BackingTexture.Size.Y);
+        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, ComposeTint, BackingTexture.Texture);
     }
 
     ///  <inheritdoc/>
