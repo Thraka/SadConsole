@@ -13,7 +13,7 @@ namespace SadConsole.Entities;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Entity host")]
-public class EntityManager : Components.UpdateComponent, Components.IComponent, IList<Entity>
+public class EntityManager : Components.UpdateComponent, Components.IComponent, IList<Entity>, IDisposable
 {
     /// <summary>
     /// Indicates that the entity renderer has been added to a parent object.
@@ -110,6 +110,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
     /// Internal use only
     /// </summary>
     public Renderers.IRenderStep? RenderStep;
+    private bool _disposedValue;
 
     /// <summary>
     /// Adds an entity to this manager.
@@ -236,8 +237,12 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
     /// </summary>
     public void Clear()
     {
-        while (_entities.Count != 0)
-            Remove(_entities[_entities.Count - 1]);
+        if (!IsAttached && _entityHolding != null)
+            while (_entityHolding.Count != 0)
+                Remove(_entityHolding[_entityHolding.Count - 1]);
+        else
+            while (_entities.Count != 0)
+                Remove(_entities[_entities.Count - 1]);
     }
 
     /// <inheritdoc/>
@@ -538,4 +543,33 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
 
     IEnumerator IEnumerable.GetEnumerator() =>
         _entities.GetEnumerator();
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                
+            }
+
+            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+            // TODO: set large fields to null
+            _disposedValue = true;
+        }
+    }
+
+    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+    // ~EntityManager()
+    // {
+    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
