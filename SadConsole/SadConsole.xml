@@ -1847,6 +1847,15 @@
             <returns>The cursor object.</returns>
             <exception cref="T:System.Exception">Thrown when a host isn't attached to the cursor.</exception>
         </member>
+        <member name="M:SadConsole.Components.Cursor.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Cursor.Dispose">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.IComponent">
             <summary>
             A component that can be added to a <see cref="T:SadConsole.IScreenObject"/>.
@@ -2275,6 +2284,14 @@
             A surface that's sized to match.
             </summary>
         </member>
+        <member name="F:SadConsole.Components.Overlay.RenderStep">
+            <summary>
+            Internal use.
+            </summary>
+            <remarks>
+            The render step used to draw the overlay. This render step is added to the host object and should draw the <see cref="P:SadConsole.Components.Overlay.Surface"/> of the Overlay component.
+            </remarks>
+        </member>
         <member name="P:SadConsole.Components.Overlay.ClearOnAdd">
             <summary>
             When true, clears the <see cref="P:SadConsole.Components.Overlay.Surface"/> property when this object is added to a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -2287,6 +2304,15 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Components.Overlay.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.Overlay.Dispose">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.Components.RenderComponent">
@@ -2709,6 +2735,23 @@
             Returns the value "Console".
             </summary>
             <returns>The string "Console".</returns>
+        </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
@@ -3909,6 +3952,15 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Entities.EntityManager.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManager.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManager.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Entities.EntityManager.Dispose">
             <inheritdoc/>
         </member>
         <member name="T:SadConsole.PointExtensions">
@@ -10973,6 +11025,16 @@
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
         </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
+        </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
             A color that can be adjusted by brightness and mapped to a <see cref="T:SadConsole.UI.Colors"/> color.
@@ -14968,14 +15030,6 @@
         <member name="M:SadRogue.Primitives.ColorExtensions2.ToColoredString(SadRogue.Primitives.Gradient,System.String)">
             <summary>
             Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
-            </summary>
-            <param name="gradient">The gradient to work with.</param>
-            <param name="text">The text to use for the colored string.</param>
-            <returns>A new colored string object.</returns>
-        </member>
-    </members>
-</doc>
-.ColoredString"/> object using the current gradient.
             </summary>
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>

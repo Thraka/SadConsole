@@ -110,6 +110,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
     /// Internal use only
     /// </summary>
     public Renderers.IRenderStep? RenderStep;
+
     private bool _disposedValue;
 
     /// <summary>
@@ -544,28 +545,35 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
     IEnumerator IEnumerable.GetEnumerator() =>
         _entities.GetEnumerator();
 
+    /// <inheritdoc/>
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
-            if (disposing)
-            {
-                
-            }
+            Clear();
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
+            _entityHolding = null;
+            _screen = null;
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            _entities = null;
+            _entitiesVisible = null;
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
+            RenderStep?.Dispose();
+            RenderStep = null;
             _disposedValue = true;
         }
     }
 
-    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-    // ~EntityManager()
-    // {
-    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-    //     Dispose(disposing: false);
-    // }
+    /// <inheritdoc/>
+    ~EntityManager()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: false);
+    }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

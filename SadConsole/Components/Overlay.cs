@@ -6,14 +6,22 @@ namespace SadConsole.Components;
 /// <summary>
 /// A surface that's rendered on top of a host surface.
 /// </summary>
-public class Overlay : UpdateComponent
+public sealed class Overlay : UpdateComponent, IDisposable
 {
-    private Renderers.IRenderStep? RenderStep;
+    private bool _disposedValue;
 
     /// <summary>
     /// A surface that's sized to match.
     /// </summary>
-    public ScreenSurface Surface { get; private set; }
+    public ScreenSurface? Surface { get; private set; }
+
+    /// <summary>
+    /// Internal use.
+    /// </summary>
+    /// <remarks>
+    /// The render step used to draw the overlay. This render step is added to the host object and should draw the <see cref="Surface"/> of the Overlay component.
+    /// </remarks>
+    public Renderers.IRenderStep? RenderStep;
 
     /// <summary>
     /// When true, clears the <see cref="Surface"/> property when this object is added to a <see cref="IScreenSurface"/>.
@@ -72,16 +80,44 @@ public class Overlay : UpdateComponent
     public override void Update(IScreenObject host, TimeSpan delta)
     {
         MatchSurface((IScreenSurface)host);
-        Surface.Update(delta);
+        Surface!.Update(delta);
     }
 
     private void MatchSurface(IScreenSurface host)
     {
-        if (Surface.Width != host.Surface.ViewWidth || Surface.Height != host.Surface.ViewHeight)
+        if (Surface!.Width != host.Surface.ViewWidth || Surface.Height != host.Surface.ViewHeight)
             Surface.Resize(host.Surface.ViewWidth, host.Surface.ViewHeight, false);
         if (Surface.Font != host.Font)
             Surface.Font = host.Font;
         if (Surface.FontSize != host.FontSize)
             Surface.FontSize = host.FontSize;
+    }
+
+    /// <inheritdoc/>
+    protected void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            RenderStep?.Dispose();
+            RenderStep = null;
+            Surface?.Dispose();
+            Surface = null;
+            _disposedValue = true;
+        }
+    }
+
+    /// <inheritdoc/>
+    ~Overlay()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: false);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

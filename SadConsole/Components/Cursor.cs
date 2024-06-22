@@ -15,7 +15,7 @@ namespace SadConsole.Components;
 [System.Diagnostics.DebuggerDisplay("Cursor")]
 [DataContract]
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Cursor : IComponent
+public class Cursor : IComponent, IDisposable
 {
     private ColoredGlyphBase _cursorCellOriginal;
     private ICellEffect? _cursorCellEffect;
@@ -26,6 +26,7 @@ public class Cursor : IComponent
     [DataMember]
     private bool _applyCursorEffect = true;
     private Renderers.IRenderStep? _cursorRenderStep;
+    private bool _disposedValue;
 
     /// <summary>
     /// The default glyph used for a new cursor. Value 219.
@@ -1246,5 +1247,45 @@ public class Cursor : IComponent
 
         if (!_editor.IsValidCell(_position.X, _position.Y))
             Position = (0, 0);
+    }
+
+    /// <inheritdoc/>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+                _cursorCellOriginal = null;
+                _cursorCellEffect = null;
+                _cursorCell = null;
+                _editor = null;
+                PrintAppearance = null;
+                PrintEffect = null;
+                CursorRenderEffect = null;
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+            }
+
+            _cursorRenderStep?.Dispose();
+            _cursorRenderStep = null;
+
+            _disposedValue = true;
+        }
+    }
+
+    /// <inheritdoc/>
+    ~Cursor()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: false);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
