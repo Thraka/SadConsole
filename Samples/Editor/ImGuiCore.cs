@@ -42,7 +42,7 @@ public static partial class ImGuiCore
         //_imGui.fontSize = 14f;
 
         Game.Instance.MonoGameInstance.Components.Add(_imGui);
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        Host.Global.SadConsoleComponent.Enabled = false;
     }
 
     public static void Start()
@@ -124,8 +124,7 @@ public static partial class ImGuiCore
 
     public static void Stop()
     {
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Visible = true;
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = true;
+        Host.Global.SadConsoleComponent.Enabled = true;
         Settings.DoFinalDraw = true;
 
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;

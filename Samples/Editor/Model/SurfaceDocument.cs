@@ -39,7 +39,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         ((IDocumentTools)this).ShowToolsList = true;
         ((IDocumentTools)this).State.ToolObjects = [ new Tools.Info(), new Tools.Empty(), new Tools.Pencil(), new Tools.Recolor(),
                                                      new Tools.Fill(), new Tools.Box(), new Tools.Circle(), new Tools.Line(),
-                                                     new Tools.Text(), new Tools.Selection() ];
+                                                     new Tools.Text(), new Tools.Selection(), new Tools.Operations() ];
         ((IDocumentTools)this).State.ToolNames = ((IDocumentTools)this).State.ToolObjects.Select(t => t.Name).ToArray();
     }
 
@@ -158,6 +158,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             popup.Closed += FontPicker_Closed;
             popup.Show();
         }
+        ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: ");
         ImGui.SameLine();
         if (ImGui.Button(EditorFontSize.ToString()))

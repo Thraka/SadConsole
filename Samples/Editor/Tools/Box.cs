@@ -16,7 +16,7 @@ internal class Box : ITool, IOverlay
     private Overlay _toolOverlay = new();
     private bool _isCancelled;
 
-    private ShapeSettings.Settings _shapeSettings;
+    private ShapeSettings.Settings _shapeSettings = new() { HasBorder = true, UseBoxBorderStyle = true, BoxBorderStyle = Model.SadConsoleTypes.ConnectedGlyphs.GetValueFromIndex(1) };
 
     public string Name => "Box";
 

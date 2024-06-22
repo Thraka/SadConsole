@@ -1,4 +1,5 @@
-﻿using SadConsole.Editor.Tools;
+﻿using ImGuiNET;
+using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
@@ -11,7 +12,6 @@ internal partial class AnimationDocument : IDocumentTools
 
     void IDocumentTools.BuildUI(ImGuiRenderer renderer)
     {
-        
     }
 
     void IDocumentTools.ToolChanged(ITool? oldTool, ITool newTool)

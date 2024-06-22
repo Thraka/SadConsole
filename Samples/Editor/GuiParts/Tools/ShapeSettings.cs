@@ -8,7 +8,7 @@ internal static class ShapeSettings
 {
     public struct Settings
     {
-        // Stolen from ShapreParameters and converted to fields
+        // Stolen from ShapeParameters and converted to fields
         public bool HasBorder;
         public bool HasFill;
         public bool IgnoreFillForeground;

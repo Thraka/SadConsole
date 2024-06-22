@@ -49,7 +49,7 @@ internal class Selection : ITool, IOverlay
          * Btn
          * 
         */
-
+        
         ImGuiWidgets.BeginGroupPanel("Settings");
 
         ImGui.BeginDisabled(!_boxCreated);
@@ -136,7 +136,9 @@ internal class Selection : ITool, IOverlay
                                 new Point(Math.Max(_firstPoint.X, secondPoint.X), Math.Max(_firstPoint.Y, secondPoint.Y)));
 
                 Overlay.Surface.Clear();
-                Overlay.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxThin(Color.White));
+                Overlay.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxFilled(borderStyle: ICellSurface.ConnectedLineThin,
+                                                                                        borderColors: new ColoredGlyph(Color.White, Color.Black),
+                                                                                        fillStyle: new ColoredGlyph(Color.White.SetAlpha(150), Color.Transparent, 176)));
             }
             else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             {
