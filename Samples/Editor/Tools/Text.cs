@@ -32,7 +32,7 @@ internal class Text : ITool
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
         Mirror mirror = SharedToolSettings.Tip.Mirror;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         SettingsTable.BeginTable("matchtable");
 
@@ -53,12 +53,11 @@ internal class Text : ITool
 
         ImGuiWidgets.EndGroupPanel();
     }
-
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (_isWriting)
         {
@@ -71,7 +70,7 @@ internal class Text : ITool
         {
             if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
             {
-                surface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+                document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             }
         }
 
@@ -80,11 +79,11 @@ internal class Text : ITool
         if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
             _isWriting = true;
-            _cursorPosition = hoveredCellPosition - surface.Surface.ViewPosition;
+            _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
             if (_cursor is null)
             {
                 _cursor = new() { IsVisible = true, IsEnabled = true };
-                surface.SadComponents.Add(_cursor);
+                document.VisualDocument.SadComponents.Add(_cursor);
             }
             _cursor.Position = _cursorPosition;
             _cursor.PrintAppearance = SharedToolSettings.Tip;
@@ -105,21 +104,21 @@ internal class Text : ITool
 
         if (_cursor != null)
         {
-            doc.Surface.SadComponents.Remove(_cursor);
+            doc.VisualDocument.SadComponents.Remove(_cursor);
             _cursor = null;
         }
 
         doc.Options.DisableScrolling = false;
     }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument()
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer)
     {
         if (_isWriting && _cursor != null)
         {
             _keyboard.Update(Game.Instance.UpdateFrameDelta);
-            ((Components.IComponent)_cursor).ProcessKeyboard(ImGuiCore.State.GetOpenDocument().Surface, _keyboard, out bool handled);
+            ((Components.IComponent)_cursor).ProcessKeyboard(document.VisualDocument, _keyboard, out bool handled);
         }
     }
 }

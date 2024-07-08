@@ -5,7 +5,6 @@ using SadConsole.Components;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Model;
 
@@ -15,7 +14,6 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
     private int _sliderValueX;
 
     private bool _showPreviousFrame;
-    private int _currentFrameCounter = 1;
     private byte _previousFrameOpacity = 50;
 
     public int Width = 40;
@@ -128,19 +126,17 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
             {
                 if (dialogResult)
                 {
-                    if (Surface.Surface.ViewWidth > Width)
-                        Surface.Surface.ViewWidth = Width;
-                    if (Surface.Surface.ViewHeight > Height)
-                        Surface.Surface.ViewHeight = Height;
+                    foreach (ICellSurfaceResize frame in _animatedScreenObject.Frames)
+                    {
+                        frame.Resize(Width, Height, false);
+                    }
 
-                    //TODO: TEST
-                    ((ICellSurfaceResize)Surface.Surface).Resize(Surface.Surface.ViewWidth, Surface.Surface.ViewHeight, Width, Height, false);
-                    Surface.IsDirty = true;
+                    Frames_GoCurrent();
                 }
                 else
                 {
-                    Width = Surface.Surface.Width;
-                    Height = Surface.Surface.Height;
+                    Width = base.VisualDocument.Surface.Width;
+                    Height = base.VisualDocument.Surface.Height;
                 }
             }
 
@@ -152,9 +148,9 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Font: ");
         ImGui.SameLine();
-        if (ImGui.Button($"{Surface.Font.Name} | {SurfaceFontSize}"))
+        if (ImGui.Button($"{base.VisualDocument.Font.Name} | {SurfaceFontSize}"))
         {
-            FontPicker popup = new(Surface.Font, SurfaceFontSize);
+            FontPicker popup = new(base.VisualDocument.Font, SurfaceFontSize);
             popup.Closed += FontPicker_Closed;
             popup.Show();
         }
@@ -170,39 +166,43 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
         {
             EditorFontSize = SurfaceFontSize;
             _animatedScreenObject.FontSize = EditorFontSize;
-            Surface.FontSize = EditorFontSize;
+            VisualDocument.FontSize = EditorFontSize;
 
             // Force overlay to update and match surface
-            foreach (Overlay overlay in Surface.GetSadComponents<Components.Overlay>())
-                overlay.Update(Surface, TimeSpan.Zero);
+            foreach (Overlay overlay in VisualDocument.GetSadComponents<Components.Overlay>())
+                overlay.Update(VisualDocument, TimeSpan.Zero);
         }
 
-        if (FontSizePopup.Show(renderer, "editorfontsize_select", Surface.Font, ref EditorFontSize))
+        if (FontSizePopup.Show(renderer, "editorfontsize_select", VisualDocument.Font, ref EditorFontSize))
         {
             _animatedScreenObject.FontSize = EditorFontSize;
-            Surface.FontSize = EditorFontSize;
+            VisualDocument.FontSize = EditorFontSize;
 
             // Force overlay to update and match surface
-            foreach (Overlay overlay in Surface.GetSadComponents<Components.Overlay>())
-                overlay.Update(Surface, TimeSpan.Zero);
+            foreach (Overlay overlay in VisualDocument.GetSadComponents<Components.Overlay>())
+                overlay.Update(VisualDocument, TimeSpan.Zero);
         }
         ImGuiWidgets.EndGroupPanel();
 
         ImGuiWidgets.BeginGroupPanel("Animation Editor");
         {
             ImGui.AlignTextToFramePadding();
-
+            ImGui.Text("Frames"); ImGui.SameLine();
             // Current Frame
             // =======================
             //ImGui.Text($"Current Frame: {_currentFrameCounter}\\{_animatedScreenObject.Frames.Count}");
 
             //ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == 0);
             if (ImGui.Button("<<"))
                 Frames_GoStart();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == 0);
             if (ImGui.Button("<"))
                 Frames_GoPrevious();
+            ImGui.EndDisabled();
 
             float textSize = ImGui.CalcTextSize(">>").X + ImGui.CalcTextSize(">").X;
             Vector2 spacing = ImGui.GetStyle().ItemSpacing;
@@ -210,27 +210,37 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth(ImGui.GetItemRectSize().X - (spacing.X * 3) - (textSize * 2) - padding.X);
-            if (ImGui.SliderInt("##currentframe", ref _currentFrameCounter, 1, _animatedScreenObject.Frames.Count))
+            ImGui.BeginDisabled(_animatedScreenObject.Frames.Count == 1);
+            int sliderFrame = _animatedScreenObject.CurrentFrameIndex + 1;
+            if (ImGui.SliderInt("##currentframe", ref sliderFrame, 1, _animatedScreenObject.Frames.Count))
+            {
+                _animatedScreenObject.CurrentFrameIndex = sliderFrame - 1;
                 Frames_GoCurrent();
+            }
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count - 1);
             if (ImGui.Button(">"))
                 Frames_GoNext();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count - 1);
             if (ImGui.Button(">>"))
                 Frames_GoEnd();
+            ImGui.EndDisabled();
 
             // Adding Frames
             // =======================
-            ImGui.Text("Adding Frames: ");
+            ImGui.Text("Add: ");
 
             ImGui.SameLine();
             if (ImGui.SmallButton("Add To End"))
             {
                 Frames_AddToEnd();
 
-                if (_currentFrameCounter == _animatedScreenObject.Frames.Count - 1)
+                if (_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count - 2)
                     Frames_GoNext();
 
             }
@@ -241,39 +251,54 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
             // Editing Frames
             // =======================
-            ImGui.Text("Editing Frames: ");
+            ImGui.Text("Edit: ");
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.Frames.Count == 1);
             if (ImGui.SmallButton("Copy Prev."))
                 Frames_CopyPrevious();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
             if (ImGui.SmallButton("Clear This"))
                 Frames_Reset(_animatedScreenObject.CurrentFrame);
 
-            ImGui.Text("Delete Frames: ");
+            // Delete Frames
+            // =======================
+            ImGui.Text("Delete: ");
+
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.Frames.Count == 1);
             if (ImGui.SmallButton("Delete This"))
                 Frames_Delete();
+            ImGui.EndDisabled();
 
             // Moving Frames
             // =======================
-            ImGui.Text("Editing Frames: ");
+            ImGui.Text("Move: ");
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == 0);
             if (ImGui.SmallButton("<<##movestart"))
                 Frames_MoveStart();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == 0);
             if (ImGui.SmallButton("<##moveback"))
                 Frames_MoveBack();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count - 1);
             if (ImGui.SmallButton(">##moveforward"))
                 Frames_MoveForward();
+            ImGui.EndDisabled();
 
             ImGui.SameLine();
+            ImGui.BeginDisabled(_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count - 1);
             if (ImGui.SmallButton(">>##moveend"))
                 Frames_MoveEnd();
+            ImGui.EndDisabled();
 
             ImGui.Separator();
 
@@ -301,29 +326,19 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
         FontPicker window = (FontPicker)sender!;
         if (window.DialogResult)
         {
-            Surface.Font = window.Font;
-            Surface.FontSize = window.FontSize;
+            VisualDocument.Font = window.Font;
+            VisualDocument.FontSize = window.FontSize;
             EditorFontSize = window.FontSize;
             SurfaceFontSize = window.FontSize;
 
             _animatedScreenObject.FontSize = SurfaceFontSize;
-            Surface.FontSize = SurfaceFontSize;
+            VisualDocument.FontSize = SurfaceFontSize;
         }
     }
 
     public override void BuildUIDocument(ImGuiRenderer renderer)
     {
-        BuildUIDocumentStandard(renderer, Surface);
-    }
-
-    public override void OnShow(ImGuiRenderer renderer)
-    {
-        SadConsole.Game.Instance.Screen = Surface;
-    }
-
-    public override void OnHide(ImGuiRenderer renderer)
-    {
-        SadConsole.Game.Instance.Screen = null;
+        BuildUIDocumentStandard(renderer);
     }
 
     public override IEnumerable<IFileHandler> GetLoadHandlers() =>
@@ -357,31 +372,35 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
         CreateSurfaceFromFrame();
     }
 
+    private void ClearTool() =>
+        ((IDocumentTools)this).State.SelectedTool?.DocumentViewChanged(this);
+
     private void CreateSurfaceFromFrame()
     {
-        if (Surface is ScreenSurface surface)
-        {
-            if (surface.SadComponents.Contains(_previousFrameOverlay))
-                surface.SadComponents.Remove(_previousFrameOverlay);
+        Rectangle previousView = default;
 
-            surface.Dispose();
-        }
+        VisualDocument ??= new ScreenSurface(1, 1);
 
-        ICellSurface newSurface = _animatedScreenObject.CurrentFrame.GetSubSurface();
-        Surface = new ScreenSurface(newSurface, null, EditorFontSize);
-        Surface.Render(TimeSpan.Zero);
-        SadConsole.Game.Instance.Screen = Surface;
+        VisualDocument.FontSize = EditorFontSize;
+        ((ICellSurfaceSettable)VisualDocument.Surface).SetSurface(_animatedScreenObject.CurrentFrame.GetSubSurface(), previousView);
+
+        VisualDocument.Render(TimeSpan.Zero);
+        Game.Instance.Screen = VisualDocument;
+
+        ClearTool();
 
         SetupTraceOverlay();
     }
 
     private void SetupTraceOverlay()
     {
+        ClearTool();
+
         if (_showPreviousFrame)
         {
-            if (!Surface.SadComponents.Contains(_previousFrameOverlay))
+            if (!VisualDocument.SadComponents.Contains(_previousFrameOverlay))
             {
-                Surface.SadComponents.Add(_previousFrameOverlay);
+                VisualDocument.SadComponents.Add(_previousFrameOverlay);
                 ((Renderers.SurfaceRenderStep)_previousFrameOverlay.RenderStep!).ComposeTint = Color.White.SetAlpha(_previousFrameOpacity).ToMonoColor();
 
                 if (_animatedScreenObject.CurrentFrameIndex == 0)
@@ -392,58 +411,59 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
         }
         else
         {
-            if (Surface.SadComponents.Contains(_previousFrameOverlay))
-                Surface.SadComponents.Remove(_previousFrameOverlay);
+            if (VisualDocument.SadComponents.Contains(_previousFrameOverlay))
+                VisualDocument.SadComponents.Remove(_previousFrameOverlay);
         }
     }
 
     private void Frames_Reset(ICellSurface frame)
     {
+        ClearTool();
         frame.DefaultBackground = DefaultBackground.ToColor();
         frame.DefaultForeground = DefaultForeground.ToColor();
         frame.Clear();
+
+        if (VisualDocument != null)
+            VisualDocument.IsDirty = true;
     }
 
     private void Frames_GoCurrent()
     {
-        _animatedScreenObject.CurrentFrameIndex = _currentFrameCounter - 1;
+        ClearTool();
         CreateSurfaceFromFrame();
     }
 
     private void Frames_GoNext()
     {
-        _currentFrameCounter++;
-        if (_currentFrameCounter > _animatedScreenObject.Frames.Count)
-            _currentFrameCounter = 1;
-        _animatedScreenObject.CurrentFrameIndex = _currentFrameCounter - 1;
+        ClearTool();
+        _animatedScreenObject.MoveNext(true);
         CreateSurfaceFromFrame();
     }
 
     private void Frames_GoStart()
     {
-        _currentFrameCounter = 1;
-        _animatedScreenObject.CurrentFrameIndex = _currentFrameCounter - 1;
+        ClearTool();
+        _animatedScreenObject.MoveStart();
         CreateSurfaceFromFrame();
     }
 
     private void Frames_GoEnd()
     {
-        _currentFrameCounter = _animatedScreenObject.Frames.Count;
-        _animatedScreenObject.CurrentFrameIndex = _currentFrameCounter - 1;
+        ClearTool();
+        _animatedScreenObject.MoveEnd();
         CreateSurfaceFromFrame();
     }
 
     private void Frames_GoPrevious()
     {
-        _currentFrameCounter--;
-        if (_currentFrameCounter == 0)
-            _currentFrameCounter = _animatedScreenObject.Frames.Count;
-        _animatedScreenObject.CurrentFrameIndex = _currentFrameCounter - 1;
+        ClearTool();
+        _animatedScreenObject.MovePrevious(true);
         CreateSurfaceFromFrame();
     }
 
     private void Frames_Insert()
     {
+        ClearTool();
         Frames_Reset(_animatedScreenObject.CreateFrame());
 
         ICellSurface frame = _animatedScreenObject.Frames[^1];
@@ -455,17 +475,24 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
     private void Frames_CopyPrevious()
     {
-        int targetIndex = _currentFrameCounter - 2;
+        ClearTool();
+        int targetIndex = _animatedScreenObject.CurrentFrameIndex - 1;
         if (targetIndex == -1)
             targetIndex = _animatedScreenObject.Frames.Count - 1;
 
         _animatedScreenObject.Frames[targetIndex].Copy(_animatedScreenObject.CurrentFrame);
-        Surface.IsDirty = true;
+        VisualDocument.IsDirty = true;
     }
 
     private void Frames_Delete()
     {
-        throw new NotImplementedException();
+        ClearTool();
+        _animatedScreenObject.Frames.Remove(_animatedScreenObject.CurrentFrame);
+
+        if (_animatedScreenObject.CurrentFrameIndex == _animatedScreenObject.Frames.Count)
+            _animatedScreenObject.CurrentFrameIndex--;
+
+        Frames_GoCurrent();
     }
 
     private void Frames_AddToEnd() =>
@@ -473,45 +500,37 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
     private void Frames_MoveEnd()
     {
-        if (_currentFrameCounter != _animatedScreenObject.Frames.Count)
-        {
-            ICellSurface frame = _animatedScreenObject.CurrentFrame;
-            _animatedScreenObject.Frames.Remove(frame);
-            _animatedScreenObject.Frames.Add(frame);
-            Frames_GoEnd();
-        }
+        ClearTool();
+        ICellSurface frame = _animatedScreenObject.CurrentFrame;
+        _animatedScreenObject.Frames.Remove(frame);
+        _animatedScreenObject.Frames.Add(frame);
+        Frames_GoEnd();
     }
 
     private void Frames_MoveForward()
     {
-        if (_currentFrameCounter != _animatedScreenObject.Frames.Count)
-        {
-            ICellSurface frame = _animatedScreenObject.CurrentFrame;
-            _animatedScreenObject.Frames.Remove(frame);
-            _animatedScreenObject.Frames.Insert(_animatedScreenObject.CurrentFrameIndex + 1, frame);
-            Frames_GoNext();
-        }
+        ClearTool();
+        ICellSurface frame = _animatedScreenObject.CurrentFrame;
+        _animatedScreenObject.Frames.Remove(frame);
+        _animatedScreenObject.Frames.Insert(_animatedScreenObject.CurrentFrameIndex + 1, frame);
+        Frames_GoNext();
     }
 
     private void Frames_MoveStart()
     {
-        if (_currentFrameCounter != 1)
-        {
-            ICellSurface frame = _animatedScreenObject.CurrentFrame;
-            _animatedScreenObject.Frames.Remove(frame);
-            _animatedScreenObject.Frames.Insert(0, frame);
-            Frames_GoStart();
-        }
+        ClearTool();
+        ICellSurface frame = _animatedScreenObject.CurrentFrame;
+        _animatedScreenObject.Frames.Remove(frame);
+        _animatedScreenObject.Frames.Insert(0, frame);
+        Frames_GoStart();
     }
 
     private void Frames_MoveBack()
     {
-        if (_currentFrameCounter != 1)
-        {
-            ICellSurface frame = _animatedScreenObject.CurrentFrame;
-            _animatedScreenObject.Frames.Remove(frame);
-            _animatedScreenObject.Frames.Insert(_animatedScreenObject.CurrentFrameIndex - 1, frame);
-            Frames_GoPrevious();
-        }
+        ClearTool();
+        ICellSurface frame = _animatedScreenObject.CurrentFrame;
+        _animatedScreenObject.Frames.Remove(frame);
+        _animatedScreenObject.Frames.Insert(_animatedScreenObject.CurrentFrameIndex - 1, frame);
+        Frames_GoPrevious();
     }
 }

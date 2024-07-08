@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using ImGuiNET;
+﻿using ImGuiNET;
 using SadConsole.Components;
 using SadConsole.Editor.GuiParts.Tools;
 using SadConsole.Editor.Model;
@@ -8,7 +6,7 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
 
-internal class Empty : ITool, IOverlay
+internal class Empty : ITool
 {
     private Color _emptyCellColor = Color.NavajoWhite;
     private nint _gridImage = -1;
@@ -16,65 +14,59 @@ internal class Empty : ITool, IOverlay
 
     public string Name => "Empty Cells";
 
-    public Overlay Overlay => _toolOverlay;
-
     public string Description => "Empties existing cells.";
 
     public void BuildSettingsPanel(ImGuiRenderer renderer)
     {
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
-        ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (!isActive) return;
 
         if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
-            surface.Surface[hoveredCellPosition].Clear();
-            surface.Surface[hoveredCellPosition].Glyph = 0;
-            surface.Surface.IsDirty = true;
+            document.VisualDocument.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
 
-            Overlay.Surface.Surface[hoveredCellPosition.X - surface.Surface.ViewPosition.X, hoveredCellPosition.Y - surface.Surface.ViewPosition.Y].Background = _emptyCellColor;
-            Overlay.Surface.IsDirty = true;
+            document.VisualToolLayerLower.Surface!.Surface[hoveredCellPosition.X - document.VisualDocument.Surface.ViewPosition.X, hoveredCellPosition.Y - document.VisualDocument.Surface.ViewPosition.Y].Background = _emptyCellColor;
+            document.VisualToolLayerLower.Surface!.IsDirty = true;
         }
     }
 
     public void OnSelected()
     {
-        DocumentViewChanged();
+        DocumentViewChanged(ImGuiCore.State.GetOpenDocument());
     }
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged()
+    public void DocumentViewChanged(Document document)
     {
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        //document.VisualToolLayerLower.Update(document.VisualToolContainer, TimeSpan.Zero);
 
-        Overlay.Update(surface, TimeSpan.Zero);
+        document.VisualToolLayerLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        document.VisualToolLayerLower.Clear();
 
-        Overlay.Surface.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-        Overlay.Surface.Surface.Clear();
+        var clearCell = new ColoredGlyph(document.VisualDocument.Surface.DefaultForeground, document.VisualDocument.Surface.DefaultBackground, 0);
 
-        var clearCell = new ColoredGlyph(surface.Surface.DefaultForeground, surface.Surface.DefaultBackground, 0);
-
-        for (int index = 0; index < Overlay.Surface.Surface.Count; index++)
+        for (int index = 0; index < document.VisualToolLayerLower.Surface.Surface.Count; index++)
         {
-            ColoredGlyphBase renderCell = surface.Surface[(Point.FromIndex(index, Overlay.Surface.Surface.Width) + surface.Surface.ViewPosition).ToIndex(surface.Surface.Width)];
+            ColoredGlyphBase renderCell = document.VisualDocument.Surface[(Point.FromIndex(index, document.VisualToolLayerLower.Surface.Surface.Width) + document.VisualDocument.Surface.ViewPosition).ToIndex(document.VisualDocument.Surface.Width)];
 
             if (renderCell.Foreground == clearCell.Foreground &&
                 renderCell.Background == clearCell.Background &&
                 renderCell.Glyph == clearCell.Glyph)
 
-                Overlay.Surface.Surface[index].Background = _emptyCellColor;
+                document.VisualToolLayerLower.Surface.Surface[index].Background = _emptyCellColor;
         }
 
         //Overlay.Surface.Render(TimeSpan.Zero);
         //_gridImage = ImGuiCore.Renderer.BindTexture(((Host.GameTexture)_gridSurface.Renderer!.Output).Texture);
     }
 
-    public void DrawOverDocument()
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer)
     {
         //Vector2 min = ImGui.GetItemRectMin();
         //Vector2 max = ImGui.GetItemRectMax();

@@ -17,7 +17,7 @@ internal class Operations : ITool
         //IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         
     }
@@ -26,7 +26,7 @@ internal class Operations : ITool
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

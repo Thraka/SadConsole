@@ -87,7 +87,7 @@ public static partial class ImGuiCore
         // Test code
         var doc = Model.SurfaceDocument.FromSettings(280, 225, Color.White, Color.Black);
         State.OpenDocuments = [.. State.OpenDocuments, doc];
-        ((Model.SurfaceDocument)State.OpenDocuments[0]).Surface.Surface.View = new Rectangle(0, 0, 10, 10);
+        ((Model.SurfaceDocument)State.OpenDocuments[0]).VisualDocument.Surface.View = new Rectangle(0, 0, 10, 10);
     }
 
     public static void ResetUIList()

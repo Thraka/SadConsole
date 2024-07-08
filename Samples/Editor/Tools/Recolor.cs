@@ -41,7 +41,7 @@ internal class Recolor : ITool
 
     public void BuildSettingsPanel(ImGuiRenderer renderer)
     {
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         ImGuiWidgets.BeginGroupPanel("Match");
 
@@ -230,17 +230,17 @@ internal class Recolor : ITool
 
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (!isActive) return;
 
         if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
-            ColoredGlyphBase targetCell = surface.Surface[hoveredCellPosition];
+            ColoredGlyphBase targetCell = document.VisualDocument.Surface[hoveredCellPosition];
 
             bool matched = false;
 
@@ -262,12 +262,12 @@ internal class Recolor : ITool
                 if (_isApplyGlyph)
                     targetCell.Glyph = _applyGlyph;
 
-                surface.IsDirty = true;
+                document.VisualDocument.IsDirty = true;
             }
         }
         else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
-            ColoredGlyphBase tempCell = surface.Surface[hoveredCellPosition];
+            ColoredGlyphBase tempCell = document.VisualDocument.Surface[hoveredCellPosition];
 
             _matchForeground = tempCell.Foreground.ToVector4();
             _matchBackground = tempCell.Background.ToVector4();
@@ -280,7 +280,7 @@ internal class Recolor : ITool
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

@@ -26,7 +26,7 @@ internal class Pencil : ITool
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
         Mirror mirror = SharedToolSettings.Tip.Mirror;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         SettingsTable.DrawCommonSettings("pencilsettings", true, true, true, true, true,
                                          ref foreground, surface.Surface.DefaultForeground.ToVector4(),
@@ -42,23 +42,23 @@ internal class Pencil : ITool
         ImGuiWidgets.EndGroupPanel();
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (!isActive) return;
 
         if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
-            surface.Surface[hoveredCellPosition].Clear();
-            SharedToolSettings.Tip.CopyAppearanceTo(surface.Surface[hoveredCellPosition]);
-            surface.IsDirty = true;
+            document.VisualDocument.Surface[hoveredCellPosition].Clear();
+            SharedToolSettings.Tip.CopyAppearanceTo(document.VisualDocument.Surface[hoveredCellPosition]);
+            document.VisualDocument.IsDirty = true;
         }
         else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
-            surface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
         }
     }
 
@@ -66,7 +66,7 @@ internal class Pencil : ITool
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

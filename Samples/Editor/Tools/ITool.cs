@@ -1,4 +1,5 @@
 ﻿using SadConsole.ImGuiSystem;
+using SadConsole.Editor.Model;
 
 namespace SadConsole.Editor.Tools;
 
@@ -10,13 +11,13 @@ public interface ITool
 
     void BuildSettingsPanel(ImGuiRenderer renderer);
 
-    void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer);
+    void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer);
 
     void OnSelected();
 
     void OnDeselected();
 
-    void DocumentViewChanged();
+    void DocumentViewChanged(Document document);
 
-    void DrawOverDocument();
+    void DrawOverDocument(Document document, ImGuiRenderer renderer);
 }

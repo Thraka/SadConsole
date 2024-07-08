@@ -18,7 +18,7 @@ internal class Info : ITool
     {
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
@@ -42,31 +42,31 @@ internal class Info : ITool
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
                 ImGui.BeginTooltip();
 
-                var fontTexture = renderer.BindTexture(((Host.GameTexture)surface.Font.Image).Texture);
-                var rect = surface.Font.GetGlyphSourceRectangle(surface.Surface[cellPosition].Glyph);
-                var textureSize = new SadRogue.Primitives.Point(surface.Font.Image.Width, surface.Font.Image.Height);
+                var fontTexture = renderer.BindTexture(((Host.GameTexture)document.VisualDocument.Font.Image).Texture);
+                var rect = document.VisualDocument.Font.GetGlyphSourceRectangle(document.VisualDocument.Surface[cellPosition].Glyph);
+                var textureSize = new SadRogue.Primitives.Point(document.VisualDocument.Font.Image.Width, document.VisualDocument.Font.Image.Height);
 
-                ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
+                ImGui.Image(fontTexture, document.VisualDocument.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
                 var cursorPosForSecondFont = ImGui.GetCursorPos();
                 ImGui.SameLine();
                 var cursorPosForDetails = ImGui.GetCursorPos();
                 ImGui.SetCursorPos(cursorPosForSecondFont);
 
-                var rectSolid = surface.Font.SolidGlyphRectangle;
-                ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rectSolid.Position.ToUV(textureSize), (rectSolid.Position + rectSolid.Size).ToUV(textureSize), surface.Surface[cellPosition].Background.ToVector4());
+                var rectSolid = document.VisualDocument.Font.SolidGlyphRectangle;
+                ImGui.Image(fontTexture, document.VisualDocument.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rectSolid.Position.ToUV(textureSize), (rectSolid.Position + rectSolid.Size).ToUV(textureSize), document.VisualDocument.Surface[cellPosition].Background.ToVector4());
                 ImGui.SetCursorPos(cursorPosForSecondFont);
-                ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize), surface.Surface[cellPosition].Foreground.ToVector4());
+                ImGui.Image(fontTexture, document.VisualDocument.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize), document.VisualDocument.Surface[cellPosition].Foreground.ToVector4());
 
                 ImGui.SetCursorPos(cursorPosForDetails);
                 ImGui.BeginGroup();
                 {
-                    ImGui.Text($"Glyph: {surface.Surface[cellPosition].Glyph}");
+                    ImGui.Text($"Glyph: {document.VisualDocument.Surface[cellPosition].Glyph}");
                     ImGui.Text($"Foreground: ");
                     ImGui.SameLine();
-                    ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                    ImGui.ColorButton("surface_cell_color", document.VisualDocument.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
                     ImGui.Text($"Background: ");
                     ImGui.SameLine();
-                    ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                    ImGui.ColorButton("surface_cell_color", document.VisualDocument.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
                 }
                 ImGui.EndGroup();
 
@@ -80,7 +80,7 @@ internal class Info : ITool
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }
