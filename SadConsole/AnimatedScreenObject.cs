@@ -69,7 +69,10 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
         set
         {
             if (value < 0 || value >= Frames.Count)
+            {
                 CurrentFrameIndexValue = 0;
+                IsDirty = true;
+            }
 
             else if (value != CurrentFrameIndexValue)
             {
@@ -192,6 +195,52 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
         State = AnimationState.Restarted;
         State = AnimationState.Playing;
     }
+
+    /// <summary>
+    /// Changes the <see cref="CurrentFrame"/> to the next frame.
+    /// </summary>
+    /// <param name="circular">If true and the current frame is the last, sets the current frame to the first frame.</param>
+    public void MoveNext(bool circular = false)
+    {
+        if (circular)
+        {
+            if (CurrentFrameIndex == Frames.Count - 1)
+                CurrentFrameIndex = 0;
+            else
+                CurrentFrameIndex++;
+        }
+        else
+            CurrentFrameIndex++;
+    }
+
+    /// <summary>
+    /// Changes the <see cref="CurrentFrame"/> to the previous frame.
+    /// </summary>
+    /// <param name="circular">If true and the current frame is the first, sets the current frame to the last frame.</param>
+    public void MovePrevious(bool circular = false)
+    {
+        if (circular)
+        {
+            if (CurrentFrameIndex == 0)
+                CurrentFrameIndex = Frames.Count - 1;
+            else
+                CurrentFrameIndex--;
+        }
+        else
+            CurrentFrameIndex--;
+    }
+
+    /// <summary>
+    /// Changes the <see cref="CurrentFrame"/> to the last frame.
+    /// </summary>
+    public void MoveEnd() =>
+        CurrentFrameIndex = Frames.Count - 1;
+
+    /// <summary>
+    /// Changes the <see cref="CurrentFrame"/> to the first frame.
+    /// </summary>
+    public void MoveStart() =>
+        CurrentFrameIndex = 0;
 
     /// <summary>
     /// Creates an animated surface that looks like static noise.
