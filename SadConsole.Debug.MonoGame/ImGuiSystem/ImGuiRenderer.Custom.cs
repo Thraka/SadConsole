@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SadConsole.ImGuiSystem;
 
@@ -31,5 +32,15 @@ public partial class ImGuiRenderer
     {
         ImGui.GetIO().NativePtr->FontDefault = value;
         RebuildFontAtlas();
+    }
+
+    public bool HasBoundTexture(Texture2D texture) =>
+        _loadedTexturesByTexture.ContainsKey(texture);
+
+    public IntPtr GetBoundTexturePointer(Texture2D texture)
+    {
+        if (!_loadedTexturesByTexture.ContainsKey(texture)) throw new Exception("Texture isn't bound");
+
+        return _loadedTexturesByTexture[texture];
     }
 }
