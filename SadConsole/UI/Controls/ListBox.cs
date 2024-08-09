@@ -241,6 +241,9 @@ public partial class ListBox : CompositeControl
 
         if (ScrollBar != null)
         {
+            if (ScrollBar.IsFocused)
+                ScrollBar.IsFocused = false;
+
             ScrollBar.ValueChanged -= _scrollbar_ValueChanged;
             value = ScrollBar.Value;
             max = ScrollBar.MaximumValue;
