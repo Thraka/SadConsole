@@ -308,6 +308,7 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
     /// <param name="convertMode">The mode used when converting the texture to a surface.</param>
     /// <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Background"/>.</param>
     /// <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
+    /// <param name="frameDefaultBackground">The default background to use in the animation frames. Defaults to transparent.</param>
     /// 
     /// <returns>An instance of <see cref="AnimatedScreenObject"/> with converted frames.</returns>
     /// 
@@ -320,10 +321,11 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
     public static AnimatedScreenObject FromImage(string name, string filePath, Point frameLayout, TimeSpan frameDuration,
         Point? pixelPadding = null, Point? frameStartAndFinish = null, IFont? font = null, Action<ColoredGlyphBase>? action = null,
         TextureConvertMode convertMode = TextureConvertMode.Foreground, TextureConvertForegroundStyle convertForegroundStyle = TextureConvertForegroundStyle.Block,
-        TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel)
+        TextureConvertBackgroundStyle convertBackgroundStyle = TextureConvertBackgroundStyle.Pixel, Color? frameDefaultBackground = null)
     {
         // set defaults
         font ??= GameHost.Instance.DefaultFont;
+        frameDefaultBackground ??= Color.Transparent;
         Point padding = pixelPadding ?? (0, 0);
         frameStartAndFinish ??= (0, 0);
 
@@ -336,6 +338,7 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
 
         // load the image
         using ITexture image = GameHost.Instance.GetTexture(filePath);
+        
         Point imageSize = (image.Width, image.Height);
 
         // convert the image to surface
@@ -398,6 +401,8 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
         void CopyFrameToClip()
         {
             CellSurface frame = (CellSurface)clip.CreateFrame();
+            frame.DefaultBackground = frameDefaultBackground.Value;
+            frame.Clear();
             convertedImage.Copy(currentFrameArea, frame, 0, 0);
             if (action != null) Array.ForEach(frame.Cells, action);
         }
