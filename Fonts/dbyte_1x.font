@@ -1,0 +1,10 @@
+{
+    "$type": "SadConsole.SadFont, SadConsole",
+    "Name": "DINOBYTE_6x8",
+    "FilePath": "dbyte_1x.png",
+    "GlyphHeight": 8,
+    "GlyphPadding": 0,
+    "GlyphWidth": 6,
+    "SolidGlyphIndex": 219,
+    "Columns": 16
+}
