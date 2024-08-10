@@ -17,7 +17,7 @@
 
   <PropertyGroup>
     <!-- monogame, sfml, or fna -->
-    <GameHost>fna</GameHost>
+    <GameHost>monogame</GameHost>
     
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
@@ -58,7 +58,6 @@
     <MonoGameContentReference Include="Content\Assets.mgcb" />
     <None Remove="Content\bin\**\*" />
     <None Remove="Content\obj\**\*" />
-
   </ItemGroup>
 
   <!-- Files related to compiling and running the demos. -->
