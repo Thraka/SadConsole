@@ -64,6 +64,7 @@ internal class Text : ITool
             if (ImGui.IsMouseReleased(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
                 OnDeselected();
+                document.VisualToolLayerUpper.Clear();
             }
         }
         else
@@ -80,10 +81,11 @@ internal class Text : ITool
         {
             _isWriting = true;
             _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
+            document.VisualDocument.Surface.Copy(document.VisualDocument.Surface.View, document.VisualToolLayerUpper, 0, 0);
             if (_cursor is null)
             {
                 _cursor = new() { IsVisible = true, IsEnabled = true };
-                document.VisualDocument.SadComponents.Add(_cursor);
+                document.VisualToolContainer.SadComponents.Add(_cursor);
             }
             _cursor.Position = _cursorPosition;
             _cursor.PrintAppearance = SharedToolSettings.Tip;

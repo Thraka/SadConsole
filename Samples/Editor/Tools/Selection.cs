@@ -60,6 +60,9 @@ internal class Selection : ITool
         if (ImGui.Button("Move"))
         {
             _cloneState = CloneState.Move;
+
+            // Clear the spots where the selection was
+            ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.Clear(_boxArea.Translate(ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.ViewPosition));
         }
         ImGui.EndDisabled();
 

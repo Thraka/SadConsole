@@ -12,17 +12,13 @@ using SadConsole.Renderers;
 
 namespace SadConsole.Editor.Model;
 
+[DataContract]
 public abstract class Document
 {
     private static int _id;
     private string _uniqueIdentifier = GenerateCharacterId();
 
-    //TODO: Kill this off and replace with CompositeRenderer
-    // Do I need to remove IRenderer and just make a single
-    // class used for this? Maybe just a method... I mean
-    // this is really just composing VisualDoc + two Overlays...
     private BoundTexture2D? _surfaceDisplayTexture;
-    private BoundTexture2D? _overlayDisplayTexture;
 
     public RenderTarget2D _displayTexture;
 
@@ -35,8 +31,10 @@ public abstract class Document
     public DocumentTypes DocumentType;
 
     public ScreenObject VisualContainer;
+
     [DataMember]
     public IScreenSurface VisualDocument;
+
     public LayeredScreenSurface VisualToolContainer;
     public CellSurface VisualToolLayerLower;
     public CellSurface VisualToolLayerUpper;
