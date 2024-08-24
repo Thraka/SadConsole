@@ -11,14 +11,13 @@ internal class Selection : ITool
     private bool _isFirstPointSelected = false;
     private Rectangle _boxArea;
     private Point _firstPoint;
-    private bool _boxCreated;
     private bool _isCancelled;
     private bool _isPasting;
     CellSurface? _blueprint;
     private string[] _blueprintNames = [];
     private CellSurface[] _blueprintValues = [];
     private int _blueprintSelection = -1;
-    private CloneState _cloneState;
+    private ToolMode _toolMode;
 
     private ShapeSettings.Settings _shapeSettings;
 
@@ -28,6 +27,93 @@ internal class Selection : ITool
         ...
         To cancel drawing, depress the right mouse button or press the ESC key.
         """;
+
+    private void DrawBlueprint()
+    {
+        if (_blueprint == null) return;
+
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerLower.Surface.Clear();
+        _blueprint.Copy(document.VisualToolLayerLower.Surface, _boxArea.X, _boxArea.Y);
+
+        DrawBlueprintBox();
+    }
+
+    private void DrawBlueprintBox()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerUpper.Surface.Clear();
+        document.VisualToolLayerUpper.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxFilled(borderStyle: ICellSurface.ConnectedLineThin,
+                                                                                borderColors: new ColoredGlyph(Color.White, Color.Black),
+                                                                                fillStyle: new ColoredGlyph(Color.White.SetAlpha(150), Color.Transparent, 176)));
+    }
+
+    private void ToolLayersUpperClear()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerUpper.Clear();
+    }
+
+    private void ToolLayersLowerClear()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerLower.Clear();
+    }
+
+    private void ToolLayersClear()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerLower.Clear();
+        document.VisualToolLayerUpper.Clear();
+    }
+
+    private void GetBlueprintFromSelection()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        _blueprint = new CellSurface(_boxArea.Width, _boxArea.Height);
+        document.VisualDocument.Surface.Copy(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), _blueprint, 0, 0);
+    }
+
+    public void SelectionReset()
+    {
+        _toolMode = ToolMode.Selecting;
+        _firstPoint = Point.None;
+        _boxArea = Rectangle.Empty;
+        _isFirstPointSelected = false;
+        _blueprint = null;
+        ToolLayersClear();
+    }
+
+    public void SelectionMove()
+    {
+        SelectionCopy();
+        SelectionErase();
+        DrawBlueprint();
+    }
+
+    public void SelectionCopy()
+    {
+        GetBlueprintFromSelection();
+    }
+
+    public void SelectionErase()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualDocument.Surface.Clear(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition));
+    }
+
+    public void SelectionStore(string name)
+    {
+        _blueprintNames = [.. _blueprintNames, name];
+        _blueprintValues = [.. _blueprintValues, _blueprint];
+    }
+
+    public void SelectionBluesprintStamp()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        Point location = _boxArea.Position + document.VisualDocument.Surface.ViewPosition;
+        _blueprint.Copy(document.VisualDocument.Surface, location.X, location.Y);
+    }
 
     public void BuildSettingsPanel(ImGuiRenderer renderer)
     {
@@ -46,41 +132,55 @@ internal class Selection : ITool
          * Btn
          * 
         */
-        
+
+        // Reset -> Selecting
+        // Selecting
+        // Selected
+        //   Move  -> Erase -> Blueprint Selected
+        //   Copy  -> Blueprint Selected
+        //   Erase -> Reset
+        //   Store -> Popup -> Selected
+        // Blueprint Selected
+        //   Stamp
+        // Choose Blueprint -> Blueprint Selected
+        // 
+
         ImGuiWidgets.BeginGroupPanel("Settings");
 
-        ImGui.BeginDisabled(_cloneState != CloneState.Selected);
+        ImGui.BeginDisabled(_toolMode == ToolMode.Selecting);
         if (ImGui.Button("Reset"))
         {
             OnDeselected();
         }
         ImGui.EndDisabled();
 
-        ImGui.BeginDisabled(_cloneState != CloneState.Selected);
+        ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Move"))
         {
-            _cloneState = CloneState.Move;
+            _toolMode = ToolMode.BlueprintMoveOnce;
 
-            // Clear the spots where the selection was
-            ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.Clear(_boxArea.Translate(ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.ViewPosition));
+            SelectionMove();
         }
         ImGui.EndDisabled();
 
-        ImGui.BeginDisabled(_cloneState != CloneState.Selected);
+        ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Copy"))
         {
+            _toolMode = ToolMode.BlueprintMove;
 
+            SelectionCopy();
         }
         ImGui.EndDisabled();
 
-        ImGui.BeginDisabled(_cloneState != CloneState.Selected);
+        ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Clear"))
         {
-
+            SelectionErase();
+            SelectionReset();
         }
         ImGui.EndDisabled();
 
-        ImGui.BeginDisabled(_cloneState != CloneState.Selected);
+        ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Store"))
         {
             ImGui.OpenPopup("Blueprint Name");
@@ -97,8 +197,7 @@ internal class Selection : ITool
             {
                 if (accepted)
                 {
-                    _blueprintNames = [.. _blueprintNames, blueprintName];
-                    _blueprintValues = [.. _blueprintValues, _blueprint];
+                    SelectionStore(blueprintName);
                 }
             }
         }
@@ -106,7 +205,16 @@ internal class Selection : ITool
         ImGui.Separator();
         ImGui.Text("Stored Blueprints");
         
-        ImGui.ListBox("##listblueprints", ref _blueprintSelection, _blueprintNames, _blueprintNames.Length, 5);
+        if (ImGui.ListBox("##listblueprints", ref _blueprintSelection, _blueprintNames, _blueprintNames.Length, 5))
+        {
+            _toolMode = ToolMode.BlueprintMove;
+            
+            _blueprint = _blueprintValues[_blueprintSelection];
+            _boxArea = _blueprint.Area;
+
+            DrawBlueprint();
+            _blueprintSelection = -1;
+        }
 
         ImGuiWidgets.EndGroupPanel();
     }
@@ -124,14 +232,15 @@ internal class Selection : ITool
         // Cancelled
         if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
         {
-            OnDeselected();
+            SelectionReset();
             _isCancelled = true;
         }
 
         if (_isCancelled)
             return;
 
-        if (_cloneState == CloneState.SelectingPoint1)
+        // Box selection logic
+        if (_toolMode == ToolMode.Selecting)
         {
             if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
@@ -145,87 +254,57 @@ internal class Selection : ITool
                 Point secondPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
 
                 _boxArea = new(new Point(Math.Min(_firstPoint.X, secondPoint.X), Math.Min(_firstPoint.Y, secondPoint.Y)),
-                                new Point(Math.Max(_firstPoint.X, secondPoint.X), Math.Max(_firstPoint.Y, secondPoint.Y)));
+                               new Point(Math.Max(_firstPoint.X, secondPoint.X), Math.Max(_firstPoint.Y, secondPoint.Y)));
 
-                document.VisualToolLayerLower.Surface.Clear();
-                document.VisualToolLayerLower.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxFilled(borderStyle: ICellSurface.ConnectedLineThin,
-                                                                                        borderColors: new ColoredGlyph(Color.White, Color.Black),
-                                                                                        fillStyle: new ColoredGlyph(Color.White.SetAlpha(150), Color.Transparent, 176)));
+                ToolLayersLowerClear();
+                DrawBlueprintBox();
             }
             else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 if (_boxArea != Rectangle.Empty)
                 {
-                    _blueprint = new(_boxArea.Width, _boxArea.Height);
-                    document.VisualDocument.Surface.Copy(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), _blueprint, 0, 0);
-                    _boxCreated = true;
+                    GetBlueprintFromSelection();
                     _isFirstPointSelected = false;
-                    _cloneState = CloneState.Selected;
+                    _toolMode = ToolMode.SelectedArea;
+
                 }
                 else
                 {
-                    OnDeselected();
+                    SelectionReset();
                 }
             }
         }
 
         // Reset by mouse or keyboard
-        else if (_cloneState == CloneState.Selected)
+        else if (_toolMode == ToolMode.SelectedArea)
         {
             if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
-                OnDeselected();
+                SelectionReset();
+            }
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+            {
+                SelectionReset();
             }
         }
+        
 
         // Movement mode
-        else if (_cloneState == CloneState.Move)
+        else if (_toolMode == ToolMode.BlueprintMove || _toolMode == ToolMode.BlueprintMoveOnce)
         {
+            _boxArea = _boxArea.WithPosition(hoveredCellPosition - document.VisualDocument.Surface.ViewPosition);
+            DrawBlueprint();
 
-        }
-
-        ////////////////////////////////////////////////////////
-
-        if (_isPasting)
-        {
-            _boxArea = _boxArea.WithCenter(hoveredCellPosition - document.VisualDocument.Surface.ViewPosition);
-            document.VisualToolLayerLower.Surface.Clear();
-            document.VisualToolLayerLower.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxThin(Color.White));
-        }
-        else
-        {
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+            if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             {
-                if (!_isFirstPointSelected)
-                {
-                    _isFirstPointSelected = true;
+                SelectionBluesprintStamp();
 
-                    _firstPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-                }
-
-                Point secondPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-
-                _boxArea = new(new Point(Math.Min(_firstPoint.X, secondPoint.X), Math.Min(_firstPoint.Y, secondPoint.Y)),
-                                new Point(Math.Max(_firstPoint.X, secondPoint.X), Math.Max(_firstPoint.Y, secondPoint.Y)));
-
-                document.VisualToolLayerLower.Surface.Clear();
-                document.VisualToolLayerLower.Surface.DrawBox(_boxArea, ShapeParameters.CreateStyledBoxFilled(borderStyle: ICellSurface.ConnectedLineThin,
-                                                                                        borderColors: new ColoredGlyph(Color.White, Color.Black),
-                                                                                        fillStyle: new ColoredGlyph(Color.White.SetAlpha(150), Color.Transparent, 176)));
+                if (_toolMode == ToolMode.BlueprintMoveOnce)
+                    SelectionReset();
             }
-            else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+            else if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
-                if (_boxArea != Rectangle.Empty)
-                {
-                    _blueprint = new(_boxArea.Width, _boxArea.Height);
-                    document.VisualDocument.Surface.Copy(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), _blueprint, 0, 0);
-                    _boxCreated = true;
-                    _isFirstPointSelected = false;
-                }
-            }
-            else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
-            {
-                OnDeselected();
+                SelectionReset();
             }
         }
     }
@@ -237,12 +316,14 @@ internal class Selection : ITool
 
     public void OnDeselected()
     {
+        if (_toolMode == ToolMode.BlueprintMove)
+            SelectionBluesprintStamp();
+
+        SelectionReset();
+
         _isCancelled = false;
-        _boxArea = Rectangle.Empty;
-        _isFirstPointSelected = false;
-        _boxCreated = false;
         _blueprint = null;
-        _cloneState = CloneState.SelectingPoint1;
+        _toolMode = ToolMode.Selecting;
     }
 
     public void DocumentViewChanged(Document document)
@@ -252,13 +333,11 @@ internal class Selection : ITool
 
     public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 
-
-    public enum CloneState
+    public enum ToolMode
     {
-        SelectingPoint1,
-        Selected,
-        Stamp,
-        Clear,
-        Move
+        Selecting,
+        SelectedArea,
+        BlueprintMove,
+        BlueprintMoveOnce,
     }
 }
