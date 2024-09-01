@@ -101,6 +101,9 @@ public class SaveFile : ImGuiWindow
                     string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
                     object savableInstance = Document!.DehydrateToFileHandler(_fileLoaders[_fileLoaderSelectedIndex], file);
                     _fileLoaders[_fileLoaderSelectedIndex].Save(savableInstance, file);
+                    // TODO: Support editing palettes and saving them
+                    //if (Document.HasPalette)
+                    //    Document.Palette.Save(file + ".pal");
                     DialogResult = true;
                     IsOpen = false;
                 }

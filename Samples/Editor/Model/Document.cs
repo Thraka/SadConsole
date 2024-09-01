@@ -39,6 +39,9 @@ public abstract class Document
     public CellSurface VisualToolLayerLower;
     public CellSurface VisualToolLayerUpper;
 
+    public bool HasPalette = false;
+    public Palette Palette = new();
+
     protected void ComposeVisual()
     {
         VisualToolContainer ??= new(VisualDocument.Surface.ViewWidth, VisualDocument.Surface.ViewHeight);
@@ -235,6 +238,17 @@ public abstract class Document
             }
         }
         ImGui.EndChild();
+    }
+
+    protected void LoadPaletteIfExist(string file)
+    {
+        if (System.IO.File.Exists(file))
+        {
+            Palette pal = new();
+            pal.Load(file);
+            Palette = pal;
+            HasPalette = true;
+        }
     }
 
 }

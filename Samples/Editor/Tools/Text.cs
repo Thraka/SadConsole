@@ -64,7 +64,7 @@ internal class Text : ITool
             if (ImGui.IsMouseReleased(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
                 OnDeselected();
-                document.VisualToolLayerUpper.Clear();
+                document.VisualToolLayerLower.Clear();
             }
         }
         else
@@ -79,19 +79,43 @@ internal class Text : ITool
 
         if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
-            _isWriting = true;
-            _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-            document.VisualDocument.Surface.Copy(document.VisualDocument.Surface.View, document.VisualToolLayerUpper, 0, 0);
-            if (_cursor is null)
+            if (_isWriting)
             {
-                _cursor = new() { IsVisible = true, IsEnabled = true };
-                document.VisualToolContainer.SadComponents.Add(_cursor);
+                _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
+                _cursor.Position = _cursorPosition;
             }
-            _cursor.Position = _cursorPosition;
-            _cursor.PrintAppearance = SharedToolSettings.Tip;
-            _cursor.PrintOnlyCharacterData = false;
-            _cursor.PrintAppearanceMatchesHost = false;
-            ImGuiCore.State.GetOpenDocument().Options.DisableScrolling = true;
+            else
+            {
+                _isWriting = true;
+                _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
+                document.VisualDocument.Surface.Copy(document.VisualDocument.Surface.View, document.VisualToolLayerLower, 0, 0);
+                if (_cursor is null)
+                {
+                    _cursor = new() { IsVisible = true, IsEnabled = true };
+                    document.VisualToolContainer.SadComponents.Add(_cursor);
+                }
+                _cursor.Position = _cursorPosition;
+                _cursor.PrintAppearance = SharedToolSettings.Tip;
+                _cursor.PrintOnlyCharacterData = false;
+                _cursor.PrintAppearanceMatchesHost = false;
+                document.Options.DisableScrolling = true;
+            }
+        }
+    }
+
+    private void ClearCursorCopySurface()
+    {
+        if (_cursor is not null)
+        {
+            _keyboard.Clear();
+            _isWriting = false;
+
+            Document document = ImGuiCore.State.GetOpenDocument();
+            document.VisualToolLayerLower.Copy(document.VisualToolLayerLower.Area, document.VisualDocument.Surface, document.VisualDocument.Surface.View.X, document.VisualDocument.Surface.View.Y);
+            document.VisualToolLayerLower.Clear();
+            document.VisualToolContainer.SadComponents.Remove(_cursor);
+            document.Options.DisableScrolling = false;
+            _cursor = null;
         }
     }
 
@@ -99,18 +123,7 @@ internal class Text : ITool
 
     public void OnDeselected()
     {
-        _keyboard.Clear();
-        _isWriting = false;
-
-        Document doc = ImGuiCore.State.GetOpenDocument();
-
-        if (_cursor != null)
-        {
-            doc.VisualDocument.SadComponents.Remove(_cursor);
-            _cursor = null;
-        }
-
-        doc.Options.DisableScrolling = false;
+        ClearCursorCopySurface();
     }
 
     public void DocumentViewChanged(Document document) { }

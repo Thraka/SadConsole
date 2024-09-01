@@ -269,10 +269,20 @@ internal class Recolor : ITool
         {
             ColoredGlyphBase tempCell = document.VisualDocument.Surface[hoveredCellPosition];
 
-            _matchForeground = tempCell.Foreground.ToVector4();
-            _matchBackground = tempCell.Background.ToVector4();
-            _matchMirror = tempCell.Mirror;
-            _matchGlyph = tempCell.Glyph;
+            if (ImGui.IsKeyDown(ImGuiKey.ModShift))
+            {
+                _applyForeground = tempCell.Foreground.ToVector4();
+                _applyBackground = tempCell.Background.ToVector4();
+                _applyMirror = tempCell.Mirror;
+                _applyGlyph = tempCell.Glyph;
+            }
+            else
+            {
+                _matchForeground = tempCell.Foreground.ToVector4();
+                _matchBackground = tempCell.Background.ToVector4();
+                _matchMirror = tempCell.Mirror;
+                _matchGlyph = tempCell.Glyph;
+            }
         }
     }
 

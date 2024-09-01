@@ -230,6 +230,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             VisualDocument.FontSize = EditorFontSize;
             VisualDocument.Render(TimeSpan.Zero);
             ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else if (handler is SurfaceFileCompressed compressedHandler)
@@ -243,6 +244,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             SurfaceFontSize = VisualDocument.FontSize;
             VisualDocument.Render(TimeSpan.Zero);
             ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else if (handler is SurfaceFile surfaceHandler)
@@ -256,6 +258,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             SurfaceFontSize = VisualDocument.FontSize;
             VisualDocument.Render(TimeSpan.Zero);
             ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else

@@ -19,6 +19,8 @@ public static partial class ImGuiCore
 
         //public static Dictionary<IFont, Texture2D> FontTexturesPure;
 
+        public static Model.Palette Palette = new();
+
         public static Model.Document GetOpenDocument() => OpenDocuments[SelectedDocumentIndex];
 
         public static class LayoutInfo

@@ -40,7 +40,12 @@ internal class Empty : ITool
         DocumentViewChanged(ImGuiCore.State.GetOpenDocument());
     }
 
-    public void OnDeselected() { }
+    public void OnDeselected()
+    {
+        Document document = ImGuiCore.State.GetOpenDocument();
+        document.VisualToolLayerLower.Surface.DefaultBackground = Color.Transparent;
+        document.VisualToolLayerLower.Clear();
+    }
 
     public void DocumentViewChanged(Document document)
     {

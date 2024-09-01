@@ -27,9 +27,18 @@ internal static class ShapeSettings
         // flags
         public bool UseBoxBorderStyle;
 
-        public ShapeParameters ToShapeParameters() =>
-            new ShapeParameters(HasBorder, BorderGlyph, IgnoreBorderForeground, IgnoreBorderBackground, IgnoreBorderGlyph, IgnoreBorderMirror,
+        public ShapeParameters ToShapeParameters()
+        {
+            if (!HasBorder && HasFill)
+            {
+                return new ShapeParameters(true, FillGlyph, IgnoreFillForeground, IgnoreFillBackground, IgnoreFillGlyph, IgnoreFillMirror,
+                                HasFill, FillGlyph, IgnoreFillForeground, IgnoreFillBackground, IgnoreFillGlyph, IgnoreFillMirror,
+                                ICellSurface.ConnectedLineEmpty, null);
+            }
+            
+            return new ShapeParameters(HasBorder, BorderGlyph, IgnoreBorderForeground, IgnoreBorderBackground, IgnoreBorderGlyph, IgnoreBorderMirror,
                                 HasFill, FillGlyph, IgnoreFillForeground, IgnoreFillBackground, IgnoreFillGlyph, IgnoreFillMirror,
                                 BoxBorderStyle, BoxBorderStyleGlyphs);
+        }
     }
 }
