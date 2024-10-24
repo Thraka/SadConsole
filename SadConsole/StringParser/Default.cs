@@ -17,8 +17,11 @@ public class Default : IParser
     public Dictionary<string, Func<string>> Variables { get; } = new();
 
     /// <summary>
-    /// Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
+    /// Custom processor called before the build in command resolver.
     /// </summary>
+    /// <remarks>
+    /// Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
+    /// </remarks>
     public Func<string, string, ColoredGlyphAndEffect[], ICellSurface?, ParseCommandStacks?, ParseCommandBase?>? CustomProcessor;
 
     /// <summary>
