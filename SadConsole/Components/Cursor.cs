@@ -87,7 +87,9 @@ public class Cursor : IComponent, IDisposable
         set
         {
             _cursorCellEffect = value;
-            _cursorCellOriginal.CopyAppearanceTo(_cursorCell, true);
+
+            if (_cursorCell != null)
+                _cursorCellOriginal?.CopyAppearanceTo(_cursorCell, true);
         }
     }
 
