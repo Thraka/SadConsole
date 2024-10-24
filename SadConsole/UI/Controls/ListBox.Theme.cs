@@ -12,7 +12,7 @@ public partial class ListBox
     /// <summary>
     /// Internal flag to indicate the scroll bar needs to be reconfigured.
     /// </summary>
-    protected bool _reconfigureSrollBar;
+    protected bool _reconfigureScrollBar;
 
     /// <summary>
     /// The drawing theme for the border when <see cref="DrawBorder"/> is true.
@@ -37,7 +37,7 @@ public partial class ListBox
             if (_drawBorder != value)
             {
                 _drawBorder = value;
-                _reconfigureSrollBar = true;
+                _reconfigureScrollBar = true;
             }
         }
     }
@@ -118,10 +118,10 @@ public partial class ListBox
             return;
         }
 
-        if (_reconfigureSrollBar)
+        if (_reconfigureScrollBar)
         {
             SetupScrollBar();
-            _reconfigureSrollBar = false;
+            _reconfigureScrollBar = false;
         }
 
         RefreshThemeStateColors(FindThemeColors());
