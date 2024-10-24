@@ -10,10 +10,12 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- When a Cursor is removed from a host object, the object is set to dirty now.
-- Overlay component now calls update on the attached visual.
-- Fix bug with DrawCircle not setting dirty.
-- Fix bug with DrawBox not respecting ignore glyph setting.
+- Fixed small bug when cursor's effect was removed.
+- StringParser's base command object has a virtual Removed method.
+- StringParser's Recolor command can use 'w' in place of length to specify that it recolors 'word' length: until a space or \0 character is reached.
+- StringParser's Blink command now has the blink effect RestoreCellOnRemoved set to true.
+- NamedColor supporting type which is just a collection of named color values for serialization.
+- Fix some spelling errors.
     </PackageReleaseNotes>
   </PropertyGroup>
 

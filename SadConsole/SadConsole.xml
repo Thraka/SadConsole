@@ -11058,9 +11058,7 @@
         </member>
         <member name="M:SadConsole.StringValidation.LettersOnly">
             <remarks>
-            Pattern:<br/>
-            <code>[a-zA-Z]</code><br/>
-            Explanation:<br/>
+            Pattern explanation:<br/>
             <code>
             ○ Match a character in the set [A-Za-z].<br/>
             </code>
@@ -15160,9 +15158,6 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
-            <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
 </doc>

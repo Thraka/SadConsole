@@ -119,20 +119,11 @@ End Module
 
 ## Latest changes
 
-v10.4.0 (03/31/2024)
+v10.4.2 (10/23/2024)
 
-New versioning system. Versions for SadConsole will be in the following format: [all libs major].[all libs minor].[individual lib revision]
-
-When patches come out for the indvidual libraries, the X in 10.0.X would increment. These would be like host updates, or the extended library, but not public facing changes in SadConsole itself. If SadConsole itself updates, the X in 10.X.0 would increment. All libraries would increment with SadConsole, and the individual lib revisions would reset to 0. The X on X.0.0 would indicate a major change to SadConsole with most likely a lot of bigger breaking changes.
-
-That said, SadConsole is resetting all versions to v10.4.0 for this release. From now on, the new versioning system is in place.
-
-- [Breaking] A minor breaking change. If you were creating your own `IConfigurator` startup configs, the `Run` method's parameter changed from `Game` to `GameHost`.
-
-- [Core] Added `Components.Overlay` which displays a surface on top of an existing console/surface object as a top layer.
-- [Core] Bug: `Font.OnFontChanged` wasn't actually being called. It is now.
-- [Core] Added `Coroutine` NuGet library. This is included now with SadConsole.
-- [Core] Added `CoroutineHandlerComponent` which is a manager that you can add to an object and coroutines to.
-- [Core] `Cursor.PrintCoroutine` which prints as a coroutine, pausing at each character.
-- [Core] `Instructions.DrawString` updated to use `Cursor.PrintCoroutine` which lets it pretty print word breaks.
-- [Core] XML docs didn't genereate correctly for the last build.
+- [Core] Fixed small bug when cursor's effect was removed.
+- [Core] `StringParser`'s base command object has a virtual `Removed` method.
+- [Core] `StringParser`'s Recolor command can use 'w' in place of length to specify that it recolors 'word' length: until a space or \0 character is reached.
+- [Core] `StringParser`'s Blink command now has the blink effect `RestoreCellOnRemoved` set to true.
+- [Core] `NamedColor` supporting type which is just a collection of named color values for serialization.
+- [Core] Fix some spelling errors.
