@@ -191,6 +191,28 @@
             Restarts the animation from the first frame.
             </summary>
         </member>
+        <member name="M:SadConsole.AnimatedScreenObject.MoveNext(System.Boolean)">
+            <summary>
+            Changes the <see cref="P:SadConsole.AnimatedScreenObject.CurrentFrame"/> to the next frame.
+            </summary>
+            <param name="circular">If true and the current frame is the last, sets the current frame to the first frame.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.MovePrevious(System.Boolean)">
+            <summary>
+            Changes the <see cref="P:SadConsole.AnimatedScreenObject.CurrentFrame"/> to the previous frame.
+            </summary>
+            <param name="circular">If true and the current frame is the first, sets the current frame to the last frame.</param>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.MoveEnd">
+            <summary>
+            Changes the <see cref="P:SadConsole.AnimatedScreenObject.CurrentFrame"/> to the last frame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.AnimatedScreenObject.MoveStart">
+            <summary>
+            Changes the <see cref="P:SadConsole.AnimatedScreenObject.CurrentFrame"/> to the first frame.
+            </summary>
+        </member>
         <member name="M:SadConsole.AnimatedScreenObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
             <summary>
             Creates an animated surface that looks like static noise.
@@ -203,7 +225,7 @@
             <param name="foreground">The foreground color of the animation. Defaults to white.</param>
             <returns>An animation.</returns>
         </member>
-        <member name="M:SadConsole.AnimatedScreenObject.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyphBase},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle)">
+        <member name="M:SadConsole.AnimatedScreenObject.FromImage(System.String,System.String,SadRogue.Primitives.Point,System.TimeSpan,System.Nullable{SadRogue.Primitives.Point},System.Nullable{SadRogue.Primitives.Point},SadConsole.IFont,System.Action{SadConsole.ColoredGlyphBase},SadConsole.TextureConvertMode,SadConsole.TextureConvertForegroundStyle,SadConsole.TextureConvertBackgroundStyle,System.Nullable{SadRogue.Primitives.Color})">
             <summary>
             Converts an image file containing frames to an instance of <see cref="T:SadConsole.AnimatedScreenObject"/>.
             </summary>
@@ -218,6 +240,7 @@
             <param name="convertMode">The mode used when converting the texture to a surface.</param>
             <param name="convertBackgroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="convertForegroundStyle">The style to use when <paramref name="convertMode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
+            <param name="frameDefaultBackground">The default background to use in the animation frames. Defaults to transparent.</param>
             
             <returns>An instance of <see cref="T:SadConsole.AnimatedScreenObject"/> with converted frames.</returns>
             
@@ -10545,8 +10568,11 @@
         </member>
         <member name="F:SadConsole.StringParser.Default.CustomProcessor">
             <summary>
-            Custom processor called if any built in command is not triggerd. Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
+            Custom processor called before the build in command resolver.
             </summary>
+            <remarks>
+            Signature is ("command", "parameters", existing glyphs, text surface, associated editor, command stacks).
+            </remarks>
         </member>
         <member name="M:SadConsole.StringParser.Default.Parse(System.ReadOnlySpan{System.Char},System.Int32,SadConsole.ICellSurface,SadConsole.StringParser.ParseCommandStacks)">
             <summary>
@@ -10634,11 +10660,16 @@
             </summary>
             <param name="glyphState">The current glyph being built.</param>
             <param name="glyphString">The current string of glyphs that has been processed until now.</param>
-            <param name="surfaceIndex">Where on the surface this flyph will appear.</param>
+            <param name="surfaceIndex">Where on the surface this glyph will appear.</param>
             <param name="surface">The surface associated with the glyph.</param>
             <param name="stringIndex">Where in the original string this glyph is from.</param>
             <param name="processedString">The entire string being processed.</param>
             <param name="commandStack">The state of commands.</param>
+        </member>
+        <member name="M:SadConsole.StringParser.ParseCommandBase.Removed">
+            <summary>
+            Called when the command is removed from its stack.
+            </summary>
         </member>
         <member name="T:SadConsole.StringParser.ParseCommandBlink">
             <summary>
@@ -12958,7 +12989,7 @@
             <returns>A tuple containing the item and the item's array position.</returns> 
             <exception cref="T:System.Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
         </member>
-        <member name="F:SadConsole.UI.Controls.ListBox._reconfigureSrollBar">
+        <member name="F:SadConsole.UI.Controls.ListBox._reconfigureScrollBar">
             <summary>
             Internal flag to indicate the scroll bar needs to be reconfigured.
             </summary>
@@ -13515,7 +13546,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.OnClick">
             <summary>
-            Perfroms a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
+            Performs a click on the base button and also toggles the <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> property.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.RadioButton.OnIsSelected">
@@ -14405,6 +14436,65 @@
             Creates a new event args object.
             </summary>
             <param name="key">The key being pressed.</param>
+        </member>
+        <member name="T:SadConsole.UI.NamedColor">
+            <summary>
+            A color associated with a name.
+            </summary>
+            <param name="Name">The name of the color.</param>
+            <param name="Color">The color.</param>
+        </member>
+        <member name="M:SadConsole.UI.NamedColor.#ctor(System.String,SadRogue.Primitives.Color)">
+            <summary>
+            A color associated with a name.
+            </summary>
+            <param name="Name">The name of the color.</param>
+            <param name="Color">The color.</param>
+        </member>
+        <member name="P:SadConsole.UI.NamedColor.Name">
+            <summary>The name of the color.</summary>
+        </member>
+        <member name="P:SadConsole.UI.NamedColor.Color">
+            <summary>The color.</summary>
+        </member>
+        <member name="T:SadConsole.UI.NamedColorCollection">
+            <summary>
+            A collection of named colors
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.NamedColorCollection.Colors">
+            <summary>
+            The backing dictionary of colors.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.Add(SadConsole.UI.NamedColor)">
+            <summary>
+            Adds a color to the collection.
+            </summary>
+            <param name="color"></param>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.#ctor">
+            <summary>
+            Creates a new instance with the default colors of White and Black.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.LoadDefaults">
+            <summary>
+            Clears the collection of colors and adds White and Black colors.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.Load(System.String)">
+            <summary>
+            Loads a <see cref="P:SadConsole.UI.NamedColorCollection.Colors"/> dictionary from a file, and returns a new instance of the <see cref="T:SadConsole.UI.NamedColorCollection"/> class with those colors.
+            </summary>
+            <param name="file">The file.</param>
+            <exception cref="T:System.IO.FileNotFoundException">Thrown when the file isn't found.</exception>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.Save(System.String)">
+            <summary>
+            Saves the <see cref="P:SadConsole.UI.NamedColorCollection.Colors"/> dictionary to a file.
+            </summary>
+            <param name="file">The file.</param>
         </member>
         <member name="T:SadConsole.UI.ThemeStates">
             <summary>
