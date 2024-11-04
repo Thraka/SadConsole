@@ -15,7 +15,9 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
     public int Width = 80;
     public int Height = 25;
 
+    [DataMember]
     public int ViewX;
+    [DataMember]
     public int ViewY;
 
     public Vector4 DefaultForeground = Color.White.ToVector4();
@@ -78,6 +80,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Name:");
         ImGui.SameLine();
+        ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X);
         ImGui.InputText("##name", ref Name, 50);
 
         ImGui.Separator();
@@ -194,6 +197,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             VisualDocument.FontSize = window.FontSize;
             EditorFontSize = window.FontSize;
             SurfaceFontSize = window.FontSize;
+            VisualDocument.FontSize = SurfaceFontSize;
             ComposeVisual();
         }
     }
@@ -261,8 +265,8 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             LoadPaletteIfExist(file + ".pal");
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     public override object DehydrateToFileHandler(IFileHandler handler, string file)

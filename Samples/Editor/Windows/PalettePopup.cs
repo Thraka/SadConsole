@@ -106,18 +106,19 @@ public static class PalettePopup
                 }
                 if (ImGui.BeginTabItem("Primitives"))
                 {
-                    Vector2 area = ImGui.GetItemRectSize();
+                    Vector2 area = ImGui.GetContentRegionMax();
 
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("Filter:");
                     ImGui.SameLine();
-                    ImGui.SetNextItemWidth(area.Y - ImGui.GetCursorPosY() - spacing.Y - area.Y);
+                    
+                    ImGui.SetNextItemWidth(area.X - ImGui.GetCursorPosX() - ImGui.CalcTextSize("X").X - (spacing.X * 2));
                     ImGui.InputText("##Filter", ref s_filter, 50);
                     ImGui.SameLine();
                     if (ImGui.Button("X"))
                         s_filter = string.Empty;
 
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
+                    ImGui.SetNextItemWidth(area.X - spacing.X);
                     if (ImGui.BeginListBox("##primcolorlist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
@@ -149,13 +150,13 @@ public static class PalettePopup
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
 
-                        for (int i = 0; i < pal.Names.Length; i++)
+                        for (int i = 0; i < pal.Colors.Length; i++)
                         {
                             Vector2 pos = ImGui.GetCursorPos();
 
-                            if (GenerateSelectableColor(pal.Names[i], pal.ParsedValues[i], drawData, ref color))
+                            if (GenerateSelectableColor(pal.Colors[i].Name, pal.Colors[i].Color, drawData, ref color))
                             {
-                                color = pal.ParsedValues[i];
+                                color = pal.Colors[i].Color;
                                 returnValue = true;
                                 ImGui.CloseCurrentPopup();
                             }
@@ -177,13 +178,13 @@ public static class PalettePopup
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
 
-                        for (int i = 0; i < pal.Names.Length; i++)
+                        for (int i = 0; i < pal.Colors.Length; i++)
                         {
                             Vector2 pos = ImGui.GetCursorPos();
 
-                            if (GenerateSelectableColor(pal.Names[i], pal.ParsedValues[i], drawData, ref color))
+                            if (GenerateSelectableColor(pal.Colors[i].Name, pal.Colors[i].Color, drawData, ref color))
                             {
-                                color = pal.ParsedValues[i];
+                                color = pal.Colors[i].Color;
                                 returnValue = true;
                                 ImGui.CloseCurrentPopup();
                             }

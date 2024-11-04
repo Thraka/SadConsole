@@ -37,6 +37,7 @@ public class WindowTools : ImGuiObjectBase
                         }
                         ImGui.SameLine();
 
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - ImGui.GetCursorPosX());
                         if (ImGui.Combo("##toolsList", ref selectedToolIndex, docTools.State.ToolNames, docTools.State.ToolObjects.Length, docTools.State.ToolObjects.Length <= 4 ? 4 : 6))
                         {
                             if (docTools.State.SelectedToolIndex != selectedToolIndex)

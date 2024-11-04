@@ -3,6 +3,8 @@ using SadConsole.Components;
 using SadConsole.Editor.GuiParts.Tools;
 using SadConsole.ImGuiSystem;
 using SadConsole.Editor.Model;
+using SadRogue.Primitives;
+using System.Numerics;
 
 namespace SadConsole.Editor.Tools;
 
@@ -144,15 +146,17 @@ internal class Selection : ITool
         //   Stamp
         // Choose Blueprint -> Blueprint Selected
         // 
+        Vector2 spacing = ImGui.GetStyle().ItemSpacing;
 
-        ImGuiWidgets.BeginGroupPanel("Settings");
+        ImGuiWidgets.BeginGroupPanel("Operations");
 
         ImGui.BeginDisabled(_toolMode == ToolMode.Selecting);
-        if (ImGui.Button("Reset"))
+        if (ImGui.Button("Reset Selection"))
         {
             OnDeselected();
         }
         ImGui.EndDisabled();
+        ImGui.Separator();
 
         ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Move"))
@@ -162,6 +166,7 @@ internal class Selection : ITool
             SelectionMove();
         }
         ImGui.EndDisabled();
+        ImGui.SameLine();
 
         ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Copy"))
@@ -171,19 +176,38 @@ internal class Selection : ITool
             SelectionCopy();
         }
         ImGui.EndDisabled();
+        ImGui.SameLine();
 
         ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
-        if (ImGui.Button("Clear"))
+        if (ImGui.Button("Erase"))
         {
             SelectionErase();
             SelectionReset();
         }
         ImGui.EndDisabled();
+        ImGui.Separator();
 
         ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
         if (ImGui.Button("Store"))
         {
             ImGui.OpenPopup("Blueprint Name");
+        }
+        ImGui.EndDisabled();
+        ImGui.SameLine();
+
+        ImGui.BeginDisabled(_toolMode != ToolMode.SelectedArea);
+        if (ImGui.Button("Create New Document"))
+        {
+            Document document = ImGuiCore.State.GetOpenDocument();
+            SurfaceDocument newDocument = new()
+            {
+                Width = _boxArea.Width,
+                Height = _boxArea.Height
+            };
+            newDocument.Create();
+            
+            document.VisualDocument.Surface.Copy(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), newDocument.VisualDocument.Surface, 0, 0);
+            ImGuiCore.State.OpenDocuments = [.. ImGuiCore.State.OpenDocuments, newDocument];
         }
         ImGui.EndDisabled();
 
@@ -201,10 +225,14 @@ internal class Selection : ITool
                 }
             }
         }
+        ImGuiWidgets.EndGroupPanel();
 
-        ImGui.Separator();
         ImGui.Text("Stored Blueprints");
-        
+
+        //Vector2 area = ImGui.GetItemRectSize();
+        //ImGui.SetNextItemWidth(area.Y - ImGui.GetCursorPosY() - spacing.Y - area.Y);
+
+        ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
         if (ImGui.ListBox("##listblueprints", ref _blueprintSelection, _blueprintNames, _blueprintNames.Length, 5))
         {
             _toolMode = ToolMode.BlueprintMove;
@@ -216,7 +244,6 @@ internal class Selection : ITool
             _blueprintSelection = -1;
         }
 
-        ImGuiWidgets.EndGroupPanel();
     }
 
     public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)

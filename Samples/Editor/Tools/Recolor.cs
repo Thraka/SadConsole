@@ -45,6 +45,10 @@ internal class Recolor : ITool
 
         ImGuiWidgets.BeginGroupPanel("Match");
 
+        //
+        // MATCH SETTINGS
+        //
+
         GuiParts.Tools.SettingsTable.BeginTable("matchtable");
 
         // Foreground
@@ -59,6 +63,8 @@ internal class Recolor : ITool
 
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##foreground_edit", ref _matchForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_matchForeground, _matchBackground) = (_matchBackground, _matchForeground);
             ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
             ImGui.SameLine();
@@ -84,6 +90,8 @@ internal class Recolor : ITool
 
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##background_edit", ref _matchBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_matchForeground, _matchBackground) = (_matchBackground, _matchForeground);
             ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
 
             ImGui.SameLine();
@@ -138,6 +146,10 @@ internal class Recolor : ITool
 
         ImGuiWidgets.BeginGroupPanel("Apply");
 
+        //
+        // APPLY SETTINGS
+        //
+
         GuiParts.Tools.SettingsTable.BeginTable("applytable");
 
         // Foreground
@@ -152,6 +164,8 @@ internal class Recolor : ITool
 
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##foreground_edit", ref _applyForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_applyForeground, _applyBackground) = (_applyBackground, _applyForeground);
             ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
             ImGui.SameLine();
@@ -177,6 +191,8 @@ internal class Recolor : ITool
 
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
             ImGui.ColorEdit4("##background_edit", ref _applyBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_applyForeground, _applyBackground) = (_applyBackground, _applyForeground);
             ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
 
             ImGui.SameLine();
@@ -221,7 +237,8 @@ internal class Recolor : ITool
             ImGui.BeginDisabled(!_isApplyGlyph);
 
             FontGlyph.DrawWithPopup(renderer, "##glyph_edit", "apply_font", surface.Font, _applyForeground, _applyBackground, ref _applyGlyph, true);
-
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_applyGlyph, _matchGlyph) = (_matchGlyph, _applyGlyph);
             ImGui.EndDisabled();
         }
 

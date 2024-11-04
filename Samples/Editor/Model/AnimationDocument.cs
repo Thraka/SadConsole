@@ -20,7 +20,9 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
     public int Height = 20;
     public int FrameCount;
 
+    [DataMember]
     public int ViewX;
+    [DataMember]
     public int ViewY;
 
     public Vector4 DefaultForeground = Color.White.ToVector4();
@@ -78,13 +80,21 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
         ImGui.Text("Def. Foreground: ");
         ImGui.SameLine(windowWidth - paddingX - ImGuiCore.State.LayoutInfo.ColorEditBoxWidth);
-        ImGui.ColorEdit4("##fore", ref DefaultForeground, ImGuiColorEditFlags.NoInputs);
+        if (ImGui.ColorEdit4("##fore", ref DefaultForeground, ImGuiColorEditFlags.NoInputs));
+        {
+            if (VisualDocument != null)
+                VisualDocument.Surface.DefaultForeground = DefaultForeground.ToColor();
+        }
         ImGuiCore.State.CheckSetPopupOpen("##forepicker");
         ImGuiCore.State.LayoutInfo.ColorEditBoxWidth = ImGui.GetItemRectSize().X;
 
         ImGui.Text("Def. Background: ");
         ImGui.SameLine(windowWidth - paddingX - ImGuiCore.State.LayoutInfo.ColorEditBoxWidth);
-        ImGui.ColorEdit4("##back", ref DefaultBackground, ImGuiColorEditFlags.NoInputs);
+        if (ImGui.ColorEdit4("##back", ref DefaultBackground, ImGuiColorEditFlags.NoInputs))
+        {
+            if (VisualDocument != null)
+                VisualDocument.Surface.DefaultBackground = DefaultBackground.ToColor();
+        }
         ImGuiCore.State.CheckSetPopupOpen("##backpicker");
     }
 
@@ -303,6 +313,7 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
             ImGui.Separator();
 
             if (ImGui.Checkbox("Show Previous Frame Trace", ref _showPreviousFrame))
+                // Regardless of if it's on/off, setup and compose
                 SetupTraceOverlay();
 
             if (_showPreviousFrame)
@@ -333,6 +344,7 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
             _animatedScreenObject.FontSize = SurfaceFontSize;
             VisualDocument.FontSize = SurfaceFontSize;
+            ComposeVisual();
         }
     }
 
@@ -342,18 +354,64 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
     }
 
     public override IEnumerable<IFileHandler> GetLoadHandlers() =>
-        [this, new SurfaceFile()];
+        [this, new AnimationFile()];
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>
-        [this, new SurfaceFile(), new SurfaceFileCompressed()];
+        [this, new AnimationFile()];
 
     public override bool HydrateFromFileHandler(IFileHandler handler, string file)
     {
+        if (handler is AnimationDocument documentHandler)
+        {
+            documentHandler = (AnimationDocument)handler.Load(file);
+            _animatedScreenObject = documentHandler._animatedScreenObject;
+            FrameCount = _animatedScreenObject.Frames.Count;
+            DocumentType = documentHandler.DocumentType;
+            Height = documentHandler.Height;
+            Width = documentHandler.Width;
+            Name = documentHandler.Name;
+            Options = documentHandler.Options;
+            ViewX = 0;
+            ViewY = 0;
+            EditorFontSize = documentHandler.EditorFontSize;
+            SurfaceFontSize = documentHandler.SurfaceFontSize;
+            CreateSurfaceFromFrame();
+            VisualDocument.FontSize = EditorFontSize;
+            VisualDocument.Render(TimeSpan.Zero);
+            LoadPaletteIfExist(file + ".pal");
+            return true;
+        }
+        else if (handler is AnimationFile)
+        {
+            _animatedScreenObject = (AnimatedScreenObject)handler.Load(file);
+            FrameCount = _animatedScreenObject.Frames.Count;
+            Width = _animatedScreenObject.Frames[0].Width;
+            Height = _animatedScreenObject.Frames[0].Height;
+            DefaultBackground = _animatedScreenObject.Frames[0].DefaultBackground.ToVector4();
+            DefaultForeground = _animatedScreenObject.Frames[0].DefaultForeground.ToVector4();
+            EditorFontSize = _animatedScreenObject.FontSize;
+            SurfaceFontSize = _animatedScreenObject.FontSize;
+            CreateSurfaceFromFrame();
+            LoadPaletteIfExist(file + ".pal");
+            return true;
+        }
+
         return false;
     }
 
     public override object DehydrateToFileHandler(IFileHandler handler, string file)
     {
+        if (handler is AnimationFile)
+        {
+            AnimatedScreenObject output = new(_animatedScreenObject.Name, _animatedScreenObject.Frames);
+            output.Center = _animatedScreenObject.Center;
+            output.Repeat = _animatedScreenObject.Repeat;
+            output.AnimationDuration = _animatedScreenObject.AnimationDuration;
+            output.FontSize = SurfaceFontSize;
+
+            return output;
+        }
+
         return this;
     }
 
@@ -377,17 +435,17 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
 
     private void CreateSurfaceFromFrame()
     {
-        Rectangle previousView = default;
+        //Rectangle previousView = default;
 
         VisualDocument ??= new ScreenSurface(1, 1);
 
         VisualDocument.FontSize = EditorFontSize;
-        ((ICellSurfaceSettable)VisualDocument.Surface).SetSurface(_animatedScreenObject.CurrentFrame.GetSubSurface(), previousView);
+        //((ICellSurfaceSettable)VisualDocument.Surface).SetSurface(_animatedScreenObject.CurrentFrame.GetSubSurface(), previousView);
+        ((ScreenSurface)VisualDocument).Surface = _animatedScreenObject.CurrentFrame;
+        DefaultBackground = VisualDocument.Surface.DefaultBackground.ToVector4();
+        DefaultForeground = VisualDocument.Surface.DefaultForeground.ToVector4();
 
         VisualDocument.Render(TimeSpan.Zero);
-        Game.Instance.Screen = VisualDocument;
-
-        ClearTool();
 
         SetupTraceOverlay();
     }
@@ -414,6 +472,7 @@ internal partial class AnimationDocument : Document, IDocumentTools, IFileHandle
             if (VisualDocument.SadComponents.Contains(_previousFrameOverlay))
                 VisualDocument.SadComponents.Remove(_previousFrameOverlay);
         }
+        ComposeVisual();
     }
 
     private void Frames_Reset(ICellSurface frame)

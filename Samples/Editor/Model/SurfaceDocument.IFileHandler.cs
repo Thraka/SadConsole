@@ -29,7 +29,7 @@ internal partial class SurfaceDocument
         {
             try
             {
-                Serializer.Save(surface, file, false);
+                Serializer.Save(surface, file, true);
 
                 return true;
             }

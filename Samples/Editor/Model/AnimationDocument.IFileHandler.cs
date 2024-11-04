@@ -1,5 +1,4 @@
 ﻿using SadConsole.Editor.FileHandlers;
-using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
 
@@ -9,16 +8,16 @@ internal partial class AnimationDocument
 
     bool IFileHandler.SupportsSave => true;
 
-    string IFileHandler.FriendlyName => "Editor Document";
+    string IFileHandler.FriendlyName => "Animation Document";
 
-    string[] IFileHandler.ExtensionsLoading => ["sadsurface"]; 
+    string[] IFileHandler.ExtensionsLoading => ["animdoc"]; 
 
-    string[] IFileHandler.ExtensionsSaving => ["sadsurface"];
+    string[] IFileHandler.ExtensionsSaving => ["animdoc"];
 
-    public string HelpInformation => "Saves just the surface document.";
+    public string HelpInformation => "Saves the editor document.";
 
     object IFileHandler.Load(string file) =>
-        Serializer.Load<AnimationDocument>(file, file.EndsWith('z'));
+        Serializer.Load<AnimationDocument>(file, true);
 
     bool IFileHandler.Save(object instance, string file)
     {
@@ -29,7 +28,7 @@ internal partial class AnimationDocument
         {
             try
             {
-                Serializer.Save(surface, file, false);
+                Serializer.Save(surface, file, true);
 
                 return true;
             }
