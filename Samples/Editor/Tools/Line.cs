@@ -7,13 +7,12 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
 
-internal class Line : ITool, IOverlay
+internal class Line : ITool
 {
     private bool _isDrawing = false;
     private bool _isFirstPointSelected = false;
     private Point _firstPoint;
     private Point _secondPoint;
-    private Overlay _toolOverlay = new();
     private bool _isCancelled;
 
     public string Name => "Line";
@@ -28,8 +27,6 @@ internal class Line : ITool, IOverlay
         To cancel drawing, depress the right mouse button or press the ESC key.
         """;
 
-    public Overlay Overlay => _toolOverlay;
-
     public void BuildSettingsPanel(ImGuiRenderer renderer)
     {
         ImGuiWidgets.BeginGroupPanel("Settings");
@@ -38,7 +35,7 @@ internal class Line : ITool, IOverlay
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         Mirror mirror = SharedToolSettings.Tip.Mirror;
         int glyph = SharedToolSettings.Tip.Glyph;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         SettingsTable.DrawCommonSettings("fillsettings", true, true, true, true, true,
                                  ref foreground, surface.Surface.DefaultForeground.ToVector4(),
@@ -54,11 +51,11 @@ internal class Line : ITool, IOverlay
         ImGuiWidgets.EndGroupPanel();
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (!_isDrawing)
         {
@@ -71,7 +68,7 @@ internal class Line : ITool, IOverlay
             {
                 OnDeselected();
                 _isCancelled = true;
-                Overlay.Surface.Clear();
+                document.VisualToolLayerLower.Surface.Clear();
             }
 
             if (_isCancelled)
@@ -83,13 +80,13 @@ internal class Line : ITool, IOverlay
                 {
                     _isFirstPointSelected = true;
 
-                    _firstPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+                    _firstPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
                 }
 
-                _secondPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+                _secondPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
 
-                Overlay.Surface.Clear();
-                Overlay.Surface.DrawLine(_firstPoint,
+                document.VisualToolLayerLower.Surface.Clear();
+                document.VisualToolLayerLower.Surface.DrawLine(_firstPoint,
                                          _secondPoint,
                                          SharedToolSettings.Tip.Glyph,
                                          SharedToolSettings.Tip.Foreground,
@@ -100,15 +97,15 @@ internal class Line : ITool, IOverlay
             {
                 if (_firstPoint != Point.None)
                 {
-                    surface.Surface.DrawLine(_firstPoint + surface.Surface.ViewPosition,
-                                             _secondPoint + surface.Surface.ViewPosition,
+                    document.VisualDocument.Surface.DrawLine(_firstPoint + document.VisualDocument.Surface.ViewPosition,
+                                             _secondPoint + document.VisualDocument.Surface.ViewPosition,
                                              SharedToolSettings.Tip.Glyph,
                                              SharedToolSettings.Tip.Foreground,
                                              SharedToolSettings.Tip.Background,
                                              SharedToolSettings.Tip.Mirror);
 
 
-                    Overlay.Surface.Clear();
+                    document.VisualToolLayerLower.Surface.Clear();
                 }
 
                 OnDeselected();
@@ -129,7 +126,7 @@ internal class Line : ITool, IOverlay
         _isFirstPointSelected = false;
     }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

@@ -23,11 +23,9 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
     [DataMember]
     public Point SurfaceFontSize;
-    [DataMember]
-    public Point EditorFontSize;
 
     [DataMember]
-    public IScreenSurface Surface { get => base.Surface; set => base.Surface = value; }
+    public Point EditorFontSize;
 
     public SurfaceDocument()
     {
@@ -39,7 +37,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         ((IDocumentTools)this).ShowToolsList = true;
         ((IDocumentTools)this).State.ToolObjects = [ new Tools.Info(), new Tools.Empty(), new Tools.Pencil(), new Tools.Recolor(),
                                                      new Tools.Fill(), new Tools.Box(), new Tools.Circle(), new Tools.Line(),
-                                                     new Tools.Text(), new Tools.Selection() ];
+                                                     new Tools.Text(), new Tools.Selection(), new Tools.Operations() ];
         ((IDocumentTools)this).State.ToolNames = ((IDocumentTools)this).State.ToolObjects.Select(t => t.Name).ToArray();
     }
 
@@ -111,18 +109,19 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             {
                 if (dialogResult)
                 {
-                    if (Surface.Surface.ViewWidth > Width)
-                        Surface.Surface.ViewWidth = Width;
-                    if (Surface.Surface.ViewHeight > Height)
-                        Surface.Surface.ViewHeight = Height;
+                    if (VisualDocument.Surface.ViewWidth > Width)
+                        VisualDocument.Surface.ViewWidth = Width;
+                    if (VisualDocument.Surface.ViewHeight > Height)
+                        VisualDocument.Surface.ViewHeight = Height;
 
-                    ((ICellSurfaceResize)Surface.Surface).Resize(Surface.Surface.ViewWidth, Surface.Surface.ViewHeight, Width, Height, false);
-                    Surface.IsDirty = true;
+                    ((ICellSurfaceResize)VisualDocument.Surface).Resize(VisualDocument.Surface.ViewWidth, VisualDocument.Surface.ViewHeight, Width, Height, false);
+                    VisualDocument.IsDirty = true;
+                    ComposeVisual();
                 }
                 else
                 {
-                    Width = Surface.Surface.Width;
-                    Height = Surface.Surface.Height;
+                    Width = VisualDocument.Surface.Width;
+                    Height = VisualDocument.Surface.Height;
                 }
             }
 
@@ -131,20 +130,20 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
         ImGui.Separator();
 
-        DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
+        DefaultForeground = VisualDocument.Surface.DefaultForeground.ToVector4();
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Def. Foreground: ");
         ImGui.SameLine();
         if (ImGui.ColorEdit4("##fore", ref DefaultForeground, ImGuiColorEditFlags.NoInputs))
-            Surface.Surface.DefaultForeground = DefaultForeground.ToColor();
+            VisualDocument.Surface.DefaultForeground = DefaultForeground.ToColor();
         ImGuiCore.State.CheckSetPopupOpen("##forepicker");
 
-        DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
+        DefaultBackground = VisualDocument.Surface.DefaultBackground.ToVector4();
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Def. Background: ");
         ImGui.SameLine();
         if (ImGui.ColorEdit4("##back", ref DefaultBackground, ImGuiColorEditFlags.NoInputs))
-            Surface.Surface.DefaultBackground = DefaultBackground.ToColor();
+            VisualDocument.Surface.DefaultBackground = DefaultBackground.ToColor();
         ImGuiCore.State.CheckSetPopupOpen("##backpicker");
 
         ImGui.Separator();
@@ -152,12 +151,13 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Font: ");
         ImGui.SameLine();
-        if (ImGui.Button($"{Surface.Font.Name} | {SurfaceFontSize}"))
+        if (ImGui.Button($"{VisualDocument.Font.Name} | {SurfaceFontSize}"))
         {
-            FontPicker popup = new(Surface.Font, SurfaceFontSize);
+            FontPicker popup = new(VisualDocument.Font, SurfaceFontSize);
             popup.Closed += FontPicker_Closed;
             popup.Show();
         }
+        ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: ");
         ImGui.SameLine();
         if (ImGui.Button(EditorFontSize.ToString()))
@@ -168,22 +168,18 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         if (ImGui.Button("Reset"))
         {
             EditorFontSize = SurfaceFontSize;
-            Surface.FontSize = EditorFontSize;
+            VisualDocument.FontSize = EditorFontSize;
 
             // Force overlay to update and match surface
-            Components.Overlay? overlay = Surface.GetSadComponent<Components.Overlay>();
-            if (overlay != null)
-                overlay.Update(Surface, TimeSpan.Zero);
+            ComposeVisual();
         }
 
-        if (FontSizePopup.Show(renderer, "editorfontsize_select", Surface.Font, ref EditorFontSize))
+        if (FontSizePopup.Show(renderer, "editorfontsize_select", VisualDocument.Font, ref EditorFontSize))
         {
-            Surface.FontSize = EditorFontSize;
+            VisualDocument.FontSize = EditorFontSize;
 
             // Force overlay to update and match surface
-            Components.Overlay? overlay = Surface.GetSadComponent<Components.Overlay>();
-            if (overlay != null)
-                overlay.Update(Surface, TimeSpan.Zero);
+            ComposeVisual();
         }
 
         ImGuiWidgets.EndGroupPanel();
@@ -194,26 +190,17 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         FontPicker window = (FontPicker)sender!;
         if (window.DialogResult)
         {
-            Surface.Font = window.Font;
-            Surface.FontSize = window.FontSize;
+            VisualDocument.Font = window.Font;
+            VisualDocument.FontSize = window.FontSize;
             EditorFontSize = window.FontSize;
             SurfaceFontSize = window.FontSize;
+            ComposeVisual();
         }
     }
 
     public override void BuildUIDocument(ImGuiRenderer renderer)
     {
-        BuildUIDocumentStandard(renderer, Surface);
-    }
-
-    public override void OnShow(ImGuiRenderer renderer)
-    {
-        SadConsole.Game.Instance.Screen = Surface;
-    }
-
-    public override void OnHide(ImGuiRenderer renderer)
-    {
-        SadConsole.Game.Instance.Screen = null;
+        BuildUIDocumentStandard(renderer);
     }
 
     public override IEnumerable<IFileHandler> GetLoadHandlers() =>
@@ -228,9 +215,9 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
         {
             documentHandler = (SurfaceDocument)handler.Load(file);
             //TODO: Should most of the these ... = documentHandler.value calls just go to the surface directly??
-            Surface = documentHandler.Surface;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
+            VisualDocument = documentHandler.VisualDocument;
+            DefaultBackground = VisualDocument.Surface.DefaultBackground.ToVector4();
+            DefaultForeground = VisualDocument.Surface.DefaultForeground.ToVector4();
             DocumentType = documentHandler.DocumentType;
             Height = documentHandler.Height;
             Width = documentHandler.Width;
@@ -240,32 +227,38 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
             ViewY = 0;
             EditorFontSize = documentHandler.EditorFontSize;
             SurfaceFontSize = documentHandler.SurfaceFontSize;
-            Surface.FontSize = EditorFontSize;
-            Surface.Render(TimeSpan.Zero);
+            VisualDocument.FontSize = EditorFontSize;
+            VisualDocument.Render(TimeSpan.Zero);
+            ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else if (handler is SurfaceFileCompressed compressedHandler)
         {
-            Surface = (ScreenSurface)compressedHandler.Load(file);
-            Width = Surface.Surface.Width;
-            Height = Surface.Surface.Height;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-            EditorFontSize = Surface.FontSize;
-            SurfaceFontSize = Surface.FontSize;
-            Surface.Render(TimeSpan.Zero);
+            VisualDocument = (ScreenSurface)compressedHandler.Load(file);
+            Width = VisualDocument.Surface.Width;
+            Height = VisualDocument.Surface.Height;
+            DefaultBackground = VisualDocument.Surface.DefaultBackground.ToVector4();
+            DefaultForeground = VisualDocument.Surface.DefaultForeground.ToVector4();
+            EditorFontSize = VisualDocument.FontSize;
+            SurfaceFontSize = VisualDocument.FontSize;
+            VisualDocument.Render(TimeSpan.Zero);
+            ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else if (handler is SurfaceFile surfaceHandler)
         {
-            Surface = (ScreenSurface)surfaceHandler.Load(file);
-            Width = Surface.Surface.Width;
-            Height = Surface.Surface.Height;
-            DefaultBackground = Surface.Surface.DefaultBackground.ToVector4();
-            DefaultForeground = Surface.Surface.DefaultForeground.ToVector4();
-            EditorFontSize = Surface.FontSize;
-            SurfaceFontSize = Surface.FontSize;
-            Surface.Render(TimeSpan.Zero);
+            VisualDocument = (ScreenSurface)surfaceHandler.Load(file);
+            Width = VisualDocument.Surface.Width;
+            Height = VisualDocument.Surface.Height;
+            DefaultBackground = VisualDocument.Surface.DefaultBackground.ToVector4();
+            DefaultForeground = VisualDocument.Surface.DefaultForeground.ToVector4();
+            EditorFontSize = VisualDocument.FontSize;
+            SurfaceFontSize = VisualDocument.FontSize;
+            VisualDocument.Render(TimeSpan.Zero);
+            ComposeVisual();
+            LoadPaletteIfExist(file + ".pal");
             return true;
         }
         else
@@ -276,7 +269,7 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
     {
         if (handler is SurfaceFileCompressed || handler is SurfaceFile)
         {
-            ScreenSurface newSurface = new(Surface.Surface, Surface.Font, SurfaceFontSize);
+            ScreenSurface newSurface = new(VisualDocument.Surface, VisualDocument.Font, SurfaceFontSize);
             return newSurface;
         }
 
@@ -286,13 +279,14 @@ internal partial class SurfaceDocument : Document, IDocumentTools, IFileHandler
 
     public override void Create()
     {
-        Surface = new ScreenSurface(Width, Height);
-        Surface.Surface.DefaultBackground = DefaultBackground.ToColor();
-        Surface.Surface.DefaultForeground = DefaultForeground.ToColor();
-        Surface.Surface.Clear();
-        EditorFontSize = Surface.FontSize;
-        SurfaceFontSize = Surface.FontSize;
-        Surface.Render(TimeSpan.Zero);
+        VisualDocument = new ScreenSurface(Width, Height);
+        VisualDocument.Surface.DefaultBackground = DefaultBackground.ToColor();
+        VisualDocument.Surface.DefaultForeground = DefaultForeground.ToColor();
+        VisualDocument.Surface.Clear();
+        EditorFontSize = VisualDocument.FontSize;
+        SurfaceFontSize = VisualDocument.FontSize;
+        VisualDocument.Render(TimeSpan.Zero);
+        ComposeVisual();
     }
 
     public static SurfaceDocument FromSettings(int width, int height, Color foreground, Color background)

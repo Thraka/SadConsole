@@ -71,8 +71,7 @@ public sealed class ParseCommandBlink : ParseCommandBase
         }
 
 
-        if (_blinkEffect == null)
-            _blinkEffect = new CustomBlinkEffect() { BlinkSpeed = Speed };
+        _blinkEffect ??= new CustomBlinkEffect() { BlinkSpeed = Speed, RestoreCellOnRemoved = true };
 
         // No exceptions, set the type
         CommandType = CommandTypes.Effect;

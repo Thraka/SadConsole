@@ -12,7 +12,7 @@ public partial class ListBox
     /// <summary>
     /// Internal flag to indicate the scroll bar needs to be reconfigured.
     /// </summary>
-    protected bool _reconfigureSrollBar;
+    protected bool _reconfigureScrollBar;
 
     /// <summary>
     /// The drawing theme for the border when <see cref="DrawBorder"/> is true.
@@ -32,7 +32,14 @@ public partial class ListBox
     public bool DrawBorder
     {
         get => _drawBorder;
-        set { _drawBorder = value; _reconfigureSrollBar = true; }
+        set
+        {
+            if (_drawBorder != value)
+            {
+                _drawBorder = value;
+                _reconfigureScrollBar = true;
+            }
+        }
     }
 
     /// <summary>
@@ -50,7 +57,7 @@ public partial class ListBox
     /// Sets up the scroll bar for the listbox.
     /// </summary>
     [MemberNotNull("ScrollBar")]
-    protected void SetupScrollBar()
+    protected virtual void SetupScrollBar()
     {
         if (DrawBorder && Height < 4)
             DrawBorder = false;
@@ -111,10 +118,10 @@ public partial class ListBox
             return;
         }
 
-        if (_reconfigureSrollBar)
+        if (_reconfigureScrollBar)
         {
             SetupScrollBar();
-            _reconfigureSrollBar = false;
+            _reconfigureScrollBar = false;
         }
 
         RefreshThemeStateColors(FindThemeColors());
@@ -140,7 +147,7 @@ public partial class ListBox
             endingRow = Height - 2;
             startingRow = 1;
             columnOffset = 1;
-            columnEnd = Width - 2;
+            columnEnd = IsScrollBarVisible ? ScrollBar.Position.X: Width - 1;
             Surface.DrawBox(new Rectangle(0, 0, Width, Height), ShapeParameters.CreateStyledBox(BorderLineStyle, new ColoredGlyph(borderAppearance.Foreground, borderAppearance.Background, 0)));
         }
         else
@@ -148,11 +155,11 @@ public partial class ListBox
             endingRow = Height;
             startingRow = 0;
             columnOffset = 0;
-            columnEnd = Width - (IsScrollBarVisible ? 1 : 0);
+            columnEnd = IsScrollBarVisible ? ScrollBar.Position.X: Width;
             Surface.Fill(borderAppearance.Foreground, borderAppearance.Background, 0, null);
         }
 
-        ItemsArea = (columnOffset, startingRow, columnEnd, endingRow);
+        ItemsArea = (columnOffset, startingRow, columnEnd - columnOffset, endingRow);
         MouseArea = (0, 0, Width, Height);
 
         VisibleItemsTotal = Items.Count >= endingRow ? endingRow : Items.Count;
@@ -181,7 +188,7 @@ public partial class ListBox
                 if (itemIndexRelative == SelectedIndex)
                     state = (ControlStates)Helpers.SetFlag((int)state, (int)ControlStates.Selected);
 
-                ItemTheme.Draw(this, new Rectangle(columnOffset, i + startingRow, columnEnd, 1), Items[itemIndexRelative], state);
+                ItemTheme.Draw(this, new Rectangle(ItemsArea.X, i + startingRow, ItemsArea.Width, 1), Items[itemIndexRelative], state);
             }
         }
 

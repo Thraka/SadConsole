@@ -26,7 +26,7 @@ internal class Fill : ITool
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         Mirror mirror = SharedToolSettings.Tip.Mirror;
         int glyph = SharedToolSettings.Tip.Glyph;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         SettingsTable.DrawCommonSettings("fillsettings", true, true, true, true, true,
                                  ref foreground, surface.Surface.DefaultForeground.ToVector4(),
@@ -42,11 +42,11 @@ internal class Fill : ITool
         ImGuiWidgets.EndGroupPanel();
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         if (!isActive) return;
 
@@ -55,7 +55,7 @@ internal class Fill : ITool
             ColoredGlyph cellToMatch = new();
             ColoredGlyphBase currentFillCell = SharedToolSettings.Tip;
 
-            surface.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
+            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
 
             Func<ColoredGlyphBase, bool> isTargetCell = (c) =>
             {
@@ -74,32 +74,32 @@ internal class Fill : ITool
                 //console.TextSurface.SetEffect(c, _currentFillCell.Effect);
             };
 
-            List<ColoredGlyphBase> cells = new List<ColoredGlyphBase>(surface.Surface);
+            List<ColoredGlyphBase> cells = new List<ColoredGlyphBase>(document.VisualDocument.Surface);
 
             Func<ColoredGlyphBase, SadConsole.Algorithms.NodeConnections<ColoredGlyphBase>> getConnectedCells = (c) =>
             {
                 Algorithms.NodeConnections<ColoredGlyphBase> connections = new Algorithms.NodeConnections<ColoredGlyphBase>();
 
-                var position = Point.FromIndex(cells.IndexOf(c), surface.Surface.Width);
+                var position = Point.FromIndex(cells.IndexOf(c), document.VisualDocument.Surface.Width);
 
-                connections.West = surface.Surface.IsValidCell(position.X - 1, position.Y) ? surface.Surface[position.X - 1, position.Y] : null;
-                connections.East = surface.Surface.IsValidCell(position.X + 1, position.Y) ? surface.Surface[position.X + 1, position.Y] : null;
-                connections.North = surface.Surface.IsValidCell(position.X, position.Y - 1) ? surface.Surface[position.X, position.Y - 1] : null;
-                connections.South = surface.Surface.IsValidCell(position.X, position.Y + 1) ? surface.Surface[position.X, position.Y + 1] : null;
+                connections.West = document.VisualDocument.Surface.IsValidCell(position.X - 1, position.Y) ? document.VisualDocument.Surface[position.X - 1, position.Y] : null;
+                connections.East = document.VisualDocument.Surface.IsValidCell(position.X + 1, position.Y) ? document.VisualDocument.Surface[position.X + 1, position.Y] : null;
+                connections.North = document.VisualDocument.Surface.IsValidCell(position.X, position.Y - 1) ? document.VisualDocument.Surface[position.X, position.Y - 1] : null;
+                connections.South = document.VisualDocument.Surface.IsValidCell(position.X, position.Y + 1) ? document.VisualDocument.Surface[position.X, position.Y + 1] : null;
 
                 return connections;
             };
 
             if (!isTargetCell(currentFillCell))
-                SadConsole.Algorithms.FloodFill<ColoredGlyphBase>(surface.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
+                SadConsole.Algorithms.FloodFill<ColoredGlyphBase>(document.VisualDocument.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
 
-            surface.Surface.IsDirty = true;
+            document.VisualDocument.Surface.IsDirty = true;
         }
         else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
-            surface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             
-            surface.IsDirty = true;
+            document.VisualDocument.IsDirty = true;
         }
     }
 
@@ -107,7 +107,7 @@ internal class Fill : ITool
 
     public void OnDeselected() { }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

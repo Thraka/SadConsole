@@ -54,11 +54,16 @@ public abstract class ParseCommandBase
     /// </summary>
     /// <param name="glyphState">The current glyph being built.</param>
     /// <param name="glyphString">The current string of glyphs that has been processed until now.</param>
-    /// <param name="surfaceIndex">Where on the surface this flyph will appear.</param>
+    /// <param name="surfaceIndex">Where on the surface this glyph will appear.</param>
     /// <param name="surface">The surface associated with the glyph.</param>
     /// <param name="stringIndex">Where in the original string this glyph is from.</param>
     /// <param name="processedString">The entire string being processed.</param>
     /// <param name="commandStack">The state of commands.</param>
     public abstract void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex,
         ICellSurface? surface, ref int stringIndex, System.ReadOnlySpan<char> processedString, ParseCommandStacks commandStack);
+
+    /// <summary>
+    /// Called when the command is removed from its stack.
+    /// </summary>
+    public virtual void Removed() { }
 }

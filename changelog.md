@@ -1,3 +1,12 @@
+## v10.4.2 (10/23/2024)
+
+- [Core] Fixed small bug when cursor's effect was removed.
+- [Core] `StringParser`'s base command object has a virtual `Removed` method.
+- [Core] `StringParser`'s Recolor command can use 'w' in place of length to specify that it recolors 'word' length: until a space or \0 character is reached.
+- [Core] `StringParser`'s Blink command now has the blink effect `RestoreCellOnRemoved` set to true.
+- [Core] `NamedColor` supporting type which is just a collection of named color values for serialization.
+- [Core] Fix some spelling errors.
+
 ## v10.4.1 (06/12/2024)
 
 - [Core] When a Cursor is removed from a host object, the object is set to dirty now.
@@ -15,7 +24,7 @@
 
 New versioning system. Versions for SadConsole will be in the following format: [all libs major].[all libs minor].[individual lib revision]
 
-When patches come out for the indvidual libraries, the X in 10.0.X would increment. These would be like host updates, or the extended library, but not public facing changes in SadConsole itself. If SadConsole itself updates, the X in 10.X.0 would increment. All libraries would increment with SadConsole, and the individual lib revisions would reset to 0. The X on X.0.0 would indicate a major change to SadConsole with most likely a lot of bigger breaking changes.
+When patches come out for the individual libraries, the X in 10.0.X would increment. These would be like host updates, or the extended library, but not public facing changes in SadConsole itself. If SadConsole itself updates, the X in 10.X.0 would increment. All libraries would increment with SadConsole, and the individual lib revisions would reset to 0. The X on X.0.0 would indicate a major change to SadConsole with most likely a lot of bigger breaking changes.
 
 That said, SadConsole is resetting all versions to v10.4.0 for this release. From now on, the new versioning system is in place.
 

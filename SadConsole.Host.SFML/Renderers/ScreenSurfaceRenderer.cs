@@ -37,12 +37,12 @@ public class ScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Color used with drawing the texture to the screen. Let's a surface become transparent.
     /// </summary>
-    public Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
+    public Color _finalDrawColor = Color.White;
 
     /// <summary>
     /// Render steps to process.
     /// </summary>
-    protected List<IRenderStep> RenderSteps = new List<IRenderStep>();
+    protected List<IRenderStep> RenderSteps = new();
 
     /// <summary>
     /// The blend state used by this renderer.

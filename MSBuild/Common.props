@@ -4,7 +4,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
 
     <!-- The current package versions -->
-    <SadConsole_Version>10.4.1</SadConsole_Version>
+    <SadConsole_Version>10.4.2</SadConsole_Version>
     <SadConsole_Extended_Version>10.4.0</SadConsole_Extended_Version>
     <SadConsole_Host_MonoGameWPF_Version>10.4.1</SadConsole_Host_MonoGameWPF_Version>
     <SadConsole_Host_MonoGame_Version>10.4.1</SadConsole_Host_MonoGame_Version>

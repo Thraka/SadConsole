@@ -55,6 +55,7 @@ public sealed class ParseCommandRecolor : ParseCommandBase
     public byte A { get; set; }
 
     private int _counter;
+    private bool wordLength;
 
     /// <summary>
     /// Creates a new instance of this command.
@@ -62,16 +63,27 @@ public sealed class ParseCommandRecolor : ParseCommandBase
     /// <param name="parameters">The string to parse for parameters.</param>
     public ParseCommandRecolor(string parameters)
     {
+        //[c:r f|b:color[:count]]
         var badCommandException = new ArgumentException("command is invalid for Recolor: " + parameters);
 
         string[] parametersArray = parameters.Split(':');
 
         if (parametersArray.Length == 3)
         {
-            _counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
+            if (parametersArray[2] == "w")
+            {
+                wordLength = true;
+                _counter = -1;
+            }
+            else
+            {
+                wordLength = false;
+                _counter = int.Parse(parametersArray[2], CultureInfo.InvariantCulture);
+            }
         }
         else
         {
+            wordLength = false;
             _counter = -1;
         }
 
@@ -165,6 +177,13 @@ public sealed class ParseCommandRecolor : ParseCommandBase
             _counter--;
 
             if (_counter == 0)
+            {
+                commandStack.RemoveSafe(this);
+            }
+        }
+        else if (wordLength)
+        {
+            if (char.IsWhiteSpace(processedString[stringIndex]) || processedString[stringIndex] == '\0')
             {
                 commandStack.RemoveSafe(this);
             }

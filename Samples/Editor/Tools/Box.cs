@@ -1,22 +1,20 @@
 ﻿using System.Numerics;
 using ImGuiNET;
-using SadConsole.Components;
-using SadConsole.Editor.GuiParts.Tools;
+
 using SadConsole.Editor.Model;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
 
-internal class Box : ITool, IOverlay
+internal class Box : ITool
 {
     private bool _isFirstPointSelected = false;
     private Rectangle _boxArea;
     private Point _firstPoint;
     private Point _secondPoint;
-    private Overlay _toolOverlay = new();
     private bool _isCancelled;
 
-    private ShapeSettings.Settings _shapeSettings;
+    private GuiParts.Tools.ShapeSettings.Settings _shapeSettings = new() { HasBorder = true, UseBoxBorderStyle = true, BoxBorderStyle = Model.SadConsoleTypes.ConnectedGlyphs.GetValueFromIndex(1) };
 
     public string Name => "Box";
 
@@ -30,13 +28,11 @@ internal class Box : ITool, IOverlay
         To cancel drawing, depress the right mouse button or press the ESC key.
         """;
 
-    public Overlay Overlay => _toolOverlay;
-
     public void BuildSettingsPanel(ImGuiRenderer renderer)
     {
         ImGuiWidgets.BeginGroupPanel("Settings");
 
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().Surface;
+        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
 
         //GuiParts.Tools.SettingsTable.BeginTable("toolsettings");
 
@@ -152,11 +148,11 @@ internal class Box : ITool, IOverlay
         ImGuiWidgets.EndGroupPanel();
     }
 
-    public void MouseOver(IScreenSurface surface, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
     {
         if (ImGuiCore.State.IsPopupOpen) return;
 
-        GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, surface.Surface.ViewPosition, surface.FontSize, Color.Green);
+        GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
 
         // No settings to draw, exit
         if (!_shapeSettings.HasFill && !_shapeSettings.HasBorder)
@@ -182,23 +178,23 @@ internal class Box : ITool, IOverlay
             {
                 _isFirstPointSelected = true;
 
-                _firstPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+                _firstPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
             }
 
-            _secondPoint = hoveredCellPosition - surface.Surface.ViewPosition;
+            _secondPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
 
             _boxArea = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
                             new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
 
-            Overlay.Surface.Clear();
-            Overlay.Surface.DrawBox(_boxArea, _shapeSettings.ToShapeParameters());
+            document.VisualToolLayerLower.Surface!.Clear();
+            document.VisualToolLayerLower.Surface!.DrawBox(_boxArea, _shapeSettings.ToShapeParameters());
         }
         else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
         {
             if (_boxArea != Rectangle.Empty)
             {
-                surface.Surface.DrawBox(_boxArea.Translate(surface.Surface.ViewPosition), _shapeSettings.ToShapeParameters());
-                Overlay.Surface.Clear();
+                document.VisualDocument.Surface.DrawBox(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), _shapeSettings.ToShapeParameters());
+                document.VisualToolLayerLower.Surface!.Clear();
             }
 
             OnDeselected();
@@ -212,13 +208,12 @@ internal class Box : ITool, IOverlay
 
     public void OnDeselected()
     {
-        Overlay.Surface.Clear();
         _isCancelled = false;
         _boxArea = Rectangle.Empty;
         _isFirstPointSelected = false;
     }
 
-    public void DocumentViewChanged() { }
+    public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument() { }
+    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
 }

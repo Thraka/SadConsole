@@ -1,4 +1,5 @@
-﻿using SadConsole.Editor.Tools;
+﻿using ImGuiNET;
+using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Model;
@@ -11,15 +12,17 @@ internal partial class AnimationDocument : IDocumentTools
 
     void IDocumentTools.BuildUI(ImGuiRenderer renderer)
     {
-        
     }
 
     void IDocumentTools.ToolChanged(ITool? oldTool, ITool newTool)
     {
-        if (oldTool != null && oldTool is IOverlay overlay)
-            Surface.SadComponents.Remove(overlay.Overlay);
-
-        if (newTool is IOverlay)
-            Surface.SadComponents.Add(((IOverlay)newTool).Overlay);
+        VisualToolLayerLower.Surface!.Clear();
+        VisualToolLayerLower.Surface!.Surface.DefaultBackground = Color.Transparent;
+        VisualToolLayerLower.Surface.Surface.DefaultForeground = Color.White;
+        VisualToolLayerLower.Surface.Surface.DefaultGlyph = 0;
+        VisualToolLayerUpper.Surface!.Clear();
+        VisualToolLayerUpper.Surface!.Surface.DefaultBackground = Color.Transparent;
+        VisualToolLayerUpper.Surface.Surface.DefaultForeground = Color.White;
+        VisualToolLayerUpper.Surface.Surface.DefaultGlyph = 0;
     }
 }

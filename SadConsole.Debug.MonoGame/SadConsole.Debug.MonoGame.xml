@@ -29,6 +29,40 @@
             <param name="obj">The object to check.</param>
             <returns>A string respresenting the object.</returns>
         </member>
+        <member name="T:SadConsole.ImGuiSystem.BoundTexture2D">
+             <summary>
+             Represents a texture coupled with its pointer as known by ImGUI.
+             </summary>
+             <remarks>
+             This object is meant to be managed by a single reference. You must unbind the texture manually once you're done with it.
+            
+             The <see cref="M:SadConsole.ImGuiSystem.BoundTexture2D.Refresh(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)"/> method is used to automatically unbind the old texture and replace it with the one provided, when they don't match.
+             </remarks>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.BoundTexture2D.Texture">
+            <summary>
+            The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> bound to ImGUI.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.BoundTexture2D.Pointer">
+            <summary>
+            The current pointer to the texture as known by ImGUI.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.BoundTexture2D.#ctor(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a new instance of this class.
+            </summary>
+            <param name="renderer">The ImGUI render object.</param>
+            <param name="texture">The texture you want to bind with ImGUI.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.BoundTexture2D.Refresh(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Checks to see that the passed in texture matches the one on this object. If it doesn't the old one is unbound and this one is bound.
+            </summary>
+            <param name="renderer">The ImGUI renderer.</param>
+            <param name="texture">The texture.</param>
+        </member>
         <member name="T:SadConsole.ImGuiSystem.ImGuiObjectCollection">
             <summary>
             A collection of <see cref="T:SadConsole.ImGuiSystem.ImGuiObjectBase"/> objects that can be added to a ImGui renderer.

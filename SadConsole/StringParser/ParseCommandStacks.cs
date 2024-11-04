@@ -183,5 +183,7 @@ public class ParseCommandStacks
             all.Reverse();
             All = new Stack<ParseCommandBase>(all);
         }
+
+        command.Removed();
     }
 }

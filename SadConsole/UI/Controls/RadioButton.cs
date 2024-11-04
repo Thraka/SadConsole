@@ -63,7 +63,7 @@ public partial class RadioButton : ToggleButtonBase
     }
 
     /// <summary>
-    /// Perfroms a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
+    /// Performs a click on the base button and also toggles the <see cref="ToggleButtonBase.IsSelected"/> property.
     /// </summary>
     protected override void OnClick()
     {

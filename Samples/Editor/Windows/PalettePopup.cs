@@ -81,6 +81,7 @@ public static class PalettePopup
                 }
                 if (ImGui.BeginTabItem("SadConsole"))
                 {
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
                     if (ImGui.BeginListBox("##themelist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
@@ -116,6 +117,7 @@ public static class PalettePopup
                     if (ImGui.Button("X"))
                         s_filter = string.Empty;
 
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
                     if (ImGui.BeginListBox("##primcolorlist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
@@ -138,8 +140,58 @@ public static class PalettePopup
 
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Custom"))
+                if (ImGuiCore.State.GetOpenDocument().HasPalette && ImGui.BeginTabItem("Document"))
                 {
+                    Model.Palette pal = ImGuiCore.State.GetOpenDocument().Palette;
+
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
+                    if (ImGui.BeginListBox("##themelist"))
+                    {
+                        ImDrawListPtr drawData = ImGui.GetWindowDrawList();
+
+                        for (int i = 0; i < pal.Names.Length; i++)
+                        {
+                            Vector2 pos = ImGui.GetCursorPos();
+
+                            if (GenerateSelectableColor(pal.Names[i], pal.ParsedValues[i], drawData, ref color))
+                            {
+                                color = pal.ParsedValues[i];
+                                returnValue = true;
+                                ImGui.CloseCurrentPopup();
+                            }
+                        }
+
+                        ImGui.EndListBox();
+                    }
+
+
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Editor"))
+                {
+                    Model.Palette pal = ImGuiCore.State.Palette;
+
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
+                    if (ImGui.BeginListBox("##themelist"))
+                    {
+                        ImDrawListPtr drawData = ImGui.GetWindowDrawList();
+
+                        for (int i = 0; i < pal.Names.Length; i++)
+                        {
+                            Vector2 pos = ImGui.GetCursorPos();
+
+                            if (GenerateSelectableColor(pal.Names[i], pal.ParsedValues[i], drawData, ref color))
+                            {
+                                color = pal.ParsedValues[i];
+                                returnValue = true;
+                                ImGui.CloseCurrentPopup();
+                            }
+                        }
+
+                        ImGui.EndListBox();
+                    }
+
                     ImGui.EndTabItem();
                 }
 

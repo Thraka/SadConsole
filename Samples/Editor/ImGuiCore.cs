@@ -42,7 +42,7 @@ public static partial class ImGuiCore
         //_imGui.fontSize = 14f;
 
         Game.Instance.MonoGameInstance.Components.Add(_imGui);
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = false;
+        Host.Global.SadConsoleComponent.Enabled = false;
     }
 
     public static void Start()
@@ -87,7 +87,7 @@ public static partial class ImGuiCore
         // Test code
         var doc = Model.SurfaceDocument.FromSettings(280, 225, Color.White, Color.Black);
         State.OpenDocuments = [.. State.OpenDocuments, doc];
-        ((Model.SurfaceDocument)State.OpenDocuments[0]).Surface.Surface.View = new Rectangle(0, 0, 10, 10);
+        ((Model.SurfaceDocument)State.OpenDocuments[0]).VisualDocument.Surface.View = new Rectangle(0, 0, 10, 10);
     }
 
     public static void ResetUIList()
@@ -124,8 +124,7 @@ public static partial class ImGuiCore
 
     public static void Stop()
     {
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Visible = true;
-        Game.Instance.MonoGameInstance.SadConsoleComponent.Enabled = true;
+        Host.Global.SadConsoleComponent.Enabled = true;
         Settings.DoFinalDraw = true;
 
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;

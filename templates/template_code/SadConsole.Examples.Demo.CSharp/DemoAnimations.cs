@@ -125,22 +125,11 @@ class AnimatedFlip : AnimationSlide
 {
     public AnimatedFlip() : base()
     {
-        Surface.DefaultBackground = new Color(227, 227, 227);
-        Surface.Clear();
-
-        var floor = new ScreenSurface(Surface.Width, 5)
-        {
-            Parent = this,
-            Position = (0, Surface.Height - 5)
-        };
-
-        floor.Surface.DefaultBackground = new Color(235, 235, 235);
-        floor.Surface.Clear();
 
         Add(AnimatedScreenObject.FromImage("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), TimeSpan.FromSeconds(0.1d),
-            pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"]));
+            pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black));
 
-        PrintInfo("Square 8 x 8", Children[1]);
+        PrintInfo("Square 8 x 8", Children[0]);
     }
 }
 
@@ -149,7 +138,7 @@ class AnimatedSkater : AnimationSlide
     public AnimatedSkater() : base()
     {
         Add(AnimatedScreenObject.FromImage("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), TimeSpan.FromSeconds(0.15d),
-            pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"]));
+            pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black));
 
         PrintInfo("Square 8 x 8", Children[0]);
     }

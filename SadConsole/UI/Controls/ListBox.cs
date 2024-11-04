@@ -192,7 +192,7 @@ public partial class ListBox : CompositeControl
     /// <param name="height">The height of the listbox.</param>
     public ListBox(int width, int height) : base(width, height)
     {
-        _reconfigureSrollBar = true;
+        _reconfigureScrollBar = true;
         Items = new ObservableCollection<object>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
         ItemTheme = new ListBoxItemTheme();
@@ -241,6 +241,9 @@ public partial class ListBox : CompositeControl
 
         if (ScrollBar != null)
         {
+            if (ScrollBar.IsFocused)
+                ScrollBar.IsFocused = false;
+
             ScrollBar.ValueChanged -= _scrollbar_ValueChanged;
             value = ScrollBar.Value;
             max = ScrollBar.MaximumValue;
