@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <GameHost>monogame</GameHost>
-    <UseProjectReferences>false</UseProjectReferences>
+    <UseProjectReferences>true</UseProjectReferences>
 
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -47,9 +47,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ClassicBasic.Interpreter">
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\..\ClassicBasic\ClassicBasic.Interpreter\ClassicBasic.Interpreter.csproj" />
+    <Reference Condition=" '$(UseProjectReferences)' != 'true' " Include="ClassicBasic.Interpreter">
       <HintPath>ClassicBasic\ClassicBasic.Interpreter.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.38" />
   </ItemGroup>
 
   <ItemGroup>
