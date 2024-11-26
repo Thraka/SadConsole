@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using ImGuiNET.Internal;
-using ImGuiInternal = ImGuiNET.Internal.ImGui;
 
-namespace ImGuiNET;
+namespace Hexa.NET.ImGui;
 
 public static partial class ImGuiWidgets
 {
@@ -51,7 +49,7 @@ public static partial class ImGuiWidgets
 
         ImGui.PopStyleVar(2);
 
-        var window = ImGuiInternal.GetCurrentWindow();
+        var window = ImGuiP.GetCurrentWindow();
 
         //window.ContentRegionRect.Max.X -= frameHeight * 0.5f;
         window.WorkRect.Max.X -= frameHeight * 0.5f;
@@ -121,7 +119,7 @@ public static partial class ImGuiWidgets
 
         ImGui.PopStyleVar(2);
 
-        var window = ImGuiInternal.GetCurrentWindow();
+        var window = ImGuiP.GetCurrentWindow();
         //window.ContentRegionRect.Max.X += frameHeight * 0.5f;
         window.WorkRect.Max.X += frameHeight * 0.5f;
         window.InnerRect.Max.X += frameHeight * 0.5f;

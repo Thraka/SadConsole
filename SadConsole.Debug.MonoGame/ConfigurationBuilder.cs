@@ -34,7 +34,7 @@ internal class ImGuiDebugConfig : RootComponent, IConfigurator
 
     public override void Run(TimeSpan delta)
     {
-        if (Game.Instance.FrameNumber != 0 && Game.Instance.Keyboard.IsKeyReleased(HotKey) && !Debug.MonoGame.Debugger.IsOpened)
-            Debug.MonoGame.Debugger.Start();
+        if (Game.Instance.FrameNumber != 0 && Game.Instance.Keyboard.IsKeyReleased(HotKey) && !Debug.Debugger.IsOpened)
+            Debug.Debugger.Start();
     }
 }

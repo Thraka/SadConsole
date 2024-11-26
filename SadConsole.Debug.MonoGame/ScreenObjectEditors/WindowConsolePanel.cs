@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 
-namespace SadConsole.Debug.MonoGame.ScreenObjectEditors;
+namespace SadConsole.Debug.SadComponentEditors;
 
 internal class WindowConsolePanel : ImGuiObjectBase
 {

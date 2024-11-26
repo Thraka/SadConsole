@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -64,12 +64,5 @@ namespace SadConsole.ImGuiSystem
                 HostClosed?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        public IntPtr BindMonoGameTexture(Texture2D texture) =>
-            ImGuiRenderer.BindTexture(texture);
-
-        public void UnbindMonoGameTexture(IntPtr texturePointer) =>
-            ImGuiRenderer.UnbindTexture(texturePointer);
-
     }
 }

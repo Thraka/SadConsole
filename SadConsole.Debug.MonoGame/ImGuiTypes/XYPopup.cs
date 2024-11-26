@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
+﻿using System.Numerics;
 using SadConsole.ImGuiSystem;
-using static SadConsole.Debug.MonoGame.ImGuiTypes.ImGuiColoredGlyphEditor;
 
-namespace SadConsole.Debug.MonoGame.ImGuiTypes;
+namespace Hexa.NET.ImGui;
 
 internal class XYPopup
 {

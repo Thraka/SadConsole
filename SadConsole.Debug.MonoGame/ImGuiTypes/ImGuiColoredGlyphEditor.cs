@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using ImGuiNET;
-using SadConsole.Entities;
+﻿using System.Numerics;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
+using Hexa.NET.ImGui;
 
-namespace SadConsole.Debug.MonoGame.ImGuiTypes;
+namespace SadConsole.Debug.SadComponentEditors;
 
 internal class ImGuiColoredGlyphEditor
 {
@@ -43,7 +36,7 @@ internal class ImGuiColoredGlyphEditor
         ImGui.PushID(id);
         ImGui.BeginGroup();
         {
-            var fontTexture = renderer.BindTexture(((Host.GameTexture)font.Image).Texture);
+            var fontTexture = renderer.BindTexture(((SadConsole.Host.GameTexture)font.Image).Texture);
             var rect = font.GetGlyphSourceRectangle(_imGuiGlyph.Glyph);
             var textureSize = new Point(font.Image.Width, font.Image.Height);
 

@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
@@ -27,20 +27,12 @@
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.89.7.1" />
-    <!--
-    <Reference Include="ImGui.NET">
-      <HintPath>..\..\ImGui.NET\bin\Debug\ImGui.NET\netstandard2.0\ImGui.NET.dll</HintPath>
-    </Reference>
-    -->
   </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />

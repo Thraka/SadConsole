@@ -4,7 +4,7 @@
         <name>SadConsole.Debug.MonoGame</name>
     </assembly>
     <members>
-        <member name="M:SadConsole.Debug.MonoGame.Debugger.BasicInit">
+        <member name="M:SadConsole.Debug.Debugger.BasicInit">
             <summary>
             Initializes the debugger.
             </summary>
@@ -16,7 +16,7 @@
         </member>
         <member name="M:SadConsole.Configuration.DebugExtensions.EnableImGuiDebug(SadConsole.Configuration.Builder,SadConsole.Input.Keys)">
             <summary>
-            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that uses the specified hotkey to invoke <see cref="M:SadConsole.Debug.MonoGame.Debugger.Start"/>.
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that uses the specified hotkey to invoke <see cref="!:Debug.MonoGame.Debugger.Start"/>.
             </summary>
             <param name="builder">The config builder.</param>
             <param name="hotkey">The keyboard key to start the debugger.</param>
@@ -27,41 +27,37 @@
             Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
             </summary>
             <param name="obj">The object to check.</param>
-            <returns>A string respresenting the object.</returns>
+            <returns>A string representing the object.</returns>
         </member>
-        <member name="T:SadConsole.ImGuiSystem.BoundTexture2D">
-             <summary>
-             Represents a texture coupled with its pointer as known by ImGUI.
-             </summary>
-             <remarks>
-             This object is meant to be managed by a single reference. You must unbind the texture manually once you're done with it.
-            
-             The <see cref="M:SadConsole.ImGuiSystem.BoundTexture2D.Refresh(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)"/> method is used to automatically unbind the old texture and replace it with the one provided, when they don't match.
-             </remarks>
-        </member>
-        <member name="P:SadConsole.ImGuiSystem.BoundTexture2D.Texture">
+        <member name="T:SadConsole.ImGuiSystem.ImGuiImplementation">
             <summary>
-            The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> bound to ImGUI.
+            A basic ImGui interface that adds the <see cref="T:SadConsole.ImGuiSystem.ImGuiMonoGameComponent"/> to MonoGame, rendering ImGui over SadConsole.
             </summary>
         </member>
-        <member name="P:SadConsole.ImGuiSystem.BoundTexture2D.Pointer">
+        <member name="P:SadConsole.ImGuiSystem.ImGuiImplementation.Renderer">
             <summary>
-            The current pointer to the texture as known by ImGUI.
+            Gets the renderer for ImGui.
             </summary>
         </member>
-        <member name="M:SadConsole.ImGuiSystem.BoundTexture2D.#ctor(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)">
+        <member name="P:SadConsole.ImGuiSystem.ImGuiImplementation.MonoGameComponent">
             <summary>
-            Creates a new instance of this class.
+            Gets the MonoGame component that is rendering ImGui.
             </summary>
-            <param name="renderer">The ImGUI render object.</param>
-            <param name="texture">The texture you want to bind with ImGUI.</param>
         </member>
-        <member name="M:SadConsole.ImGuiSystem.BoundTexture2D.Refresh(SadConsole.ImGuiSystem.ImGuiRenderer,Microsoft.Xna.Framework.Graphics.Texture2D)">
+        <member name="P:SadConsole.ImGuiSystem.ImGuiImplementation.UIObjects">
             <summary>
-            Checks to see that the passed in texture matches the one on this object. If it doesn't the old one is unbound and this one is bound.
+            Gets the list of UI objects that is drawn by ImGui.
             </summary>
-            <param name="renderer">The ImGUI renderer.</param>
-            <param name="texture">The texture.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiImplementation.Start(System.Boolean,System.Boolean,System.Boolean,System.Single,System.String)">
+            <summary>
+            Starts the ImGui system.
+            </summary>
+            <param name="disableFinalDraw">Turns off <see cref="F:SadConsole.Settings.DoFinalDraw"/>, which causes SadConsole to only render ImGui to the screen.</param>
+            <param name="disableUpdate">Turns off <see cref="F:SadConsole.Settings.DoUpdate"/>, which pauses SadConsole's update loop.</param>
+            <param name="disableInput">Turns off <see cref="P:SadConsole.Settings.Input.DoKeyboard"/> and <see cref="P:SadConsole.Settings.Input.DoMouse"/>, allowing only ImGui to handle input.</param>
+            <param name="fontSize">The font size to use with ImGui.</param>
+            <param name="fontFileTTF">The TTF font file to use with ImGui.</param>
         </member>
         <member name="T:SadConsole.ImGuiSystem.ImGuiObjectCollection">
             <summary>
@@ -81,10 +77,10 @@
         </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
             <summary>
-            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:ImGuiNET.ImGui.Image(System.IntPtr,System.Numerics.Vector2)" />. That pointer is then used by ImGui to let us know what texture to draw
+            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:Hexa.NET.ImGui.ImGui.Image(Hexa.NET.ImGui.ImTextureID,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector4,System.Numerics.Vector4)" />. That pointer is then used by ImGui to let us know what texture to draw
             </summary>
         </member>
-        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(System.IntPtr)">
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(Hexa.NET.ImGui.ImTextureID)">
             <summary>
             Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
             </summary>
@@ -119,7 +115,7 @@
             Sends XNA input state to ImGui
             </summary>
         </member>
-        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(ImGuiNET.ImDrawDataPtr)">
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(Hexa.NET.ImGui.ImDrawDataPtr)">
             <summary>
             Gets the geometry as set up by ImGui and sends it to the graphics device
             </summary>

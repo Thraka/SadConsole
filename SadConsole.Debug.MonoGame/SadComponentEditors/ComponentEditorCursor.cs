@@ -1,9 +1,8 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using SadConsole.Components;
-using SadConsole.Debug.MonoGame.ImGuiTypes;
 using SadConsole.ImGuiSystem;
 
-namespace SadConsole.Debug.MonoGame.SadComponentEditors;
+namespace SadConsole.Debug.SadComponentEditors;
 
 internal class ComponentEditorCursor : ImGuiObjectBase
 {
@@ -36,7 +35,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
             _cursorAppearanceEditor = new ImGuiColoredGlyphEditor();
 
             // Copy the render state of the cursor
-            _cursorAppearance = new ColoredGlyph();
+            _cursorAppearance = new SadConsole.ColoredGlyph();
             _stateComponent.CursorRenderCell.CopyAppearanceTo(_cursorAppearance);
 
             // Position
@@ -80,7 +79,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
             if (XYPopup.BuildUI("comp_cur_edit_position", renderer, ref _positionX, ref _positionY, "X", "Y"))
                 _stateComponent.Position = (_positionX, _positionY);
             else
-                if (!ImGui.IsPopupOpen("comp_cur_edit_position"))
+                if (!ImGuiP.IsPopupOpen("comp_cur_edit_position"))
                 {
                     _positionX = _stateComponent.Position.X;
                     _positionY = _stateComponent.Position.Y;

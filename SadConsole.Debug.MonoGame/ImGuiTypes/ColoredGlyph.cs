@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
-using SadConsole.SerializedTypes;
 
-namespace SadConsole.Debug.MonoGame.ImGuiTypes;
+namespace SadConsole.Debug;
 
 public struct ColoredGlyph
 {
