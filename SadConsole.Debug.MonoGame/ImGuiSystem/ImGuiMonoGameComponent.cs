@@ -20,7 +20,7 @@ namespace SadConsole.ImGuiSystem
 
         public bool WantsKeyboardCapture => ImGuiRenderer.WantsKeyboardCapture;
 
-        public List<ImGuiObjectBase> UIComponents { get; private set; } = new List<ImGuiObjectBase>();
+        public List<ImGuiObjectBase> UIComponents { get; } = [ ];
 
         public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game, bool enableDocking): base(game)
         {
@@ -38,8 +38,14 @@ namespace SadConsole.ImGuiSystem
             if (enableDocking)
             {
                 ImGuiIOPtr io = ImGui.GetIO();
-                io.ConfigFlags = io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+                io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ImGuiRenderer.BeforeLayoutInput(gameTime);
+            Host.Global.BlockSadConsoleInput = ImGuiRenderer.WantsMouseCapture | ImGuiRenderer.WantsKeyboardCapture;
         }
 
         public override void Draw(GameTime gameTime)

@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
@@ -10,6 +10,7 @@
     <PackageId>SadConsole.Debugger.MonoGame</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <RootNamespace>SadConsole</RootNamespace>
   </PropertyGroup>
 
   <!-- Custom properties -->
@@ -33,6 +34,12 @@
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Roboto-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />

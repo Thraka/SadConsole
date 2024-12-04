@@ -34,7 +34,7 @@ public static class ImGuiImplementation
     /// <param name="disableInput">Turns off <see cref="Settings.Input.DoKeyboard"/> and <see cref="Settings.Input.DoMouse"/>, allowing only ImGui to handle input.</param>
     /// <param name="fontSize">The font size to use with ImGui.</param>
     /// <param name="fontFileTTF">The TTF font file to use with ImGui.</param>
-    public static void Start(bool disableFinalDraw = true, bool disableUpdate = false, bool disableInput = true, float fontSize = 18f, string fontFileTTF = "JetBrains Mono SemiBold Nerd Font Complete.ttf")
+    public static void Start(bool disableFinalDraw = true, bool disableUpdate = false, bool disableInput = true, float fontSize = 18f, string fontFileTTF = "Roboto-Regular.ttf")
     {
         Settings.DoFinalDraw = disableFinalDraw!;
         Settings.DoUpdate = disableUpdate!;

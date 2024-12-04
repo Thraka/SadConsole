@@ -148,14 +148,21 @@ namespace SadConsole.ImGuiSystem
         }
 
         /// <summary>
-        /// Sets up ImGui for a new frame, should be called at frame start
+        /// Runs the ImGui input. Call before <see cref="BeforeLayout"/>.
         /// </summary>
-        public virtual void BeforeLayout(GameTime gameTime)
+        /// <param name="gameTime">Game frame delta.</param>
+        public void BeforeLayoutInput(GameTime gameTime)
         {
             ImGui.GetIO().DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             UpdateInput();
+        }
 
+        /// <summary>
+        /// Sets up ImGui for a new frame, should be called at frame start
+        /// </summary>
+        public virtual void BeforeLayout(GameTime gameTime)
+        {
             ImGui.NewFrame();
         }
 
@@ -227,9 +234,6 @@ namespace SadConsole.ImGuiSystem
 
             ImGuiIOPtr io = ImGui.GetIO();
 
-            WantsMouseCapture = io.WantCaptureMouse;
-            WantsKeyboardCapture = io.WantCaptureKeyboard;
-
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
 
@@ -257,12 +261,15 @@ namespace SadConsole.ImGuiSystem
 
             io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+
+            WantsMouseCapture = io.WantCaptureMouse;
+            WantsKeyboardCapture = io.WantCaptureKeyboard;
         }
 
         private bool TryMapKeys(Keys key, out ImGuiKey imguikey)
         {
             //Special case not handed in the switch...
-            //If the actual key we put in is "None", return none and true. 
+            //If the actual key we put in is "None", return none and true.
             //otherwise, return none and false.
             if (key == Keys.None)
             {
