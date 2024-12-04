@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Fps.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InternalHostStartupData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\MonoGameSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\MonoGameCallbackConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\WindowRenderer.cs" />
