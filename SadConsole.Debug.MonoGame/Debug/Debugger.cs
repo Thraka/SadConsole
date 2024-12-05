@@ -23,19 +23,6 @@ public static partial class Debugger
         }
     }
 
-    /// <summary>
-    /// Initializes the debugger.
-    /// </summary>
-    public static void BasicInit()
-    {
-        _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, (Microsoft.Xna.Framework.Game)Game.Instance.MonoGameInstance, true);
-        //_imGui.Font = "Roboto-Regular.ttf";
-        //_imGui.fontSize = 14f;
-
-        Game.Instance.MonoGameInstance.Components.Add(_imGui);
-        Host.Global.SadConsoleComponent.Enabled = false;
-    }
-
     public static void Start()
     {
         if (_imGui != null)
@@ -44,13 +31,12 @@ public static partial class Debugger
             _imGui.Enabled = true;
 
             Host.Global.SadConsoleComponent.Enabled = false;
+            GuiState.RefreshScreenObject();
             return;
         }
 
         Host.Global.SadConsoleComponent.Enabled = false;
-
-        //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = false;
-        //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = false;
+        GuiState.RefreshScreenObject();
 
         _imGui = new ImGuiMonoGameComponent(SadConsole.Host.Global.GraphicsDeviceManager, (Microsoft.Xna.Framework.Game)Game.Instance.MonoGameInstance, true);
         var ptr = ImGui.GetIO().Fonts.AddFontFromFileTTF(@"Roboto-Regular.ttf", 14);
@@ -62,7 +48,6 @@ public static partial class Debugger
         _imGui.UIComponents.Add(new GuiTopBar());
         _imGui.UIComponents.Add(new GuiDockspace());
         _imGui.UIComponents.Add(new ScreenObjectsPanel());
-        //_imGui.UIComponents.Add(new GuiSurfacePreview());
         _imGui.UIComponents.Add(new GuiPreviews());
 
         ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(SadConsole.UI.Window), new SadComponentEditors.WindowConsolePanel());

@@ -33,11 +33,6 @@
             <param name="startupAction">A callback to add objects to the ImGui MonoGame component.</param>
             <returns>The config builder.</returns>
         </member>
-        <member name="M:SadConsole.Debug.Debugger.BasicInit">
-            <summary>
-            Initializes the debugger.
-            </summary>
-        </member>
         <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
             <summary>
             Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
@@ -230,9 +225,23 @@
             <param name="color">The color to convert.</param>
             <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
         </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector3(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector3"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector3"/> representing the color.</returns>
+        </member>
         <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector4)">
             <summary>
             Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector3)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector3"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
             </summary>
             <param name="value">The vector color to convert.</param>
             <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
@@ -260,6 +269,13 @@
         <member name="M:System.Numerics.ExtensionsColorNumericsMonoGame.ToMonoGameColor(System.Numerics.Vector4)">
             <summary>
             Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:Microsoft.Xna.Framework.Color"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumericsMonoGame.ToMonoGameColor(System.Numerics.Vector3)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector3"/> to a <see cref="T:Microsoft.Xna.Framework.Color"/>.
             </summary>
             <param name="value">The vector color to convert.</param>
             <returns>The <see cref="T:Microsoft.Xna.Framework.Color"/> representing the color.</returns>
