@@ -407,8 +407,6 @@ public abstract partial class GameHost : IDisposable
     protected void LoadDefaultFonts(string? defaultFont)
     {
         // Load the embedded fonts.
-        System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;
-
         EmbeddedFont = LoadResourceFont("SadConsole.Resources.IBM.font");
         EmbeddedFontExtended = LoadResourceFont("SadConsole.Resources.IBM_ext.font");
 
@@ -424,6 +422,8 @@ public abstract partial class GameHost : IDisposable
         // Local method to load a font from the built in assembly resource
         SadFont LoadResourceFont(string fontName)
         {
+            System.Reflection.Assembly assembly = typeof(SadConsole.SadFont).Assembly;
+
             using Stream stream = assembly.GetManifestResourceStream(fontName)!;
             using StreamReader sr = new(stream);
 
