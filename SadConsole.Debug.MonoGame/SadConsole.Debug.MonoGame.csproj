@@ -7,7 +7,7 @@
     <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
     <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
-    <PackageId>SadConsole.Debugger.MonoGame</PackageId>
+    <PackageId>SadConsole.Debug.MonoGame</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
     <RootNamespace>SadConsole</RootNamespace>
@@ -34,13 +34,10 @@
   <ItemGroup>
     <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
     <None Include="..\README.md" pack="true" PackagePath="." />
+    <Content Include="Roboto-Regular.ttf" pack="true" PackagePath="content/." CopyToOutputDirectory="Always" />
+    <Content Include="SadConsole.Debug.MonoGame.targets" PackagePath="build/SadConsole.Debug.MonoGame.targets" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Roboto-Regular.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
