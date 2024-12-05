@@ -11,6 +11,8 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public abstract class CompositeControl : ControlBase, IContainer
 {
+    protected bool MouseLastHandledByChild = false;
+
     /// <summary>
     /// The controls this composite control is hosting. Use <see cref="AddControl(ControlBase)"/> and <see cref="RemoveControl(ControlBase)"/> to manage the collection.
     /// </summary>
@@ -79,11 +81,16 @@ public abstract class CompositeControl : ControlBase, IContainer
                 if (!processResult)
                     processResult = base.ProcessMouse(state);
 
-                // Child control has the mouse over it, so we need to clear the base control as having the mouse over it, if it did have it
-                else if (MouseState_IsMouseOver)
+                else
                 {
-                    MouseState_IsMouseOver = false;
-                    OnMouseExit(newState);
+                    // Child control has the mouse over it, so we need to clear the base control as having the mouse over it, if it did have it
+                    if (MouseState_IsMouseOver)
+                    {
+                        MouseState_IsMouseOver = false;
+                        OnMouseExit(newState);
+                    }
+
+                    MouseLastHandledByChild = true;
                 }
 
                 return processResult;
@@ -94,6 +101,17 @@ public abstract class CompositeControl : ControlBase, IContainer
                 {
                     MouseState_IsMouseOver = false;
                     OnMouseExit(newState);
+                }
+
+                if (MouseLastHandledByChild)
+                {
+                    var controls = new List<ControlBase>(Controls);
+                    controls.Reverse();
+
+                    for (int i = 0; i < controls.Count; i++)
+                        controls[i].ProcessMouse(state);
+
+                    MouseLastHandledByChild = false;
                 }
             }
         }
