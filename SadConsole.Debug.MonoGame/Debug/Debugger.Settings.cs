@@ -9,9 +9,14 @@ namespace SadConsole.Debug;
 
 public static partial class Debugger
 {
+    /// <summary>
+    /// The settings used by the debugger.
+    /// </summary>
     public static class Settings
     {
-        public static Vector4 Color_Labels = Color.AnsiCyanBright.ToVector4();
+        /// <summary>
+        /// The color of the focused object.
+        /// </summary>
         public static Vector4 Color_FocusedObj = Color.AnsiCyanBright.ToVector4();
     }
 }

@@ -17,9 +17,9 @@ public class ImGuiObjectCollection : ImGuiObjectBase, IList<ImGuiObjectBase>
         _list = [];
 
     /// <summary>
-    /// Draws the objects contained in this collection.
+    /// Draws the objects contained in this collection if <see cref="ImGuiObjectBase.IsVisible"/> is <see langword="true"/>.
     /// </summary>
-    /// <param name="renderer"></param>
+    /// <param name="renderer">The ImGui renderer.</param>
     public override void BuildUI(ImGuiRenderer renderer)
     {
         if (!IsVisible) return;

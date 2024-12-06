@@ -7,21 +7,15 @@ using Hexa.NET.ImGui;
 
 namespace SadConsole.Debug;
 
-public class ScreenObjectDetailsPanel: ImGuiObjectBase
+public class ScreenObjectDetailsPanel
 {
-    public static Dictionary<Type, ImGuiObjectBase> RegisteredPanels { get; } = [];
+    public static Dictionary<Type, ScreenObjectEditors.IDetailsPanel> RegisteredPanels { get; } = [];
 
     public ScreenObjectState CurrentScreenObject;
 
     public void BuildUI(ImGuiRenderer renderer, ScreenObjectState state)
     {
         CurrentScreenObject = state;
-        BuildUI(renderer);
-        CurrentScreenObject = null;
-    }
-
-    public override void BuildUI(ImGuiRenderer renderer)
-    {
         if (CurrentScreenObject == null) return;
 
         //ImGui.BeginChild(id, new Vector2(0, 300), false, ImGuiWindowFlags.HorizontalScrollbar);
@@ -69,44 +63,16 @@ public class ScreenObjectDetailsPanel: ImGuiObjectBase
             if (ImGui.Checkbox("Is Focused", ref isFocused))
                 CurrentScreenObject.Object.IsFocused = isFocused;
 
-
-            ///////
-            // Window
-            ///////
-            if (CurrentScreenObject.IsWindow)
-            {
-                var window = (UI.Window)CurrentScreenObject.Object;
-
-                ImGui.SeparatorText("Window Settings");
-
-                ImGui.AlignTextToFramePadding();
-                ImGui.Text("Title: ");
-                ImGui.SameLine();
-                ImGui.SetNextItemWidth(-1);
-                window.Title = ImGui2.InputText("##window_title", window.Title);
-
-                ImGui.AlignTextToFramePadding();
-                ImGui.Text("Title Alignment: ");
-                ImGui.SameLine();
-                ImGui.SetNextItemWidth(ImGui.CalcTextSize("Stretch").X * 2 + ImGui.GetStyle().FramePadding.X * 2.0f);
-                if (ImGui.Combo("##window_title_alignment", ref CurrentScreenObject.WindowState.TitleAlignment,
-                                                            Enums<HorizontalAlignment>.Names,
-                                                            Enums<HorizontalAlignment>.Count))
-                {
-                    window.TitleAlignment = (HorizontalAlignment)CurrentScreenObject.WindowState.TitleAlignment;
-                }
-
-            }
-
             ///////
             // Custom editors
             ///////
             if (RegisteredPanels.TryGetValue(CurrentScreenObject.Object.GetType(), out var panel))
             {
                 ImGui.SeparatorText("Custom Editor");
-                panel.BuildUI(renderer);
+                panel.BuildUI(renderer, CurrentScreenObject);
             }
         }
         ImGui.EndGroup();
+        CurrentScreenObject = null;
     }
 }

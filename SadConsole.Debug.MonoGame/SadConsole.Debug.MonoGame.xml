@@ -9,12 +9,14 @@
             Extensions to enable the ImGui debug UI.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.DebugExtensionsImGui.EnableImGuiDebugger(SadConsole.Configuration.Builder,SadConsole.Input.Keys)">
+        <member name="M:SadConsole.Configuration.DebugExtensionsImGui.EnableImGuiDebugger(SadConsole.Configuration.Builder,SadConsole.Input.Keys,System.Action{System.Boolean},System.Action)">
             <summary>
             Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that uses the specified hotkey to invoke <see cref="M:SadConsole.Debug.Debugger.Start"/>.
             </summary>
             <param name="builder">The config builder.</param>
             <param name="hotkey">The keyboard key to start the debugger.</param>
+            <param name="openedEventHandler">An event handler that's raised when the debugger opens.</param>
+            <param name="closedEventHandler">An event handler that's raised when the debugger closes.</param>
             <returns>The config builder.</returns>
         </member>
         <member name="T:SadConsole.Configuration.ConfigurationImGui">
@@ -32,6 +34,56 @@
             <param name="enableDocking">Enables the docking feature of ImGui. Defaults to false.</param>
             <param name="startupAction">A callback to add objects to the ImGui MonoGame component.</param>
             <returns>The config builder.</returns>
+        </member>
+        <member name="T:SadConsole.Debug.Debugger">
+            <summary>
+            The SadConsole debugger class.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Debug.Debugger.Opened">
+            <summary>
+            An event that's raised when the debugger is opened. True is passed if it's the first time it's opened.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Debug.Debugger.Closed">
+            <summary>
+            An event that's raised when the debugger is closed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Debug.Debugger.GuiComponents">
+            <summary>
+            The ImGui objects to draw each game frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Debug.Debugger.Renderer">
+            <summary>
+            The ImGui renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Debug.Debugger.IsOpened">
+            <summary>
+            True when the debugger is currently opened.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Debugger.Start">
+            <summary>
+            Starts the debugger.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Debugger.Stop">
+            <summary>
+            Stops the debugger.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Debug.Debugger.Settings">
+            <summary>
+            The settings used by the debugger.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Debug.Debugger.Settings.Color_FocusedObj">
+            <summary>
+            The color of the focused object.
+            </summary>
         </member>
         <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
             <summary>
@@ -98,9 +150,9 @@
         </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.BuildUI(SadConsole.ImGuiSystem.ImGuiRenderer)">
             <summary>
-            Draws the objects contained in this collection.
+            Draws the objects contained in this collection if <see cref="P:SadConsole.ImGuiSystem.ImGuiObjectBase.IsVisible"/> is <see langword="true"/>.
             </summary>
-            <param name="renderer"></param>
+            <param name="renderer">The ImGui renderer.</param>
         </member>
         <member name="P:SadConsole.ImGuiSystem.ImGuiObjectCollection.Item(System.Int32)">
             <inheritdoc/>
