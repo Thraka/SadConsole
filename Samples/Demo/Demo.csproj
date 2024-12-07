@@ -16,12 +16,14 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- monogame, sfml, or fna -->
+    <!-- monogame, sfml, fna, or kni -->
     <GameHost>monogame</GameHost>
-    
+
+    <DefineConstants>$(DefineConstants);PROJREFS</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
+    <DefineConstants Condition=" '$(GameHost)' == 'kni' ">$(DefineConstants);KNI;MONOGAME</DefineConstants>
 
   </PropertyGroup>
 
@@ -29,6 +31,7 @@
     <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
     <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'kni' " Include="..\..\SadConsole.Host.KNI\SadConsole.Host.KNI.csproj" />
     <ProjectReference Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
 
     <!-- MonoGame Debugging lib -->
@@ -50,7 +53,7 @@
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
 
-    <!-- If you want to use DirectX, you must set the <TargetFramework> to net6.0-windows and change the MonoGame reference -->
+    <!-- If you want to use DirectX, you must set the <TargetFramework> to net8.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
 
     <!-- Compile the MonoGame Shaders -->

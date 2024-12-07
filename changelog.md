@@ -1,3 +1,12 @@
+## v10.5.0 (12/07/2024)
+
+- [All] Add .NET 9 target. This will be the last release for .NET 6 and .NET 7.
+- [Core] Some components that used their own renderers weren't disposing the ones they replaced.
+- [UI] Fix bug with mouse moving over composite controls such as the list box.
+- [Extended] Rework `DebugMouseTint` class and add `DebugFocusedTint` class. Both settable as configuration builder options now.
+- [MonoGame] Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.
+- [Debug Library] Release the first version of the `SadConsole.Debug.MonoGame` library. This also adds general **ImGui** support.
+
 ## v10.4.2 (10/23/2024)
 
 - [Core] Fixed small bug when cursor's effect was removed.
@@ -322,7 +331,7 @@ Removed
   - `ListBox` converted to a `CompositeControl`.
   - `ControlHost.FocusedControl` loses it's focus state when the host loses focus. The state is restored when the host gets focus.
   - `ControlBase` has more accurate mouse processing. For example, pressing a button down on a different control and releasing it on a new control doesn't trigger a click.
-  - Added new `Panel` control. 
+  - Added new `Panel` control.
 - Controls handle mouse interactions better.
 - The theme library (when set and at start) will add the library colors to the `ColorExtensions.ColorMappings` dictionary with the format of **theme.color-name**.
 
@@ -497,7 +506,7 @@ Because of the breaking change, I'm setting this version to a strange one, *v8.9
 - Minor speed improvement to `console.Fill`.
 - Fixed **really bad bug*- that caused `console.Print` to skip printing if the length of the text ran off the end of the console.
 - Fixed **really bad bug*- that caused `console.Parent` assignment to result in `console.Parent` becoming null.
-- **BREAKING CHANGE*- `Console.OnFocused` and `Console.OnFocusLost` are now public. 
+- **BREAKING CHANGE*- `Console.OnFocused` and `Console.OnFocusLost` are now public.
 - Console no longer calls `OnFocused` and `OnFocusLost` when `IsFocused` is set. Instead, `Global.FocusedConsole` calls the appropriate focused callback. Fixes #218 (thanks Aezoc)
 
 #### Controls
@@ -576,7 +585,7 @@ Code changes:
 - Changed Listbox.Slider to Listbox.Scrollbar. Also changed any property that used the word Slider to ScrollBar
 - Window messagebox and prompts have a library parameter to theme. If not specified, uses the default theme.
 - [Fixed #165] Window stealing mouse focus from scrollbar (thanks VGA256)
-- [Fixed #164] Controls should be aware of what theme is being used 
+- [Fixed #164] Controls should be aware of what theme is being used
 - Upgraded to MonoGame 3.7
 - Renamed base types and removed some others
 - SurfaceBase is now CellSurface and not abstract
@@ -683,7 +692,7 @@ Code changes:
 - Added some new color extension methods (clear channel, alpha only).
 
 ## 03/17/2018
-      
+
 - Added Settings.WindowMinimumSize.
 
 ## 03/16/2018
@@ -782,7 +791,7 @@ Code changes:
 
 Major update to all of SadConsole.
 
-A lot of refactoring has happened. Many of the types in SadConsole have been moved around to a more logical position and a lot of redundancy has been removed. 
+A lot of refactoring has happened. Many of the types in SadConsole have been moved around to a more logical position and a lot of redundancy has been removed.
 
 For example, the **Console*- type used to be located at the `SadConsole.Consoles.Console` which felt very obtuse. **Console*- is a core type that doesn't need its own namespace, much like **Cell**. This type is now located in the root namespace `SadConsole`.
 
@@ -796,7 +805,7 @@ Other things have simplified naming too, like `Console.CanUseKeyboard` is just `
 | ----- | --- |
 | SadConsole.Global   | Global state, like time elapsed, keyboard/mouse input state, the active thing to render. |
 | SadConsole.Game     | `Microsoft.Xna.Framework.Game` game instance that you can run instead of providing your own. |
-| SadConsole.Settings | Various settings like fullscreen, device clear color, enable/disable keyboard or mouse, other settings. | 
+| SadConsole.Settings | Various settings like fullscreen, device clear color, enable/disable keyboard or mouse, other settings. |
 
 ### Core types
 
@@ -823,7 +832,7 @@ Here is a list of types that have changed and what replaced them. The root `SadC
 
 | Old Class        | New Class     |
 | ---------------- | --- |
-| Engine           | Replaced by **Global**, **Game**, and **Settings**. | 
+| Engine           | Replaced by **Global**, **Game**, and **Settings**. |
 | ICellAppearance  | Removed - Use **Cell**. |
 | CellAppearance   | Removed - Use **Cell**. |
 | Consoles.IConsole     | IConsole. Still exists, implements **IScreen*- now. |
@@ -844,7 +853,7 @@ Here is a list of types that have changed and what replaced them. The root `SadC
 | Consoles.ITextSurfaceRendererUpdate | Removed - All surfaces support cached rendering. |
 | Consoles.CachedTextSurfaceRenderer  | Removed - All surfaces support cached rendering. |
 | Input.MouseInfo       | Renamed to Input.Mouse |
-| Input.KeyboardInfo    | Renamed to Input.Keyboard | 
+| Input.KeyboardInfo    | Renamed to Input.Keyboard |
 
 Besides the **Consoles*- namespace, startup, and **Engine*- -> **Global*- changes, not much else has changed.
 
@@ -878,7 +887,7 @@ static void Main(string[] args)
 
     // Hook the "after render" even though we're not using it.
     SadConsole.Game.OnDraw = DrawFrame;
-            
+
     // Start the game.
     SadConsole.Game.Instance.Run();
 
@@ -1020,7 +1029,7 @@ Versions are no longer the same across all libraries.
 - Cursor supports using the ColoredString parser system.
 - Fixed RexPaint support.
 - Main game window centers after resizing.
-- Virtual cursor now support wrapping lines at the word level and linux line endings. 
+- Virtual cursor now support wrapping lines at the word level and linux line endings.
 - Rewrote the initialization system. Cut out the MonoGame.Game object and wrapped it behind the scenes. Easier for new users.
 - Fixed various bugs in the AnimatedTextSurface.
 
@@ -1103,7 +1112,7 @@ Versions are no longer the same across all libraries.
 #### GameHelpers
 
 - Created new binary called SadConsole.GameHelpers.
-- A GameObject type has been created (along with a collection type) which represents a point on the console. 
+- A GameObject type has been created (along with a collection type) which represents a point on the console.
 *- Generally these aren't rendered, but they allow you to query the collection for a GameObject named X or one located at a specific point. You can also do queries that return all GameObjects with a specific color or character for example, using lync.
 *- GameObjects have a Settings collection which represent name-value-pairs. For example, create a Door GameObject which a setting named Destination and a value of the name of another file. Then code your game to look for when something touches the same location as the GameObject and then move it to the appropriate screen.
 - GameConsole is a LayeredConsole with special metadata that contains a GameObjectCollection for each layer.
@@ -1131,7 +1140,7 @@ Versions are no longer the same across all libraries.
 - Added Entity.PositionOffset which is now taken into consideration when rendering an entity.
 *- By setting this property to the position of a console (when the console and entity have the same cellsize) will cause the entity to look as if it's hosted by the console.
 - Cell now has a SpriteEffect property which allows you to mirror and flip the cell to create more characters.
-*- Also implemented on the ICellAppearence 
+*- Also implemented on the ICellAppearence
 - CellsRenderer now correctly resets the "custom view" flag if a custom view is set to the exact dimensions of the surface.
 
 #### Controls
@@ -1145,7 +1154,7 @@ Versions are no longer the same across all libraries.
 #### Core
 
 - Added the SadConsole.EngineGameComponent XNA-based GameComponent.
-*- This simplifies initialization and framework code you need to hook up in your Game class. Added just like any other GameComponent object. 
+*- This simplifies initialization and framework code you need to hook up in your Game class. Added just like any other GameComponent object.
 - Added some new methods to the Color extensions provided by this library
 *- RedOnly, GreenOnly, and BlueOnly. These methods will return a new color with only the appropriate RGB channel set from the existing color.
 
@@ -1214,7 +1223,7 @@ Versions are no longer the same across all libraries.
     - Promoted PrintAppearance from a field to a property.
     - Removed CursorAppearance property as it is already exposed via the CursorRenderCell property.
     - Added DataContract attirbute to Cursor class.
-    - Created a Render method that the Console class will now call when rendering the cursor instead of doing it itself. 
+    - Created a Render method that the Console class will now call when rendering the cursor instead of doing it itself.
     - Added the PrintOnlyCharacterData property, defaults to false.
         - This allows you to override this method in a derived class to control how the cursor appears on the screen.
     - Removed CursorCharacter, use CursorRenderCell.CharacterIndex instead.

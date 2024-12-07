@@ -1,6 +1,6 @@
 {
     "$type": "SadConsole.SadFont, SadConsole",
-    "Name": "IBM_16x8",
+    "Name": "IBM_8x16",
     "FilePath": "IBM8x16.png",
     "GlyphHeight": 16,
     "GlyphPadding": 1,

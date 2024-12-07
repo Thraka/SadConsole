@@ -57,7 +57,7 @@ experiments/
 !/FNA/library/[rR]elease/
 !/FNA/dependencies/x64/
 !/FNA/library/[dD]ebug/
-!/src/SadConsole.Shared/[dD]ebug/
+!/SadConsole.Debug.MonoGame/[dD]ebug/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

@@ -9,9 +9,7 @@
     <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageTags>sadconsole;sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>
-Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->

@@ -11,7 +11,7 @@ namespace SadConsole;
 public interface IScreenSurface : IScreenObject
 {
     /// <summary>
-    /// Raised when the a mouse button is clicked on this object.
+    /// Raised when a mouse button is clicked on this object.
     /// </summary>
     event EventHandler<MouseScreenObjectState> MouseButtonClicked;
 

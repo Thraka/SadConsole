@@ -330,6 +330,11 @@
             Temporary variable to store the state of the <see cref="F:SadConsole.Settings.ResizeMode"/> when it's set to None, before going full screen.
             </summary>
         </member>
+        <member name="P:SadConsole.Game.UseTitleContainer">
+            <summary>
+            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
+            </summary>
+        </member>
         <member name="P:SadConsole.Game.MonoGameInstance">
             <summary>
             The <see cref="T:Microsoft.Xna.Framework.Game"/> instance.
@@ -1291,6 +1296,11 @@
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.ComposeTint">
+            <summary>
+            The color applied when the sprite batch draws this surface on the renderer.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
             <summary>
             Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
@@ -1419,6 +1429,13 @@
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseTitleContainer(SadConsole.Configuration.Builder)">
+            <summary>
+            Tells the game host to use the <see cref="T:Microsoft.Xna.Framework.TitleContainer"/> to open streams for reading.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameCtor(SadConsole.Configuration.Builder,System.Action{Microsoft.Xna.Framework.Game})">
             <summary>

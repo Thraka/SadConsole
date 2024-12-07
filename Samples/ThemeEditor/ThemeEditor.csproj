@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Using Include="SadConsole" />
     <Using Include="SadRogue.Primitives" />
@@ -27,7 +27,7 @@
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="10.*" />
@@ -36,7 +36,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
-    
+
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="10.*" />
 
@@ -48,5 +48,5 @@
   <ItemGroup>
     <TrimmerRootAssembly Include="System.IO.FileSystem" />
   </ItemGroup>
-  
+
 </Project>

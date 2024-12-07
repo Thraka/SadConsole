@@ -72,14 +72,14 @@ class ShakeEffect : CellEffectBase
         _animatedValueX.RepeatCount = 1;
         _animatedValueY.RepeatCount = 1;
 
-        EventHandler repating = (s, e) =>
+        EventHandler repeating = (s, e) =>
         {
             Instructions.AnimatedValue animated = (Instructions.AnimatedValue)s!;
             animated.Reset(shakeTime, SadConsole.GameHost.Instance.Random.NextDouble() * -3, SadConsole.GameHost.Instance.Random.NextDouble() * 3, new SadConsole.EasingFunctions.Bounce() { Mode = EasingFunctions.EasingMode.InOut });
         };
 
-        _animatedValueX.Repeating += repating;
-        _animatedValueY.Repeating += repating;
+        _animatedValueX.Repeating += repeating;
+        _animatedValueY.Repeating += repeating;
 
         RestoreCellOnRemoved = true;
         RemoveOnFinished = true;

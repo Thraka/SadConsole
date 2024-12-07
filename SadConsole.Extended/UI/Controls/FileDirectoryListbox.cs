@@ -62,7 +62,7 @@ public class FileDirectoryListbox : ListBox
     public bool HideNonFilterFiles { get; set; }
 
     /// <summary>
-    /// When <see langword="true"/>, only displays files that match <see cref="FileFilter"/>; otherwise <see langword="false"/> to display all files.
+    /// A list of extensions of files to highlight, separated by a semicolon. The extension is just the name without any wildcards or periods, in lowercase. Example: <c>txt;json;xml</c>.
     /// </summary>
     public string? HighlightedExtentions { get; set; }
 

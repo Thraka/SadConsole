@@ -530,6 +530,11 @@ public static class ColorExtensions2
         {
             return GetRandomColor(Color.White, SadConsole.GameHost.Instance.Random);
         }
+        // Temp code to eventually support parsing a ToString from a color...
+        //else if (value[0] == '{' && value[^1] == '}' && value.Contains("R:") && value.Contains("G:") && value.Contains("B:") && value.Contains("A:"))
+        //{
+            
+        //}
         else
         {
             value = value.ToLowerInvariant();

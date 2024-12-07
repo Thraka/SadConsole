@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Text;
 using System.Threading.Tasks;
 using ClassicBasic.Interpreter;
@@ -22,9 +23,10 @@ namespace BasicTerminal
         public IVariableRepository BASICVariableRepository;
         public IDataStatementReader BASICDataStatement;
         public IExpressionEvaluator BASICExpresionEval;
+        public IFileSystem BASICFileSystem;
 
         private Task RunProgramTask;
-
+        
         public ConsoleBASICInterpreter()
         {
             BASICRunEnvironment = new RunEnvironment();
@@ -32,6 +34,8 @@ namespace BasicTerminal
             BASICVariableRepository = new VariableRepository();
             BASICDataStatement = new DataStatementReader(BASICRunEnvironment, BASICProgramRepository);
             BASICExpresionEval = new ExpressionEvaluator(BASICVariableRepository, BASICRunEnvironment);
+            BASICFileSystem = new FileSystem();
+
             BASICTokensProvider = new TokensProvider(new IToken[] {
                 new ClassicBasic.Interpreter.Commands.Clear(BASICRunEnvironment, BASICVariableRepository, BASICDataStatement),
                 new ClassicBasic.Interpreter.Commands.Cont(BASICRunEnvironment,BASICProgramRepository),
@@ -43,14 +47,14 @@ namespace BasicTerminal
                 new ClassicBasic.Interpreter.Commands.Else(BASICRunEnvironment),
                 new ClassicBasic.Interpreter.Commands.End(BASICRunEnvironment),
                 new ClassicBasic.Interpreter.Commands.For(BASICRunEnvironment,BASICExpresionEval, BASICVariableRepository),
-                //new ClassicBasic.Interpreter.Commands.Get(BASICRunEnvironment,BASICExpresionEval,this),
+                new ClassicBasic.Interpreter.Commands.Get(BASICRunEnvironment,BASICExpresionEval,this),
                 new ClassicBasic.Interpreter.Commands.Gosub(BASICRunEnvironment,BASICProgramRepository),
                 new ClassicBasic.Interpreter.Commands.Goto(BASICRunEnvironment,BASICExpresionEval, BASICProgramRepository),
                 new ClassicBasic.Interpreter.Commands.If(BASICRunEnvironment,BASICExpresionEval, BASICProgramRepository),
-                //new ClassicBasic.Interpreter.Commands.Input(BASICRunEnvironment,BASICExpresionEval,BASICVariableRepository, this),
+                new ClassicBasic.Interpreter.Commands.Input(BASICRunEnvironment,BASICExpresionEval,BASICVariableRepository, this),
                 new ClassicBasic.Interpreter.Commands.Let(BASICRunEnvironment,BASICExpresionEval),
                 new ClassicBasic.Interpreter.Commands.List(BASICProgramRepository,this, BASICRunEnvironment),
-                //new ClassicBasic.Interpreter.Commands.Load(BASICRunEnvironment,BASICProgramRepository),
+                new ClassicBasic.Interpreter.Commands.Load(BASICExpresionEval, BASICFileSystem, BASICProgramRepository),
                 new ClassicBasic.Interpreter.Commands.New(BASICRunEnvironment,BASICProgramRepository,BASICVariableRepository,BASICDataStatement),
                 new ClassicBasic.Interpreter.Commands.Next(BASICRunEnvironment,BASICVariableRepository),
                 new ClassicBasic.Interpreter.Commands.On(BASICRunEnvironment,BASICExpresionEval,BASICProgramRepository),
@@ -95,6 +99,8 @@ namespace BasicTerminal
         }
 
         public void OnRemoved(IScreenObject host) { }
+
+        bool isInput = false;
 
         public void ProcessKeyboard(IScreenObject host, Keyboard keyboard, out bool handled)
         {
