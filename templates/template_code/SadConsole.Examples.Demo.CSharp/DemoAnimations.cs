@@ -61,7 +61,7 @@ internal class Animations : ScreenSurface
         ChangeAnimation(_animations.Length - 1, 1, _animations[0]);
 
     private void PrevAnimation() =>
-        ChangeAnimation(0, -1, _animations.Last());
+        ChangeAnimation(0, -1, _animations[^1]);
 
     private void ChangeAnimation(int testIndex, int step, AnimationSlide overlappingAnim)
     {

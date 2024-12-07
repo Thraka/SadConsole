@@ -1,11 +1,13 @@
 ﻿// Taken from https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/ImGuiRenderer.cs
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Color = Microsoft.Xna.Framework.Color;
+using System.Collections.Generic;
+using System;
 
 namespace SadConsole.ImGuiSystem
 {
@@ -19,7 +21,7 @@ namespace SadConsole.ImGuiSystem
         // Graphics
         private GraphicsDevice _graphicsDevice;
 
-        private BasicEffect _effect;
+        private BasicEffect? _effect;
         private RasterizerState _rasterizerState;
 
         private byte[] _vertexData;
@@ -31,11 +33,11 @@ namespace SadConsole.ImGuiSystem
         private int _indexBufferSize;
 
         // Textures
-        private Dictionary<IntPtr, Texture2D> _loadedTexturesByPointer;
-        private Dictionary<Texture2D, IntPtr> _loadedTexturesByTexture;
+        private Dictionary<ImTextureID, Texture2D> _loadedTexturesByPointer;
+        private Dictionary<Texture2D, ImTextureID> _loadedTexturesByTexture;
 
         private int _textureId;
-        private IntPtr? _fontTextureId;
+        private ImTextureID? _fontTextureId;
 
         // Input
         private int _scrollWheelValue;
@@ -45,14 +47,14 @@ namespace SadConsole.ImGuiSystem
 
         internal ImGuiRenderer(Microsoft.Xna.Framework.Game game)
         {
-            nint context = ImGui.CreateContext();
+            ImGuiContextPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
 
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _graphicsDevice = game.GraphicsDevice;
 
-            _loadedTexturesByPointer = new Dictionary<IntPtr, Texture2D>();
-            _loadedTexturesByTexture = new Dictionary<Texture2D, IntPtr>();
+            _loadedTexturesByPointer = [];
+            _loadedTexturesByTexture = [];
 
             _rasterizerState = new RasterizerState()
             {
@@ -76,7 +78,13 @@ namespace SadConsole.ImGuiSystem
         {
             // Get font texture from ImGui
             ImGuiIOPtr io = ImGui.GetIO();
-            io.Fonts.GetTexDataAsRGBA32(out byte* pixelData, out int width, out int height, out int bytesPerPixel);
+
+            byte* pixelData = null;
+            int width = 0;
+            int height = 0;
+            int bytesPerPixel = 0;
+
+            io.Fonts.GetTexDataAsRGBA32(ref pixelData, ref width, ref height, ref bytesPerPixel);
 
             // Copy the data to a managed array
             byte[] pixels = new byte[width * height * bytesPerPixel];
@@ -100,12 +108,12 @@ namespace SadConsole.ImGuiSystem
         /// <summary>
         /// Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="ImGui.Image" />. That pointer is then used by ImGui to let us know what texture to draw
         /// </summary>
-        public virtual IntPtr BindTexture(Texture2D texture)
+        public virtual ImTextureID BindTexture(Texture2D texture)
         {
             if (_loadedTexturesByTexture.ContainsKey(texture))
                 return _loadedTexturesByTexture[texture];
 
-            var id = new IntPtr(_textureId++);
+            var id = new ImTextureID(_textureId++);
 
             _loadedTexturesByPointer.Add(id, texture);
             _loadedTexturesByTexture.Add(texture, id);
@@ -116,7 +124,7 @@ namespace SadConsole.ImGuiSystem
         /// <summary>
         /// Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
         /// </summary>
-        public virtual void UnbindTexture(IntPtr textureId)
+        public virtual void UnbindTexture(ImTextureID textureId)
         {
             if (_loadedTexturesByPointer.ContainsKey(textureId))
             {
@@ -140,14 +148,21 @@ namespace SadConsole.ImGuiSystem
         }
 
         /// <summary>
-        /// Sets up ImGui for a new frame, should be called at frame start
+        /// Runs the ImGui input. Call before <see cref="BeforeLayout"/>.
         /// </summary>
-        public virtual void BeforeLayout(GameTime gameTime)
+        /// <param name="gameTime">Game frame delta.</param>
+        public void BeforeLayoutInput(GameTime gameTime)
         {
             ImGui.GetIO().DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             UpdateInput();
+        }
 
+        /// <summary>
+        /// Sets up ImGui for a new frame, should be called at frame start
+        /// </summary>
+        public virtual void BeforeLayout(GameTime gameTime)
+        {
             ImGui.NewFrame();
         }
 
@@ -219,9 +234,6 @@ namespace SadConsole.ImGuiSystem
 
             ImGuiIOPtr io = ImGui.GetIO();
 
-            WantsMouseCapture = io.WantCaptureMouse;
-            WantsKeyboardCapture = io.WantCaptureKeyboard;
-
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
 
@@ -249,12 +261,15 @@ namespace SadConsole.ImGuiSystem
 
             io.DisplaySize = new System.Numerics.Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight);
             io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+
+            WantsMouseCapture = io.WantCaptureMouse;
+            WantsKeyboardCapture = io.WantCaptureKeyboard;
         }
 
         private bool TryMapKeys(Keys key, out ImGuiKey imguikey)
         {
             //Special case not handed in the switch...
-            //If the actual key we put in is "None", return none and true. 
+            //If the actual key we put in is "None", return none and true.
             //otherwise, return none and false.
             if (key == Keys.None)
             {
@@ -281,7 +296,7 @@ namespace SadConsole.ImGuiSystem
                 Keys.PrintScreen => ImGuiKey.PrintScreen,
                 Keys.Insert => ImGuiKey.Insert,
                 Keys.Delete => ImGuiKey.Delete,
-                >= Keys.D0 and <= Keys.D9 => ImGuiKey._0 + (key - Keys.D0),
+                >= Keys.D0 and <= Keys.D9 => ImGuiKey.Key0 + (key - Keys.D0),
                 >= Keys.A and <= Keys.Z => ImGuiKey.A + (key - Keys.A),
                 >= Keys.NumPad0 and <= Keys.NumPad9 => ImGuiKey.Keypad0 + (key - Keys.NumPad0),
                 Keys.Multiply => ImGuiKey.KeypadMultiply,
@@ -379,7 +394,7 @@ namespace SadConsole.ImGuiSystem
 
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
-                ImDrawListPtr cmdList = drawData.CmdListsRange[n];
+                ImDrawListPtr cmdList = drawData.CmdLists[n];
 
                 fixed (void* vtxDstPtr = &_vertexData[vtxOffset * DrawVertDeclaration.Size])
                 fixed (void* idxDstPtr = &_indexData[idxOffset * sizeof(ushort)])
@@ -407,11 +422,11 @@ namespace SadConsole.ImGuiSystem
 
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
-                ImDrawListPtr cmdList = drawData.CmdListsRange[n];
+                ImDrawListPtr cmdList = drawData.CmdLists[n];
 
                 for (int cmdi = 0; cmdi < cmdList.CmdBuffer.Size; cmdi++)
                 {
-                    ImDrawCmdPtr drawCmd = cmdList.CmdBuffer[cmdi];
+                    ImDrawCmd drawCmd = cmdList.CmdBuffer[cmdi];
 
                     if (drawCmd.ElemCount == 0)
                         continue;

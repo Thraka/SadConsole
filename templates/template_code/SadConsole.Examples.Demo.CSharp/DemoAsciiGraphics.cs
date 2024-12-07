@@ -6,7 +6,7 @@ using static SadConsole.Examples.RootScreen;
 
 namespace SadConsole.Examples;
 
-internal class DemoAcii : IDemo
+internal class DemoAsciiGraphics : IDemo
 {
     public string Title => "Ascii/Ansi/Playscii";
 
@@ -83,7 +83,7 @@ internal class AsciiGraphics : ScreenSurface
         ChangeAsciiArt(_asciiArtPages.Length - 1, 1, _asciiArtPages[0]);
 
     private void PrevAsciiArt() =>
-        ChangeAsciiArt(0, -1, _asciiArtPages.Last());
+        ChangeAsciiArt(0, -1, _asciiArtPages[^1]);
 
     private void ChangeAsciiArt(int testIndex, int step, AsciiArt overlappingPage)
     {
@@ -225,6 +225,43 @@ class PlaysciiArt : AsciiArt
             foreach (IScreenObject child in image.Children)
                 ((ScreenSurface)child).FontSize *= modifier;
         }
+
+        // add image to this surface
+        AddCentered(image);
+    }
+
+    private static IFont GetFont(string fontName) => !Game.Instance.Fonts.ContainsKey(fontName) ?
+        Game.Instance.LoadFont($"Res/Fonts/{fontName}.font") : Game.Instance.Fonts[fontName];
+
+    private void AddCentered(ScreenSurface surface)
+    {
+        Children.Add(surface);
+        surface.UsePixelPositioning = true;
+        surface.Position = (WidthPixels / 2 - surface.AbsoluteArea.Width / 2, HeightPixels / 2 - surface.AbsoluteArea.Height / 2);
+    }
+}
+
+class RexpaintArt : AsciiArt
+{
+    public static readonly Dictionary<string, Description> Descriptions = new()
+        {
+            { "test.xp", new Description("Nothing",
+                "Nothing here.") { FontName = "MRMOTEXT Extended 1.1" } },
+        };
+
+    public RexpaintArt(string rexFileName) : base(Descriptions[rexFileName])
+    {
+        // change background of this surface for better clarity
+        Surface.DefaultBackground = Color.Black;
+        Surface.Clear();
+
+        // get font
+        IFont font = GetFont(Descriptions[rexFileName].FontName);
+
+        // convert the playscii file
+        using FileStream stream = File.OpenRead($"Res/Rexpaint/{rexFileName}");
+
+        ScreenSurface image = new(REXPaintImage.Load(stream).ToCellSurface()[0], font);
 
         // add image to this surface
         AddCentered(image);

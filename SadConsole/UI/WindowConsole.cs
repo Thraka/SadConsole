@@ -204,6 +204,7 @@ public partial class Window : Console, IWindowData
         _isVisibleProcessing = false;
         CanDrag = true;
         MoveToFrontOnMouseClick = true;
+        Renderer?.Dispose();
         Renderer = GameHost.Instance.GetRenderer(RendererNames.Window);
         Controls = new ControlHost();
         SadComponents.Add(Controls);
@@ -229,6 +230,7 @@ public partial class Window : Console, IWindowData
         MoveToFrontOnMouseClick = true;
         Controls = new ControlHost();
         SadComponents.Add(Controls);
+        Renderer?.Dispose();
         Renderer = GameHost.Instance.GetRenderer(RendererNames.Window);
         DrawBorder();
     }

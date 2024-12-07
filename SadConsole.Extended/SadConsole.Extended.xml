@@ -123,16 +123,41 @@
         <member name="M:SadConsole.Components.ClassicConsoleKeyboardHandler.ProcessKeyboard(SadConsole.IScreenObject,SadConsole.Input.Keyboard,System.Boolean@)">
             <inheritdoc/>
         </member>
-        <member name="T:SadConsole.Components.MouseTint">
+        <member name="T:SadConsole.Components.DebugFocusedObjectTint">
+            <summary>
+            Tints a surface when that surface is focused. Helps debug which object is focused in <see cref="P:SadConsole.GameHost.FocusedScreenObjects"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DebugFocusedObjectTint.TintColor">
+            <summary>
+            The tint color to apply to the focused object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DebugFocusedObjectTint.IsEnabled">
+            <summary>
+            When <see langword="false"/>, disables this component and clears the tinted object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.DebugFocusedObjectTint.Run(System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Components.DebugMouseTint">
             <summary>
             Tints a surface when that surface would use the mouse. Helps debug which object is receiving mouse input as you move the mouse around.
             </summary>
         </member>
-        <member name="M:SadConsole.Components.MouseTint.OnAdded(SadConsole.IScreenObject)">
-            <inheritdoc/>
+        <member name="P:SadConsole.Components.DebugMouseTint.TintColor">
+            <summary>
+            The tint color to apply to the object under the mouse.
+            </summary>
         </member>
-        <member name="M:SadConsole.Components.MouseTint.Update(SadConsole.IScreenObject,System.TimeSpan)">
-            <inheritdoc/>
+        <member name="P:SadConsole.Components.DebugMouseTint.IsEnabled">
+            <summary>
+            When <see langword="false"/>, disables this component and clears the tinted object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.DebugMouseTint.Run(System.TimeSpan)">
+            <inheritdoc />
         </member>
         <member name="T:SadConsole.Components.MoveViewPortKeyboardHandler">
             <summary>
@@ -258,6 +283,46 @@
             </summary>
             <param name="host">The host object being moved.</param>
             <param name="delta">The time difference from the previous frame.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.DebugExtensionsFocusedTint">
+            <summary>
+            Extensions class for configuring focused object tint debugging.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensionsFocusedTint.EnableFocusedObjectTintDebug(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that tints the currently focused object.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <returns>The config builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensionsFocusedTint.EnableFocusedObjectTintDebug(SadConsole.Configuration.Builder,SadRogue.Primitives.Color)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that tints the object under the mouse.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <param name="tintColor">The color to tint objects.</param>
+            <returns>The config builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.DebugExtensionsMouseTint">
+            <summary>
+            Extensions class for configuring mouse tint debugging.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensionsMouseTint.EnableMouseTintDebug(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that tints the object under the mouse <see cref="F:SadRogue.Primitives.Color.Purple"/>.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <returns>The config builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensionsMouseTint.EnableMouseTintDebug(SadConsole.Configuration.Builder,SadRogue.Primitives.Color)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that tints the object under the mouse.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <param name="tintColor">The color to tint objects.</param>
+            <returns>The config builder.</returns>
         </member>
         <member name="T:SadConsole.Entities.EntityManagerZoned">
             <summary>
@@ -1103,7 +1168,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.FileDirectoryListbox.HighlightedExtentions">
             <summary>
-            When <see langword="true"/>, only displays files that match <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.FileFilter"/>; otherwise <see langword="false"/> to display all files.
+            A list of extensions of files to highlight, separated by a semicolon. The extension is just the name without any wildcards or periods, in lowercase. Example: <c>txt;json;xml</c>.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.#ctor(System.Int32,System.Int32)">

@@ -2,17 +2,14 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Host_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Host</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>
-- Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
-- Change host to be a lot more friendly towards running from an existing MonoGame Game instead of SadConsole's game.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->

@@ -969,6 +969,11 @@
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.ComposeTint">
+            <summary>
+            The color applied when the sprite batch draws this surface on the renderer.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
             <summary>
             Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.

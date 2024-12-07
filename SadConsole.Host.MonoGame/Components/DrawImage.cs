@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable WFO1000
+
+using System;
 using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 

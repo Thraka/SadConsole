@@ -5,7 +5,7 @@ using SadConsole.UI.Controls;
 namespace SadConsole.Examples;
 internal class DemoKeyboardHandlers : IDemo
 {
-    public string Title => "Keyboard Handlers and Cursors";
+    public string Title => "Terminal Emulators";
 
     public string Description => "The [c:r f:ansibluebright]SadConsole.Extended[c:u] NuGet library contains 2 keyboard " +
                                  "components which change how the keyboard interacts with a console." +
@@ -134,7 +134,7 @@ internal class KeyboardHandlers : ControlsConsole
         // Disable the cursor since our keyboard handler will do the work.
         Cursor cursor = _promptScreen.GetSadComponent<Cursor>()!;
         cursor.Print("Try typing in the following commands: help, ver, cls, look. If you type exit or quit, the program will end.").NewLine().NewLine();
-        
+
         _promptScreen.Surface.TimesShiftedUp = 0;
     }
 

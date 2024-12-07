@@ -45,7 +45,7 @@ public abstract class Document
     protected void ComposeVisual()
     {
         VisualToolContainer ??= new(VisualDocument.Surface.ViewWidth, VisualDocument.Surface.ViewHeight);
-
+        
         VisualToolLayerLower = (CellSurface)VisualToolContainer.Layers.First();
         VisualToolLayerUpper ??= new(VisualDocument.Surface.ViewWidth, VisualDocument.Surface.ViewHeight);
 

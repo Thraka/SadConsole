@@ -1,0 +1,8 @@
+﻿<Project>
+  <ItemGroup>
+    <Files Include="$(MSBuildThisFileDirectory)/../content/Roboto-Regular.ttf" />
+  </ItemGroup>
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <Copy SourceFiles="@(Files)" DestinationFolder="$(TargetDir)/%(RecursiveDir)" />
+  </Target>
+</Project>

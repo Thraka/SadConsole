@@ -16,6 +16,8 @@ internal class Pencil : ITool
         Use the left-mouse button to draw.
         
         The right-mouse button changes the current pencil tip to the foreground, background, and glyph, that is under the cursor.
+        - Hold shift when clicking to only copy the colors.
+        - Hold ctrl when clicking to only copy the glyph.
         """;
 
     public void BuildSettingsPanel(ImGuiRenderer renderer)
@@ -58,7 +60,19 @@ internal class Pencil : ITool
         }
         else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
-            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+            ColoredGlyphBase sourceCell = document.VisualDocument.Surface[hoveredCellPosition];
+
+            if (ImGui.IsKeyDown(ImGuiKey.ModShift))
+            {
+                SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
+                SharedToolSettings.Tip.Background = sourceCell.Background;
+            }
+            else if (ImGui.IsKeyDown(ImGuiKey.ModCtrl))
+            {
+                SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
+            }
+            else
+                document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
         }
     }
 

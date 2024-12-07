@@ -145,6 +145,9 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Controls.Add(colorsBlack);
         Controls.Add(colorsBlue);
 
+        CompTest a = new(22, 10) { Position = (tab.Bounds.MaxExtentX + 1, tab.Position.Y) };
+        Controls.Add(a);
+
         OnInvalidated();
     }
 
@@ -190,6 +193,32 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         this.Print(1, panel.Bounds.MaxExtentY + 1, "TOGGLE SWITCH", colors.YellowDark);
     }
 }
+
+class CompTest : CompositeControl
+{
+    public CompTest(int width, int height) : base(width, height) { }
+
+    protected override void CreateChildControls()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Button btn = new(Width = Width)
+            {
+                Text = $"Button{i}",
+                Position = (0, i),
+            };
+            AddControl(btn);
+        }
+    }
+
+    public override bool ProcessMouse(MouseScreenObjectState state)
+    {
+
+        bool result = base.ProcessMouse(state);
+        return result;
+    }
+}
+
 
 
 

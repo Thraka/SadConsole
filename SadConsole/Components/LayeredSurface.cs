@@ -33,9 +33,9 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     protected Rectangle _screenCachedView;
 
     /// <summary>
-    /// The entities to process.
+    /// The layers.
     /// </summary>
-    [DataMember(Name = "Layers")] 
+    [DataMember(Name = "Layers")]
     protected List<ICellSurface> _layers = new(3);
 
     /// <summary>

@@ -2,14 +2,14 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Version>$(SadConsole_Extended_Version)</Version>
     <AssemblyTitle>SadConsole Extended - Common Helpers</AssemblyTitle>
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Rework `DebugMouseTint` class and add `DebugFocusedTint` class. Both settable as configuration builder options now.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->

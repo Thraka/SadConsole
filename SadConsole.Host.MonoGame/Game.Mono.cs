@@ -37,6 +37,11 @@ public sealed partial class Game : GameHost
     private Host.Keyboard _keyboardState = new Host.Keyboard();
 
     /// <summary>
+    /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
+    /// </summary>
+    public bool UseTitleContainer { get; set; } = true;
+
+    /// <summary>
     /// The <see cref="Microsoft.Xna.Framework.Game"/> instance.
     /// </summary>
     public Microsoft.Xna.Framework.Game MonoGameInstance { get; set; }
@@ -123,6 +128,9 @@ public sealed partial class Game : GameHost
 
         Instance = game;
 
+        // MonoGame settings
+        game.UseTitleContainer = configuration.GetOrCreateConfig<MonoGameSettings>().UseTitleContainer;
+
         // This creates the monogame game instance, which:
         // 1. Runs the ctor
         // 2. ctor runs the config.WithMonoGameCtor method added by user
@@ -197,12 +205,22 @@ public sealed partial class Game : GameHost
         SplashScreens.SplashScreenManager.CheckRun();
     }
 
+    public void Tick()
+    {
+        MonoGameInstance.Tick();
+    }
+
     /// <inheritdoc/>
     public override void Run()
     {
+#if KNI
+        MonoGameInstance.Run();
+        SadConsole.Host.Global.ResetRendering();
+#else
         MonoGameInstance.Run();
         OnGameEnding();
         MonoGameInstance.Dispose();
+#endif
     }
 
     /// <inheritdoc/>
@@ -244,7 +262,9 @@ public sealed partial class Game : GameHost
         if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
             return System.IO.File.OpenWrite(file);
 
-        return File.OpenRead(file);
+        return UseTitleContainer
+               ? Microsoft.Xna.Framework.TitleContainer.OpenStream(file)
+               : File.OpenRead(file);
     }
 
     /// <summary>

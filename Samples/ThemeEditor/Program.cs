@@ -8,7 +8,7 @@ Builder startup = new Builder()
     .IsStartingScreenFocused(true)
     .ConfigureFonts(true)
     .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
-    .EnableImGuiDebug(SadConsole.Input.Keys.F12)
+    .EnableImGuiDebugger(SadConsole.Input.Keys.F12)
     ;
 
 Game.Create(startup);

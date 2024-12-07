@@ -1266,6 +1266,11 @@
         <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
             <inheritdoc/>
         </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.ComposeTint">
+            <summary>
+            The color applied when the sprite batch draws this surface on the renderer.
+            </summary>
+        </member>
         <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
             <summary>
             Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
@@ -1403,6 +1408,13 @@
             <param name="width">The total pixel width of the control.</param>
             <param name="height">The total pixel height of the control.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseTitleContainer(SadConsole.Configuration.Builder)">
+            <summary>
+            Tells the game host to use the <see cref="T:Microsoft.Xna.Framework.TitleContainer"/> to open streams for reading.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameCtor(SadConsole.Configuration.Builder,System.Action{MonoGame.Framework.WpfInterop.WpfGame})">
             <summary>

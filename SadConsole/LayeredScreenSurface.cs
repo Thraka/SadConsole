@@ -53,6 +53,7 @@ public class LayeredScreenSurface : ScreenSurface, ILayeredData
     {
         Layers = new LayeredSurface();
 
+        Renderer?.Dispose();
         Renderer = GameHost.Instance.GetRenderer(SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface);
 
         SadComponents.Add(Layers);
@@ -68,6 +69,7 @@ public class LayeredScreenSurface : ScreenSurface, ILayeredData
     {
         Layers = new LayeredSurface();
 
+        Renderer?.Dispose();
         Renderer = GameHost.Instance.GetRenderer(SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface);
 
         // Add the layers component which also adds the layers render step

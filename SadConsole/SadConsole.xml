@@ -2074,7 +2074,7 @@
         </member>
         <member name="F:SadConsole.Components.LayeredSurface._layers">
             <summary>
-            The entities to process.
+            The layers.
             </summary>
         </member>
         <member name="F:SadConsole.Components.LayeredSurface.RenderStep">
@@ -8009,7 +8009,7 @@
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseButtonClicked">
             <summary>
-            Raised when the a mouse button is clicked on this object.
+            Raised when a mouse button is clicked on this object.
             </summary>
         </member>
         <member name="E:SadConsole.IScreenSurface.MouseEnter">
@@ -11058,7 +11058,9 @@
         </member>
         <member name="M:SadConsole.StringValidation.LettersOnly">
             <remarks>
-            Pattern explanation:<br/>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
             <code>
             ○ Match a character in the set [A-Za-z].<br/>
             </code>
@@ -15158,6 +15160,9 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
+            <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
 </doc>

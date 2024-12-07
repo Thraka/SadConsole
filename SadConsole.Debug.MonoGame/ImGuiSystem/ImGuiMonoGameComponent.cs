@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -20,7 +20,7 @@ namespace SadConsole.ImGuiSystem
 
         public bool WantsKeyboardCapture => ImGuiRenderer.WantsKeyboardCapture;
 
-        public List<ImGuiObjectBase> UIComponents { get; private set; } = new List<ImGuiObjectBase>();
+        public List<ImGuiObjectBase> UIComponents { get; } = [ ];
 
         public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game, bool enableDocking): base(game)
         {
@@ -38,8 +38,14 @@ namespace SadConsole.ImGuiSystem
             if (enableDocking)
             {
                 ImGuiIOPtr io = ImGui.GetIO();
-                io.ConfigFlags = io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+                io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ImGuiRenderer.BeforeLayoutInput(gameTime);
+            Host.Global.BlockSadConsoleInput = ImGuiRenderer.WantsMouseCapture | ImGuiRenderer.WantsKeyboardCapture;
         }
 
         public override void Draw(GameTime gameTime)
@@ -64,12 +70,5 @@ namespace SadConsole.ImGuiSystem
                 HostClosed?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        public IntPtr BindMonoGameTexture(Texture2D texture) =>
-            ImGuiRenderer.BindTexture(texture);
-
-        public void UnbindMonoGameTexture(IntPtr texturePointer) =>
-            ImGuiRenderer.UnbindTexture(texturePointer);
-
     }
 }

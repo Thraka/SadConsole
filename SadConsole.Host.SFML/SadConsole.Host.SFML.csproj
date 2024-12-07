@@ -2,16 +2,14 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Host_SFML_Version)</Version>
     <AssemblyTitle>SadConsole SFML Host</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
     <PackageId>SadConsole.Host.SFML</PackageId>
     <PackageTags>sadconsole;sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>
-Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->

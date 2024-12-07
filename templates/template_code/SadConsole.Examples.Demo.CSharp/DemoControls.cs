@@ -30,6 +30,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public ControlsTest() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
+
         Controls.ThemeColors = GameSettings.ControlColorScheme;
 
         var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
