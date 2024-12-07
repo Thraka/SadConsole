@@ -18,7 +18,7 @@ class GuiPreviews : ImGuiObjectBase
     public override void BuildUI(ImGuiRenderer renderer)
     {
 
-        ImGui.SetNextWindowClass(ref GuiDockspace.NoTabBarDock);
+        ImGui.SetNextWindowClass(ref GuiDockspace.AutoHideTabBar);
         ImGui.SetNextWindowBgAlpha(1f);
         ImGui.Begin(GuiDockspace.ID_CENTER_PANEL, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar);
         {
@@ -48,15 +48,6 @@ class GuiPreviews : ImGuiObjectBase
                 }
                 if (ImGui.BeginTabItem("Item Preview", ImGuiTabItemFlags.NoCloseWithMiddleMouseButton))
                 {
-                    // TODO:
-                    // New window that is an editor type for the parent object
-                    // Inspect components to see if entity renderer, controls ui, etc, enable different editors.
-                    // Add ability to add those components.
-
-
-                    // Check for zoom:
-
-
                     // Render output texture
                     if (GuiState._selectedScreenObject is IScreenSurface surface)
                     {
@@ -67,6 +58,7 @@ class GuiPreviews : ImGuiObjectBase
                             // List the render steps if more than one
                             if (GuiState._selectedScreenObjectState.SurfaceState.RenderSteps.Length > 2)
                             {
+                                ImGui.AlignTextToFramePadding();
                                 ImGui.TextColored(Color.AnsiCyanBright.ToVector4(), "Render steps: ");
                                 ImGui.SameLine();
                                 ImGui.SetNextItemWidth(200);

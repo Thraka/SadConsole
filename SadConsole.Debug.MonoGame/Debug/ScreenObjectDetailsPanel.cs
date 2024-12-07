@@ -4,12 +4,14 @@ using System.Numerics;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 using Hexa.NET.ImGui;
+using ImGuiWindow = SadConsole.ImGuiSystem.ImGuiWindow;
 
 namespace SadConsole.Debug;
 
 public class ScreenObjectDetailsPanel
 {
-    public static Dictionary<Type, ScreenObjectEditors.IDetailsPanel> RegisteredPanels { get; } = [];
+    private string _serializeFileName;
+    public static Dictionary<Type, Editors.IScreenObjectPanel> RegisteredPanels { get; } = [];
 
     public ScreenObjectState CurrentScreenObject;
 
@@ -17,6 +19,9 @@ public class ScreenObjectDetailsPanel
     {
         CurrentScreenObject = state;
         if (CurrentScreenObject == null) return;
+
+        ImGui2.SeparatorText(state.Object.ToString(), Debugger.Settings.Color_PanelHeader);
+        ImGui.Separator();
 
         //ImGui.BeginChild(id, new Vector2(0, 300), false, ImGuiWindowFlags.HorizontalScrollbar);
         ImGui.BeginGroup();
@@ -63,12 +68,34 @@ public class ScreenObjectDetailsPanel
             if (ImGui.Checkbox("Is Focused", ref isFocused))
                 CurrentScreenObject.Object.IsFocused = isFocused;
 
+            ImGui.Separator();
+
+            if (ImGui.Button("Save Object"))
+            {
+                ImGui.OpenPopup("serialize_object");
+                _serializeFileName = "";
+            }
+
+            if (ImGui.BeginPopupModal("serialize_object"))
+            {
+                ImGui.SetNextItemWidth(400);
+                ImGui.InputText("##filename", ref _serializeFileName, 50 );
+
+                if (ImGuiWindow.DrawButtons(out bool savedClicked, string.IsNullOrEmpty(_serializeFileName.Trim())))
+                {
+                    if (savedClicked)
+                        Serializer.Save(GuiState._selectedScreenObject, _serializeFileName.Trim(), false);
+                    ImGui.CloseCurrentPopup();
+                }
+
+                ImGui.EndPopup();
+            }
+
             ///////
             // Custom editors
             ///////
             if (RegisteredPanels.TryGetValue(CurrentScreenObject.Object.GetType(), out var panel))
             {
-                ImGui.SeparatorText("Custom Editor");
                 panel.BuildUI(renderer, CurrentScreenObject);
             }
         }

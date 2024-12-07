@@ -85,6 +85,11 @@
             The color of the focused object.
             </summary>
         </member>
+        <member name="F:SadConsole.Debug.Debugger.Settings.Color_PanelHeader">
+            <summary>
+            The color of panel headers of objects.
+            </summary>
+        </member>
         <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
             <summary>
             Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.

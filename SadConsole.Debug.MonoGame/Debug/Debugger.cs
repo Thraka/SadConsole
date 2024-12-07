@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
-using SadConsole.Debug.ScreenObjectEditors;
 
 namespace SadConsole.Debug;
 
@@ -56,12 +55,14 @@ public static partial class Debugger
             _imGui.Enabled = true;
 
             Host.Global.SadConsoleComponent.Enabled = false;
+            SadConsole.Settings.DoFinalDraw = false;
             GuiState.RefreshScreenObject();
             Opened?.Invoke(false);
             return;
         }
 
         Host.Global.SadConsoleComponent.Enabled = false;
+        SadConsole.Settings.DoFinalDraw = false;
         GuiState.RefreshScreenObject();
 
         _imGui = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
@@ -73,11 +74,12 @@ public static partial class Debugger
 
         _imGui.UIComponents.Add(new GuiTopBar());
         _imGui.UIComponents.Add(new GuiDockspace());
-        _imGui.UIComponents.Add(new ScreenObjectsPanel());
+        _imGui.UIComponents.Add(new GuiScreenObjects());
         _imGui.UIComponents.Add(new GuiPreviews());
 
-        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new WindowConsolePanel());
-        ComponentsPanel.RegisteredPanels.Add(typeof(Components.Cursor), new SadComponentEditors.ComponentEditorCursor());
+        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.WindowConsolePanel());
+        ComponentsPanel.RegisteredPanels.Add(typeof(Components.Cursor), new Editors.ComponentEditorCursor());
+        //ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
 
         _imGui.Update(new GameTime());
         Game.Instance.MonoGameInstance.Components.Add(_imGui);
@@ -95,6 +97,7 @@ public static partial class Debugger
         _imGui.Visible = false;
         _imGui.Enabled = false;
 
+        SadConsole.Settings.DoFinalDraw = true;
         SadConsole.Settings.Input.DoKeyboard = true;
         SadConsole.Settings.Input.DoMouse = true;
 

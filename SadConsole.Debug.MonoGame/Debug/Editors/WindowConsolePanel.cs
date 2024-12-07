@@ -3,15 +3,15 @@ using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 
-namespace SadConsole.Debug.ScreenObjectEditors;
+namespace SadConsole.Debug.Editors;
 
-internal class WindowConsolePanel : IDetailsPanel
+internal class WindowConsolePanel : IScreenObjectPanel
 {
-    public void BuildUI(ImGuiRenderer renderer, ScreenObjectState CurrentScreenObject)
+    public void BuildUI(ImGuiRenderer renderer, ScreenObjectState state)
     {
-        var window = (UI.Window)CurrentScreenObject.Object;
+        var window = (UI.Window)state.Object;
 
-        ImGui.SeparatorText("Window Settings");
+        ImGui2.SeparatorText("Window Settings", Debugger.Settings.Color_PanelHeader);
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Title: ");
@@ -23,11 +23,11 @@ internal class WindowConsolePanel : IDetailsPanel
         ImGui.Text("Title Alignment: ");
         ImGui.SameLine();
         ImGui.SetNextItemWidth(ImGui.CalcTextSize("Stretch").X * 2 + ImGui.GetStyle().FramePadding.X * 2.0f);
-        if (ImGui.Combo("##window_title_alignment", ref CurrentScreenObject.WindowState.TitleAlignment,
+        if (ImGui.Combo("##window_title_alignment", ref state.WindowState.TitleAlignment,
                 Enums<HorizontalAlignment>.Names,
                 Enums<HorizontalAlignment>.Count))
         {
-            window.TitleAlignment = (HorizontalAlignment)CurrentScreenObject.WindowState.TitleAlignment;
+            window.TitleAlignment = (HorizontalAlignment)state.WindowState.TitleAlignment;
         }
     }
 }

@@ -5,7 +5,7 @@ using Hexa.NET.ImGui;
 
 namespace SadConsole.Debug;
 
-class ScreenObjectsPanel : ImGuiObjectBase
+class GuiScreenObjects : ImGuiObjectBase
 {
     private float f = 0.0f;
     private bool _toggle_screenObj_doDraw;
@@ -26,12 +26,11 @@ class ScreenObjectsPanel : ImGuiObjectBase
             System.Diagnostics.Debugger.Break();
         }
 
-        ImGui.SetNextWindowClass(ref GuiDockspace.NoTabBarDock);
-
+        ImGui.SetNextWindowClass(ref GuiDockspace.AutoHideTabBar);
         ImGui.Begin(GuiDockspace.ID_LEFT_PANEL);
         {
             // Screen objects list
-            ImGui.SeparatorText("Current Scene");
+            ImGui2.SeparatorText("Current Scene", Debugger.Settings.Color_PanelHeader);
 
             // Refresh list of objects
             foreach (ScreenObjectState item in GuiState.ScreenObjectUniques.Values)
@@ -87,9 +86,9 @@ class ScreenObjectsPanel : ImGuiObjectBase
                 ImGui.EndListBox();
             }
 
+            // Object is selected
             if (GuiState._selectedScreenObjectState != null)
             {
-                ImGui.SeparatorText(GuiState._selectedScreenObjectState.Object.ToString());
                 _guiDetails.BuildUI(renderer, GuiState._selectedScreenObjectState);
                 _guiComponents.BuildUI(renderer, GuiState._selectedScreenObjectState);
             }

@@ -18,5 +18,10 @@ public static partial class Debugger
         /// The color of the focused object.
         /// </summary>
         public static Vector4 Color_FocusedObj = Color.AnsiCyanBright.ToVector4();
+
+        /// <summary>
+        /// The color of panel headers of objects.
+        /// </summary>
+        public static Vector4 Color_PanelHeader = Color.Goldenrod.ToVector4();
     }
 }

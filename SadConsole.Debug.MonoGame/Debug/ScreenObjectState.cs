@@ -118,8 +118,8 @@ public class ScreenObjectState
 
             if (surface.Renderer!.Steps.Count != 0)
             {
-                List<string> names = new List<string>();
-                List<IRenderStepTexture> steps = new List<IRenderStepTexture>();
+                List<string> names = [];
+                List<IRenderStepTexture> steps = [];
 
                 names.Add("Final");
                 steps.Add(null);

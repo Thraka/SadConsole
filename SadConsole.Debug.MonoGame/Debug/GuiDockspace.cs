@@ -6,11 +6,12 @@ namespace SadConsole.Debug;
 
 class GuiDockspace : ImGuiObjectBase
 {
-    public static string ID_LEFT_PANEL = "LeftPanel";
-    public static string ID_TOP_PANEL = "TopPanel";
-    public static string ID_CENTER_PANEL = "CenterPanel";
+    public const string ID_LEFT_PANEL = "Scene##LeftPanel";
+    public const string ID_RIGHT_PANEL = "Previews##RightPanel";
+    public const string ID_CENTER_PANEL = "Extras##CenterPanel";
 
     public static ImGuiWindowClass NoTabBarDock;
+    public static ImGuiWindowClass AutoHideTabBar;
 
     private bool p_open;
     private bool _runOnce = false;
@@ -23,9 +24,10 @@ class GuiDockspace : ImGuiObjectBase
         ImGui.SetNextWindowViewport(viewport.ID);
         ImGui.SetNextWindowBgAlpha(0.0f);
 
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
-        window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
-        window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking
+                                      | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse
+                                      | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove
+                                      | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
 
         ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
@@ -41,9 +43,9 @@ class GuiDockspace : ImGuiObjectBase
         if (!_runOnce)
         {
             _runOnce = true;
-            
-            NoTabBarDock = new() { DockNodeFlagsOverrideSet = (ImGuiDockNodeFlags)ImGuiDockNodeFlagsPrivate.NoTabBar };
 
+            NoTabBarDock = new() { DockNodeFlagsOverrideSet = (ImGuiDockNodeFlags)ImGuiDockNodeFlagsPrivate.NoTabBar };
+            AutoHideTabBar = new() { DockNodeFlagsOverrideSet = ImGuiDockNodeFlags.AutoHideTabBar };
             Vector2 workCenter = ImGui.GetMainViewport().GetWorkCenter();
 
             ImGuiP.DockBuilderRemoveNode(idRootDockspace);             // Clear any preexisting layouts associated with the ID we just chose
@@ -58,14 +60,14 @@ class GuiDockspace : ImGuiObjectBase
             ImGuiP.DockBuilderSetNodePos(idRootDockspace, nodePos);
 
             uint idLeftPanel = 0;
-            uint idTopPanel = 0;
+            uint idRightPanel = 0;
             uint idCenterPanel = 0;
 
             ImGuiP.DockBuilderSplitNode(idRootDockspace, ImGuiDir.Left, 0.3f, ref idLeftPanel, ref idCenterPanel);
-            ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Left, 0.3f, ref idTopPanel, ref idCenterPanel);
+            ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Right, 0.3f, ref idRightPanel, ref idCenterPanel);
 
             ImGuiP.DockBuilderDockWindow(ID_LEFT_PANEL, idLeftPanel);
-            ImGuiP.DockBuilderDockWindow(ID_TOP_PANEL, idTopPanel);
+            ImGuiP.DockBuilderDockWindow(ID_RIGHT_PANEL, idRightPanel);
             ImGuiP.DockBuilderDockWindow(ID_CENTER_PANEL, idCenterPanel);
 
             ImGuiP.DockBuilderFinish(idRootDockspace);

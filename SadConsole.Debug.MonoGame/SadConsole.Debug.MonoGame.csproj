@@ -38,6 +38,10 @@
     <Content Include="SadConsole.Debug.MonoGame.targets" PackagePath="build/SadConsole.Debug.MonoGame.targets" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Debug\ScreenObjectEditors\" />
+  </ItemGroup>
+
   <Target Name="CopyPackage" AfterTargets="Pack">
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
     <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />

@@ -3,34 +3,32 @@ using Hexa.NET.ImGui;
 using SadConsole.Components;
 using SadConsole.ImGuiSystem;
 
-namespace SadConsole.Debug.SadComponentEditors;
+namespace SadConsole.Debug.Editors;
 
-internal class ComponentEditorCursor : ImGuiObjectBase
+internal class ComponentEditorCursor : ISadComponentPanel
 {
     private Cursor _stateComponent;
     private IScreenObject _screenObject;
 
     private bool _isEnabled;
     private bool _isVisible;
-    private ImGuiColoredGlyphEditor _printEffectEditor;
     private bool _printAppearanceMatchesHost;
     private bool _printOnlyCharData;
     private bool _printDisableAutoLineFeed;
     private bool _disableWordBreak;
 
-    private ImGuiColoredGlyphEditor _cursorAppearanceEditor;
     private ColoredGlyphBase _cursorAppearance;
 
     private int _positionX;
     private int _positionY;
 
-    public override void BuildUI(ImGuiRenderer renderer)
+    public void BuildUI(ImGuiRenderer renderer, ScreenObjectState state, IComponent component)
     {
         // Capture the state information of the component as it is
-        if (_screenObject != GuiState._selectedScreenObjectState.Object || _stateComponent != GuiState._selectedScreenObjectState.Object.SadComponents[GuiState._selectedScreenObjectState.ComponentsSelectedItem])
+        if (_screenObject != state.Object || _stateComponent != state.Object.SadComponents[state.ComponentsSelectedItem])
         {
-            _screenObject = GuiState._selectedScreenObjectState.Object;
-            _stateComponent = (Cursor)GuiState._selectedScreenObjectState.Object.SadComponents[GuiState._selectedScreenObjectState.ComponentsSelectedItem];
+            _screenObject = state.Object;
+            _stateComponent = (Cursor)state.Object.SadComponents[state.ComponentsSelectedItem];
 
             _printAppearanceMatchesHost = _stateComponent.PrintAppearanceMatchesHost;
             _printOnlyCharData = _stateComponent.PrintOnlyCharacterData;
@@ -38,9 +36,6 @@ internal class ComponentEditorCursor : ImGuiObjectBase
             _disableWordBreak = _stateComponent.DisableWordBreak;
             _isEnabled = _stateComponent.IsEnabled;
             _isVisible = _stateComponent.IsVisible;
-
-            _printEffectEditor = new ImGuiColoredGlyphEditor();
-            _cursorAppearanceEditor = new ImGuiColoredGlyphEditor();
 
             // Copy the render state of the cursor
             _cursorAppearance = new SadConsole.ColoredGlyph();
@@ -98,7 +93,7 @@ internal class ComponentEditorCursor : ImGuiObjectBase
                 }
                 SettingsTable.EndTable();
                 ImGui.EndDisabled();
-                
+
                 if (ImGui.Checkbox("Print only character data?", ref _printOnlyCharData))
                     _stateComponent.PrintOnlyCharacterData = _printOnlyCharData;
                 if (ImGui.Checkbox("Disable printing automatic line feed?", ref _printDisableAutoLineFeed))

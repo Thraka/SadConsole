@@ -5,6 +5,13 @@ namespace Hexa.NET.ImGui;
 
 public static partial class ImGui2
 {
+    public static void SeparatorText(string label, Vector4 color)
+    {
+        ImGui.PushStyleColor(ImGuiCol.Text, color);
+        ImGui.SeparatorText(label);
+        ImGui.PopStyleColor();
+    }
+
     public static void SeparatorLabel(string text)
     {
         Color color = ImGui.GetStyle().Colors[(int)ImGuiCol.Text].ToColor();
