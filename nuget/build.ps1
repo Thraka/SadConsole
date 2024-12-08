@@ -53,8 +53,41 @@ if ($foundPackage){
     $projects = "SadConsole.Extended", "SadConsole.Host.MonoGame", "SadConsole.Host.SFML", "SadConsole.Host.FNA", "SadConsole.Debug.MonoGame"
 
     foreach ($project in $projects) {
-            
-        # SadConsole Extended
+        
+        # Special condition for debug package
+        if ($project -eq "SadConsole.Debug.MonoGame") {
+
+
+            $timeout = New-TimeSpan -Minutes 10
+            $timer = [Diagnostics.StopWatch]::StartNew()
+            [Boolean]$foundPackage = $false
+
+            Write-Output "Processing SadConsole.Debug.MonoGame project, waiting on MonoGame host package"
+
+            # Loop searching for the new MonoGame package
+            while ($timer.elapsed -lt $timeout){
+
+                $existingVersions = (Invoke-WebRequest "https://api-v2v3search-0.nuget.org/query?q=PackageId:SadConsole.Host.MonoGame&prerelease=true").Content | ConvertFrom-Json
+
+                if ($existingVersions.totalHits -eq 0) {
+                    throw "Unable to get any results from NuGet"
+                }
+
+                if ($null -eq ($existingVersions.data.versions | Where-Object version -eq $version)) {
+                    Write-Output "Waiting 30 seconds to retry..."
+                    Start-Sleep -Seconds 30
+                }
+                else {
+                    Write-Output "Found package. Waiting 1 extra minute to let things settle"
+                    $foundPackage = $true
+                    Start-Sleep -Seconds 60
+                    break
+                }
+            }
+
+        }
+
+        # Build package
         Write-Output "Building $project Debug and Release"
         $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Debug -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
         $output = Invoke-Expression "dotnet build ..\$project\$project.csproj -c Release -p:UseProjectReferences=false --no-cache"; if ($LASTEXITCODE -ne 0) { Write-Error "Failed"; Write-Output $output; throw }
@@ -72,3 +105,4 @@ if ($foundPackage){
     # Archive the packages
     Move-Item "*.nupkg","*.snupkg" .\archive\ -force
 }
+
