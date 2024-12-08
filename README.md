@@ -7,7 +7,7 @@ SadConsole is a C#-based .NET cross-platform terminal, ascii, console, game engi
 
 While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for **SadConsole.Host.MonoGame** and **SadConsole.Host.SFML**. When adding a host library to your project, you don't need to reference the base **SadConsole** package. If you use MonoGame, you'll also need to add a rendering NuGet package, such as **MonoGame.Framework.DesktopGL**.
 
-_SadConsole currently targets .NET 6, .NET 7, and .NET 8_
+_SadConsole currently targets .NET 6, .NET 7, .NET 8, and .NET 9_
 
 For the latest changes in this release, see the [notes below](#latest-changes)
 
@@ -119,11 +119,9 @@ End Module
 
 ## Latest changes
 
-v10.4.2 (10/23/2024)
-
-- [Core] Fixed small bug when cursor's effect was removed.
-- [Core] `StringParser`'s base command object has a virtual `Removed` method.
-- [Core] `StringParser`'s Recolor command can use 'w' in place of length to specify that it recolors 'word' length: until a space or \0 character is reached.
-- [Core] `StringParser`'s Blink command now has the blink effect `RestoreCellOnRemoved` set to true.
-- [Core] `NamedColor` supporting type which is just a collection of named color values for serialization.
-- [Core] Fix some spelling errors.
+- [All] Add .NET 9 target. This will be the last release for .NET 6 and .NET 7.
+- [Core] Some components that used their own renderers weren't disposing the ones they replaced.
+- [UI] Fix bug with mouse moving over composite controls such as the list box.
+- [Extended] Rework `DebugMouseTint` class and add `DebugFocusedTint` class. Both settable as configuration builder options now.
+- [MonoGame] Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.
+- [Debug Library] Release the first version of the `SadConsole.Debug.MonoGame` library. This also adds general **ImGui** support.
