@@ -242,7 +242,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     {
         if (_layers.Count == 0) throw new Exception("Can't create a layer unless an existing layer has been added first. The size of an existing layer is used to generate a new layer.");
 
-        CellSurface newSurface = new CellSurface(_layers[0].Width, _layers[0].Height, _layers[0].ViewWidth, _layers[0].ViewHeight);
+        CellSurface newSurface = new CellSurface(_layers[0].ViewWidth, _layers[0].ViewHeight, _layers[0].Width, _layers[0].Height);
         newSurface.DefaultBackground = Color.Transparent;
         newSurface.DefaultForeground = _layers[0].DefaultForeground;
         newSurface.DefaultGlyph = _layers[0].DefaultGlyph;
