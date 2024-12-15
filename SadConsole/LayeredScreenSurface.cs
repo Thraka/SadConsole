@@ -10,7 +10,7 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("ScreenSurface (Layered)")]
-public class LayeredScreenSurface : ScreenSurface, ILayeredData
+public class LayeredScreenSurface : ScreenSurface, ILayeredData, ICellSurfaceResize
 {
     /// <summary>
     /// The controls host holding all the controls.
@@ -76,10 +76,31 @@ public class LayeredScreenSurface : ScreenSurface, ILayeredData
         SadComponents.Add(Layers);
     }
 
+
     /// <summary>
-    /// Returns the value "Console (Controls)".
+    /// Resizes the surface to the specified width and height.
     /// </summary>
-    /// <returns>The string "Console (Controls)".</returns>
+    /// <param name="viewWidth">The viewable width of the surface.</param>
+    /// <param name="viewHeight">The viewable height of the surface.</param>
+    /// <param name="totalWidth">The maximum width of the surface.</param>
+    /// <param name="totalHeight">The maximum height of the surface.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public new void Resize(int viewWidth, int viewHeight, int totalWidth, int totalHeight, bool clear) =>
+        Layers.Resize(viewWidth, viewHeight, totalWidth, totalHeight, clear);
+
+    /// <summary>
+    /// Resizes the surface and view to the specified width and height.
+    /// </summary>
+    /// <param name="width">The width of the surface and view.</param>
+    /// <param name="height">The height of the surface and view.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public new void Resize(int width, int height, bool clear) =>
+        Layers.Resize(width, height, clear);
+
+    /// <summary>
+    /// Returns the value "ScreenSurface (Layered)".
+    /// </summary>
+    /// <returns>The string "ScreenSurface (Layered)".</returns>
     public override string ToString() =>
         "ScreenSurface (Layered)";
 }

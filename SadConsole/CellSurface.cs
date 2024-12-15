@@ -309,22 +309,22 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         Resize(viewWidth, viewHeight, viewWidth, viewHeight, clear);
 
     /// <inheritdoc />
-    public void Resize(int viewWidth, int viewHeight, int bufferWidth, int bufferHeight, bool clear)
+    public void Resize(int viewWidth, int viewHeight, int totalWidth, int totalHeight, bool clear)
     {
         if (viewWidth <= 0) throw new ArgumentOutOfRangeException(nameof(viewWidth), "Surface view width must be > 0");
         if (viewHeight <= 0) throw new ArgumentOutOfRangeException(nameof(viewHeight), "Surface view height must be > 0");
-        if (bufferWidth <= 0) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Surface buffer width must be > 0");
-        if (bufferHeight <= 0) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Surface buffer height must be > 0");
-        if (viewWidth > bufferWidth) throw new ArgumentOutOfRangeException(nameof(bufferWidth), "Buffer width must be less than or equal to the width.");
-        if (viewHeight > bufferHeight) throw new ArgumentOutOfRangeException(nameof(bufferHeight), "Buffer height must be less than or equal to the height.");
+        if (totalWidth <= 0) throw new ArgumentOutOfRangeException(nameof(totalWidth), "Surface width must be > 0");
+        if (totalHeight <= 0) throw new ArgumentOutOfRangeException(nameof(totalHeight), "Surface height must be > 0");
+        if (viewWidth > totalWidth) throw new ArgumentOutOfRangeException(nameof(totalWidth), "View width must be less than or equal to the width.");
+        if (viewHeight > totalHeight) throw new ArgumentOutOfRangeException(nameof(totalHeight), "View height must be less than or equal to the height.");
 
-        var newCells = new ColoredGlyphBase[bufferWidth * bufferHeight];
+        var newCells = new ColoredGlyphBase[totalWidth * totalHeight];
 
-        for (int y = 0; y < bufferHeight; y++)
+        for (int y = 0; y < totalHeight; y++)
         {
-            for (int x = 0; x < bufferWidth; x++)
+            for (int x = 0; x < totalWidth; x++)
             {
-                int index = new Point(x, y).ToIndex(bufferWidth);
+                int index = new Point(x, y).ToIndex(totalWidth);
 
                 if (this.IsValidCell(x, y))
                 {
@@ -342,7 +342,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
 
         Cells = newCells;
         _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
-                                         (0, 0, bufferWidth, bufferHeight));
+                                         (0, 0, totalWidth, totalHeight));
         if (clear)
             Effects.RemoveAll();
         else

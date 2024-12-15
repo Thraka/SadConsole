@@ -13,7 +13,7 @@ namespace SadConsole.Components;
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("Layered surface")]
-public class LayeredSurface : Components.UpdateComponent, Components.IComponent, IList<ICellSurface>
+public class LayeredSurface : Components.UpdateComponent, Components.IComponent, IList<ICellSurface>, ICellSurfaceResize
 {
     /// <summary>
     /// Indicates that the entity renderer has been added to a parent object.
@@ -266,6 +266,47 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
         return true;
     }
 
+
+    /// <summary>
+    /// Resizes each layer to the specified width and height.
+    /// </summary>
+    /// <param name="viewWidth">The viewable width of the surface.</param>
+    /// <param name="viewHeight">The viewable height of the surface.</param>
+    /// <param name="totalWidth">The maximum width of the surface.</param>
+    /// <param name="totalHeight">The maximum height of the surface.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public void Resize(int viewWidth, int viewHeight, int totalWidth, int totalHeight, bool clear)
+    {
+        foreach (ICellSurface layer in _layers)
+        {
+            if (layer is not ICellSurfaceResize surface)
+                throw new Exception("Surface doesn't support resize.");
+
+            surface.Resize(viewWidth, viewHeight, totalWidth, totalHeight, clear);
+        }
+
+        _screenCachedView = _layers[0].View;
+    }
+
+    /// <summary>
+    /// Resizes the surface and view to the specified width and height.
+    /// </summary>
+    /// <param name="width">The width of the surface and view.</param>
+    /// <param name="height">The height of the surface and view.</param>
+    /// <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="ICellSurface.DefaultForeground"/>, <see cref="ICellSurface.DefaultBackground"/> and glyph 0.</param>
+    public void Resize(int width, int height, bool clear)
+    {
+        foreach (ICellSurface layer in _layers)
+        {
+            if (layer is not ICellSurfaceResize surface)
+                throw new Exception("Surface doesn't support resize.");
+
+            surface.Resize(width, height, clear);
+        }
+
+        _screenCachedView = _layers[0].View;
+    }
+
     /// <inheritdoc/>
     public override void OnAdded(IScreenObject host)
     {
@@ -315,17 +356,14 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     public override void Update(IScreenObject host, TimeSpan delta)
     {
         // View or font changed on parent surface, re-evaluate everything
-        if (IsAttached)
+        if (IsAttached && _screenCachedView != _screen.Surface.View)
         {
-            if (_screenCachedView != _screen.Surface.View)
-            {
-                _screenCachedView = _screen.Surface.View;
+            _screenCachedView = _screen.Surface.View;
 
-                foreach (ICellSurface layer in _layers)
-                    layer.View = _screenCachedView;
+            foreach (ICellSurface layer in _layers)
+                layer.View = _screenCachedView;
 
-                _screen.IsDirty = true;
-            }
+            _screen.IsDirty = true;
         }
     }
 
