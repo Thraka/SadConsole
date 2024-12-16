@@ -275,7 +275,7 @@ public static class Screen
                 {
                     _cellTrackOnControl = true;
                     Point pos = state.SurfaceCellPosition - _surfaceView.Position;
-                    if (_surfaceView.MouseArea.Contains(pos))
+                    if (_surfaceView.MouseArea.Contains(pos) && _surfaceView.Surface.IsValidCell(pos.X, pos.Y))
                     {
                         SetEditCell(_surfaceView.Surface[pos.X, pos.Y]);
                     }

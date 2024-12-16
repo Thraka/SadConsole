@@ -38,7 +38,7 @@ public class Blink : CellEffectBase
     public int BlinkCount { get; set; }
 
     /// <summary>
-    /// The total duraction this effect will run for, before being flagged as finished. <see cref="System.TimeSpan.MaxValue"/> represents forever.
+    /// The total duration this effect will run for, before being flagged as finished. <see cref="System.TimeSpan.MaxValue"/> represents forever.
     /// </summary>
     [DataMember]
     public System.TimeSpan Duration { get; set; }
