@@ -54,17 +54,17 @@ internal class ComponentEditorCursor : ISadComponentPanel
             if (ImGui.CollapsingHeader("Render Appearance"))
             {
                 SettingsTable.BeginTable("cur_rend_appearance");
-                ColoredGlyphReference glyphRef = _cursorAppearance;
-                SettingsTable.DrawCommonSettings("settings", true, true, true, true, true, ref glyphRef,
-                                                                                           SadRogue.Primitives.Color.White.ToVector4(),
-                                                                                           SadRogue.Primitives.Color.Black.ToVector4(),
-                                                                                           ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
+                ImGuiTypes.ColoredGlyphReference glyphRef = _cursorAppearance;
+                SettingsTable.DrawCommonSettings(true, true, true, true, true, ref glyphRef,
+                                                 SadRogue.Primitives.Color.White.ToVector4(),
+                                                 SadRogue.Primitives.Color.Black.ToVector4(),
+                                                 ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
                 // Something changed
                 if (glyphRef != _cursorAppearance)
                 {
                     _cursorAppearance.Foreground = glyphRef.Foreground.ToColor();
                     _cursorAppearance.Background = glyphRef.Background.ToColor();
-                    _cursorAppearance.Mirror = glyphRef.Mirror;
+                    _cursorAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
                     _cursorAppearance.Glyph = glyphRef.Glyph;
                     _stateComponent.CursorRenderCell.CopyAppearanceFrom(_cursorAppearance);
                 }
@@ -79,17 +79,17 @@ internal class ComponentEditorCursor : ISadComponentPanel
                 ImGui.BeginDisabled(_printAppearanceMatchesHost);
                 SettingsTable.BeginTable("cur_print_appearance");
 
-                ColoredGlyphReference glyphRef = _stateComponent.PrintAppearance;
-                SettingsTable.DrawCommonSettings("settings", true, true, true, false, true, ref glyphRef,
-                                                                                           SadRogue.Primitives.Color.White.ToVector4(),
-                                                                                           SadRogue.Primitives.Color.Black.ToVector4(),
-                                                                                           ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
+                ImGuiTypes.ColoredGlyphReference glyphRef = _stateComponent.PrintAppearance;
+                SettingsTable.DrawCommonSettings(true, true, true, false, true, ref glyphRef,
+                                                 SadRogue.Primitives.Color.White.ToVector4(),
+                                                 SadRogue.Primitives.Color.Black.ToVector4(),
+                                                 ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
                 // Something changed
                 if (glyphRef != _cursorAppearance)
                 {
                     _stateComponent.PrintAppearance.Foreground = glyphRef.Foreground.ToColor();
                     _stateComponent.PrintAppearance.Background = glyphRef.Background.ToColor();
-                    _stateComponent.PrintAppearance.Mirror = glyphRef.Mirror;
+                    _stateComponent.PrintAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
                 }
                 SettingsTable.EndTable();
                 ImGui.EndDisabled();

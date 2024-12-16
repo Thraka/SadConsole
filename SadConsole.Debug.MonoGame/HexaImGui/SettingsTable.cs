@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Numerics;
 using SadConsole;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace Hexa.NET.ImGui;
 
 public static partial class SettingsTable
 {
-    public static void BeginTable(string id)
+    public static bool BeginTable(string id, ImGuiTableFlags tableFlags = ImGuiTableFlags.None,
+                                             ImGuiTableColumnFlags column1Flags = ImGuiTableColumnFlags.WidthStretch,
+                                             ImGuiTableColumnFlags column2Flags = ImGuiTableColumnFlags.WidthStretch)
     {
         if (ImGui.BeginTable(id, 2, ImGuiTableFlags.None, System.Numerics.Vector2.Zero, ImGui.GetContentRegionAvail().X))
         {
-            ImGui.TableSetupColumn("one", ImGuiTableColumnFlags.WidthFixed);
-            ImGui.TableSetupColumn("two", ImGuiTableColumnFlags.WidthStretch);
+            ImGui.TableSetupColumn("one", column1Flags);
+            ImGui.TableSetupColumn("two", column2Flags);
+
+            return true;
         }
+
+        return false;
     }
 
     public static void EndTable()
@@ -27,20 +26,20 @@ public static partial class SettingsTable
         ImGui.EndTable();
     }
 
-    public static void DrawCommonSettings(string id, bool showForeground, bool showBackground, bool showMirror, bool showGlyph, bool enableSwapForeBackRightClick,
-                                          ref SadConsole.Debug.ColoredGlyphReference glyphRef, Vector4? foregroundResetColor, Vector4? backgroundResetColor,
+    public static void DrawCommonSettings(bool showForeground, bool showBackground, bool showMirror, bool showGlyph, bool enableSwapForeBackRightClick,
+                                          ref SadConsole.ImGuiTypes.ColoredGlyphReference glyphRef, Vector4? foregroundResetColor, Vector4? backgroundResetColor,
                                           IFont font, ImGuiRenderer renderer)
     {
-        DrawCommonSettings(id, showForeground, showBackground, showMirror, showGlyph, enableSwapForeBackRightClick,
+        DrawCommonSettings(showForeground, showBackground, showMirror, showGlyph, enableSwapForeBackRightClick,
                            ref glyphRef.Foreground, foregroundResetColor,
                            ref glyphRef.Background, backgroundResetColor,
                            ref glyphRef.Mirror, ref glyphRef.Glyph, font, renderer);
     }
 
-    public static void DrawCommonSettings(string id, bool showForeground, bool showBackground, bool showMirror, bool showGlyph, bool enableSwapForeBackRightClick,
+    public static void DrawCommonSettings(bool showForeground, bool showBackground, bool showMirror, bool showGlyph, bool enableSwapForeBackRightClick,
                                           ref Vector4 foreground, Vector4? foregroundResetColor,
                                           ref Vector4 background, Vector4? backgroundResetColor,
-                                          ref Mirror mirror,
+                                          ref SadConsole.ImGuiTypes.Mirror mirror,
                                           ref int glyph, IFont font, ImGuiRenderer renderer)
     {
         if (showForeground)
@@ -64,18 +63,7 @@ public static partial class SettingsTable
             DrawFontGlyph("Glyph:", "##glyph", ref glyph, foreground, background, font, renderer);
     }
 
-    public static void DrawCheckbox(string label, string id, ref bool isChecked)
-    {
-        ImGui.TableNextRow();
-        ImGui.TableSetColumnIndex(0);
-        ImGui.AlignTextToFramePadding();
-        ImGui.Text(label);
-        ImGui.TableSetColumnIndex(1);
-
-        ImGui.Checkbox(id, ref isChecked);
-    }
-
-    public static bool DrawInt(string label, string id, ref int intValue, int minValue = 0, int maxValue = -1)
+    public static bool DrawCheckbox(string label, string id, ref bool isChecked)
     {
         bool returnValue;
         ImGui.TableNextRow();
@@ -83,7 +71,22 @@ public static partial class SettingsTable
         ImGui.AlignTextToFramePadding();
         ImGui.Text(label);
         ImGui.TableSetColumnIndex(1);
-        ImGui.SetNextItemWidth(-1);
+
+        returnValue = ImGui.Checkbox(id, ref isChecked);
+
+        return returnValue;
+    }
+
+    public static bool DrawInt(string label, string id, ref int intValue, int minValue = 0, int maxValue = -1, int width = -1)
+    {
+        bool returnValue;
+
+        ImGui.TableNextRow();
+        ImGui.TableSetColumnIndex(0);
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text(label);
+        ImGui.TableSetColumnIndex(1);
+        ImGui.SetNextItemWidth(width);
         returnValue = ImGui.InputInt(id, ref intValue);
 
         if (intValue < minValue)
@@ -95,18 +98,21 @@ public static partial class SettingsTable
         return returnValue;
     }
 
-    public static void DrawText(string label, string text)
+    public static void DrawText(string label, string text, bool alignTextToFramePadding = true)
     {
         ImGui.TableNextRow();
         ImGui.TableSetColumnIndex(0);
-        ImGui.AlignTextToFramePadding();
+        if (alignTextToFramePadding)
+            ImGui.AlignTextToFramePadding();
         ImGui.Text(label);
         ImGui.TableSetColumnIndex(1);
         ImGui.SetNextItemWidth(-1);
         ImGui.Text(text);
     }
 
-    public static bool DrawColor(string label, string id, ref Vector4 color, Vector4? resetColor, out bool colorRightClicked)
+    public static bool DrawColor(string label, string id, ref Vector4 color, Vector4? resetColor,
+                                 out bool colorRightClicked,
+                                 ImGuiColorEditFlags flags = ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs)
     {
         bool returnValue = false;
         Vector4 colorCopy = color;
@@ -117,8 +123,8 @@ public static partial class SettingsTable
         ImGui.Text(label);
 
         ImGui.TableSetColumnIndex(1);
-        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-        if (ImGui.ColorEdit4(id, ref colorCopy, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs))
+        //ImGui.SetNextItemWidth(-ImGui.GetContentRegionAvail().X);
+        if (ImGui.ColorEdit4(id, ref colorCopy, flags))
         {
             color = colorCopy;
             returnValue = true;
@@ -139,7 +145,7 @@ public static partial class SettingsTable
         return returnValue;
     }
 
-    public static bool DrawMirror(string label, string id, ref Mirror mirror)
+    public static bool DrawMirror(string label, string id, ref SadConsole.ImGuiTypes.Mirror mirror, int width = -1)
     {
         bool returnValue = false;
         ImGui.TableNextRow();
@@ -148,11 +154,12 @@ public static partial class SettingsTable
         ImGui.Text(label);
         ImGui.TableSetColumnIndex(1);
 
-        int itemIndex = Enums<Mirror>.GetIndexFromValue(mirror);
+        int itemIndex = ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetIndexFromValue(mirror);
 
-        if (ImGui.Combo(id, ref itemIndex, Enums<Mirror>.Names, Enums<Mirror>.Count))
+        ImGui.SetNextItemWidth(width);
+        if (ImGui.Combo(id, ref itemIndex, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Names, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Count))
         {
-            mirror = Enums<Mirror>.GetValueFromIndex(itemIndex);
+            mirror = ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetValueFromIndex(itemIndex);
             returnValue = true;
         }
 

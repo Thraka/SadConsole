@@ -11,27 +11,34 @@ public abstract class ImGuiWindow : ImGuiObjectBase
 
     public event EventHandler Closed;
 
+    public bool RemoveOnClose = true;
+
     public bool DialogResult;
 
-    protected void OnClosed() =>
+    public void Close()
+    {
+        IsOpen = false;
+        OnClosed();
         Closed?.Invoke(this, EventArgs.Empty);
+    }
 
+    protected abstract void OnClosed();
 
-    public static bool DrawButtons(out bool result, bool acceptDisabled = false)
+    public static bool DrawButtons(out bool result, bool acceptDisabled = false, string cancelButtonText = "Cancel", string acceptButtonText = "Accept")
     {
         bool buttonClicked = false;
         result = false;
 
-        ImGui.Separator();
+        // Cancel Button
+        if (ImGui.Button(cancelButtonText))
+            buttonClicked = true;
 
-        if (ImGui.Button("Cancel")) { buttonClicked = true; }
-
-        // Right-align button
-        float pos = ImGui.CalcTextSize("Accept").X + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().FramePadding.X * 2 + 2;
+        // Accept Button -- Right-aligned
+        float pos = ImGui.CalcTextSize(acceptButtonText).X + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().FramePadding.X * 2 + 2;
         ImGui.SameLine(ImGui.GetWindowWidth() - pos);
         ImGui.BeginDisabled(acceptDisabled);
         
-        if (ImGui.Button("Accept"))
+        if (ImGui.Button(acceptButtonText))
         {
             buttonClicked = true;
             result = true;

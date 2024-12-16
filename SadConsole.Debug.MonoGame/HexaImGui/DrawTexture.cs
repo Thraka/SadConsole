@@ -20,7 +20,7 @@ public static partial class ImGui2
     public static void DrawTexture(string id, bool border, int zoomMode, ImTextureID texture, Vector2 textureSize, Vector2 region, out bool isItemActive, out bool isItemHovered)
     {
         ImGui.PushID(id);
-        var startPos = ImGui.GetCursorScreenPos();
+        Vector2 startPos = ImGui.GetCursorScreenPos();
 
         if (zoomMode == Zoom2x)
             textureSize *= 2;
@@ -30,10 +30,11 @@ public static partial class ImGui2
         ImGui.InvisibleButton("##imagebutton", textureSize, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight);
 
         isItemActive = ImGui.IsItemActive();
-        isItemHovered = ImGui.IsItemHovered(ImGuiHoveredFlags.RectOnly);
+        isItemHovered = ImGui.IsItemHovered();
 
         //ImGui.SetCursorScreenPos(startPos);
         //ImGui.Image(texture, textureSize, Vector2.Zero, Vector2.One);
+        
         var drawPointer = ImGui.GetWindowDrawList();
         drawPointer.AddImage(texture, startPos, startPos + textureSize, Vector2.Zero, Vector2.One, ImGui.GetColorU32(new Vector4(1f, 1f, 1f, 1f)));
         if (border)

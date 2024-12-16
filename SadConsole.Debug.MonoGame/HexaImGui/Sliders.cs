@@ -18,7 +18,7 @@ public static partial class ImGui2
         // Calculate button size, taken from widgets.cpp in imgui lib
         var style = ImGui.GetStyle();
         Vector2 label_size = ImGui.CalcTextSize("+", true) + (style.FramePadding * 2f);
-        ImGui.BeginChild(label, size);
+        ImGui.BeginGroup();
 
         if (ImGui.Button($"-", new Vector2(size.X, label_size.Y)))
         {
@@ -34,7 +34,7 @@ public static partial class ImGui2
             v = Math.Clamp(v + 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
         }
 
-        ImGui.EndChild();
+        ImGui.EndGroup();
 
         return returnValue;
     }

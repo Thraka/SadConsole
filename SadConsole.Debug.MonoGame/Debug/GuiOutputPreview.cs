@@ -6,7 +6,6 @@ namespace SadConsole.Debug;
 
 public class FinalOutputWindow : ImGuiSystem.ImGuiWindow
 {
-    private bool _windowOpenState;
     private int _mode = ModeNormal;
 
     private const int ModeNormal = 0;
@@ -18,7 +17,13 @@ public class FinalOutputWindow : ImGuiSystem.ImGuiWindow
         Title = title;
         IsOpen = isOpen;
     }
-    
+
+    override protected void OnClosed()
+    {
+        if (RemoveOnClose)
+            Debugger.GuiComponents.Remove(this);
+    }
+
     public override void BuildUI(ImGuiRenderer renderer)
     {
         if (IsOpen)

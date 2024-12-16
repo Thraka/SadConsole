@@ -18,9 +18,9 @@ public static partial class ImGui2
             Point fontTextureSize = new Point(font.Image.Width, font.Image.Height);
 
             Vector2 renderAreaSize = font.GetFontSize(IFont.Sizes.Two).ToVector2();
-
             if (showNumber)
             {
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - ImGui.GetStyle().FramePadding.X * 2 - renderAreaSize.X);
                 if (ImGui.InputInt(id, ref selectedGlyph, 1))
                     selectedGlyph = Math.Clamp(selectedGlyph, 0, font.TotalGlyphs - 1);
 

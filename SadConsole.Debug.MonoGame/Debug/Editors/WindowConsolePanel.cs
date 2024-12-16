@@ -1,7 +1,5 @@
-﻿using System.Numerics;
-using Hexa.NET.ImGui;
+﻿using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Debug.Editors;
 
@@ -24,8 +22,8 @@ internal class WindowConsolePanel : IScreenObjectPanel
         ImGui.SameLine();
         ImGui.SetNextItemWidth(ImGui.CalcTextSize("Stretch").X * 2 + ImGui.GetStyle().FramePadding.X * 2.0f);
         if (ImGui.Combo("##window_title_alignment", ref state.WindowState.TitleAlignment,
-                Enums<HorizontalAlignment>.Names,
-                Enums<HorizontalAlignment>.Count))
+                ImGuiListEnum<HorizontalAlignment>.Names,
+                ImGuiListEnum<HorizontalAlignment>.Count))
         {
             window.TitleAlignment = (HorizontalAlignment)state.WindowState.TitleAlignment;
         }

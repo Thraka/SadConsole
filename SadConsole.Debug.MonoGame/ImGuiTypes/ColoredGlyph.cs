@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SadConsole.Debug;
+namespace SadConsole.ImGuiTypes;
 
 public struct ColoredGlyphReference
 {
@@ -16,7 +16,7 @@ public struct ColoredGlyphReference
         Background = cell.Background.ToVector4(),
         Glyph = cell.Glyph,
         IsVisible = cell.IsVisible,
-        Mirror = cell.Mirror,
+        Mirror = MirrorConverter.FromSadConsoleMirror(cell.Mirror),
         //Decorators = cell.Decorators
     };
 
@@ -26,7 +26,7 @@ public struct ColoredGlyphReference
                left.Background == right.Background.ToVector4() &&
                left.Glyph == right.Glyph &&
                left.IsVisible == right.IsVisible &&
-               left.Mirror == right.Mirror;
+               left.Mirror == MirrorConverter.FromSadConsoleMirror(right.Mirror);
     }
 
     public static bool operator !=(ColoredGlyphReference left, ColoredGlyphBase right)
