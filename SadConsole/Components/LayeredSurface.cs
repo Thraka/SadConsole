@@ -356,14 +356,30 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     public override void Update(IScreenObject host, TimeSpan delta)
     {
         // View or font changed on parent surface, re-evaluate everything
-        if (IsAttached && _screenCachedView != _screen.Surface.View)
+        if (IsAttached)
         {
-            _screenCachedView = _screen.Surface.View;
+            if (_screenCachedView != _screen.Surface.View)
+            {
+                _screenCachedView = _screen.Surface.View;
 
-            foreach (ICellSurface layer in _layers)
-                layer.View = _screenCachedView;
+                foreach (ICellSurface layer in _layers)
+                    layer.View = _screenCachedView;
 
-            _screen.IsDirty = true;
+                _screen.IsDirty = true;
+            }
+
+            // If the current screen isn't dirty, check if any layer is.
+            if (!_screen.IsDirty)
+            {
+                foreach (ICellSurface layer in _layers)
+                {
+                    if (layer.IsDirty)
+                    {
+                        _screen.IsDirty = true;
+                        break;
+                    }
+                }
+            }
         }
     }
 
