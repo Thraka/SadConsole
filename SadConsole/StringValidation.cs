@@ -102,7 +102,7 @@ public static partial class StringValidation
 
 #if NET7_0_OR_GREATER
     /// <summary>
-    /// Returns a <see cref="Validator"/> delegate that validates whether or not a string contains only letters.
+    /// Returns a <see cref="Validator"/> delegate that validates whether a string contains only letters.
     /// </summary>
     /// <param name="errorMessage">A message to provide to the result if the validation fails.</param>
     /// <returns>The validation result.</returns>

@@ -10048,6 +10048,17 @@
             <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
             <returns>A new object instance.</returns>
         </member>
+        <member name="M:SadConsole.Serializer.TryLoad``1(System.String,System.Boolean,``0@,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Tries to load the file, returning it as the specified tyupe.
+            </summary>
+            <param name="file">The file to load from.</param>
+            <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
+            <param name="obj">The loaded object.</param>
+            <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
+            <typeparam name="T">The type of object to deserialize.</typeparam>
+            <returns></returns>
+        </member>
         <member name="T:SadConsole.Serializer.LogTraceWriter">
             <summary>
             A simple log writer that helps debug the JSON serialization.
@@ -11087,7 +11098,7 @@
         </member>
         <member name="M:SadConsole.StringValidation.Letters(System.String)">
             <summary>
-            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string contains only letters.
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether a string contains only letters.
             </summary>
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>

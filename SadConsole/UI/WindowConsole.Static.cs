@@ -1,4 +1,5 @@
 ﻿using System;
+using SadConsole.Input;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
@@ -182,7 +183,12 @@ public partial class Window
         window.Title = "";
 
         closeButton.Position = new Point(2, window.Height - 1 - closeButton.Surface.Height);
-        closeButton.Click += (o, e) => { window.DialogResult = true; window.Hide(); closedCallback?.Invoke(); };
+        closeButton.Click += (o, e) =>
+        {
+            window.DialogResult = true;
+            window.Hide();
+            closedCallback?.Invoke();
+        };
 
         window.Controls.Add(closeButton);
         closeButton.IsFocused = true;
