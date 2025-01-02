@@ -50,16 +50,6 @@
             An event that's raised when the debugger is closed.
             </summary>
         </member>
-        <member name="P:SadConsole.Debug.Debugger.GuiComponents">
-            <summary>
-            The ImGui objects to draw each game frame.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Debug.Debugger.Renderer">
-            <summary>
-            The ImGui renderer.
-            </summary>
-        </member>
         <member name="P:SadConsole.Debug.Debugger.IsOpened">
             <summary>
             True when the debugger is currently opened.
@@ -96,6 +86,26 @@
             </summary>
             <param name="obj">The object to check.</param>
             <returns>A string representing the object.</returns>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiCore">
+            <summary>
+            Shared objects that drive the ImGui integration for SadConsole.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiCore.ImGuiComponent">
+            <summary>
+            MonoGame component for rendering ImGui.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiCore.GuiComponents">
+            <summary>
+            The ImGui objects to draw each game frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiCore.Renderer">
+            <summary>
+            The ImGui renderer.
+            </summary>
         </member>
         <member name="T:SadConsole.ImGuiSystem.ImGuiGuardedValue`1">
             <summary>
@@ -202,6 +212,26 @@
             <summary>
             Creates a new list, wrapping the provided items.
             </summary>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new list, wrapping the provided items.
+            </summary>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Int32,`0[])">
+            <summary>
+            Creates a new list, wrapping the provided items, and sets which item is selected.
+            </summary>
+            <param name="selectedIndex">The 0-based index of the item to select.</param>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Int32,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new list, wrapping the provided items, and sets which item is selected.
+            </summary>
+            <param name="selectedIndex">The 0-based index of the item to select.</param>
             <param name="items">The items to wrap.</param>
         </member>
         <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.IsItemSelected">
@@ -497,6 +527,39 @@
             <param name="point">The coordinates within the size.</param>
             <param name="size">The size.</param>
             <returns>The UV coordinates.</returns>
+        </member>
+        <member name="M:Hexa.NET.ImGui.SC.FileListBox.Draw">
+            <summary>
+            Draws the list box.
+            </summary>
+        </member>
+        <member name="M:Hexa.NET.ImGui.SC.FileListBox.Draw(System.Boolean@,System.Boolean@)">
+            <summary>
+            Draws the list box.
+            </summary>
+            <param name="itemHighlighted">True when an item is single-clicked and <see cref="P:Hexa.NET.ImGui.SC.FileListBox.DoubleClickToSelect"/> is true.</param>
+            <returns>True when an item is selected or highlighted.</returns>
+        </member>
+        <member name="T:Hexa.NET.ImGui.StyleExtensions">
+            <summary>
+            Extensions that help with getting ImGui style values.
+            </summary>
+        </member>
+        <member name="M:Hexa.NET.ImGui.StyleExtensions.GetSpacing(Hexa.NET.ImGui.ImGuiStylePtr,System.Numerics.Vector2@,System.Numerics.Vector2@)">
+            <summary>
+            Gets the frame padding and item spacing values.
+            </summary>
+            <param name="style">The style object.</param>
+            <param name="framePadding">Frame padding.</param>
+            <param name="itemSpacing">Item spacing.</param>
+        </member>
+        <member name="M:Hexa.NET.ImGui.StyleExtensions.GetWidthOfItems(Hexa.NET.ImGui.ImGuiStylePtr,System.String[])">
+            <summary>
+            Calculates the text size and adds frame padding * 2 for each item provided.
+            </summary>
+            <param name="style">The style object.</param>
+            <param name="items">String values to calculate.</param>
+            <returns>The total size.</returns>
         </member>
     </members>
 </doc>

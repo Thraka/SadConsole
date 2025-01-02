@@ -6,9 +6,9 @@ using SadRogue.Primitives;
 using SadConsole;
 using System.Linq;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static class GlyphPickerPopup
     {
@@ -24,7 +24,7 @@ public static partial class ImGui2
 
                 // Draw font image
                 ImGui.Text("Select your glyph");
-                ImGui2.DrawTexture("font_preview", true, ImGui2.ZoomNormal, ((SadConsole.Host.GameTexture)font.Image).Texture, renderer, out bool isActive, out bool isHovered);
+                ImGuiSC.DrawTexture("font_preview", true, ImGuiSC.ZoomNormal, ((SadConsole.Host.GameTexture)font.Image).Texture, renderer, out bool isActive, out bool isHovered);
 
                 if (isHovered)
                 {

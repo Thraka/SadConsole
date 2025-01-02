@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
@@ -20,7 +21,7 @@ public class ComponentsPanel: ImGuiObjectBase
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
-        ImGui2.SeparatorText("Components", Debugger.Settings.Color_PanelHeader);
+        ImGuiSC.SeparatorText("Components", Debugger.Settings.Color_PanelHeader);
         ImGui.Separator();
 
         if (CurrentScreenObject == null) return;
@@ -39,7 +40,7 @@ public class ComponentsPanel: ImGuiObjectBase
             ImGui.ListBox("##Components", ref CurrentScreenObject.ComponentsSelectedItem,
                           CurrentScreenObject.Components, CurrentScreenObject.Object.SadComponents.Count, 3);
 
-            ImGui2.SeparatorText($"{CurrentScreenObject.Components[CurrentScreenObject.ComponentsSelectedItem]} Settings", Debugger.Settings.Color_PanelHeader);
+            ImGuiSC.SeparatorText($"{CurrentScreenObject.Components[CurrentScreenObject.ComponentsSelectedItem]} Settings", Debugger.Settings.Color_PanelHeader);
 
             ImGui.Separator();
 

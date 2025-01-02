@@ -3,9 +3,9 @@ using System.Numerics;
 using SadConsole;
 using SadConsole.ImGuiSystem;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static bool ScrollableSurface(string id, IScreenSurface Surface, out SadRogue.Primitives.Point hoveredCellPosition, ImGuiRenderer renderer)
     {
@@ -40,7 +40,7 @@ public static partial class ImGui2
 
         //if (idother != 0 && idvalue != idother) System.Diagnostics.Debugger.Break();
 
-        DrawTexture("output_preview_surface1", true, ImGui2.ZoomNormal, ((SadConsole.Host.GameTexture)Surface.Renderer.Output).Texture, imageSize, renderer, out var isActive, out var isHovered);
+        DrawTexture("output_preview_surface1", true, ImGuiSC.ZoomNormal, ((SadConsole.Host.GameTexture)Surface.Renderer.Output).Texture, imageSize, renderer, out var isActive, out var isHovered);
 
         Vector2 mousePosition = ImGui.GetMousePos();
         Vector2 pos = mousePosition - ImGui.GetItemRectMin();
@@ -61,7 +61,7 @@ public static partial class ImGui2
 
             int _sliderValueY = view.Position.Y;
 
-            if (ImGui2.VSliderIntNudges("##height", new Vector2(barSize, imageSize.Y), ref _sliderValueY, Surface.Surface.Height - view.Height, 0, ImGuiSliderFlags.AlwaysClamp))
+            if (ImGuiSC.VSliderIntNudges("##height", new Vector2(barSize, imageSize.Y), ref _sliderValueY, Surface.Surface.Height - view.Height, 0, ImGuiSliderFlags.AlwaysClamp))
                 Surface.Surface.ViewPosition = Surface.Surface.ViewPosition.WithY(_sliderValueY);
         }
 
@@ -69,7 +69,7 @@ public static partial class ImGui2
         {
             int _sliderValueX = view.Position.X;
 
-            if (ImGui2.SliderIntNudges("##width", (int)imageSize.X, ref _sliderValueX, 0, Surface.Surface.Width - view.Width, bigX ? "BIG" : "%d", ImGuiSliderFlags.AlwaysClamp))
+            if (ImGuiSC.SliderIntNudges("##width", (int)imageSize.X, ref _sliderValueX, 0, Surface.Surface.Width - view.Width, bigX ? "BIG" : "%d", ImGuiSliderFlags.AlwaysClamp))
                 Surface.Surface.ViewPosition = Surface.Surface.ViewPosition.WithX(_sliderValueX);
         }
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     // Taken from https://github.com/ocornut/imgui/issues/1496#issuecomment-655048353
 
@@ -52,7 +52,7 @@ public static partial class ImGui2
         var window = ImGuiP.GetCurrentWindow();
 
         //window.ContentRegionRect.Max.X -= frameHeight * 0.5f;
-        
+
         window.WorkRect.Max.X          -= frameHeight * 0.5f;
         window.InnerRect.Max.X         -= frameHeight * 0.5f;
         window.Size.X -= frameHeight;

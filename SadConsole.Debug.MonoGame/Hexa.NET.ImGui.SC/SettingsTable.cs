@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
 using SadConsole;
 using SadConsole.ImGuiSystem;
+using SadRogue.Primitives;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
 public static partial class SettingsTable
 {
@@ -44,14 +45,14 @@ public static partial class SettingsTable
     {
         if (showForeground)
         {
-            DrawColor("Foreground:", "##fore", ref foreground, foregroundResetColor, out bool colorRightClicked);
+            DrawColor("Foreground:", "##fore", ref foreground, foregroundResetColor, true, out bool colorRightClicked);
             if (colorRightClicked && enableSwapForeBackRightClick)
                 (background, foreground) = (foreground, background);
         }
 
         if (showBackground)
         {
-            DrawColor("Background:", "##back", ref background, backgroundResetColor, out bool colorRightClicked);
+            DrawColor("Background:", "##back", ref background, backgroundResetColor, true, out bool colorRightClicked);
             if (colorRightClicked && enableSwapForeBackRightClick)
                 (background, foreground) = (foreground, background);
         }
@@ -110,7 +111,20 @@ public static partial class SettingsTable
         ImGui.Text(text);
     }
 
+    public static bool DrawString(string label, ref string text, ulong maxLength)
+    {
+        ImGui.TableNextRow();
+        ImGui.TableSetColumnIndex(0);
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text(label);
+        ImGui.TableSetColumnIndex(1);
+        ImGui.SetNextItemWidth(-1);
+        bool edited = ImGui.InputText($"##drawstring_{label}", ref text, maxLength);
+        return edited;
+    }
+
     public static bool DrawColor(string label, string id, ref Vector4 color, Vector4? resetColor,
+                                 bool showPalette,
                                  out bool colorRightClicked,
                                  ImGuiColorEditFlags flags = ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs)
     {
@@ -140,6 +154,17 @@ public static partial class SettingsTable
                 color = resetColor.Value;
                 returnValue = true;
             }
+        }
+
+        if (showPalette)
+        {
+            ImGui.SameLine();
+            if (ImGui.Button($"Palette{id}"))
+                ImGui.OpenPopup($"palettepopup_{id}");
+
+            Color palColor = colorCopy.ToColor();
+            if (Windows.PalettePopup.Show($"palettepopup_{id}", ref palColor))
+                color = palColor.ToVector4();
         }
 
         return returnValue;
@@ -174,6 +199,6 @@ public static partial class SettingsTable
         ImGui.Text(label);
         ImGui.TableSetColumnIndex(1);
 
-        return ImGui2.FontGlyph.DrawWithPopup(renderer, id, "glyph_select", font, glyphForeground, glyphBackground, ref glyph, true);
+        return ImGuiSC.FontGlyph.DrawWithPopup(renderer, id, "glyph_select", font, glyphForeground, glyphBackground, ref glyph, true);
     }
 }

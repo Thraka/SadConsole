@@ -2,6 +2,7 @@
 using System.Numerics;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
@@ -30,7 +31,7 @@ class GuiScreenObjects : ImGuiObjectBase
         ImGui.Begin(GuiDockspace.ID_LEFT_PANEL);
         {
             // Screen objects list
-            ImGui2.SeparatorText("Current Scene", Debugger.Settings.Color_PanelHeader);
+            ImGuiSC.SeparatorText("Current Scene", Debugger.Settings.Color_PanelHeader);
 
             // Refresh list of objects
             foreach (ScreenObjectState item in GuiState.ScreenObjectUniques.Values)

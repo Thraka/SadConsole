@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
@@ -23,7 +24,7 @@ class GuiSurfacePreview : ImGuiObjectBase
                 // Inspect components to see if entity renderer, controls ui, etc, enable different editors.
                 // Add ability to add those components.
 
-                
+
                 // Check for zoom:
 
 
@@ -51,7 +52,7 @@ class GuiSurfacePreview : ImGuiObjectBase
                         }
 
                         // Render the target texture
-                        ImGui2.DrawTexture("output_preview_surface1", false, _zoom ? ImGui2.Zoom2x : ImGui2.ZoomNormal, targetTexture, renderer, out var isActive, out var isHovered);
+                        ImGuiSC.DrawTexture("output_preview_surface1", false, _zoom ? ImGuiSC.Zoom2x : ImGuiSC.ZoomNormal, targetTexture, renderer, out var isActive, out var isHovered);
 
                         // Peek the cell if the target type is the final
                         if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)

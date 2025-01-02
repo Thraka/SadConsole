@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static uint Color_White = ImGui.GetColorU32(SadRogue.Primitives.Color.White.ToVector4());
 
@@ -34,7 +34,7 @@ public static partial class ImGui2
 
         //ImGui.SetCursorScreenPos(startPos);
         //ImGui.Image(texture, textureSize, Vector2.Zero, Vector2.One);
-        
+
         var drawPointer = ImGui.GetWindowDrawList();
         drawPointer.AddImage(texture, startPos, startPos + textureSize, Vector2.Zero, Vector2.One, ImGui.GetColorU32(new Vector4(1f, 1f, 1f, 1f)));
         if (border)

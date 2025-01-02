@@ -10,6 +10,9 @@ public struct ColoredGlyphReference
     public bool IsVisible;
     public Mirror Mirror;
 
+    public ColoredGlyph ToColoredGlyph() =>
+        new(Foreground.ToColor(), Background.ToColor(), Glyph, Mirror.ToSadConsoleMirror());
+    
     public static implicit operator ColoredGlyphReference(SadConsole.ColoredGlyphBase cell) => new ColoredGlyphReference()
     {
         Foreground = cell.Foreground.ToVector4(),

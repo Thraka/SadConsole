@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
@@ -38,7 +39,7 @@ class GuiPreviews : ImGuiObjectBase
                         ImGui.RadioButton("Fit", ref _scOutputMode, ModeFit);
 
                         ImGui.BeginChild("output1", ImGuiWindowFlags.HorizontalScrollbar);
-                        ImGui2.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                        ImGuiSC.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
                         ImGui.EndChild();
                     }
                     else
@@ -81,7 +82,7 @@ class GuiPreviews : ImGuiObjectBase
 
                             // Render the target texture
                             ImGui.BeginChild("output2", ImGuiWindowFlags.HorizontalScrollbar);
-                            ImGui2.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
+                            ImGuiSC.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
 
                             // Peek the cell if the target type is the final
                             if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)

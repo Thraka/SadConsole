@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static unsafe string InputText(string label, string value)
     {

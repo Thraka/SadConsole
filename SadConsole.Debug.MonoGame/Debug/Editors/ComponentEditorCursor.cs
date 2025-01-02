@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.Components;
 using SadConsole.ImGuiSystem;
 
@@ -53,22 +54,25 @@ internal class ComponentEditorCursor : ISadComponentPanel
             ImGui.AlignTextToFramePadding();
             if (ImGui.CollapsingHeader("Render Appearance"))
             {
-                SettingsTable.BeginTable("cur_rend_appearance");
-                ImGuiTypes.ColoredGlyphReference glyphRef = _cursorAppearance;
-                SettingsTable.DrawCommonSettings(true, true, true, true, true, ref glyphRef,
-                                                 SadRogue.Primitives.Color.White.ToVector4(),
-                                                 SadRogue.Primitives.Color.Black.ToVector4(),
-                                                 ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
-                // Something changed
-                if (glyphRef != _cursorAppearance)
+                if (SettingsTable.BeginTable("cur_rend_appearance"))
                 {
-                    _cursorAppearance.Foreground = glyphRef.Foreground.ToColor();
-                    _cursorAppearance.Background = glyphRef.Background.ToColor();
-                    _cursorAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
-                    _cursorAppearance.Glyph = glyphRef.Glyph;
-                    _stateComponent.CursorRenderCell.CopyAppearanceFrom(_cursorAppearance);
+                    ImGuiTypes.ColoredGlyphReference glyphRef = _cursorAppearance;
+                    SettingsTable.DrawCommonSettings(true, true, true, true, true, ref glyphRef,
+                        SadRogue.Primitives.Color.White.ToVector4(),
+                        SadRogue.Primitives.Color.Black.ToVector4(),
+                        ((IScreenSurface)_screenObject).Font, ImGuiCore.Renderer);
+                    // Something changed
+                    if (glyphRef != _cursorAppearance)
+                    {
+                        _cursorAppearance.Foreground = glyphRef.Foreground.ToColor();
+                        _cursorAppearance.Background = glyphRef.Background.ToColor();
+                        _cursorAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
+                        _cursorAppearance.Glyph = glyphRef.Glyph;
+                        _stateComponent.CursorRenderCell.CopyAppearanceFrom(_cursorAppearance);
+                    }
+
+                    SettingsTable.EndTable();
                 }
-                SettingsTable.EndTable();
             }
 
             if (ImGui.CollapsingHeader("Printing Behavior"))
@@ -77,21 +81,24 @@ internal class ComponentEditorCursor : ISadComponentPanel
                     _stateComponent.PrintAppearanceMatchesHost = _printAppearanceMatchesHost;
 
                 ImGui.BeginDisabled(_printAppearanceMatchesHost);
-                SettingsTable.BeginTable("cur_print_appearance");
-
-                ImGuiTypes.ColoredGlyphReference glyphRef = _stateComponent.PrintAppearance;
-                SettingsTable.DrawCommonSettings(true, true, true, false, true, ref glyphRef,
-                                                 SadRogue.Primitives.Color.White.ToVector4(),
-                                                 SadRogue.Primitives.Color.Black.ToVector4(),
-                                                 ((IScreenSurface)_screenObject).Font, Debugger.Renderer);
-                // Something changed
-                if (glyphRef != _cursorAppearance)
+                if (SettingsTable.BeginTable("cur_print_appearance"))
                 {
-                    _stateComponent.PrintAppearance.Foreground = glyphRef.Foreground.ToColor();
-                    _stateComponent.PrintAppearance.Background = glyphRef.Background.ToColor();
-                    _stateComponent.PrintAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
+                    ImGuiTypes.ColoredGlyphReference glyphRef = _stateComponent.PrintAppearance;
+                    SettingsTable.DrawCommonSettings(true, true, true, false, true, ref glyphRef,
+                        SadRogue.Primitives.Color.White.ToVector4(),
+                        SadRogue.Primitives.Color.Black.ToVector4(),
+                        ((IScreenSurface)_screenObject).Font, ImGuiCore.Renderer);
+                    // Something changed
+                    if (glyphRef != _cursorAppearance)
+                    {
+                        _stateComponent.PrintAppearance.Foreground = glyphRef.Foreground.ToColor();
+                        _stateComponent.PrintAppearance.Background = glyphRef.Background.ToColor();
+                        _stateComponent.PrintAppearance.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(glyphRef.Mirror);
+                    }
+
+                    SettingsTable.EndTable();
                 }
-                SettingsTable.EndTable();
+
                 ImGui.EndDisabled();
 
                 if (ImGui.Checkbox("Print only character data?", ref _printOnlyCharData))
@@ -118,7 +125,7 @@ internal class ComponentEditorCursor : ISadComponentPanel
             }
 
             // Popup for settings
-            if (ImGui2.XYEditPopup("comp_cur_edit_position", ref _positionX, ref _positionY, "X", "Y"))
+            if (ImGuiSC.XYEditPopup("comp_cur_edit_position", ref _positionX, ref _positionY, "X", "Y"))
                 _stateComponent.Position = (_positionX, _positionY);
 
             //else if (!ImGuiP.IsPopupOpen("comp_cur_edit_position"))

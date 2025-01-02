@@ -1,15 +1,21 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Reflection;
-using ImGuiNET;
+using SadRogue.Primitives;
+using UI = SadConsole.UI;
 
-namespace SadConsole.Editor.Windows;
+namespace Hexa.NET.ImGui.SC.Windows;
 
 public static class PalettePopup
 {
     static Color s_ansiColor = Color.AnsiRed;
     static int s_themeColorIndex = 0;
-    static string[] s_themeColorNames = Enum.GetNames(typeof(SadConsole.UI.Colors.ColorNames));
+    static string[] s_themeColorNames = Enum.GetNames(typeof(UI.Colors.ColorNames));
     static string s_filter = string.Empty;
+
+    public static List<Tuple<string, UI.NamedColor[]>> ExtraPalettes = new();
 
     public static bool Show(string popupId, ref Color color)
     {
@@ -30,6 +36,7 @@ public static class PalettePopup
                         ImGui.TableSetupColumn("one");
                         ImGui.TableSetupColumn("two");
                     }
+
                     bool clicked = false;
 
                     GenerateAnsiComboRow("RED DARK", Color.AnsiRed, "RED BRIGHT", Color.AnsiRedBright, ref clicked, ref color);
@@ -47,11 +54,12 @@ public static class PalettePopup
                         ImGui.TableSetColumnIndex(0);
                         Vector2 pos = ImGui.GetCursorPos();
 
-                        if (ImGui.Selectable($"##ansi{name}", false, ImGuiSelectableFlags.DontClosePopups))
+                        if (ImGui.Selectable($"##ansi{name}", false, ImGuiSelectableFlags.NoAutoClosePopups))
                         {
                             clicked = true;
                             selectedColor = color;
                         }
+
                         ImGui.SetCursorPos(pos);
                         ImGui.TextColored(color2.ToVector4(), name);
                         ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, color.PackedValue);
@@ -59,11 +67,12 @@ public static class PalettePopup
                         ImGui.TableSetColumnIndex(1);
 
                         pos = ImGui.GetCursorPos();
-                        if (ImGui.Selectable($"##ansi{name2}", false, ImGuiSelectableFlags.DontClosePopups))
+                        if (ImGui.Selectable($"##ansi{name2}", false, ImGuiSelectableFlags.NoAutoClosePopups))
                         {
                             clicked = true;
                             selectedColor = color2;
                         }
+
                         ImGui.SetCursorPos(pos);
                         ImGui.TextColored(color.ToVector4(), name2);
                         ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, color2.PackedValue);
@@ -79,9 +88,10 @@ public static class PalettePopup
 
                     ImGui.EndTabItem();
                 }
+
                 if (ImGui.BeginTabItem("SadConsole"))
                 {
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
+                    ImGui.SetNextItemWidth(-1);
                     if (ImGui.BeginListBox("##themelist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
@@ -91,7 +101,7 @@ public static class PalettePopup
                             Vector2 pos = ImGui.GetCursorPos();
                             Color parsedColor = UI.Colors.Default.FromColorName(Enum.Parse<UI.Colors.ColorNames>(colorname));
 
-                            if (GenerateSelectableColor(colorname, parsedColor, drawData, ref color))
+                            if (GenerateSelectableColor(colorname, parsedColor, drawData))
                             {
                                 color = parsedColor;
                                 returnValue = true;
@@ -104,31 +114,33 @@ public static class PalettePopup
 
                     ImGui.EndTabItem();
                 }
+
                 if (ImGui.BeginTabItem("Primitives"))
                 {
-                    Vector2 area = ImGui.GetContentRegionMax();
+                    Vector2 area = ImGui.GetContentRegionAvail();
 
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("Filter:");
                     ImGui.SameLine();
-                    
-                    ImGui.SetNextItemWidth(area.X - ImGui.GetCursorPosX() - ImGui.CalcTextSize("X").X - (spacing.X * 2));
+                    //ImGui.SetNextItemWidth(area.X - ImGui.GetCursorPosX() - ImGui.CalcTextSize("X").X - (spacing.X * 2));
+                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - spacing.X - ImGui.CalcTextSize("X").X - padding.X * 2);
                     ImGui.InputText("##Filter", ref s_filter, 50);
                     ImGui.SameLine();
                     if (ImGui.Button("X"))
                         s_filter = string.Empty;
 
-                    ImGui.SetNextItemWidth(area.X - spacing.X);
+                    ImGui.SetNextItemWidth(-1);
                     if (ImGui.BeginListBox("##primcolorlist"))
                     {
                         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
 
                         Type colorType = typeof(Color);
-                        foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) => t.FieldType.Name == colorType.Name && t.Name.Contains(s_filter, StringComparison.OrdinalIgnoreCase)))
+                        foreach (FieldInfo item in colorType.GetFields(BindingFlags.Public | BindingFlags.Static).Where((t) =>
+                                     t.FieldType.Name == colorType.Name && t.Name.Contains(s_filter, StringComparison.OrdinalIgnoreCase)))
                         {
                             Color parsedColor = (Color)item.GetValue(null)!;
 
-                            if (GenerateSelectableColor(item.Name, parsedColor, drawData, ref color))
+                            if (GenerateSelectableColor(item.Name, parsedColor, drawData))
                             {
                                 color = parsedColor;
                                 returnValue = true;
@@ -141,65 +153,40 @@ public static class PalettePopup
 
                     ImGui.EndTabItem();
                 }
-                if (ImGuiCore.State.GetOpenDocument().HasPalette && ImGui.BeginTabItem("Document"))
+
+                // Custom colors
+                foreach (Tuple<string, UI.NamedColor[]> colorTab in ExtraPalettes)
                 {
-                    Model.Palette pal = ImGuiCore.State.GetOpenDocument().Palette;
-
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
-                    if (ImGui.BeginListBox("##themelist"))
+                    if (ImGui.BeginTabItem(colorTab.Item1))
                     {
-                        ImDrawListPtr drawData = ImGui.GetWindowDrawList();
-
-                        for (int i = 0; i < pal.Colors.Length; i++)
+                        ImGui.SetNextItemWidth(-1);
+                        if (ImGui.BeginListBox($"##themelist_{colorTab.Item1}"))
                         {
-                            Vector2 pos = ImGui.GetCursorPos();
+                            ImDrawListPtr drawData = ImGui.GetWindowDrawList();
 
-                            if (GenerateSelectableColor(pal.Colors[i].Name, pal.Colors[i].Color, drawData, ref color))
+                            for (int i = 0; i < colorTab.Item2.Length; i++)
                             {
-                                color = pal.Colors[i].Color;
-                                returnValue = true;
-                                ImGui.CloseCurrentPopup();
+                                Vector2 pos = ImGui.GetCursorPos();
+
+                                if (GenerateSelectableColor(colorTab.Item2[i].Name, colorTab.Item2[i].Color, drawData))
+                                {
+                                    color = colorTab.Item2[i].Color;
+                                    returnValue = true;
+                                    ImGui.CloseCurrentPopup();
+                                }
                             }
+
+                            ImGui.EndListBox();
                         }
 
-                        ImGui.EndListBox();
+                        ImGui.EndTabItem();
                     }
-
-
-                    ImGui.EndTabItem();
-                }
-
-                if (ImGui.BeginTabItem("Editor"))
-                {
-                    Model.Palette pal = ImGuiCore.State.Palette;
-
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionMax().X - spacing.X);
-                    if (ImGui.BeginListBox("##themelist"))
-                    {
-                        ImDrawListPtr drawData = ImGui.GetWindowDrawList();
-
-                        for (int i = 0; i < pal.Colors.Length; i++)
-                        {
-                            Vector2 pos = ImGui.GetCursorPos();
-
-                            if (GenerateSelectableColor(pal.Colors[i].Name, pal.Colors[i].Color, drawData, ref color))
-                            {
-                                color = pal.Colors[i].Color;
-                                returnValue = true;
-                                ImGui.CloseCurrentPopup();
-                            }
-                        }
-
-                        ImGui.EndListBox();
-                    }
-
-                    ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
             }
 
-            bool GenerateSelectableColor(string name, Color color, ImDrawListPtr drawData, ref Color selectedColor)
+            bool GenerateSelectableColor(string name, Color color, ImDrawListPtr drawData)
             {
                 bool returnValue = false;
                 Vector2 pos = ImGui.GetCursorPos();
@@ -236,8 +223,7 @@ public static class PalettePopup
             ImGui.EndPopup();
         }
 
-        ImGuiCore.State.CheckSetPopupOpen(popupId);
-
         return returnValue;
     }
 }
+

@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using SadRogue.Primitives;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static void SeparatorText(string label, Vector4 color)
     {

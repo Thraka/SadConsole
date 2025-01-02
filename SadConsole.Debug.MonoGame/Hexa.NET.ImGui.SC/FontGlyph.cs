@@ -5,9 +5,9 @@ using SadConsole.Host;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static class FontGlyph
     {
@@ -41,22 +41,33 @@ public static partial class ImGui2
             return GlyphPickerPopup.Show(renderer, "glyph_select", font, fontTexture, fontTextureSize, ref selectedGlyph);
         }
 
+        public static void Draw(ImGuiRenderer renderer, string id, IFont font, ColoredGlyph glyph) =>
+            Draw(renderer, id, font, glyph.Foreground.ToVector4(), glyph.Background.ToVector4(), glyph.Glyph);
+
         public static void Draw(ImGuiRenderer renderer, string id, IFont font, Vector4 foreground, Vector4 background, int glyph)
         {
             ImTextureID fontTexture = renderer.BindTexture(((GameTexture)font.Image).Texture);
-            Rectangle rect = font.GetGlyphSourceRectangle(glyph);
+            Rectangle rect = font.SolidGlyphRectangle;
+
             Point fontTextureSize = new(font.Image.Width, font.Image.Height);
 
             Vector2 renderAreaSize = font.GetFontSize(IFont.Sizes.Two).ToVector2();
 
             // TODO: Apply mirror to UV
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, Vector2.One);
-            ImGui.BeginDisabled();
-            ImGui.ImageButton($"{id}##tool_tip_settings_button", fontTexture,
-                                  renderAreaSize,
-                                  rect.Position.ToUV(fontTextureSize), (rect.Position + rect.Size).ToUV(fontTextureSize),
-                                  background, foreground);
-            ImGui.EndDisabled();
+            var pos = ImGui.GetCursorPos();
+            ImGui.Image(fontTexture,
+                renderAreaSize,
+                rect.Position.ToUV(fontTextureSize), (rect.Position + rect.Size).ToUV(fontTextureSize),
+                background);
+
+            ImGui.SetCursorPos(pos);
+
+            rect = font.GetGlyphSourceRectangle(glyph);
+            ImGui.Image(fontTexture,
+                renderAreaSize,
+                rect.Position.ToUV(fontTextureSize), (rect.Position + rect.Size).ToUV(fontTextureSize),
+                foreground);
             ImGui.PopStyleVar();
         }
     }

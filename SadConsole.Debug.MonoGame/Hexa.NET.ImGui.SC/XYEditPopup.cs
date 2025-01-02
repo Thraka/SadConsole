@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using SadConsole.ImGuiSystem;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static bool XYEditPopup(string id, ref int xValue, ref int yValue, string xText, string yText, int inputWidth = 100)
     {

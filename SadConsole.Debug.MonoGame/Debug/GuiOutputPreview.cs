@@ -1,10 +1,11 @@
 ﻿using System.Numerics;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
-public class FinalOutputWindow : ImGuiSystem.ImGuiWindow
+public class FinalOutputWindow : ImGuiWindowBase
 {
     private int _mode = ModeNormal;
 
@@ -16,12 +17,6 @@ public class FinalOutputWindow : ImGuiSystem.ImGuiWindow
     {
         Title = title;
         IsOpen = isOpen;
-    }
-
-    override protected void OnClosed()
-    {
-        if (RemoveOnClose)
-            Debugger.GuiComponents.Remove(this);
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -40,7 +35,7 @@ public class FinalOutputWindow : ImGuiSystem.ImGuiWindow
                     if (ImGui.RadioButton("2x", ref _mode, Mode2X)) { _mode = Mode2X; } ImGui.SameLine();
                     if (ImGui.RadioButton("Fit", ref _mode, ModeFit)) { _mode = ModeFit; }
 
-                    ImGui2.DrawTexture("output_preview_image", true, _mode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                    ImGuiSC.DrawTexture("output_preview_image", true, _mode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
                 }
                 else
                     ImGui.Text("Rendering output hasn't been created.");

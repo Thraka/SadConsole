@@ -1,4 +1,5 @@
 ﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.Editors;
@@ -9,13 +10,13 @@ internal class WindowConsolePanel : IScreenObjectPanel
     {
         var window = (UI.Window)state.Object;
 
-        ImGui2.SeparatorText("Window Settings", Debugger.Settings.Color_PanelHeader);
+        ImGuiSC.SeparatorText("Window Settings", Debugger.Settings.Color_PanelHeader);
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Title: ");
         ImGui.SameLine();
         ImGui.SetNextItemWidth(-1);
-        window.Title = ImGui2.InputText("##window_title", window.Title);
+        window.Title = ImGuiSC.InputText("##window_title", window.Title);
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Title Alignment: ");

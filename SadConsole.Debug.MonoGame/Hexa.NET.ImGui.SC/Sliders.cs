@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Hexa.NET.ImGui;
+namespace Hexa.NET.ImGui.SC;
 
-public static partial class ImGui2
+public static partial class ImGuiSC
 {
     public static bool VSliderIntNudges(string label, Vector2 size, ref int v, int v_min, int v_max) =>
         VSliderIntNudges(label, size, ref v, v_min, v_max, "%d", ImGuiSliderFlags.None);
