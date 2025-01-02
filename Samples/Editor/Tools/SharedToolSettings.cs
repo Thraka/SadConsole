@@ -14,4 +14,6 @@ internal static class SharedToolSettings
     {
         Tip = new ColoredGlyph() { Glyph = 1 };
     }
+
+    // public static void DrawSharedToolSettings
 }

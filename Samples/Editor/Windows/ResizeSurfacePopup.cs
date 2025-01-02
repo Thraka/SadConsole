@@ -1,5 +1,5 @@
-﻿using ImGuiNET;
-using SadConsole.Editor.GuiParts.Tools;
+﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
@@ -14,17 +14,18 @@ public static class ResizeSurfacePopup
         bool returnValue = false;
         dialogResult = false;
 
-        ImGuiCore.State.CheckSetPopupOpen(popupId);
+        ImGui.SetNextWindowSize(new System.Numerics.Vector2(200, -1));
         if (ImGui.BeginPopup(popupId))
         {
-            SettingsTable.BeginTable("resize_surface_table");
+            if (SettingsTable.BeginTable("resize_surface_table", column1Flags: ImGuiTableColumnFlags.WidthFixed))
+            {
+                SettingsTable.DrawInt("Width:", "##width", ref width, 1, MaxWidth);
+                SettingsTable.DrawInt("Height:", "##height", ref height, 1, MaxHeight);
 
-            SettingsTable.DrawInt("Width:", "width", ref width, 1, MaxWidth);
-            SettingsTable.DrawInt("Height:", "height", ref height, 1, MaxHeight);
+                SettingsTable.EndTable();
+            }
 
-            SettingsTable.EndTable();
-
-            if (ImGuiWindow.DrawButtons(out dialogResult))
+            if (ImGuiWindowBase.DrawButtons(out dialogResult))
             {
                 returnValue = true;
                 ImGui.CloseCurrentPopup();

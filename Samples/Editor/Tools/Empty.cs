@@ -1,7 +1,6 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using SadConsole.Components;
-using SadConsole.Editor.GuiParts.Tools;
-using SadConsole.Editor.Model;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
@@ -12,70 +11,74 @@ internal class Empty : ITool
     private nint _gridImage = -1;
     private Overlay _toolOverlay = new();
 
-    public string Name => "Empty Cells";
+    public string Title => "\uf2d3 Empty Cells";
 
     public string Description => "Empties existing cells.";
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public void BuildSettingsPanel(Document document)
     {
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditingSurface.FontSize, Color.Green);
 
         if (!isActive) return;
 
-        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
         {
-            document.VisualDocument.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
+            document.EditingSurface.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
 
-            document.VisualToolLayerLower.Surface!.Surface[hoveredCellPosition.X - document.VisualDocument.Surface.ViewPosition.X, hoveredCellPosition.Y - document.VisualDocument.Surface.ViewPosition.Y].Background = _emptyCellColor;
-            document.VisualToolLayerLower.Surface!.IsDirty = true;
+            document.VisualLayerToolLower.Surface!.Surface[hoveredCellPosition.X - document.EditingSurface.Surface.ViewPosition.X, hoveredCellPosition.Y - document.EditingSurface.Surface.ViewPosition.Y].Background = _emptyCellColor;
+            document.VisualLayerToolLower.Surface!.IsDirty = true;
         }
     }
 
-    public void OnSelected()
+    public void Reset(Document document) { }
+
+    public void OnSelected(Document document)
     {
-        DocumentViewChanged(ImGuiCore.State.GetOpenDocument());
+        DocumentViewChanged(document);
     }
 
-    public void OnDeselected()
+    public void OnDeselected(Document document)
     {
-        Document document = ImGuiCore.State.GetOpenDocument();
-        document.VisualToolLayerLower.Surface.DefaultBackground = Color.Transparent;
-        document.VisualToolLayerLower.Clear();
+        document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
+        document.VisualLayerToolLower.Clear();
     }
 
     public void DocumentViewChanged(Document document)
     {
-        //document.VisualToolLayerLower.Update(document.VisualToolContainer, TimeSpan.Zero);
+        //document.VisualLayerToolLower.Update(document.VisualToolContainer, TimeSpan.Zero);
 
-        document.VisualToolLayerLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-        document.VisualToolLayerLower.Clear();
+        document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        document.VisualLayerToolLower.Clear();
 
-        var clearCell = new ColoredGlyph(document.VisualDocument.Surface.DefaultForeground, document.VisualDocument.Surface.DefaultBackground, 0);
+        var clearCell = new ColoredGlyph(document.EditingSurface.Surface.DefaultForeground, document.EditingSurface.Surface.DefaultBackground, 0);
 
-        for (int index = 0; index < document.VisualToolLayerLower.Surface.Surface.Count; index++)
+        for (int index = 0; index < document.VisualLayerToolLower.Surface.Surface.Count; index++)
         {
-            ColoredGlyphBase renderCell = document.VisualDocument.Surface[(Point.FromIndex(index, document.VisualToolLayerLower.Surface.Surface.Width) + document.VisualDocument.Surface.ViewPosition).ToIndex(document.VisualDocument.Surface.Width)];
+            ColoredGlyphBase renderCell = document.EditingSurface.Surface[(Point.FromIndex(index, document.VisualLayerToolLower.Surface.Surface.Width) + document.EditingSurface.Surface.ViewPosition).ToIndex(document.EditingSurface.Surface.Width)];
 
             if (renderCell.Foreground == clearCell.Foreground &&
                 renderCell.Background == clearCell.Background &&
                 renderCell.Glyph == clearCell.Glyph)
 
-                document.VisualToolLayerLower.Surface.Surface[index].Background = _emptyCellColor;
+                document.VisualLayerToolLower.Surface.Surface[index].Background = _emptyCellColor;
         }
 
         //Overlay.Surface.Render(TimeSpan.Zero);
         //_gridImage = ImGuiCore.Renderer.BindTexture(((Host.GameTexture)_gridSurface.Renderer!.Output).Texture);
     }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer)
+    public void DrawOverDocument(Document document)
     {
         //Vector2 min = ImGui.GetItemRectMin();
         //Vector2 max = ImGui.GetItemRectMax();
         //ImDrawListPtr drawList = ImGui.GetWindowDrawList();
         //drawList.AddImage(_gridImage, min, max);
     }
+
+    public override string ToString() =>
+        Title;
 }

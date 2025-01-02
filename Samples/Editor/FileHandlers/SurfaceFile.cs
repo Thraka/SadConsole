@@ -1,50 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Hexa.NET.ImGui.SC.Windows;
+using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.FileHandlers;
+
 internal class SurfaceFile : IFileHandler
 {
     public bool SupportsLoad => true;
 
     public bool SupportsSave => true;
 
-    public string FriendlyName => "Surface";
+    public FileDialogOptions DefaultSaveOptions { get; } = new(false, true);
 
-    public string[] ExtensionsLoading => ["surface", "surfacez"];
+    public FileDialogOptions DefaultLoadOptions { get; } = new(false, true);
+
+    public string Title => "Cell Surface";
+
+    public string[] ExtensionsLoading => ["surface"];
 
     public string[] ExtensionsSaving => ["surface"];
 
     public string HelpInformation => "Saves just the surface, without any other metadata, such as the document title.";
 
-    public object Load(string file) =>
-        Serializer.Load<ScreenSurface>(file, file.EndsWith('z'));
-
-    public bool Save(object instance, string file)
+    public object? Load(string file)
     {
-        instance = instance as Model.Document ?? instance;
+        // Try loading uncompressed first.
+        if (!Serializer.TryLoad<CellSurface>(file, false, out CellSurface? surface))
+        {
+            if (!Serializer.TryLoad<CellSurface>(file, true, out surface))
+            {
+                MessageWindow.Show($"Unable to load file.\r\n\r\nIs it the wrong type?", "Error");
+                return null;
+            }
+        }
 
-        if (!file.EndsWith(ExtensionsSaving[0], StringComparison.InvariantCulture))
+        return new DocumentSurface(surface);
+    }
+
+    public bool Save(object instance, string file, bool compress)
+    {
+        if (!file.EndsWith(ExtensionsSaving[0], StringComparison.InvariantCultureIgnoreCase))
             file += "." + ExtensionsSaving[0];
 
-        if (instance is ScreenSurface surface)
+        if (instance is Document doc)
         {
+            ScreenSurface surface = doc.EditingSurface;
+
             try
             {
-                Serializer.Save(surface, file, false);
+                Serializer.Save(surface.Surface, file, compress);
 
                 return true;
             }
             catch (Exception e)
             {
-                ImGuiCore.Alert($"Unable to save file.\r\n\r\n{e.Message}");
+                MessageWindow.Show($"Unable to save file.\r\n\r\n{e.Message}", "Error");
                 return false;
             }
         }
 
-        ImGuiCore.Alert($"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}");
+        MessageWindow.Show($"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
+
         return false;
     }
 }

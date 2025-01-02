@@ -1,50 +1,36 @@
-﻿using System.Numerics;
-using ImGuiNET;
+﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.Documents;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
-public class SaveFile : ImGuiWindow
+public class SaveFile : ImGuiWindowBase
 {
     private FileListBox _fileListBox;
-    public Model.Document? Document;
-    private IFileHandler[] _fileLoaders;
-    private string[] _fileLoadersNames;
-    private int _fileLoaderSelectedIndex;
+    private ImGuiList<IFileHandler> _fileLoaders = new();
     private string _selectedFileName = "";
+    private Document _document;
+    private bool useCompression;
 
-    
-    public SaveFile()
+    public SaveFile(Document document)
     {
         Title = "Save file";
         _fileListBox = new(Directory.GetCurrentDirectory());
+        _document = document;
 
-        //_fileListBox.ItemSelected += (s, e) => selectedEvent = true;
-        //_fileListBox.ItemHighlighted += (s, e) => highlightedEvent = true;
-        //_fileListBox.ChangeDirectory += (s, e) => { changedDirEvent = true; counter++; };
-    }
-
-    public void Show(Model.Document document)
-    {
-        IsOpen = true;
-        Document = document;
-
-        _fileLoaders = Document.GetSaveHandlers().ToArray();
-        _fileLoadersNames = _fileLoaders.Select(f => f.FriendlyName).ToArray();
-        _fileLoaderSelectedIndex = 0;
-
-        if (!ImGuiCore.GuiComponents.Contains(this))
-            ImGuiCore.GuiComponents.Add(this);
+        _fileLoaders = new ImGuiList<IFileHandler>(0, _document.GetSaveHandlers());
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
+        // TODO: This is written in the context of we only have 1 extension.
         if (IsOpen)
         {
             ImGui.OpenPopup(Title);
 
-            ImGuiExt.CenterNextWindow();
+            ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(550, -1));
             //ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, 300));
 
@@ -61,16 +47,16 @@ public class SaveFile : ImGuiWindow
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("File Types");
                     ImGui.SetNextItemWidth(-1);
-                    ImGui.ListBox("##handlers", ref _fileLoaderSelectedIndex, _fileLoadersNames, _fileLoadersNames.Length, 10);
+                    ImGui.ListBox("##handlers", ref _fileLoaders.SelectedItemIndex, _fileLoaders.Names, _fileLoaders.Count, 10);
 
                     // Draw right-side file list box;
                     ImGui.TableSetColumnIndex(1);
-                    _fileListBox.SearchPattern = string.Join(';', _fileLoaders[_fileLoaderSelectedIndex].ExtensionsSaving.Select(ex => $"*.{ex}"));
+                    _fileListBox.SearchPattern = string.Join(';', _fileLoaders.SelectedItem.ExtensionsSaving.Select(ex => $"*.{ex}"));
                     _fileListBox.Begin("listbox", new(-1, 300));
                     if (_fileListBox.Draw(out bool fileSelected, out bool fileHighlighted))
                     {
                         if (!_fileListBox.IsSelectedItemDirectory)
-                            _selectedFileName = _fileListBox.HighlightedItem!.Name;
+                            _selectedFileName = Path.GetFileNameWithoutExtension(_fileListBox.HighlightedItem!.Name);
                     }
                     _fileListBox.End();
 
@@ -78,45 +64,33 @@ public class SaveFile : ImGuiWindow
                 }
                 ImGui.Separator();
 
+                if (_fileLoaders.SelectedItem.DefaultSaveOptions.ShowCompressionToggle)
+                    ImGui.Checkbox("Compress File", ref useCompression);
+
+                ImGui.AlignTextToFramePadding();
                 ImGui.Text("File name: ");
                 ImGui.SameLine();
+
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - ImGui.GetStyle().GetWidthOfItems($".{_fileLoaders.SelectedItem.ExtensionsSaving[0]}"));
                 ImGui.InputText("##filename", ref _selectedFileName, 200);
-
-                //ImGui.GetWindowDrawList().AddRectFilled(boxStart, boxEnd, Color.Blue.PackedValue);
-                //ImGui.SameLine();
-
+                ImGui.SameLine();
+                ImGui.Text($".{_fileLoaders.SelectedItem.ExtensionsSaving[0]}");
 
                 // Draw final row of dialog buttons
                 ImGui.Separator();
-                if (ImGui.Button("Cancel")) { DialogResult = false; IsOpen = false; }
-
-                // Right-align button
-                float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
-                ImGui.SameLine(ImGui.GetWindowWidth() - pos);
-
-                ImGui.BeginDisabled(string.IsNullOrEmpty(_selectedFileName));
-
-                if (ImGui.Button("Save"))
+                if (ImGuiWindowBase.DrawButtons(out DialogResult, string.IsNullOrEmpty(_selectedFileName), "Cancel", "Save"))
                 {
-                    string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
-                    object savableInstance = Document!.DehydrateToFileHandler(_fileLoaders[_fileLoaderSelectedIndex], file);
-                    _fileLoaders[_fileLoaderSelectedIndex].Save(savableInstance, file);
-                    // TODO: Support editing palettes and saving them
-                    //if (Document.HasPalette)
-                    //    Document.Palette.Save(file + ".pal");
-                    DialogResult = true;
-                    IsOpen = false;
-                }
+                    if (DialogResult)
+                    {
+                        string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
+                        _fileLoaders.SelectedItem.Save(_document, file, false);
+                    }
 
-                ImGui.EndDisabled();
+                    Close();
+                }
 
                 ImGui.EndPopup();
             }
-        }
-        else
-        {
-            OnClosed();
-            ImGuiCore.GuiComponents.Remove(this);
         }
     }
 }

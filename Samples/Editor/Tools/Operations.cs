@@ -1,68 +1,85 @@
 ﻿using System.Numerics;
-using ImGuiNET;
-using SadConsole.Editor.Model;
-using SadConsole.ImGuiSystem;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.Tools;
+
 internal class Operations : ITool
 {
     private bool _onlyVisible;
+    private bool _wrap;
 
-    public string Name => "Surface Operations";
+    public string Title => "\uee1b Surface Operations";
 
     public string Description => "Perform operations on the surface, such as shifting or clearing.";
 
     private ColoredGlyph _tip = SharedToolSettings.Tip;
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public void BuildSettingsPanel(Document document)
     {
         ImGui.Checkbox("Only on visible area", ref _onlyVisible);
 
-        ImGuiWidgets.BeginGroupPanel("Shift");
+        ImGuiSC.BeginGroupPanel("Shift");
+
+        ImGui.Checkbox("Wrap Cells", ref _wrap);
 
         ISurface surfaceArea;
-        IScreenSurface doc = ImGuiCore.State.GetOpenDocument().VisualDocument;
+        ScreenSurface doc = document.EditingSurface;
 
         if (_onlyVisible)
-            surfaceArea = ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.GetSubSurface(ImGuiCore.State.GetOpenDocument().VisualDocument.Surface.View);
+            surfaceArea = document.EditingSurface.Surface.GetSubSurface(document.EditingSurface.Surface.View);
         else
-            surfaceArea = ImGuiCore.State.GetOpenDocument().VisualDocument.Surface;
+            surfaceArea = document.EditingSurface.Surface;
 
-        if (ImGui.Button("Left"))
-        {
-            surfaceArea.ShiftLeft();
-            doc.IsDirty = true;
-        }
-        else if (ImGui.Button("Right"))
-        {
-            surfaceArea.ShiftRight();
-            doc.IsDirty = true;
+        Vector2 buttonSize = new(ImGui.CalcTextSize("right").X + ImGui.GetStyle().FramePadding.X * 2, 0);
 
-        }
-        else if (ImGui.Button("Up"))
+        if (ImGui.Button("Left", buttonSize))
         {
-            surfaceArea.ShiftUp();
-            doc.IsDirty = true;
-        }
-        else if (ImGui.Button("Down"))
-        {
-            surfaceArea.ShiftDown();
+            surfaceArea.ShiftLeft(1, _wrap);
             doc.IsDirty = true;
         }
 
-        ImGuiWidgets.EndGroupPanel();
+        ImGui.SameLine();
+        if (ImGui.Button("Right", buttonSize))
+        {
+            surfaceArea.ShiftRight(1, _wrap);
+            doc.IsDirty = true;
+
+        }
+
+        if (ImGui.Button("Up", buttonSize))
+        {
+            surfaceArea.ShiftUp(1, _wrap);
+            doc.IsDirty = true;
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Down", buttonSize))
+        {
+            surfaceArea.ShiftDown(1, _wrap);
+            doc.IsDirty = true;
+        }
+
+        ImGuiSC.EndGroupPanel();
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        
+
     }
 
-    public void OnSelected() { }
+    public void OnSelected(Document document) { }
 
-    public void OnDeselected() { }
+    public void OnDeselected(Document document) { }
+
+    public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
+    public void DrawOverDocument(Document document) { }
+
+    public override string ToString() =>
+        Title;
 }
+

@@ -1,181 +1,107 @@
-﻿using System.Numerics;
-using Hexa.NET.ImGui;
+﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.FileHandlers;
+using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
-public class FilePicker
+public class OpenFile : ImGuiWindowBase
 {
-    static readonly Dictionary<object, FilePicker> _filePickers = new Dictionary<object, FilePicker>();
+    private FileListBox _fileListBox;
+    private ImGuiList<IFileHandler>? _fileLoaders = new();
 
-    public string RootFolder;
-    public string CurrentFolder;
-    public string SelectedFile;
-    public List<string> AllowedExtensions;
-    public bool OnlyAllowFolders;
+    public IFileHandler SelectedLoader;
+    public FileInfo SelectedFile;
 
-    public static FilePicker GetFolderPicker(object o, string startingPath)
-        => GetFilePicker(o, startingPath, null, true);
-
-    public static FilePicker GetFilePicker(object o, string startingPath, string searchFilter = null, bool onlyAllowFolders = false)
+    public OpenFile()
     {
-        if (File.Exists(startingPath))
-        {
-            startingPath = new FileInfo(startingPath).DirectoryName;
-        }
-        else if (string.IsNullOrEmpty(startingPath) || !Directory.Exists(startingPath))
-        {
-            startingPath = Environment.CurrentDirectory;
-            if (string.IsNullOrEmpty(startingPath))
-                startingPath = AppContext.BaseDirectory;
-        }
-
-        if (!_filePickers.TryGetValue(o, out FilePicker fp))
-        {
-            fp = new FilePicker();
-            fp.RootFolder = startingPath;
-            fp.CurrentFolder = startingPath;
-            fp.OnlyAllowFolders = onlyAllowFolders;
-
-            if (searchFilter != null)
-            {
-                if (fp.AllowedExtensions != null)
-                    fp.AllowedExtensions.Clear();
-                else
-                    fp.AllowedExtensions = new List<string>();
-
-                fp.AllowedExtensions.AddRange(searchFilter.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-            }
-
-            _filePickers.Add(o, fp);
-        }
-
-        return fp;
+        Title = "Open file";
+        _fileListBox = new(Directory.GetCurrentDirectory());
     }
 
-    public static void RemoveFilePicker(object o) => _filePickers.Remove(o);
-
-    public bool Draw()
+    protected override void OnOpened()
     {
-        ImGui.Text("Current Folder: " + Path.GetFileName(RootFolder) + CurrentFolder.Replace(RootFolder, ""));
-        bool result = false;
+        base.OnOpened();
 
-        if (ImGui.BeginChild(1, new Vector2(400, 400)))
+        // Reset to no document builders selected
+        Core.State.DocumentBuilders.SelectedItemIndex = 0;
+        _fileLoaders = new ImGuiList<IFileHandler>(0, Core.State.DocumentBuilders.SelectedItem.GetLoadHandlers());
+    }
+
+    public override void BuildUI(ImGuiRenderer renderer)
+    {
+        if (IsOpen)
         {
-            var di = new DirectoryInfo(CurrentFolder);
-            if (di.Exists)
-            {
-                if (di.Parent != null && CurrentFolder != RootFolder)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Text, Color.Yellow.PackedValue);
-                    if (ImGui.Selectable("../", false, ImGuiSelectableFlags.NoAutoClosePopups))
-                        CurrentFolder = di.Parent.FullName;
+            ImGui.OpenPopup(Title);
 
-                    ImGui.PopStyleColor();
+            ImGuiSC.CenterNextWindow();
+            ImGui.SetNextWindowSize(new System.Numerics.Vector2(550, -1));
+            //ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, 300));
+
+            if (ImGui.BeginPopupModal(Title, ref IsOpen))
+            {
+                ImGui.Text("Document Type:");
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+
+                if (ImGui.ListBox("##doctypes",
+                                  ref Core.State.DocumentBuilders.SelectedItemIndex,
+                                  Core.State.DocumentBuilders.Names,
+                                  Core.State.DocumentBuilders.Count, 3))
+                {
+                    _fileLoaders = new ImGuiList<IFileHandler>(0, Core.State.DocumentBuilders.SelectedItem.GetLoadHandlers());
                 }
 
-                var fileSystemEntries = GetFileSystemEntries(di.FullName);
-                foreach (var fse in fileSystemEntries)
-                {
-                    if (Directory.Exists(fse))
-                    {
-                        var name = Path.GetFileName(fse);
-                        ImGui.PushStyleColor(ImGuiCol.Text, Color.Yellow.PackedValue);
-                        if (ImGui.Selectable(name + "/", false, ImGuiSelectableFlags.NoAutoClosePopups))
-                            CurrentFolder = fse;
-                        ImGui.PopStyleColor();
-                    }
-                    else
-                    {
-                        var name = Path.GetFileName(fse);
-                        bool isSelected = SelectedFile == fse;
-                        if (ImGui.Selectable(name, isSelected, ImGuiSelectableFlags.NoAutoClosePopups))
-                            SelectedFile = fse;
+                ImGui.Separator();
 
-                        if (ImGuiP.IsMouseDoubleClicked(0))
+                if (Core.State.DocumentBuilders.IsItemSelected())
+                {
+                    if (ImGui.BeginTable("table1", 2, ImGuiTableFlags.BordersInnerV))
+                    {
+                        ImGui.TableSetupColumn("one", ImGuiTableColumnFlags.WidthFixed, ImGui.GetContentRegionAvail().X / 3);
+                        ImGui.TableSetupColumn("two");
+
+                        // Draw left-side file handlers
+                        ImGui.TableNextRow();
+                        ImGui.TableSetColumnIndex(0);
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("File Types");
+                        ImGui.SetNextItemWidth(-1);
+                        ImGui.ListBox("##handlers", ref _fileLoaders.SelectedItemIndex, _fileLoaders.Names, _fileLoaders.Count, 10);
+
+                        // Draw right-side file list box;
+                        ImGui.TableSetColumnIndex(1);
+                        if (_fileLoaders.IsItemSelected())
                         {
-                            result = true;
-                            ImGui.CloseCurrentPopup();
+                            _fileListBox.SearchPattern = string.Join(';', _fileLoaders.SelectedItem.ExtensionsLoading.Select(ex => $"*.{ex}"));
+                            _fileListBox.Begin("listbox", new(-1, 300));
+                            _fileListBox.Draw();
+                            _fileListBox.End();
                         }
                     }
+
+                    ImGui.EndTable();
                 }
-            }
-        }
-        ImGui.EndChild();
 
+                ImGui.Separator();
 
-        if (ImGui.Button("Cancel"))
-        {
-            result = false;
-            ImGui.CloseCurrentPopup();
-        }
-
-        if (OnlyAllowFolders)
-        {
-            ImGui.SameLine();
-            if (ImGui.Button("Open"))
-            {
-                result = true;
-                SelectedFile = CurrentFolder;
-                ImGui.CloseCurrentPopup();
-            }
-        }
-        else if (SelectedFile != null)
-        {
-            ImGui.SameLine();
-            if (ImGui.Button("Open"))
-            {
-                result = true;
-                ImGui.CloseCurrentPopup();
-            }
-        }
-
-        return result;
-    }
-
-    bool TryGetFileInfo(string fileName, out FileInfo realFile)
-    {
-        try
-        {
-            realFile = new FileInfo(fileName);
-            return true;
-        }
-        catch
-        {
-            realFile = null;
-            return false;
-        }
-    }
-
-    List<string> GetFileSystemEntries(string fullName)
-    {
-        var files = new List<string>();
-        var dirs = new List<string>();
-
-        foreach (var fse in Directory.GetFileSystemEntries(fullName, ""))
-        {
-            if (Directory.Exists(fse))
-            {
-                dirs.Add(fse);
-            }
-            else if (!OnlyAllowFolders)
-            {
-                if (AllowedExtensions != null)
+                if (ImGuiWindowBase.DrawButtons(out DialogResult, _fileListBox.HighlightedItem == null || _fileListBox.IsHighlightedItemDirectory, "Cancel", "Open"))
                 {
-                    var ext = Path.GetExtension(fse);
-                    if (AllowedExtensions.Contains(ext))
-                        files.Add(fse);
+                    if (DialogResult)
+                    {
+                        SelectedLoader = _fileLoaders.SelectedItem!;
+                        SelectedFile = (FileInfo)_fileListBox.HighlightedItem!;
+                    }
+
+                    Close();
                 }
-                else
-                {
-                    files.Add(fse);
-                }
+
+                ImGui.EndPopup();
             }
         }
-
-        var ret = new List<string>(dirs);
-        ret.AddRange(files);
-
-        return ret;
+        else
+        {
+            OnClosed();
+            ImGuiCore.GuiComponents.Remove(this);
+        }
     }
-
 }

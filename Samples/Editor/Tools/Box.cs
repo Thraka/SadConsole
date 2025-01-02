@@ -1,24 +1,24 @@
 ﻿using System.Numerics;
-using ImGuiNET;
-
-using SadConsole.Editor.Model;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiTypes;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Box : ITool
 {
-    private bool _isFirstPointSelected = false;
-    private Rectangle _boxArea;
-    private Point _firstPoint;
-    private Point _secondPoint;
-    private bool _isCancelled;
+    private ImGuiTypes.ShapeSettings _shapeSettings = new() { HasBorder = true,
+                                                              UseBoxBorderStyle = true,
+                                                              BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[0].ConnectedLineStyle };
 
-    private GuiParts.Tools.ShapeSettings.Settings _shapeSettings = new() { HasBorder = true, UseBoxBorderStyle = true, BoxBorderStyle = Model.SadConsoleTypes.ConnectedGlyphs.GetValueFromIndex(1) };
+    private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
 
-    public string Name => "Box";
+    public string Title => "\uefa4 Box";
 
-    public string Description => """
+    public string Description =>
+        """
         Draws a box.
 
         The border and fill of the box can be customized.
@@ -28,29 +28,28 @@ internal class Box : ITool
         To cancel drawing, depress the right mouse button or press the ESC key.
         """;
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public Box()
     {
-        ImGuiWidgets.BeginGroupPanel("Settings");
+        _lineTypes.SelectedItemIndex = 0;
+    }
 
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
+    public void BuildSettingsPanel(Document document)
+    {
+        ImGuiSC.BeginGroupPanel("Settings");
 
-        //GuiParts.Tools.SettingsTable.BeginTable("toolsettings");
+        ScreenSurface surface = document.EditingSurface;
+
+        //SettingsTable.BeginTable("toolsettings");
 
         ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
-        //GuiParts.Tools.SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
+        //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
         if (_shapeSettings.HasBorder)
         {
-
-            _shapeSettings.BorderGlyph ??= new ColoredGlyph();
-
             // Data for border settings
-            Vector4 foreground = _shapeSettings.BorderGlyph.Foreground.ToVector4();
-            Vector4 background = _shapeSettings.BorderGlyph.Background.ToVector4();
-            Mirror mirror = _shapeSettings.BorderGlyph.Mirror;
-            int glyph = _shapeSettings.BorderGlyph.Glyph;
+            ColoredGlyphReference borderGlyph = _shapeSettings.BorderGlyph ??= new ColoredGlyph();
 
-            ImGuiWidgets.BeginGroupPanel("Border");
-            GuiParts.Tools.SettingsTable.BeginTable("bordersettings");
+            ImGuiSC.BeginGroupPanel("Border");
+            SettingsTable.BeginTable("bordersettings");
 
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
@@ -58,162 +57,93 @@ internal class Box : ITool
             ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
             ImGui.TableSetColumnIndex(1);
 
-            int itemIndex = Model.SadConsoleTypes.ConnectedGlyphs.GetIndexFromValue(_shapeSettings.BoxBorderStyle ?? ICellSurface.ConnectedLineEmpty);
+            ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
+            ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
+            ImGui.EndDisabled();
 
-            ImGui.Combo("##border_line_style", ref itemIndex, Model.SadConsoleTypes.ConnectedGlyphs.Names, Model.SadConsoleTypes.ConnectedGlyphs.Names.Length);
-            
             if (_shapeSettings.UseBoxBorderStyle)
-                _shapeSettings.BoxBorderStyle = Model.SadConsoleTypes.ConnectedGlyphs.GetValueFromIndex(itemIndex);
+                _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
             else
                 _shapeSettings.BoxBorderStyle = null;
 
+            SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                ref borderGlyph,
+                surface.Surface.DefaultForeground.ToVector4(),
+                surface.Surface.DefaultBackground.ToVector4(),
+                document.EditingSurfaceFont, ImGuiCore.Renderer
+            );
 
-            GuiParts.Tools.SettingsTable.DrawColor("Foreground:", "##fore", ref foreground, surface.Surface.DefaultForeground.ToVector4(), out bool colorRightClicked);
-            if (colorRightClicked)
-                (background, foreground) = (foreground, background);
-
-            GuiParts.Tools.SettingsTable.DrawColor("Background:", "##back", ref background, surface.Surface.DefaultBackground.ToVector4(), out colorRightClicked);
-            if (colorRightClicked)
-                (background, foreground) = (foreground, background);
-
-            GuiParts.Tools.SettingsTable.DrawMirror("Mirror:", "##mirror", ref mirror);
-
-            GuiParts.Tools.SettingsTable.DrawFontGlyph("Glyph:", "##glyph", ref glyph, foreground, background, surface.Font, renderer);
-            GuiParts.Tools.SettingsTable.EndTable();
+            SettingsTable.EndTable();
             if (ImGui.CollapsingHeader("Ignore Options##border"))
             {
-                GuiParts.Tools.SettingsTable.BeginTable("bordersettings_ignore");
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
-                GuiParts.Tools.SettingsTable.EndTable();
+                SettingsTable.BeginTable("bordersettings_ignore");
+                SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
+                SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
+                SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
+                SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
+                SettingsTable.EndTable();
             }
             // Store the altered settings
-            _shapeSettings.BorderGlyph.Foreground = foreground.ToColor();
-            _shapeSettings.BorderGlyph.Background = background.ToColor();
-            _shapeSettings.BorderGlyph.Mirror = mirror;
-            _shapeSettings.BorderGlyph.Glyph = glyph;
+            _shapeSettings.BorderGlyph = borderGlyph.ToColoredGlyph();
 
-            ImGuiWidgets.EndGroupPanel();
+            ImGuiSC.EndGroupPanel();
         }
 
         ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
-        //GuiParts.Tools.SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
+        //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
         if (_shapeSettings.HasFill)
         {
-
             _shapeSettings.FillGlyph ??= new ColoredGlyph();
 
             // Data for border settings
-            Vector4 foreground = _shapeSettings.FillGlyph.Foreground.ToVector4();
-            Vector4 background = _shapeSettings.FillGlyph.Background.ToVector4();
-            Mirror mirror = _shapeSettings.FillGlyph.Mirror;
-            int glyph = _shapeSettings.FillGlyph.Glyph;
+            ColoredGlyphReference fillGlyph = _shapeSettings.FillGlyph;
 
-            ImGuiWidgets.BeginGroupPanel("Border");
-            GuiParts.Tools.SettingsTable.BeginTable("bordersettings");
+            ImGuiSC.BeginGroupPanel("Border");
+            SettingsTable.BeginTable("bordersettings");
 
-            GuiParts.Tools.SettingsTable.DrawColor("Foreground:", "##fore", ref foreground, surface.Surface.DefaultForeground.ToVector4(), out bool colorRightClicked);
-            if (colorRightClicked)
-                (background, foreground) = (foreground, background);
+            SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                ref fillGlyph,
+                surface.Surface.DefaultForeground.ToVector4(),
+                surface.Surface.DefaultBackground.ToVector4(),
+                document.EditingSurfaceFont, ImGuiCore.Renderer
+            );
 
-            GuiParts.Tools.SettingsTable.DrawColor("Background:", "##back", ref background, surface.Surface.DefaultBackground.ToVector4(), out colorRightClicked);
-            if (colorRightClicked)
-                (background, foreground) = (foreground, background);
+            SettingsTable.EndTable();
 
-            GuiParts.Tools.SettingsTable.DrawMirror("Mirror:", "##mirror", ref mirror);
-
-            GuiParts.Tools.SettingsTable.DrawFontGlyph("Glyph:", "##glyph", ref glyph, foreground, background, surface.Font, renderer);
-            GuiParts.Tools.SettingsTable.EndTable();
             if (ImGui.CollapsingHeader("Ignore Options##fill"))
             {
-                GuiParts.Tools.SettingsTable.BeginTable("fillsettings_ignore");
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Background", "##ignore_Fill_background", ref _shapeSettings.IgnoreFillBackground);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_Fill_mirror", ref _shapeSettings.IgnoreFillMirror);
-                GuiParts.Tools.SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_Fill_glyph", ref _shapeSettings.IgnoreFillGlyph);
-                GuiParts.Tools.SettingsTable.EndTable();
+                SettingsTable.BeginTable("fillsettings_ignore");
+                SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
+                SettingsTable.DrawCheckbox("Ignore Background", "##ignore_Fill_background", ref _shapeSettings.IgnoreFillBackground);
+                SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_Fill_mirror", ref _shapeSettings.IgnoreFillMirror);
+                SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_Fill_glyph", ref _shapeSettings.IgnoreFillGlyph);
+                SettingsTable.EndTable();
             }
 
             // Store the altered settings
-            _shapeSettings.FillGlyph.Foreground = foreground.ToColor();
-            _shapeSettings.FillGlyph.Background = background.ToColor();
-            _shapeSettings.FillGlyph.Mirror = mirror;
-            _shapeSettings.FillGlyph.Glyph = glyph;
+            _shapeSettings.FillGlyph = fillGlyph.ToColoredGlyph();
 
-            ImGuiWidgets.EndGroupPanel();
+            ImGuiSC.EndGroupPanel();
         }
 
-        ImGuiWidgets.EndGroupPanel();
+        ImGuiSC.EndGroupPanel();
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
-    {
-        if (ImGuiCore.State.IsPopupOpen) return;
-
-        GuiParts.Tools.ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
-
-        // No settings to draw, exit
-        if (!_shapeSettings.HasFill && !_shapeSettings.HasBorder)
-            return;
-
-        // Cancelled but left mouse finally released, exit cancelled
-        if (_isCancelled && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-            _isCancelled = false;
-
-        // Cancelled
-        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
-        {
-            OnDeselected();
-            _isCancelled = true;
-        }
-
-        if (_isCancelled)
-            return;
-
-        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
-        {
-            if (!_isFirstPointSelected)
-            {
-                _isFirstPointSelected = true;
-
-                _firstPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-            }
-
-            _secondPoint = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-
-            _boxArea = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
-                            new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
-
-            document.VisualToolLayerLower.Surface!.Clear();
-            document.VisualToolLayerLower.Surface!.DrawBox(_boxArea, _shapeSettings.ToShapeParameters());
-        }
-        else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-        {
-            if (_boxArea != Rectangle.Empty)
-            {
-                document.VisualDocument.Surface.DrawBox(_boxArea.Translate(document.VisualDocument.Surface.ViewPosition), _shapeSettings.ToShapeParameters());
-                document.VisualToolLayerLower.Surface!.Clear();
-            }
-
-            OnDeselected();
-        }
-    }
-
-    public void OnSelected()
+    public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
 
     }
 
-    public void OnDeselected()
-    {
-        _isCancelled = false;
-        _boxArea = Rectangle.Empty;
-        _isFirstPointSelected = false;
-    }
+    public void OnSelected(Document document) { }
+
+    public void OnDeselected(Document document) { }
+
+    public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
+    public void DrawOverDocument(Document document) { }
+
+    public override string ToString() =>
+        Title;
 }
