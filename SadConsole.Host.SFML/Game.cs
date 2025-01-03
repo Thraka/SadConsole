@@ -224,7 +224,7 @@ public sealed partial class Game : GameHost
             if (Settings.DoUpdate)
             {
                 // Process any pre-Screen logic components
-                foreach (SadConsole.Components.RootComponent item in SadConsole.Game.Instance.RootComponents)
+                foreach (Components.RootComponent item in Instance.RootComponents)
                     item.Run(UpdateFrameDelta);
 
                 if (Global.GraphicsDevice.HasFocus() && !Global.BlockSadConsoleInput)
@@ -309,8 +309,11 @@ public sealed partial class Game : GameHost
         new Host.GameTexture((uint)width, (uint)height);
 
     /// <inheritdoc/> 
-    public override SadConsole.Input.IKeyboardState GetKeyboardState() =>
-        _keyboard;
+    public override SadConsole.Input.IKeyboardState GetKeyboardState()
+    {
+        _keyboard.Refresh();
+        return _keyboard;
+    }
 
     /// <inheritdoc/> 
     public override SadConsole.Input.IMouseState GetMouseState() =>
