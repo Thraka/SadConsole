@@ -291,7 +291,7 @@ public struct AsciiKey
     /// <summary>
     /// Total time the key has been held.
     /// </summary>
-    public float TimeHeld;
+    public System.TimeSpan TimeHeld;
 
     /// <summary>
     /// Tracks if the key was previously held when calculating the <see cref="Keyboard.InitialRepeatDelay"/>.

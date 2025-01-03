@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SadConsole.Input;
@@ -49,12 +50,12 @@ public class Keyboard
     /// <summary>
     /// How often a key is included in the <see cref="KeysPressed"/> collection after the <see cref="InitialRepeatDelay"/> time has passed.
     /// </summary>
-    public float RepeatDelay = 0.04f;
+    public TimeSpan RepeatDelay = TimeSpan.FromSeconds(0.04);
 
     /// <summary>
     /// The initial delay after a key is first pressed before it is included a second time (while held down) in the <see cref="KeysPressed"/> collection.
     /// </summary>
-    public float InitialRepeatDelay = 0.8f;
+    public TimeSpan InitialRepeatDelay = TimeSpan.FromSeconds(0.8);
 
     /// <summary>
     /// Creates a new instance of the keyboard manager.
@@ -196,7 +197,7 @@ public class Keyboard
             {
                 activeKeyIndex = KeysDownInternal.FindIndex(k => k == key);
                 AsciiKey thisKey = KeysDownInternal[activeKeyIndex];
-                thisKey.TimeHeld += (float)elapsedSeconds.TotalSeconds;
+                thisKey.TimeHeld += elapsedSeconds;
                 KeysDownInternal[activeKeyIndex] = thisKey;
             }
             else if (KeysDownInternal.Contains(keyOppositeShift))
@@ -204,7 +205,7 @@ public class Keyboard
                 activeKeyIndex = KeysDownInternal.FindIndex(k => k == keyOppositeShift);
                 AsciiKey thisKey = KeysDownInternal[activeKeyIndex];
                 thisKey.Character = key.Character;
-                thisKey.TimeHeld += (float)elapsedSeconds.TotalSeconds;
+                thisKey.TimeHeld += elapsedSeconds;
                 KeysDownInternal[activeKeyIndex] = thisKey;
             }
             else
@@ -225,13 +226,13 @@ public class Keyboard
             else if (activeKey.PostInitialDelay == false && activeKey.TimeHeld >= InitialRepeatDelay)
             {
                 activeKey.PostInitialDelay = true;
-                activeKey.TimeHeld = 0f;
+                activeKey.TimeHeld = TimeSpan.Zero;
                 KeysPressedInternal.Add(activeKey);
                 KeysDownInternal[activeKeyIndex] = activeKey;
             }
             else if (activeKey.PostInitialDelay && activeKey.TimeHeld >= RepeatDelay)
             {
-                activeKey.TimeHeld = 0f;
+                activeKey.TimeHeld = TimeSpan.Zero;
                 KeysPressedInternal.Add(activeKey);
                 KeysDownInternal[activeKeyIndex] = activeKey;
             }
