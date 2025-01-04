@@ -141,8 +141,15 @@ public partial class Game : GameHost
         if (hostStartupData.InitialRenderWidth == 0 || hostStartupData.InitialRenderHeight == 0)
             throw new Exception($"You must call {nameof(Configuration.ExtensionsHost.SetInitialRenderPixels)} and set values greater than 0.");
 
-        ScreenCellsX = startupData.ScreenCellsX;
-        ScreenCellsY = startupData.ScreenCellsY;
+        if (startupData.ScreenCellsXYByResolution != null)
+        {
+            (ScreenCellsX, ScreenCellsY) = startupData.ScreenCellsXYByResolution(this);
+        }
+        else
+        {
+            ScreenCellsX = startupData.ScreenCellsX;
+            ScreenCellsY = startupData.ScreenCellsY;
+        }
 
         SadConsole.Settings.Rendering.RenderWidth = hostStartupData.InitialRenderWidth;
         SadConsole.Settings.Rendering.RenderHeight = hostStartupData.InitialRenderHeight;

@@ -131,8 +131,15 @@ public sealed partial class Game : GameHost
         InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
             ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
 
-        ScreenCellsX = startupData.ScreenCellsX;
-        ScreenCellsY = startupData.ScreenCellsY;
+        if (startupData.ScreenCellsXYByResolution != null)
+        {
+            (ScreenCellsX, ScreenCellsY) = startupData.ScreenCellsXYByResolution(this);
+        }
+        else
+        {
+            ScreenCellsX = startupData.ScreenCellsX;
+            ScreenCellsY = startupData.ScreenCellsY;
+        }
 
         InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
 
