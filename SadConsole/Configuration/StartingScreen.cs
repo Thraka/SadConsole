@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using SadRogue.Primitives;
 
 namespace SadConsole.Configuration;
 
@@ -47,6 +48,25 @@ public static partial class Extensions
 
         data.ScreenCellsX = width;
         data.ScreenCellsY = height;
+
+        return configBuilder;
+    }
+
+    /// <summary>
+    /// Sets the initial screen size of the window based on the given resolution in pixels.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <param name="resolution">The screen resolution in pixels.</param>
+    /// <returns>The configuration builder.</returns>
+    public static Builder SetScreenSize(this Builder configBuilder, Point resolution)
+    {
+        InternalStartupData data = configBuilder.GetOrCreateConfig<InternalStartupData>();
+
+        data.ScreenCellsXYByResolution = (gameHost) =>
+        {
+            Point defaultFontSize = gameHost.DefaultFont.GetFontSize(gameHost.DefaultFontSize);
+            return new Point(resolution.X / defaultFontSize.X, resolution.Y / defaultFontSize.Y);
+        };
 
         return configBuilder;
     }
