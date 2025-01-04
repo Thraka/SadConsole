@@ -159,6 +159,8 @@ public sealed partial class Game : GameHost
 
         LoadDefaultFonts(fontConfig.AlternativeDefaultFont);
 
+        DefaultFontSize = fontConfig.DefaultFontSize;
+
         foreach (string font in fontConfig.CustomFonts)
             LoadFont(font);
 

@@ -71,6 +71,19 @@ public static partial class Extensions
 
         return configBuilder;
     }
+
+    /// <summary>
+    /// Sets the default font size for the game. The default is <see cref="IFont.Sizes.One"/>.
+    /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
+    /// <param name="size">The size of the default font.</param>
+    /// <returns>The configuration builder.</returns>
+    public static Builder SetDefaultFontSize(this Builder configBuilder, IFont.Sizes size)
+    {
+        FontConfig config = configBuilder.GetOrCreateConfig<FontConfig>();
+        config.SetDefaultFontSize(size);
+        return configBuilder;
+    }
 }
 
 internal class OldFontNameConfig : IConfigurator
@@ -94,11 +107,30 @@ internal class OldFontNameConfig : IConfigurator
 /// </summary>
 public class FontConfig : IConfigurator
 {
+    /// <summary>
+    /// The method invoked by the <see cref="GameHost"/> as fonts are loaded.
+    /// </summary>
     public Action<FontConfig, GameHost>? FontLoader { get; set; }
 
+    /// <summary>
+    /// An array of custom font files to load into SadConsole. The default is an empty array.
+    /// </summary>
     public string[] CustomFonts = Array.Empty<string>();
+
+    /// <summary>
+    /// The default font to use when the game starts. A <see langword="null"/> value indicates that the default font is the built-in font.
+    /// </summary>
     public string? AlternativeDefaultFont = null;
+
+    /// <summary>
+    /// When <see langword="true"/>, the default font is the SadConsole extended font. The default is <see langword="false"/>.
+    /// </summary>
     public bool UseExtendedFont = false;
+
+    /// <summary>
+    /// The size of font to use with the default font. The default is <see cref="IFont.Sizes.One"/>.
+    /// </summary>
+    public IFont.Sizes DefaultFontSize = IFont.Sizes.One;
 
     /// <summary>
     /// Sets the default font to the SadConsole standard font, an IBM 8x16 font.
@@ -131,6 +163,13 @@ public class FontConfig : IConfigurator
     /// <param name="fontFiles">An array of font files to load.</param>
     public void AddExtraFonts(params string[] fontFiles) =>
         CustomFonts = (string[])fontFiles.Clone();
+
+    /// <summary>
+    /// Sets the default font size for the game. The default is <see cref="IFont.Sizes.One"/>.
+    /// </summary>
+    /// <param name="size">The default font size.</param>
+    public void SetDefaultFontSize(IFont.Sizes size) =>
+        DefaultFontSize = size;
 
     /// <summary>
     /// Invokes the <see cref="FontLoader"/> delegate.

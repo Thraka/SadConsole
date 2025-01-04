@@ -2604,6 +2604,14 @@
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration builder.</returns>
         </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetDefaultFontSize(SadConsole.Configuration.Builder,SadConsole.IFont.Sizes)">
+            <summary>
+            Sets the default font size for the game. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="size">The size of the default font.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen``1(SadConsole.Configuration.Builder)">
             <summary>
             Sets the startup splash screen to the specified object.
@@ -2650,6 +2658,31 @@
             The config settings for loading the default fonts when the game starts.
             </summary>
         </member>
+        <member name="P:SadConsole.Configuration.FontConfig.FontLoader">
+            <summary>
+            The method invoked by the <see cref="T:SadConsole.GameHost"/> as fonts are loaded.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.CustomFonts">
+            <summary>
+            An array of custom font files to load into SadConsole. The default is an empty array.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.AlternativeDefaultFont">
+            <summary>
+            The default font to use when the game starts. A <see langword="null"/> value indicates that the default font is the built-in font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.UseExtendedFont">
+            <summary>
+            When <see langword="true"/>, the default font is the SadConsole extended font. The default is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.DefaultFontSize">
+            <summary>
+            The size of font to use with the default font. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
             <summary>
             Sets the default font to the SadConsole standard font, an IBM 8x16 font.
@@ -2671,6 +2704,12 @@
             Loads the provided font files into SadConsole.
             </summary>
             <param name="fontFiles">An array of font files to load.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.SetDefaultFontSize(SadConsole.IFont.Sizes)">
+            <summary>
+            Sets the default font size for the game. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
+            </summary>
+            <param name="size">The default font size.</param>
         </member>
         <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
             <summary>
