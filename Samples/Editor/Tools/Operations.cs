@@ -18,6 +18,7 @@ internal class Operations : ITool
 
     public void BuildSettingsPanel(Document document)
     {
+        ImGui.SeparatorText(Title);
         ImGui.Checkbox("Only on visible area", ref _onlyVisible);
 
         ImGuiSC.BeginGroupPanel("Shift");

@@ -9,7 +9,7 @@ namespace SadConsole.Editor.Tools;
 internal class Fill : ITool
 {
     private readonly ImGuiList<string> _modes = new(0, "Draw", "Objects");
-    private Windows.GlyphEditor _glyphEditor;
+    private Windows.GlyphEditor? _glyphEditor;
 
     private bool _isAdding = false;
     private bool _isEditing = false;
@@ -26,11 +26,12 @@ internal class Fill : ITool
 
     public void BuildSettingsPanel(Document document)
     {
+        ImGui.SeparatorText(Title);
+
         bool supportsObjects = document is IDocumentSimpleObjects;
 
         if (supportsObjects)
         {
-            ImGui.Separator();
             ImGui.AlignTextToFramePadding();
             ImGui.Text("Mode");
             ImGui.SameLine();
@@ -133,7 +134,7 @@ internal class Fill : ITool
 
     private void GlyphEditor_Closed(object? sender, EventArgs e)
     {
-        if (_glyphEditor.DialogResult)
+        if (_glyphEditor!.DialogResult)
         {
             ColoredGlyph glyph = _glyphEditor.Glyph.ToColoredGlyph();
             if (_isAdding)
@@ -165,7 +166,7 @@ internal class Fill : ITool
     {
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditingSurface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!isActive) return;
 
@@ -176,7 +177,7 @@ internal class Fill : ITool
 
             document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
 
-            Func<ColoredGlyphBase, bool> isTargetCell = (c) =>
+            bool isTargetCell(ColoredGlyphBase c)
             {
                 if (c.Glyph == 0 && cellToMatch.Glyph == 0)
                     return c.Background == cellToMatch.Background;
@@ -185,17 +186,17 @@ internal class Fill : ITool
                        c.Background == cellToMatch.Background &&
                        c.Glyph == cellToMatch.Glyph &&
                        c.Mirror == cellToMatch.Mirror;
-            };
+            }
 
-            Action<ColoredGlyphBase> fillCell = (c) =>
+            void fillCell(ColoredGlyphBase c)
             {
                 currentFillCell.CopyAppearanceTo(c);
                 //console.TextSurface.SetEffect(c, _currentFillCell.Effect);
-            };
+            }
 
-            List<ColoredGlyphBase> cells = new List<ColoredGlyphBase>(document.EditingSurface.Surface);
+            List<ColoredGlyphBase> cells = new(document.EditingSurface.Surface);
 
-            Func<ColoredGlyphBase, SadConsole.Algorithms.NodeConnections<ColoredGlyphBase>> getConnectedCells = (c) =>
+            Algorithms.NodeConnections<ColoredGlyphBase> getConnectedCells(ColoredGlyphBase c)
             {
                 Algorithms.NodeConnections<ColoredGlyphBase> connections = new Algorithms.NodeConnections<ColoredGlyphBase>();
 
@@ -207,10 +208,10 @@ internal class Fill : ITool
                 connections.South = document.EditingSurface.Surface.IsValidCell(position.X, position.Y + 1) ? document.EditingSurface.Surface[position.X, position.Y + 1] : null;
 
                 return connections;
-            };
+            }
 
             if (!isTargetCell(currentFillCell))
-                SadConsole.Algorithms.FloodFill<ColoredGlyphBase>(document.EditingSurface.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
+                Algorithms.FloodFill(document.EditingSurface.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
 
             document.EditingSurface.Surface.IsDirty = true;
         }

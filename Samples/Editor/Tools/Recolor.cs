@@ -41,6 +41,7 @@ internal class Recolor : ITool
 
     public void BuildSettingsPanel(Document document)
     {
+        ImGui.SeparatorText(Title);
         IScreenSurface surface = document.EditingSurface;
 
         ImGuiSC.BeginGroupPanel("Match");
@@ -236,7 +237,7 @@ internal class Recolor : ITool
     {
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditingSurface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!isActive) return;
 

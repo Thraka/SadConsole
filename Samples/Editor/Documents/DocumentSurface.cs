@@ -134,9 +134,12 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
             VisualTool.IsDirty = true;
         }
 
-        ImGui.Separator();
-        if (ImGui.Button("Edit Simple Game Objects"))
+        ImGui.SeparatorText("Simple Game Objects"u8);
+        if (ImGui.Button("Manage"u8))
             new Windows.SimpleObjectEditor(SimpleObjects, DefaultForeground, DefaultBackground, EditingSurfaceFont).Open();
+
+        ImGui.SameLine();
+        ImGui.Button("Import"u8);
     }
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>

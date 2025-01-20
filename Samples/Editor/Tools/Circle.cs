@@ -7,16 +7,13 @@ using SadConsole.ImGuiTypes;
 
 namespace SadConsole.Editor.Tools;
 
-internal class Box : ITool
+internal class Circle : ITool
 {
     private ImGuiTypes.ShapeSettings _shapeSettings = new() { HasBorder = true,
-                                                              UseBoxBorderStyle = true,
-                                                              BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+                                                              UseBoxBorderStyle = false,
                                                               BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
                                                               HasFill = false,
                                                               FillGlyph = new ColoredGlyph()};
-
-    private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
 
     private bool _isDrawing = false;
     private bool _isFirstPointSelected = false;
@@ -24,22 +21,21 @@ internal class Box : ITool
     private Point _secondPoint;
     private bool _isCancelled;
 
-    public string Title => "\uefa4 Box";
+    public string Title => "\uf10c Circle";
 
     public string Description =>
         """
-        Draws a box.
+        Draws a circle.
 
-        The border and fill of the box can be customized.
+        The border and fill of the circle can be customized.
 
-        Hold down the left mouse button to start drawing. Hold down the button and drag the mouse to draw the box. Let go of the button to finish drawing.
+        Hold down the left mouse button to start drawing. Hold down the button and drag the mouse to draw the circle. Let go of the button to finish drawing.
 
         To cancel drawing, depress the right mouse button or press the ESC key.
         """;
 
-    public Box()
+    public Circle()
     {
-        _lineTypes.SelectedItemIndex = 1;
     }
 
     public void BuildSettingsPanel(Document document)
@@ -61,40 +57,18 @@ internal class Box : ITool
 
                 SettingsTable.BeginTable("bordersettings");
 
-                ImGui.TableNextRow();
-                ImGui.TableSetColumnIndex(0);
-                ImGui.AlignTextToFramePadding();
-                ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
-                ImGui.TableSetColumnIndex(1);
-
-                ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
-                ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
-                ImGui.EndDisabled();
-
-                if (_shapeSettings.UseBoxBorderStyle)
-                    _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
-                else
-                    _shapeSettings.BoxBorderStyle = null;
-
-                if (_shapeSettings.UseBoxBorderStyle)
-                {
-                    SettingsTable.DrawColor("Foreground", "##borderFore", ref borderGlyph.Foreground, surface.Surface.DefaultForeground.ToVector4(), true, out bool rightClick);
-                    SettingsTable.DrawColor("Background", "##borderBack", ref borderGlyph.Background, surface.Surface.DefaultBackground.ToVector4(), true, out rightClick);
-                }
-                else
-                {
-                    SettingsTable.DrawCommonSettings(true, true, true, true, true,
-                        ref borderGlyph,
-                        surface.Surface.DefaultForeground.ToVector4(),
-                        surface.Surface.DefaultBackground.ToVector4(),
-                        document.EditingSurfaceFont, ImGuiCore.Renderer
-                    );
-                }
+                SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                    ref borderGlyph,
+                    surface.Surface.DefaultForeground.ToVector4(),
+                    surface.Surface.DefaultBackground.ToVector4(),
+                    document.EditingSurfaceFont, ImGuiCore.Renderer
+                );
 
                 SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
                 SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
                 SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
                 SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
+
                 SettingsTable.EndTable();
                 // Store the altered settings
                 _shapeSettings.BorderGlyph = borderGlyph.ToColoredGlyph();
@@ -176,9 +150,9 @@ internal class Box : ITool
                 _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
                 document.VisualLayerToolLower.Surface.Clear();
-                document.VisualLayerToolLower.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
-                                                                            new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
-                                                                            _shapeSettings.ToShapeParameters());
+                document.VisualLayerToolLower.Surface.DrawCircle(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                                                               new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
+                                                                 _shapeSettings.ToShapeParameters());
             }
 
             // Commit
@@ -188,9 +162,9 @@ internal class Box : ITool
                 {
                     Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
                     Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
-                    document.EditingSurface.Surface.DrawBox(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
-                                                                          new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
-                                                            _shapeSettings.ToShapeParameters());
+                    document.EditingSurface.Surface.DrawCircle(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                                                             new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
+                                                               _shapeSettings.ToShapeParameters());
 
                     document.VisualLayerToolLower.Surface.Clear();
                 }

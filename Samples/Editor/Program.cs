@@ -5,16 +5,11 @@ using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
-int MainWidth = 80;
-int MainHeight = 23;
-int HeaderWidth = 80;
-int HeaderHeight = 2;
-
-Settings.WindowTitle = "SadEditor v0.1";
+Settings.WindowTitle = "SadEditor v0.2";
 
 Builder config =
     new Builder()
-        .SetScreenSize(130, 50)
+        .SetWindowSizeInCells(130, 50)
         .OnStart(StartHandler);
 
         //.UseDefaultConsole()

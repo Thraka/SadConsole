@@ -21,7 +21,9 @@ internal class Empty : ITool
 
     public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditingSurface.FontSize, Color.Green);
+        if (!isHovered) return;
+
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!isActive) return;
 

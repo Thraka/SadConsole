@@ -41,7 +41,7 @@ public abstract partial class Document : ITitle
 
     public bool IsDirty => EditingSurface.IsDirty || VisualTool.IsDirty;
 
-    public ITool[] Tools = [new Info(), new Empty(), new Pencil(), new Recolor(), new Line(), new Box(), new Operations(), new Fill()];
+    public ITool[] Tools = [new Info(), new Empty(), new Pencil(), new Recolor(), new Line(), new Box(), new Circle(), new Operations(), new Fill()];
 
 
     protected ImGuiGuardedValue<int> _width;

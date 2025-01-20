@@ -30,11 +30,11 @@ internal class Pencil : ITool
 
     public void BuildSettingsPanel(Document document)
     {
+        ImGui.SeparatorText(Title);
         bool supportsObjects = document is IDocumentSimpleObjects;
 
         if (supportsObjects)
         {
-            ImGui.Separator();
             ImGui.AlignTextToFramePadding();
             ImGui.Text("Mode");
             ImGui.SameLine();
@@ -75,7 +75,7 @@ internal class Pencil : ITool
 
             ImGui.SetNextItemWidth(-1);
 
-            if (ImGui.BeginListBox("##pencil_simplegameobjects"))
+            if (ImGui.BeginListBox("##pencil_simplegameobjects"u8))
             {
                 SimpleObjectHelpers.DrawSelectables("pencil_simplegameobjects", docSimpleObjects.SimpleObjects, document.EditingSurfaceFont);
 

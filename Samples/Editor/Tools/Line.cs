@@ -28,6 +28,7 @@ internal class Line : ITool
 
     public void BuildSettingsPanel(Document document)
     {
+        ImGui.SeparatorText(Title);
         ImGuiSC.BeginGroupPanel("Settings");
 
         Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
@@ -58,7 +59,7 @@ internal class Line : ITool
     {
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditingSurface.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!_isDrawing)
         {
@@ -69,7 +70,7 @@ internal class Line : ITool
             // Cancelled
             if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
             {
-                OnDeselected(document);
+                ClearState();
                 _isCancelled = true;
                 document.VisualLayerToolLower.Surface.Clear();
             }
@@ -111,26 +112,29 @@ internal class Line : ITool
                     document.VisualLayerToolLower.Surface.Clear();
                 }
 
-                OnDeselected(document);
+                ClearState();
             }
         }
     }
 
     public void OnSelected(Document document) { }
 
-    public void OnDeselected(Document document)
-    {
-        _isCancelled = false;
-        _isDrawing = false;
-        _firstPoint = Point.None;
-        _isFirstPointSelected = false;
-    }
+    public void OnDeselected(Document document) =>
+        ClearState();
 
     public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
     public void DrawOverDocument(Document document) { }
+
+    public void ClearState()
+    {
+        _isCancelled = false;
+        _isDrawing = false;
+        _firstPoint = Point.None;
+        _isFirstPointSelected = false;
+    }
 
     public override string ToString() =>
         Title;
