@@ -5,7 +5,7 @@ namespace SadConsole.Extensions;
 /// <summary>
 /// Extensions for the <see cref="System.ReadOnlySpan{T}"/> type.
 /// </summary>
-public static class ReadOnlySpan
+public static class ReadOnlySpanExtensions
 {
     /// <summary>
     /// Gets the next instnace of the specified character in a <see cref="char"/> span.
