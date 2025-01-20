@@ -42,7 +42,7 @@ internal class ImGuiConfig : IConfigurator
     public bool EnableDocking { get; set; }
     public Action<ImGuiMonoGameComponent> StartupAction { get; set; }
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
         Game host = (Game)game;
         ImGuiMonoGameComponent imguiComponent = new(Global.GraphicsDeviceManager, host.MonoGameInstance, EnableDocking);

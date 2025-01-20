@@ -31,7 +31,7 @@ public static partial class ImGuiSC
     {
         Vector2 spacing = ImGui.GetStyle().ItemSpacing;
         Vector2 padding = ImGui.GetStyle().FramePadding;
-
+        
         ImDrawListPtr drawList = ImGui.GetWindowDrawList();
         Vector2 pos = ImGui.GetCursorScreenPos();
         Vector2 textSize = ImGui.CalcTextSize(text);

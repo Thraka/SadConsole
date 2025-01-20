@@ -13,8 +13,8 @@ public static partial class SettingsTable
     {
         if (ImGui.BeginTable(id, 2, ImGuiTableFlags.None, System.Numerics.Vector2.Zero, ImGui.GetContentRegionAvail().X))
         {
-            ImGui.TableSetupColumn("one", column1Flags);
-            ImGui.TableSetupColumn("two", column2Flags);
+            ImGui.TableSetupColumn("one"u8, column1Flags);
+            ImGui.TableSetupColumn("two"u8, column2Flags);
 
             return true;
         }
@@ -45,23 +45,23 @@ public static partial class SettingsTable
     {
         if (showForeground)
         {
-            DrawColor("Foreground:", "##fore", ref foreground, foregroundResetColor, true, out bool colorRightClicked);
+            DrawColor("Foreground", "##fore", ref foreground, foregroundResetColor, true, out bool colorRightClicked);
             if (colorRightClicked && enableSwapForeBackRightClick)
                 (background, foreground) = (foreground, background);
         }
 
         if (showBackground)
         {
-            DrawColor("Background:", "##back", ref background, backgroundResetColor, true, out bool colorRightClicked);
+            DrawColor("Background", "##back", ref background, backgroundResetColor, true, out bool colorRightClicked);
             if (colorRightClicked && enableSwapForeBackRightClick)
                 (background, foreground) = (foreground, background);
         }
 
         if (showMirror)
-            DrawMirror("Mirror:", "##mirror", ref mirror);
+            DrawMirror("Mirror", "##mirror", ref mirror);
 
         if (showGlyph)
-            DrawFontGlyph("Glyph:", "##glyph", ref glyph, foreground, background, font, renderer);
+            DrawFontGlyph("Glyph", "##glyph", ref glyph, foreground, background, font, renderer);
     }
 
     public static bool DrawCheckbox(string label, string id, ref bool isChecked)

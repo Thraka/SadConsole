@@ -17,7 +17,7 @@ public static partial class ImGuiSC
 
         // Calculate button size, taken from widgets.cpp in imgui lib
         var style = ImGui.GetStyle();
-        Vector2 label_size = ImGui.CalcTextSize("+", true) + (style.FramePadding * 2f);
+        Vector2 label_size = ImGui.CalcTextSize("+"u8, true) + (style.FramePadding * 2f);
         ImGui.BeginGroup();
 
         if (ImGui.Button($"-", new Vector2(size.X, label_size.Y)))
@@ -26,7 +26,7 @@ public static partial class ImGuiSC
             v = Math.Clamp(v - 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
         }
 
-        returnValue = returnValue | ImGui.VSliderInt("##vslider", new Vector2(size.X, size.Y - (style.FramePadding.Y * 4f) - (label_size.Y * 2)), ref v, v_min, v_max, fmt, flags);
+        returnValue = returnValue | ImGui.VSliderInt("##vslider"u8, new Vector2(size.X, size.Y - (style.FramePadding.Y * 4f) - (label_size.Y * 2)), ref v, v_min, v_max, fmt, flags);
 
         if (ImGui.Button("+", new Vector2(size.X, label_size.Y)))
         {
@@ -66,7 +66,7 @@ public static partial class ImGuiSC
 
         ImGui.SetNextItemWidth(width - (buttonWidth * 2));
 
-        returnValue = returnValue | ImGui.SliderInt("##width", ref v, v_min, v_max, fmt, flags);
+        returnValue = returnValue | ImGui.SliderInt("##width"u8, ref v, v_min, v_max, fmt, flags);
 
         ImGui.SameLine();
 

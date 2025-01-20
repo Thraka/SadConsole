@@ -19,11 +19,11 @@ public static partial class ImGuiSC
             if (ImGui.BeginPopup(popupId))
             {
                 // Get shared space to reserve font icon preview
-                Vector2 size = ImGui.CalcTextSize("Glyph: None");
+                Vector2 size = ImGui.CalcTextSize("Glyph: None"u8);
                 size.Y = Math.Max(size.Y, font.GlyphHeight);
 
                 // Draw font image
-                ImGui.Text("Select your glyph");
+                ImGui.Text("Select your glyph"u8);
                 ImGuiSC.DrawTexture("font_preview", true, ImGuiSC.ZoomNormal, ((SadConsole.Host.GameTexture)font.Image).Texture, renderer, out bool isActive, out bool isHovered);
 
                 if (isHovered)
@@ -69,17 +69,17 @@ public static partial class ImGuiSC
                     else
                     {
                         Vector2 cursor = ImGui.GetCursorPos();
-                        ImGui.InvisibleButton("##padded-area-preview", size);
+                        ImGui.InvisibleButton("##padded-area-preview"u8, size);
                         ImGui.SetCursorPos(cursor);
-                        ImGui.Text($"Glyph: None");
+                        ImGui.Text("Glyph: None"u8);
                     }
                 }
                 else
                 {
                     Vector2 cursor = ImGui.GetCursorPos();
-                    ImGui.InvisibleButton("##padded-area-preview", size);
+                    ImGui.InvisibleButton("##padded-area-preview"u8, size);
                     ImGui.SetCursorPos(cursor);
-                    ImGui.Text($"Glyph: None");
+                    ImGui.Text("Glyph: None"u8);
                 }
 
                 ImGui.EndPopup();

@@ -134,7 +134,7 @@ public class FileListBox
             // If we're at the root, but there are no dirs nor files, alert the user
             if (_currentFolder.FullName.Equals(_rootFolder.FullName) && _currentFolderItems.Length == 0)
             {
-                ImGui.Text("No files match the specified criteria.");
+                ImGui.Text("No files match the specified criteria."u8);
             }
 
             // Draw items

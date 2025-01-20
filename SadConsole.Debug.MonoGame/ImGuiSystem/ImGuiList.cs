@@ -7,7 +7,7 @@ using System.Linq;
 namespace SadConsole.ImGuiSystem;
 
 /// <summary>
-/// Wraps a collection of objects for ImGui controls, like listboxes.
+/// Wraps a collection of objects for ImGui controls, like list boxes.
 /// </summary>
 /// <typeparam name="T">The type of object wrapped.</typeparam>
 public class ImGuiList<T> where T : class
