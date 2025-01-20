@@ -219,6 +219,12 @@ public partial class Game : GameHost
         return _mouseState;
     }
 
+    /// <inheritdoc/>
+    public override void GetDeviceScreenSize(out int width, out int height)
+    {
+        width = MonoGameInstance.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+        height = MonoGameInstance.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+    }
 
     /// <summary>
     /// Opens a read-only stream with MonoGame.

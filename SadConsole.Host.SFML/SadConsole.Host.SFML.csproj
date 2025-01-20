@@ -24,7 +24,7 @@
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
     <PackageReference Include="SFML.Net" Version="2.6.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    
+
     <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.0" />
   </ItemGroup>
 

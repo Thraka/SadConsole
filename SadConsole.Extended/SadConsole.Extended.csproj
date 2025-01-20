@@ -17,7 +17,7 @@
     <UseProjectReferences>true</UseProjectReferences>
     <RootNamespace>SadConsole</RootNamespace>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' == 'false' " Include="SadConsole" Version="$(SadConsole_Version)" />

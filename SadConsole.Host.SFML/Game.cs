@@ -129,25 +129,24 @@ public sealed partial class Game : GameHost
         foreach (string font in fontConfig.CustomFonts)
             LoadFont(font);
 
-        // Load screen size
-        InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
-            ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
+        // Load screen size and window
+        ConfigureWindowConfig windowConfig = _configuration.Configs.OfType<ConfigureWindowConfig>().FirstOrDefault()
+                                             ?? throw new Exception("The starting window or screen hasn't been configured.");
 
-        if (startupData.ScreenCellsXYByResolution != null)
-        {
-            (ScreenCellsX, ScreenCellsY) = startupData.ScreenCellsXYByResolution(this);
-        }
-        else
-        {
-            ScreenCellsX = startupData.ScreenCellsX;
-            ScreenCellsY = startupData.ScreenCellsY;
-        }
+        _configuration.Configs.Remove(windowConfig);
+        ((IConfigurator)windowConfig).Run(_configuration, this);
 
+        // Get the existing window instance, or create a new one.
         InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
 
         if (hostStartupData.TargetWindow == null)
         {
-            Global.GraphicsDevice = new RenderWindow(new SFML.Window.VideoMode((uint)(DefaultFont.GetFontSize(GameHost.Instance.DefaultFontSize).X * ScreenCellsX), (uint)(DefaultFont.GetFontSize(DefaultFontSize).Y * ScreenCellsY)), Host.Settings.WindowTitle, SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
+            Global.GraphicsDevice = new RenderWindow(
+                new SFML.Window.VideoMode(
+                    (uint)(windowConfig.WindowWidthInPixels),
+                    (uint)(windowConfig.WindowHeightInPixels)),
+                Host.Settings.WindowTitle,
+                SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
             Global.GraphicsDevice.SetTitle(Settings.WindowTitle);
         }
         else
@@ -163,19 +162,23 @@ public sealed partial class Game : GameHost
             ResetRendering();
         };
 
+        if (windowConfig.Fullscreen)
+            ToggleFullScreen();
+
         // Load FPS
         FpsConfig fpsConfig = _configuration.Configs.OfType<FpsConfig>().FirstOrDefault() ?? new FpsConfig();
         if (!fpsConfig.UnlimitedFPS)
             if (Host.Settings.FPS > 0)
                 Global.GraphicsDevice.SetFramerateLimit((uint)Host.Settings.FPS);
 
+        // Create the globally shared spritebatch
         Global.SharedSpriteBatch = new SpriteBatch();
 
         //SadConsole.Host.Global.RenderStates.BlendMode = BlendMode.Multiply
 
         // Setup rendering sizes
-        Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
-        Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
+        Settings.Rendering.RenderWidth = windowConfig.GameResolutionWidthInPixels;
+        Settings.Rendering.RenderHeight = windowConfig.GameResolutionHeightInPixels;
         ResetRendering();
 
         // Configure input
@@ -257,7 +260,7 @@ public sealed partial class Game : GameHost
                 }
 
                 Screen?.Update(UpdateFrameDelta);
-                
+
                 ((SadConsole.Game)Instance).InvokeFrameUpdate();
             }
 
@@ -305,11 +308,11 @@ public sealed partial class Game : GameHost
         OnGameEnding();
     }
 
-    /// <inheritdoc/> 
+    /// <inheritdoc/>
     public override ITexture GetTexture(string resourcePath) =>
         new SadConsole.Host.GameTexture(resourcePath);
 
-    /// <inheritdoc/> 
+    /// <inheritdoc/>
     public override ITexture GetTexture(Stream textureStream) =>
         new SadConsole.Host.GameTexture(textureStream);
 
@@ -317,17 +320,23 @@ public sealed partial class Game : GameHost
     public override ITexture CreateTexture(int width, int height) =>
         new Host.GameTexture((uint)width, (uint)height);
 
-    /// <inheritdoc/> 
+    /// <inheritdoc/>
     public override SadConsole.Input.IKeyboardState GetKeyboardState()
     {
         _keyboard.Refresh();
         return _keyboard;
     }
 
-    /// <inheritdoc/> 
+    /// <inheritdoc/>
     public override SadConsole.Input.IMouseState GetMouseState() =>
         _mouse;
 
+    /// <inheritdoc/>
+    public override void GetDeviceScreenSize(out int width, out int height)
+    {
+        width = (int)SFML.Window.VideoMode.DesktopMode.Width;
+        height = (int)SFML.Window.VideoMode.DesktopMode.Height;
+    }
 
     /// <summary>
     /// Opens a read-only stream with MonoGame.
@@ -344,7 +353,9 @@ public sealed partial class Game : GameHost
     /// </summary>
     public void ToggleFullScreen()
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException("SFML doesn't support full screen yet.");
+        // Check out https://stackoverflow.com/questions/61992029/sfml-c-sharp-how-do-i-switch-between-fullscreen
+        // Would that help?
     }
 
     /// <inheritdoc/>

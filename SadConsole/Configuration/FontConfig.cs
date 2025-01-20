@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 
 namespace SadConsole.Configuration;
 
@@ -88,7 +86,7 @@ public static partial class Extensions
 
 internal class OldFontNameConfig : IConfigurator
 {
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
         game.Started += Game_Started;
     }
@@ -176,7 +174,7 @@ public class FontConfig : IConfigurator
     /// </summary>
     /// <param name="config">The builder running this configurator.</param>
     /// <param name="game">The game being created.</param>
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
         FontLoader?.Invoke(this, game);
         Settings.UseDefaultExtendedFont = UseExtendedFont;

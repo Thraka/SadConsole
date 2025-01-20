@@ -252,19 +252,22 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.String)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetKeyboardState">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetMouseState">
-            <inheritdoc/> 
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>

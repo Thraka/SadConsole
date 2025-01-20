@@ -32,7 +32,7 @@ public class MonoGameSettings : IConfigurator
 {
     public bool UseTitleContainer { get; set; } = false;
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
     }
 }

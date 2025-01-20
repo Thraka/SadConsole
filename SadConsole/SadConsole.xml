@@ -2502,21 +2502,26 @@
             Composes a game host object.
             </summary>
         </member>
-        <member name="P:SadConsole.Configuration.Builder.Configs">
+        <member name="T:SadConsole.Configuration.BuilderBase">
+            <summary>
+            Base class for building startup config options.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.BuilderBase.Configs">
             <summary>
             A collection of <see cref="T:SadConsole.Configuration.IConfigurator"/> objects.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.GetOrCreateConfig``1">
+        <member name="M:SadConsole.Configuration.BuilderBase.GetOrCreateConfig``1">
             <summary>
-            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection.
+            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection.
             </summary>
             <typeparam name="TConfig">The type of config object.</typeparam>
-            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection. If found in the collection, that instance is returned.</returns>
+            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection. If found in the collection, that instance is returned.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.Run(SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.BuilderBase.Run(SadConsole.GameHost)">
             <summary>
-            Runs each config object in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection with the specified game instance.
+            Runs each config object in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection with the specified game instance.
             </summary>
             <param name="game">The game being created.</param>
         </member>
@@ -2557,19 +2562,52 @@
             <param name="instance_FrameRender">The event handler</param>
             <returns>The configuration builder.</returns>
         </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureWindow(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.ConfigureWindowConfig,SadConsole.Configuration.BuilderBase,SadConsole.GameHost})">
+            <summary>
+            Configures the game window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="loader">The method to invoke when this is run.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetWindowSizeInCells(SadConsole.Configuration.Builder,System.Int32,System.Int32,System.Boolean)">
+             <summary>
+             Sets the desired resolution of the SadConsole window in cells using the default font.
+             </summary>
+             <param name="width">How wide the window is in font cells.</param>
+             <param name="height">How tall the window is in font cells.</param>
+             <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
+             <remarks>
+             The <paramref name="width"/> and <paramref name="height"/> values are used to generate the game window based
+             on how large the font is. For example, if the font is 10x8, and you request window size of 20x20, a window is
+             created with a width of 10 * 20 and a height of 8 * 20 in pixels, which is 200x160.
+            
+             When <paramref name="zoom"/> is set to true, the window will try to get as big as possible while keeping
+             the SadConsole output crisp.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetWindowSizeInPixels(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
+            the current font, and set to a value that allows the most cells to appear on screen.
+            </summary>
+            <param name="width">The width of the window.</param>
+            <param name="height">The height of the window.</param>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.UseDefaultConsole(SadConsole.Configuration.Builder)">
             <summary>
             Sets the <see cref="P:SadConsole.GameHost.StartingConsole"/> and <see cref="P:SadConsole.GameHost.Screen"/> properties to new console when the game starts.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <returns>The configuration builder.</returns>
-        </member>
-        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
-            <summary>
-            Either focuses or unfocuses the starting screen.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
         </member>
         <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.GameHost})">
@@ -2644,14 +2682,96 @@
             <param name="creator">A method that returns an object as the starting screen.</param>
             <returns>The configuration builder.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
             <summary>
-            Sets the initial screen size of the window, in cells.
+            Either focuses or unfocuses the starting screen.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="width">The cell count along the x-axis.</param>
-            <param name="height">The cell count along the y-axis.</param>
+            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.WindowWidthInPixels">
+            <summary>
+            The desired width of the game window in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.WindowHeightInPixels">
+            <summary>
+            The desired height of the game window in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.GameResolutionWidthInPixels">
+            <summary>
+            The rendering width of the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.GameResolutionHeightInPixels">
+            <summary>
+            The rendering height of the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.CellsX">
+            <summary>
+            The amount of cells that fit in the window along the x-axis.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.CellsY">
+            <summary>
+            The amount of cells that fit in the window along the y-axis.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.Fullscreen">
+            <summary>
+            When true, tells the game host to run in fullscreen mode.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.BorderlessWindowedFullscreen">
+            <summary>
+            When true, fullscreen mode uses a borderless window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.SetWindowSizeInPixels(System.Int32,System.Int32)">
+            <summary>
+            Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
+            the current font, and set to a value that allows the most cells to appear on screen.
+            </summary>
+            <param name="width">The width of the window.</param>
+            <param name="height">The height of the window.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.SetWindowSizeInCells(System.Int32,System.Int32,System.Boolean)">
+             <summary>
+             Sets the desired resolution of the SadConsole window in cells using the default font.
+             </summary>
+             <param name="width">How wide the window is in font cells.</param>
+             <param name="height">How tall the window is in font cells.</param>
+             <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
+             <remarks>
+             The <paramref name="width"/> and <paramref name="height"/> values are used to generate the game window based
+             on how large the font is. For example, if the font is 10x8, and you request window size of 20x20, a window is
+             created with a width of 10 * 20 and a height of 8 * 20 in pixels, which is 200x160.
+            
+             When <paramref name="zoom"/> is set to true, the window will try to get as big as possible while keeping
+             the SadConsole output crisp.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <summary>
+            Gets the size of the device screen in pixels.
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.IsWindowSizeValid">
+            <summary>
+            Validates that the window fits on the display.
+            </summary>
+            <returns>True when the <see cref="P:SadConsole.Configuration.ConfigureWindowConfig.WindowWidthInPixels"/> and <see cref="P:SadConsole.Configuration.ConfigureWindowConfig.WindowHeightInPixels"/> are
+            less than or equal to the screen size; otherwise, false.</returns>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.Loader">
+            <summary>
+            The method invoked by the <see cref="T:SadConsole.GameHost"/> as fonts are loaded.
+            </summary>
         </member>
         <member name="T:SadConsole.Configuration.FontConfig">
             <summary>
@@ -2711,7 +2831,7 @@
             </summary>
             <param name="size">The default font size.</param>
         </member>
-        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
             <summary>
             Invokes the <see cref="P:SadConsole.Configuration.FontConfig.FontLoader"/> delegate.
             </summary>
@@ -2723,7 +2843,7 @@
             Configuration interface that's added to the <see cref="T:SadConsole.Configuration.Builder"/> object.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
             <summary>
             Called by the <see cref="T:SadConsole.Configuration.Builder"/>; Runs the specific config for this object.
             </summary>
@@ -4115,12 +4235,12 @@
             <param name="width">The width to use in converting each index to a point.</param>
             <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="T:SadRogue.Primitives.Direction.Types"/> enumeration.</returns>
         </member>
-        <member name="T:SadConsole.Extensions.ReadOnlySpan">
+        <member name="T:SadConsole.Extensions.ReadOnlySpanExtensions">
             <summary>
             Extensions for the <see cref="T:System.ReadOnlySpan`1"/> type.
             </summary>
         </member>
-        <member name="M:SadConsole.Extensions.ReadOnlySpan.Next(System.ReadOnlySpan{System.Char},System.Char,System.Int32@)">
+        <member name="M:SadConsole.Extensions.ReadOnlySpanExtensions.Next(System.ReadOnlySpan{System.Char},System.Char,System.Int32@)">
             <summary>
             Gets the next instnace of the specified character in a <see cref="T:System.Char"/> span.
             </summary>
@@ -4657,6 +4777,13 @@
             </summary>
             <returns>The state of the mouse.</returns>
         </member>
+        <member name="M:SadConsole.GameHost.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <summary>
+            Gets the size of the current device's screen in pixels.
+            </summary>
+            <param name="width">The width of the screen.</param>
+            <param name="height">The height of the screen.</param>
+        </member>
         <member name="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])">
             <summary>
             The splash screens the game should sequentially show on startup.
@@ -4743,7 +4870,7 @@
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.Dispose(System.Boolean)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.GameHost.Finalize">
             <summary>
@@ -13539,7 +13666,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ProgressBar.Progress">
             <summary>
-            Gets or sets the value of the scrollbar between the minimum and maximum values.
+            Gets or sets the value of the scrollbar between 0.0 and 1.0.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ProgressBar.#ctor(System.Int32,System.Int32,SadConsole.HorizontalAlignment)">

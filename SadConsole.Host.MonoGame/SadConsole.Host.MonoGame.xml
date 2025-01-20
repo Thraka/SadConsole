@@ -404,6 +404,9 @@
         <member name="M:SadConsole.Game.GetMouseState">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
             Opens a read-only stream with MonoGame.

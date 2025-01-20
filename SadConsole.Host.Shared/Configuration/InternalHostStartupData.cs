@@ -53,7 +53,7 @@ public class InternalHostStartupData : IConfigurator
     public int InitialRenderHeight { get; set; }
 #endif
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
     }
 }

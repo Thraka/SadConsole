@@ -43,7 +43,7 @@ public class FpsConfig : IConfigurator
     public bool ShowFPSVisual { get; set; }
 #endif
 
-    public void Run(Builder configBuilder, GameHost game)
+    public void Run(BuilderBase configBuilder, GameHost game)
     {
     }
 }

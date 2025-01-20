@@ -28,6 +28,9 @@ demo code, which you can reuse in your own project.
 
 using SadConsole.Examples;
 using SadConsole.Configuration;
+using SadConsole.Effects;
+using SadConsole.UI;
+using SadConsole.UI.Controls;
 
 #if FNA
 Settings.WindowTitle = "SadConsole Examples (FNA)";
@@ -38,10 +41,27 @@ Settings.WindowTitle = "SadConsole Examples (SFML)";
 #endif
 
 Builder startup = new Builder()
-    .SetScreenSize(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
-    .SetStartingScreen<RootScreen>()
-    .IsStartingScreenFocused(false) // Don't want RootScreen to be focused because RootScreen automatically focuses the selected demo console
-    .ConfigureFonts(true)
+        .ConfigureFonts((config, host) =>
+        {
+            // FullHD default: <= 1920x1870
+            IFont.Sizes defaultFontSize = IFont.Sizes.One;
+
+            host.GetDeviceScreenSize(out int width, out int height);
+
+            // QHD (aka 2k)
+            if (width > 1920 && height > 1080)
+                defaultFontSize = IFont.Sizes.Two;
+
+            // Most likely 4k
+            if (width > 2560 && height > 1440)
+                defaultFontSize = IFont.Sizes.Four;
+
+            config.DefaultFontSize = defaultFontSize;
+            config.UseExtendedFont = true;
+        })
+        .SetStartingScreen<RootScreen>()
+        .IsStartingScreenFocused(false) // Don't want RootScreen to be focused because RootScreen automatically focuses the selected demo console
+        .SetWindowSizeInCells(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
     ;
 Game.Create(startup);
 Game.Instance.Run();

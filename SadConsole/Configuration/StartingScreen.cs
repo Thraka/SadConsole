@@ -1,7 +1,4 @@
-﻿#nullable enable
-
-using System;
-using SadRogue.Primitives;
+﻿using System;
 
 namespace SadConsole.Configuration;
 
@@ -36,37 +33,16 @@ public static partial class Extensions
     }
 
     /// <summary>
-    /// Sets the initial screen size of the window, in cells.
+    /// Either focuses or unfocuses the starting screen.
     /// </summary>
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
-    /// <param name="width">The cell count along the x-axis.</param>
-    /// <param name="height">The cell count along the y-axis.</param>
+    /// <param name="value">Indicates whether or not <see cref="GameHost.Screen"/> is focused.</param>
     /// <returns>The configuration builder.</returns>
-    public static Builder SetScreenSize(this Builder configBuilder, int width, int height)
+    public static Builder IsStartingScreenFocused(this Builder configBuilder, bool value)
     {
-        InternalStartupData data = configBuilder.GetOrCreateConfig<InternalStartupData>();
+        StartingScreenConfig data = configBuilder.GetOrCreateConfig<StartingScreenConfig>();
 
-        data.ScreenCellsX = width;
-        data.ScreenCellsY = height;
-
-        return configBuilder;
-    }
-
-    /// <summary>
-    /// Sets the initial screen size of the window based on the given resolution in pixels.
-    /// </summary>
-    /// <param name="configBuilder">The builder object that composes the game startup.</param>
-    /// <param name="resolution">The screen resolution in pixels.</param>
-    /// <returns>The configuration builder.</returns>
-    public static Builder SetScreenSize(this Builder configBuilder, Point resolution)
-    {
-        InternalStartupData data = configBuilder.GetOrCreateConfig<InternalStartupData>();
-
-        data.ScreenCellsXYByResolution = (gameHost) =>
-        {
-            Point defaultFontSize = gameHost.DefaultFont.GetFontSize(gameHost.DefaultFontSize);
-            return new Point(resolution.X / defaultFontSize.X, resolution.Y / defaultFontSize.Y);
-        };
+        data.FocusStartingScreen = value;
 
         return configBuilder;
     }
@@ -76,14 +52,15 @@ public class StartingScreenConfig : IConfigurator
 {
     public Func<GameHost, IScreenObject> GenerateStartingObject { get; set; }
 
-    public void Run(Builder configBuilder, GameHost game)
+    public bool? FocusStartingScreen { get; set; } = null;
+
+    public void Run(BuilderBase configBuilder, GameHost game)
     {
         game.FocusedScreenObjects.Clear();
         game.Screen = GenerateStartingObject(game);
         game.DestroyDefaultStartingConsole();
 
-        InternalStartupData data = configBuilder.GetOrCreateConfig<InternalStartupData>();
-        if (data.FocusStartingScreen.HasValue)
-            game.Screen.IsFocused = data.FocusStartingScreen.Value;
+        if (FocusStartingScreen.HasValue)
+            game.Screen.IsFocused = FocusStartingScreen.Value;
     }
 }
