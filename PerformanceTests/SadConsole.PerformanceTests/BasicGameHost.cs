@@ -83,6 +83,12 @@ namespace SadConsole.PerformanceTests
             throw new NotImplementedException();
         }
 
+        public override void GetDeviceScreenSize(out int width, out int height)
+        {
+            width = 1920;
+            height = 1080;
+        }
+
         public override IRenderer GetRenderer(string name)
         {
             return null;

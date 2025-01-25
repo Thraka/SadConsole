@@ -112,7 +112,17 @@ public static class CellSurfaceEditor
     /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsValidCell(this ISurface obj, int x, int y) =>
-        x >= 0 && x < obj.Surface.Width && y >= 0 && y < obj.Surface.Height;
+        IsValidCell(obj, new Point(x, y));
+
+    /// <summary>
+    /// Tests if a cell is valid based on its x,y position.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="coordinate">The coordinate of the cell to test.</param>
+    /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValidCell(this ISurface obj, Point coordinate) =>
+        obj.Surface.Area.Contains(coordinate);
 
     /// <summary>
     /// Tests if a cell is valid based on its x,y position.
@@ -125,7 +135,7 @@ public static class CellSurfaceEditor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsValidCell(this ISurface obj, int x, int y, out int index)
     {
-        if (x >= 0 && x < obj.Surface.Width && y >= 0 && y < obj.Surface.Height)
+        if (obj.Surface.IsValidCell(x, y))
         {
             index = y * obj.Surface.Width + x;
             return true;
@@ -134,6 +144,17 @@ public static class CellSurfaceEditor
         index = -1;
         return false;
     }
+
+    /// <summary>
+    /// Tests if a cell is valid based on its x,y position.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="coordinate">The coordinate of the cell to test.</param>
+    /// <param name="index">If the cell is valid, the index of the cell when found.</param>
+    /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValidCell(this ISurface obj, Point coordinate, out int index) =>
+        IsValidCell(obj, coordinate.X, coordinate.Y, out index);
 
     /// <summary>
     /// Tests if a cell is valid based on its index.

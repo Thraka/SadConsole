@@ -5157,6 +5157,14 @@
             <param name="y">The y coordinate of the cell to test.</param>
             <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,SadRogue.Primitives.Point)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="coordinate">The coordinate of the cell to test.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,System.Int32,System.Int32,System.Int32@)">
             <summary>
             Tests if a cell is valid based on its x,y position.
@@ -5164,6 +5172,15 @@
             <param name="obj">The surface being edited.</param>
             <param name="x">The x coordinate of the cell to test.</param>
             <param name="y">The y coordinate of the cell to test.</param>
+            <param name="index">If the cell is valid, the index of the cell when found.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,SadRogue.Primitives.Point,System.Int32@)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="coordinate">The coordinate of the cell to test.</param>
             <param name="index">If the cell is valid, the index of the cell when found.</param>
             <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
         </member>
@@ -6116,7 +6133,7 @@
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface to the specified width and height.
+            Resizes the surface to the specified width and height. This destroys the original backing array.
             </summary>
             <param name="viewWidth">The viewable width of the surface.</param>
             <param name="viewHeight">The viewable height of the surface.</param>
@@ -6126,7 +6143,7 @@
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface and view to the specified width and height.
+            Resizes the surface and view to the specified width and height. This destroys the original backing array.
             </summary>
             <param name="width">The width of the surface and view.</param>
             <param name="height">The height of the surface and view.</param>

@@ -7,7 +7,7 @@ public interface ICellSurfaceResize
 {
 
     /// <summary>
-    /// Resizes the surface to the specified width and height.
+    /// Resizes the surface to the specified width and height. This can destroy the original backing array.
     /// </summary>
     /// <param name="viewWidth">The viewable width of the surface.</param>
     /// <param name="viewHeight">The viewable height of the surface.</param>
@@ -17,7 +17,7 @@ public interface ICellSurfaceResize
     void Resize(int viewWidth, int viewHeight, int totalWidth, int totalHeight, bool clear);
 
     /// <summary>
-    /// Resizes the surface and view to the specified width and height.
+    /// Resizes the surface and view to the specified width and height. This can destroy the original backing array.
     /// </summary>
     /// <param name="width">The width of the surface and view.</param>
     /// <param name="height">The height of the surface and view.</param>

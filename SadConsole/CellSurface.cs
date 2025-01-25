@@ -18,8 +18,11 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
     private Color _defaultBackground;
     private Color _defaultForeground;
 
+    /// <summary>
+    /// The width and height of the surface along with the viewable area.
+    /// </summary>
     [DataMember(Name = "AreaBounds")]
-    private BoundedRectangle _viewArea;
+    protected BoundedRectangle _viewArea;
 
     /// <inheritdoc />
     public event EventHandler? IsDirtyChanged;
@@ -318,38 +321,109 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
         if (viewWidth > totalWidth) throw new ArgumentOutOfRangeException(nameof(totalWidth), "View width must be less than or equal to the width.");
         if (viewHeight > totalHeight) throw new ArgumentOutOfRangeException(nameof(totalHeight), "View height must be less than or equal to the height.");
 
-        var newCells = new ColoredGlyphBase[totalWidth * totalHeight];
-
-        for (int y = 0; y < totalHeight; y++)
+        // No change to size, so check clear flag and respond accordingly
+        if (totalWidth == Width && totalHeight == Height)
         {
-            for (int x = 0; x < totalWidth; x++)
-            {
-                int index = new Point(x, y).ToIndex(totalWidth);
+            if (clear)
+                this.Clear();
 
-                if (this.IsValidCell(x, y))
+            _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
+                                            (0, 0, totalWidth, totalHeight));
+
+            IsDirty = true;
+            return;
+        }
+
+        // The cell array is going to change
+        ColoredGlyphBase[] newCells = new ColoredGlyphBase[totalWidth * totalHeight];
+
+        // If the resize has the same width, it's simpler to handle. We just erase or add the appropriate rows.
+        if (totalWidth == Width)
+        {
+            // Adding new rows
+            if (totalHeight > Height)
+            {
+                Array.Copy(Cells, newCells, Cells.Length);
+
+                // If clear set, clear the old cells
+                if (clear)
                 {
-                    newCells[index] = this[x, y];
+                    for (int i = 0; i < Cells.Length; i++)
+                        CellClear(Surface, newCells[i]);
+                }
+
+                for (int i = Cells.Length; i < newCells.Length; i++)
+                    newCells[i] = new ColoredGlyph(DefaultForeground, DefaultBackground, DefaultGlyph);
+            }
+
+            // Shorter rows
+            else
+            {
+                Array.Copy(Cells, newCells, newCells.Length);
+
+                // If clear set, clear the old cells
+                if (clear)
+                {
+                    for (int i = 0; i < Cells.Length; i++)
+                        CellClear(Surface, newCells[i]);
+                }
+            }
+        }
+        else
+        {
+            int copyWidth = Math.Min(Width, totalWidth);
+            int copyHeight = Math.Min(Height, totalHeight);
+
+            // Start at shortest height
+            for (int y = 0; y < copyHeight; y++)
+            {
+                // For the shortest width, copy the existing cells
+                for (int x = 0; x < copyWidth; x++)
+                {
+                    newCells[new Point(x, y).ToIndex(totalWidth)] = this[x, y];
 
                     if (clear)
-                        this.Clear(x, y);
+                        CellClear(Surface, newCells[new Point(x, y).ToIndex(totalWidth)]);
                 }
-                else
+                // For the longer width, create the new cells
+                for (int x = copyWidth; x < totalWidth; x++)
                 {
-                    newCells[index] = new ColoredGlyph(DefaultForeground, DefaultBackground, 0);
+                    newCells[new Point(x, y).ToIndex(totalWidth)] = new ColoredGlyph(DefaultForeground, DefaultBackground, DefaultGlyph);
+                }
+            }
+
+            for (int y = copyHeight; y < totalHeight; y++)
+            {
+                for (int x = 0; x < totalWidth; x++)
+                {
+                    newCells[new Point(x, y).ToIndex(totalWidth)] = new ColoredGlyph(DefaultForeground, DefaultBackground, DefaultGlyph);
                 }
             }
         }
 
+        // Move the new array to the surface
         Cells = newCells;
         _viewArea = new BoundedRectangle((0, 0, viewWidth, viewHeight),
                                          (0, 0, totalWidth, totalHeight));
+
+        // If clear was set, remove every effect, otherwise just remove effects on cells no longer valid
         if (clear)
             Effects.RemoveAll();
         else
             Effects.DropInvalidCells();
 
+        // Flag the surface as dirty and notify that the cell array has been reset
         IsDirty = true;
         OnCellsReset();
+        
+        // Local method that clears a cell. Duplicates this.Clear() but without the IsDirty flag.
+        static void CellClear(ICellSurface surface, ColoredGlyphBase cell)
+        {
+            cell.Clear();
+            cell.Foreground = surface.DefaultForeground;
+            cell.Background = surface.DefaultBackground;
+            cell.Glyph = surface.DefaultGlyph;
+        }
     }
 
     /// <inheritdoc />
