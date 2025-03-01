@@ -6,6 +6,11 @@ namespace SadConsole;
 
 public partial class ScreenSurface
 {
+    /// <summary>
+    /// A cached value determined by <see cref="OnMouseEnter(MouseScreenObjectState)"/>. <see langword="true"/> when the mouse entered the surface bounds with the mouse button down.
+    /// </summary>
+    protected bool MouseState_EnteredWithButtonDown = false;
+
     /// <inheritdoc/>
     public event EventHandler<MouseScreenObjectState>? MouseButtonClicked;
 
@@ -35,8 +40,13 @@ public partial class ScreenSurface
     /// Raises the <see cref="MouseEnter"/> event.
     /// </summary>
     /// <param name="state">Current mouse state in relation to this console.</param>
-    protected virtual void OnMouseEnter(MouseScreenObjectState state) =>
+    protected virtual void OnMouseEnter(MouseScreenObjectState state)
+    {
+        if (state.Mouse.LeftButtonDown)
+            MouseState_EnteredWithButtonDown = true;
+
         MouseEnter?.Invoke(this, state);
+    }
 
     /// <summary>
     /// Raises the <see cref="MouseExit"/> event.
@@ -46,6 +56,7 @@ public partial class ScreenSurface
     {
         // Force mouse off just in case
         IsMouseOver = false;
+        MouseState_EnteredWithButtonDown = false;
 
         MouseExit?.Invoke(this, state);
     }
@@ -58,7 +69,7 @@ public partial class ScreenSurface
     {
         if (state.Mouse.LeftButtonDown)
         {
-            if (MoveToFrontOnMouseClick && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
+            if (MoveToFrontOnMouseClick && !MouseState_EnteredWithButtonDown && Parent != null && Parent.Children.IndexOf(this) != Parent.Children.Count - 1)
             {
                 Parent.Children.MoveToTop(this);
             }
@@ -68,6 +79,8 @@ public partial class ScreenSurface
                 IsFocused = true;
             }
         }
+        else
+            MouseState_EnteredWithButtonDown = false;
 
         MouseMove?.Invoke(this, state);
     }
