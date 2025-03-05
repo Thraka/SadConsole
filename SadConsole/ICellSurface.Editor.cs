@@ -167,6 +167,26 @@ public static class CellSurfaceEditor
         index >= 0 && index < obj.Surface.Count;
 
     /// <summary>
+    /// Changes the glyph and mirror of the specified cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">The x location of the cell.</param>
+    /// <param name="y">The y location of the cell.</param>
+    /// <param name="definition">The glyph and mirror of the cell.</param>
+    public static void SetGlyph(this ISurface obj, int x, int y, GlyphDefinition definition)
+    {
+        if (!obj.Surface.IsValidCell(x, y, out int index))
+            return;
+
+        ColoredGlyphBase cell = obj.Surface[index];
+
+        cell.Glyph = definition.Glyph;
+        cell.Mirror = definition.Mirror;
+
+        obj.Surface.IsDirty = true;
+    }
+
+    /// <summary>
     /// Changes the glyph of a specified cell to a new value.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
@@ -455,7 +475,7 @@ public static class CellSurfaceEditor
         obj.Surface.Effects.GetEffect(obj.Surface[index]);
 
     /// <summary>
-    /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+    /// Changes the appearance of the cell to that of the provided colored glyph object.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="x">The x location of the cell.</param>
@@ -472,6 +492,16 @@ public static class CellSurfaceEditor
         appearance.CopyAppearanceTo(obj.Surface[index]);
         obj.Surface.IsDirty = true;
     }
+
+    /// <summary>
+    /// Changes the appearance of the cell to that of the provided colored glyph object.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">The x location of the cell.</param>
+    /// <param name="y">The y location of the cell.</param>
+    /// <param name="definition">The glyph and mirror of the cell.</param>
+    public static void SetCellAppearance(this ISurface obj, int x, int y, GlyphDefinition definition) =>
+        SetGlyph(obj, x, y, definition);
 
     /// <summary>
     /// Gets the appearance of a cell.
@@ -1190,7 +1220,7 @@ public static class CellSurfaceEditor
         for (int i = 0; i < length; i++)
         {
             int tempIndex = i + index;
-            var cell = sb[i];
+            ColoredGlyphAndEffect cell = sb[i];
             if (tempIndex < obj.Surface.Count)
             {
                 obj.Surface[tempIndex].CopyAppearanceTo(cell);
