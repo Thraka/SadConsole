@@ -845,6 +845,11 @@
             An array of <see cref="T:SadConsole.ColoredGlyphBase"/> objects used to represent a 2D surface.
             </summary>
         </member>
+        <member name="F:SadConsole.CellSurface._viewArea">
+            <summary>
+            The width and height of the surface along with the viewable area.
+            </summary>
+        </member>
         <member name="E:SadConsole.CellSurface.IsDirtyChanged">
             <inheritdoc />
         </member>
@@ -1630,7 +1635,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
             <summary>
-            Enables linux-like string parsing where a \n behaves like a \r\n.
+            Enables Linux-like string parsing where a \n behaves like a \r\n.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
@@ -1640,12 +1645,12 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
             <summary>
-            Gets or sets the row of the cursor postion.
+            Gets or sets the row of the cursor position.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Column">
             <summary>
-            Gets or sets the column of the cursor postion.
+            Gets or sets the column of the cursor position.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.AutomaticallyShiftRowsUp">
@@ -1774,42 +1779,42 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.Up(System.Int32)">
             <summary>
-            Moves the cusor up by the specified amount of lines.
+            Moves the cursor up by the specified amount of lines.
             </summary>
             <param name="amount">The amount of lines to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Down(System.Int32)">
             <summary>
-            Moves the cusor down by the specified amount of lines.
+            Moves the cursor down by the specified amount of lines.
             </summary>
             <param name="amount">The amount of lines to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Left(System.Int32)">
             <summary>
-            Moves the cusor left by the specified amount of columns.
+            Moves the cursor left by the specified amount of columns.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.LeftWrap(System.Int32)">
             <summary>
-            Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
+            Moves the cursor left by the specified amount of columns, wrapping the cursor if needed.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Right(System.Int32)">
             <summary>
-            Moves the cusor right by the specified amount of columns.
+            Moves the cursor right by the specified amount of columns.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.RightWrap(System.Int32)">
             <summary>
-            Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
+            Moves the cursor right by the specified amount of columns, wrapping the cursor if needed.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
@@ -5192,6 +5197,15 @@
             <param name="index">The index to test.</param>
             <returns>A true value indicating the cell index is in this cell obj.Surface.</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.GlyphDefinition)">
+            <summary>
+            Changes the glyph and mirror of the specified cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="definition">The glyph and mirror of the cell.</param>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ISurface,System.Int32,System.Int32,System.Int32)">
             <summary>
             Changes the glyph of a specified cell to a new value.
@@ -5360,12 +5374,21 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyphBase)">
             <summary>
-            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+            Changes the appearance of the cell to that of the provided colored glyph object.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
             <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.GlyphDefinition)">
+            <summary>
+            Changes the appearance of the cell to that of the provided colored glyph object.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="definition">The glyph and mirror of the cell.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
@@ -6133,7 +6156,7 @@
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface to the specified width and height. This destroys the original backing array.
+            Resizes the surface to the specified width and height. This can destroy the original backing array.
             </summary>
             <param name="viewWidth">The viewable width of the surface.</param>
             <param name="viewHeight">The viewable height of the surface.</param>
@@ -6143,7 +6166,7 @@
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface and view to the specified width and height. This destroys the original backing array.
+            Resizes the surface and view to the specified width and height. This can destroy the original backing array.
             </summary>
             <param name="width">The width of the surface and view.</param>
             <param name="height">The height of the surface and view.</param>
@@ -6191,11 +6214,6 @@
             The width of each glyph in pixels.
             </summary>
         </member>
-        <member name="P:SadConsole.IFont.GlyphPadding">
-            <summary>
-            The amount of pixels between glyphs.
-            </summary>
-        </member>
         <member name="P:SadConsole.IFont.TotalGlyphs">
             <summary>
             Gets how many glyphs this font has.
@@ -6203,7 +6221,7 @@
         </member>
         <member name="P:SadConsole.IFont.SolidGlyphIndex">
             <summary>
-            Which glyph index is considered completely solid. Used for shading.
+            Which glyph index is considered completely solid white. Used for shading.
             </summary>
         </member>
         <member name="P:SadConsole.IFont.SolidGlyphRectangle">
@@ -6237,6 +6255,11 @@
             </summary>
             <param name="glyph">The index of the glyph to get.</param>
             <returns>The rectangle for the glyph.</returns>
+        </member>
+        <member name="P:SadConsole.IFont.GlyphRectangles">
+            <summary>
+            A dictionary that stores the source rectangles of the font by glyph id.
+            </summary>
         </member>
         <member name="M:SadConsole.IFont.GenerateGlyphSourceRectangle(System.Int32)">
             <summary>
@@ -10111,6 +10134,11 @@
         <member name="M:SadConsole.ScreenSurface.Dispose">
             <inheritdoc/>
         </member>
+        <member name="F:SadConsole.ScreenSurface.MouseState_EnteredWithButtonDown">
+            <summary>
+            A cached value determined by <see cref="M:SadConsole.ScreenSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)"/>. <see langword="true"/> when the mouse entered the surface bounds with the mouse button down.
+            </summary>
+        </member>
         <member name="E:SadConsole.ScreenSurface.MouseButtonClicked">
             <inheritdoc/>
         </member>
@@ -12585,7 +12613,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsMouseButtonStateClean">
             <summary>
-            When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; othwerise <see langword="false"/>.
+            When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; otherwise <see langword="false"/>.
             </summary>
             <remarks>
             This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.

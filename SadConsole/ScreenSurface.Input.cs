@@ -9,7 +9,7 @@ public partial class ScreenSurface
     /// <summary>
     /// A cached value determined by <see cref="OnMouseEnter(MouseScreenObjectState)"/>. <see langword="true"/> when the mouse entered the surface bounds with the mouse button down.
     /// </summary>
-    protected bool MouseState_EnteredWithButtonDown = false;
+    protected internal bool MouseState_EnteredWithButtonDown = false;
 
     /// <inheritdoc/>
     public event EventHandler<MouseScreenObjectState>? MouseButtonClicked;
