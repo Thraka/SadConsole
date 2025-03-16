@@ -157,7 +157,7 @@ public sealed class SadFont : IFont
     /// <returns>The rectangle for the glyph if it exists, otherwise returns <see cref="UnsupportedGlyphRectangle"/>.</returns>
     public Rectangle GetGlyphSourceRectangle(int glyph)
     {
-        if (glyph >= 0 && GlyphRectangles.TryGetValue(glyph, out Rectangle value))
+        if (GlyphRectangles.TryGetValue(glyph, out Rectangle value))
             return value;
 
         return UnsupportedGlyphRectangle;
