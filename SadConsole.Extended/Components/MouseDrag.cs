@@ -7,7 +7,7 @@ namespace SadConsole.Components;
 /// <summary>
 /// Enables dragging a scrollable surface around by mouse.
 /// </summary>
-public class MouseDrag : MouseConsoleComponent
+public class MouseDragViewPort : MouseConsoleComponent
 {
     bool _isDragging = false;
     Point _grabWorldPosition = Point.Zero;
