@@ -62,6 +62,7 @@ Builder startup = new Builder()
         .SetStartingScreen<RootScreen>()
         .IsStartingScreenFocused(false) // Don't want RootScreen to be focused because RootScreen automatically focuses the selected demo console
         .SetWindowSizeInCells(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
+        .EnableImGuiDebugger(SadConsole.Input.Keys.F5)
     ;
 Game.Create(startup);
 Game.Instance.Run();

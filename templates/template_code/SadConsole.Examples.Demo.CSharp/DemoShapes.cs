@@ -1,5 +1,4 @@
 ﻿using SadConsole.Input;
-using SadConsole.StringParser;
 
 namespace SadConsole.Examples;
 

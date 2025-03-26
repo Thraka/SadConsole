@@ -17,31 +17,52 @@ static class GameSettings
     public static Rectangle ScreenDescriptionBounds = new Rectangle(2, ScreenListBounds.MaxExtentY + 4, SCREEN_DESCRIPTION_WIDTH, SCREEN_DESCRIPTION_HEIGHT);
     public static Rectangle ScreenDemoBounds = new Rectangle(ScreenListBounds.MaxExtentX + 5, 2, SCREEN_DEMO_WIDTH, SCREEN_DEMO_HEIGHT);
 
-    public static Colors ControlColorScheme = Colors.CreateSadConsoleBlue();
+    public static Colors ControlColorScheme = Colors.CreateAnsi();
 
-    public static IDemo[] Demos =
+    public static object[] Demos =
         {
+            "Basics".CreateColored(Color.OrangeRed),
             new DemoAutoTyping(),
-            new DemoStringParsing(),
-            new DemoControls(),
             new DemoShapes(),
+            new DemoStringParsing(),
+            new DemoRandomScrolling(),
+            new DemoPlayground(),
+
+            "",
+            "GUI/TUI".CreateColored(Color.OrangeRed),
+            new DemoControls(),
+            new DemoControls2(),
+            new DemoScrollableViews(),
+
+            "",
+            "Layering".CreateColored(Color.OrangeRed),
+            new DemoLayeredSurface(),
+
+            "",
+            "Terminal-like".CreateColored(Color.OrangeRed),
+            new DemoScrollableConsole(),
             new DemoKeyboardHandlers(),
             new DemoMultipleCursors(),
-            new DemoScrollableConsole(),
-            new DemoScrollableViews(),
-            new DemoRandomScrolling(),
-            new DemoSurfaceOpacity(),
+
+            "",
+            "ASCII and Graphics".CreateColored(Color.OrangeRed),
             new DemoAsciiGraphics(),
             new DemoAnimations(),
-            new DemoEntitySurface(),
-            new DemoLayeredSurface(),
-            new DemoSecondSurfaceRenderer(),
-            new DemoCustomCellsRenderer(),
-            new DemoPlayground(),
-            // new DemoControls2(),
-            // new DemoShader(),
-            // new DemoRotatedSurface(),
-            // new DemoFontManipulation(),
+            new DemoTheDraw(),
 
+            "",
+            "Entities".CreateColored(Color.OrangeRed),
+            new DemoEntitySurface(),
+            
+            "",
+            "Renderers".CreateColored(Color.OrangeRed),
+            new DemoSurfaceOpacity(),
+            new DemoSecondSurfaceRenderer(),
+            new DemoRotatedSurface(),
+            new DemoCustomCellsRenderer(),
+            new DemoShader(),
+
+            //"Advanced".CreateColored(Color.OrangeRed),
+            // new DemoFontManipulation(),
         };
 }

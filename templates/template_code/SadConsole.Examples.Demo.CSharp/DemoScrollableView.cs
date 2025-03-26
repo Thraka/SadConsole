@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SadConsole.UI;
-using SadConsole;
-using SadRogue.Primitives;
+﻿using SadConsole.UI;
 
 namespace SadConsole.Examples;
 
@@ -11,7 +6,7 @@ internal class DemoScrollableViews : IDemo
 {
     public string Title => "UI Scrolling Surface";
 
-    public string Description => "Example of a UI control that can display a surface and scroll it.";
+    public string Description => "Example of a UI control that can display a surface and scroll it.\r\n\r\nEach control shares the same backing data. [c:r f:Red:w]Click on a surface to draw.";
 
     public string CodeFile => "DemoScrollableViews.cs";
 
@@ -25,8 +20,8 @@ internal class DemoScrollableViews : IDemo
 internal class ScrollableView: ControlsConsole
 {
     CellSurface _sharedSurface;
-    Palette mouseColors;
-    bool isDrawing;
+    Palette _mouseColors;
+    bool _isDrawing;
 
     public ScrollableView() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
@@ -90,40 +85,29 @@ internal class ScrollableView: ControlsConsole
         Controls.Add(viewer);
 
         // Setup mouse palette
-        mouseColors = new Palette(new[] { Color.AnsiBlue, Color.AnsiCyan, Color.AnsiGreen, Color.AnsiGreenBright, Color.AnsiRed, Color.AnsiRedBright });
-
-        var button = new SadConsole.UI.Controls.Button(10)
-        {
-            Text = "move"
-        };
-
-        button.Click += (s, e) =>
-        {
-            ((SadConsole.UI.Controls.SurfaceViewer)Controls[1]).Surface.ViewPosition = (10, 10);
-        };
-        Controls.Add(button);
+        _mouseColors = new Palette([Color.AnsiBlue, Color.AnsiCyan, Color.AnsiGreen, Color.AnsiGreenBright, Color.AnsiRed, Color.AnsiRedBright]);
     }
 
     private void Viewer_MouseMove(object? sender, SadConsole.UI.Controls.ControlBase.ControlMouseState e)
     {
         if (e.OriginalMouseState.Mouse.LeftButtonDown)
         {
-            if (!isDrawing)
+            if (!_isDrawing)
             {
-                isDrawing = true;
-                mouseColors.ShiftLeft();
+                _isDrawing = true;
+                _mouseColors.ShiftLeft();
             }
 
             var viewer = (SadConsole.UI.Controls.SurfaceViewer)sender!;
             if (viewer.IsMouseButtonStateClean && viewer.MouseArea.Contains(e.MousePosition))
             {
-                _sharedSurface.SetGlyph(e.MousePosition.X + viewer.Surface.ViewPosition.X, e.MousePosition.Y + viewer.Surface.ViewPosition.Y, 0, mouseColors[0], mouseColors[0]);
+                _sharedSurface.SetGlyph(e.MousePosition.X + viewer.Surface.ViewPosition.X, e.MousePosition.Y + viewer.Surface.ViewPosition.Y, 0, _mouseColors[0], _mouseColors[0]);
             }
         }
         else
         {
-            if (isDrawing)
-                isDrawing = false;
+            if (_isDrawing)
+                _isDrawing = false;
         }
     }
 }

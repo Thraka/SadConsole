@@ -50,6 +50,7 @@ class AutoTyping : Console
         // We want this to print on a subregion of the main console, so we'll create a sub view and use that
         typingInstruction = new SadConsole.Instructions.DrawString(SadConsole.ColoredString.Parser.Parse(string.Join("\r\n", text)));
         typingInstruction.TotalTimeToPrint = TimeSpan.FromSeconds(8); // 0.5 seconds per line of text
+        typingInstruction.RemoveOnFinished = true;
 
         Cursor.Position = new SadRogue.Primitives.Point(1, 1);
         Cursor.IsEnabled = false;
