@@ -16,6 +16,11 @@ public static class RendererNames
     public const string ScreenSurface = "screensurface";
 
     /// <summary>
+    /// The renderer for a <see cref="ScreenSurface"/> that doesn't use any steps, it directly renders the surface to a cached texture.
+    /// </summary>
+    public const string OptimizedScreenSurface = "optimizedscreensurface";
+
+    /// <summary>
     /// The renderer for a <see cref="LayeredScreenSurface"/>.
     /// </summary>
     public const string LayeredScreenSurface = "layeredscreensurface";

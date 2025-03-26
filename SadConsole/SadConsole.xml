@@ -6214,6 +6214,11 @@
             The width of each glyph in pixels.
             </summary>
         </member>
+        <member name="P:SadConsole.IFont.GlyphPadding">
+            <summary>
+            The amount of pixels between glyphs.
+            </summary>
+        </member>
         <member name="P:SadConsole.IFont.TotalGlyphs">
             <summary>
             Gets how many glyphs this font has.

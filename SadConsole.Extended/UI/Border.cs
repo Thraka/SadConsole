@@ -405,7 +405,7 @@ public class Border: ScreenSurface
     /// <param name="contents">The window the border will be around.</param>
     public Border(Window contents): this (contents, new BorderParameters(false, null, null, HorizontalAlignment.Center, Color.White, Color.White, true, true, true, 0, Color.White, Color.White))
     {
-
+        Renderer = GameHost.Instance.GetRenderer(Renderers.Constants.RendererNames.OptimizedScreenSurface);
     }
 
     /// <summary>
