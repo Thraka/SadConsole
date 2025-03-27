@@ -5,12 +5,15 @@ using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
+using System.Runtime.Serialization;
 
 namespace SadConsole.Debug;
 
 public class ScreenObjectDetailsPanel
 {
     private string _serializeFileName;
+    private ComponentsPanel _guiComponents = new();
+
     public static Dictionary<Type, Editors.IScreenObjectPanel> RegisteredPanels { get; } = [];
 
     public ScreenObjectState CurrentScreenObject;
@@ -21,7 +24,6 @@ public class ScreenObjectDetailsPanel
         if (CurrentScreenObject == null) return;
 
         ImGuiSC.SeparatorText(state.Object.ToString(), Debugger.Settings.Color_PanelHeader);
-        ImGui.Separator();
 
         //ImGui.BeginChild(id, new Vector2(0, 300), false, ImGuiWindowFlags.HorizontalScrollbar);
         ImGui.BeginGroup();
@@ -57,51 +59,90 @@ public class ScreenObjectDetailsPanel
                 SettingsTable.EndTable();
             }
 
-            ///////
-            // IsVisible/Enabled
-            ///////
-            ImGui.Separator();
-
-            if (ImGui.Checkbox("Visible", ref CurrentScreenObject.IsVisible))
-                GuiState._selectedScreenObject.IsVisible = CurrentScreenObject.IsVisible;
-            ImGui.SameLine();
-
-            if (ImGui.Checkbox("Enabled", ref CurrentScreenObject.IsEnabled))
-                GuiState._selectedScreenObject.IsEnabled = CurrentScreenObject.IsEnabled;
-
-            bool isFocused = CurrentScreenObject.Object.IsFocused;
-            if (ImGui.Checkbox("Is Focused", ref isFocused))
-                CurrentScreenObject.Object.IsFocused = isFocused;
-
-            ImGui.Separator();
-
-            if (ImGui.Button("Save Object"))
+            if (ImGui.BeginTabBar("item_properties_tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton))
             {
-                ImGui.OpenPopup("serialize_object");
-                _serializeFileName = "";
-            }
-
-            if (ImGui.BeginPopupModal("serialize_object"))
-            {
-                ImGui.SetNextItemWidth(400);
-                ImGui.InputText("##filename", ref _serializeFileName, 50 );
-
-                if (ImGuiWindowBase.DrawButtons(out bool savedClicked, string.IsNullOrEmpty(_serializeFileName.Trim())))
+                if (ImGui.BeginTabItem("Settings", ImGuiTabItemFlags.NoCloseWithMiddleMouseButton))
                 {
-                    if (savedClicked)
-                        Serializer.Save(GuiState._selectedScreenObject, _serializeFileName.Trim(), false);
-                    ImGui.CloseCurrentPopup();
+
+                    ///////
+                    // IsVisible/Enabled/Mouse/Keyboard
+                    ///////
+                    ImGui.SeparatorText("Flags"u8);
+
+                    if (ImGui.Checkbox("Visible"u8, ref CurrentScreenObject.IsVisible))
+                        GuiState._selectedScreenObject.IsVisible = CurrentScreenObject.IsVisible;
+                    ImGui.SameLine();
+
+                    if (ImGui.Checkbox("Enabled"u8, ref CurrentScreenObject.IsEnabled))
+                        GuiState._selectedScreenObject.IsEnabled = CurrentScreenObject.IsEnabled;
+                    ImGui.SameLine();
+
+                    bool isFocused = CurrentScreenObject.Object.IsFocused;
+                    if (ImGui.Checkbox("Is Focused"u8, ref isFocused))
+                        CurrentScreenObject.Object.IsFocused = isFocused;
+
+                    ImGui.SeparatorText("Input"u8);
+
+                    bool useKeyboard = CurrentScreenObject.Object.UseKeyboard;
+                    if (ImGui.Checkbox("Use Keyboard"u8, ref useKeyboard))
+                        CurrentScreenObject.Object.UseKeyboard = useKeyboard;
+
+                    bool useMouse = CurrentScreenObject.Object.UseMouse;
+                    if (ImGui.Checkbox("Use Mouse"u8, ref useMouse))
+                        CurrentScreenObject.Object.UseMouse = useMouse;
+                    ImGui.SameLine();
+
+                    bool mouseExclusive = CurrentScreenObject.Object.IsExclusiveMouse;
+                    ImGui.BeginDisabled();
+                    ImGui.Checkbox("Is Mouse Exclusive"u8, ref mouseExclusive);
+                    ImGui.EndDisabled();
+
+                    ImGui.SeparatorText("Serialization"u8);
+
+                    if (ImGui.Button("Save Object"u8))
+                    {
+                        ImGui.OpenPopup("serialize_object"u8);
+                        _serializeFileName = "";
+                    }
+
+                    if (ImGui.BeginPopupModal("serialize_object"u8))
+                    {
+                        ImGui.SetNextItemWidth(400);
+                        ImGui.InputText("##filename"u8, ref _serializeFileName, 50);
+
+                        if (ImGuiWindowBase.DrawButtons(out bool savedClicked, string.IsNullOrEmpty(_serializeFileName.Trim())))
+                        {
+                            if (savedClicked)
+                                Serializer.Save(GuiState._selectedScreenObject, _serializeFileName.Trim(), false);
+                            ImGui.CloseCurrentPopup();
+                        }
+
+                        ImGui.EndPopup();
+                    }
+
+                    ImGui.EndTabItem();
                 }
 
-                ImGui.EndPopup();
-            }
+                ///////
+                // Custom editors
+                ///////
+                if (RegisteredPanels.TryGetValue(CurrentScreenObject.Object.GetType(), out var panel))
+                {
+                    panel.BuildTabItem(renderer, CurrentScreenObject);
+                }
 
-            ///////
-            // Custom editors
-            ///////
-            if (RegisteredPanels.TryGetValue(CurrentScreenObject.Object.GetType(), out var panel))
-            {
-                panel.BuildUI(renderer, CurrentScreenObject);
+                ///////
+                // Components
+                ///////
+
+                if (ImGui.BeginTabItem("Components", ImGuiTabItemFlags.NoCloseWithMiddleMouseButton))
+                {
+                    _guiComponents.BuildUI(renderer, GuiState._selectedScreenObjectState);
+
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
             }
         }
         ImGui.EndGroup();

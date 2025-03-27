@@ -34,33 +34,18 @@ internal class ComponentEditorLayeredSurface : ISadComponentPanel
             ImGui.Text($"Current Layer: {_currentLayer}");
             ImGui.SameLine();
             ImGui.BeginDisabled(_currentLayer == 0);
-            if (ImGui.ArrowButton("downbtn", ImGuiDir.Down))
+            if (ImGui.ArrowButton("downbtn"u8, ImGuiDir.Down))
                 _currentLayer--;
             ImGui.EndDisabled();
 
             ImGui.SameLine();
             ImGui.BeginDisabled(_currentLayer == _stateComponent.Count - 1);
-            if (ImGui.ArrowButton("upbtn", ImGuiDir.Up))
+            if (ImGui.ArrowButton("upbtn"u8, ImGuiDir.Up))
                 _currentLayer++;
             ImGui.EndDisabled();
 
 
         }
         ImGui.EndGroup();
-
-        ImGui.Begin(GuiDockspace.ID_CENTER_PANEL, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar);
-        {
-            if (ImGui.BeginTabBar("preview_tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton))
-            {
-                if (ImGui.BeginTabItem("Another tab item", ImGuiTabItemFlags.NoCloseWithMiddleMouseButton))
-                {
-                    ImGui.Text($"Layer: {_stateComponent.Count}");
-                    ImGui.EndTabItem();
-                }
-
-                ImGui.EndTabBar();
-            }
-        }
-        ImGui.End();
     }
 }

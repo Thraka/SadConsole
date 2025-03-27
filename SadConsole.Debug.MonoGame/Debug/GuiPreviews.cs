@@ -18,7 +18,6 @@ class GuiPreviews : ImGuiObjectBase
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
-
         ImGui.SetNextWindowClass(ref GuiDockspace.AutoHideTabBar);
         ImGui.SetNextWindowBgAlpha(1f);
         ImGui.Begin(GuiDockspace.ID_CENTER_PANEL, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar);
@@ -40,6 +39,19 @@ class GuiPreviews : ImGuiObjectBase
 
                         ImGui.BeginChild("output1", ImGuiWindowFlags.HorizontalScrollbar);
                         ImGuiSC.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                        if (GuiState._hoveredScreenObjectState != null)
+                        {
+                            if (GuiState._hoveredScreenObjectState.IsScreenSurface)
+                            {
+                                IScreenSurface surface = (IScreenSurface)GuiState._hoveredScreenObjectState.Object;
+
+                                var drawList = ImGui.GetWindowDrawList();
+                                Vector2 itemRectMin = ImGui.GetItemRectMin();
+                                Vector2 boxTopLeft = new(itemRectMin.X + surface.AbsoluteArea.X, itemRectMin.Y + surface.AbsoluteArea.Y);
+                                Vector2 boxBottomRight = boxTopLeft + new Vector2(surface.AbsoluteArea.Width, surface.AbsoluteArea.Height);
+                                drawList.AddRect(boxTopLeft, boxBottomRight, Color.Violet.PackedValue);
+                            }
+                        }
                         ImGui.EndChild();
                     }
                     else

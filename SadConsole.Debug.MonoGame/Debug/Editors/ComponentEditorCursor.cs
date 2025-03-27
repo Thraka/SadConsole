@@ -10,18 +10,8 @@ internal class ComponentEditorCursor : ISadComponentPanel
 {
     private Cursor _stateComponent;
     private IScreenObject _screenObject;
-
-    private bool _isEnabled;
-    private bool _isVisible;
-    private bool _printAppearanceMatchesHost;
-    private bool _printOnlyCharData;
-    private bool _printDisableAutoLineFeed;
-    private bool _disableWordBreak;
-
+    
     private ColoredGlyphBase _cursorAppearance;
-
-    private int _positionX;
-    private int _positionY;
 
     public void BuildUI(ImGuiRenderer renderer, ScreenObjectState state, IComponent component)
     {
@@ -31,28 +21,28 @@ internal class ComponentEditorCursor : ISadComponentPanel
             _screenObject = state.Object;
             _stateComponent = (Cursor)state.Object.SadComponents[state.ComponentsSelectedItem];
 
-            _printAppearanceMatchesHost = _stateComponent.PrintAppearanceMatchesHost;
-            _printOnlyCharData = _stateComponent.PrintOnlyCharacterData;
-            _printDisableAutoLineFeed = _stateComponent.DisablePrintAutomaticLineFeed;
-            _disableWordBreak = _stateComponent.DisableWordBreak;
-            _isEnabled = _stateComponent.IsEnabled;
-            _isVisible = _stateComponent.IsVisible;
-
             // Copy the render state of the cursor
             _cursorAppearance = new SadConsole.ColoredGlyph();
             _stateComponent.CursorRenderCell.CopyAppearanceTo(_cursorAppearance);
-
-            // Position
-            _positionX = _stateComponent.Position.X;
-            _positionY = _stateComponent.Position.Y;
+            
         }
+
+        bool printAppearanceMatchesHost = _stateComponent.PrintAppearanceMatchesHost;
+        bool printOnlyCharData = _stateComponent.PrintOnlyCharacterData;
+        bool printDisableAutoLineFeed = _stateComponent.DisablePrintAutomaticLineFeed;
+        bool disableWordBreak = _stateComponent.DisableWordBreak;
+        bool isEnabled = _stateComponent.IsEnabled;
+        bool isVisible = _stateComponent.IsVisible;
+
+        int positionX = _stateComponent.Position.X;
+        int positionY = _stateComponent.Position.Y;
 
         // Draw the ImGUI interface
         ImGui.BeginGroup();
         {
             // Print appearance
             ImGui.AlignTextToFramePadding();
-            if (ImGui.CollapsingHeader("Render Appearance"))
+            if (ImGui.CollapsingHeader("Render Appearance"u8))
             {
                 if (SettingsTable.BeginTable("cur_rend_appearance"))
                 {
@@ -61,6 +51,7 @@ internal class ComponentEditorCursor : ISadComponentPanel
                         SadRogue.Primitives.Color.White.ToVector4(),
                         SadRogue.Primitives.Color.Black.ToVector4(),
                         ((IScreenSurface)_screenObject).Font, ImGuiCore.Renderer);
+
                     // Something changed
                     if (glyphRef != _cursorAppearance)
                     {
@@ -73,14 +64,18 @@ internal class ComponentEditorCursor : ISadComponentPanel
 
                     SettingsTable.EndTable();
                 }
+
+                bool useRenderEffect = _stateComponent.ApplyCursorEffect;
+                if (ImGui.Checkbox("Apply Cursor Effect", ref useRenderEffect))
+                    _stateComponent.ApplyCursorEffect = useRenderEffect;
             }
 
-            if (ImGui.CollapsingHeader("Printing Behavior"))
+            if (ImGui.CollapsingHeader("Printing Behavior"u8))
             {
-                if (ImGui.Checkbox("Print appearance matches host?", ref _printAppearanceMatchesHost))
-                    _stateComponent.PrintAppearanceMatchesHost = _printAppearanceMatchesHost;
+                if (ImGui.Checkbox("Print appearance matches host?"u8, ref printAppearanceMatchesHost))
+                    _stateComponent.PrintAppearanceMatchesHost = printAppearanceMatchesHost;
 
-                ImGui.BeginDisabled(_printAppearanceMatchesHost);
+                ImGui.BeginDisabled(printAppearanceMatchesHost);
                 if (SettingsTable.BeginTable("cur_print_appearance"))
                 {
                     ImGuiTypes.ColoredGlyphReference glyphRef = _stateComponent.PrintAppearance;
@@ -101,32 +96,32 @@ internal class ComponentEditorCursor : ISadComponentPanel
 
                 ImGui.EndDisabled();
 
-                if (ImGui.Checkbox("Print only character data?", ref _printOnlyCharData))
-                    _stateComponent.PrintOnlyCharacterData = _printOnlyCharData;
-                if (ImGui.Checkbox("Disable printing automatic line feed?", ref _printDisableAutoLineFeed))
-                    _stateComponent.DisablePrintAutomaticLineFeed = _printDisableAutoLineFeed;
-                if (ImGui.Checkbox("Disable word break?", ref _disableWordBreak))
-                    _stateComponent.DisableWordBreak = _disableWordBreak;
-                if (ImGui.Checkbox("Is Enabled", ref _isEnabled))
-                    _stateComponent.IsEnabled = _isEnabled;
-                if (ImGui.Checkbox("Is Visible", ref _isVisible))
-                    _stateComponent.IsVisible = _isVisible;
+                if (ImGui.Checkbox("Print only character data?"u8, ref printOnlyCharData))
+                    _stateComponent.PrintOnlyCharacterData = printOnlyCharData;
+                if (ImGui.Checkbox("Disable printing automatic line feed?"u8, ref printDisableAutoLineFeed))
+                    _stateComponent.DisablePrintAutomaticLineFeed = printDisableAutoLineFeed;
+                if (ImGui.Checkbox("Disable word break?"u8, ref disableWordBreak))
+                    _stateComponent.DisableWordBreak = disableWordBreak;
+                if (ImGui.Checkbox("Is Enabled"u8, ref isEnabled))
+                    _stateComponent.IsEnabled = isEnabled;
+                if (ImGui.Checkbox("Is Visible"u8, ref isVisible))
+                    _stateComponent.IsVisible = isVisible;
             }
 
-            if (ImGui.CollapsingHeader("Settings", ImGuiTreeNodeFlags.DefaultOpen))
+            if (ImGui.CollapsingHeader("Settings"u8, ImGuiTreeNodeFlags.DefaultOpen))
             {
                 // Position
                 ImGui.AlignTextToFramePadding();
                 ImGui.BulletText($"Position X: {_stateComponent.Position.X} Y: {_stateComponent.Position.Y}");
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 10);
-                if (ImGui.Button("Change"))
-                    ImGui.OpenPopup("comp_cur_edit_position");
+                if (ImGui.Button("Change"u8))
+                    ImGui.OpenPopup("comp_cur_edit_position"u8);
             }
 
             // Popup for settings
-            if (ImGuiSC.XYEditPopup("comp_cur_edit_position", ref _positionX, ref _positionY, "X", "Y"))
-                _stateComponent.Position = (_positionX, _positionY);
+            if (ImGuiSC.XYEditPopup("comp_cur_edit_position", ref positionX, ref positionY, "X", "Y"))
+                _stateComponent.Position = (positionX, positionY);
 
             //else if (!ImGuiP.IsPopupOpen("comp_cur_edit_position"))
             //{

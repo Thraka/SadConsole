@@ -21,13 +21,10 @@ public class ComponentsPanel: ImGuiObjectBase
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
-        ImGuiSC.SeparatorText("Components", Debugger.Settings.Color_PanelHeader);
-        ImGui.Separator();
-
         if (CurrentScreenObject == null) return;
         if (CurrentScreenObject.Object.SadComponents.Count == 0)
         {
-            ImGui.Text("No components on object");
+            ImGui.Text("No components on object"u8);
             return;
         }
 
@@ -40,9 +37,7 @@ public class ComponentsPanel: ImGuiObjectBase
             ImGui.ListBox("##Components", ref CurrentScreenObject.ComponentsSelectedItem,
                           CurrentScreenObject.Components, CurrentScreenObject.Object.SadComponents.Count, 3);
 
-            ImGuiSC.SeparatorText($"{CurrentScreenObject.Components[CurrentScreenObject.ComponentsSelectedItem]} Settings", Debugger.Settings.Color_PanelHeader);
-
-            ImGui.Separator();
+            ImGui.SeparatorText($"{CurrentScreenObject.Components[CurrentScreenObject.ComponentsSelectedItem]} Settings");
 
             ///////
             // Custom editors
@@ -53,7 +48,7 @@ public class ComponentsPanel: ImGuiObjectBase
                 panel.BuildUI(renderer, CurrentScreenObject, CurrentScreenObject.Object.SadComponents[CurrentScreenObject.ComponentsSelectedItem]);
 
             else
-                ImGui.Text("No editor associated with this component");
+                ImGui.Text("No editor associated with this component"u8);
         }
     }
 }

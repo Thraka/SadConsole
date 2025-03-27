@@ -70,7 +70,8 @@ public static partial class Debugger
 
         ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.WindowConsolePanel());
         ComponentsPanel.RegisteredPanels.Add(typeof(Components.Cursor), new Editors.ComponentEditorCursor());
-        //ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
+        ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
+        ComponentsPanel.RegisteredPanels.Add(typeof(UI.ControlHost), new Editors.ComponentEditorControlHost());
 
         ImGuiCore.ImGuiComponent.Update(new GameTime());
         Game.Instance.MonoGameInstance.Components.Add(ImGuiCore.ImGuiComponent);

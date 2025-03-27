@@ -12,6 +12,7 @@ public class ScreenObjectState
     public int Identifier;
     public bool Found;
     public IScreenObject Object;
+    public string ObjectName;
 
     public int PositionX;
     public int PositionY;
@@ -56,11 +57,12 @@ public class ScreenObjectState
 
         IsScreenSurface = Object is IScreenSurface;
         IsWindow = Object is UI.Window;
+        ObjectName = Object.GetDebuggerDisplayValue();
 
         RefreshComponents();
 
-        if (IsScreenSurface) SurfaceState.Refresh(Object as IScreenSurface);
-        if (IsWindow) WindowState.Refresh(Object as UI.Window);
+        if (IsScreenSurface) SurfaceState.Refresh((IScreenSurface)Object);
+        if (IsWindow) WindowState.Refresh((UI.Window)Object);
     }
 
     public void RefreshComponents()

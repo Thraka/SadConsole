@@ -4,5 +4,5 @@ namespace SadConsole.Debug.Editors;
 
 public interface IScreenObjectPanel
 {
-    void BuildUI(ImGuiRenderer renderer, ScreenObjectState state);
+    void BuildTabItem(ImGuiRenderer renderer, ScreenObjectState state);
 }
