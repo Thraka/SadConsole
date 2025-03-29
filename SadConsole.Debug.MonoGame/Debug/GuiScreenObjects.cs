@@ -6,7 +6,7 @@ using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
-class GuiScreenObjects : ImGuiObjectBase
+public class GuiScreenObjects : ImGuiObjectBase
 {
     private float f = 0.0f;
     private bool _toggle_screenObj_doDraw;

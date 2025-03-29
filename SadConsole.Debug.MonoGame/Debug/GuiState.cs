@@ -2,7 +2,7 @@
 
 namespace SadConsole.Debug;
 
-static class GuiState
+public static class GuiState
 {
     public static IScreenObject? _selectedScreenObject;
     public static ScreenObjectState? _selectedScreenObjectState;

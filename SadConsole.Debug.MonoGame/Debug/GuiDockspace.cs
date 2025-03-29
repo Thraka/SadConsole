@@ -4,11 +4,11 @@ using Hexa.NET.ImGui;
 
 namespace SadConsole.Debug;
 
-class GuiDockspace : ImGuiObjectBase
+public class GuiDockspace : ImGuiObjectBase
 {
     public const string ID_LEFT_PANEL = "Scene##LeftPanel";
-    public const string ID_RIGHT_PANEL = "Previews##RightPanel";
-    public const string ID_CENTER_PANEL = "Extras##CenterPanel";
+    public const string ID_CENTER_PANEL = "Previews##RightPanel";
+    public const string ID_RIGHT_PANEL = "Extras##CenterPanel";
 
     public static ImGuiWindowClass NoTabBarDock;
     public static ImGuiWindowClass AutoHideTabBar;

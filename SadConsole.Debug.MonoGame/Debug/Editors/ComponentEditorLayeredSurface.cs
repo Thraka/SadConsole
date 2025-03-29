@@ -1,11 +1,10 @@
-﻿using System.Numerics;
-using Hexa.NET.ImGui;
+﻿using Hexa.NET.ImGui;
 using SadConsole.Components;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.Editors;
 
-internal class ComponentEditorLayeredSurface : ISadComponentPanel
+public class ComponentEditorLayeredSurface : ISadComponentPanel
 {
     private LayeredSurface _stateComponent;
     private IScreenObject _screenObject;

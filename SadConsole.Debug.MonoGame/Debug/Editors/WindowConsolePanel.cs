@@ -4,7 +4,7 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.Editors;
 
-internal class WindowConsolePanel : IScreenObjectPanel
+public class ScreenObjectEditorWindowConsole : IScreenObjectPanel
 {
     public void BuildTabItem(ImGuiRenderer renderer, ScreenObjectState state)
     {

@@ -7,7 +7,7 @@ using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
-class GuiPreviews : ImGuiObjectBase
+public class GuiPreviews : ImGuiObjectBase
 {
     private int _scOutputMode = ModeNormal;
     private int _surfaceOutputMode = ModeNormal;

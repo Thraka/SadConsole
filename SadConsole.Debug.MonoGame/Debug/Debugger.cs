@@ -68,7 +68,7 @@ public static partial class Debugger
         ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiScreenObjects());
         ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiPreviews());
 
-        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.WindowConsolePanel());
+        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.ScreenObjectEditorWindowConsole());
         ComponentsPanel.RegisteredPanels.Add(typeof(Components.Cursor), new Editors.ComponentEditorCursor());
         ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
         ComponentsPanel.RegisteredPanels.Add(typeof(UI.ControlHost), new Editors.ComponentEditorControlHost());

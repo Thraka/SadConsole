@@ -6,7 +6,7 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Debug.Editors;
 
-internal class ComponentEditorCursor : ISadComponentPanel
+public class ComponentEditorCursor : ISadComponentPanel
 {
     private Cursor _stateComponent;
     private IScreenObject _screenObject;
