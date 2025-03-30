@@ -95,7 +95,7 @@ public class GuiDocumentsHost: ImGuiObjectBase
 
                     // Handle selected tool
                     if (Core.State.Tools.IsItemSelected())
-                        Core.State.Tools.SelectedItem.MouseOver(document, hoveredCellPosition, isHovered, isActive);
+                        Core.State.Tools.SelectedItem.Process(document, hoveredCellPosition, isHovered, isActive);
 
                     // Handle scrolling the surface if it's required
                     Rectangle view = document.EditingSurface.Surface.View;

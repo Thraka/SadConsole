@@ -41,7 +41,7 @@ public abstract partial class Document : ITitle
 
     public bool IsDirty => EditingSurface.IsDirty || VisualTool.IsDirty;
 
-    public ITool[] Tools = [new Info(), new Empty(), new Pencil(), new Recolor(), new Line(), new Box(), new Circle(), new Operations(), new Fill()];
+    public ITool[] Tools = [new Info(), new Pencil(), new Empty(), new Recolor(), new Text(), new Line(), new Box(), new Circle(), new Fill(), new Selection(), new Operations()];
 
 
     protected ImGuiGuardedValue<int> _width;
@@ -57,7 +57,7 @@ public abstract partial class Document : ITitle
         EditingSurfaceFontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
         EditorFontSize = EditingSurfaceFontSize;
         VisualTool = new LayeredScreenSurface(1, 1);
-        VisualLayerToolLower = VisualTool.Layers.Create();
+        VisualLayerToolLower = (CellSurface)VisualTool.Layers[0];
         VisualLayerToolUpper = VisualTool.Layers.Create();
     }
 
@@ -70,7 +70,14 @@ public abstract partial class Document : ITitle
 
         Core.State.SyncEditorPalette();
     }
-    public virtual void OnDeselected() { }
+
+    public virtual void OnDeselected()
+    {
+        if (Core.State.Tools.IsItemSelected())
+            Core.State.Tools.SelectedItem.OnDeselected(this);
+
+        Core.State.Tools.Objects.Clear();
+    }
 
     public virtual void Resync()
     {
@@ -147,7 +154,7 @@ public abstract partial class Document : ITitle
         Palette.Save(file);
     }
 
-    protected static string GenerateName(string prefix) =>
+    public static string GenerateName(string prefix) =>
         $"{prefix}|{GenerateCharacterId()}";
 
     protected static string GenerateCharacterId()

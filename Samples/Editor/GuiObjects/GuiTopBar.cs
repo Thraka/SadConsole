@@ -44,7 +44,7 @@ public class GuiTopBar : ImGuiObjectBase
                             if (window.SelectedLoader.Load(window.SelectedFile.FullName) is Document document)
                             {
                                 Core.State.Documents.Objects.Add(document);
-                                Core.State.Documents.SelectedItemIndex = Core.State.Documents.Objects.Count - 1;
+                                //Core.State.Documents.SelectedItemIndex = Core.State.Documents.Objects.Count - 1;
                             }
                         }
                     };

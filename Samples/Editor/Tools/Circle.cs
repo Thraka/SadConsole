@@ -114,7 +114,7 @@ internal class Circle : ITool
         }
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
+    public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
         if (!isHovered) return;
 

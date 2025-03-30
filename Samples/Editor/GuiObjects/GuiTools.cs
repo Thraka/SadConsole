@@ -12,7 +12,7 @@ public class GuiToolsList: ImGuiObjectBase
         ImGuiGuardedValue<int> _itemIndex = new(Core.State.Tools.SelectedItemIndex);
         ImGui.SetNextItemWidth(-1);
         if (ImGui.ListBox("##tools", ref _itemIndex.CurrentValue,
-                Core.State.Tools.Names, Core.State.Tools.Count, 8))
+                Core.State.Tools.Names, Core.State.Tools.Count, Core.State.Tools.Count))
         {
             if (_itemIndex.IsChanged() && _itemIndex.OriginalValue != -1)
                 Core.State.Tools.Objects[_itemIndex.OriginalValue].OnDeselected(Core.State.Documents.SelectedItem);

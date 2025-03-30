@@ -65,7 +65,7 @@ internal class Operations : ITool
         ImGuiSC.EndGroupPanel();
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
+    public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
 
     }

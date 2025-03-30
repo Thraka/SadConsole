@@ -9,7 +9,7 @@ public interface ITool: ITitle
 
     void BuildSettingsPanel(Document document);
 
-    void MouseOver(Document document, Point hoveredCellPosition, bool isHovered, bool isActive);
+    void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive);
 
     void OnSelected(Document document);
 
