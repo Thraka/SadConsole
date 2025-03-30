@@ -170,10 +170,8 @@ public sealed partial class Game : GameHost
         _configuration.Configs.Remove(windowConfig);
         ((IConfigurator)windowConfig).Run(_configuration, this);
 
-#if !WPF
         Global.GraphicsDeviceManager.PreferredBackBufferWidth = windowConfig.WindowWidthInPixels;
         Global.GraphicsDeviceManager.PreferredBackBufferHeight = windowConfig.WindowHeightInPixels;
-#endif
         Settings.Rendering.RenderWidth = windowConfig.GameResolutionWidthInPixels;
         Settings.Rendering.RenderHeight = windowConfig.GameResolutionHeightInPixels;
 
