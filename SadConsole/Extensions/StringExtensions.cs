@@ -65,6 +65,10 @@ public static class StringExtensions
         return adjustedText;
     }
 
+    [Obsolete($"Use the {nameof(ToColoredString)} extension method instead.")]
+    public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null) =>
+        ToColoredString(value, foreground, background, mirror, decorators);
+
     /// <summary>
     /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground and background, setting the ignore properties if needed.
     /// </summary>
@@ -73,8 +77,8 @@ public static class StringExtensions
     /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
     /// <param name="mirror">The mirror setting. If null, <see cref="ColoredString.IgnoreMirror"/> will be set.</param>
     /// <param name="decorators">The decorators setting. If null, <see cref="ColoredString.IgnoreDecorators"/> will be set.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-    public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null)
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
+    public static ColoredString ToColoredString(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null)
     {
         ColoredString returnValue = new ColoredString(value);
 
@@ -105,14 +109,23 @@ public static class StringExtensions
         return returnValue;
     }
 
+    [Obsolete($"Use the {nameof(ToGradient)} extension method instead.")]
+    public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground) =>
+        ToGradient(value, startingForeground, endingForeground);
+
+    [Obsolete($"Use the {nameof(ToGradient)} extension method instead.")]
+    public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground) =>
+        ToGradient(value, startingForeground, endingForeground, startingBackground, endingBackground);
+
+
     /// <summary>
     /// Creates a <see cref="ColoredString"/> object from an existing string with the specified foreground gradient and cell effect. 
     /// </summary>
     /// <param name="value">The current string.</param>
     /// <param name="startingForeground">The starting foreground color to blend.</param>
     /// <param name="endingForeground">The ending foreground color to blend.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-    public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground)
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
+    public static ColoredString ToGradient(this string value, Color startingForeground, Color endingForeground)
     {
         ColoredString newString = new ColoredString(value);
 
@@ -133,8 +146,8 @@ public static class StringExtensions
     /// <param name="endingForeground">The ending foreground color to blend.</param>
     /// <param name="startingBackground">The starting background color to blend.</param>
     /// <param name="endingBackground">The ending background color to blend.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
-    public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground)
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
+    public static ColoredString ToGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground)
     {
         ColoredString newString = new ColoredString(value);
 
