@@ -67,7 +67,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer, IRendererMonoGam
     /// <inheritdoc/>
     public bool IsForced { get; set; }
 
-    List<IRenderStep> IRenderer.Steps { get; set; } = null;
+    List<IRenderStep> IRenderer.Steps { get; set; } = new();
 
     /// <inheritdoc/>
     public XnaRectangle[] CachedRenderRects { get; private set; }

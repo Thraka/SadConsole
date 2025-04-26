@@ -57,7 +57,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     public bool IsForced { get; set; }
 
     /// <inheritdoc/>
-    List<IRenderStep> IRenderer.Steps { get; set; } = null;
+    List<IRenderStep> IRenderer.Steps { get; set; } = new();
 
     /// <summary>
     /// Cached set of rectangles used in rendering each cell.
