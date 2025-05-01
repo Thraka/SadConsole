@@ -159,6 +159,23 @@
         <member name="M:SadConsole.Components.DebugMouseTint.Run(System.TimeSpan)">
             <inheritdoc />
         </member>
+        <member name="T:SadConsole.Components.MouseDragViewPort">
+            <summary>
+            Enables dragging a scrollable surface around by mouse.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.MouseDragViewPort.IsEnabled">
+            <summary>
+            When true, enables this component.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.MouseDragViewPort.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+            <exception cref="T:System.Exception">Raised when the host this component is added to doesn't implement <see cref="T:SadConsole.IScreenSurface"/>.</exception>
+        </member>
+        <member name="M:SadConsole.Components.MouseDragViewPort.ProcessMouse(SadConsole.IScreenObject,SadConsole.Input.MouseScreenObjectState,System.Boolean@)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Components.MoveViewPortKeyboardHandler">
             <summary>
             Moves the view of an <see cref="T:SadConsole.IScreenSurface"/> with a set of specified keyboard keys.

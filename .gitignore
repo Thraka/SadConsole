@@ -232,3 +232,5 @@ pip-log.txt
 releases/
 nuget/
 .vscode/
+/Fonts/MRMOTEXTEX_dont_check_in.zip
+/.idea

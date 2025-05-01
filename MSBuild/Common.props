@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="Nuget.props" />
+
   <PropertyGroup>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
@@ -12,27 +14,12 @@
     <SadConsole_Host_FNA_Version>10.5.0</SadConsole_Host_FNA_Version>
     <SadConsole_Debug_MonoGame_Version>10.5.0</SadConsole_Debug_MonoGame_Version>
 
-    <!-- Author information -->
-    <Authors>Thraka</Authors>
-    <Company>SadLogic</Company>
-    <Copyright>Copyright © 2024 Steve De George JR (Thraka)</Copyright>
-    <NeutralLanguage>en-US</NeutralLanguage>
-
     <!-- Build settings that ensure source/symbols included -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-
-    <!-- NuGet stuff -->
-    <PackageIcon>nugeticon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Debug versioning -->
     <SadConsole_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Version)-debug</SadConsole_Version>

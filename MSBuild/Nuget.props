@@ -1,0 +1,22 @@
+<Project>
+  
+  <PropertyGroup>
+
+    <!-- Author information -->
+    <Authors>Thraka</Authors>
+    <Company>SadLogic</Company>
+    <Copyright>Copyright © 2025 Steve De George JR (Thraka)</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <!-- NuGet stuff -->
+    <PackageIcon>nugeticon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/SadConsole/SadConsole</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>http://sadconsole.com/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+  </PropertyGroup>
+
+</Project>
