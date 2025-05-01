@@ -36,11 +36,12 @@ internal class Pencil : ITool
         if (supportsObjects)
         {
             ImGui.AlignTextToFramePadding();
-            ImGui.Text("Mode");
+            ImGui.Text("Mode"u8);
             ImGui.SameLine();
             ImGui.Combo("##toolmode", ref _modes.SelectedItemIndex, _modes.Names, _modes.Count);
         }
 
+        // Normal settings
         if (_modes.SelectedItemIndex == 0 || !supportsObjects)
         {
             ImGuiSC.BeginGroupPanel("Settings");
@@ -69,6 +70,8 @@ internal class Pencil : ITool
 
             ImGuiSC.EndGroupPanel();
         }
+
+        // Objects
         else
         {
             IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
@@ -86,21 +89,14 @@ internal class Pencil : ITool
 
             if (isItemSelected)
             {
+                ImGui.SeparatorText("Selected Object"u8);
+
                 ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
                     document.EditingSurfaceFont,
                     docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
                 ImGui.SameLine();
                 ImGui.Text(docSimpleObjects.SimpleObjects.SelectedItem!.ToString());
                 SharedToolSettings.Tip = (ColoredGlyph)docSimpleObjects.SimpleObjects.SelectedItem.Visual.Clone();
-            }
-
-            if (isItemSelected)
-            {
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
-                    document.EditingSurfaceFont,
-                    docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
-
-                ImGui.SameLine();
             }
         }
     }

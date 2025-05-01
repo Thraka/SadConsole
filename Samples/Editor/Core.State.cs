@@ -16,7 +16,7 @@ public static partial class Core
 
         static State()
         {
-
+            LoadBlueprints();
         }
 
         public static GuiTopBar GuiTopBar = new();
@@ -29,6 +29,30 @@ public static partial class Core
         public static ImGuiList<Tools.ITool> Tools = new();
 
         public static EditorPalette Palette = new();
+
+        public static ImGuiList<Blueprint> Blueprints = new();
+
+        public static void LoadBlueprints()
+        {
+            List<Blueprint> blueprints = new();
+
+            foreach (string file in Directory.GetFiles(Core.Settings.BlueprintFolder))
+            {
+                try
+                {
+                    using BinaryReader reader = new(File.OpenRead(file));
+
+                    string name = reader.ReadString();
+
+                    blueprints.Add(new Blueprint(name, file));
+                }
+                catch
+                {
+                }
+            }
+
+            Blueprints = new ImGuiList<Blueprint>(blueprints);
+        }
 
         public static void SyncEditorPalette()
         {

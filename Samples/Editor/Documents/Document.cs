@@ -50,7 +50,6 @@ public abstract partial class Document : ITitle
     public bool HasPalette = false;
     public EditorPalette Palette = new();
 
-
     protected Document()
     {
         EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;
@@ -64,7 +63,7 @@ public abstract partial class Document : ITitle
     public virtual void OnSelected()
     {
         Core.State.Tools.Objects.Clear();
-
+        
         foreach (var tool in Tools)
             Core.State.Tools.Objects.Add(tool);
 
@@ -75,7 +74,7 @@ public abstract partial class Document : ITitle
     {
         if (Core.State.Tools.IsItemSelected())
             Core.State.Tools.SelectedItem.OnDeselected(this);
-
+        
         Core.State.Tools.Objects.Clear();
     }
 

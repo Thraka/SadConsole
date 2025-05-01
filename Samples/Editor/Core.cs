@@ -14,6 +14,8 @@ public static partial class Core
         public string Font = "0xProtoNerdFont-Regular.ttf";
         public float UIScale = 1f;
 
+        public string BlueprintFolder = "blueprints";
+
         public int WindowNewDocWidthFactor = 22;
         public int WindowSimpleObjectEditor = 40;
         public int WindowGlyphEditor = 20;

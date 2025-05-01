@@ -1,9 +1,8 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
 
 namespace SadConsole.Editor.Tools;
 
@@ -14,6 +13,9 @@ internal class Selection : ITool
     private ShapeParameters _selectionBoxShape;
     private CellSurface _selectionSurface;
     private States _state = States.None;
+    string _saveBlueprintFileName = string.Empty;
+    string _saveBlueprintName = string.Empty;
+    bool _pasteIgnoreEmpty = false;
 
     public string Title => "\uefa4 Selection\\Blueprints";
 
@@ -36,14 +38,35 @@ internal class Selection : ITool
     {
         ImGui.SeparatorText(Title);
 
-        ScreenSurface surface = document.EditingSurface;
+        ImGui.Checkbox("Ignore empty cells on paste"u8, ref _pasteIgnoreEmpty);
+
+        ImGui.BeginDisabled(Core.State.Blueprints.Count == 0);
+        if (ImGui.Button("Import"u8))
+        {
+            BlueprintImport? window = new();
+            window.Open();
+            window.Closed += (sender, e) =>
+            {
+                if (window.DialogResult)
+                {
+                    CancelPaste(document, false);
+                    _selectionSurface = Core.State.Blueprints.SelectedItem!.GetSurface();
+                    _state = States.Pasting;
+
+                    window = null;
+                }
+            };
+        }
+        ImGui.EndDisabled();
     }
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
+        
 
         if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
         {
+            bool _createBlueprint = false;
             if (ImGui.Selectable("Move"u8))
             {
                 CopySurface(document);
@@ -74,6 +97,15 @@ internal class Selection : ITool
                 ImGui.CloseCurrentPopup();
             }
 
+            if (ImGui.Selectable("Create Blueprint"u8))
+            {
+                _saveBlueprintFileName = string.Empty;
+                _saveBlueprintName = string.Empty;
+                CopySurface(document);
+                ImGui.CloseCurrentPopup();
+                _createBlueprint = true;
+            }
+
             ImGui.Separator();
             if (ImGui.Selectable("Erase"u8))
             {
@@ -92,7 +124,49 @@ internal class Selection : ITool
             }
 
             ImGui.EndPopup();
+
+            if (_createBlueprint)
+                ImGui.OpenPopup("create_blueprint"u8);
+
             return;
+        }
+
+        if (ImGui.BeginPopupModal("create_blueprint"u8))
+        {
+            ImGui.SetNextItemWidth(400);
+
+            ImGui.InputText("Name"u8, ref _saveBlueprintName, 50);
+            ImGui.InputText("Filename"u8, ref _saveBlueprintFileName, 50);
+
+            bool fileExists = File.Exists(System.IO.Path.Combine(Core.Settings.BlueprintFolder, _saveBlueprintFileName));
+
+            if (fileExists)
+            {
+                ImGui.TextColored(Color.Red.ToVector4(), "File already exists. Delete?"u8);
+                if (ImGui.Button("Delete"u8))
+                {
+                    File.Delete(System.IO.Path.Combine(Core.Settings.BlueprintFolder, _saveBlueprintFileName));
+                }
+            }
+
+            bool disableAccept = string.IsNullOrEmpty(_saveBlueprintFileName.Trim()) || string.IsNullOrEmpty(_saveBlueprintName.Trim()) || fileExists;
+
+            if (ImGuiWindowBase.DrawButtons(out bool savedClicked, disableAccept))
+            {
+                if (savedClicked)
+                {
+                    Blueprint.CreateAndSave(_saveBlueprintName, Path.Combine(Core.Settings.BlueprintFolder, _saveBlueprintFileName), _selectionSurface);
+                }
+
+                _saveBlueprintFileName = string.Empty;
+                _saveBlueprintName = string.Empty;
+
+                Core.State.LoadBlueprints();
+
+                ImGui.CloseCurrentPopup();
+            }
+
+            ImGui.EndPopup();
         }
 
         if (!isHovered) return;
@@ -117,9 +191,32 @@ internal class Selection : ITool
             if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 Point pos = hoveredCellPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2);
-                _selectionSurface.Copy(document.EditingSurface.Surface, pos.X, pos.Y);
 
-                if (_state == States.Pasting)
+                // Do copy
+                for (int curX = 0; curX < _selectionSurface.Surface.Width; curX++)
+                {
+                    for (int curY = 0; curY < _selectionSurface.Surface.Height; curY++)
+                    {
+                        ColoredGlyphBase cell = _selectionSurface.Surface[curX, curY];
+                        bool cancelCopy = _pasteIgnoreEmpty &&
+                                          cell.Foreground == _selectionSurface.DefaultForeground &&
+                                          cell.Background == _selectionSurface.DefaultBackground &&
+                                          cell.Glyph == _selectionSurface.DefaultGlyph &&
+                                          cell.Decorators != null && cell.Decorators.Count == 0;
+
+                        if (_selectionSurface.IsValidCell(curX, curY, out int sourceIndex) &&
+                            document.EditingSurface.Surface.IsValidCell(pos.X + curX, pos.Y + curY, out int destIndex))
+                        {
+                            _selectionSurface.Surface[sourceIndex].CopyAppearanceTo(document.EditingSurface.Surface[destIndex]);
+                        }
+                    }
+                }
+
+                
+
+                document.EditingSurface.Surface.IsDirty = true;
+
+                if (_state == States.PastingMultiple)
                 {
                     CancelPaste(document, false);
                 }
@@ -140,7 +237,7 @@ internal class Selection : ITool
                 _selectionSurface.Copy(document.VisualLayerToolLower.Surface, pos.X, pos.Y);
                 document.VisualLayerToolUpper.Surface.DrawBox(new Rectangle(pos.X, pos.Y, _selectionSurface.Width, _selectionSurface.Height),
                                                                             _selectionBoxShape);
-                document.VisualLayerToolUpper.Surface.Print(0, 0, pos.ToString());
+                //document.VisualLayerToolUpper.Surface.Print(0, 0, pos.ToString());
             }
 
             return;
@@ -183,10 +280,10 @@ internal class Selection : ITool
                                        new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y)));
 
         _selectionSurface = new(selectionArea.Width, selectionArea.Height);
-
+        
         document.EditingSurface.Surface.Copy(selectionArea, _selectionSurface, 0, 0);
 
-        DocumentSurface doc = new DocumentSurface(_selectionSurface);
+        DocumentSurface doc = new(_selectionSurface);
         doc.EditingSurfaceFont = document.EditingSurfaceFont;
         doc.EditingSurfaceFontSize = document.EditingSurfaceFontSize;
         doc.EditorFontSize = document.EditorFontSize;
@@ -214,6 +311,9 @@ internal class Selection : ITool
                                        new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y)));
 
         _selectionSurface = new(selectionArea.Width, selectionArea.Height);
+        _selectionSurface.DefaultForeground = document.EditingSurface.Surface.DefaultForeground;
+        _selectionSurface.DefaultBackground = document.EditingSurface.Surface.DefaultBackground;
+        _selectionSurface.DefaultGlyph = document.EditingSurface.Surface.DefaultGlyph;
 
         document.EditingSurface.Surface.Copy(selectionArea, _selectionSurface, 0, 0);
     }

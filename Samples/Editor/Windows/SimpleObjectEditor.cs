@@ -38,7 +38,7 @@ public class SimpleObjectEditor : ImGuiWindowBase
             ImGui.OpenPopup(Title);
 
             ImGuiSC.CenterNextWindow();
-            ImGui.SetNextWindowSize(new System.Numerics.Vector2(Core.Settings.WindowSimpleObjectEditor * ImGui.GetFontSize(), -1));
+            ImGui.SetNextWindowSize(new Vector2(Core.Settings.WindowSimpleObjectEditor * ImGui.GetFontSize(), -1));
             if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
                 ImGui.Columns(2);
