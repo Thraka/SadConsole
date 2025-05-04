@@ -139,7 +139,5 @@ public partial class ProgressBar
 
             Surface.Fill(fillRect, foregroundAppearance.Foreground, foregroundAppearance.Background, BarGlyph);
         }
-
-        IsDirty = false;
     }
 }

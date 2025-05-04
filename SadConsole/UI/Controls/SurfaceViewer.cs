@@ -102,7 +102,6 @@ public class SurfaceViewer : CompositeControl
         Surface.Clear();
 
         IsDirty = true;
-        Surface.IsDirty = true;
     }
 
     /// <summary>
@@ -199,8 +198,6 @@ public class SurfaceViewer : CompositeControl
         }
 
         base.UpdateAndRedraw(time);
-
-        Surface.IsDirty = false;
     }
 
     private void _surface_IsDirtyChanged(object? sender, EventArgs e)

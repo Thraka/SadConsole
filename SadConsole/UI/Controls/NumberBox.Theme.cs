@@ -49,7 +49,7 @@ public partial class NumberBox
         if (Surface.Effects.Count != 0)
         {
             Surface.Effects.UpdateEffects(time);
-            IsDirty = true;
+            IsDirty = IsDirty || Surface.IsDirty;
         }
 
         if (!IsDirty) return;
@@ -129,8 +129,6 @@ public partial class NumberBox
                 Surface[^2].Foreground = normal.Foreground;
                 Surface[^2].Background = normal.Background;
             }
-
-            IsDirty = true;
         }
         else
         {
@@ -174,8 +172,6 @@ public partial class NumberBox
                 else
                     Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
             }
-
-            IsDirty = false;
 
             _oldState = State;
         }

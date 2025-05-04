@@ -50,6 +50,5 @@ public class DrawingArea : ControlBase
             Appearance = ThemeState.Normal;
 
         OnDraw?.Invoke(this, time);
-        IsDirty = false;
     }
 }

@@ -196,6 +196,7 @@ public abstract class ControlBase
             if (value != _isDirty)
             {
                 _isDirty = value;
+                Surface.IsDirty = value;
                 OnIsDirtyChanged();
             }
         }
@@ -348,7 +349,7 @@ public abstract class ControlBase
         Width = width;
         Height = height;
         CanResize = true;
-        IsDirty = true;
+        _isDirty = true;
         TabStop = true;
         IsVisible = true;
         FocusOnMouseClick = true;

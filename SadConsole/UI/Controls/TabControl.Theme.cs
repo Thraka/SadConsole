@@ -190,8 +190,6 @@ public partial class TabControl
                         break;
                 }
             }
-
-            IsDirty = false;
         }
 
         base.UpdateAndRedraw(time);

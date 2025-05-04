@@ -105,10 +105,8 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <param name="container">The container.</param>
     /// <param name="renderer">The renderer used with this step.</param>
     /// <param name="screenObject">The screen surface with font information.</param>
-    protected void ProcessContainer(UI.Controls.IContainer container, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
+    private void ProcessContainer(UI.Controls.IContainer container, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
     {
-        UI.Controls.ControlBase control;
-
         /*
          * Temp code to clip drawing controls to the containers region. Prevents controls bleeding outside their container.
          * However, this code is useless until the mouse input is updated to account for the container. So probably
@@ -131,13 +129,17 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
 
         for (int i = 0; i < container.Count; i++)
         {
-            control = container[i];
+            ControlBase control = container[i];
 
-            if (!control.IsVisible) continue;
+            if (!control.IsVisible)
+                continue;
+
             RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View);
 
             if (control is UI.Controls.IContainer childContainer)
                 ProcessContainer(childContainer, renderer, screenObject);
+
+            control.IsDirty = false;
         }
     }
 

@@ -127,8 +127,6 @@ public partial class Panel
                     Surface.DrawLine(new Point(1, Surface.Height - 1), new Point(Width - 1, Surface.Height - 1), null, bottomrightcolor, Appearance.Background);
                 }
             }
-
-            IsDirty = false;
         }
 
         // Draw the children controls

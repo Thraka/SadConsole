@@ -41,7 +41,7 @@ public class Button : ButtonBase
     public Button(int width, int height = 1)
         : base(width, height)
     {
-        
+
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class Button : ButtonBase
             appearance.Glyph, null);
 
         int width = AutoSize ? Surface.Width : Width;
-        
+
         if (ShowEnds && width >= 3)
         {
             Surface.Print(1, middle, Text.Align(TextAlignment, width - 2));
@@ -98,8 +98,6 @@ public class Button : ButtonBase
         }
         else
             Surface.Print(0, middle, Text.Align(TextAlignment, width));
-
-        IsDirty = false;
     }
 
     /// <summary>
