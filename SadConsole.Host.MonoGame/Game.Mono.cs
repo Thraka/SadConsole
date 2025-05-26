@@ -35,8 +35,8 @@ public sealed partial class Game : GameHost
     /// </summary>
     private bool _handleResizeNone;
 
-    private Host.Mouse _mouseState = new Host.Mouse();
-    private Host.Keyboard _keyboardState = new Host.Keyboard();
+    private Mouse _mouseState = new();
+    private Keyboard _keyboardState = new();
 
     /// <summary>
     /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
@@ -102,7 +102,7 @@ public sealed partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .ConfigureFonts(font)
                 .OnStart(gameStarted)

@@ -4326,7 +4326,7 @@
             <param name="background">The background color. If null, <see cref="P:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
             <param name="mirror">The mirror setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
             <param name="decorators">The decorators setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreDecorators"/> will be set.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
@@ -4335,7 +4335,7 @@
             <param name="value">The current string.</param>
             <param name="startingForeground">The starting foreground color to blend.</param>
             <param name="endingForeground">The ending foreground color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
@@ -4346,7 +4346,7 @@
             <param name="endingForeground">The ending foreground color to blend.</param>
             <param name="startingBackground">The starting background color to blend.</param>
             <param name="endingBackground">The ending background color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.WordWrap(System.String,System.Int32)">
             <summary>
@@ -9144,6 +9144,11 @@
             The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface"/>.
             </summary>
         </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.OptimizedScreenSurface">
+            <summary>
+            The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface"/> that doesn't use any steps, it directly renders the surface to a cached texture.
+            </summary>
+        </member>
         <member name="F:SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface">
             <summary>
             The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface"/>.
@@ -10341,6 +10346,11 @@
         <member name="F:SadConsole.Settings.DoFinalDraw">
             <summary>
             When true, indicates that any game framework should render a composed image, of all consoles, to the screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Settings.DoGraphicsDeviceClear">
+            <summary>
+            When true, clears the graphics device before final draw.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
@@ -12471,18 +12481,15 @@
             Create each control and add it to <see cref="F:SadConsole.UI.Controls.CompositeControl.Controls"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.CompositeControl.IsDirtyEventHandler(System.Boolean)">
-            <summary>
-            A handler to forward state to <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/>.
-            </summary>
-            <param name="value"></param>
-        </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
             Processes the mouse on each control hosted by this control.
             </summary>
             <param name="state">The mouse state based on the parent screen object.</param>
             <returns><see langword="true"/> when a control processes the mouse; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)">
             <summary>

@@ -23,6 +23,6 @@ public class StartingConsoleConfig : IConfigurator
     {
         game.StartingConsole = new Console(game.ScreenCellsX, game.ScreenCellsY);
         game.Screen = game.StartingConsole;
-        game.Screen!.IsFocused = true;
+        game.Screen.IsFocused = true;
     }
 }

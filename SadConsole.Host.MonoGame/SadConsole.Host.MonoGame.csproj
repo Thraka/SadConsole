@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Host_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Host</AssemblyTitle>
@@ -27,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 

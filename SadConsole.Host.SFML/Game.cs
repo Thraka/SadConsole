@@ -54,7 +54,7 @@ public sealed partial class Game : GameHost
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     public static void Create(int cellCountX, int cellCountY) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts()
@@ -68,7 +68,7 @@ public sealed partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts()
@@ -84,7 +84,7 @@ public sealed partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts(font)
@@ -131,7 +131,7 @@ public sealed partial class Game : GameHost
 
         // Load screen size and window
         ConfigureWindowConfig windowConfig = _configuration.Configs.OfType<ConfigureWindowConfig>().FirstOrDefault()
-                                             ?? throw new Exception("The starting window or screen hasn't been configured.");
+            ?? throw new Exception("The starting window or screen hasn't been configured.");
 
         _configuration.Configs.Remove(windowConfig);
         ((IConfigurator)windowConfig).Run(_configuration, this);
@@ -271,8 +271,6 @@ public sealed partial class Game : GameHost
             // Draw game loop part
             if (Settings.DoDraw)
             {
-                Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
-
                 // Clear draw calls for next run
                 Instance.DrawCalls.Clear();
 
@@ -296,6 +294,7 @@ public sealed partial class Game : GameHost
                 // If we're going to draw to the screen, do it.
                 if (Settings.DoFinalDraw)
                 {
+                    Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
                     Global.SharedSpriteBatch.Reset(Global.GraphicsDevice, Host.Settings.SFMLScreenBlendMode, Transform.Identity, Host.Settings.SFMLScreenShader);
                     Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
                     Global.SharedSpriteBatch.End();

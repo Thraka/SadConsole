@@ -81,7 +81,7 @@ public partial class Game : Microsoft.Xna.Framework.Game
     }
 
     /// <inheritdoc/>
-    protected override void Initialize()
+    protected override void Initialize()    
     {
         // Window title
         Window.Title = SadConsole.Settings.WindowTitle;
@@ -91,10 +91,8 @@ public partial class Game : Microsoft.Xna.Framework.Game
 
         // Initialize the SadConsole engine with a font, and a screen size that mirrors MS-DOS.
         Global.SadConsoleComponent = new SadConsoleGameComponent(this);
-        Global.ClearScreenComponent = new ClearScreenGameComponent(this);
 
         Components.Add(Global.SadConsoleComponent);
-        Components.Add(Global.ClearScreenComponent);
 
         // Initializes the components and loads content
         base.Initialize();

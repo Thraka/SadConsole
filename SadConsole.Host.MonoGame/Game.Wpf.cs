@@ -48,7 +48,7 @@ public partial class Game : GameHost
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     public static void Create(int cellCountX, int cellCountY) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts()
@@ -62,7 +62,7 @@ public partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts()
@@ -78,7 +78,7 @@ public partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts(font)
@@ -135,27 +135,17 @@ public partial class Game : GameHost
             LoadFont(font);
 
         // Load screen size
-        InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
-            ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
+        // Load screen size and window
+        ConfigureWindowConfig windowConfig = _configuration.Configs.OfType<ConfigureWindowConfig>().FirstOrDefault()
+            ?? throw new Exception("The starting window or screen hasn't been configured.");
 
-        InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
+        _configuration.Configs.Remove(windowConfig);
+        ((IConfigurator)windowConfig).Run(_configuration, this);
 
-        if (hostStartupData.InitialRenderWidth == 0 || hostStartupData.InitialRenderHeight == 0)
-            throw new Exception($"You must call {nameof(Configuration.ExtensionsHost.SetInitialRenderPixels)} and set values greater than 0.");
+        Settings.Rendering.RenderWidth = windowConfig.GameResolutionWidthInPixels;
+        Settings.Rendering.RenderHeight = windowConfig.GameResolutionHeightInPixels;
 
-        if (startupData.ScreenCellsXYByResolution != null)
-        {
-            (ScreenCellsX, ScreenCellsY) = startupData.ScreenCellsXYByResolution(this);
-        }
-        else
-        {
-            ScreenCellsX = startupData.ScreenCellsX;
-            ScreenCellsY = startupData.ScreenCellsY;
-        }
-
-        SadConsole.Settings.Rendering.RenderWidth = hostStartupData.InitialRenderWidth;
-        SadConsole.Settings.Rendering.RenderHeight = hostStartupData.InitialRenderHeight;
-
+        // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.OptimizedScreenSurface, typeof(Renderers.OptimizedScreenSurfaceRenderer));
@@ -185,7 +175,7 @@ public partial class Game : GameHost
         _configuration.Run(this);
 
         var fontSize = DefaultFont.GetFontSize(DefaultFontSize);
-        if (fontSize.X > hostStartupData.InitialRenderWidth || fontSize.Y > hostStartupData.InitialRenderHeight)
+        if (fontSize.X > Settings.Rendering.RenderWidth || fontSize.Y > Settings.Rendering.RenderHeight)
             throw new Exception("WPF control is too small to present a single cell in the font size.");
 
         // Normal start

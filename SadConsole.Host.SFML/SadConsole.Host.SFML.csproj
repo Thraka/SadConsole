@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Host_SFML_Version)</Version>
     <AssemblyTitle>SadConsole SFML Host</AssemblyTitle>

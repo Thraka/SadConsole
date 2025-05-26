@@ -79,11 +79,6 @@ public static class Global
     /// </summary>
     public static SadConsoleGameComponent SadConsoleComponent { get; set; }
 
-    /// <summary>
-    /// The game component that clears the render output before each frame draw.
-    /// </summary>
-    public static ClearScreenGameComponent ClearScreenComponent { get; set; }
-
 #if WPF
 
     /// <summary>
