@@ -211,7 +211,7 @@ public sealed partial class Game : GameHost
             Instance.MonoGameInstance.Components.Add(new Host.FPSCounterComponent((Microsoft.Xna.Framework.Game)Instance.MonoGameInstance));
 
         // Run all startup config objects
-        _configuration.Run(this);
+        _configuration.ProcessConfigs(this);
 
         // Normal start
         OnGameStarted();

@@ -78,6 +78,27 @@
             <param name="host">The host of the component.</param>
             <param name="delta">Unused.</param>
         </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
+            <summary>
+            Sets the target window SadConsole renders to instead of building its own window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="window">The target window to render the game on.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallColor">
             <summary>
             Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
@@ -1089,21 +1110,6 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
-            <summary>
-            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <returns>The configuration builder.</returns>
-        </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
-            <summary>
-            Sets the target window SadConsole renders to instead of building its own window.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="window">The target window to render the game on.</param>
-            <returns>The configuration builder.</returns>
         </member>
         <member name="T:SFML.Graphics.SpriteBatch">
             <summary>

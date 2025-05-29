@@ -35,6 +35,6 @@ public abstract class BuilderBase
     /// Runs each config object in the <see cref="Configs"/> collection with the specified game instance.
     /// </summary>
     /// <param name="game">The game being created.</param>
-    public void Run(GameHost game) =>
+    public void ProcessConfigs(GameHost game) =>
         Configs.ForEach(config => config.Run(this, game));
 }

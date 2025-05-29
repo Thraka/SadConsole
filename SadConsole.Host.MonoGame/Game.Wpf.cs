@@ -172,7 +172,7 @@ public partial class Game : GameHost
         //    Instance.MonoGameInstance.Components.Add(new Host.Game.FPSCounterComponent(Instance.MonoGameInstance));
 
         // Run all startup config objects
-        _configuration.Run(this);
+        _configuration.ProcessConfigs(this);
 
         var fontSize = DefaultFont.GetFontSize(DefaultFontSize);
         if (fontSize.X > Settings.Rendering.RenderWidth || fontSize.Y > Settings.Rendering.RenderHeight)

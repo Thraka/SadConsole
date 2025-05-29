@@ -211,7 +211,7 @@ public sealed partial class Game : GameHost
             LoadMappedColors();
 
         // Run all startup config objects, then destroy the config instance
-        _configuration.Run(this);
+        _configuration.ProcessConfigs(this);
 
         // NOTE: Compared to the monogame game, this init method is invoked at create, but the game isn't yet running.
         // in monogame, this same method is invoked when the game starts running.

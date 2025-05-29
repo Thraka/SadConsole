@@ -1384,6 +1384,12 @@
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+        </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
             <summary>
             Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.

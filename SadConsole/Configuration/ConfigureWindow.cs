@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using SadRogue.Primitives;
 
 namespace SadConsole.Configuration;
@@ -36,6 +34,7 @@ public static partial class Extensions
     /// <summary>
     /// Sets the desired resolution of the SadConsole window in cells using the default font.
     /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="width">How wide the window is in font cells.</param>
     /// <param name="height">How tall the window is in font cells.</param>
     /// <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
@@ -61,6 +60,7 @@ public static partial class Extensions
     /// Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
     /// the current font, and set to a value that allows the most cells to appear on screen.
     /// </summary>
+    /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="width">The width of the window.</param>
     /// <param name="height">The height of the window.</param>
     public static Builder SetWindowSizeInPixels(this Builder configBuilder, int width, int height)
@@ -74,6 +74,9 @@ public static partial class Extensions
     }
 }
 
+/// <summary>
+/// Holds the config state for the window.
+/// </summary>
 public sealed class ConfigureWindowConfig : IConfigurator
 {
     /// <summary>

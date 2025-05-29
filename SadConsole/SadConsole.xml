@@ -2507,6 +2507,12 @@
             Composes a game host object.
             </summary>
         </member>
+        <member name="M:SadConsole.Configuration.Builder.GetBuilder">
+            <summary>
+            Creates and returns a new instance of the <see cref="T:SadConsole.Configuration.Builder"/> class.
+            </summary>
+            <returns>A new <see cref="T:SadConsole.Configuration.Builder"/> instance.</returns>
+        </member>
         <member name="T:SadConsole.Configuration.BuilderBase">
             <summary>
             Base class for building startup config options.
@@ -2524,7 +2530,7 @@
             <typeparam name="TConfig">The type of config object.</typeparam>
             <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection. If found in the collection, that instance is returned.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.BuilderBase.Run(SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.BuilderBase.ProcessConfigs(SadConsole.GameHost)">
             <summary>
             Runs each config object in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection with the specified game instance.
             </summary>
@@ -2588,6 +2594,7 @@
              <summary>
              Sets the desired resolution of the SadConsole window in cells using the default font.
              </summary>
+             <param name="configBuilder">The builder object that composes the game startup.</param>
              <param name="width">How wide the window is in font cells.</param>
              <param name="height">How tall the window is in font cells.</param>
              <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
@@ -2605,6 +2612,7 @@
             Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
             the current font, and set to a value that allows the most cells to appear on screen.
             </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="width">The width of the window.</param>
             <param name="height">The height of the window.</param>
         </member>
@@ -2694,6 +2702,11 @@
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.ConfigureWindowConfig">
+            <summary>
+            Holds the config state for the window.
+            </summary>
         </member>
         <member name="P:SadConsole.Configuration.ConfigureWindowConfig.WindowWidthInPixels">
             <summary>
@@ -10346,11 +10359,6 @@
         <member name="F:SadConsole.Settings.DoFinalDraw">
             <summary>
             When true, indicates that any game framework should render a composed image, of all consoles, to the screen.
-            </summary>
-        </member>
-        <member name="F:SadConsole.Settings.DoGraphicsDeviceClear">
-            <summary>
-            When true, clears the graphics device before final draw.
             </summary>
         </member>
         <member name="F:SadConsole.Settings.DoUpdate">
