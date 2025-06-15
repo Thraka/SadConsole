@@ -118,6 +118,9 @@ public sealed partial class Game : GameHost
     {
         if (_configuration == null) throw new Exception("Configuration must be set.");
 
+        // Raylib needs the window created right at the start so that fonts can load into textures
+        Raylib.InitWindow(0, 0, Settings.WindowTitle);
+
         // Configure the fonts
         FontConfig fontConfig = _configuration.Configs.OfType<FontConfig>().FirstOrDefault()
             ?? new FontConfig();
@@ -142,7 +145,7 @@ public sealed partial class Game : GameHost
         // Get the existing window instance, or create a new one.
         InternalHostStartupData hostStartupData = _configuration.Configs.OfType<InternalHostStartupData>().FirstOrDefault() ?? new();
 
-        Raylib.InitWindow(windowConfig.WindowWidthInPixels, windowConfig.WindowHeightInPixels, Settings.WindowTitle);
+        Raylib.SetWindowSize(windowConfig.WindowWidthInPixels, windowConfig.WindowHeightInPixels);
 
         // Configure window style
         ConfigFlags flags = ConfigFlags.ResizableWindow;
@@ -279,7 +282,7 @@ public sealed partial class Game : GameHost
                     Raylib.BeginDrawing();
                     Raylib.ClearBackground(Settings.ClearColor.ToHostColor());
                     Raylib.DrawTexturePro(Global.RenderOutput.Texture,
-                                          new(0, 0, Global.RenderOutput.Texture.Width, Global.RenderOutput.Texture.Height),
+                                          new(0, 0, Global.RenderOutput.Texture.Width, -Global.RenderOutput.Texture.Height),
                                           Settings.Rendering.RenderRect.ToHostRectangle(),
                                           Vector2.Zero,
                                           0f,

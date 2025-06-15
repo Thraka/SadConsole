@@ -18,16 +18,16 @@ public class Keyboard : IKeyboardState
 
     public bool IsKeyDown(Keys key)
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public bool IsKeyUp(Keys key)
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public void Refresh()
     {
-        throw new NotImplementedException();
+        
     }
 }
