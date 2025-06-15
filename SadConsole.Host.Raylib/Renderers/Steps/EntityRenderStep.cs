@@ -1,7 +1,10 @@
 ﻿using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
+using System.Numerics;
+using Raylib_cs;
 using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
+using Rectangle = SadRogue.Primitives.Rectangle;
+using HostColor = Raylib_cs.Color;
 
 namespace SadConsole.Renderers;
 
@@ -17,7 +20,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
     /// <summary>
     /// The cached texture of the drawn entities.
     /// </summary>
-    public RenderTexture BackingTexture { get; private set; }
+    public RenderTexture2D BackingTexture { get; private set; }
 
     /// <inheritdoc/>
     public ITexture CachedTexture => _cachedTexture;
@@ -43,8 +46,9 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Reset()
     {
-        BackingTexture?.Dispose();
-        BackingTexture = null;
+        if (Raylib.IsRenderTextureValid(BackingTexture))
+            Raylib.UnloadRenderTexture(BackingTexture);
+
         _cachedTexture?.Dispose();
         _cachedTexture = null;
         _entityManager = null;
@@ -56,28 +60,32 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
         bool result = false;
 
         // Update texture if something is out of size.
-        if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+        if (backingTextureChanged || !Raylib.IsRenderTextureValid(BackingTexture) || screenObject.AbsoluteArea.Width != (int)BackingTexture.Texture.Width || screenObject.AbsoluteArea.Height != (int)BackingTexture.Texture.Height)
         {
-            BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            if (Raylib.IsRenderTextureValid(BackingTexture))
+                Raylib.UnloadRenderTexture(BackingTexture);
+
+            BackingTexture = Raylib.LoadRenderTexture(screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height);
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
         }
 
-        // Redraw is needed
+        var hostRenderer = (ScreenSurfaceRenderer)renderer;
+
         if (result || _entityManager.IsDirty || isForced)
         {
-            BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
+            Raylib.BeginTextureMode(BackingTexture);
+            Raylib.ClearBackground(Color.Transparent.ToHostColor());
 
+            Raylib.BeginBlendMode(hostRenderer.BlendState);
+
+            IFont font = _entityManager.AlternativeFont ?? screenObject.Font;
+            Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
             ColoredGlyphBase cell;
             Rectangle renderRect;
 
-            IFont font = _entityManager.AlternativeFont ?? screenObject.Font;
-
             Entities.Entity item;
-
             for (int i = 0; i < _entityManager.EntitiesVisible.Count; i++)
             {
                 item = _entityManager.EntitiesVisible[i];
@@ -92,12 +100,21 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                     cell = item.AppearanceSingle.Appearance;
                     cell.IsDirty = false;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, font);
+                    if (cell.Background != Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground)
+                            Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Background.ToHostColor());
+
+                        if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                            Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Glyph).ToHostRectangle(cell.Mirror), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Foreground.ToHostColor());
+
+                        if (cell.Decorators != null)
+                            for (int d = 0; d < cell.Decorators.Count; d++)
+                                if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                    Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToHostRectangle(cell.Decorators[d].Mirror), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Decorators[d].Color.ToHostColor());
                 }
                 else
                 {
                     // Offset the top-left render rectangle by the center point of the animation.
-                    var surfaceStartPosition = new Point(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
+                    Point surfaceStartPosition = new Point(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
 
                     for (int y = 0; y < item.AppearanceSurface.Animation.ViewHeight; y++)
                     {
@@ -113,7 +130,18 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                             cell.IsDirty = false;
 
                             if (cell.IsVisible)
-                                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect.ToIntRect(), true, font);
+                            {
+                                if (cell.Background != Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground)
+                                    Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Background.ToHostColor());
+
+                                if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                                    Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Glyph).ToHostRectangle(cell.Mirror), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Foreground.ToHostColor());
+
+                                if (cell.Decorators != null)
+                                    for (int d = 0; d < cell.Decorators.Count; d++)
+                                        if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                            Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToHostRectangle(cell.Decorators[d].Mirror), renderRect.ToHostRectangle(), Vector2.Zero, 0f, cell.Decorators[d].Color.ToHostColor());
+                            }
 
                             index++;
                         }
@@ -121,8 +149,8 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                 }
             }
 
-            Host.Global.SharedSpriteBatch.End();
-            BackingTexture.Display();
+            Raylib.EndBlendMode();
+            Raylib.EndTextureMode();
 
             result = true;
             _entityManager.IsDirty = false;
@@ -134,15 +162,14 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+        Raylib.DrawTexture(BackingTexture.Texture, 0, 0, HostColor.White);
     }
 
     ///  <inheritdoc/>
     public void Render(IRenderer renderer, IScreenSurface screenObject)
     {
-
     }
+
 
     /// <summary>
     /// Disposes the object.

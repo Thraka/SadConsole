@@ -7,6 +7,7 @@ using SadConsole.Configuration;
 using System.Linq;
 using Raylib_cs;
 using Color = SadRogue.Primitives.Color;
+using Rectangle = SadRogue.Primitives.Rectangle;
 using System.Numerics;
 
 namespace SadConsole;
@@ -163,8 +164,8 @@ public sealed partial class Game : GameHost
         ResetRendering();
 
         // Configure input
-        _keyboard = new Keyboard(Global.GraphicsDevice);
-        _mouse = new Mouse(Global.GraphicsDevice);
+        _keyboard = new Keyboard();
+        _mouse = new Mouse();
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
@@ -387,12 +388,10 @@ public sealed partial class Game : GameHost
             RecreateRenderOutput(Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
 
             Settings.Rendering.RenderRect = new Rectangle(
-                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - Settings.Rendering.RenderWidth) / 2),
-                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - Settings.Rendering.RenderHeight) / 2),
+                                                        Math.Max(0, (Raylib.GetScreenWidth() - Settings.Rendering.RenderWidth) / 2),
+                                                        Math.Max(0, (Raylib.GetScreenHeight() - Settings.Rendering.RenderHeight) / 2),
                                                         Settings.Rendering.RenderWidth,
                                                         Settings.Rendering.RenderHeight);
-
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
 
             Settings.Rendering.RenderScale = (1, 1);
         }
@@ -405,7 +404,7 @@ public sealed partial class Game : GameHost
             // Find the bounds
             while (true)
             {
-                if (Settings.Rendering.RenderWidth * multiple > Global.GraphicsDevice.Size.X || Settings.Rendering.RenderHeight * multiple > Global.GraphicsDevice.Size.Y)
+                if (Settings.Rendering.RenderWidth * multiple > Raylib.GetScreenWidth() || Settings.Rendering.RenderHeight * multiple > Raylib.GetScreenHeight())
                 {
                     multiple--;
                     break;
@@ -415,65 +414,52 @@ public sealed partial class Game : GameHost
             }
 
             Settings.Rendering.RenderRect = new Rectangle(
-                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.X - (Settings.Rendering.RenderWidth * multiple)) / 2),
-                                                        Math.Max(0, ((int)Global.GraphicsDevice.Size.Y - (Settings.Rendering.RenderHeight * multiple)) / 2),
+                                                        Math.Max(0, ((int)Raylib.GetScreenWidth() - (Settings.Rendering.RenderWidth * multiple)) / 2),
+                                                        Math.Max(0, ((int)Raylib.GetScreenHeight() - (Settings.Rendering.RenderHeight * multiple)) / 2),
                                                         Settings.Rendering.RenderWidth * multiple,
                                                         Settings.Rendering.RenderHeight * multiple);
 
             Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / ((float)Settings.Rendering.RenderWidth * multiple), Settings.Rendering.RenderHeight / (float)(Settings.Rendering.RenderHeight * multiple));
-
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
         else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
         {
             RecreateRenderOutput(Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
 
-            float heightRatio = Global.GraphicsDevice.Size.Y / (float)Settings.Rendering.RenderHeight;
-            float widthRatio = Global.GraphicsDevice.Size.X / (float)Settings.Rendering.RenderWidth;
+            float heightRatio = Raylib.GetScreenHeight() / (float)Settings.Rendering.RenderHeight;
+            float widthRatio = Raylib.GetScreenWidth() / (float)Settings.Rendering.RenderWidth;
 
             float fitHeight = Settings.Rendering.RenderHeight * widthRatio;
             float fitWidth = Settings.Rendering.RenderWidth * heightRatio;
 
-            if (fitHeight <= Global.GraphicsDevice.Size.Y)
+            if (fitHeight <= Raylib.GetScreenHeight())
             {
                 // Render width = window width, pad top and bottom
 
                 Settings.Rendering.RenderRect = new Rectangle(0,
-                                                            Math.Max(0, (int)((Global.GraphicsDevice.Size.Y - fitHeight) / 2)),
-                                                            (int)Global.GraphicsDevice.Size.X,
+                                                            Math.Max(0, (int)((Raylib.GetScreenHeight() - fitHeight) / 2)),
+                                                            (int)Raylib.GetScreenWidth(),
                                                             (int)fitHeight);
 
-                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / fitHeight);
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Raylib.GetScreenWidth(), Settings.Rendering.RenderHeight / fitHeight);
             }
             else
             {
                 // Render height = window height, pad left and right
-                Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (int)((Global.GraphicsDevice.Size.X - fitWidth) / 2)),
+                Settings.Rendering.RenderRect = new Rectangle(Math.Max(0, (int)((Raylib.GetScreenWidth() - fitWidth) / 2)),
                                                                 0,
                                                                 (int)fitWidth,
-                                                                (int)Global.GraphicsDevice.Size.Y);
+                                                                (int)Raylib.GetScreenHeight());
 
-                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / fitWidth, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
+                Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / fitWidth, Settings.Rendering.RenderHeight / (float)Raylib.GetScreenHeight());
             }
-
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
-        }
-        else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
-        {
-            Settings.Rendering.RenderWidth = (int)Global.GraphicsDevice.Size.X;
-            Settings.Rendering.RenderHeight = (int)Global.GraphicsDevice.Size.Y;
-            RecreateRenderOutput(Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
-            Settings.Rendering.RenderRect = new Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
-            Settings.Rendering.RenderScale = (1, 1);
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
         }
         else
         {
+            Settings.Rendering.RenderWidth = (int)Raylib.GetScreenWidth();
+            Settings.Rendering.RenderHeight = (int)Raylib.GetScreenHeight();
             RecreateRenderOutput(Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
-            var view = Global.GraphicsDevice.GetView();
-            Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
-            Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
+            Settings.Rendering.RenderRect = new Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
+            Settings.Rendering.RenderScale = (1, 1);
         }
     }
 

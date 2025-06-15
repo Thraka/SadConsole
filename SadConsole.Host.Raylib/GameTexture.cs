@@ -49,12 +49,14 @@ public class GameTexture : ITexture
     /// </summary>
     /// <param name="width">The width of the texture in pixels.</param>
     /// <param name="height">The height of the texture in pixels.</param>
-    //public GameTexture(int width, int height)
-    //{
-    //    _skipDispose = false;
-    //    _texture = Raylib.LoadRenderTexture(width, height);
-    //    Size = (int)(width * height);
-    //}
+    public GameTexture(int width, int height)
+    {
+        Image img = Raylib.GenImageColor(width, height, HostColor.Blank);
+        _texture = Raylib.LoadTextureFromImage(img);
+        _skipDispose = false;
+        Size = width * height;
+        Raylib.UnloadImage(img);
+    }
 
     /// <summary>
     /// Creates a new game texture with the specified width, height, and pixels.
@@ -62,13 +64,30 @@ public class GameTexture : ITexture
     /// <param name="width">The width of the texture in pixels.</param>
     /// <param name="height">The height of the texture in pixels.</param>
     /// <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
-    //public GameTexture(int width, int height, Color[] pixels)
-    //{
-    //    _skipDispose = false;
-    //    _texture = new Texture(width, height);
-    //    Size = (int)(width * height);
-    //    SetPixels(pixels);
-    //}
+    public GameTexture(int width, int height, Color[] pixels)
+    {
+        //_skipDispose = false;
+        //_texture = new Texture(width, height);
+        //Size = (int)(width * height);
+        //SetPixels(pixels);
+        throw new NotSupportedException();
+    }
+
+    /// <summary>
+    /// Creates a new game texture from a stream.
+    /// </summary>
+    /// <param name="stream">The stream containing the texture data.</param>
+    public GameTexture(Stream stream)
+    {
+        using BinaryReader br = new BinaryReader(stream);
+        byte[] bytes = br.ReadBytes((int)stream.Length);
+
+        Image img = Raylib.LoadImageFromMemory(".png", bytes);
+        _texture = Raylib.LoadTextureFromImage(img);
+        _skipDispose = false;
+        Size = img.Width * img.Height;
+        Raylib.UnloadImage(img);
+    }
 
     /// <summary>
     /// Wraps a texture. Doesn't dispose it when this object is disposed!

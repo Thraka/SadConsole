@@ -1,28 +1,31 @@
 ﻿using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
-using SadConsole.Host;
-using SadConsole.UI.Controls;
+using System.Numerics;
+using Raylib_cs;
 using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
+using Rectangle = SadRogue.Primitives.Rectangle;
+using HostColor = Raylib_cs.Color;
+using HostRectangle = Raylib_cs.Rectangle;
+using SadConsole.UI.Controls;
 
 namespace SadConsole.Renderers;
 
 /// <summary>
-/// Draws a <see cref="UI.ControlHost"/>.
+/// Draws a <see cref="SadConsole.UI.ControlHost"/>.
 /// </summary>
 [System.Diagnostics.DebuggerDisplay("Control host")]
 public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
 {
-    private UI.ControlHost _controlsHost;
-    private GameTexture _cachedTexture;
+    private SadConsole.UI.ControlHost _controlsHost;
+    private Host.GameTexture _cachedTexture;
 
     /// <inheritdoc/>
     public string Name => Constants.RenderStepNames.ControlHost;
 
     /// <summary>
-    /// The cached texture of the drawn controls layer.
+    /// The cached texture of the drawn surface.
     /// </summary>
-    public RenderTexture BackingTexture { get; private set; }
+    public RenderTexture2D BackingTexture { get; private set; }
 
     /// <inheritdoc/>
     public ITexture CachedTexture => _cachedTexture;
@@ -45,8 +48,9 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Reset()
     {
-        BackingTexture?.Dispose();
-        BackingTexture = null;
+        if (Raylib.IsRenderTextureValid(BackingTexture))
+            Raylib.UnloadRenderTexture(BackingTexture);
+
         _cachedTexture?.Dispose();
         _cachedTexture = null;
         _controlsHost = null;
@@ -58,32 +62,44 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
         bool result = false;
 
         // Update texture if something is out of size.
-        if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+        if (backingTextureChanged || !Raylib.IsRenderTextureValid(BackingTexture) || screenObject.AbsoluteArea.Width != (int)BackingTexture.Texture.Width || screenObject.AbsoluteArea.Height != (int)BackingTexture.Texture.Height)
         {
-            BackingTexture?.Dispose();
-            _cachedTexture?.Dispose();
+            if (Raylib.IsRenderTextureValid(BackingTexture))
+                Raylib.UnloadRenderTexture(BackingTexture);
 
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = Raylib.LoadRenderTexture(screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height);
+            _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
         }
 
-        // Redraw is needed
         if (result || _controlsHost.IsDirty || isForced)
         {
-            BackingTexture.Clear(Color.Transparent);
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, ((ScreenSurfaceRenderer)renderer).SFMLBlendState, Transform.Identity);
+            Raylib.BeginTextureMode(BackingTexture);
+            Raylib.ClearBackground(Color.Transparent.ToHostColor());
+            Raylib.BeginBlendMode(((ScreenSurfaceRenderer)renderer).BlendState);
 
             ProcessContainer(_controlsHost, ((ScreenSurfaceRenderer)renderer), screenObject);
 
-            Host.Global.SharedSpriteBatch.End();
-            BackingTexture.Display();
+            Raylib.EndBlendMode();
+            Raylib.EndTextureMode();
 
             result = true;
             _controlsHost.IsDirty = false;
         }
 
         return result;
+    }
+
+    ///  <inheritdoc/>
+    public void Composing(IRenderer renderer, IScreenSurface screenObject)
+    {
+        Raylib.DrawTexture(BackingTexture.Texture, 0, 0, HostColor.White);
+    }
+
+    ///  <inheritdoc/>
+    public void Render(IRenderer renderer, IScreenSurface screenObject)
+    {
     }
 
     /// <summary>
@@ -94,6 +110,26 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <param name="screenObject">The screen surface with font information.</param>
     private void ProcessContainer(UI.Controls.IContainer container, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
     {
+        /*
+         * Temp code to clip drawing controls to the containers region. Prevents controls bleeding outside their container.
+         * However, this code is useless until the mouse input is updated to account for the container. So probably
+         * IContainer needs to be improved to cache this information some how. Then the control's input can query its
+         * container to interset control.MouseBounds.
+
+        Rectangle clipRect;
+
+        if (container is ControlBase containerAsControl)
+        {
+            SadRogue.Primitives.Point position = container.AbsolutePosition + containerAsControl.Surface.View.Position;
+            SadRogue.Primitives.Point size = containerAsControl.Surface.Area.Size;
+            clipRect = new(position.X, position.Y, size.X, size.Y);
+        }
+        else
+            clipRect = screenObject.Surface.View;
+
+        // clipRect would be passed to RenderControlCells
+        */
+
         for (int i = 0; i < container.Count; i++)
         {
             ControlBase control = container[i];
@@ -110,18 +146,6 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
         }
     }
 
-    ///  <inheritdoc/>
-    public void Composing(IRenderer renderer, IScreenSurface screenObject)
-    {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
-    }
-
-    ///  <inheritdoc/>
-    public void Render(IRenderer renderer, IScreenSurface screenObject)
-    {
-    }
-
     /// <summary>
     /// Renders the cells of a control.
     /// </summary>
@@ -130,18 +154,13 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <param name="font">The font to render the cells with.</param>
     /// <param name="fontSize">The size of a cell in pixels.</param>
     /// <param name="parentViewRect">The view of the parent to cull cells from.</param>
-    protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect)
+    protected void RenderControlCells(SadConsole.UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, SadRogue.Primitives.Point fontSize, Rectangle parentViewRect)
     {
         font = control.AlternateFont ?? font;
+
+        Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
         ColoredGlyphBase cell;
 
-        //if (control.Surface.DefaultBackground.A != 0)
-        //{
-        //    (int x, int y) = (control.AbsolutePosition - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
-        //    (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * fontSize;
-
-        //    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
-        //}
         for (int y = 0; y < control.Surface.View.Height; y++)
         {
             int i = ((y + control.Surface.ViewPosition.Y) * control.Surface.Width) + control.Surface.ViewPosition.X;
@@ -153,13 +172,23 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
 
                 if (cell.IsVisible)
                 {
-                    SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
+                    Point cellRenderPosition = control.AbsolutePosition + (x, y);
 
                     if (!parentViewRect.Contains(cellRenderPosition)) continue;
+                    //if (!parentViewRect.Contains(cellRenderPosition) || !clipRect.Contains(cellRenderPosition)) continue;
 
-                    IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
+                    HostRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
+                    if (cell.Background != Color.Transparent)
+                        Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), renderRect, Vector2.Zero, 0f, cell.Background.ToHostColor());
+
+                    if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                        Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Glyph).ToHostRectangle(cell.Mirror), renderRect, Vector2.Zero, 0f, cell.Foreground.ToHostColor());
+
+                    if (cell.Decorators != null)
+                        for (int d = 0; d < cell.Decorators.Count; d++)
+                            if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToHostRectangle(cell.Decorators[d].Mirror), renderRect, Vector2.Zero, 0f, cell.Decorators[d].Color.ToHostColor());
                 }
 
                 i++;

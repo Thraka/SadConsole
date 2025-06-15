@@ -1,8 +1,10 @@
 ﻿using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
-using SadRogue.Primitives;
 using System.Collections.Generic;
+using System.Numerics;
+using Raylib_cs;
+using SadRogue.Primitives;
+using HostColor = Raylib_cs.Color;
+using Color = SadRogue.Primitives.Color;
 
 namespace SadConsole.Renderers;
 
@@ -27,7 +29,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Quick access to backing texture.
     /// </summary>
-    public RenderTexture _backingTexture;
+    public RenderTexture2D _backingTexture;
 
     /// <summary>
     /// The cached texture of the drawn surface.
@@ -37,12 +39,12 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Color used with drawing the texture to the screen. Let's a surface become transparent.
     /// </summary>
-    public Color _finalDrawColor = SadRogue.Primitives.Color.White.ToSFMLColor();
+    public HostColor _finalDrawColor = SadRogue.Primitives.Color.White.ToHostColor();
 
     /// <summary>
     /// The blend state used by this renderer.
     /// </summary>
-    public BlendMode SFMLBlendState { get; set; } = SadConsole.Host.Settings.SFMLSurfaceBlendMode;
+    public BlendMode HostBlendState { get; set; } = SadConsole.Host.Settings.SurfaceBlendMode;
 
     /// <summary>
     /// A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
@@ -50,7 +52,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     public byte Opacity
     {
         get => _finalDrawColor.A;
-        set => _finalDrawColor = new Color(_finalDrawColor.R, _finalDrawColor.G, _finalDrawColor.B, value);
+        set => _finalDrawColor = new HostColor(_finalDrawColor.R, _finalDrawColor.G, _finalDrawColor.B, value);
     }
 
     /// <inheritdoc/>
@@ -62,7 +64,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     /// <summary>
     /// Cached set of rectangles used in rendering each cell.
     /// </summary>
-    public IntRect[] CachedRenderRects;
+    public Raylib_cs.Rectangle[] CachedRenderRects;
 
     /// <summary>
     /// Creates a new instance of this renderer with the default steps.
@@ -81,11 +83,13 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
         IsForced = force;
 
         // Update texture if something is out of size.
-        if (_backingTexture == null || screen.AbsoluteArea.Width != (int)_backingTexture.Size.X || screen.AbsoluteArea.Height != (int)_backingTexture.Size.Y)
+        if (!Raylib.IsRenderTextureValid(_backingTexture) || screen.AbsoluteArea.Width != _backingTexture.Texture.Width || screen.AbsoluteArea.Height != _backingTexture.Texture.Height)
         {
             IsForced = true;
-            _backingTexture?.Dispose();
-            _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+            if (Raylib.IsRenderTextureValid(_backingTexture))
+                Raylib.UnloadRenderTexture(_backingTexture);
+
+            _backingTexture = Raylib.LoadRenderTexture(screen.AbsoluteArea.Width, screen.AbsoluteArea.Height);
             _renderTexture?.Dispose();
             _renderTexture = new Host.GameTexture(_backingTexture.Texture);
             BackingTextureRecreated?.Invoke(this, EventArgs.Empty);
@@ -94,12 +98,12 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
         // Update cached drawing rectangles if something is out of size.
         if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
         {
-            CachedRenderRects = new IntRect[screen.Surface.View.Width * screen.Surface.View.Height];
+            CachedRenderRects = new Raylib_cs.Rectangle[screen.Surface.View.Width * screen.Surface.View.Height];
 
             for (int i = 0; i < CachedRenderRects.Length; i++)
             {
                 var position = Point.FromIndex(i, screen.Surface.View.Width);
-                CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToIntRect();
+                CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToHostRectangle();
             }
 
             IsForced = true;
@@ -112,19 +116,23 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
 
     ///  <inheritdoc/>
     public void Render(IScreenSurface screenObject) =>
-        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_backingTexture.Texture, new SFML.System.Vector2i(screenObject.AbsoluteArea.Position.X, screenObject.AbsoluteArea.Position.Y), _finalDrawColor));
+        GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallTexture(_backingTexture.Texture, screenObject.AbsoluteArea.Position, _finalDrawColor));
 
     void RedrawSurface(IScreenSurface screenObject)
     {
-        _backingTexture.Clear(Color.Transparent);
-        Host.Global.SharedSpriteBatch.Reset(_backingTexture, SFMLBlendState, Transform.Identity);
+        Raylib.BeginTextureMode(_backingTexture);
+        Raylib.ClearBackground(Color.Transparent.ToHostColor());
 
-        int rectIndex = 0;
-        ColoredGlyphBase cell;
+        Raylib.BeginBlendMode(HostBlendState);
+
         IFont font = screenObject.Font;
+        Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
+        ColoredGlyphBase cell;
 
         if (screenObject.Surface.DefaultBackground.A != 0)
-            Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)_backingTexture.Size.X, (int)_backingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+            Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), new(0, 0, _backingTexture.Texture.Width, _backingTexture.Texture.Height), Vector2.Zero, 0f, screenObject.Surface.DefaultBackground.ToHostColor());
+
+        int rectIndex = 0;
 
         for (int y = 0; y < screenObject.Surface.View.Height; y++)
         {
@@ -133,22 +141,28 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
             for (int x = 0; x < screenObject.Surface.View.Width; x++)
             {
                 cell = screenObject.Surface[i];
-
                 cell.IsDirty = false;
 
                 if (cell.IsVisible)
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
+                {
+                    if (cell.Background != Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground)
+                        Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Background.ToHostColor());
+
+                    if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                        Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Glyph).ToHostRectangle(cell.Mirror), CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Foreground.ToHostColor());
+
+                    if (cell.Decorators != null)
+                        for (int d = 0; d < cell.Decorators.Count; d++)
+                            if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToHostRectangle(cell.Decorators[d].Mirror), CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Decorators[d].Color.ToHostColor());
+                }
 
                 i++;
                 rectIndex++;
             }
         }
-
-        if (screenObject.Tint.A != 0)
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(screenObject.Tint.ToSFMLColor(), ((SadConsole.Host.GameTexture)screenObject.Font.Image).Texture, screenObject.AbsoluteArea.ToIntRect(), screenObject.Font.SolidGlyphRectangle.ToIntRect()));
-
-        Host.Global.SharedSpriteBatch.End();
-        _backingTexture.Display();
+        Raylib.EndBlendMode();
+        Raylib.EndTextureMode();
 
         screenObject.IsDirty = false;
     }
@@ -167,7 +181,9 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
     {
         if (!disposedValue)
         {
-            _backingTexture?.Dispose();
+            if (Raylib.IsRenderTextureValid(_backingTexture))
+                Raylib.UnloadRenderTexture(_backingTexture);
+
             _renderTexture?.Dispose();
 
             disposedValue = true;

@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
-    <PackageReference Include="Raylib-cs" Version="7.0.1" />
+    <PackageReference Include="Raylib-cs" Version="7.0.1" IncludeAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 

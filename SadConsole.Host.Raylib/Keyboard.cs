@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SFML.Graphics;
 using SadConsole.Input;
 using System;
 using System.Linq;
@@ -14,7 +13,7 @@ public class Keyboard : IKeyboardState
 
     public Keys[] GetPressedKeys()
     {
-        throw new NotImplementedException();
+        return Array.Empty<Keys>();
     }
 
     public bool IsKeyDown(Keys key)

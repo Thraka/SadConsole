@@ -3,7 +3,6 @@ using System;
 using System.Numerics;
 using Raylib_cs;
 using SadRogue.Primitives;
-using static System.Net.Mime.MediaTypeNames;
 using Color = SadRogue.Primitives.Color;
 using HostColor = Raylib_cs.Color;
 

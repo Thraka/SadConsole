@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Numerics;
+using Raylib_cs;
 using SadRogue.Primitives;
-using SFML.Graphics;
+using Color = SadRogue.Primitives.Color;
+using Rectangle = SadRogue.Primitives.Rectangle;
+using HostColor = Raylib_cs.Color;
+using HostRectangle = Raylib_cs.Rectangle;
 
 namespace SadConsole.Renderers;
 
@@ -56,14 +61,16 @@ public class CursorRenderStep : IRenderStep
         {
             if (cursor.IsVisible && screenObject.Surface.IsValidCell(cursor.Position.X, cursor.Position.Y) && screenObject.Surface.View.Contains(cursor.Position))
             {
-                IntRect rect = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
-                                                                       cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
-                                                                       screenObject.FontSize).ToIntRect();
+                Rectangle rect = screenObject.Font.GetRenderRect(cursor.Position.X - screenObject.Surface.ViewPosition.X,
+                                                                 cursor.Position.Y - screenObject.Surface.ViewPosition.Y,
+                                                                 screenObject.FontSize);
 
-                Host.Global.SharedSpriteBatch.DrawCell(cursor.CursorRenderCellActiveState, rect,
-                                                       cursor.CursorRenderCellActiveState.Background != SadRogue.Primitives.Color.Transparent
-                                                       && cursor.CursorRenderCellActiveState.Background != screenObject.Surface.DefaultBackground,
-                                                       screenObject.Font);
+                Raylib.DrawTexturePro(((Host.GameTexture)screenObject.Font.Image).Texture,
+                                      screenObject.Font.GetGlyphSourceRectangle(cursor.CursorRenderCellActiveState.Glyph).ToHostRectangle(),
+                                      rect.ToHostRectangle(),
+                                      Vector2.Zero,
+                                      0f,
+                                      cursor.CursorRenderCellActiveState.Foreground.ToHostColor());
             }
         }
     }

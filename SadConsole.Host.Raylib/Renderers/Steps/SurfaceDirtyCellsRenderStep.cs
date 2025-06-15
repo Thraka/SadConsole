@@ -1,7 +1,9 @@
 ﻿using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
+using System.Numerics;
+using Raylib_cs;
 using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
+using HostColor = Raylib_cs.Color;
 
 namespace SadConsole.Renderers;
 
@@ -16,7 +18,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     /// <summary>
     /// The cached texture of the drawn surface.
     /// </summary>
-    public RenderTexture BackingTexture { get; private set; }
+    public RenderTexture2D BackingTexture { get; private set; }
 
     /// <inheritdoc/>//
     public ITexture CachedTexture => _cachedTexture;
@@ -35,8 +37,9 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Reset()
     {
-        BackingTexture?.Dispose();
-        BackingTexture = null;
+        if (Raylib.IsRenderTextureValid(BackingTexture))
+            Raylib.UnloadRenderTexture(BackingTexture);
+
         _cachedTexture?.Dispose();
         _cachedTexture = null;
     }
@@ -47,32 +50,37 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
         bool fullRedraw = false;
 
         // Update texture if something is out of size.
-        if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
+        if (backingTextureChanged || !Raylib.IsRenderTextureValid(BackingTexture) || screenObject.AbsoluteArea.Width != (int)BackingTexture.Texture.Width || screenObject.AbsoluteArea.Height != (int)BackingTexture.Texture.Height)
         {
-            BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            if (Raylib.IsRenderTextureValid(BackingTexture))
+                Raylib.UnloadRenderTexture(BackingTexture);
+
+            BackingTexture = Raylib.LoadRenderTexture(screenObject.AbsoluteArea.Width, screenObject.AbsoluteArea.Height);
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             fullRedraw = true;
         }
 
-        var sfmlRenderer = (ScreenSurfaceRenderer)renderer;
+        var hostRenderer = (ScreenSurfaceRenderer)renderer;
 
         // Redraw is needed
         if (fullRedraw || screenObject.IsDirty || isForced)
         {
+            Raylib.BeginTextureMode(BackingTexture);
+
             // Only cleared when full redraw needed
             if (fullRedraw)
-                BackingTexture.Clear(Color.Transparent);
+                Raylib.ClearBackground(Color.Transparent.ToHostColor());
 
-            Host.Global.SharedSpriteBatch.Reset(BackingTexture, sfmlRenderer.SFMLBlendState, Transform.Identity);
+            Raylib.BeginBlendMode(hostRenderer.BlendState);
 
             int rectIndex = 0;
-            ColoredGlyphBase cell;
             IFont font = screenObject.Font;
+            Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
+            ColoredGlyphBase cell;
 
             if (fullRedraw)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), new(0, 0, BackingTexture.Texture.Width, BackingTexture.Texture.Height), Vector2.Zero, 0f, screenObject.Surface.DefaultBackground.ToHostColor());
 
             for (int y = 0; y < screenObject.Surface.View.Height; y++)
             {
@@ -87,7 +95,18 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
                         cell.IsDirty = false;
 
                         if (cell.IsVisible)
-                            Host.Global.SharedSpriteBatch.DrawCell(cell, sfmlRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
+                        {
+                            if (cell.Background != Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground)
+                                Raylib.DrawTexturePro(fontImage, font.SolidGlyphRectangle.ToHostRectangle(), hostRenderer.CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Background.ToHostColor());
+
+                            if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
+                                Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Glyph).ToHostRectangle(cell.Mirror), hostRenderer.CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Foreground.ToHostColor());
+
+                            if (cell.Decorators != null)
+                                for (int d = 0; d < cell.Decorators.Count; d++)
+                                    if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                                        Raylib.DrawTexturePro(fontImage, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToHostRectangle(cell.Decorators[d].Mirror), hostRenderer.CachedRenderRects[rectIndex], Vector2.Zero, 0f, cell.Decorators[d].Color.ToHostColor());
+                        }
                     }
 
                     i++;
@@ -95,8 +114,8 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
                 }
             }
 
-            Host.Global.SharedSpriteBatch.End();
-            BackingTexture.Display();
+            Raylib.EndBlendMode();
+            Raylib.EndTextureMode();
 
             fullRedraw = true;
             screenObject.IsDirty = false;
@@ -108,8 +127,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
-        Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
+        Raylib.DrawTexture(BackingTexture.Texture, 0, 0, HostColor.Blank);
     }
 
     ///  <inheritdoc/>
