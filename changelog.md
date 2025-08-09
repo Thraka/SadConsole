@@ -1,3 +1,18 @@
+## v10.6.0 (08/09/2025)
+
+Note: .NET 6 is still supported but will be removed when .NET 10 releases, making .NET 8 the earliest version you can target.
+
+- [Breaking] The MonoGame host no longer has the `ClearScreenComponent`. Instead, the clear screen happens right before the final draw of the main SadConsole component.
+- [Breaking] `Builder.Run` was renamed to `Builder.ProcessConfigs` and a new `Builder.Run` was added to make it simpler to configure and start the game.
+- [Breaking] Custom controls should NO LONGER set `IsDirty = false` when exiting `UpdateAndRedraw`.
+- [Core] A little speed improvement to resize in special cases.
+- [Core] Added `SetGlyph` method overload to `ICellSurface` which takes a `GlyphDefinition` to update the glyph and mirror of a cell.
+- [Core] Fixed a bug with dragging a surface over another surface incorrectly triggering `MoveToFront` functionality.
+- [Extended] Added `MouseDrag` component.
+- [Hosts] Added `OptimizedScreenSurfaceRenderer` which is a renderer that only draws dirty cells.
+- [UI] During control rendering, hosts will set controls `IsDirty = false` when they're actually drawn instead of when the update method of the control says it should be drawn.
+- [UI] Fixed combo box popup with non-1x sized fonts.
+
 ## v10.5.0 (12/07/2024)
 
 - [All] Add .NET 9 target. This will be the last release for .NET 6 and .NET 7.
