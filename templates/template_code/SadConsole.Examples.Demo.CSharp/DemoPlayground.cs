@@ -29,6 +29,6 @@ internal class Playground : Console
 {
     public Playground() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-
+        
     }
 }

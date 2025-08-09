@@ -10,9 +10,9 @@ namespace SadConsole.Examples;
 
 internal class DemoFontManipulation : IDemo
 {
-    public string Title => "Font manipulation";
+    public string Title => "Font manipulation [INCOMPLETE]";
 
-    public string Description => "Demonstrates some of the code to edit fonts while the game is running. THIS DEMO ISN'T YET COMPLETE.";
+    public string Description => "Demonstrates some of the code to edit fonts while the game is running.\r\n\r\n[c:r f:ansiredbright]THIS DEMO ISN'T YET COMPLETE.[c:u]";
 
     public string CodeFile => "DemoFontManipulation.cs";
 
