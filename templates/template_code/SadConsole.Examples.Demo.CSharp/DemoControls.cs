@@ -1,5 +1,4 @@
-﻿using SadConsole.Input;
-using SadConsole.UI;
+﻿using SadConsole.UI;
 using SadConsole.UI.Controls;
 
 namespace SadConsole.Examples;
@@ -61,9 +60,27 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
         progressTimer = new SadConsole.Components.Timer(TimeSpan.FromSeconds(0.5));
         progressTimer.Start();
-        progressTimer.TimerElapsed += (timer, e) => { prog1.Progress = prog1.Progress >= 1f ? 0f : prog1.Progress + 0.1f; prog2.Progress = prog2.Progress >= 1f ? 0f : prog2.Progress + 0.1f; };
+        progressTimer.TimerElapsed += (timer, e) =>
+        {
 
-        SadComponents.Add(progressTimer);
+            if (prog1.Progress >= 1f)
+                prog1.Progress = 0f;
+            else
+                prog1.Progress += 0.1f;
+
+            if (prog2.Progress >= 1f)
+                prog2.Progress = 0f;
+            else
+                prog2.Progress += 0.1f;
+        };
+
+        // We want the timer to run before the controls host does, otherwise other controls
+        // might trigger a render pass before the timer event and do to the way update then
+        // render works, rendering may clear the IsDirty flag that the timer set on the bar.
+        progressTimer.SortOrder = 0;
+        Controls.SortOrder = 1;
+
+        SadComponents.Add(progressTimer); // This causes a sort to happen
 
         var listbox = new ListBox(20, 6)
         {
