@@ -25,7 +25,8 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
   </ItemGroup>
   <ItemGroup Condition=" '$(UseProjectReferences)' == 'false' ">
-    <PackageReference Include="SadConsole.Host.MonoGame" Version="10.4.0" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="10.*" />
+    <PackageReference Include="SadConsole.Extended" Version="10.*" />
   </ItemGroup>
   <ItemGroup Condition=" '$(UseProjectReferences)' == 'true' ">
     <ProjectReference Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />

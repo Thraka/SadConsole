@@ -44,10 +44,9 @@
     </Reference>
 
     <!-- Analyzers -->
-    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-    
-  </ItemGroup>
+    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+</ItemGroup>
 
   <!-- FNA and SFML can't use MonoGame shaders -->
   <ItemGroup Condition=" '$(GameHost)' != 'monogame' ">
