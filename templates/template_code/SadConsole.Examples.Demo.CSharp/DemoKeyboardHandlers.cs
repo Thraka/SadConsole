@@ -12,7 +12,7 @@ internal class DemoKeyboardHandlers : IDemo
                                  "\r\n\r\n" +
                                  "[c:r f:AnsiGreenBright]ClassicConsoleKeyboardHandler[c:u]: Command prompt style handler. Cursor movement is limited.\r\n" +
                                  "\r\n" +
-                                 "[c:r f:AnsiGreenBright]C64KeyboardHandler[c:u]: Commdore computer style handler. Cursor can be moved around.\r\n";
+                                 "[c:r f:AnsiGreenBright]C64KeyboardHandler[c:u]: Commodore computer style handler. Cursor can be moved around.";
 
     public string CodeFile => "DemoKeyboardHandlers.cs";
 

@@ -10,7 +10,7 @@ internal class DemoAsciiGraphics : IDemo
 {
     public string Title => "Ascii/Ansi/Playscii";
 
-    public string Description => "This demo loads loads different file formats for display in SadConsole.\r\n\r\n[c:r f:Yellow:1]- Plain text ascii\r\n[c:r f:Yellow:1]- Codepage 437 ANSI\r\n[c:r f:Yellow:1]- Playscii\r\n\r\nPress the [c:r f:Red:10]Left Arrow or [c:r f:Red:11]Right Arrow keys to navigate files and [c:r f:Red:8]Up Arrow or [c:r f:Red:10]Down Arrow keys to scroll Ansi files.";
+    public string Description => "This demo loads loads different file formats for display in SadConsole:\r\n[c:r f:Yellow:1]- Plain text ascii\r\n[c:r f:Yellow:1]- Codepage 437 ANSI\r\n[c:r f:Yellow:1]- Playscii\r\n\r\nPress the [c:r f:Red:16]Left\\Right Arrow keys to navigate files and [c:r f:Red:13]Up\\Down Arrow keys to scroll Ansi files.";
 
     public string CodeFile => "DemoAsciiGraphics.cs";
 

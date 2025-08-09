@@ -56,7 +56,8 @@ public class Document : IDisposable
         using var reader = new BinaryReader(stream);
 
         _ansiBytes = reader.ReadBytes((int)stream.Length);
-        AnsiString = new string(_ansiBytes.Select(b => (char)b).ToArray());
+        //AnsiString = new string(_ansiBytes.Select(b => (char)b).ToArray());
+        AnsiString = Encoding.ASCII.GetString(_ansiBytes);
         Stream = new MemoryStream(_ansiBytes);
     }
 

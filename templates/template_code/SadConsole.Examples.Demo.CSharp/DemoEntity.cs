@@ -13,7 +13,7 @@ internal class DemoEntitySurface : IDemo
                                  "entities (although it supports larger entities)." +
                                  "\r\n\r\n" +
                                  "Press [c:r f:Red:2]F1 to toggle movement\r\n" +
-                                 "Use the [c:r f:Red:5]Arrow keys to move the player entity\r\n";
+                                 "Use the [c:r f:Red:5]Arrow keys to move the player entity";
 
     public string CodeFile => "DemoEntity.cs";
 
