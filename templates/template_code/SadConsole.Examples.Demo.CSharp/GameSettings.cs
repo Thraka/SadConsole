@@ -60,9 +60,10 @@ static class GameSettings
             new DemoSecondSurfaceRenderer(),
             new DemoRotatedSurface(),
             new DemoCustomCellsRenderer(),
-            new DemoShader(),
+            //new DemoShader(),
 
+            //"",
             //"Advanced".CreateColored(Color.OrangeRed),
-            // new DemoFontManipulation(),
+            //new DemoFontManipulation(),
         };
 }

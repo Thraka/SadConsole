@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
+using static SadConsole.Analyzers.DiagnosticHelpers;
 
 namespace SadConsole.Analyzers;
 
@@ -15,9 +16,6 @@ namespace SadConsole.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ColoredGlyphDecoratorSetAnalyzer : DiagnosticAnalyzer
 {
-    private static LocalizableResourceString GenerateString(string name) =>
-        new LocalizableResourceString(name, Resources.ResourceManager, typeof(Resources));
-
     private const string CommonApiClassName = "SadConsole.ColoredGlyphBase";
     private const string CommonApiPropertyName = "Decorators";
 

@@ -20,7 +20,7 @@
         {
           "modifiers": [
             {
-              "copyOnly": [ "*.MonoGame.cs", "*.SFML.cs", "*.FNA.cs", "Program.cs" ]
+              "copyOnly": [ "*.MonoGame.cs", "*.SFML.cs", "*.FNA.cs", "Program.cs", "*.Other.cs" ]
             }
           ]
         }

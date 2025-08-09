@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "template_code\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyGame", "template_code\SadConsole.Project.MonoGame.CSharp\MyGame.csproj", "{28FB0842-0027-4C42-9544-26CB5F373576}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyGame", "template_code\SadConsole.Project.SFML.CSharp\MyGame.csproj", "{CC4EC76C-4819-4382-8653-A5E76B322CEC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{28FB0842-0027-4C42-9544-26CB5F373576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28FB0842-0027-4C42-9544-26CB5F373576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28FB0842-0027-4C42-9544-26CB5F373576}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC4EC76C-4819-4382-8653-A5E76B322CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC4EC76C-4819-4382-8653-A5E76B322CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC4EC76C-4819-4382-8653-A5E76B322CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC4EC76C-4819-4382-8653-A5E76B322CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,7 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1C6F7BA6-B13A-406E-91BC-8E5B2B40D10D} = {7078C9C9-91F2-40B1-8C94-414065169B74}
 		{28FB0842-0027-4C42-9544-26CB5F373576} = {7078C9C9-91F2-40B1-8C94-414065169B74}
-		{CC4EC76C-4819-4382-8653-A5E76B322CEC} = {7078C9C9-91F2-40B1-8C94-414065169B74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA69A128-74AA-43AF-BF22-6FCF0EE1A683}

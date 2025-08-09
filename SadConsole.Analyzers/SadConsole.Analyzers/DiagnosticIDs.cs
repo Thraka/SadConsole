@@ -1,4 +1,6 @@
-﻿namespace SadConsole.Analyzers;
+﻿using Microsoft.CodeAnalysis;
+
+namespace SadConsole.Analyzers;
 
 public static class DiagnosticIDs
 {
@@ -12,4 +14,10 @@ public static class DiagnosticCategories
     public const string Design = "Design";
     public const string Naming = "Naming";
 
+}
+
+public static class DiagnosticHelpers
+{
+    public static LocalizableResourceString GenerateString(string name) =>
+        new(name, Resources.ResourceManager, typeof(Resources));
 }

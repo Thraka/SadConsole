@@ -44,8 +44,8 @@ class CustomSurface : ScreenSurface
         }
 
         // Get rid of the old one and assign a new one.
-        Renderer?.Dispose();
-        Renderer = new OffsetGlyphRenderer();
+        //Renderer?.Dispose();
+        //Renderer = new OffsetGlyphRenderer();
     }
 
     protected override void OnMouseMove(MouseScreenObjectState state)

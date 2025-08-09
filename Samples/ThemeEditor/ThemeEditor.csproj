@@ -25,7 +25,7 @@
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">

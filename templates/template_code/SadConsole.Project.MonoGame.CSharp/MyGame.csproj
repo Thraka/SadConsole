@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
     <PackageReference Include="SadConsole.Extended" Version="10.5.0" />
   </ItemGroup>

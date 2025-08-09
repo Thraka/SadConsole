@@ -58,20 +58,20 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Controls.Add(toggle);
 
         //
-        // Table control 
+        // Table control
         //
         Table tableControl = new Table(20, 10, 4);
 
         int counter = 0;
         tableControl.SetupScrollBar(Orientation.Vertical, 10, (tableControl.Width - 1, 0));
-        tableControl.SetupScrollBar(Orientation.Horizontal, 10, (1, 0));
+        tableControl.SetupScrollBar(Orientation.Horizontal, 10, (0, 0));
 
         for (int y = 0; y < 15; y++)
             for (int x = 0; x < 20; x++)
                 tableControl.Cells[y, x].Value = ++counter;
         tableControl.Position = (22, 2);
 
-        Controls.Add(tableControl);
+        //Controls.Add(tableControl);
 
         //
         // Tab control showing two tabs
@@ -115,14 +115,21 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             tabPanel2.Add(check);
             check = new CheckBox(15, 1) { Text = "Checkbox 3", Position = (4, 3) };
             tabPanel2.Add(check);
+
+            ListBox lbox = new(10, 5) { Position = (2, 5) };
+            foreach (var item in Enumerable.Range(1, 8))
+            {
+                lbox.Items.Add($"Item {item}");
+            }
+            tabPanel2.Add(lbox);
         }
-        
+
         TabControl tab = new TabControl(new[] { new TabItem("Style", tabPanel1) { AutomaticPadding = 0 },
                                                 new TabItem("Nothing", tabPanel2) { AutomaticPadding = 0 },
                                               },
                                               35, 15) { Name = "tab" };
         tab.Position = (22, 2);
-        //Controls.Add(tab);
+        Controls.Add(tab);
 
         // Create the radio buttons for blue/black themes
         RadioButton colorsBlack = new("Ansi Black")
@@ -194,6 +201,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
     }
 }
 
+// This just exists for testing some airspace bugs
 class CompTest : CompositeControl
 {
     public CompTest(int width, int height) : base(width, height) { }
@@ -202,7 +210,7 @@ class CompTest : CompositeControl
     {
         for (int i = 0; i < 5; i++)
         {
-            Button btn = new(Width = Width)
+            Button btn = new(Width)
             {
                 Text = $"Button{i}",
                 Position = (0, i),
@@ -215,6 +223,7 @@ class CompTest : CompositeControl
     {
 
         bool result = base.ProcessMouse(state);
+        //if (result) System.Diagnostics.Debugger.Break();
         return result;
     }
 }
