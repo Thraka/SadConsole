@@ -163,7 +163,5 @@ public class ColorPicker : ControlBase
                 Surface[x, y].Foreground = new Color(255 - rowColors[x].R, 255 - rowColors[x].G, 255 - rowColors[x].B);
             }
         }
-
-        IsDirty = false;
     }
 }
