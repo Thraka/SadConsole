@@ -16,7 +16,7 @@ namespace SadConsole.Analyzers;
 /// All code fixes must  be linked to specific analyzers.
 /// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ColoredGlyphDecoratorNullCodeFix)), Shared]
-public class ColoredGlyphDecoratorNullCodeFix : CodeFixProvider
+public class ColoredGlyphDecoratorNewCodeFix : CodeFixProvider
 {
     private const string CommonName = "Common";
 
@@ -48,9 +48,9 @@ public class ColoredGlyphDecoratorNullCodeFix : CodeFixProvider
         // Register a code action that will invoke the fix.
         context.RegisterCodeFix(
             CodeAction.Create(
-                title: Resources.SADCON0002_RemoveCellDecoratorsTitle,
+                title: Resources.SADCON0001_NewCellDecoratorsTitle,
                 createChangedDocument: c => ConvertToHelpersAsync(context, declaration, c),
-                equivalenceKey: nameof(Resources.SADCON0002_RemoveCellDecoratorsTitle)),
+                equivalenceKey: nameof(Resources.SADCON0001_NewCellDecoratorsTitle)),
             diagnostic);
     }
 
