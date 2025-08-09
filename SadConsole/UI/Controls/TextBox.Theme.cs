@@ -37,7 +37,7 @@ public partial class TextBox
         if (Surface.Effects.Count != 0)
         {
             Surface.Effects.UpdateEffects(time);
-            IsDirty = true;
+            IsDirty = IsDirty || Surface.IsDirty;
         }
 
         if (!IsDirty) return;
@@ -98,8 +98,6 @@ public partial class TextBox
                 _oldState = State;
                 _editingText = Text;
             }
-
-            IsDirty = true;
         }
         else
         {
@@ -111,8 +109,6 @@ public partial class TextBox
                 Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
             else
                 Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
-
-            IsDirty = false;
         }
     }
 }

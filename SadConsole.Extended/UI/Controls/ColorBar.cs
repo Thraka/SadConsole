@@ -194,7 +194,5 @@ public class ColorBar : ControlBase
 
         Surface[SelectedPosition, 1].Glyph = 30;
         Surface[SelectedPosition, 1].Foreground = Color.LightGray;//this[_selectedPosition, 0].Foreground;
-
-        IsDirty = false;
     }
 }

@@ -57,7 +57,7 @@ public partial class ComboBox : CheckBox
     {
         DropdownContainer = new ScreenSurface(dropdownWidth, dropdownHeight);
         ListBox = new ListBox(dropdownWidth, dropdownHeight);
-        
+
         ControlHost listboxHost = new ControlHost();
         DropdownContainer.SadComponents.Add(listboxHost);
         listboxHost.Add(ListBox);
@@ -165,8 +165,8 @@ public partial class ComboBox : CheckBox
             IScreenSurface console = Parent.Host.ParentConsole;
             int screenBoundsX = console.Surface.Width;
             int screenBoundsY = console.Surface.Height;
-            int containerBoundsX = (DropdownContainer.Position.X + DropdownContainer.Width) * console.FontSize.X / console.Font.GlyphWidth;
-            int containerBoundsY = (DropdownContainer.Position.Y + DropdownContainer.Height) * console.FontSize.Y / console.Font.GlyphHeight;
+            int containerBoundsX = (DropdownContainer.Position.X + DropdownContainer.Width);
+            int containerBoundsY = (DropdownContainer.Position.Y + DropdownContainer.Height);
 
             // We are going off the screen horizontally
             if (containerBoundsX >= screenBoundsX)

@@ -132,7 +132,7 @@ public partial class ProgressBar : ControlBase
     }
 
     /// <summary>
-    /// Gets or sets the value of the scrollbar between the minimum and maximum values.
+    /// Gets or sets the value of the scrollbar between 0.0 and 1.0.
     /// </summary>
     public float Progress
     {

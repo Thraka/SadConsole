@@ -43,4 +43,14 @@ public partial class ImGuiRenderer
 
         return _loadedTexturesByTexture[texture];
     }
+
+    public void ReplaceBoundTexture(ImTextureID textureID, Texture2D texture)
+    {
+        if (_loadedTexturesByPointer.TryGetValue(textureID, out var oldTexture))
+        {
+            _loadedTexturesByTexture.Remove(oldTexture);
+            _loadedTexturesByTexture[texture] = textureID;
+            _loadedTexturesByPointer[textureID] = texture;
+        }
+    }
 }

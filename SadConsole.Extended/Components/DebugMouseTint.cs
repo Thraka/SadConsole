@@ -117,7 +117,7 @@ namespace SadConsole.Components
             }
         }
 
-        void IConfigurator.Run(Builder config, GameHost game) =>
+        void IConfigurator.Run(BuilderBase config, GameHost game) =>
             game.RootComponents.Add(this);
     }
 }

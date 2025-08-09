@@ -145,9 +145,6 @@ public partial class RadioButton
 
         if (width >= 5)
             Surface.Print(4, 0, Text.Align(TextAlignment, width - 4));
-
-
-        IsDirty = false;
     }
 
     /// <summary>

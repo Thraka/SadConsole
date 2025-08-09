@@ -48,13 +48,6 @@ public abstract class CompositeControl : ControlBase, IContainer
     protected virtual void CreateChildControls() { }
 
     /// <summary>
-    /// A handler to forward state to <see cref="ControlBase.IsDirty"/>.
-    /// </summary>
-    /// <param name="value"></param>
-    protected void IsDirtyEventHandler(bool value) =>
-        IsDirty = value;
-
-    /// <summary>
     /// Processes the mouse on each control hosted by this control.
     /// </summary>
     /// <param name="state">The mouse state based on the parent screen object.</param>
@@ -119,6 +112,20 @@ public abstract class CompositeControl : ControlBase, IContainer
         return false;
     }
 
+    /// <inheritdoc/>
+    protected override void OnMouseExit(ControlMouseState state)
+    {
+        base.OnMouseExit(state);
+
+        var controls = new List<ControlBase>(Controls);
+
+        for (int i = 0; i < controls.Count; i++)
+        {
+            ControlBase control = controls[i];
+            control.LostMouse(state.OriginalMouseState);
+        }
+    }
+
     /// <summary>
     /// Adds a child control to this control.
     /// </summary>
@@ -160,7 +167,11 @@ public abstract class CompositeControl : ControlBase, IContainer
         ControlBase[] controls = Controls.ToArray();
 
         for (int i = 0; i < controls.Length; i++)
+        {
             controls[i].UpdateAndRedraw(time);
+
+            IsDirty |= controls[i].IsDirty;
+        }
     }
 
     /// <inheritdoc/>

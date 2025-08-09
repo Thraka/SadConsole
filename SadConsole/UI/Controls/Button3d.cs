@@ -18,7 +18,7 @@ public class Button3d : ButtonBase
     public Button3d(int width, int height)
         : base(width, height)
     {
-        
+
     }
 
     ///<inheritdoc/>
@@ -100,8 +100,6 @@ public class Button3d : ButtonBase
 
             MouseArea = new Rectangle(0, 0, Width, Height);
         }
-
-        IsDirty = false;
     }
 
     [OnDeserialized]

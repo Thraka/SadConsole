@@ -5,11 +5,11 @@ namespace SadConsole.Examples;
 
 internal class DemoEntitySurface : IDemo
 {
-    public string Title => "Entity lite demonstration";
+    public string Title => "Entity demonstration";
 
     public string Description => "SadConsole contains an entity system which lets you create individual objects " +
                                  "that are drawn on top of an existing surface. The system is highly performant, " +
-                                 "supports collision detection, and has optimizations for single-cell 1x1 " +
+                                 "supports collision detection, and has optimizations for single-cell (1x1) " +
                                  "entities (although it supports larger entities)." +
                                  "\r\n\r\n" +
                                  "Press [c:r f:Red:2]F1 to toggle movement\r\n" +

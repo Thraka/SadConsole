@@ -182,7 +182,5 @@ public class HueBar : ControlBase
             Surface[foundColor.Item3, 0].Foreground = stop.Color;
             colorIndexesFinished.Add(foundColor.Item3);
         }
-
-        IsDirty = false;
     }
 }

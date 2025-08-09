@@ -155,8 +155,6 @@ public partial class ScrollBar : ControlBase
             if (BarSize > 1)
                 for (int i = 0; i < GripSize; i++)
                     control.Surface[GripStart + i].Glyph = GripGlyph;
-
-            control.IsDirty = false;
         }
     }
 }

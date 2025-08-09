@@ -9,8 +9,8 @@
     <Import_RootNamespace>SadConsole.Host.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\Run.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Fps.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Configuration\InternalHostStartupData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\MonoGameSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\MonoGameCallbackConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Renderers\LayeredRenderer.cs" />

@@ -404,6 +404,9 @@
         <member name="M:SadConsole.Game.GetMouseState">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
             Opens a read-only stream with MonoGame.
@@ -558,17 +561,6 @@
         <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
-        <member name="T:SadConsole.Host.ClearScreenGameComponent">
-            <summary>
-            A MonoGame component that clears the screen with the <see cref="F:SadConsole.Settings.ClearColor"/> color.
-            </summary>
-        </member>
-        <member name="M:SadConsole.Host.ClearScreenGameComponent.#ctor(Microsoft.Xna.Framework.Game)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Host.ClearScreenGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
-            <inheritdoc/>
-        </member>
         <member name="T:SadConsole.Host.FPSCounterComponent">
             <summary>
             A component to draw how many frames per second the engine is performing at.
@@ -681,11 +673,6 @@
         <member name="P:SadConsole.Host.Global.SadConsoleComponent">
             <summary>
             The game component to control SadConsole updates, input, and rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Global.ClearScreenComponent">
-            <summary>
-            The game component that clears the render output before each frame draw.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Global.GraphicsDeviceManager">
@@ -1415,6 +1402,12 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
             <summary>

@@ -3,7 +3,7 @@ using Hexa.NET.ImGui;
 
 namespace SadConsole.Debug;
 
-class GuiTopBar : ImGuiObjectBase
+public class GuiTopBar : ImGuiObjectBase
 {
     public override void BuildUI(ImGuiRenderer renderer)
     {

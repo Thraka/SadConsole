@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace SadConsole.Configuration;
+﻿namespace SadConsole.Configuration;
 
 /// <summary>
 /// Configuration interface that's added to the <see cref="Builder"/> object.
@@ -12,5 +10,5 @@ public interface IConfigurator
     /// </summary>
     /// <param name="config">The builder configuration object.</param>
     /// <param name="game">The game object being created.</param>
-    void Run(Builder config, GameHost game);
+    void Run(BuilderBase config, GameHost game);
 }

@@ -48,7 +48,7 @@ public class SplashScreenConfig : IConfigurator
     /// </summary>
     public Func<GameHost, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
         game.SetSplashScreens(GenerateSplashScreen(game));
     }

@@ -17,6 +17,7 @@
 
   <PropertyGroup>
     <!-- monogame, sfml, fna, or kni -->
+    <!-- If sfml, target framework must be set to a platform, such as net9.0-windows -->
     <GameHost>monogame</GameHost>
 
     <DefineConstants>$(DefineConstants);PROJREFS</DefineConstants>
@@ -42,6 +43,10 @@
       <HintPath>..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
     </Reference>
 
+    <!-- Analyzers -->
+    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    
   </ItemGroup>
 
   <!-- FNA and SFML can't use MonoGame shaders -->
@@ -51,13 +56,13 @@
 
   <!-- MonoGame host requires you to choose which rendering library you want to use. -->
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
 
     <!-- If you want to use DirectX, you must set the <TargetFramework> to net8.0-windows and change the MonoGame reference -->
-    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />-->
+    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.3" />-->
 
     <!-- Compile the MonoGame Shaders -->
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
     <MonoGameContentReference Include="Content\Assets.mgcb" />
     <None Remove="Content\bin\**\*" />
     <None Remove="Content\obj\**\*" />

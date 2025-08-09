@@ -1,0 +1,9 @@
+{
+  "$type": "SadConsole.Editor.Core+AppSettings, Editor",
+  "FontSize": 14.0,
+  "Font": "CousineNerdFont-Regular.ttf",
+  "UIScale": 1,
+  "WindowNewDocWidthFactor": 22,
+  "WindowSimpleObjectEditor": 40,
+  "WindowGlyphEditor": 20
+}

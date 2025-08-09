@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace SadConsole;
 
@@ -11,11 +12,12 @@ public static class ExtensionsSystem
     /// <returns>A string representing the object.</returns>
     public static string GetDebuggerDisplayValue(this object obj)
     {
-        var debugger = obj.GetType()
-                          .GetCustomAttributes(typeof(System.Diagnostics.DebuggerDisplayAttribute), true)
-                          .FirstOrDefault()
-                          as System.Diagnostics.DebuggerDisplayAttribute;
+        Type type = obj.GetType();
 
-        return debugger?.Value ?? obj.ToString();
+        var debugger = type.GetCustomAttributes(typeof(System.Diagnostics.DebuggerDisplayAttribute), true)
+                           .FirstOrDefault()
+                           as System.Diagnostics.DebuggerDisplayAttribute;
+
+        return debugger?.Value ?? obj.ToString() ?? type.Name;
     }
 }

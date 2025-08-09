@@ -118,8 +118,7 @@ public sealed partial class Game : WpfGame
             SadConsolePreInit.Invoke(this, EventArgs.Empty);
             SadConsole.Game.Instance.MonoGameInstance = this;
 
-
-            SadConsole.Game.Instance._configuration.SetInitialRenderPixels((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
+            SadConsole.Game.Instance._configuration.SetWindowSizeInPixels((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height);
             SadConsole.Game.Instance._configuration.ConfigureFonts((string)GetValue(FontPathProperty));
             SadConsole.Game.Instance.MonoGameInit(this);
         }

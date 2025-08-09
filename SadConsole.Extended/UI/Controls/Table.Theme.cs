@@ -142,8 +142,6 @@ public partial class Table
             rowIndex++;
         }
 
-        IsDirty = false;
-
         base.UpdateAndRedraw(time);
     }
 

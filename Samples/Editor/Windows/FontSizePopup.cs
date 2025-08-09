@@ -1,14 +1,15 @@
-﻿using ImGuiNET;
+﻿using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
+
 
 public static class FontSizePopup
 {
     private static int _selectedSize = -1;
     private static string[] _sizes = ["x0.25", "x0.50", "x1", "x2", "x3", "x4"];
 
-    public static bool Show(ImGuiRenderer renderer, string popupId, IFont font, ref Point fontSize)
+    public static bool Show(string popupId, IFont font, ref Point fontSize)
     {
         bool returnValue = false;
 
@@ -34,11 +35,9 @@ public static class FontSizePopup
                 ImGui.CloseCurrentPopup();
                 returnValue = true;
             }
-            
+
             ImGui.EndPopup();
         }
-
-        ImGuiCore.State.CheckSetPopupOpen(popupId);
 
         return returnValue;
     }

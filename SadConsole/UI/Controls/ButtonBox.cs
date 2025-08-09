@@ -24,7 +24,7 @@ public class ButtonBox : ButtonBase
     public ButtonBox(int width, int height)
         : base(width, height)
     {
-        
+
     }
 
     ///<inheritdoc/>
@@ -139,8 +139,6 @@ public class ButtonBox : ButtonBase
             Surface.DrawLine(new Point(Width - 1, 0), new Point(Width - 1, Surface.Height - 1), null, bottomrightcolor, appearance.Background);
             Surface.DrawLine(new Point(1, Surface.Height - 1), new Point(Width - 1, Surface.Height - 1), null, bottomrightcolor, appearance.Background);
         }
-
-        IsDirty = false;
     }
 
     [OnDeserialized]

@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <!--<Nullable>enable</Nullable>-->
+    <Nullable>enable</Nullable>
     <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
     <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
@@ -36,10 +36,6 @@
     <None Include="..\README.md" pack="true" PackagePath="." />
     <Content Include="Roboto-Regular.ttf" pack="true" PackagePath="content/." CopyToOutputDirectory="Always" />
     <Content Include="SadConsole.Debug.MonoGame.targets" PackagePath="build/SadConsole.Debug.MonoGame.targets" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Debug\ScreenObjectEditors\" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

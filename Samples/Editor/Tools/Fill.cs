@@ -1,14 +1,20 @@
 ﻿using System.Numerics;
-using ImGuiNET;
-using SadConsole.Editor.GuiParts.Tools;
-using SadConsole.Editor.Model;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Fill : ITool
 {
-    public string Name => "Fill";
+    private readonly ImGuiList<string> _modes = new(0, "Draw", "Objects");
+    private Windows.GlyphEditor? _glyphEditor;
+
+    private bool _isAdding = false;
+    private bool _isEditing = false;
+
+    public string Title => "\ueb2a Fill";
 
     public string Description => """
         Fills an area of the surface.
@@ -18,46 +24,160 @@ internal class Fill : ITool
         The right-mouse button changes the current fill tip to the foreground, background, and glyph, that is under the cursor.
         """;
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public void BuildSettingsPanel(Document document)
     {
-        ImGuiWidgets.BeginGroupPanel("Settings");
+        ImGui.SeparatorText(Title);
 
-        Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
-        Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
-        Mirror mirror = SharedToolSettings.Tip.Mirror;
-        int glyph = SharedToolSettings.Tip.Glyph;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
+        bool supportsObjects = document is IDocumentSimpleObjects;
 
-        SettingsTable.DrawCommonSettings("fillsettings", true, true, true, true, true,
-                                 ref foreground, surface.Surface.DefaultForeground.ToVector4(),
-                                 ref background, surface.Surface.DefaultBackground.ToVector4(),
-                                 ref mirror,
-                                 ref glyph, surface.Font, renderer);
+        if (supportsObjects)
+        {
+            ImGui.AlignTextToFramePadding();
+            ImGui.Text("Mode");
+            ImGui.SameLine();
+            ImGui.Combo("##toolmode", ref _modes.SelectedItemIndex, _modes.Names, _modes.Count);
+        }
 
-        SharedToolSettings.Tip.Foreground = foreground.ToColor();
-        SharedToolSettings.Tip.Background = background.ToColor();
-        SharedToolSettings.Tip.Mirror = mirror;
-        SharedToolSettings.Tip.Glyph = glyph;
+        if (_modes.SelectedItemIndex == 0 || !supportsObjects)
+        {
+            ImGuiSC.BeginGroupPanel("Settings");
 
-        ImGuiWidgets.EndGroupPanel();
+            Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
+            Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
+            int glyph = SharedToolSettings.Tip.Glyph;
+            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+
+            if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
+            {
+
+                SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                    ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
+                    ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
+                    ref mirror,
+                    ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+
+                SettingsTable.EndTable();
+            }
+
+            SharedToolSettings.Tip.Foreground = foreground.ToColor();
+            SharedToolSettings.Tip.Background = background.ToColor();
+            SharedToolSettings.Tip.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            SharedToolSettings.Tip.Glyph = glyph;
+
+            ImGuiSC.EndGroupPanel();
+        }
+        else
+        {
+            IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
+
+            ImGui.SetNextItemWidth(-1);
+
+            if (ImGui.BeginListBox("##pencil_simplegameobjects"))
+            {
+                SimpleObjectHelpers.DrawSelectables("pencil_simplegameobjects", docSimpleObjects.SimpleObjects, document.EditingSurfaceFont);
+
+                ImGui.EndListBox();
+            }
+
+            bool isItemSelected = docSimpleObjects.SimpleObjects.IsItemSelected();
+
+            if (isItemSelected)
+            {
+                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                    document.EditingSurfaceFont,
+                    docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
+                ImGui.SameLine();
+                ImGui.Text(docSimpleObjects.SimpleObjects.SelectedItem!.ToString());
+                SharedToolSettings.Tip = (ColoredGlyph)docSimpleObjects.SimpleObjects.SelectedItem.Visual.Clone();
+            }
+
+            ImGui.BeginDisabled(!isItemSelected);
+            if (ImGui.Button("Change Item"))
+            {
+                _glyphEditor = new(docSimpleObjects.SimpleObjects.SelectedItem!.Visual,
+                                   document.EditingSurface.Surface.DefaultForeground,
+                                   document.EditingSurface.Surface.DefaultBackground,
+                                   document.EditingSurfaceFont, docSimpleObjects.SimpleObjects.SelectedItem!.Name);
+                _glyphEditor.Closed += GlyphEditor_Closed;
+                _isEditing = true;
+                _glyphEditor.Open();
+            }
+            ImGui.EndDisabled();
+            if (ImGui.Button("Add New Object"))
+            {
+                _glyphEditor = new(new ColoredGlyph(),
+                                            document.EditingSurface.Surface.DefaultForeground,
+                                            document.EditingSurface.Surface.DefaultBackground,
+                                            document.EditingSurfaceFont, "Name");
+                _glyphEditor.Closed += GlyphEditor_Closed;
+                _isAdding = true;
+                _glyphEditor.Open();
+            }
+
+            if (isItemSelected)
+            {
+                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                    document.EditingSurfaceFont,
+                    docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
+
+                ImGui.SameLine();
+            }
+
+            if (ImGui.BeginCombo("##simplegameobjectscombo", docSimpleObjects.SimpleObjects.SelectedItem?.Name))
+            {
+                SimpleObjectHelpers.DrawSelectables("simplegameobjectscombo", docSimpleObjects.SimpleObjects, document.EditingSurfaceFont);
+
+                ImGui.EndCombo();
+            }
+        }
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    private void GlyphEditor_Closed(object? sender, EventArgs e)
     {
-        if (ImGuiCore.State.IsPopupOpen) return;
+        if (_glyphEditor!.DialogResult)
+        {
+            ColoredGlyph glyph = _glyphEditor.Glyph.ToColoredGlyph();
+            if (_isAdding)
+            {
+                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
+                docSimpleObjects.SimpleObjects.Objects.Add(
+                    new SimpleObjectDefinition() { Visual = _glyphEditor.Glyph.ToColoredGlyph(), Name = _glyphEditor.Name! });
+
+                _isAdding = false;
+            }
+            else if (_isEditing)
+            {
+                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
+
+                docSimpleObjects.SimpleObjects.SelectedItem!.Visual = _glyphEditor.Glyph.ToColoredGlyph();
+                docSimpleObjects.SimpleObjects.SelectedItem!.Name = _glyphEditor.Name!;
+
+                SharedToolSettings.Tip = docSimpleObjects.SimpleObjects.SelectedItem.Visual;
+
+                _isEditing = false;
+            }
+        }
+
+        _glyphEditor = null;
+    }
+
+    public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
+    {
+        if (!isHovered) return;
+
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!isActive) return;
 
-        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
         {
             ColoredGlyph cellToMatch = new();
             ColoredGlyphBase currentFillCell = SharedToolSettings.Tip;
 
-            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
+            document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(cellToMatch);
 
-            Func<ColoredGlyphBase, bool> isTargetCell = (c) =>
+            bool isTargetCell(ColoredGlyphBase c)
             {
                 if (c.Glyph == 0 && cellToMatch.Glyph == 0)
                     return c.Background == cellToMatch.Background;
@@ -66,48 +186,52 @@ internal class Fill : ITool
                        c.Background == cellToMatch.Background &&
                        c.Glyph == cellToMatch.Glyph &&
                        c.Mirror == cellToMatch.Mirror;
-            };
+            }
 
-            Action<ColoredGlyphBase> fillCell = (c) =>
+            void fillCell(ColoredGlyphBase c)
             {
                 currentFillCell.CopyAppearanceTo(c);
                 //console.TextSurface.SetEffect(c, _currentFillCell.Effect);
-            };
+            }
 
-            List<ColoredGlyphBase> cells = new List<ColoredGlyphBase>(document.VisualDocument.Surface);
+            List<ColoredGlyphBase> cells = new(document.EditingSurface.Surface);
 
-            Func<ColoredGlyphBase, SadConsole.Algorithms.NodeConnections<ColoredGlyphBase>> getConnectedCells = (c) =>
+            Algorithms.NodeConnections<ColoredGlyphBase> getConnectedCells(ColoredGlyphBase c)
             {
                 Algorithms.NodeConnections<ColoredGlyphBase> connections = new Algorithms.NodeConnections<ColoredGlyphBase>();
 
-                var position = Point.FromIndex(cells.IndexOf(c), document.VisualDocument.Surface.Width);
+                var position = Point.FromIndex(cells.IndexOf(c), document.EditingSurface.Surface.Width);
 
-                connections.West = document.VisualDocument.Surface.IsValidCell(position.X - 1, position.Y) ? document.VisualDocument.Surface[position.X - 1, position.Y] : null;
-                connections.East = document.VisualDocument.Surface.IsValidCell(position.X + 1, position.Y) ? document.VisualDocument.Surface[position.X + 1, position.Y] : null;
-                connections.North = document.VisualDocument.Surface.IsValidCell(position.X, position.Y - 1) ? document.VisualDocument.Surface[position.X, position.Y - 1] : null;
-                connections.South = document.VisualDocument.Surface.IsValidCell(position.X, position.Y + 1) ? document.VisualDocument.Surface[position.X, position.Y + 1] : null;
+                connections.West = document.EditingSurface.Surface.IsValidCell(position.X - 1, position.Y) ? document.EditingSurface.Surface[position.X - 1, position.Y] : null;
+                connections.East = document.EditingSurface.Surface.IsValidCell(position.X + 1, position.Y) ? document.EditingSurface.Surface[position.X + 1, position.Y] : null;
+                connections.North = document.EditingSurface.Surface.IsValidCell(position.X, position.Y - 1) ? document.EditingSurface.Surface[position.X, position.Y - 1] : null;
+                connections.South = document.EditingSurface.Surface.IsValidCell(position.X, position.Y + 1) ? document.EditingSurface.Surface[position.X, position.Y + 1] : null;
 
                 return connections;
-            };
+            }
 
             if (!isTargetCell(currentFillCell))
-                SadConsole.Algorithms.FloodFill<ColoredGlyphBase>(document.VisualDocument.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
+                Algorithms.FloodFill(document.EditingSurface.Surface[hoveredCellPosition], isTargetCell, fillCell, getConnectedCells);
 
-            document.VisualDocument.Surface.IsDirty = true;
+            document.EditingSurface.Surface.IsDirty = true;
         }
-        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
         {
-            document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
-            
-            document.VisualDocument.IsDirty = true;
+            document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+            document.EditingSurface.IsDirty = true;
         }
     }
 
-    public void OnSelected() { }
+    public void OnSelected(Document document) { }
 
-    public void OnDeselected() { }
+    public void OnDeselected(Document document) { }
+
+    public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
+    public void DrawOverDocument(Document document) { }
+
+    public override string ToString() =>
+        Title;
 }

@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
-using ImGuiNET;
-using SadConsole.Editor.GuiParts.Tools;
-using SadConsole.Editor.Model;
-using SadConsole.Editor.Windows;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using Hexa.NET.ImGui.SC.Windows;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
@@ -29,30 +29,30 @@ internal class Recolor : ITool
     private int _applyGlyph = 0;
     private Mirror _applyMirror = Mirror.None;
 
-    public string Name => "Recolor";
+    public string Title => "\ue22b Recolor";
 
     public string Description => """
         Recolor the glyphs on the surface.
-        
+
         Set the match conditions, then use the left-mouse button to apply the new colors based on the match conditions.
-        
+
         The right-mouse button changes the current condition parameters to match the foreground, background, and glyph that is under the cursor.
         """;
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public void BuildSettingsPanel(Document document)
     {
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
+        ImGui.SeparatorText(Title);
+        IScreenSurface surface = document.EditingSurface;
 
-        ImGuiWidgets.BeginGroupPanel("Match");
+        ImGuiSC.BeginGroupPanel("Match");
 
         //
         // MATCH SETTINGS
         //
-
-        GuiParts.Tools.SettingsTable.BeginTable("matchtable");
-
-        // Foreground
+        if (SettingsTable.BeginTable("matchtable"))
         {
+
+            // Foreground
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -65,21 +65,18 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##foreground_edit", ref _matchForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_matchForeground, _matchBackground) = (_matchBackground, _matchForeground);
-            ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
             ImGui.SameLine();
             if (ImGui.Button($"Palette##foreground_edit"))
-                ImGuiCore.State.OpenPopup($"palettepopup##foreground_edit");
+                ImGui.OpenPopup($"palettepopup##foreground_edit");
 
             Color col = _matchForeground.ToColor();
             if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
                 _matchForeground = col.ToVector4();
 
             ImGui.EndDisabled();
-        }
 
-        // Background
-        {
+            // Background
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -92,21 +89,18 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##background_edit", ref _matchBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_matchForeground, _matchBackground) = (_matchBackground, _matchForeground);
-            ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
 
             ImGui.SameLine();
             if (ImGui.Button($"Palette##background_edit"))
-                ImGuiCore.State.OpenPopup($"palettepopup##background_edit");
+                ImGui.OpenPopup($"palettepopup##background_edit");
 
-            Color col = _matchBackground.ToColor();
+            col = _matchBackground.ToColor();
             if (PalettePopup.Show($"palettepopup##background_edit", ref col))
                 _matchBackground = col.ToVector4();
 
             ImGui.EndDisabled();
-        }
 
-        // Mirror
-        {
+            // Mirror
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -114,19 +108,16 @@ internal class Recolor : ITool
             ImGui.TableSetColumnIndex(1);
 
             ImGui.BeginDisabled(!_isMatchMirror);
+            int itemIndex =
+                ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetIndexFromValue(ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_matchMirror));
 
-            int itemIndex = Model.SadConsoleTypes.Mirror.GetIndexFromValue(_matchMirror);
-
-            if (ImGui.Combo("##mirror_edit", ref itemIndex, Model.SadConsoleTypes.Mirror.Names, Model.SadConsoleTypes.Mirror.Names.Length))
-            {
-                _matchMirror = Model.SadConsoleTypes.Mirror.GetValueFromIndex(itemIndex);
-            }
-
+            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Names,
+                    ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Count))
+                _matchMirror =
+                    ImGuiTypes.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetValueFromIndex(itemIndex));
             ImGui.EndDisabled();
-        }
 
-        // Glyph
-        {
+            // Glyph
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -134,26 +125,28 @@ internal class Recolor : ITool
             ImGui.TableSetColumnIndex(1);
 
             ImGui.BeginDisabled(!_isMatchGlyph);
-
-            FontGlyph.DrawWithPopup(renderer, "##glyph_edit", "match_font", surface.Font, _matchForeground, _matchBackground, ref _matchGlyph,true);
-
+            ImGuiSC.FontGlyph.DrawWithPopup(ImGuiCore.Renderer, "##glyph_edit", "match_font", surface.Font, _matchForeground, _matchBackground,
+                ref _matchGlyph, true);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                (_applyGlyph, _matchGlyph) = (_matchGlyph, _applyGlyph);
             ImGui.EndDisabled();
+
+            SettingsTable.EndTable();
         }
 
-        GuiParts.Tools.SettingsTable.EndTable();
-        ImGuiWidgets.EndGroupPanel();
+        ImGuiSC.EndGroupPanel();
 
 
-        ImGuiWidgets.BeginGroupPanel("Apply");
+        ImGuiSC.BeginGroupPanel("Apply");
 
         //
         // APPLY SETTINGS
         //
 
-        GuiParts.Tools.SettingsTable.BeginTable("applytable");
-
-        // Foreground
+        if (SettingsTable.BeginTable("applytable"))
         {
+
+            // Foreground
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -166,21 +159,18 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##foreground_edit", ref _applyForeground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_applyForeground, _applyBackground) = (_applyBackground, _applyForeground);
-            ImGuiCore.State.CheckSetPopupOpen($"##foregroundpicker");
 
             ImGui.SameLine();
             if (ImGui.Button($"Palette##foreground_edit"))
-                ImGuiCore.State.OpenPopup($"palettepopup##foreground_edit");
+                ImGui.OpenPopup($"palettepopup##foreground_edit");
 
             Color col = _applyForeground.ToColor();
             if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
                 _applyForeground = col.ToVector4();
 
             ImGui.EndDisabled();
-        }
 
-        // Background
-        {
+            // Background
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -193,21 +183,18 @@ internal class Recolor : ITool
             ImGui.ColorEdit4("##background_edit", ref _applyBackground, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.NoInputs);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_applyForeground, _applyBackground) = (_applyBackground, _applyForeground);
-            ImGuiCore.State.CheckSetPopupOpen($"##backgroundpicker");
 
             ImGui.SameLine();
             if (ImGui.Button($"Palette##background_edit"))
-                ImGuiCore.State.OpenPopup($"palettepopup##background_edit");
+                ImGui.OpenPopup($"palettepopup##background_edit");
 
-            Color col = _applyBackground.ToColor();
-            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
+            col = _applyBackground.ToColor();
+            if (PalettePopup.Show($"palettepopup_background_edit", ref col))
                 _applyBackground = col.ToVector4();
 
             ImGui.EndDisabled();
-        }
 
-        // Mirror
-        {
+            // Mirror
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -215,19 +202,15 @@ internal class Recolor : ITool
             ImGui.TableSetColumnIndex(1);
 
             ImGui.BeginDisabled(!_isApplyMirror);
+            int itemIndex = ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetIndexFromValue(ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_applyMirror));
 
-            int itemIndex = Model.SadConsoleTypes.Mirror.GetIndexFromValue(_applyMirror);
-
-            if (ImGui.Combo("##mirror_edit", ref itemIndex, Model.SadConsoleTypes.Mirror.Names, Model.SadConsoleTypes.Mirror.Names.Length))
-            {
-                _applyMirror = Model.SadConsoleTypes.Mirror.GetValueFromIndex(itemIndex);
-            }
-
+            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Names,
+                    ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Count))
+                _applyMirror =
+                    ImGuiTypes.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetValueFromIndex(itemIndex));
             ImGui.EndDisabled();
-        }
 
-        // Glyph
-        {
+            // Glyph
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
             ImGui.AlignTextToFramePadding();
@@ -236,28 +219,31 @@ internal class Recolor : ITool
 
             ImGui.BeginDisabled(!_isApplyGlyph);
 
-            FontGlyph.DrawWithPopup(renderer, "##glyph_edit", "apply_font", surface.Font, _applyForeground, _applyBackground, ref _applyGlyph, true);
+            ImGuiSC.FontGlyph.DrawWithPopup(ImGuiCore.Renderer, "##glyph_edit", "apply_font", surface.Font, _applyForeground, _applyBackground,
+                ref _applyGlyph, true);
+
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_applyGlyph, _matchGlyph) = (_matchGlyph, _applyGlyph);
             ImGui.EndDisabled();
+
+            SettingsTable.EndTable();
         }
 
-        GuiParts.Tools.SettingsTable.EndTable();
-        ImGuiWidgets.EndGroupPanel();
+        ImGuiSC.EndGroupPanel();
 
     }
 
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+    public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        if (ImGuiCore.State.IsPopupOpen) return;
+        if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (!isActive) return;
 
-        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
         {
-            ColoredGlyphBase targetCell = document.VisualDocument.Surface[hoveredCellPosition];
+            ColoredGlyphBase targetCell = document.EditingSurface.Surface[hoveredCellPosition];
 
             bool matched = false;
 
@@ -279,14 +265,14 @@ internal class Recolor : ITool
                 if (_isApplyGlyph)
                     targetCell.Glyph = _applyGlyph;
 
-                document.VisualDocument.IsDirty = true;
+                document.EditingSurface.IsDirty = true;
             }
         }
-        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
         {
-            ColoredGlyphBase tempCell = document.VisualDocument.Surface[hoveredCellPosition];
+            ColoredGlyphBase tempCell = document.EditingSurface.Surface[hoveredCellPosition];
 
-            if (ImGui.IsKeyDown(ImGuiKey.ModShift))
+            if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
             {
                 _applyForeground = tempCell.Foreground.ToVector4();
                 _applyBackground = tempCell.Background.ToVector4();
@@ -303,11 +289,16 @@ internal class Recolor : ITool
         }
     }
 
-    public void OnSelected() { }
+    public void OnSelected(Document document) { }
 
-    public void OnDeselected() { }
+    public void OnDeselected(Document document) { }
+
+    public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer) { }
+    public void DrawOverDocument(Document document) { }
+
+    public override string ToString() =>
+        Title;
 }

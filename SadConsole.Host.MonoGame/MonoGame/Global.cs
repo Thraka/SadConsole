@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #if WPF
@@ -80,11 +78,6 @@ public static class Global
     /// The game component to control SadConsole updates, input, and rendering.
     /// </summary>
     public static SadConsoleGameComponent SadConsoleComponent { get; set; }
-
-    /// <summary>
-    /// The game component that clears the render output before each frame draw.
-    /// </summary>
-    public static ClearScreenGameComponent ClearScreenComponent { get; set; }
 
 #if WPF
 

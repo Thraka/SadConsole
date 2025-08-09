@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using SadConsole.Input;
 using System;
+using System.Linq;
 
 namespace SadConsole.Host;
 
@@ -47,9 +48,17 @@ class Keyboard : SadConsole.Input.IKeyboardState
     // Forcing numlock on works as the getpressedkeys method will automatically return the keypad key vs keyboard lock key.
     public bool NumLock => true;
 
-    public SadConsole.Input.Keys[] GetPressedKeys()
+    public SadConsole.Input.Keys[] GetPressedKeys() =>
+        _keys;
+
+    public bool IsKeyDown(SadConsole.Input.Keys key) =>
+        _keys.Contains(key);
+
+    public bool IsKeyUp(SadConsole.Input.Keys key) =>
+        !_keys.Contains(key);
+
+    public void Refresh()
     {
-        //return _keys.ToArray();
         List<Input.Keys> keysPressed = new List<Input.Keys>(5);
 
         for (int i = 0; i < (int)SFML.Window.Keyboard.Key.KeyCount; i++)
@@ -58,15 +67,6 @@ class Keyboard : SadConsole.Input.IKeyboardState
                 keysPressed.Add(((SFML.Window.Keyboard.Key)i).ToSadConsole());
         }
 
-        return keysPressed.ToArray();
+        _keys = keysPressed.ToArray();
     }
-
-    public bool IsKeyDown(SadConsole.Input.Keys key) =>
-        SFML.Window.Keyboard.IsKeyPressed(key.ToSFML());
-
-    public bool IsKeyUp(SadConsole.Input.Keys key) =>
-        !SFML.Window.Keyboard.IsKeyPressed(key.ToSFML());
-
-    public void Refresh() =>
-        throw new NotImplementedException("This method is not used by the host.");
 }

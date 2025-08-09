@@ -1,23 +1,23 @@
 ﻿using SadConsole.ImGuiSystem;
-using SadConsole.Editor.Model;
+using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.Tools;
 
-public interface ITool
+public interface ITool: ITitle
 {
-    string Name { get; }
-
     string Description { get; }
 
-    void BuildSettingsPanel(ImGuiRenderer renderer);
+    void BuildSettingsPanel(Document document);
 
-    void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer);
+    void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive);
 
-    void OnSelected();
+    void OnSelected(Document document);
 
-    void OnDeselected();
+    void OnDeselected(Document document);
+
+    void Reset(Document document);
 
     void DocumentViewChanged(Document document);
 
-    void DrawOverDocument(Document document, ImGuiRenderer renderer);
+    void DrawOverDocument(Document document);
 }

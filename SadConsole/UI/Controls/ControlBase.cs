@@ -136,7 +136,7 @@ public abstract class ControlBase
     public Rectangle MouseArea { get; set; }
 
     /// <summary>
-    /// When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; othwerise <see langword="false"/>.
+    /// When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; otherwise <see langword="false"/>.
     /// </summary>
     /// <remarks>
     /// This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
@@ -196,6 +196,7 @@ public abstract class ControlBase
             if (value != _isDirty)
             {
                 _isDirty = value;
+                Surface.IsDirty = value;
                 OnIsDirtyChanged();
             }
         }
@@ -348,7 +349,7 @@ public abstract class ControlBase
         Width = width;
         Height = height;
         CanResize = true;
-        IsDirty = true;
+        _isDirty = true;
         TabStop = true;
         IsVisible = true;
         FocusOnMouseClick = true;
@@ -756,7 +757,7 @@ public abstract class ControlBase
         /// </summary>
         /// <param name="control">The control.</param>
         /// <param name="originalMouseState">The original mouse state sent to the control.</param>
-        public ControlMouseState(ControlBase control, MouseScreenObjectState originalMouseState) : this(control, originalMouseState.CellPosition - control.AbsolutePosition, originalMouseState)
+        public ControlMouseState(ControlBase control, MouseScreenObjectState originalMouseState) : this(control, originalMouseState.SurfaceCellPosition - control.AbsolutePosition, originalMouseState)
         {
 
         }

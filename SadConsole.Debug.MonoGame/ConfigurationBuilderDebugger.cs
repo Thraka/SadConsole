@@ -43,7 +43,7 @@ internal class ImGuiDebugConfig : RootComponent, IConfigurator
             Debug.Debugger.Start();
     }
 
-    void IConfigurator.Run(Builder config, GameHost game)
+    void IConfigurator.Run(BuilderBase config, GameHost game)
     {
         game.RootComponents.Add(this);
 

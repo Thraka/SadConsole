@@ -35,7 +35,7 @@ public interface IFont: IDisposable
     int TotalGlyphs { get; }
 
     /// <summary>
-    /// Which glyph index is considered completely solid. Used for shading.
+    /// Which glyph index is considered completely solid white. Used for shading.
     /// </summary>
     int SolidGlyphIndex { get; set; }
 
@@ -70,6 +70,11 @@ public interface IFont: IDisposable
     /// <param name="glyph">The index of the glyph to get.</param>
     /// <returns>The rectangle for the glyph.</returns>
     Rectangle GetGlyphSourceRectangle(int glyph);
+
+    /// <summary>
+    /// A dictionary that stores the source rectangles of the font by glyph id.
+    /// </summary>
+    Dictionary<int, Rectangle> GlyphRectangles { get; }
 
     /// <summary>
     /// Generates a rectangle for the specified glyph. For the actual font rectangle, use <see cref="GetGlyphSourceRectangle(int)"/>.

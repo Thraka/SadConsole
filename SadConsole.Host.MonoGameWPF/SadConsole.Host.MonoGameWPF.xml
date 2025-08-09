@@ -381,6 +381,9 @@
         <member name="M:SadConsole.Game.GetMouseState">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
             Opens a read-only stream with MonoGame.
@@ -649,11 +652,6 @@
         <member name="P:SadConsole.Host.Global.SadConsoleComponent">
             <summary>
             The game component to control SadConsole updates, input, and rendering.
-            </summary>
-        </member>
-        <member name="P:SadConsole.Host.Global.ClearScreenComponent">
-            <summary>
-            The game component that clears the render output before each frame draw.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Global.GraphicsDeviceWpfControl">
@@ -1386,6 +1384,12 @@
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+        </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
             <summary>
             Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
@@ -1398,15 +1402,6 @@
             Adds a MonoGame game component that renders the frames per-second of the game.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <returns>The configuration builder.</returns>
-        </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.SetInitialRenderPixels(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
-            <summary>
-            Sets the <see cref="P:SadConsole.Settings.Rendering.RenderWidth"/> and <see cref="P:SadConsole.Settings.Rendering.RenderHeight"/> values.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="width">The total pixel width of the control.</param>
-            <param name="height">The total pixel height of the control.</param>
             <returns>The configuration builder.</returns>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.UseTitleContainer(SadConsole.Configuration.Builder)">

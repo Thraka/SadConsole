@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
@@ -11,26 +10,17 @@ namespace SadConsole.Debug;
 /// </summary>
 public static partial class Debugger
 {
-    private static ImGuiMonoGameComponent _imGui;
 
     /// <summary>
     /// An event that's raised when the debugger is opened. True is passed if it's the first time it's opened.
     /// </summary>
     public static event Action<bool> Opened;
+
     /// <summary>
     /// An event that's raised when the debugger is closed.
     /// </summary>
     public static event Action Closed;
 
-    /// <summary>
-    /// The ImGui objects to draw each game frame.
-    /// </summary>
-    public static List<ImGuiObjectBase> GuiComponents => _imGui.UIComponents;
-
-    /// <summary>
-    /// The ImGui renderer.
-    /// </summary>
-    public static ImGuiRenderer Renderer => _imGui.ImGuiRenderer;
 
     /// <summary>
     /// True when the debugger is currently opened.
@@ -39,8 +29,9 @@ public static partial class Debugger
     {
         get
         {
-            if (_imGui == null) return false;
-            return _imGui.Visible;
+            if (ImGuiCore.ImGuiComponent == null) return false;
+            
+            return ImGuiCore.ImGuiComponent.Visible;
         }
     }
 
@@ -49,10 +40,10 @@ public static partial class Debugger
     /// </summary>
     public static void Start()
     {
-        if (_imGui != null)
+        if (ImGuiCore.ImGuiComponent != null)
         {
-            _imGui.Visible = true;
-            _imGui.Enabled = true;
+            ImGuiCore.ImGuiComponent.Visible = true;
+            ImGuiCore.ImGuiComponent.Enabled = true;
 
             Host.Global.SadConsoleComponent.Enabled = false;
             SadConsole.Settings.DoFinalDraw = false;
@@ -65,24 +56,25 @@ public static partial class Debugger
         SadConsole.Settings.DoFinalDraw = false;
         GuiState.RefreshScreenObject();
 
-        _imGui = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+        ImGuiCore.ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
         var ptr = ImGui.GetIO().Fonts.AddFontFromFileTTF(@"Roboto-Regular.ttf", 14);
-        _imGui.ImGuiRenderer.SetDefaultFont(ptr);
-        _imGui.HostClosed += _imGui_HostClosed;
+        ImGuiCore.ImGuiComponent.ImGuiRenderer.SetDefaultFont(ptr);
+        ImGuiCore.ImGuiComponent.HostClosed += ImGuiCore_ImGuiComponent_HostClosed;
 
         Themes.SetModernColors();
 
-        _imGui.UIComponents.Add(new GuiTopBar());
-        _imGui.UIComponents.Add(new GuiDockspace());
-        _imGui.UIComponents.Add(new GuiScreenObjects());
-        _imGui.UIComponents.Add(new GuiPreviews());
+        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiTopBar());
+        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiDockspace());
+        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiScreenObjects());
+        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiPreviews());
 
-        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.WindowConsolePanel());
+        ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.ScreenObjectEditorWindowConsole());
         ComponentsPanel.RegisteredPanels.Add(typeof(Components.Cursor), new Editors.ComponentEditorCursor());
-        //ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
+        ComponentsPanel.RegisteredPanels.Add(typeof(Components.LayeredSurface), new Editors.ComponentEditorLayeredSurface());
+        ComponentsPanel.RegisteredPanels.Add(typeof(UI.ControlHost), new Editors.ComponentEditorControlHost());
 
-        _imGui.Update(new GameTime());
-        Game.Instance.MonoGameInstance.Components.Add(_imGui);
+        ImGuiCore.ImGuiComponent.Update(new GameTime());
+        Game.Instance.MonoGameInstance.Components.Add(ImGuiCore.ImGuiComponent);
         Opened?.Invoke(true);
     }
 
@@ -94,8 +86,8 @@ public static partial class Debugger
         Host.Global.SadConsoleComponent.Enabled = true;
         Host.Global.BlockSadConsoleInput = false;
 
-        _imGui.Visible = false;
-        _imGui.Enabled = false;
+        ImGuiCore.ImGuiComponent.Visible = false;
+        ImGuiCore.ImGuiComponent.Enabled = false;
 
         SadConsole.Settings.DoFinalDraw = true;
         SadConsole.Settings.Input.DoKeyboard = true;
@@ -104,6 +96,6 @@ public static partial class Debugger
         Closed?.Invoke();
     }
 
-    private static void _imGui_HostClosed(object sender, EventArgs e) =>
+    private static void ImGuiCore_ImGuiComponent_HostClosed(object sender, EventArgs e) =>
         Stop();
 }

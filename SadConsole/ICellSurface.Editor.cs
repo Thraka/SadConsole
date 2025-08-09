@@ -112,7 +112,17 @@ public static class CellSurfaceEditor
     /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsValidCell(this ISurface obj, int x, int y) =>
-        x >= 0 && x < obj.Surface.Width && y >= 0 && y < obj.Surface.Height;
+        IsValidCell(obj, new Point(x, y));
+
+    /// <summary>
+    /// Tests if a cell is valid based on its x,y position.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="coordinate">The coordinate of the cell to test.</param>
+    /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValidCell(this ISurface obj, Point coordinate) =>
+        obj.Surface.Area.Contains(coordinate);
 
     /// <summary>
     /// Tests if a cell is valid based on its x,y position.
@@ -125,7 +135,7 @@ public static class CellSurfaceEditor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsValidCell(this ISurface obj, int x, int y, out int index)
     {
-        if (x >= 0 && x < obj.Surface.Width && y >= 0 && y < obj.Surface.Height)
+        if (obj.Surface.IsValidCell(x, y))
         {
             index = y * obj.Surface.Width + x;
             return true;
@@ -136,6 +146,17 @@ public static class CellSurfaceEditor
     }
 
     /// <summary>
+    /// Tests if a cell is valid based on its x,y position.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="coordinate">The coordinate of the cell to test.</param>
+    /// <param name="index">If the cell is valid, the index of the cell when found.</param>
+    /// <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValidCell(this ISurface obj, Point coordinate, out int index) =>
+        IsValidCell(obj, coordinate.X, coordinate.Y, out index);
+
+    /// <summary>
     /// Tests if a cell is valid based on its index.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
@@ -144,6 +165,26 @@ public static class CellSurfaceEditor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsValidCell(this ISurface obj, int index) =>
         index >= 0 && index < obj.Surface.Count;
+
+    /// <summary>
+    /// Changes the glyph and mirror of the specified cell.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">The x location of the cell.</param>
+    /// <param name="y">The y location of the cell.</param>
+    /// <param name="definition">The glyph and mirror of the cell.</param>
+    public static void SetGlyph(this ISurface obj, int x, int y, GlyphDefinition definition)
+    {
+        if (!obj.Surface.IsValidCell(x, y, out int index))
+            return;
+
+        ColoredGlyphBase cell = obj.Surface[index];
+
+        cell.Glyph = definition.Glyph;
+        cell.Mirror = definition.Mirror;
+
+        obj.Surface.IsDirty = true;
+    }
 
     /// <summary>
     /// Changes the glyph of a specified cell to a new value.
@@ -434,7 +475,7 @@ public static class CellSurfaceEditor
         obj.Surface.Effects.GetEffect(obj.Surface[index]);
 
     /// <summary>
-    /// Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+    /// Changes the appearance of the cell to that of the provided colored glyph object.
     /// </summary>
     /// <param name="obj">The surface being edited.</param>
     /// <param name="x">The x location of the cell.</param>
@@ -451,6 +492,16 @@ public static class CellSurfaceEditor
         appearance.CopyAppearanceTo(obj.Surface[index]);
         obj.Surface.IsDirty = true;
     }
+
+    /// <summary>
+    /// Changes the appearance of the cell to that of the provided colored glyph object.
+    /// </summary>
+    /// <param name="obj">The surface being edited.</param>
+    /// <param name="x">The x location of the cell.</param>
+    /// <param name="y">The y location of the cell.</param>
+    /// <param name="definition">The glyph and mirror of the cell.</param>
+    public static void SetCellAppearance(this ISurface obj, int x, int y, GlyphDefinition definition) =>
+        SetGlyph(obj, x, y, definition);
 
     /// <summary>
     /// Gets the appearance of a cell.
@@ -1169,7 +1220,7 @@ public static class CellSurfaceEditor
         for (int i = 0; i < length; i++)
         {
             int tempIndex = i + index;
-            var cell = sb[i];
+            ColoredGlyphAndEffect cell = sb[i];
             if (tempIndex < obj.Surface.Count)
             {
                 obj.Surface[tempIndex].CopyAppearanceTo(cell);

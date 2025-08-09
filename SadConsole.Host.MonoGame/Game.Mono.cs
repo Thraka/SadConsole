@@ -4,7 +4,9 @@ using System;
 using System.IO;
 using System.Linq;
 using SadConsole.Configuration;
+using SadConsole.Host;
 using SadRogue.Primitives;
+using Point = Microsoft.Xna.Framework.Point;
 
 namespace SadConsole;
 
@@ -33,8 +35,8 @@ public sealed partial class Game : GameHost
     /// </summary>
     private bool _handleResizeNone;
 
-    private Host.Mouse _mouseState = new Host.Mouse();
-    private Host.Keyboard _keyboardState = new Host.Keyboard();
+    private Mouse _mouseState = new();
+    private Keyboard _keyboardState = new();
 
     /// <summary>
     /// When <see langword="true"/>, forces the <see cref="OpenStream"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
@@ -72,9 +74,8 @@ public sealed partial class Game : GameHost
     /// <param name="cellCountY">The height of the screen, in cells.</param>
     public static void Create(int cellCountX, int cellCountY) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
-                .IsStartingScreenFocused(true)
                 .ConfigureFonts()
                 );
 
@@ -86,9 +87,8 @@ public sealed partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
-                .IsStartingScreenFocused(true)
                 .ConfigureFonts()
                 .OnStart(gameStarted)
                 );
@@ -102,9 +102,8 @@ public sealed partial class Game : GameHost
     /// <param name="gameStarted">An event handler to be invoked when the game starts.</param>
     public static void Create(int cellCountX, int cellCountY, string font, EventHandler<GameHost> gameStarted) =>
         Create(new Builder()
-                .SetScreenSize(cellCountX, cellCountY)
+                .SetWindowSizeInCells(cellCountX, cellCountY)
                 .UseDefaultConsole()
-                .IsStartingScreenFocused(true)
                 .ConfigureFonts(font)
                 .OnStart(gameStarted)
                 );
@@ -159,21 +158,36 @@ public sealed partial class Game : GameHost
 
         LoadDefaultFonts(fontConfig.AlternativeDefaultFont);
 
+        DefaultFontSize = fontConfig.DefaultFontSize;
+
         foreach (string font in fontConfig.CustomFonts)
             LoadFont(font);
 
-        // Load screen size
-        InternalStartupData startupData = _configuration.Configs.OfType<InternalStartupData>().FirstOrDefault()
-            ?? throw new Exception($"You must call {nameof(Configuration.Extensions.SetScreenSize)} to set a default screen size.");
+        // Load screen size and window
+        ConfigureWindowConfig windowConfig = _configuration.Configs.OfType<ConfigureWindowConfig>().FirstOrDefault()
+            ?? throw new Exception("The starting window or screen hasn't been configured.");
 
-        ScreenCellsX = startupData.ScreenCellsX;
-        ScreenCellsY = startupData.ScreenCellsY;
+        _configuration.Configs.Remove(windowConfig);
+        ((IConfigurator)windowConfig).Run(_configuration, this);
 
-        SadConsole.Host.Global.ResizeGraphicsDeviceManager(DefaultFont.GetFontSize(DefaultFontSize).ToMonoPoint(), ScreenCellsX, ScreenCellsY, 0, 0);
+        Global.GraphicsDeviceManager.PreferredBackBufferWidth = windowConfig.WindowWidthInPixels;
+        Global.GraphicsDeviceManager.PreferredBackBufferHeight = windowConfig.WindowHeightInPixels;
+        Settings.Rendering.RenderWidth = windowConfig.GameResolutionWidthInPixels;
+        Settings.Rendering.RenderHeight = windowConfig.GameResolutionHeightInPixels;
+
+#if !FNA
+        Global.GraphicsDeviceManager.HardwareModeSwitch = !windowConfig.BorderlessWindowedFullscreen;
+#endif
+        Global.GraphicsDeviceManager.ApplyChanges();
+        Global.ResetRendering();
+
+        if (windowConfig.Fullscreen)
+            ToggleFullScreen();
 
         // Setup renderers
         SetRenderer(Renderers.Constants.RendererNames.Default, typeof(Renderers.ScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.ScreenSurface, typeof(Renderers.ScreenSurfaceRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.OptimizedScreenSurface, typeof(Renderers.OptimizedScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.Window, typeof(Renderers.WindowRenderer));
         SetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface, typeof(Renderers.LayeredRenderer));
 
@@ -197,7 +211,7 @@ public sealed partial class Game : GameHost
             Instance.MonoGameInstance.Components.Add(new Host.FPSCounterComponent((Microsoft.Xna.Framework.Game)Instance.MonoGameInstance));
 
         // Run all startup config objects
-        _configuration.Run(this);
+        _configuration.ProcessConfigs(this);
 
         // Normal start
         OnGameStarted();
@@ -249,6 +263,12 @@ public sealed partial class Game : GameHost
         return _mouseState;
     }
 
+    /// <inheritdoc/>
+    public override void GetDeviceScreenSize(out int width, out int height)
+    {
+        width = MonoGameInstance.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+        height = MonoGameInstance.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+    }
 
     /// <summary>
     /// Opens a read-only stream with MonoGame.
@@ -311,7 +331,7 @@ public sealed partial class Game : GameHost
 
         SadConsole.Host.Global.ResetRendering();
     }
-    
+
     /// <inheritdoc/>
     public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
     {

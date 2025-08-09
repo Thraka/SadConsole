@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Newtonsoft.Json;
@@ -141,6 +142,29 @@ public static class Serializer
                     return (T)JsonConvert.DeserializeObject(sr.ReadToEnd(), typeof(T), settings ?? _settings)!;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Tries to load the file, returning it as the specified tyupe.
+    /// </summary>
+    /// <param name="file">The file to load from.</param>
+    /// <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
+    /// <param name="obj">The loaded object.</param>
+    /// <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="Settings"/> property.</param>
+    /// <typeparam name="T">The type of object to deserialize.</typeparam>
+    /// <returns></returns>
+    public static bool TryLoad<T>(string file, bool isCompressed, [NotNullWhen(true)] out T? obj, JsonSerializerSettings? settings = null)
+    {
+        try
+        {
+            obj = Load<T>(file, isCompressed, settings);
+            return true;
+        }
+        catch (Exception e)
+        {
+            obj = default(T);
+            return false;
         }
     }
 

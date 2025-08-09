@@ -75,7 +75,7 @@ public class CallbackConfig : IConfigurator
     public EventHandler<GameHost>? event_FrameUpdate { get; set; }
     public EventHandler<GameHost>? event_FrameRender { get; set; }
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
         if (event_Started != null)
             game.Started += event_Started;

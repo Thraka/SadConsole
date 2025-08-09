@@ -73,7 +73,7 @@ public static class StringExtensions
     /// <param name="background">The background color. If null, <see cref="ColoredString.IgnoreBackground"/> will be set.</param>
     /// <param name="mirror">The mirror setting. If null, <see cref="ColoredString.IgnoreMirror"/> will be set.</param>
     /// <param name="decorators">The decorators setting. If null, <see cref="ColoredString.IgnoreDecorators"/> will be set.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null)
     {
         ColoredString returnValue = new ColoredString(value);
@@ -111,7 +111,7 @@ public static class StringExtensions
     /// <param name="value">The current string.</param>
     /// <param name="startingForeground">The starting foreground color to blend.</param>
     /// <param name="endingForeground">The ending foreground color to blend.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground)
     {
         ColoredString newString = new ColoredString(value);
@@ -133,7 +133,7 @@ public static class StringExtensions
     /// <param name="endingForeground">The ending foreground color to blend.</param>
     /// <param name="startingBackground">The starting background color to blend.</param>
     /// <param name="endingBackground">The ending background color to blend.</param>
-    /// <returns>A <see cref="ColoredString"/> object instace.</returns>
+    /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground)
     {
         ColoredString newString = new ColoredString(value);

@@ -845,6 +845,11 @@
             An array of <see cref="T:SadConsole.ColoredGlyphBase"/> objects used to represent a 2D surface.
             </summary>
         </member>
+        <member name="F:SadConsole.CellSurface._viewArea">
+            <summary>
+            The width and height of the surface along with the viewable area.
+            </summary>
+        </member>
         <member name="E:SadConsole.CellSurface.IsDirtyChanged">
             <inheritdoc />
         </member>
@@ -1630,7 +1635,7 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.UseLinuxLineEndings">
             <summary>
-            Enables linux-like string parsing where a \n behaves like a \r\n.
+            Enables Linux-like string parsing where a \n behaves like a \r\n.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.UseStringParser">
@@ -1640,12 +1645,12 @@
         </member>
         <member name="P:SadConsole.Components.Cursor.Row">
             <summary>
-            Gets or sets the row of the cursor postion.
+            Gets or sets the row of the cursor position.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.Column">
             <summary>
-            Gets or sets the column of the cursor postion.
+            Gets or sets the column of the cursor position.
             </summary>
         </member>
         <member name="P:SadConsole.Components.Cursor.AutomaticallyShiftRowsUp">
@@ -1774,42 +1779,42 @@
         </member>
         <member name="M:SadConsole.Components.Cursor.Up(System.Int32)">
             <summary>
-            Moves the cusor up by the specified amount of lines.
+            Moves the cursor up by the specified amount of lines.
             </summary>
             <param name="amount">The amount of lines to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Down(System.Int32)">
             <summary>
-            Moves the cusor down by the specified amount of lines.
+            Moves the cursor down by the specified amount of lines.
             </summary>
             <param name="amount">The amount of lines to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Left(System.Int32)">
             <summary>
-            Moves the cusor left by the specified amount of columns.
+            Moves the cursor left by the specified amount of columns.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.LeftWrap(System.Int32)">
             <summary>
-            Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
+            Moves the cursor left by the specified amount of columns, wrapping the cursor if needed.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.Right(System.Int32)">
             <summary>
-            Moves the cusor right by the specified amount of columns.
+            Moves the cursor right by the specified amount of columns.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
         </member>
         <member name="M:SadConsole.Components.Cursor.RightWrap(System.Int32)">
             <summary>
-            Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
+            Moves the cursor right by the specified amount of columns, wrapping the cursor if needed.
             </summary>
             <param name="amount">The amount of columns to move the cursor</param>
             <returns>This cursor object.</returns>
@@ -2191,6 +2196,24 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes each layer to the specified width and height.
+            </summary>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
+            <param name="totalWidth">The maximum width of the surface.</param>
+            <param name="totalHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.Resize(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface and view to the specified width and height.
+            </summary>
+            <param name="width">The width of the surface and view.</param>
+            <param name="height">The height of the surface and view.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
         <member name="M:SadConsole.Components.LayeredSurface.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
@@ -2484,21 +2507,32 @@
             Composes a game host object.
             </summary>
         </member>
-        <member name="P:SadConsole.Configuration.Builder.Configs">
+        <member name="M:SadConsole.Configuration.Builder.GetBuilder">
+            <summary>
+            Creates and returns a new instance of the <see cref="T:SadConsole.Configuration.Builder"/> class.
+            </summary>
+            <returns>A new <see cref="T:SadConsole.Configuration.Builder"/> instance.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.BuilderBase">
+            <summary>
+            Base class for building startup config options.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.BuilderBase.Configs">
             <summary>
             A collection of <see cref="T:SadConsole.Configuration.IConfigurator"/> objects.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.GetOrCreateConfig``1">
+        <member name="M:SadConsole.Configuration.BuilderBase.GetOrCreateConfig``1">
             <summary>
-            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection.
+            Adds or gets the specified config object from the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection.
             </summary>
             <typeparam name="TConfig">The type of config object.</typeparam>
-            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection. If found in the collection, that instance is returned.</returns>
+            <returns>A new instance of <typeparamref name="TConfig"/> if it's not found in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection. If found in the collection, that instance is returned.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.Builder.Run(SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.BuilderBase.ProcessConfigs(SadConsole.GameHost)">
             <summary>
-            Runs each config object in the <see cref="P:SadConsole.Configuration.Builder.Configs"/> collection with the specified game instance.
+            Runs each config object in the <see cref="P:SadConsole.Configuration.BuilderBase.Configs"/> collection with the specified game instance.
             </summary>
             <param name="game">The game being created.</param>
         </member>
@@ -2539,19 +2573,54 @@
             <param name="instance_FrameRender">The event handler</param>
             <returns>The configuration builder.</returns>
         </member>
+        <member name="M:SadConsole.Configuration.Extensions.ConfigureWindow(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.ConfigureWindowConfig,SadConsole.Configuration.BuilderBase,SadConsole.GameHost})">
+            <summary>
+            Configures the game window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="loader">The method to invoke when this is run.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the initial screen size of the window, in cells.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The cell count along the x-axis.</param>
+            <param name="height">The cell count along the y-axis.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetWindowSizeInCells(SadConsole.Configuration.Builder,System.Int32,System.Int32,System.Boolean)">
+             <summary>
+             Sets the desired resolution of the SadConsole window in cells using the default font.
+             </summary>
+             <param name="configBuilder">The builder object that composes the game startup.</param>
+             <param name="width">How wide the window is in font cells.</param>
+             <param name="height">How tall the window is in font cells.</param>
+             <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
+             <remarks>
+             The <paramref name="width"/> and <paramref name="height"/> values are used to generate the game window based
+             on how large the font is. For example, if the font is 10x8, and you request window size of 20x20, a window is
+             created with a width of 10 * 20 and a height of 8 * 20 in pixels, which is 200x160.
+            
+             When <paramref name="zoom"/> is set to true, the window will try to get as big as possible while keeping
+             the SadConsole output crisp.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetWindowSizeInPixels(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+            <summary>
+            Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
+            the current font, and set to a value that allows the most cells to appear on screen.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="width">The width of the window.</param>
+            <param name="height">The height of the window.</param>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.UseDefaultConsole(SadConsole.Configuration.Builder)">
             <summary>
             Sets the <see cref="P:SadConsole.GameHost.StartingConsole"/> and <see cref="P:SadConsole.GameHost.Screen"/> properties to new console when the game starts.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <returns>The configuration builder.</returns>
-        </member>
-        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
-            <summary>
-            Either focuses or unfocuses the starting screen.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
         </member>
         <member name="M:SadConsole.Configuration.Extensions.ConfigureFonts(SadConsole.Configuration.Builder,System.Action{SadConsole.Configuration.FontConfig,SadConsole.GameHost})">
@@ -2586,6 +2655,14 @@
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration builder.</returns>
         </member>
+        <member name="M:SadConsole.Configuration.Extensions.SetDefaultFontSize(SadConsole.Configuration.Builder,SadConsole.IFont.Sizes)">
+            <summary>
+            Sets the default font size for the game. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="size">The size of the default font.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="M:SadConsole.Configuration.Extensions.SetSplashScreen``1(SadConsole.Configuration.Builder)">
             <summary>
             Sets the startup splash screen to the specified object.
@@ -2618,18 +2695,130 @@
             <param name="creator">A method that returns an object as the starting screen.</param>
             <returns>The configuration builder.</returns>
         </member>
-        <member name="M:SadConsole.Configuration.Extensions.SetScreenSize(SadConsole.Configuration.Builder,System.Int32,System.Int32)">
+        <member name="M:SadConsole.Configuration.Extensions.IsStartingScreenFocused(SadConsole.Configuration.Builder,System.Boolean)">
             <summary>
-            Sets the initial screen size of the window, in cells.
+            Either focuses or unfocuses the starting screen.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="width">The cell count along the x-axis.</param>
-            <param name="height">The cell count along the y-axis.</param>
+            <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.ConfigureWindowConfig">
+            <summary>
+            Holds the config state for the window.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.WindowWidthInPixels">
+            <summary>
+            The desired width of the game window in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.WindowHeightInPixels">
+            <summary>
+            The desired height of the game window in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.GameResolutionWidthInPixels">
+            <summary>
+            The rendering width of the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.GameResolutionHeightInPixels">
+            <summary>
+            The rendering height of the game.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.CellsX">
+            <summary>
+            The amount of cells that fit in the window along the x-axis.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.CellsY">
+            <summary>
+            The amount of cells that fit in the window along the y-axis.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.Fullscreen">
+            <summary>
+            When true, tells the game host to run in fullscreen mode.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.BorderlessWindowedFullscreen">
+            <summary>
+            When true, fullscreen mode uses a borderless window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.SetWindowSizeInPixels(System.Int32,System.Int32)">
+            <summary>
+            Sets the desired resolution of the SadConsole window in pixels. The output surface and initial cell counts are calculated based on
+            the current font, and set to a value that allows the most cells to appear on screen.
+            </summary>
+            <param name="width">The width of the window.</param>
+            <param name="height">The height of the window.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.SetWindowSizeInCells(System.Int32,System.Int32,System.Boolean)">
+             <summary>
+             Sets the desired resolution of the SadConsole window in cells using the default font.
+             </summary>
+             <param name="width">How wide the window is in font cells.</param>
+             <param name="height">How tall the window is in font cells.</param>
+             <param name="zoom">When true, creates a larger window to automatically zoom the contents.</param>
+             <remarks>
+             The <paramref name="width"/> and <paramref name="height"/> values are used to generate the game window based
+             on how large the font is. For example, if the font is 10x8, and you request window size of 20x20, a window is
+             created with a width of 10 * 20 and a height of 8 * 20 in pixels, which is 200x160.
+            
+             When <paramref name="zoom"/> is set to true, the window will try to get as big as possible while keeping
+             the SadConsole output crisp.
+             </remarks>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <summary>
+            Gets the size of the device screen in pixels.
+            </summary>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigureWindowConfig.IsWindowSizeValid">
+            <summary>
+            Validates that the window fits on the display.
+            </summary>
+            <returns>True when the <see cref="P:SadConsole.Configuration.ConfigureWindowConfig.WindowWidthInPixels"/> and <see cref="P:SadConsole.Configuration.ConfigureWindowConfig.WindowHeightInPixels"/> are
+            less than or equal to the screen size; otherwise, false.</returns>
+        </member>
+        <member name="P:SadConsole.Configuration.ConfigureWindowConfig.Loader">
+            <summary>
+            The method invoked by the <see cref="T:SadConsole.GameHost"/> as fonts are loaded.
+            </summary>
         </member>
         <member name="T:SadConsole.Configuration.FontConfig">
             <summary>
             The config settings for loading the default fonts when the game starts.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.FontConfig.FontLoader">
+            <summary>
+            The method invoked by the <see cref="T:SadConsole.GameHost"/> as fonts are loaded.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.CustomFonts">
+            <summary>
+            An array of custom font files to load into SadConsole. The default is an empty array.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.AlternativeDefaultFont">
+            <summary>
+            The default font to use when the game starts. A <see langword="null"/> value indicates that the default font is the built-in font.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.UseExtendedFont">
+            <summary>
+            When <see langword="true"/>, the default font is the SadConsole extended font. The default is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Configuration.FontConfig.DefaultFontSize">
+            <summary>
+            The size of font to use with the default font. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
             </summary>
         </member>
         <member name="M:SadConsole.Configuration.FontConfig.UseBuiltinFont">
@@ -2654,7 +2843,13 @@
             </summary>
             <param name="fontFiles">An array of font files to load.</param>
         </member>
-        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.FontConfig.SetDefaultFontSize(SadConsole.IFont.Sizes)">
+            <summary>
+            Sets the default font size for the game. The default is <see cref="F:SadConsole.IFont.Sizes.One"/>.
+            </summary>
+            <param name="size">The default font size.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.FontConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
             <summary>
             Invokes the <see cref="P:SadConsole.Configuration.FontConfig.FontLoader"/> delegate.
             </summary>
@@ -2666,7 +2861,7 @@
             Configuration interface that's added to the <see cref="T:SadConsole.Configuration.Builder"/> object.
             </summary>
         </member>
-        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.Builder,SadConsole.GameHost)">
+        <member name="M:SadConsole.Configuration.IConfigurator.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
             <summary>
             Called by the <see cref="T:SadConsole.Configuration.Builder"/>; Runs the specific config for this object.
             </summary>
@@ -2759,6 +2954,23 @@
             </summary>
             <returns>The string "Console".</returns>
         </member>
+        <member name="T:SadConsole.Debug.Screen">
+            <summary>
+            A debugging screen that takes the place of the active <see cref="P:SadConsole.GameHost.Screen"/> and displays information about SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Displays the debugger.
+            </summary>
+            <param name="font">The font to use the debugging screen.</param>
+            <param name="fontSize">The size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Debug.Screen.Show">
+            <summary>
+            Shows the debug screen with the default font and size.
+            </summary>
+        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallCustom">
             <summary>
             A draw call that invokes an <see cref="T:System.Action"/> delegate.
@@ -2847,7 +3059,7 @@
         </member>
         <member name="P:SadConsole.Effects.Blink.Duration">
             <summary>
-            The total duraction this effect will run for, before being flagged as finished. <see cref="F:System.TimeSpan.MaxValue"/> represents forever.
+            The total duration this effect will run for, before being flagged as finished. <see cref="F:System.TimeSpan.MaxValue"/> represents forever.
             </summary>
         </member>
         <member name="M:SadConsole.Effects.Blink.#ctor">
@@ -4041,12 +4253,12 @@
             <param name="width">The width to use in converting each index to a point.</param>
             <returns>Returns the an array of values indidcating the index in the area surface of each direction where -1 represents a position outside the bounds of the area. Indexed by a <see cref="T:SadRogue.Primitives.Direction.Types"/> enumeration.</returns>
         </member>
-        <member name="T:SadConsole.Extensions.ReadOnlySpan">
+        <member name="T:SadConsole.Extensions.ReadOnlySpanExtensions">
             <summary>
             Extensions for the <see cref="T:System.ReadOnlySpan`1"/> type.
             </summary>
         </member>
-        <member name="M:SadConsole.Extensions.ReadOnlySpan.Next(System.ReadOnlySpan{System.Char},System.Char,System.Int32@)">
+        <member name="M:SadConsole.Extensions.ReadOnlySpanExtensions.Next(System.ReadOnlySpan{System.Char},System.Char,System.Int32@)">
             <summary>
             Gets the next instnace of the specified character in a <see cref="T:System.Char"/> span.
             </summary>
@@ -4127,7 +4339,7 @@
             <param name="background">The background color. If null, <see cref="P:SadConsole.ColoredString.IgnoreBackground"/> will be set.</param>
             <param name="mirror">The mirror setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreMirror"/> will be set.</param>
             <param name="decorators">The decorators setting. If null, <see cref="P:SadConsole.ColoredString.IgnoreDecorators"/> will be set.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
@@ -4136,7 +4348,7 @@
             <param name="value">The current string.</param>
             <param name="startingForeground">The starting foreground color to blend.</param>
             <param name="endingForeground">The ending foreground color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.CreateGradient(System.String,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
             <summary>
@@ -4147,7 +4359,7 @@
             <param name="endingForeground">The ending foreground color to blend.</param>
             <param name="startingBackground">The starting background color to blend.</param>
             <param name="endingBackground">The ending background color to blend.</param>
-            <returns>A <see cref="T:SadConsole.ColoredString"/> object instace.</returns>
+            <returns>A <see cref="T:SadConsole.ColoredString"/> object instance.</returns>
         </member>
         <member name="M:SadConsole.StringExtensions.WordWrap(System.String,System.Int32)">
             <summary>
@@ -4583,6 +4795,13 @@
             </summary>
             <returns>The state of the mouse.</returns>
         </member>
+        <member name="M:SadConsole.GameHost.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <summary>
+            Gets the size of the current device's screen in pixels.
+            </summary>
+            <param name="width">The width of the screen.</param>
+            <param name="height">The height of the screen.</param>
+        </member>
         <member name="M:SadConsole.GameHost.SetSplashScreens(SadConsole.IScreenSurface[])">
             <summary>
             The splash screens the game should sequentially show on startup.
@@ -4669,7 +4888,7 @@
             </summary>
         </member>
         <member name="M:SadConsole.GameHost.Dispose(System.Boolean)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.GameHost.Finalize">
             <summary>
@@ -4956,6 +5175,14 @@
             <param name="y">The y coordinate of the cell to test.</param>
             <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,SadRogue.Primitives.Point)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="coordinate">The coordinate of the cell to test.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,System.Int32,System.Int32,System.Int32@)">
             <summary>
             Tests if a cell is valid based on its x,y position.
@@ -4966,6 +5193,15 @@
             <param name="index">If the cell is valid, the index of the cell when found.</param>
             <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
         </member>
+        <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,SadRogue.Primitives.Point,System.Int32@)">
+            <summary>
+            Tests if a cell is valid based on its x,y position.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="coordinate">The coordinate of the cell to test.</param>
+            <param name="index">If the cell is valid, the index of the cell when found.</param>
+            <returns>A true value indicating the cell by x,y does exist in this cell obj.Surface.</returns>
+        </member>
         <member name="M:SadConsole.CellSurfaceEditor.IsValidCell(SadConsole.ISurface,System.Int32)">
             <summary>
             Tests if a cell is valid based on its index.
@@ -4973,6 +5209,15 @@
             <param name="obj">The surface being edited.</param>
             <param name="index">The index to test.</param>
             <returns>A true value indicating the cell index is in this cell obj.Surface.</returns>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.GlyphDefinition)">
+            <summary>
+            Changes the glyph and mirror of the specified cell.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="definition">The glyph and mirror of the cell.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetGlyph(SadConsole.ISurface,System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -5142,12 +5387,21 @@
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.ColoredGlyphBase)">
             <summary>
-            Changes the appearance of the cell. The appearance represents the look of a cell and will first be cloned, then applied to the cell.
+            Changes the appearance of the cell to that of the provided colored glyph object.
             </summary>
             <param name="obj">The surface being edited.</param>
             <param name="x">The x location of the cell.</param>
             <param name="y">The y location of the cell.</param>
             <param name="appearance">The desired appearance of the cell. A null value cannot be passed.</param>
+        </member>
+        <member name="M:SadConsole.CellSurfaceEditor.SetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32,SadConsole.GlyphDefinition)">
+            <summary>
+            Changes the appearance of the cell to that of the provided colored glyph object.
+            </summary>
+            <param name="obj">The surface being edited.</param>
+            <param name="x">The x location of the cell.</param>
+            <param name="y">The y location of the cell.</param>
+            <param name="definition">The glyph and mirror of the cell.</param>
         </member>
         <member name="M:SadConsole.CellSurfaceEditor.GetCellAppearance(SadConsole.ISurface,System.Int32,System.Int32)">
             <summary>
@@ -5915,17 +6169,17 @@
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface to the specified width and height.
+            Resizes the surface to the specified width and height. This can destroy the original backing array.
             </summary>
             <param name="viewWidth">The viewable width of the surface.</param>
             <param name="viewHeight">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="totalWidth">The maximum width of the surface.</param>
+            <param name="totalHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, indicates each cell should be reset to the default values.</param>
         </member>
         <member name="M:SadConsole.ICellSurfaceResize.Resize(System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Resizes the surface and view to the specified width and height.
+            Resizes the surface and view to the specified width and height. This can destroy the original backing array.
             </summary>
             <param name="width">The width of the surface and view.</param>
             <param name="height">The height of the surface and view.</param>
@@ -5985,7 +6239,7 @@
         </member>
         <member name="P:SadConsole.IFont.SolidGlyphIndex">
             <summary>
-            Which glyph index is considered completely solid. Used for shading.
+            Which glyph index is considered completely solid white. Used for shading.
             </summary>
         </member>
         <member name="P:SadConsole.IFont.SolidGlyphRectangle">
@@ -6019,6 +6273,11 @@
             </summary>
             <param name="glyph">The index of the glyph to get.</param>
             <returns>The rectangle for the glyph.</returns>
+        </member>
+        <member name="P:SadConsole.IFont.GlyphRectangles">
+            <summary>
+            A dictionary that stores the source rectangles of the font by glyph id.
+            </summary>
         </member>
         <member name="M:SadConsole.IFont.GenerateGlyphSourceRectangle(System.Int32)">
             <summary>
@@ -8286,11 +8545,29 @@
             <param name="font">The font to use with the surface.</param>
             <param name="fontSize">The font size.</param>
         </member>
+        <member name="M:SadConsole.LayeredScreenSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
+            <param name="totalWidth">The maximum width of the surface.</param>
+            <param name="totalHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="M:SadConsole.LayeredScreenSurface.Resize(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface and view to the specified width and height.
+            </summary>
+            <param name="width">The width of the surface and view.</param>
+            <param name="height">The height of the surface and view.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
         <member name="M:SadConsole.LayeredScreenSurface.ToString">
             <summary>
-            Returns the value "Console (Controls)".
+            Returns the value "ScreenSurface (Layered)".
             </summary>
-            <returns>The string "Console (Controls)".</returns>
+            <returns>The string "ScreenSurface (Layered)".</returns>
         </member>
         <member name="T:SadConsole.Quick.Keyboard">
             <summary>
@@ -8878,6 +9155,11 @@
         <member name="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface">
             <summary>
             The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.OptimizedScreenSurface">
+            <summary>
+            The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.ScreenSurface"/> that doesn't use any steps, it directly renders the surface to a cached texture.
             </summary>
         </member>
         <member name="F:SadConsole.Renderers.Constants.RendererNames.LayeredScreenSurface">
@@ -9798,18 +10080,18 @@
             <summary>
             Resizes the surface to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
-            <param name="bufferWidth">The maximum width of the surface.</param>
-            <param name="bufferHeight">The maximum height of the surface.</param>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
+            <param name="totalWidth">The maximum width of the surface.</param>
+            <param name="totalHeight">The maximum height of the surface.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.Resize(System.Int32,System.Int32,System.Boolean)">
             <summary>
             Resizes the surface and view to the specified width and height.
             </summary>
-            <param name="width">The viewable width of the surface.</param>
-            <param name="height">The viewable height of the surface.</param>
+            <param name="width">The width of the surface and view.</param>
+            <param name="height">The height of the surface and view.</param>
             <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
         </member>
         <member name="M:SadConsole.ScreenSurface.UpdateAbsolutePosition">
@@ -9874,6 +10156,11 @@
         </member>
         <member name="M:SadConsole.ScreenSurface.Dispose">
             <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.ScreenSurface.MouseState_EnteredWithButtonDown">
+            <summary>
+            A cached value determined by <see cref="M:SadConsole.ScreenSurface.OnMouseEnter(SadConsole.Input.MouseScreenObjectState)"/>. <see langword="true"/> when the mouse entered the surface bounds with the mouse button down.
+            </summary>
         </member>
         <member name="E:SadConsole.ScreenSurface.MouseButtonClicked">
             <inheritdoc/>
@@ -9994,6 +10281,17 @@
             <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
             <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
             <returns>A new object instance.</returns>
+        </member>
+        <member name="M:SadConsole.Serializer.TryLoad``1(System.String,System.Boolean,``0@,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Tries to load the file, returning it as the specified tyupe.
+            </summary>
+            <param name="file">The file to load from.</param>
+            <param name="isCompressed">When true, indicates that the json <paramref name="file"/> should be decompressed with GZIP compression.</param>
+            <param name="obj">The loaded object.</param>
+            <param name="settings">Optional settings to use during deserialization. If <see langword="null"/>, uses the <see cref="P:SadConsole.Serializer.Settings"/> property.</param>
+            <typeparam name="T">The type of object to deserialize.</typeparam>
+            <returns></returns>
         </member>
         <member name="T:SadConsole.Serializer.LogTraceWriter">
             <summary>
@@ -11034,10 +11332,20 @@
         </member>
         <member name="M:SadConsole.StringValidation.Letters(System.String)">
             <summary>
-            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string contains only letters.
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether a string contains only letters.
             </summary>
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
@@ -12181,18 +12489,15 @@
             Create each control and add it to <see cref="F:SadConsole.UI.Controls.CompositeControl.Controls"/>.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.CompositeControl.IsDirtyEventHandler(System.Boolean)">
-            <summary>
-            A handler to forward state to <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/>.
-            </summary>
-            <param name="value"></param>
-        </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
             Processes the mouse on each control hosted by this control.
             </summary>
             <param name="state">The mouse state based on the parent screen object.</param>
             <returns><see langword="true"/> when a control processes the mouse; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)">
             <summary>
@@ -12328,7 +12633,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ControlBase.IsMouseButtonStateClean">
             <summary>
-            When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; othwerise <see langword="false"/>.
+            When <see langword="true"/>, indicates the mouse button state has only been set with this control and not another; otherwise <see langword="false"/>.
             </summary>
             <remarks>
             This property is only set when the mouse enters the control with the buttons pressed. Once the buttons are let go, the mouse is considered clean for this control.
@@ -13426,7 +13731,7 @@
         </member>
         <member name="P:SadConsole.UI.Controls.ProgressBar.Progress">
             <summary>
-            Gets or sets the value of the scrollbar between the minimum and maximum values.
+            Gets or sets the value of the scrollbar between 0.0 and 1.0.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ProgressBar.#ctor(System.Int32,System.Int32,SadConsole.HorizontalAlignment)">
@@ -15097,6 +15402,45 @@
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>
             <returns>A new colored string object.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the LettersOnly method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.LettersOnly_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.LettersOnly_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiLetters">
+            <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
 </doc>

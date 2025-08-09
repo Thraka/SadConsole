@@ -80,12 +80,12 @@ public abstract partial class GameHost : IDisposable
     /// <summary>
     /// How many cells fit in the render area width used by SadConsole.
     /// </summary>
-    public int ScreenCellsX { get; protected set; }
+    public int ScreenCellsX => Settings.Rendering.RenderWidth / DefaultFont.GetFontSize(DefaultFontSize).X;
 
     /// <summary>
     /// How many cells fit in the render area width used by SadConsole.
     /// </summary>
-    public int ScreenCellsY { get; protected set; }
+    public int ScreenCellsY => Settings.Rendering.RenderHeight / DefaultFont.GetFontSize(DefaultFontSize).Y;
 
     /// <summary>
     /// A frame number counter, incremented every game frame.
@@ -298,6 +298,13 @@ public abstract partial class GameHost : IDisposable
     public abstract IMouseState GetMouseState();
 
     /// <summary>
+    /// Gets the size of the current device's screen in pixels.
+    /// </summary>
+    /// <param name="width">The width of the screen.</param>
+    /// <param name="height">The height of the screen.</param>
+    public abstract void GetDeviceScreenSize(out int width, out int height);
+
+    /// <summary>
     /// The splash screens the game should sequentially show on startup.
     /// </summary>
     /// <param name="surfaces">The splash screens to show.</param>
@@ -328,7 +335,7 @@ public abstract partial class GameHost : IDisposable
             {
                 throw new JsonSerializationException("Unable to load font. You either have a malformed json file, or you're missing the $type declaration as the first entry of the json content:\n \"$type\": \"SadConsole.SadFont, SadConsole\",", j);
             }
-            
+
             if (Fonts.TryGetValue(masterFont.Name, out IFont? value))
                 return value;
 
@@ -499,7 +506,7 @@ public abstract partial class GameHost : IDisposable
     #region IDisposable Support
     private bool _disposedValue = false; // To detect redundant calls
 
-    /// <inheritdoc/> 
+    /// <inheritdoc/>
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)

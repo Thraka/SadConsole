@@ -135,7 +135,5 @@ public partial class ToggleSwitch
                 iconBackgroundAppearance.CopyAppearanceTo(Surface[IsSelected ? 1 : 3]);
             }
         }
-
-        IsDirty = false;
     }
 }

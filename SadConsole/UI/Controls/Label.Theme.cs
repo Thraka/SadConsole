@@ -54,8 +54,6 @@ public partial class Label : ControlBase
             else if (ShowStrikethrough)
                 Surface.SetDecorator(0, Surface.Width, GetStrikethrough(font, color));
         }
-
-        IsDirty = false;
     }
 
     /// <summary>

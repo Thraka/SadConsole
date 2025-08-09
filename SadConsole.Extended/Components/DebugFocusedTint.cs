@@ -91,7 +91,7 @@ namespace SadConsole.Components
                 _previousObject = null;
         }
 
-        void IConfigurator.Run(Builder config, GameHost game) =>
+        void IConfigurator.Run(BuilderBase config, GameHost game) =>
             game.RootComponents.Add(this);
     }
 }

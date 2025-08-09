@@ -3,10 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
 using SadRogue.Primitives;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
-class GuiPreviews : ImGuiObjectBase
+public class GuiPreviews : ImGuiObjectBase
 {
     private int _scOutputMode = ModeNormal;
     private int _surfaceOutputMode = ModeNormal;
@@ -17,7 +18,6 @@ class GuiPreviews : ImGuiObjectBase
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
-
         ImGui.SetNextWindowClass(ref GuiDockspace.AutoHideTabBar);
         ImGui.SetNextWindowBgAlpha(1f);
         ImGui.Begin(GuiDockspace.ID_CENTER_PANEL, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoTitleBar);
@@ -38,7 +38,20 @@ class GuiPreviews : ImGuiObjectBase
                         ImGui.RadioButton("Fit", ref _scOutputMode, ModeFit);
 
                         ImGui.BeginChild("output1", ImGuiWindowFlags.HorizontalScrollbar);
-                        ImGui2.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                        ImGuiSC.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                        if (GuiState._hoveredScreenObjectState != null)
+                        {
+                            if (GuiState._hoveredScreenObjectState.IsScreenSurface)
+                            {
+                                IScreenSurface surface = (IScreenSurface)GuiState._hoveredScreenObjectState.Object;
+
+                                var drawList = ImGui.GetWindowDrawList();
+                                Vector2 itemRectMin = ImGui.GetItemRectMin();
+                                Vector2 boxTopLeft = new(itemRectMin.X + surface.AbsoluteArea.X, itemRectMin.Y + surface.AbsoluteArea.Y);
+                                Vector2 boxBottomRight = boxTopLeft + new Vector2(surface.AbsoluteArea.Width, surface.AbsoluteArea.Height);
+                                drawList.AddRect(boxTopLeft, boxBottomRight, Color.Violet.PackedValue);
+                            }
+                        }
                         ImGui.EndChild();
                     }
                     else
@@ -81,7 +94,7 @@ class GuiPreviews : ImGuiObjectBase
 
                             // Render the target texture
                             ImGui.BeginChild("output2", ImGuiWindowFlags.HorizontalScrollbar);
-                            ImGui2.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
+                            ImGuiSC.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
 
                             // Peek the cell if the target type is the final
                             if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)

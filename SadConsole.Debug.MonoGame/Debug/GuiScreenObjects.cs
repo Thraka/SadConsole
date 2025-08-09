@@ -2,10 +2,11 @@
 using System.Numerics;
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 
 namespace SadConsole.Debug;
 
-class GuiScreenObjects : ImGuiObjectBase
+public class GuiScreenObjects : ImGuiObjectBase
 {
     private float f = 0.0f;
     private bool _toggle_screenObj_doDraw;
@@ -16,7 +17,6 @@ class GuiScreenObjects : ImGuiObjectBase
 
     private ImGuiDemos _guiHelpers = new();
     private ScreenObjectDetailsPanel _guiDetails = new();
-    private ComponentsPanel _guiComponents = new();
 
     public override void BuildUI(ImGuiRenderer renderer)
     {
@@ -30,17 +30,20 @@ class GuiScreenObjects : ImGuiObjectBase
         ImGui.Begin(GuiDockspace.ID_LEFT_PANEL);
         {
             // Screen objects list
-            ImGui2.SeparatorText("Current Scene", Debugger.Settings.Color_PanelHeader);
+            ImGuiSC.SeparatorText("Current Scene", Debugger.Settings.Color_PanelHeader);
 
             // Refresh list of objects
             foreach (ScreenObjectState item in GuiState.ScreenObjectUniques.Values)
                 item.Found = false;
+
+            GuiState._hoveredScreenObjectState = null;
 
             // List the objects
             if (ImGui.BeginListBox("##screen_objs_list", new Vector2(-1, 200)))
             {
                 const ImGuiTreeNodeFlags baseTreeFlags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick
                     | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.DefaultOpen;
+
 
                 ProcessItem(GuiState.ScreenObjectUniques[GameHost.Instance.Screen]);
 
@@ -55,8 +58,10 @@ class GuiScreenObjects : ImGuiObjectBase
                         treeFlags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
 
                     if (state.Object.IsFocused) ImGui.PushStyleColor(ImGuiCol.Text, Debugger.Settings.Color_FocusedObj);
-                    bool opened = ImGui.TreeNodeEx(state.Identifier.ToString(), treeFlags, state.Object.ToString());
+                    bool opened = ImGui.TreeNodeEx(state.Identifier.ToString(), treeFlags, state.ObjectName);
                     if (state.Object.IsFocused) ImGui.PopStyleColor();
+                    if (ImGui.IsItemHovered())
+                        GuiState._hoveredScreenObjectState = state;
 
                     //if (ImGui.BeginDragDropSource(ImGuiDragDropFlags.None))
                     //{
@@ -90,10 +95,7 @@ class GuiScreenObjects : ImGuiObjectBase
             if (GuiState._selectedScreenObjectState != null)
             {
                 _guiDetails.BuildUI(renderer, GuiState._selectedScreenObjectState);
-                _guiComponents.BuildUI(renderer, GuiState._selectedScreenObjectState);
             }
-
-            ImGui.Separator();
         }
 
         //_guiHelpers.BuildUI(renderer);

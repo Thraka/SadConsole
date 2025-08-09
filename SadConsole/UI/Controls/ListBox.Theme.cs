@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using SadConsole.Input;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -8,6 +9,7 @@ namespace SadConsole.UI.Controls;
 public partial class ListBox
 {
     private bool _drawBorder;
+    private int _previousMouseItemIndex;
 
     /// <summary>
     /// Internal flag to indicate the scroll bar needs to be reconfigured.
@@ -112,6 +114,9 @@ public partial class ListBox
     /// <inheritdoc/>
     public override void UpdateAndRedraw(TimeSpan time)
     {
+        if (MouseState_IsMouseOver && _previousMouseItemIndex != ItemIndexMouseOver)
+            IsDirty = true;
+
         if (!IsDirty)
         {
             base.UpdateAndRedraw(time);
@@ -164,6 +169,7 @@ public partial class ListBox
 
         VisibleItemsTotal = Items.Count >= endingRow ? endingRow : Items.Count;
         VisibleItemsMax = MouseArea.Height;
+        _previousMouseItemIndex = ItemIndexMouseOver;
 
         int offset = IsScrollBarVisible ? ScrollBar.Value : 0;
         for (int i = 0; i < endingRow; i++)
@@ -191,8 +197,6 @@ public partial class ListBox
                 ItemTheme.Draw(this, new Rectangle(ItemsArea.X, i + startingRow, ItemsArea.Width, 1), Items[itemIndexRelative], state);
             }
         }
-
-        IsDirty = Helpers.HasFlag((int)State, (int)ControlStates.MouseOver);
 
         base.UpdateAndRedraw(time);
     }

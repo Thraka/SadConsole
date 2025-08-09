@@ -1,55 +1,31 @@
-﻿using System.Numerics;
-using ImGuiNET;
+﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
-public class OpenFile : ImGuiWindow
+public class OpenFile : ImGuiWindowBase
 {
-    private int _documentSelectedIndex = 0;
-    private string _documentName = "";
     private FileListBox _fileListBox;
-    private bool _hideDocumentTypes;
-    public Model.Document? Document;
-    private IFileHandler[] _fileLoaders;
-    private string[] _fileLoadersNames;
-    private int _fileLoaderSelectedIndex;
+    private ImGuiList<IFileHandler>? _fileLoaders = new();
 
-    public IFileHandler SelectedHandler;
+    public IFileHandler SelectedLoader;
     public FileInfo SelectedFile;
 
     public OpenFile()
     {
         Title = "Open file";
         _fileListBox = new(Directory.GetCurrentDirectory());
-
-        //_fileListBox.ItemSelected += (s, e) => selectedEvent = true;
-        //_fileListBox.ItemHighlighted += (s, e) => highlightedEvent = true;
-        //_fileListBox.ChangeDirectory += (s, e) => { changedDirEvent = true; counter++; };
     }
 
-    public void Show()
+    protected override void OnOpened()
     {
-        IsOpen = true;
-        _hideDocumentTypes = false;
+        base.OnOpened();
 
-        if (!ImGuiCore.GuiComponents.Contains(this))
-            ImGuiCore.GuiComponents.Add(this);
-    }
-
-    public void Show(Model.Document document)
-    {
-        IsOpen = true;
-        _hideDocumentTypes = true;
-        Document = document;
-
-        _fileLoaders = Document.GetLoadHandlers().ToArray();
-        _fileLoadersNames = _fileLoaders.Select(f => f.FriendlyName).ToArray();
-        _fileLoaderSelectedIndex = 0;
-
-        if (!ImGuiCore.GuiComponents.Contains(this))
-            ImGuiCore.GuiComponents.Add(this);
+        // Reset to no document builders selected
+        Core.State.DocumentBuilders.SelectedItemIndex = 0;
+        _fileLoaders = new ImGuiList<IFileHandler>(0, Core.State.DocumentBuilders.SelectedItem.GetLoadHandlers());
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -58,26 +34,26 @@ public class OpenFile : ImGuiWindow
         {
             ImGui.OpenPopup(Title);
 
-            ImGuiExt.CenterNextWindow();
+            ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(550, -1));
             //ImGui.SetNextWindowSize(new System.Numerics.Vector2(350, 300));
 
             if (ImGui.BeginPopupModal(Title, ref IsOpen))
             {
-                if (!_hideDocumentTypes)
+                ImGui.Text("Document Type:");
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+
+                if (ImGui.ListBox("##doctypes",
+                                  ref Core.State.DocumentBuilders.SelectedItemIndex,
+                                  Core.State.DocumentBuilders.Names,
+                                  Core.State.DocumentBuilders.Count, 3))
                 {
-                    ImGui.Text("Document Type:");
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-                    if (DocumentTypeListControl.DrawListBox("##Document Type", 3, ref _documentSelectedIndex, ref Document))
-                    {
-                        _fileLoaders = Document.GetLoadHandlers().ToArray();
-                        _fileLoadersNames = _fileLoaders.Select(f => f.FriendlyName).ToArray();
-                        _fileLoaderSelectedIndex = 0;
-                    }
-                    ImGui.Separator();
+                    _fileLoaders = new ImGuiList<IFileHandler>(0, Core.State.DocumentBuilders.SelectedItem.GetLoadHandlers());
                 }
 
-                if (Document != null)
+                ImGui.Separator();
+
+                if (Core.State.DocumentBuilders.IsItemSelected())
                 {
                     if (ImGui.BeginTable("table1", 2, ImGuiTableFlags.BordersInnerV))
                     {
@@ -90,44 +66,34 @@ public class OpenFile : ImGuiWindow
                         ImGui.AlignTextToFramePadding();
                         ImGui.Text("File Types");
                         ImGui.SetNextItemWidth(-1);
-                        ImGui.ListBox("##handlers", ref _fileLoaderSelectedIndex, _fileLoadersNames, _fileLoadersNames.Length, 10);
+                        ImGui.ListBox("##handlers", ref _fileLoaders.SelectedItemIndex, _fileLoaders.Names, _fileLoaders.Count, 10);
 
                         // Draw right-side file list box;
                         ImGui.TableSetColumnIndex(1);
-                        _fileListBox.SearchPattern = string.Join(';', _fileLoaders[_fileLoaderSelectedIndex].ExtensionsLoading.Select(ex => $"*.{ex}"));
-                        _fileListBox.Begin("listbox", new(-1, 300));
-                        _fileListBox.Draw();
-                        _fileListBox.End();
-
-                        ImGui.EndTable();
+                        if (_fileLoaders.IsItemSelected())
+                        {
+                            _fileListBox.SearchPattern = string.Join(';', _fileLoaders.SelectedItem.ExtensionsLoading.Select(ex => $"*.{ex}"));
+                            _fileListBox.Begin("listbox", new(-1, 300));
+                            _fileListBox.Draw();
+                            _fileListBox.End();
+                        }
                     }
-                    
-                    //ImGui.GetWindowDrawList().AddRectFilled(boxStart, boxEnd, Color.Blue.PackedValue);
-                    //ImGui.SameLine();
+
+                    ImGui.EndTable();
                 }
 
-                // Draw final row of dialog buttons
                 ImGui.Separator();
-                if (ImGui.Button("Cancel")) { DialogResult = false; IsOpen = false; }
 
-                // Right-align button
-                float pos = ImGui.GetItemRectSize().X + ImGui.GetStyle().ItemSpacing.X;
-                ImGui.SameLine(ImGui.GetWindowWidth() - pos);
-
-
-                ImGui.BeginDisabled(_fileListBox.HighlightedItem == null || _fileListBox.IsHighlightedItemDirectory);
-
-                if (ImGui.Button("Open"))
+                if (ImGuiWindowBase.DrawButtons(out DialogResult, _fileListBox.HighlightedItem == null || _fileListBox.IsHighlightedItemDirectory, "Cancel", "Open"))
                 {
-                    SelectedHandler = _fileLoaders[_fileLoaderSelectedIndex];
-                    SelectedFile = (FileInfo)_fileListBox.HighlightedItem!;
-                    DialogResult = Document!.HydrateFromFileHandler(SelectedHandler, SelectedFile.FullName);
-                    if (!DialogResult)
-                        ImGuiCore.Alert("Unable to load file.");
-                    IsOpen = false;
-                }
+                    if (DialogResult)
+                    {
+                        SelectedLoader = _fileLoaders.SelectedItem!;
+                        SelectedFile = (FileInfo)_fileListBox.HighlightedItem!;
+                    }
 
-                ImGui.EndDisabled();
+                    Close();
+                }
 
                 ImGui.EndPopup();
             }

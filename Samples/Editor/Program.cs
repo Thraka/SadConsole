@@ -5,16 +5,11 @@ using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
-int MainWidth = 80;
-int MainHeight = 23;
-int HeaderWidth = 80;
-int HeaderHeight = 2;
-
-Settings.WindowTitle = "SadEditor v0.1";
+Settings.WindowTitle = "SadEditor v0.2";
 
 Builder config =
     new Builder()
-        .SetScreenSize(130, 50)
+        .SetWindowSizeInCells(130, 50)
         .OnStart(StartHandler);
 
         //.UseDefaultConsole()
@@ -30,29 +25,8 @@ Game.Instance.Dispose();
 
 static void StartHandler(object? sender, GameHost host)
 {
-    ImGuiCore.Start();
+    Core.Start();
 }
-
-public class KeyboardScreen : ScreenObject
-{
-
-    public override bool ProcessKeyboard(Keyboard keyboard)
-    {
-        Game.Instance.Keyboard.InitialRepeatDelay = -1;
-        
-        if (keyboard.IsKeyPressed(Keys.NumPad2))
-        {
-            if (keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift))
-                System.Diagnostics.Debug.WriteLine("NumPad2 with shift");
-            else
-                System.Diagnostics.Debug.WriteLine("NumPad2 without shift");
-
-        }
-
-        return false;
-    }
-}
-
 
 class ExampleConsole : ControlsConsole
 {
@@ -94,7 +68,7 @@ class ExampleConsole : ControlsConsole
             ChildrenLayout = Gum.Managers.ChildrenLayout.TopToBottomStack
         };
 
-        
+
 
         SelectionButton? previousButton = null;
 

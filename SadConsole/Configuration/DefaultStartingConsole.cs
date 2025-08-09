@@ -19,12 +19,10 @@ public static partial class Extensions
 
 public class StartingConsoleConfig : IConfigurator
 {
-    public void Run(Builder configBuilder, GameHost game)
+    public void Run(BuilderBase configBuilder, GameHost game)
     {
-        InternalStartupData data = configBuilder.GetOrCreateConfig<InternalStartupData>();
-
-        game.StartingConsole = new Console(data.ScreenCellsX, data.ScreenCellsY);
+        game.StartingConsole = new Console(game.ScreenCellsX, game.ScreenCellsY);
         game.Screen = game.StartingConsole;
-        game.Screen!.IsFocused = true;
+        game.Screen.IsFocused = true;
     }
 }

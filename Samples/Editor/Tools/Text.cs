@@ -1,139 +1,143 @@
-﻿using System.Numerics;
-using ImGuiNET;
-using SadConsole.Components;
-using SadConsole.Editor.GuiParts.Tools;
-using SadConsole.Editor.Model;
+﻿using System.Linq.Expressions;
+using System.Numerics;
+using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiTypes;
+using SadConsole.Renderers;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Text : ITool
 {
-    private bool _isWriting;
-    private Point _cursorPosition;
-    private Cursor? _cursor;
-    private Input.Keyboard _keyboard = new();
+    private bool _isTyping = false;
+    private readonly Components.Cursor _cursorVisual;
+    private Components.Cursor? _cursorActual;
 
-    public string Name => "Text";
+    public string Title => "\ueb69 Text";
 
-    public string Description => """
-        Write text to a surface.
-        
-        Use the left-mouse button to start writing or move the text cursor.
-        
-        The right-mouse button or the ESC key turns off the cursor.
+    public string Description =>
+        """
+
         """;
 
-    public void BuildSettingsPanel(ImGuiRenderer renderer)
+    public Text()
     {
-        ImGuiWidgets.BeginGroupPanel("Settings");
+        _cursorVisual = new() { AutomaticallyShiftRowsUp = false };
+    }
+
+    public void BuildSettingsPanel(Document document)
+    {
+        ImGui.SeparatorText(Title);
+
+        ImGuiSC.BeginGroupPanel("Settings");
 
         Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
-        Mirror mirror = SharedToolSettings.Tip.Mirror;
-        IScreenSurface surface = ImGuiCore.State.GetOpenDocument().VisualDocument;
+        ImGuiTypes.Mirror mirror = MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
-        SettingsTable.BeginTable("matchtable");
+        if (SettingsTable.BeginTable("textsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
+        {
 
-        SettingsTable.DrawColor("Foreground", "##fore", ref foreground, surface.Surface.DefaultForeground.ToVector4(), out bool rightClicked);
+            SettingsTable.DrawCommonSettings(true, true, true, false, true,
+                ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
+                ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
+                ref mirror,
+                ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
 
-        if (rightClicked)
-            (background, foreground) = (foreground, background);
-
-        SettingsTable.DrawColor("Background", "##back", ref background, surface.Surface.DefaultBackground.ToVector4(), out rightClicked);
-
-        if (rightClicked)
-            (background, foreground) = (foreground, background);
-
-        SettingsTable.EndTable();
+            SettingsTable.EndTable();
+        }
 
         SharedToolSettings.Tip.Foreground = foreground.ToColor();
         SharedToolSettings.Tip.Background = background.ToColor();
+        SharedToolSettings.Tip.Mirror = MirrorConverter.ToSadConsoleMirror(mirror);
 
-        ImGuiWidgets.EndGroupPanel();
+        ImGuiSC.EndGroupPanel();
     }
-    public void MouseOver(Document document, Point hoveredCellPosition, bool isActive, ImGuiRenderer renderer)
+
+    public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        if (ImGuiCore.State.IsPopupOpen) return;
-
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.VisualDocument.Surface.ViewPosition, document.VisualDocument.FontSize, Color.Green);
-
-        if (_isWriting)
+        if (_isTyping)
         {
-            if (ImGui.IsMouseReleased(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
-            {
-                OnDeselected();
-                document.VisualToolLayerLower.Clear();
-            }
-        }
-        else
-        {
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
-            {
-                document.VisualDocument.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
-            }
-        }
+            if (isHovered)
+                ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
 
-        if (!isActive) return;
-
-        if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-        {
-            if (_isWriting)
+            // Cancelled
+            if (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape))
             {
-                _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-                _cursor.Position = _cursorPosition;
+                ClearState(document);
             }
+
+            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+            {
+                _cursorActual!.Position =
+                _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.ViewPosition;
+            }
+
             else
             {
-                _isWriting = true;
-                _cursorPosition = hoveredCellPosition - document.VisualDocument.Surface.ViewPosition;
-                document.VisualDocument.Surface.Copy(document.VisualDocument.Surface.View, document.VisualToolLayerLower, 0, 0);
-                if (_cursor is null)
-                {
-                    _cursor = new() { IsVisible = true, IsEnabled = true };
-                    document.VisualToolContainer.SadComponents.Add(_cursor);
-                }
-                _cursor.Position = _cursorPosition;
-                _cursor.PrintAppearance = SharedToolSettings.Tip;
-                _cursor.PrintOnlyCharacterData = false;
-                _cursor.PrintAppearanceMatchesHost = false;
-                document.Options.DisableScrolling = true;
+                Game.Instance.Keyboard.Update(Game.Instance.UpdateFrameDelta);
+                //document.VisualTool.ProcessKeyboard(Game.Instance.Keyboard);
+                ((Components.IComponent)_cursorActual!).ProcessKeyboard(null!, Game.Instance.Keyboard, out bool didSomething);
+                ((Components.IComponent)_cursorActual).Update(null, Game.Instance.UpdateFrameDelta);
+                //document.VisualTool.Update(Game.Instance.UpdateFrameDelta);
+                //document.VisualTool.IsDirty = true;
+                _cursorVisual.Position = _cursorActual.Position;
+
+                if (didSomething)
+                    document.EditingSurface.IsDirty = true;
             }
-        }
-    }
 
-    private void ClearCursorCopySurface()
-    {
-        if (_cursor is not null)
+            return;
+        }
+
+        if (!isHovered) return;
+
+        ImGuiRenderer theRenderer = ImGuiCore.Renderer;
+
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+
+        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
         {
-            _keyboard.Clear();
-            _isWriting = false;
+            document.VisualTool.SadComponents.Add(_cursorVisual);
 
-            Document document = ImGuiCore.State.GetOpenDocument();
-            document.VisualToolLayerLower.Copy(document.VisualToolLayerLower.Area, document.VisualDocument.Surface, document.VisualDocument.Surface.View.X, document.VisualDocument.Surface.View.Y);
-            document.VisualToolLayerLower.Clear();
-            document.VisualToolContainer.SadComponents.Remove(_cursor);
-            document.Options.DisableScrolling = false;
-            _cursor = null;
+            _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.ViewPosition;
+            _cursorActual = new(document.EditingSurface.Surface.GetSubSurface(new Rectangle(document.EditingSurface.ViewPosition.X,
+                                                                                            document.EditingSurface.ViewPosition.Y,
+                                                                                            document.EditingSurface.ViewWidth,
+                                                                                            document.EditingSurface.ViewHeight)));
+            _cursorActual.PrintAppearance = SharedToolSettings.Tip;
+            _cursorActual.PrintAppearanceMatchesHost = false;
+            _cursorActual.AutomaticallyShiftRowsUp = false;
+            _cursorActual.Position = _cursorVisual.Position;
+            _isTyping = true;
+            document.Options.DisableScrolling = true;
         }
     }
 
-    public void OnSelected() { }
+    public void OnSelected(Document document) { }
 
-    public void OnDeselected()
-    {
-        ClearCursorCopySurface();
-    }
+    public void OnDeselected(Document document) =>
+        ClearState(document);
+
+    public void Reset(Document document) { }
 
     public void DocumentViewChanged(Document document) { }
 
-    public void DrawOverDocument(Document document, ImGuiRenderer renderer)
+    public void DrawOverDocument(Document document) { }
+
+    public void ClearState(Document document)
     {
-        if (_isWriting && _cursor != null)
-        {
-            _keyboard.Update(Game.Instance.UpdateFrameDelta);
-            ((Components.IComponent)_cursor).ProcessKeyboard(document.VisualDocument, _keyboard, out bool handled);
-        }
+        _isTyping = false;
+        document.VisualTool.SadComponents.Remove(_cursorVisual);
+        document.VisualTool.Surface.Clear();
+        _cursorActual?.Dispose();
+        _cursorActual = null;
+        document.Options.DisableScrolling = false;
     }
+
+    public override string ToString() =>
+        Title;
 }

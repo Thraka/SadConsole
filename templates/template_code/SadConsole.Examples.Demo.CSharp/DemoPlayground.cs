@@ -1,6 +1,9 @@
-﻿using SadConsole.Ansi;
+﻿using System.Collections.ObjectModel;
+using SadConsole.Ansi;
+using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole.Readers;
+using SadConsole.Renderers;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 using static SadConsole.Examples.RootScreen;
@@ -22,27 +25,10 @@ internal class DemoPlayground : IDemo
         Title;
 }
 
-internal class Playground : ControlsConsole
+internal class Playground : Console
 {
     public Playground() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-        Controls.Add(new TextBox(15) { Tag = "First name", Position = (5, 5) });
-        Controls.Add(new TextBox(15) { Tag = "Last name", Position = (5, 9) });
-        Controls.Add(new TextBox(15) { Tag = "User name", Position = (5, 13) });
 
-        FrameTextBoxes();
-    }
-
-    void FrameTextBoxes()
-    {
-        foreach (TextBox control in Controls.OfType<TextBox>())
-        {
-            if (control.Tag is string value)
-            {
-                Surface.DrawBox(control.Bounds.Expand(1, 1), ShapeParameters.CreateStyledBoxThin(Color.White));
-                Point stringPos = control.Position + (0, -1);
-                Surface.Print(stringPos.X, stringPos.Y, $" {value} ");
-            }
-        }
     }
 }

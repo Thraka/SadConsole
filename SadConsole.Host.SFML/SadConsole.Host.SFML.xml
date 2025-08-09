@@ -78,6 +78,27 @@
             <param name="host">The host of the component.</param>
             <param name="delta">Unused.</param>
         </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
+            <summary>
+            Sets the target window SadConsole renders to instead of building its own window.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="window">The target window to render the game on.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
         <member name="T:SadConsole.DrawCalls.DrawCallColor">
             <summary>
             Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
@@ -252,19 +273,22 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.String)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetKeyboardState">
-            <inheritdoc/> 
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.GetMouseState">
-            <inheritdoc/> 
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
         </member>
         <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
             <summary>
@@ -701,7 +725,7 @@
             <summary>
             Processes a container from the control host.
             </summary>
-            <param name="controlContainer">The container.</param>
+            <param name="container">The container.</param>
             <param name="renderer">The renderer used with this step.</param>
             <param name="screenObject">The screen surface with font information.</param>
         </member>
@@ -1086,21 +1110,6 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
-            <summary>
-            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <returns>The configuration builder.</returns>
-        </member>
-        <member name="M:SadConsole.Configuration.ExtensionsHost.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
-            <summary>
-            Sets the target window SadConsole renders to instead of building its own window.
-            </summary>
-            <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="window">The target window to render the game on.</param>
-            <returns>The configuration builder.</returns>
         </member>
         <member name="T:SFML.Graphics.SpriteBatch">
             <summary>

@@ -12,7 +12,7 @@ internal class DemoFontManipulation : IDemo
 {
     public string Title => "Font manipulation";
 
-    public string Description => "Demonstrates some of the code to edit fonts while the game is running.";
+    public string Description => "Demonstrates some of the code to edit fonts while the game is running. THIS DEMO ISN'T YET COMPLETE.";
 
     public string CodeFile => "DemoFontManipulation.cs";
 
@@ -38,7 +38,7 @@ internal class FontEditingScreen : ControlsConsole
 
         if (Font is not SadFont)
             Surface.Print(2, 2, "Current font isn't a SadFont type");
-        
+
         sourceFontArea = new Rectangle(2, 1, 16, 16);
         targetFontArea = new Rectangle(Width - 18, 1, 16, 16);
 
@@ -58,12 +58,12 @@ internal class FontEditingScreen : ControlsConsole
 
         glyphDrawCall = new DrawCallGlyph(_selectedGlyph, new Rectangle(0, 0, Font.GlyphWidth * 10, Font.GlyphHeight * 10).ToMonoRectangle(), Font, false);
 
-        UI.Controls.ColorBar barR = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 12), StartingColor = Color.Black, EndingColor = new Color(255,0,0), SelectedColor = _selectedGlyph.Foreground.RedOnly() };
+        UI.Controls.ColorBar barR = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 12), StartingColor = Color.Black, EndingColor = new Color(255, 0, 0), SelectedColor = _selectedGlyph.Foreground.RedOnly() };
         UI.Controls.ColorBar barG = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 14), StartingColor = Color.Black, EndingColor = new Color(0, 255, 0), SelectedColor = _selectedGlyph.Foreground.GreenOnly() };
         UI.Controls.ColorBar barB = new(15) { Position = (sourceFontArea.MaxExtentX + 3, sourceFontArea.Y + 16), StartingColor = Color.Black, EndingColor = new Color(0, 0, 255), SelectedColor = _selectedGlyph.Foreground.BlueOnly() };
 
         //UI.Windows.ColorPickerPopup
-        
+
         barR.ColorChanged += BarR_ColorChanged;
         barG.ColorChanged += BarG_ColorChanged;
         barB.ColorChanged += BarB_ColorChanged;

@@ -65,7 +65,7 @@ public class MonoGameCallbackConfig : IConfigurator
 
     public bool SkipMonoGameGameCreation { get; set; }
 
-    public void Run(Builder config, GameHost game)
+    public void Run(BuilderBase config, GameHost game)
     {
     }
 }

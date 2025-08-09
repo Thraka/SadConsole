@@ -33,6 +33,12 @@ public class NamedColorCollection : IEnumerable<NamedColor>
     /// </summary>
     public NamedColorCollection() { }
 
+    public NamedColorCollection(IEnumerable<NamedColor> initialCollection)
+    {
+        foreach (NamedColor color in initialCollection)
+            Colors[color.Name] = color;
+    }
+
     /// <summary>
     /// Clears the collection of colors and adds White and Black colors.
     /// </summary>

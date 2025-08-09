@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 using SadConsole.Effects;
 using SadConsole.Input;
@@ -188,7 +190,7 @@ public class Cursor : IComponent, IDisposable
     public bool DisablePrintAutomaticLineFeed { get; set; } = false;
 
     /// <summary>
-    /// Enables linux-like string parsing where a \n behaves like a \r\n.
+    /// Enables Linux-like string parsing where a \n behaves like a \r\n.
     /// </summary>
     [DataMember]
     public bool UseLinuxLineEndings { get; set; } = false;
@@ -200,7 +202,7 @@ public class Cursor : IComponent, IDisposable
     public bool UseStringParser { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets the row of the cursor postion.
+    /// Gets or sets the row of the cursor position.
     /// </summary>
     public int Row
     {
@@ -209,7 +211,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Gets or sets the column of the cursor postion.
+    /// Gets or sets the column of the cursor position.
     /// </summary>
     public int Column
     {
@@ -533,7 +535,7 @@ public class Cursor : IComponent, IDisposable
                                 // If we had a \r in the string, handle it by going back
                                 if (returnParts.Length != 1 && indexR != returnParts.Length - 1)
                                 {
-                                    // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
+                                    // Wrapped to a new line through print glyph, which triggered \r\n. We don't want the \n so return back.
                                     if (_position.X == 0 && _position.Y != currentLine)
                                         _position = new Point(_position.X, _position.Y - 1);
                                     else
@@ -702,7 +704,7 @@ public class Cursor : IComponent, IDisposable
                                 // If we had a \r in the string, handle it by going back
                                 if (returnParts.Length != 1 && indexR != returnParts.Length - 1)
                                 {
-                                    // Wrapped to a new line through print glyph, which triggerd \r\n. We don't want the \n so return back.
+                                    // Wrapped to a new line through print glyph, which triggered \r\n. We don't want the \n so return back.
                                     if (_position.X == 0 && _position.Y != currentLine)
                                         _position = new Point(_position.X, _position.Y - 1);
                                     else
@@ -843,7 +845,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor up by the specified amount of lines.
+    /// Moves the cursor up by the specified amount of lines.
     /// </summary>
     /// <param name="amount">The amount of lines to move the cursor</param>
     /// <returns>This cursor object.</returns>
@@ -854,7 +856,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor down by the specified amount of lines.
+    /// Moves the cursor down by the specified amount of lines.
     /// </summary>
     /// <param name="amount">The amount of lines to move the cursor</param>
     /// <returns>This cursor object.</returns>
@@ -865,7 +867,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor left by the specified amount of columns.
+    /// Moves the cursor left by the specified amount of columns.
     /// </summary>
     /// <param name="amount">The amount of columns to move the cursor</param>
     /// <returns>This cursor object.</returns>
@@ -876,7 +878,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor left by the specified amount of columns, wrapping the cursor if needed.
+    /// Moves the cursor left by the specified amount of columns, wrapping the cursor if needed.
     /// </summary>
     /// <param name="amount">The amount of columns to move the cursor</param>
     /// <returns>This cursor object.</returns>
@@ -897,7 +899,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor right by the specified amount of columns.
+    /// Moves the cursor right by the specified amount of columns.
     /// </summary>
     /// <param name="amount">The amount of columns to move the cursor</param>
     /// <returns>This cursor object.</returns>
@@ -909,7 +911,7 @@ public class Cursor : IComponent, IDisposable
     }
 
     /// <summary>
-    /// Moves the cusor right by the specified amount of columns, wrapping the cursor if needed.
+    /// Moves the cursor right by the specified amount of columns, wrapping the cursor if needed.
     /// </summary>
     /// <param name="amount">The amount of columns to move the cursor</param>
     /// <returns>This cursor object.</returns>

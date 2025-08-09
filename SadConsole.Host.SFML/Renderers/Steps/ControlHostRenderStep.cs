@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using Color = SFML.Graphics.Color;
 using SadConsole.Host;
+using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
 namespace SadConsole.Renderers;
@@ -88,22 +89,24 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     /// <summary>
     /// Processes a container from the control host.
     /// </summary>
-    /// <param name="controlContainer">The container.</param>
+    /// <param name="container">The container.</param>
     /// <param name="renderer">The renderer used with this step.</param>
     /// <param name="screenObject">The screen surface with font information.</param>
-    protected void ProcessContainer(UI.Controls.IContainer controlContainer, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
+    private void ProcessContainer(UI.Controls.IContainer container, ScreenSurfaceRenderer renderer, IScreenSurface screenObject)
     {
-        UI.Controls.ControlBase control;
-
-        for (int i = 0; i < controlContainer.Count; i++)
+        for (int i = 0; i < container.Count; i++)
         {
-            control = controlContainer[i];
+            ControlBase control = container[i];
 
-            if (!control.IsVisible) continue;
+            if (!control.IsVisible)
+                continue;
+
             RenderControlCells(control, renderer, screenObject.Font, screenObject.FontSize, screenObject.Surface.View);
 
-            if (control is UI.Controls.IContainer container)
-                ProcessContainer(container, renderer, screenObject);
+            if (control is UI.Controls.IContainer childContainer)
+                ProcessContainer(childContainer, renderer, screenObject);
+
+            control.IsDirty = false;
         }
     }
 

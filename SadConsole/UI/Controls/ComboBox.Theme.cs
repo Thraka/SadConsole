@@ -82,7 +82,5 @@ public partial class ComboBox
         Surface.Print(0, 0, Text.Align(TextAlignment, Surface.Width - 2));
 
         Surface[Width - 1, 0].Glyph = IsSelected ? ExpandedButtonGlyph : CollapsedButtonGlyph;
-
-        IsDirty = false;
     }
 }
