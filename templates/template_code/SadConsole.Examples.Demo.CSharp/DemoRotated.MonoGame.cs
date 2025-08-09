@@ -12,7 +12,7 @@ internal class DemoRotatedSurface : IDemo
     public string Title => "Rotated Surface";
 
     public string Description => "This demo creates a custom rendering step and draw call which can rotate consoles.\r\n\r\n" +
-                                 "As SadConsole renders objects, it builds a list of 'DrawCalls' that compose the console or surface. Such as, [c:r f:violet:3](1) clear the output texture [c:r f:violet:3](2) draw all the glyphs [c:r f:violet:3](3) apply tinting [c:r f:violet:3](4) render to the screen.\r\n";
+                                 "As SadConsole renders objects, it builds a list of 'DrawCalls' that compose the console or surface. Such as, [c:r f:violet:3](1) clear the output texture [c:r f:violet:3](2) draw all the glyphs [c:r f:violet:3](3) apply tinting [c:r f:violet:3](4) render to the screen.";
 
     public string CodeFile => "DemoShapes.MonoGame.cs";
 

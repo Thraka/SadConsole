@@ -8,8 +8,8 @@ internal class DemoCustomCellsRenderer : IDemo
 {
     public string Title => "Custom glyph objects";
 
-    public string Description => "This demo creates a custom rendering step and draw call which can rotate consoles.\r\n\r\n" +
-                                 "As SadConsole renders objects, it builds a list of 'DrawCalls' that compose the console or surface. Such as, [c:r f:violet:3](1) clear the output texture [c:r f:violet:3](2) draw all the glyphs [c:r f:violet:3](3) apply tinting [c:r f:violet:3](4) render to the screen.\r\n";
+    public string Description => "This demo uses custom glyphs objects that have a new property [c:r f:ansibluebright]RenderingOffset[c:u].\r\n\r\n" +
+                                 "A custom renderer ([c:r f:ansibluebright]OffsetGlyphRenderer[c:u]) is used to draw the glyphs and use that property as a rendering offset to the cell. When the mouse enters a glyph, an effect is applied that randomizes the [c:r f:ansibluebright]RenderingOffset[c:u] property.";
 
     public string CodeFile => "DemoShapes.MonoGame.cs";
 
@@ -44,8 +44,8 @@ class CustomSurface : ScreenSurface
         }
 
         // Get rid of the old one and assign a new one.
-        //Renderer?.Dispose();
-        //Renderer = new OffsetGlyphRenderer();
+        Renderer?.Dispose();
+        Renderer = new OffsetGlyphRenderer();
     }
 
     protected override void OnMouseMove(MouseScreenObjectState state)
