@@ -1,6 +1,6 @@
 ## v10.6.0 (08/09/2025)
 
-Note: .NET 6 is still supported but will be removed when .NET 10 releases, making .NET 8 the earliest version you can target.
+Note: .NET 6 has been dropped by the host libraries in favor of .NET 8 as the minimum version. The core SadConsole library still supports .NET 6.
 
 - [Breaking] The MonoGame host no longer has the `ClearScreenComponent`. Instead, the clear screen happens right before the final draw of the main SadConsole component.
 - [Breaking] `Builder.Run` was renamed to `Builder.ProcessConfigs` and a new `Builder.Run` was added to make it simpler to configure and start the game.
