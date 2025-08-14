@@ -1203,10 +1203,21 @@
             <param name="height">The height of the control.</param>
             <param name="itemTheme">The theme to use for the items.</param>
         </member>
+        <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.DisplayFolder(System.String)">
+            <summary>
+            Updates the listbox items with the contents of the specified folder.
+            </summary>
+            <param name="folder">The folder path to display.</param>
+            <returns><see langword="true"/> if the folder was successfully displayed; otherwise, <see langword="false"/>.</returns>
+        </member>
         <member name="M:SadConsole.UI.Controls.FileDirectoryListbox.OnItemAction">
             <summary>
-            Navigates a directory if a directory is selected. Raises the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event.
+            Navigates the file system when a directory item is selected and raises the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event.
             </summary>
+            <remarks>
+            When a directory is selected, updates <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.CurrentFolder"/> to navigate into that directory.
+            When '..' is selected, navigates to the parent directory if allowed by <see cref="P:SadConsole.UI.Controls.FileDirectoryListbox.OnlyRootAndSubDirs"/>.
+            </remarks>
         </member>
         <member name="T:SadConsole.UI.Controls.FileDirectoryListbox.FauxDirectory">
             <summary>

@@ -81,7 +81,11 @@ public class FileDirectoryListbox : ListBox
     /// <param name="itemTheme">The theme to use for the items.</param>
     public FileDirectoryListbox(int width, int height, ListBoxItemTheme itemTheme) : base(width, height, itemTheme) { }
 
-
+    /// <summary>
+    /// Updates the listbox items with the contents of the specified folder.
+    /// </summary>
+    /// <param name="folder">The folder path to display.</param>
+    /// <returns><see langword="true"/> if the folder was successfully displayed; otherwise, <see langword="false"/>.</returns>
     private bool DisplayFolder(string? folder)
     {
         if (!string.IsNullOrEmpty(folder) && System.IO.Directory.Exists(folder))
@@ -131,8 +135,12 @@ public class FileDirectoryListbox : ListBox
     }
 
     /// <summary>
-    /// Navigates a directory if a directory is selected. Raises the <see cref="ListBox.SelectedItemExecuted"/> event.
+    /// Navigates the file system when a directory item is selected and raises the <see cref="ListBox.SelectedItemExecuted"/> event.
     /// </summary>
+    /// <remarks>
+    /// When a directory is selected, updates <see cref="CurrentFolder"/> to navigate into that directory.
+    /// When '..' is selected, navigates to the parent directory if allowed by <see cref="OnlyRootAndSubDirs"/>.
+    /// </remarks>
     protected override void OnItemAction()
     {
         base.OnItemAction();
