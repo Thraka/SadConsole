@@ -1,5 +1,8 @@
 ﻿namespace SadConsole.Configuration;
 
+/// <summary>
+/// Provides extension methods for configuring and running the SadConsole game host.
+/// </summary>
 public static partial class ExtensionsHost
 {
     /// <summary>
