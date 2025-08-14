@@ -62,11 +62,11 @@ namespace SadConsole.Input
                 Input.Keys.OemMinus => SFMLKeys.Hyphen,
                 Input.Keys.OemPeriod => SFMLKeys.Period,
                 Input.Keys.OemQuestion => SFMLKeys.Slash,
-                Input.Keys.OemTilde => SFMLKeys.Tilde,
+                Input.Keys.OemTilde => SFMLKeys.Grave,
                 Input.Keys.OemOpenBrackets => SFMLKeys.LBracket,
                 Input.Keys.OemPipe => SFMLKeys.Backslash,
                 Input.Keys.OemCloseBrackets => SFMLKeys.RBracket,
-                Input.Keys.OemQuotes => SFMLKeys.Quote,
+                Input.Keys.OemQuotes => SFMLKeys.Apostrophe,
                 Input.Keys.OemBackslash => SFMLKeys.Backslash,
                 Input.Keys.Pause => SFMLKeys.Pause,
                 _ => SFMLKeys.Unknown
@@ -199,11 +199,11 @@ namespace SadConsole.Input
                 SFMLKeys.Semicolon => Input.Keys.OemSemicolon,
                 SFMLKeys.Comma => Input.Keys.OemComma,
                 SFMLKeys.Slash => Input.Keys.OemQuestion,
-                SFMLKeys.Tilde => Input.Keys.OemTilde,
+                SFMLKeys.Grave => Input.Keys.OemTilde,
                 SFMLKeys.LBracket => Input.Keys.OemOpenBrackets,
                 SFMLKeys.Backslash => Input.Keys.OemPipe,
                 SFMLKeys.RBracket => Input.Keys.OemCloseBrackets,
-                SFMLKeys.Quote => Input.Keys.OemQuotes,
+                SFMLKeys.Apostrophe => Input.Keys.OemQuotes,
                 SFMLKeys.Pause => Input.Keys.Pause,
                 _ => Input.Keys.None
             };
