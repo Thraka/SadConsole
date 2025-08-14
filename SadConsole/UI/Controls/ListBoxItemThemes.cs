@@ -80,7 +80,7 @@ public class ListBoxItemTheme : ThemeStates
     /// Creates a copy of this theme.
     /// </summary>
     /// <returns>A new theme object.</returns>
-    public new virtual ListBoxItemTheme Clone() => new ListBoxItemTheme()
+    public new virtual ListBoxItemTheme Clone() => new()
     {
         Normal = Normal.Clone(),
         Disabled = Disabled.Clone(),
@@ -109,7 +109,7 @@ public class ListBoxItemColorTheme : ListBoxItemTheme
     {
         if (item is Color || item is ValueTuple<Color, string> || item is ValueTuple<Color, Color, string>)
         {
-            string value = new string(' ', area.Width - 2);
+            string value = new(' ', area.Width - 2);
 
             ColoredGlyphBase cellLook = GetStateAppearance(itemState).Clone();
 
@@ -141,7 +141,7 @@ public class ListBoxItemColorTheme : ListBoxItemTheme
 
                 string colorBoxesCommands;
 
-                StringParser.Default parser = new StringParser.Default();
+                StringParser.Default parser = new();
 
                 if (useExtended)
                     colorBoxesCommands = UseSingleCharacterForBox ? $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 254]m" : $"[c:r f:{color2.Item1.ToParser()}:2][c:sg 301]m[c:sg 302]m";

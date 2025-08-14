@@ -45,7 +45,7 @@ namespace SadConsole.Components
     {
         private IScreenSurface? _previousObject;
         private Color _previousObjectTint = Color.Transparent;
-        private readonly Mouse _mouse = new Mouse();
+        private readonly Mouse _mouse = new();
         private bool _isEnabled = true;
 
         /// <summary>

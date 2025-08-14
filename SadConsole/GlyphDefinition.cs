@@ -38,7 +38,7 @@ public readonly struct GlyphDefinition
     /// </summary>
     /// <param name="foreground">The color of the decorator.</param>
     /// <returns>A new decorator instance.</returns>
-    public CellDecorator CreateCellDecorator(Color foreground) => new CellDecorator(foreground, Glyph, Mirror);
+    public CellDecorator CreateCellDecorator(Color foreground) => new(foreground, Glyph, Mirror);
 
     /// <summary>
     /// Creates a <see cref="ColoredGlyphBase"/> from this definition.

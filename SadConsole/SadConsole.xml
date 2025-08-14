@@ -11580,10 +11580,20 @@
         </member>
         <member name="M:SadConsole.StringValidation.Letters(System.String)">
             <summary>
-            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether or not a string contains only letters.
+            Returns a <see cref="T:SadConsole.StringValidation.Validator"/> delegate that validates whether a string contains only letters.
             </summary>
             <param name="errorMessage">A message to provide to the result if the validation fails.</param>
             <returns>The validation result.</returns>
+        </member>
+        <member name="M:SadConsole.StringValidation.LettersOnly">
+            <remarks>
+            Pattern:<br/>
+            <code>[a-zA-Z]</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match a character in the set [A-Za-z].<br/>
+            </code>
+            </remarks>
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
@@ -15905,14 +15915,6 @@
         <member name="M:SadRogue.Primitives.ColorExtensions2.ToColoredString(SadRogue.Primitives.Gradient,System.String)">
             <summary>
             Creates a <see cref="T:SadConsole.ColoredString"/> object using the current gradient.
-            </summary>
-            <param name="gradient">The gradient to work with.</param>
-            <param name="text">The text to use for the colored string.</param>
-            <returns>A new colored string object.</returns>
-        </member>
-    </members>
-</doc>
-dString"/> object using the current gradient.
             </summary>
             <param name="gradient">The gradient to work with.</param>
             <param name="text">The text to use for the colored string.</param>

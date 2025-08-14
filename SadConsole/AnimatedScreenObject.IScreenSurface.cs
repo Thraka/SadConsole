@@ -97,7 +97,7 @@ public partial class AnimatedScreenObject
     }
 
     /// <inheritdoc/>
-    public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, WidthPixels, HeightPixels);
+    public Rectangle AbsoluteArea => new(AbsolutePosition.X, AbsolutePosition.Y, WidthPixels, HeightPixels);
 
     /// <inheritdoc/>
     public bool UsePixelPositioning

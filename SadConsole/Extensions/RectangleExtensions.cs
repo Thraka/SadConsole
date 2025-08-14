@@ -16,7 +16,7 @@ public static class RectangleExtensions
     /// <returns>A new rectangle in pixels.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rectangle ToPixels(this Rectangle rect, Point fontSize) =>
-        new Rectangle(rect.Position * fontSize, rect.Size * fontSize);
+        new(rect.Position * fontSize, rect.Size * fontSize);
 
     /// <summary>
     /// Converts a rectangle from cells to pixels.
@@ -27,7 +27,7 @@ public static class RectangleExtensions
     /// <returns>A new rectangle in pixels.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rectangle ToPixels(this Rectangle rect, int cellWidth, int cellHeight) =>
-        new Rectangle(rect.X * cellWidth, rect.Y * cellHeight, rect.Width * cellWidth, rect.Height * cellHeight);
+        new(rect.X * cellWidth, rect.Y * cellHeight, rect.Width * cellWidth, rect.Height * cellHeight);
 
     /// <summary>
     /// Converts a rectangle from pixels to cells.
@@ -36,7 +36,7 @@ public static class RectangleExtensions
     /// <param name="fontSize">The font size used for translation.</param>
     /// <returns>A new rectangle in cell coordinates.</returns>
     public static Rectangle ToConsole(this Rectangle rect, Point fontSize) =>
-        new Rectangle(rect.Position / fontSize, rect.Size / fontSize);
+        new(rect.Position / fontSize, rect.Size / fontSize);
 
     /// <summary>
     /// Converts a rectangle from pixels to cells.
@@ -47,5 +47,5 @@ public static class RectangleExtensions
     /// <returns>A new rectangle in cell coordinates.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rectangle ToConsole(this Rectangle rect, int cellWidth, int cellHeight) =>
-        new Rectangle(rect.X / cellWidth, rect.Y / cellHeight, rect.Width / cellWidth, rect.Height / cellHeight);
+        new(rect.X / cellWidth, rect.Y / cellHeight, rect.Width / cellWidth, rect.Height / cellHeight);
 }

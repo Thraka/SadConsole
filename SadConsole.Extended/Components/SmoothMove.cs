@@ -13,7 +13,7 @@ public class SmoothMove : UpdateComponent
     private Instructions.AnimatedValue? _animatedValueY;
     private Point _oldValue;
     private bool _isAnimating;
-    private readonly TimeSpan _defaultTime = new TimeSpan(0, 0, 0, 0, 200);
+    private readonly TimeSpan _defaultTime = new(0, 0, 0, 0, 200);
     private bool _isEntity;
     private bool _isEnabled = true;
 

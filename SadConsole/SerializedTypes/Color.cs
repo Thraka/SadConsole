@@ -23,7 +23,7 @@ public struct ColorSerialized
     public byte A;
 
     public static implicit operator ColorSerialized(Color color) =>
-        new ColorSerialized()
+        new()
         {
             R = color.R,
             G = color.G,
@@ -32,5 +32,5 @@ public struct ColorSerialized
         };
 
     public static implicit operator Color(ColorSerialized color) =>
-        new Color(color.R, color.G, color.B, color.A);
+        new(color.R, color.G, color.B, color.A);
 }

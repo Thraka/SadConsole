@@ -58,7 +58,7 @@ public partial class ComboBox : CheckBox
         DropdownContainer = new ScreenSurface(dropdownWidth, dropdownHeight);
         ListBox = new ListBox(dropdownWidth, dropdownHeight);
 
-        ControlHost listboxHost = new ControlHost();
+        ControlHost listboxHost = new();
         DropdownContainer.SadComponents.Add(listboxHost);
         listboxHost.Add(ListBox);
 

@@ -53,7 +53,7 @@ public class ColoredGlyphSerialized
     /// Implicitly converts a <see cref="ColoredGlyph"/> to a <see cref="ColoredGlyphSerialized"/>.
     /// </summary>
     /// <param name="cell">The cell to convert.</param>
-    public static implicit operator ColoredGlyphSerialized(ColoredGlyph cell) => new ColoredGlyphSerialized()
+    public static implicit operator ColoredGlyphSerialized(ColoredGlyph cell) => new()
     {
         Foreground = cell.Foreground,
         Background = cell.Background,

@@ -109,7 +109,7 @@ public class EntityRenderStep : IRenderStep, IRenderStepTexture
                 else
                 {
                     // Offset the top-left render rectangle by the center point of the animation.
-                    XnaPoint surfaceStartPosition = new XnaPoint(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
+                    XnaPoint surfaceStartPosition = new(renderRect.X - (item.AppearanceSurface.Animation.Center.X * renderRect.Width), renderRect.Y - (item.AppearanceSurface.Animation.Center.Y * renderRect.Height));
 
                     for (int y = 0; y < item.AppearanceSurface.Animation.ViewHeight; y++)
                     {

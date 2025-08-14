@@ -622,7 +622,7 @@ public partial class Colors
     /// <returns>A new Colors object.</returns>
     public Colors Clone()
     {
-        Colors newColors = new Colors();
+        Colors newColors = new();
         CopyTo(newColors);
         return newColors;
     }

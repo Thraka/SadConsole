@@ -70,14 +70,14 @@ public class Document : IDisposable
     /// </summary>
     /// <param name="ansiContent">The ANSI.SYS encoded string.</param>
     /// <returns>A new document.</returns>
-    public static Document FromAsciiString(string ansiContent) => new Document { AnsiBytes = Encoding.ASCII.GetBytes(ansiContent) };
+    public static Document FromAsciiString(string ansiContent) => new() { AnsiBytes = Encoding.ASCII.GetBytes(ansiContent) };
 
     /// <summary>
     /// Creates a new document from an existing byte array representing ANSI.SYS codes and characters.
     /// </summary>
     /// <param name="bytes">The ANSI.SYS encoded byte array.</param>
     /// <returns>A new document.</returns>
-    public static Document FromBytes(byte[] bytes) => new Document { AnsiBytes = bytes };
+    public static Document FromBytes(byte[] bytes) => new() { AnsiBytes = bytes };
 
     /// <summary>
     /// Disposes the <see cref="Stream"/>.

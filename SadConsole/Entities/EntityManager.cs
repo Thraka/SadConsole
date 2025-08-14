@@ -493,7 +493,7 @@ public class EntityManager : Components.UpdateComponent, Components.IComponent, 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Rectangle GetAnimatedAreaOffsetByCenterPixel(Entity entity) =>
-        new Rectangle(entity.Position.X - (entity.AppearanceSurface!.Animation.Center.X * _screenCachedFontSize.X),
+        new(entity.Position.X - (entity.AppearanceSurface!.Animation.Center.X * _screenCachedFontSize.X),
                       entity.Position.Y - (entity.AppearanceSurface.Animation.Center.Y * _screenCachedFontSize.Y),
                       entity.AppearanceSurface.Animation.ViewWidth * _screenCachedFontSize.X,
                       entity.AppearanceSurface.Animation.Height * _screenCachedFontSize.Y);

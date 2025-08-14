@@ -41,7 +41,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
                 return "";
             }
 
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(_characters.Length);
+            System.Text.StringBuilder sb = new(_characters.Length);
 
             for (int i = 0; i < _characters.Length; i++)
             {
@@ -216,7 +216,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     /// <returns>A new <see cref="ColoredString"/> object.</returns>
     public ColoredString Clone()
     {
-        ColoredString returnObject = new ColoredString(_characters.Length)
+        ColoredString returnObject = new(_characters.Length)
         {
             IgnoreBackground = IgnoreBackground,
             IgnoreForeground = IgnoreForeground,
@@ -252,7 +252,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
             throw new System.IndexOutOfRangeException();
         }
 
-        ColoredString returnObject = new ColoredString(count)
+        ColoredString returnObject = new(count)
         {
             IgnoreBackground = IgnoreBackground,
             IgnoreForeground = IgnoreForeground,
@@ -387,7 +387,7 @@ public partial class ColoredString : IEnumerable<ColoredGlyphAndEffect>
     /// <returns></returns>
     public static ColoredString operator +(ColoredString string1, ColoredString string2)
     {
-        ColoredString returnString = new ColoredString(string1.Length + string2.Length);
+        ColoredString returnString = new(string1.Length + string2.Length);
 
         for (int i = 0; i < string1.Length; i++)
             returnString._characters[i] = (ColoredGlyphAndEffect)string1._characters[i].Clone();

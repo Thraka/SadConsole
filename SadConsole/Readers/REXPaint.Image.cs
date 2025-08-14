@@ -35,7 +35,7 @@ public partial class REXPaintImage
     /// <summary>
     /// A read-only collection of layers.
     /// </summary>
-    public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers => new System.Collections.ObjectModel.ReadOnlyCollection<Layer>(_layers);
+    public System.Collections.ObjectModel.ReadOnlyCollection<Layer> Layers => new(_layers);
 
     /// <summary>
     /// Creates a new RexPaint image.

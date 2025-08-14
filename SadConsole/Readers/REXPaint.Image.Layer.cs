@@ -24,7 +24,7 @@ public partial class REXPaintImage
         /// <summary>
         /// Represents all cells of the layer.
         /// </summary>
-        public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells => new System.Collections.ObjectModel.ReadOnlyCollection<Cell>(cells);
+        public System.Collections.ObjectModel.ReadOnlyCollection<Cell> Cells => new(cells);
 
         /// <summary>
         /// Gets a cell by coordinates.

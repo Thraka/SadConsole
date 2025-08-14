@@ -73,16 +73,16 @@ public class Ansi1 : ScreenSurface
         // Read the ansi file
         System.Reflection.Assembly assembly = typeof(ScreenSurface).Assembly;
         using Stream stream = assembly.GetManifestResourceStream("SadConsole.Resources.logo.ans")!;
-        using BinaryReader sr = new BinaryReader(stream);
+        using BinaryReader sr = new(stream);
 
         SadConsole.Ansi.Document document = Ansi.Document.FromBytes(sr.ReadBytes((int)stream.Length));
-        SadConsole.Ansi.AnsiWriter writer = new Ansi.AnsiWriter(document, _ansiChild.Surface);
+        SadConsole.Ansi.AnsiWriter writer = new(document, _ansiChild.Surface);
         writer.Cursor.AutomaticallyShiftRowsUp = false;
         writer.ReadEntireDocument();
 
         // Settings for editing the ansi file
         var monitorRect = new Rectangle((34, 7), (45, 10));
-        CellSurface monitorSurface = new CellSurface(monitorRect.Width, monitorRect.Height);
+        CellSurface monitorSurface = new(monitorRect.Width, monitorRect.Height);
         ColoredGlyphBase tear = new ColoredGlyph();
         ColoredGlyphBase tearPrevious = new ColoredGlyph();
         Point tearPosition = (44, 9);

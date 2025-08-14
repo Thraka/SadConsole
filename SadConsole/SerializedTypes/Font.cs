@@ -19,7 +19,7 @@ public class FontSerialized
     public string Name;
 
     public static FontSerialized FromFont(IFont font) =>
-        new FontSerialized() { Name = font.Name };
+        new() { Name = font.Name };
 
     public static IFont ToFont(FontSerialized font)
     {

@@ -181,7 +181,7 @@ public static class Serializer
         /// <summary>
         /// THe string containing the log.
         /// </summary>
-        public readonly StringBuilder Log = new StringBuilder();
+        public readonly StringBuilder Log = new();
 
         private TraceLevel _levelFilter;
 

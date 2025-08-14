@@ -660,6 +660,32 @@
         <member name="M:SadConsole.Instructions.AnimatedBoxGrow.OnAdded(SadConsole.IScreenObject)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.SimpleObjectDefinition">
+            <summary>
+            Represents a simple object definition with a visual, positions, and name.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SimpleObjectDefinition.Visual">
+            <summary>
+            Gets or sets the visual representation of the object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SimpleObjectDefinition.Positions">
+            <summary>
+            Gets the list of positions for the object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SimpleObjectDefinition.Name">
+            <summary>
+            Gets or sets the name of the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SimpleObjectDefinition.ToString">
+            <summary>
+            Returns the name of the object.
+            </summary>
+            <returns>The name of the object.</returns>
+        </member>
         <member name="T:SadConsole.Transitions.Fade">
             <summary>
             Fades out one <see cref="T:SadConsole.IScreenSurface"/> while fading in another.
@@ -2046,6 +2072,70 @@
         </member>
         <member name="M:SadConsole.UI.Controls.Table.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.GetOldRowAndColumnValues(System.Collections.Generic.List{System.ValueTuple{System.ValueTuple{System.Int32,System.Int32},System.ValueTuple{System.Int32,System.Int32}}},SadRogue.Primitives.Point,System.Int32@,System.Int32@)">
+            <summary>
+            Gets the previous row and column values for a cell position from the fake cells or actual cells.
+            </summary>
+            <param name="fakeCells">The list of fake cells.</param>
+            <param name="cellPosition">The position of the cell.</param>
+            <param name="oldRow">The previous row value (output).</param>
+            <param name="oldCol">The previous column value (output).</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.SetScrollBarVisibility(System.Int32,System.Int32)">
+            <summary>
+            Sets the visibility of the scroll bars based on the maximum row and column sizes.
+            </summary>
+            <param name="maxRowsHeight">The maximum height of the rows.</param>
+            <param name="maxColumnsWidth">The maximum width of the columns.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.GetCustomStateAppearance(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Gets the custom state appearance for a cell, such as selected or mouse-over states.
+            </summary>
+            <param name="cell">The cell to get the appearance for.</param>
+            <returns>The custom state appearance, or null if none.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.AdjustControlSurface(SadConsole.UI.Controls.Table.Cell,SadConsole.ColoredGlyphBase,System.Boolean)">
+            <summary>
+            Adjusts the control surface for a cell, applying custom state appearance and visibility.
+            </summary>
+            <param name="cell">The cell to adjust.</param>
+            <param name="customStateAppearance">The custom state appearance to apply.</param>
+            <param name="adjustVisibility">Whether to adjust visibility.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.HideVisualCell(System.Int32,System.Int32,SadRogue.Primitives.Point)">
+            <summary>
+            Hides the visual cell at the specified column, row, and position.
+            </summary>
+            <param name="column">The column index.</param>
+            <param name="row">The row index.</param>
+            <param name="position">The position of the cell.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.PrintText(SadConsole.UI.Controls.Table.Cell)">
+            <summary>
+            Prints the text for a cell, handling alignment and wrapping.
+            </summary>
+            <param name="cell">The cell to print text for.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.GetTotalCellSize(SadConsole.UI.Controls.Table.Cell,System.Int32,System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Gets the total size of a cell in width and height.
+            </summary>
+            <param name="cell">The cell to measure.</param>
+            <param name="width">The width of the cell.</param>
+            <param name="height">The height of the cell.</param>
+            <param name="totalWidth">The total width (output).</param>
+            <param name="totalHeight">The total height (output).</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.Table.GetHorizontalAlignment(SadConsole.UI.Controls.Table.Cell.Options.HorizontalAlign,System.Int32,System.Char[])">
+            <summary>
+            Gets the horizontal alignment position for a cell.
+            </summary>
+            <param name="hAlign">The horizontal alignment option.</param>
+            <param name="totalWidth">The total width of the cell.</param>
+            <param name="textArr">The text array.</param>
+            <returns>The starting X position for alignment.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.TableExtensions">
             <summary>

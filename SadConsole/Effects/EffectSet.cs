@@ -144,7 +144,7 @@ public class EffectSet : CellEffectBase, IEnumerable<ICellEffect>
     /// <inheritdoc />
     public override ICellEffect Clone()
     {
-        EffectSet chain = new EffectSet()
+        EffectSet chain = new()
         {
             DelayBetweenEffects = DelayBetweenEffects,
             Repeat = Repeat,

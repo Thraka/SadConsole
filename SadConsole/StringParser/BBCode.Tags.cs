@@ -29,7 +29,7 @@ public class Strikethrough : BBCodeCommandBase
     /// <inheritdoc />
     public override void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex, ICellSurface? surface, ref int stringIndex, ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
-        CellDecorator decorator = new CellDecorator(Color.AnsiWhite, Glyph, Mirror.None);
+        CellDecorator decorator = new(Color.AnsiWhite, Glyph, Mirror.None);
 
         // Create decorator list if needed
         glyphState.Decorators ??= new();
@@ -65,7 +65,7 @@ public class Underline : BBCodeCommandBase
     /// <inheritdoc />
     public override void Build(ref ColoredGlyphAndEffect glyphState, ColoredGlyphAndEffect[] glyphString, int surfaceIndex, ICellSurface? surface, ref int stringIndex, ReadOnlySpan<char> processedString, ParseCommandStacks commandStack)
     {
-        CellDecorator decorator = new CellDecorator(Color.AnsiWhite, Glyph, Mirror.None);
+        CellDecorator decorator = new(Color.AnsiWhite, Glyph, Mirror.None);
 
         // Create decorator list if needed
         glyphState.Decorators ??= new();

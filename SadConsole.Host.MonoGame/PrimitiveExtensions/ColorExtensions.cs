@@ -17,7 +17,7 @@ namespace SadRogue.Primitives
         /// <returns/>
         [System.Diagnostics.Contracts.Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MonoColor ToMonoColor(this SadRogueColor self) => new MonoColor(self.R, self.G, self.B, self.A);
+        public static MonoColor ToMonoColor(this SadRogueColor self) => new(self.R, self.G, self.B, self.A);
 
         /// <summary>
         /// Compares a <see cref="SadRogue.Primitives.Color"/> to a <see cref="Microsoft.Xna.Framework.Color"/>.
@@ -48,7 +48,7 @@ namespace Microsoft.Xna.Framework
         [System.Diagnostics.Contracts.Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SadRogueColor ToSadRogueColor(this MonoColor self)
-            => new SadRogueColor(self.R, self.G, self.B, self.A);
+            => new(self.R, self.G, self.B, self.A);
 
         /// <summary>
         /// Compares a <see cref="Microsoft.Xna.Framework.Color"/> to a <see cref="SadRogue.Primitives.Color"/>.
