@@ -25,6 +25,12 @@ public class BlinkGlyph : CellEffectBase
     public int GlyphIndex { get; set; }
 
     /// <summary>
+    /// When true, starts with the original glyph visible. When false, starts with the target glyph visible.
+    /// </summary>
+    [DataMember]
+    public bool StartVisible { get; set; }
+
+    /// <summary>
     /// How many times to blink. The value of -1 represents forever.
     /// </summary>
     [DataMember]
@@ -45,7 +51,8 @@ public class BlinkGlyph : CellEffectBase
         BlinkCount = -1;
         BlinkSpeed = System.TimeSpan.FromSeconds(1);
         GlyphIndex = 0;
-        _isOn = true;
+        StartVisible = true;
+        _isOn = StartVisible;
     }
 
     /// <inheritdoc />
@@ -105,7 +112,7 @@ public class BlinkGlyph : CellEffectBase
     /// </summary>
     public override void Restart()
     {
-        _isOn = true;
+        _isOn = StartVisible;
         _blinkCounter = 0;
         _duration = System.TimeSpan.Zero;
 
@@ -118,6 +125,7 @@ public class BlinkGlyph : CellEffectBase
         _isOn = _isOn,
         BlinkSpeed = BlinkSpeed,
         GlyphIndex = GlyphIndex,
+        StartVisible = StartVisible,
 
         IsFinished = IsFinished,
         StartDelay = StartDelay,
@@ -148,5 +156,5 @@ public class BlinkGlyph : CellEffectBase
 
     /// <inheritdoc />
     public override string ToString() =>
-        string.Format("BLINKCHAR-{0}-{1}-{2}-{3}", GlyphIndex, BlinkSpeed, StartDelay, RemoveOnFinished);
+        string.Format("BLINKCHAR-{0}-{1}-{2}-{3}-{4}", GlyphIndex, BlinkSpeed, StartDelay, RemoveOnFinished, StartVisible);
 }
