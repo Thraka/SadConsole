@@ -48,12 +48,26 @@ public static partial class Extensions
     }
 }
 
+/// <summary>
+/// Configuration for the game's starting screen.
+/// </summary>
 public class StartingScreenConfig : IConfigurator
 {
+    /// <summary>
+    /// Gets or sets the function that generates the starting screen object.
+    /// </summary>
     public Func<GameHost, IScreenObject> GenerateStartingObject { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the starting screen should be focused.
+    /// </summary>
     public bool? FocusStartingScreen { get; set; } = null;
 
+    /// <summary>
+    /// Configures the starting screen for the game.
+    /// </summary>
+    /// <param name="configBuilder">The builder configuration.</param>
+    /// <param name="game">The game host instance.</param>
     public void Run(BuilderBase configBuilder, GameHost game)
     {
         game.FocusedScreenObjects.Clear();

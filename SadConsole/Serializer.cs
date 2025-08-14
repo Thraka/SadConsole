@@ -27,6 +27,11 @@ public static class Serializer
     /// </summary>
     public class Contracts : DefaultContractResolver
     {
+        /// <summary>
+        /// Resolves the appropriate JSON converter for the specified object type.
+        /// </summary>
+        /// <param name="objectType">The type of object to resolve a converter for.</param>
+        /// <returns>The JSON converter for the type, or null if none is found.</returns>
         protected override JsonConverter? ResolveContractConverter(Type objectType)
         {
             if (objectType == typeof(IFont))

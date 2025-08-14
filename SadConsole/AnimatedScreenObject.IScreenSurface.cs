@@ -195,6 +195,13 @@ public partial class AnimatedScreenObject
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
     }
 
+    /// <summary>
+    /// Creates a new animation with the specified name, font, font size, and frames.
+    /// </summary>
+    /// <param name="name">The name of the animation.</param>
+    /// <param name="font">The font used by the animation.</param>
+    /// <param name="fontSize">The size of the font.</param>
+    /// <param name="frames">The frames that make up the animation.</param>
     [JsonConstructor]
     public AnimatedScreenObject(string name, IFont font, Point fontSize, IEnumerable<ICellSurface> frames)
     {

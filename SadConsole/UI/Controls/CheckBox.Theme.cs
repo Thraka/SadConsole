@@ -167,6 +167,10 @@ public partial class CheckBox : ToggleButtonBase
         return surface;
     }
 
+    /// <summary>
+    /// Estimates the required surface area for the control based on text length and checkbox components.
+    /// </summary>
+    /// <returns>A rectangle representing the estimated surface area needed.</returns>
     protected Rectangle EstimateControlSurface() =>
         new(0, 0, Text.Length + 3 + 2, 1);
 }

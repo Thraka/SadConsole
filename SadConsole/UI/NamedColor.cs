@@ -33,6 +33,10 @@ public class NamedColorCollection : IEnumerable<NamedColor>
     /// </summary>
     public NamedColorCollection() { }
 
+    /// <summary>
+    /// Creates a new instance with colors from the provided collection.
+    /// </summary>
+    /// <param name="initialCollection">The initial collection of named colors.</param>
     public NamedColorCollection(IEnumerable<NamedColor> initialCollection)
     {
         foreach (NamedColor color in initialCollection)
@@ -89,6 +93,10 @@ public class NamedColorCollection : IEnumerable<NamedColor>
         System.IO.File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(colors));
     }
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the collection of named colors.
+    /// </summary>
+    /// <returns>An enumerator for the named colors.</returns>
     public IEnumerator<NamedColor> GetEnumerator() =>
         Colors.Values.GetEnumerator();
 

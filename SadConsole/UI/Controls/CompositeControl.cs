@@ -11,6 +11,9 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public abstract class CompositeControl : ControlBase, IContainer
 {
+    /// <summary>
+    /// Indicates whether the most recent mouse event was handled by a child control.
+    /// </summary>
     protected bool MouseLastHandledByChild = false;
 
     /// <summary>
