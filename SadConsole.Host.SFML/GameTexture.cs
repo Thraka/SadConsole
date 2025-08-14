@@ -31,6 +31,10 @@ public class GameTexture : ITexture
     /// <inheritdoc />
     public int Size { get; private set; }
 
+    /// <summary>
+    /// Creates a new game texture from a file path.
+    /// </summary>
+    /// <param name="path">The file path to load the texture from.</param>
     public GameTexture(string path)
     {
         using (Stream fontStream = new FileStream(path, FileMode.Open))
@@ -41,6 +45,10 @@ public class GameTexture : ITexture
         Size = Width * Height;
     }
 
+    /// <summary>
+    /// Creates a new game texture from a stream.
+    /// </summary>
+    /// <param name="stream">The stream to load the texture from.</param>
     public GameTexture(Stream stream)
     {
         _skipDispose = false;
