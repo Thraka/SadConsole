@@ -1,3 +1,9 @@
+## v10.7.0 (XY/XY/XYXY)
+
+- Cleaned up various warnings and XML comments.
+- [Core] `BlinkChar` supports starting on or off now.
+- [Core] Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
+
 ## v10.6.0 (08/09/2025)
 
 Note: .NET 6 has been dropped by the host libraries in favor of .NET 8 as the minimum version. The core SadConsole library still supports .NET 6.
