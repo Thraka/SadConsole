@@ -669,7 +669,14 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if (newControl != null)
             newControl.IsFocused = true;
+
+        FocusedControlChangedEvent?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <summary>
+    /// Event raised when the focused control is changed.
+    /// </summary>
+    public event EventHandler? FocusedControlChangedEvent;
 
     /// <summary>
     /// Determins if a control is enabled and <see cref="ControlBase.CanFocus"/> is <see langword="true"/>.
