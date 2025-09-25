@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0-windows</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_MonoGameWPF_Version)</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
+    <AssemblyTitle>SadConsole WPF/MonoGame Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets MonoGame and WPF.</Description>
+    <PackageId>SadConsole.Host.MonoGameWPF</PackageId>
+    <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
+    <PackageReleaseNotes>Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);MONOGAME;WPF</DefineConstants>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Handle WPF and non WPF versions -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.3" />
+
+    <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.cs" />
+    <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Mono.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

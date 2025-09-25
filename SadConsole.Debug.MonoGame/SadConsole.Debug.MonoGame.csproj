@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
+    <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
+    <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
+    <PackageId>SadConsole.Debug.MonoGame</PackageId>
+    <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <RootNamespace>SadConsole</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
+
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
+
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
+    <Content Include="Roboto-Regular.ttf" pack="true" PackagePath="content/." CopyToOutputDirectory="Always" />
+    <Content Include="SadConsole.Debug.MonoGame.targets" PackagePath="build/SadConsole.Debug.MonoGame.targets" />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+</Project>

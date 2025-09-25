@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_MonoGame_Version)</Version>
+    <AssemblyTitle>SadConsole MonoGame Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
+    <PackageId>SadConsole.Host.MonoGame</PackageId>
+    <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Get rid of the WPF-specific files -->
+    <Compile Remove="**\*.Wpf.cs" />
+    <Compile Remove="Xaml\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

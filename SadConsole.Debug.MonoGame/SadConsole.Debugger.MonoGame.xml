@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Debug.MonoGame</name>
+    </assembly>
+    <members>
+        <member name="M:SadConsole.Debug.MonoGame.Debugger.BasicInit">
+            <summary>
+            Initializes the debugger.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Configuration.DebugExtensions">
+            <summary>
+            Extensions to enable the ImGui debug UI.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.DebugExtensions.EnableImGuiDebug(SadConsole.Configuration.Builder,SadConsole.Input.Keys)">
+            <summary>
+            Adds a <see cref="P:SadConsole.GameHost.RootComponents"/> component that uses the specified hotkey to invoke <see cref="M:SadConsole.Debug.MonoGame.Debugger.Start"/>.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <param name="hotkey">The keyboard key to start the debugger.</param>
+            <returns>The config builder.</returns>
+        </member>
+        <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
+            <summary>
+            Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
+            </summary>
+            <param name="obj">The object to check.</param>
+            <returns>A string respresenting the object.</returns>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiObjectCollection">
+            <summary>
+            A collection of <see cref="T:SadConsole.ImGuiSystem.ImGuiObjectBase"/> objects that can be added to a ImGui renderer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:SadConsole.ImGuiSystem.ImGuiRenderer" -->
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RebuildFontAtlas">
+            <summary>
+            Creates a texture and loads the font data from ImGui. Should be called when the <see cref="T:Microsoft.Xna.Framework.Graphics.GraphicsDevice" /> is initialized but before any rendering is done
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:ImGuiNET.ImGui.Image(System.IntPtr,System.Numerics.Vector2)" />. That pointer is then used by ImGui to let us know what texture to draw
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(System.IntPtr)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BeforeLayout(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Sets up ImGui for a new frame, should be called at frame start
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.AfterLayout">
+            <summary>
+            Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.SetupInput">
+            <summary>
+            Setup key input event handler.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateEffect(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Updates the <see cref="T:Microsoft.Xna.Framework.Graphics.Effect" /> to the current matrices and texture
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateInput">
+            <summary>
+            Sends XNA input state to ImGui
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(ImGuiNET.ImDrawDataPtr)">
+            <summary>
+            Gets the geometry as set up by ImGui and sends it to the graphics device
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsMouseCapture">
+            <summary>
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsKeyboardCapture">
+            <summary>
+            When <see langword="true"/>, indicates thats the ImGui input system is going to use the mouse, for example when focus is on a textbox; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.HideRequested">
+            <summary>
+            When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="T:System.Numerics.ExtensionsColorNumerics">
+            <summary>
+            Extensions to convert <see cref="T:System.Numerics.Vector4"/> to/from <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector4(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector4"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector4)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
+        </member>
+    </members>
+</doc>

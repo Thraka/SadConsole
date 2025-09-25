@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Thraka",
+    "classifications": [
+        "Console",
+        "Roguelike",
+        "SadConsole"
+    ],
+    "identity": "SadConsole.Item.ColoredGlyph",
+    "groupIdentity":"SadConsole.Item",
+    "name": "ColoredGlyph Type",
+    "shortName": "sadconsole.coloredglyph",
+    "preferNameDirectory": true,
+    "tags": {
+        "language": "C#",
+        "type": "item"
+    },
+    "symbols": {
+        "Name":{
+          "type": "parameter",
+          "description": "The type name for the new ColoredGlyph.",
+          "datatype": "text",
+          "replaces": "ColoredGlyphType",
+          "fileRename": "ColoredGlyphType",
+          "defaultValue": "ColoredGlyphType"
+        }
+      }
+}

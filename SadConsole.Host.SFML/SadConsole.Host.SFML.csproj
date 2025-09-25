@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_SFML_Version)</Version>
+    <AssemblyTitle>SadConsole SFML Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets SFML.</Description>
+    <PackageId>SadConsole.Host.SFML</PackageId>
+    <PackageTags>sadconsole;sfml;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);SFML</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="SFML.Net" Version="2.6.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+
+    <PackageReference Include="TheSadRogue.Primitives.SFML" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

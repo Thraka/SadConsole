@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "DebugRoslynAnalyzers": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../SadConsole.Analyzers.Sample/SadConsole.Analyzers.Sample.csproj"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+version: 1
+
+update_configs:
+  - package_manager: "dotnet:nuget"
+    directory: "/src/SadConsole/"
+    update_schedule: "live"

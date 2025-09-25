@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_FNA_Version)</Version>
+    <AssemblyTitle>SadConsole FNA Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
+    <PackageId>SadConsole.Host.FNA</PackageId>
+    <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);MONOGAME;FNA</DefineConstants>
+    <Platforms>AnyCPU;x64</Platforms>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
+  </PropertyGroup>
+
+  <!-- FNA references -->
+
+  <ItemGroup>
+    <Reference Include="FNA">
+      <HintPath>.\FNA\FNA.dll</HintPath>
+    </Reference>
+    <None Update=".\FNA\*\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net8.0" />
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net7.0" />
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net6.0" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net8.0\FNA" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net7.0\FNA" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net6.0\FNA" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <!-- Make sure none of the monogame project compiles -->
+    <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.*;$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Wpf.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Get rid of the WPF-specific files -->
+    <Compile Remove="**\*.Wpf.cs" />
+    <Compile Remove="Xaml\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>

@@ -1,0 +1,9 @@
+{
+  "$type": "SadConsole.SadFont, SadConsole",
+  "FilePath": "Nagidal24x24shade.png",
+  "GlyphHeight": 24,
+  "GlyphPadding": 0,
+  "GlyphWidth": 24,
+  "Name": "Nagidal24",
+  "SolidGlyphIndex": 219
+}

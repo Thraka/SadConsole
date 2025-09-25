@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <Version>$(SadConsole_Version)</Version>
+    <AssemblyTitle>SadConsole</AssemblyTitle>
+    <Description>A library that emulates old-school console and command prompt style graphics.</Description>
+    <PackageId>SadConsole</PackageId>
+    <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>
+- Some components that used their own renderers weren't disposing the ones they replaced.
+- Fix bug with mouse moving over composite controls such as the list box.
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>SadConsole.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <!--
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+  -->
+
+  <ItemGroup>
+    <Compile Remove="Input\ConsoleViewInputHandler.cs" />
+    <Compile Remove="Input\MouseEventArgs.cs" />
+    <Compile Remove="SerializedTypes\AnimatedConsole.cs" />
+    <Compile Remove="SerializedTypes\CellSurface.cs" />
+    <Compile Remove="SerializedTypes\CellSurfaceLayer.cs" />
+    <Compile Remove="SerializedTypes\Console.cs" />
+    <Compile Remove="SerializedTypes\Entity.cs" />
+    <Compile Remove="SerializedTypes\ScreenObject.cs" />
+    <Compile Remove="SerializedTypes\ScreenSurface.cs" />
+    <Compile Remove="SerializedTypes\ScrollingConsole.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Coroutine" Version="2.1.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\IBM8x16_NoPadding_extended.png" />
+    <EmbeddedResource Include="Resources\IBM_ext.font" />
+    <EmbeddedResource Include="Resources\IBM8x16.png" />
+    <EmbeddedResource Include="Resources\IBM.font" />
+    <EmbeddedResource Include="Resources\logo.ans" />
+    <None Include="Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+</Project>

@@ -1,0 +1,9 @@
+{
+  "$type": "SadConsole.SadFont, SadConsole",
+  "FilePath": "empty_font.png",
+  "GlyphHeight": 32,
+  "GlyphPadding": 0,
+  "GlyphWidth": 32,
+  "Name": "empty_font",
+  "SolidGlyphIndex": 9
+}

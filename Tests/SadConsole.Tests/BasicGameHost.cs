@@ -1,0 +1,155 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using SadConsole.Input;
+using SadConsole.Renderers;
+using SadRogue.Primitives;
+
+namespace SadConsole.Tests
+{
+    class BasicGameHost : GameHost
+    {
+        public class RenderStep : IRenderStep
+        {
+            public string Name { get; private set; }
+            public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
+
+            public RenderStep(string name) =>
+                Name = name;
+
+            public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
+            public void Dispose() { }
+            public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
+            public void Render(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
+            public void Reset() => throw new NotImplementedException();
+            public void SetData(object data) { }
+        }
+
+        public class RendererEmpty : IRenderer
+        {
+            public string Name { get; set; }
+            public ITexture Output => null;
+            public byte Opacity { get; set; }
+            public bool IsForced { get; set; }
+            public List<IRenderStep> Steps { get; set; } = new List<IRenderStep>();
+
+            public void Dispose()
+            {
+            }
+
+            public void Refresh(IScreenSurface surface, bool force = false)
+            {
+            }
+
+            public void Render(IScreenSurface surface)
+            {
+            }
+        }
+
+        public class Texture : ITexture
+        {
+            private SixLabors.ImageSharp.Image _graphic;
+
+            public string ResourcePath { get; private set; }
+
+            public int Height => _graphic.Height;
+
+            public int Width => _graphic.Width;
+
+            public int Size => Height * Width;
+
+            public void Dispose()
+            {
+                _graphic.Dispose();
+            }
+            public Color GetPixel(Point position) => throw new NotImplementedException();
+            public Color GetPixel(int index) => throw new NotImplementedException();
+            public Color[] GetPixels() => throw new NotImplementedException();
+            public void SetPixel(Point position, Color color) => throw new NotImplementedException();
+            public void SetPixel(int index, Color color) => throw new NotImplementedException();
+            public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null) => throw new NotImplementedException();
+
+            public void SetPixels(Color[] colors)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetPixels(ReadOnlySpan<Color> colors)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Texture(string path)
+            {
+                using (Stream fontStream = new FileStream(path, FileMode.Open))
+                    _graphic = SixLabors.ImageSharp.Image.Load(fontStream);
+
+                ResourcePath = path;
+            }
+
+            public Texture(Stream textureStream)
+            {
+                _graphic = SixLabors.ImageSharp.Image.Load(textureStream);
+            }
+        }
+
+
+        public BasicGameHost()
+        {
+            Instance = this;
+            base.LoadDefaultFonts("");
+        }
+
+        public override IKeyboardState GetKeyboardState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IMouseState GetMouseState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetDeviceScreenSize(out int width, out int height)
+        {
+            width = 1920;
+            height = 1080;
+        }
+
+        public override IRenderer GetRenderer(string name)
+        {
+            if (name == Renderers.Constants.RendererNames.Default)
+                return new RendererEmpty() { Name = name };
+
+            return null;
+        }
+
+        public override ITexture GetTexture(string resourcePath)
+        {
+            return new Texture(resourcePath);
+        }
+
+        public override ITexture GetTexture(Stream textureStream)
+        {
+            return new Texture(textureStream);
+        }
+
+        public override IRenderStep GetRendererStep(string name)
+        {
+            return new RenderStep(name);
+        }
+
+        public override void ResizeWindow(int width, int height, bool resizeBack = false) => throw new NotImplementedException();
+
+        public override void Run()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ITexture CreateTexture(int width, int height)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

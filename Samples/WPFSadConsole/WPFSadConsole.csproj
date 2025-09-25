@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\SadConsole.Host.MonoGameWPF\SadConsole.Host.MonoGameWPF.csproj" />
+
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
+    
+    <!--
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\..\monogame-framework-wpfinterop\MonoGame.Framework.WpfInterop\MonoGame.Framework.WpfInterop.csproj" />
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="9.0.0" />
+    -->
+  
+  </ItemGroup>
+
+</Project>

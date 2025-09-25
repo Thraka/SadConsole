@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SadConsole.Editor</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="10.*" />
+
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
+
+    <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Res\REXPaint\" />
+    <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
+    <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
+    <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
+    <None Update="appconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+    <Reference Include="GumCommon">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="GumDataTypesNet6">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumDataTypesNet6.dll</HintPath>
+    </Reference>
+    <Reference Include="ToolsUtilitiesStandard">
+      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\ToolsUtilitiesStandard.dll</HintPath>
+    </Reference>
+    -->
+    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
+    <PackageReference Include="MonoGame.Extended.Graphics" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\DejaVuSansMono-msdf.fnt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\DejaVuSansMono-msdf.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="*.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1740 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Host.MonoGame</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.Components.DrawImage">
+            <summary>
+            Draws an image on top of a console.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DrawImage.PositionMode">
+            <summary>
+            Sets or gets how the <see cref="P:SadConsole.Components.DrawImage.PositionOffset"/> property is interpreted.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.DrawImage.PositionOffset">
+            <summary>
+            The positioning offset.
+            </summary>
+            <remarks>
+            The position the image is displayed is based on the hosting console's position. This property adjusts the position of the image by the specified amount.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.#ctor(System.String)">
+            <summary>
+            Creates a new component with the specified image.
+            </summary>
+            <param name="filePath">Relative path to the image.</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Creates a new component with the specified image.
+            </summary>
+            <param name="texture">The texture to use</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Finalize">
+            <summary>
+            Calls <see cref="M:SadConsole.Components.DrawImage.Dispose"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.OnAdded(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.OnRemoved(SadConsole.IScreenObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Render(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Draws the image.
+            </summary>
+            <param name="host">The host of the component.</param>
+            <param name="delta">Unused.</param>
+        </member>
+        <member name="M:SadConsole.Components.DrawImage.Dispose">
+            <summary>
+            Disposes the image.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Components.DrawImage.PositionModes">
+            <summary>
+            Indicates how positioning is intepreted.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.DrawImage.PositionModes.Pixels">
+            <summary>
+            Positions in pixels.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Components.DrawImage.PositionModes.Cells">
+            <summary>
+            Positions by the font of the host in cells.
+            </summary>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a colored rectangle to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Texture">
+            <summary>
+            The texture, most likely a SadConsole font texture, containing the solid white rectangle referenced by <see cref="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.FontSolidRect">
+            <summary>
+            The solid white glyph rectangle from <see cref="F:SadConsole.DrawCalls.DrawCallColor.Texture"/> used for shading.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            The color of the target rectangle.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallColor.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="color">The folor of the rectangle.</param>
+            <param name="texture">The texture containing a solid white rectangle referenced by <paramref name="fontSolidRect"/>.</param>
+            <param name="targetRect">The drawing location of the rectangle.</param>
+            <param name="fontSolidRect">The rectangle of the solid white glyph in the <paramref name="texture"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallGlyph">
+            <summary>
+            Draws a glyph to the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Font">
+            <summary>
+            The font to use when drawing the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.Cell">
+            <summary>
+            The glyph to be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.TargetRect">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallGlyph.DrawBackground">
+            <summary>
+            When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.#ctor(SadConsole.ColoredGlyphBase,Microsoft.Xna.Framework.Rectangle,SadConsole.IFont,System.Boolean)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="cell">The glyph to be drawn.</param>
+            <param name="targetRect">Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> the glyph should be drawn.</param>
+            <param name="font">The font to use when drawing the glyph.</param>
+            <param name="drawBackground">When <see langword="true"/>, draws the <see cref="P:SadConsole.ColoredGlyphBase.Background"/> color for the glyph; otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallGlyph.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallManager">
+            <summary>
+            Helps manage the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> while draw calls are drawing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.ResumeBatch(System.Boolean)">
+            <summary>
+            Resumes rendering to <see cref="P:SadConsole.Host.Global.RenderOutput"/> with SadConsole's default settings.
+            </summary>
+            <param name="skipSetRenderTarget">When true, skips assinging <see cref="P:SadConsole.Host.Global.RenderOutput"/> as the render target.</param>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallManager.InterruptBatch">
+            <summary>
+            Ends the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> so another can be started, perhaps with an effect.
+            </summary>
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws an image ot the active <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The image to draw.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.ShaderEffect">
+            <summary>
+            The shader to use when drawing the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            Where on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the texture.
+            </summary>
+        </member>
+        <member name="F:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            A color tint to apply when drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Color},Microsoft.Xna.Framework.Graphics.Effect)">
+            <summary>
+            Creates a new instance of this draw call.
+            </summary>
+            <param name="texture">The image to draw.</param>
+            <param name="position">The position on the <see cref="P:SadConsole.Host.Global.SharedSpriteBatch"/> to draw the image.</param>
+            <param name="tint">A color tint to apply to the drawn image.</param>
+            <param name="effect">A shader to apply to the texture being drawn.</param>
+            <exception cref="T:System.NullReferenceException">Thrown when <paramref name="texture"/> is null.</exception>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.MonoGame_MirrorExtensions">
+            <summary>
+            Extensions for <see cref="T:SadConsole.Mirror"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.MonoGame_MirrorExtensions.ToMonoGame(SadConsole.Mirror)">
+            <summary>
+            Converts a <see cref="T:SadConsole.Mirror"/> type to a MonoGame <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteEffects"/> type.
+            </summary>
+            <param name="mirror">The value to convert.</param>
+            <returns>The MonoGame equivalent.</returns>
+        </member>
+        <member name="T:SadConsole.FontEditing.ExtensionsFontHost">
+            <summary>
+            Extension methods to handle editing <see cref="T:SadConsole.SadFont"/> objects.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EnableEditing(SadConsole.IFont)">
+            <summary>
+            Converts the font's backing texture into a render target, if it isn't one.
+            </summary>
+            <param name="font">The font being edited.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_DisableEditing(SadConsole.IFont)">
+            <summary>
+            Converts the font's backing texture from a render target to a normal texture.
+            </summary>
+            <param name="font">The font being edited.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_AddRows(SadConsole.SadFont,System.Int32)">
+            <summary>
+            Adds the specified number of rows to the font. Creates a new backing texture object that is a render target. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="count">The number of rows.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the number is zero or less.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,System.Int32,System.Int32)">
+            <summary>
+            Copies a glyph from one font index to another. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphIndexFrom">The source glyph index.</param>
+            <param name="glyphIndexTo">The target glyph index.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,System.Int32,System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Copies a glyph from one font index to another. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphIndexFrom">The source glyph index.</param>
+            <param name="glyphIndexTo">The target glyph index.</param>
+            <param name="blendColor">Color to apply while copying the glyph.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Copies a glyph from one font index to another.  Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+            <param name="glyphRectangleTo">The target glyph rectangle.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_CopyGlyph_GPU(SadConsole.IFont,SadConsole.IFont,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Copies a glyph from one font index to another. Is hardware accelerated.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="source">The font that contains the source texture.</param>
+            <param name="glyphRectangleFrom">The source glyph rectangle.</param>
+            <param name="glyphRectangleTo">The target glyph rectangle.</param>
+            <param name="blendColor">Color to apply while copying the glyph.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_EraseGlyph_CPU(SadConsole.IFont,System.Int32,System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Erases a glyph in the font by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The glyph index to erase.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_SetGlyph_CPU(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[],System.Boolean,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Sets the pixels of a font glyph by index.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to update.</param>
+            <param name="pixels">The pixels to set on the glyph.</param>
+            <param name="doSetPixels">When <see langword="true"/>, pushes the updated pixel buffer, <paramref name="cachedFontTexturePixels"/>, to the font texture.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="pixels"/> count doesn't match the size of a font glyph.</exception>
+        </member>
+        <member name="M:SadConsole.FontEditing.ExtensionsFontHost.Edit_GetGlyph_CPU(SadConsole.IFont,System.Int32,SadRogue.Primitives.Color[]@)">
+            <summary>
+            Returns a glyph's pixels packaged into a <see cref="T:SadRogue.Primitives.Color"/> array.
+            </summary>
+            <param name="font">The font being edited.</param>
+            <param name="glyphIndex">The index of the glyph to get.</param>
+            <param name="cachedFontTexturePixels">A cached array of all the font's texture pixels.</param>
+            <returns>The pixels of the glyph.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            The MonoGame implementation of the SadConsole Game Host.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._configuration">
+            <summary>
+            The configuration used in creating the game object.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenWidth">
+            <summary>
+            Temporary variable to store the screen width before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._preFullScreenHeight">
+            <summary>
+            Temporary variable to store the screen height before going full screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Game._handleResizeNone">
+            <summary>
+            Temporary variable to store the state of the <see cref="F:SadConsole.Settings.ResizeMode"/> when it's set to None, before going full screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.UseTitleContainer">
+            <summary>
+            When <see langword="true"/>, forces the <see cref="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)"/> method to use <code>TitleContainer</code> when creating a stream to read a file.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.MonoGameInstance">
+            <summary>
+            The <see cref="T:Microsoft.Xna.Framework.Game"/> instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Strongly typed version of <see cref="P:SadConsole.GameHost.Instance"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create">
+            <summary>
+            Creates a new game with an 80x25 console that uses the default SadConsole IBM font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32)">
+            <summary>
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.EventHandler{SadConsole.GameHost})">
+            <summary>
+            Creates a new game with the specific screen size, and an initialization callback. Loads the specified font as the default.
+            </summary>
+            <param name="cellCountX">The width of the screen, in cells.</param>
+            <param name="cellCountY">The height of the screen, in cells.</param>
+            <param name="font">The font file to load.</param>
+            <param name="gameStarted">An event handler to be invoked when the game starts.</param>
+        </member>
+        <member name="M:SadConsole.Game.Create(SadConsole.Configuration.Builder)">
+            <summary>
+            Creates a new game and assigns it to the <see cref="P:SadConsole.Game.MonoGameInstance"/> property.
+            </summary>
+            <param name="configuration">The settings used in creating the game.</param>
+        </member>
+        <member name="M:SadConsole.Game.MonoGameInit(Microsoft.Xna.Framework.Game)">
+            <summary>
+            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="!:Host.Game.ResetRendering"/>.
+            </summary>
+            <param name="game">The game instance.</param>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            Opens a read-only stream with MonoGame.
+            </summary>
+            <param name="file">The file to open.</param>
+            <param name="mode">Unused by monogame.</param>
+            <param name="access">Unused by monogame.</param>
+            <returns>The stream.</returns>
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and full screen rendering for SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Texture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Size">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.String)">
+            <summary>
+            Loads a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file path.
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.IO.Stream)">
+            <summary>
+            Loads a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream.
+            </summary>
+            <param name="stream">The stream containing the texture data.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new game texture with the specified width and height.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32,SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a new game texture with the specified width, height, and pixels.
+            </summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+            <param name="pixels">The pixels to create the texture from. The array must be <paramref name="width"/> * <paramref name="height"/>.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(Microsoft.Xna.Framework.Graphics.Texture2D,System.Boolean)">
+            <summary>
+            Wraps an existing texture.
+            </summary>
+            <param name="texture">The texture being wrapped by this object.</param>
+            <param name="handleDispose">When <see langword="true"/>, disposing this object will dispose the texture.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <summary>
+            Disposes the underlaying texture object and releases reference to it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <summary>
+            Gets an array of colors. Row-major ordered.
+            </summary>
+            <returns>The pixels. Row-major ordered.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelsMonoColor">
+            <summary>
+            Gets an array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
+            </summary>
+            <returns>An array of pixels. Row-major ordered.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
+            <summary>
+            Sets colors in the texture from an array of pixels. Row-major ordered.
+            </summary>
+            <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <summary>
+            Sets colors in the texture from a span of pixels. Row-major ordered.
+            </summary>
+            <param name="pixels">The individual pixel colors to set. Row-major ordered.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(Microsoft.Xna.Framework.Color[])">
+            <summary>
+            Replaces texture colors with the array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.
+            </summary>
+            <param name="pixels">Array of <see cref="T:Microsoft.Xna.Framework.Color"/> pixels.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position.
+            </summary>
+            <param name="position">Position of the pixel in the texture.</param>
+            <param name="color">Color of the pixel.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Sets a single pixel in the texture to the specified <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index.
+            </summary>
+            <param name="index">Index of the pixel.</param>
+            <param name="color"><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(SadRogue.Primitives.Point)">
+            <summary>
+            Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given position in the texture.
+            </summary>
+            <param name="position">Position in the texture.</param>
+            <returns><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <summary>
+            Gets a pixel in the texture by index. Row-major ordered.
+            </summary>
+            <param name="index">The index of the pixel.</param>
+            <returns>The color of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixelMonoColor(System.Int32)">
+            <summary>
+            Gets the <see cref="T:Microsoft.Xna.Framework.Color"/> at the given index in the texture.
+            </summary>
+            <param name="index">Index of the pixel in the texture.</param>
+            <returns><see cref="T:Microsoft.Xna.Framework.Color"/> of the pixel.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Host.FPSCounterComponent">
+            <summary>
+            A component to draw how many frames per second the engine is performing at.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.FPSCounterComponent.#ctor(Microsoft.Xna.Framework.Game)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.FPSCounterComponent.Update(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.FPSCounterComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Host.Game">
+            <summary>
+            A MonoGame <see cref="T:Microsoft.Xna.Framework.Game"/> instance that runs SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Game.WindowWidth">
+            <summary>
+            The current game window width.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Game.WindowHeight">
+            <summary>
+            The current game window height.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Host.Game.WindowResized">
+            <summary>
+            Raised when the window is resized and the render area has been calculated.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.#ctor">
+            <summary>
+            Creates the new MonoGame game object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Game.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Host.Global">
+            <summary>
+            Global variables used by the MonoGame host.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.Global.ResizeGraphicsDeviceManagerDelegate">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+            <param name="fontSize">The size of the font to base the final values on.</param>
+            <param name="width">The count of glyphs along the X-axis.</param>
+            <param name="height">The count of glyphs along the Y-axis.</param>
+            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="T:SadConsole.Host.Global.RecreateRenderOutputDelegate">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
+        </member>
+        <member name="P:SadConsole.Host.Global.BlockSadConsoleInput">
+            <summary>
+            When <see langword="true"/>, prevents the keyboard and mouse logic from running.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDevice">
+            <summary>
+            The graphics device created by MonoGame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SharedSpriteBatch">
+            <summary>
+            A sprite batch used by all of SadConsole to render objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutput">
+            <summary>
+            The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateLoopGameTime">
+            <summary>
+            Reference to the game timer used in the MonoGame update loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderLoopGameTime">
+            <summary>
+            Reference to the game timer used in the MonoGame render loop.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RecreateRenderOutput">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.ResizeGraphicsDeviceManager">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.ResetRendering">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.SadConsoleComponent">
+            <summary>
+            The game component to control SadConsole updates, input, and rendering.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.GraphicsDeviceManager">
+            <summary>
+            The graphics device manager created by MonoGame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResetGraphicsDevice">
+            <summary>
+            Sets the <see cref="P:SadConsole.Host.Global.GraphicsDevice"/> render target to <see langword="null"/>, targeting the app window.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResizeGraphicsDeviceManagerHandler(Microsoft.Xna.Framework.Point,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Resizes the <see cref="P:SadConsole.Host.Global.GraphicsDeviceManager"/> by the specified font size.
+            </summary>
+            <param name="fontSize">The size of the font to base the final values on.</param>
+            <param name="width">The count of glyphs along the X-axis.</param>
+            <param name="height">The count of glyphs along the Y-axis.</param>
+            <param name="additionalWidth">Additional pixel width to add to the resize.</param>
+            <param name="additionalHeight">Additional pixel height to add to the resize.</param>
+        </member>
+        <member name="M:SadConsole.Host.Global.RecreateRenderOutputHandler(System.Int32,System.Int32)">
+            <summary>
+            Regenerates the <see cref="P:SadConsole.Host.Global.RenderOutput"/> if the desired size doesn't match the current size.
+            </summary>
+            <param name="width">The width of the render output.</param>
+            <param name="height">The height of the render output.</param>
+        </member>
+        <member name="M:SadConsole.Host.Global.ResetRenderingHandler">
+            <summary>
+            Resets the <see cref="P:SadConsole.Host.Global.RenderOutput"/> target and determines the appropriate <see cref="P:SadConsole.Settings.Rendering.RenderRect"/> and <see cref="P:SadConsole.Settings.Rendering.RenderScale"/> based on the window or fullscreen state.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.SadConsoleGameComponent">
+            <summary>
+            A game component that handles updating, input, and rendering of SadConsole.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.#ctor(Microsoft.Xna.Framework.Game)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.Draw(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Draws the SadConsole frame through draw calls when <see cref="F:SadConsole.Settings.DoDraw"/> is true.
+            </summary>
+            <param name="gameTime">Time between drawing frames.</param>
+        </member>
+        <member name="M:SadConsole.Host.SadConsoleGameComponent.Update(Microsoft.Xna.Framework.GameTime)">
+            <summary>
+            Updates the SadConsole game objects and handles input. Only runs when <see cref="F:SadConsole.Settings.DoUpdate"/> is true.
+            </summary>
+            <param name="gameTime"></param>
+        </member>
+        <member name="T:SadConsole.Host.Settings">
+            <summary>
+            A settings class usually used when creating the host object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.UseHardwareFullScreen">
+            <summary>
+            Tells MonoGame to use a full screen resolution change instead of soft (quick) full screen. Must be set before the game is created.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.MonoGameSurfaceBlendState">
+            <summary>
+            The blend state used with <see cref="T:SadConsole.Renderers.IRenderer"/> on surfaces.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.MonoGameScreenBlendState">
+            <summary>
+            The blend state used when drawing surfaces to the screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Settings.GraphicsProfile">
+            <summary>
+            The MonoGame graphics profile to target.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Readers.TextureToSurfaceReader">
+            <summary>
+            Reads a texture to a cached surface. Used for animation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Readers.TextureToSurfaceReader.UseBlockMode">
+            <summary>
+            Renders the cells as blocks instead of characters.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Readers.TextureToSurfaceReader.#ctor(System.Int32,System.Int32,SadConsole.IFont,SadRogue.Primitives.Point)">
+            <summary>
+            Creates a new instance of the class.
+            </summary>
+            <param name="pixelWidth">Width the source texture.</param>
+            <param name="pixelHeight">Height of the source texture.</param>
+            <param name="font">Font used for rendering.</param>
+            <param name="fontSize">Size of the font.</param>
+        </member>
+        <member name="M:SadConsole.Readers.TextureToSurfaceReader.GetSurface(Microsoft.Xna.Framework.Graphics.Texture2D)">
+            <summary>
+            Returns a surface with the specified image rendered to it as characters.
+            </summary>
+            <param name="image">The image to render.</param>
+            <returns>The surface.</returns>
+        </member>
+        <member name="T:SadConsole.Renderers.IRendererMonoGame">
+            <summary>
+            MonoGame-specific renderer settings.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRendererMonoGame.MonoGameBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.IRendererMonoGame.CachedRenderRects">
+            <summary>
+            Cached set of rectangles used in rendering each cell.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.OptimizedScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> with tint. Doesn't allow render steps.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._renderTexture">
+            <summary>
+            The final texture steps are drawing on.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.MonoGameBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.BackingTextureUsageMode">
+            <summary>
+            Used when creating the <see cref="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer._backingTexture"/> variable.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.CachedRenderRects">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+            <remarks>
+            This renderer caches the entire drawing of the surface's cells, including the tint of the object.
+            </remarks>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._renderTexture">
+            <summary>
+            The final texture steps are drawing on.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture" /> is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture">
+            <summary>
+            Quick access to backing texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer._finalDrawColor">
+            <summary>
+            Color used with drawing the texture to the screen. Let's a surface become transparent.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.MonoGameBlendState">
+            <summary>
+            The blend state used by this renderer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureUsageMode">
+            <summary>
+            Used when creating the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> variable.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <summary>
+            A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the render steps this renderer uses.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.ScreenSurfaceRenderer.disposedValue">
+            <summary>
+            Detects redundant calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose(System.Boolean)">
+            <summary>
+            Release the backing texture and the render texture target.
+            </summary>
+            <param name="disposing">Indicates that the managed resources should be cleaned up.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Finalize">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.ControlHostRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.ControlHostRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.UI.ControlHost"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.UI.ControlHost"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.ProcessContainer(SadConsole.UI.Controls.IContainer,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Processes a container from the control host.
+            </summary>
+            <param name="container">The container.</param>
+            <param name="renderer">The renderer used with this step.</param>
+            <param name="screenObject">The screen surface with font information.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.RenderControlCells(SadConsole.UI.Controls.ControlBase,SadConsole.Renderers.ScreenSurfaceRenderer,SadConsole.IFont,SadRogue.Primitives.Point,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Renders the cells of a control.
+            </summary>
+            <param name="control">The control.</param>
+            <param name="renderer">The renderer used with this step.</param>
+            <param name="font">The font to render the cells with.</param>
+            <param name="fontSize">The size of a cell in pixels.</param>
+            <param name="parentViewRect">The view of the parent to cull cells from.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.ControlHostRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.ControlHostRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.CursorRenderStep">
+            <summary>
+            Renders a cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.Cursor"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.Cursor"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.EntityRenderStep">
+            <summary>
+            Draws the entities of a <see cref="T:SadConsole.Entities.EntityManager"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn entities.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.EntityRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Entities.EntityManager"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Entities.EntityManager"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.EntityRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.EntityRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredSurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.LayeredSurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Components.LayeredSurface"/>.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Components.LayeredSurface"/> object.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredSurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
+            <summary>
+            A render step that draws the <see cref="F:SadConsole.Renderers.ScreenSurfaceRenderer._backingTexture"/> texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.ShaderEffect">
+            <summary>
+            The shader to use when drawing the surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.CachedTexture">
+            <inheritdoc/>//
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceDirtyCellsRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.SurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.IScreenSurface"/> object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.ComposeTint">
+            <summary>
+            The color applied when the sprite batch draws this surface on the renderer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.SurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.TintSurfaceRenderStep">
+            <summary>
+            Renders a tint on top of where the output texture is drawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderStep">
+            <summary>
+            Renders the dimmed background screen when a window is modal.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.WindowRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.SetData(System.Object)">
+            <summary>
+            Not used.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderStep.Dispose">
+            <summary>
+            Does nothing.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.LayeredRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.Components.LayeredSurface"/> object by adding a <see cref="T:SadConsole.Renderers.LayeredSurfaceRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection. Skips drawing the normal surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.LayeredRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.WindowRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.UI.Window"/> object by adding a <see cref="T:SadConsole.Renderers.WindowRenderStep"/> to the <see cref="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps"/> collection.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
+            <summary>
+            Runs the game using the builder configuration.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseUnlimitedFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Unlimited FPS when rendering (normally limited to 60fps). Must be set before the game is created.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.ShowMonoGameFPS(SadConsole.Configuration.Builder)">
+            <summary>
+            Adds a MonoGame game component that renders the frames per-second of the game.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration builder.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.UseTitleContainer(SadConsole.Configuration.Builder)">
+            <summary>
+            Tells the game host to use the <see cref="T:Microsoft.Xna.Framework.TitleContainer"/> to open streams for reading.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameCtor(SadConsole.Configuration.Builder,System.Action{Microsoft.Xna.Framework.Game})">
+            <summary>
+            The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="monogameCtorCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameInit(SadConsole.Configuration.Builder,System.Action{Microsoft.Xna.Framework.Game})">
+            <summary>
+            Internal only. Called by the MonoGame game to finish configuring SadConsole.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <param name="monogameInitCallback">A method.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="M:SadConsole.Configuration.ExtensionsHost.SkipMonoGameGameCreation(SadConsole.Configuration.Builder)">
+            <summary>
+            When called, tells the game host not to create the monogame game instance at <see cref="P:SadConsole.Game.MonoGameInstance"/>.
+            </summary>
+            <param name="configBuilder">The builder object that composes the game startup.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions">
+            <summary>
+            Extensions for the <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to a <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.ToSurface(Microsoft.Xna.Framework.Graphics.Texture2D,SadConsole.ICellSurface,Microsoft.Xna.Framework.Color[],SadConsole.IFont,SadRogue.Primitives.Point,System.Boolean)">
+            <summary>
+            Converts a texture's pixels to the specified <see cref="T:SadConsole.ICellSurface"/>.
+            </summary>
+            <param name="image">The texture to process.</param>
+            <param name="surface">The surface to draw on.</param>
+            <param name="cachedColorArray">A buffer holding the color information from the texture.</param>
+            <param name="font">The font used with the cell surface.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="blockMode"><see langword="true"/> to indicate the result should use block characters instead of text characters.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions.Save(Microsoft.Xna.Framework.Graphics.Texture2D,System.String)">
+            <summary>
+            Saves a texture to a png file.
+            </summary>
+            <param name="target">The texture.</param>
+            <param name="path">The path to a png file.</param>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoColorExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Color"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoColorExtensions.ToSadRogueColor(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Color"/> to <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoColorExtensions.Matches(Microsoft.Xna.Framework.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Color"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoPointExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Point"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.ToPoint(Microsoft.Xna.Framework.Point)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Point"/> to <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Adds a <see cref="T:SadRogue.Primitives.Point"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Adds an integer to both the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Add(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Direction)">
+            <summary>
+            Adds a <see cref="T:SadRogue.Primitives.Direction"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="dir"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Subtracts a <see cref="T:SadRogue.Primitives.Point"/> from a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Subtracts an integer from both the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Subtract(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Direction)">
+            <summary>
+            Subtracts a <see cref="T:SadRogue.Primitives.Direction"/> from a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="dir"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Multiplies a <see cref="T:Microsoft.Xna.Framework.Point"/> by a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,System.Int32)">
+            <summary>
+            Multiplies the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by an integer.
+            </summary>
+            <param name="self"/>
+            <param name="i"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Multiply(Microsoft.Xna.Framework.Point,System.Double)">
+            <summary>
+            Multiplies the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by a double, then rounds the
+            values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="d"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Divide(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Divides a <see cref="T:Microsoft.Xna.Framework.Point"/> by a <see cref="T:SadRogue.Primitives.Point"/>, and
+            rounds the resulting X and Y values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Divide(Microsoft.Xna.Framework.Point,System.Double)">
+            <summary>
+            Divides the X and Y values of a <see cref="T:Microsoft.Xna.Framework.Point"/> by a double, then rounds the
+            values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="d"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoPointExtensions.Matches(Microsoft.Xna.Framework.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Point"/> to a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.MonoRectangleExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Xna.Framework.Rectangle"/> that enable operations involving
+            <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoRectangleExtensions.ToRectangle(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Converts from <see cref="T:Microsoft.Xna.Framework.Rectangle"/> to <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.MonoRectangleExtensions.Matches(Microsoft.Xna.Framework.Rectangle,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Compares a <see cref="T:Microsoft.Xna.Framework.Rectangle"/> to a <see cref="T:SadRogue.Primitives.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRogueColorExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Color"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueColorExtensions.ToMonoColor(SadRogue.Primitives.Color)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Color"/> to <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueColorExtensions.Matches(SadRogue.Primitives.Color,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRoguePointExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Point"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.ToMonoPoint(SadRogue.Primitives.Point)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Point"/> to <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Add(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Adds a <see cref="T:Microsoft.Xna.Framework.Point"/> to a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Subtract(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Subtracts a <see cref="T:Microsoft.Xna.Framework.Point"/> from a <see cref="T:SadRogue.Primitives.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Multiply(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Multiplies a <see cref="T:SadRogue.Primitives.Point"/> by a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Divide(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Divides a <see cref="T:SadRogue.Primitives.Point"/> by a <see cref="T:Microsoft.Xna.Framework.Point"/>, and
+            rounds the resulting X and Y values to the nearest integer.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRoguePointExtensions.Matches(SadRogue.Primitives.Point,Microsoft.Xna.Framework.Point)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Point"/> to a <see cref="T:Microsoft.Xna.Framework.Point"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+        <member name="T:SadRogue.Primitives.SadRogueRectangleExtensions">
+            <summary>
+            Extension methods for <see cref="T:SadRogue.Primitives.Rectangle"/> that enable operations involving
+            <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueRectangleExtensions.ToMonoRectangle(SadRogue.Primitives.Rectangle)">
+            <summary>
+            Converts from <see cref="T:SadRogue.Primitives.Rectangle"/> to <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <returns/>
+        </member>
+        <member name="M:SadRogue.Primitives.SadRogueRectangleExtensions.Matches(SadRogue.Primitives.Rectangle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Compares a <see cref="T:SadRogue.Primitives.Rectangle"/> to a <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="self"/>
+            <param name="other"/>
+            <returns/>
+        </member>
+    </members>
+</doc>

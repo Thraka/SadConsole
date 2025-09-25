@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "inheritdoctool": {
+      "version": "2.2.1",
+      "commands": [
+        "InheritDoc"
+      ],
+      "rollForward": false
+    },
+    "dotnet-mgcb": {
+      "version": "3.8.1.303",
+      "commands": [
+        "mgcb"
+      ],
+      "rollForward": false
+    }
+  }
+}
