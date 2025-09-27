@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using SadConsole.Input;
+using SadConsole.UI.Handlers;
 
 namespace SadConsole.UI.Controls;
 
@@ -40,12 +41,48 @@ public abstract class CompositeControl : ControlBase, IContainer
     public CompositeControl(int width, int height) : base(width, height)
     {
         CreateChildControls();
+
+        KeyboardHandler = new TabFocusHandler(this);
     }
 
     /// <summary>
     /// Create each control and add it to <see cref="Controls"/>.
     /// </summary>
     protected virtual void CreateChildControls() { }
+
+    public override bool AcquireFocus(FocusDirection direction)
+    {
+        switch (direction)
+        {
+            case FocusDirection.Previous:
+                return AcquireBackwardsFocus();
+            default:
+            case FocusDirection.Next:
+                return AcquireForwardFocus();
+        }
+    }
+
+    bool AcquireForwardFocus()
+    {
+        for (int i = 0; i < Controls.Count; i++)
+        {
+            if (Controls[i].CanFocus && Controls[i].AcquireFocus(FocusDirection.Next))
+                return true;
+        }
+
+        return false;
+    }
+
+    bool AcquireBackwardsFocus()
+    {
+        for (int i = Controls.Count - 1; i >= 0; i--)
+        {
+            if (Controls[i].CanFocus && Controls[i].AcquireFocus(FocusDirection.Previous))
+                return true;
+        }
+
+        return false;
+    }
 
     /// <summary>
     /// Processes the mouse on each control hosted by this control.

@@ -11828,6 +11828,11 @@
             The controls added which contain a <see cref="P:SadConsole.UI.Controls.ControlBase.Name"/> value.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.ControlHost.#ctor">
+            <summary>
+            Constructs a ControlHost object.
+            </summary>
+        </member>
         <member name="P:SadConsole.UI.ControlHost.Item(System.Int32)">
             <summary>
             Gets a control by index.
@@ -12189,11 +12194,12 @@
             </summary>
             <param name="focus">When <see langword="true"/>, focuses the button before clicking.</param>
         </member>
-        <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
+        <member name="M:SadConsole.UI.Controls.ButtonBase.ProcessKeyboard(SadConsole.Input.Keyboard,SadConsole.UI.Controls.ControlBase)">
             <summary>
             Detects if the SPACE or ENTER keys are pressed and calls the <see cref="E:SadConsole.UI.Controls.ButtonBase.Click"/> method.
             </summary>
             <param name="info"></param>
+            <param name="origin"></param>
         </member>
         <member name="M:SadConsole.UI.Controls.ButtonBase.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <inheritdoc />
@@ -12689,8 +12695,19 @@
         <member name="M:SadConsole.UI.Controls.ControlBase.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <summary>
             Called when the keyboard is used on this control.
+            This function is called only if the <see cref="P:SadConsole.UI.Controls.ControlBase.KeyboardHandler"/> declines
+            to handle the keyboard input.
             </summary>
             <param name="state">The state of the keyboard.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ControlBase.ProcessKeyboard(SadConsole.Input.Keyboard,SadConsole.UI.Controls.ControlBase)">
+            <summary>
+            Called when the keyboard is used on this control.
+            Overriding this method is primarily for composite controls that need to
+            handle keyboard input 
+            </summary>
+            <param name="state">The state of the keyboard.</param>
+            <param name="origin"></param>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <summary>
@@ -13542,9 +13559,6 @@
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.OnMouseExit(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.Panel.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <inheritdoc/>
         </member>
         <member name="M:SadConsole.UI.Controls.Panel.OnIsDirtyChanged">
@@ -14698,6 +14712,16 @@
             Returns the value "Console (Controls)".
             </summary>
             <returns>The string "Console (Controls)".</returns>
+        </member>
+        <member name="T:SadConsole.UI.Handlers.FocusDirection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Handlers.TabFocusHandler.Container">
+            <summary>
+            The container this handler operates on.
+            </summary>
         </member>
         <member name="T:SadConsole.UI.KeyPressEventArgs">
             <summary>

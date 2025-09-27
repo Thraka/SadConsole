@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadConsole.UI.Controls;
-
+using SadConsole.UI.Handlers;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI;
@@ -51,6 +52,15 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     private ControlBase? _controlWithMouse;
     private IRenderStep? _controlsRenderStep;
     private Rectangle _parentView;
+    private TabFocusHandler _tabHandler;
+
+    /// <summary>
+    /// Constructs a ControlHost object.
+    /// </summary>
+    public ControlHost()
+    {
+        _tabHandler = new TabFocusHandler(this);
+    }
 
     #region Properties
 
@@ -274,29 +284,24 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
 
         if (!host.UseKeyboard) return;
 
-        if (FocusedControl != null && FocusedControl.IsEnabled && FocusedControl.UseKeyboard)
-            handled = FocusedControl.ProcessKeyboard(info);
+        ControlBase? current = FocusedControl;
+        ControlBase? origin = current;
+
+        while (current != null)
+        {
+            if (current.IsEnabled && current.UseKeyboard)
+            {
+                handled = current.ProcessKeyboard(info, origin);
+                if (handled) return;
+            }
+
+            origin = current;
+            current = current.Parent as ControlBase;
+        }
 
         if (!handled)
         {
-            if (
-                (info.IsKeyDown(Keys.LeftShift) ||
-                info.IsKeyDown(Keys.RightShift) ||
-                info.IsKeyReleased(Keys.LeftShift) ||
-                info.IsKeyReleased(Keys.RightShift)) &&
-                info.IsKeyReleased(Keys.Tab))
-            {
-                TabPreviousControl();
-                handled = true;
-                return;
-            }
-
-            if (info.IsKeyReleased(Keys.Tab))
-            {
-                TabNextControl();
-                handled = true;
-                return;
-            }
+            handled = _tabHandler.ProcessKeyboard(info, FocusedControl);
         }
     }
 
@@ -360,178 +365,12 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// <summary>
     /// Gives the focus to the next control in the tab order.
     /// </summary>
-    public void TabNextControl()
-    {
-        if (ControlsList.Count == 0)
-            return;
-
-        ControlBase? control;
-
-        if (_focusedControl == null)
-        {
-            if (FindTabControlForward(0, ControlsList.Count - 1, out control))
-            {
-                FocusedControl = control;
-                return;
-            }
-
-            TryTabNextConsole();
-        }
-        else
-        {
-            int index = ControlsList.IndexOf(_focusedControl);
-
-            // From first control
-            if (index == 0)
-            {
-                if (FindTabControlForward(index + 1, ControlsList.Count - 1, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-
-                TryTabNextConsole();
-            }
-
-            // From last control
-            else if (index == ControlsList.Count - 1)
-            {
-                if (!TryTabNextConsole())
-                {
-                    if (FindTabControlForward(0, ControlsList.Count - 1, out control))
-                    {
-                        FocusedControl = control;
-                        return;
-                    }
-                }
-            }
-
-            // Middle
-            else
-            {
-                // Middle > End
-                if (FindTabControlForward(index + 1, ControlsList.Count - 1, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-
-                // Next console
-                if (TryTabNextConsole())
-                    return;
-
-                // Start > Middle
-                if (FindTabControlForward(0, index, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-            }
-        }
-    }
+    public void TabNextControl() => _tabHandler.TabNextControl(FocusedControl);
 
     /// <summary>
     /// Gives focus to the previous control in the tab order.
     /// </summary>
-    public void TabPreviousControl()
-    {
-        if (ControlsList.Count == 0)
-            return;
-
-        ControlBase? control;
-
-        if (_focusedControl == null)
-        {
-            if (FindTabControlPrevious(ControlsList.Count - 1, 0, out control))
-            {
-                FocusedControl = control;
-                return;
-            }
-
-            TryTabPreviousConsole();
-        }
-        else
-        {
-            int index = ControlsList.IndexOf(_focusedControl);
-
-            // From first control
-            if (index == 0)
-            {
-                if (!TryTabPreviousConsole())
-                {
-                    if (FindTabControlPrevious(ControlsList.Count - 1, 0, out control))
-                    {
-                        FocusedControl = control;
-                        return;
-                    }
-                }
-            }
-
-            // From last control
-            else if (index == ControlsList.Count - 1)
-            {
-                if (FindTabControlPrevious(index - 1, 0, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-
-                TryTabPreviousConsole();
-            }
-
-            // Middle
-            else
-            {
-                // Middle -> Start
-                if (FindTabControlPrevious(index - 1, 0, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-
-                // Next console
-                if (TryTabPreviousConsole())
-                    return;
-
-                // End -> Middle
-                if (FindTabControlPrevious(ControlsList.Count - 1, index, out control))
-                {
-                    FocusedControl = control;
-                    return;
-                }
-            }
-        }
-    }
-
-    private bool FindTabControlForward(int startingIndex, int endingIndex, [NotNullWhen(true)] out ControlBase? foundControl)
-    {
-        for (int i = startingIndex; i <= endingIndex; i++)
-        {
-            if (ControlsList[i].TabStop && ControlsList[i].IsEnabled && ControlsList[i].CanFocus)
-            {
-                foundControl = ControlsList[i];
-                return true;
-            }
-        }
-
-        foundControl = null;
-        return false;
-    }
-
-    private bool FindTabControlPrevious(int startingIndex, int endingIndex, [NotNullWhen(true)] out ControlBase? foundControl)
-    {
-        for (int i = startingIndex; i >= endingIndex; i--)
-        {
-            if (ControlsList[i].TabStop && ControlsList[i].IsEnabled && ControlsList[i].CanFocus)
-            {
-                foundControl = ControlsList[i];
-                return true;
-            }
-        }
-
-        foundControl = null;
-        return false;
-    }
+    public void TabPreviousControl() => _tabHandler.TabPreviousControl(FocusedControl);
 
     private bool ParentHasComponent(IScreenSurface surface) =>
         surface.HasSadComponent<ControlHost>(out _);
@@ -540,7 +379,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// Tries to tab to the console that comes before this one in the <see cref="IScreenObject.Parent"/> collection of <see cref="IScreenObject.Children"/>. Sets focus to the target console if found.
     /// </summary>
     /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
-    protected bool TryTabPreviousConsole()
+    public bool TryTabPreviousConsole()
     {
         if (!CanTabToNextConsole || ParentConsole?.Parent == null) return false;
 
@@ -592,7 +431,7 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// Tries to tab to the console that comes after this one in the <see cref="IScreenObject.Parent"/> collection of <see cref="IScreenObject.Children"/>. Sets focus to the target console if found.
     /// </summary>
     /// <returns><see langword="true"/> if the tab was successful; otherwise, <see langword="false"/>.</returns>
-    protected bool TryTabNextConsole()
+    protected internal bool TryTabNextConsole()
     {
         if (!CanTabToNextConsole || ParentConsole?.Parent == null) return false;
 
