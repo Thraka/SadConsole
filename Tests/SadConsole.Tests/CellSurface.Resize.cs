@@ -371,7 +371,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Resize_BiggerHeight_To_SmallerHeight_Clear_NoException()
         {
-            // This test only does bigger resize
+            // This test does only big height to small height with clear
             new SadConsole.Tests.BasicGameHost();
 
             int width = 20;
@@ -393,7 +393,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Resize_SmallerHeight_To_BiggerHeight_Clear_NoException()
         {
-            // This test only does bigger resize
+            // This test does only small height to big height with clear
             new SadConsole.Tests.BasicGameHost();
 
             int width = 20;
@@ -415,7 +415,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Resize_BiggerWidth_To_SmallerWidth_Clear_NoException()
         {
-            // This test only does bigger resize
+            // This test does only big width to small width with clear
             new SadConsole.Tests.BasicGameHost();
 
             int width = 25;
@@ -437,7 +437,7 @@ namespace SadConsole.Tests
         [TestMethod]
         public void Resize_SmallerWidth_To_BiggerWidth_Clear_NoException()
         {
-            // This test only does bigger resize
+            // This test does only small width to big width with clear
             new SadConsole.Tests.BasicGameHost();
 
             int width = 20;
