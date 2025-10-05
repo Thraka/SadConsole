@@ -359,5 +359,93 @@ namespace SadConsole.Tests
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
             }
         }
+
+        [TestMethod]
+        public void Resize_BiggerHeight_To_SmallerHeight_Clear_NoException()
+        {
+            // This test does only big height to small height with clear
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 20;
+            int height = 25;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = width;
+            int newHeight = height - 5;
+
+            // Should not throw index outside of bounds
+            surface1.Resize(newWidth, newHeight, newWidth, newHeight, true);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+        }
+
+        [TestMethod]
+        public void Resize_SmallerHeight_To_BiggerHeight_Clear_NoException()
+        {
+            // This test does only small height to big height with clear
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 20;
+            int height = 20;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = width;
+            int newHeight = height + 5;
+
+            // Should not throw index outside of bounds
+            surface1.Resize(newWidth, newHeight, newWidth, newHeight, true);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+        }
+
+        [TestMethod]
+        public void Resize_BiggerWidth_To_SmallerWidth_Clear_NoException()
+        {
+            // This test does only big width to small width with clear
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 25;
+            int height = 20;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = width - 5;
+            int newHeight = height;
+
+            // Should not throw index outside of bounds
+            surface1.Resize(newWidth, newHeight, newWidth, newHeight, true);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+        }
+
+        [TestMethod]
+        public void Resize_SmallerWidth_To_BiggerWidth_Clear_NoException()
+        {
+            // This test does only small width to big width with clear
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 20;
+            int height = 20;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = width + 5;
+            int newHeight = height;
+
+            // Should not throw index outside of bounds
+            surface1.Resize(newWidth, newHeight, newWidth, newHeight, true);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+        }
     }
 }
