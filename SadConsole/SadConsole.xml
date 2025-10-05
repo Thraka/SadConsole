@@ -2696,7 +2696,7 @@
         <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.GameHost,SadConsole.IScreenObject})">
             <summary>
             Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
-            </summary>
+            </summary>  
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="creator">A method that returns an object as the starting screen.</param>
             <returns>The configuration builder.</returns>
@@ -9692,6 +9692,14 @@
         </member>
         <member name="P:SadConsole.ScreenObject.Children">
             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.PositionFontSize">
+            <summary>
+            When set to a value other than (1, 1), the <see cref="P:SadConsole.ScreenObject.AbsolutePosition"/> is scaled by this amount.
+            </summary>
+            <remarks>
+            This causes a <see cref="T:SadConsole.ScreenObject"/> to position itself similar to how a <see cref="T:SadConsole.IScreenSurface"/> is positioned.
+            </remarks>
         </member>
         <member name="P:SadConsole.ScreenObject.Parent">
             <inheritdoc/>

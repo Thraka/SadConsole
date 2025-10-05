@@ -20,7 +20,7 @@ public static partial class Extensions
 
     /// <summary>
     /// Sets the <see cref="SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
-    /// </summary>
+    /// </summary>  
     /// <param name="configBuilder">The builder object that composes the game startup.</param>
     /// <param name="creator">A method that returns an object as the starting screen.</param>
     /// <returns>The configuration builder.</returns>

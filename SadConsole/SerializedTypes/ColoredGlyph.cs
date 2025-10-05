@@ -11,11 +11,11 @@ namespace SadConsole.SerializedTypes;
 public class ColoredGlyphJsonConverter : JsonConverter<ColoredGlyph>
 {
     /// <inheritdoc/>
-    public override void WriteJson(JsonWriter writer, ColoredGlyph value, JsonSerializer serializer) =>
+    public override void WriteJson(JsonWriter writer, ColoredGlyph? value, JsonSerializer serializer) =>
         serializer.Serialize(writer, (ColoredGlyphSerialized)value);
 
     /// <inheritdoc/>
-    public override ColoredGlyph ReadJson(JsonReader reader, Type objectType, ColoredGlyph existingValue, bool hasExistingValue, JsonSerializer serializer) =>
+    public override ColoredGlyph ReadJson(JsonReader reader, Type objectType, ColoredGlyph? existingValue, bool hasExistingValue, JsonSerializer serializer) =>
         serializer.Deserialize<ColoredGlyphSerialized>(reader);
 }
 

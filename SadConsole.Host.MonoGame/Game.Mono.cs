@@ -142,7 +142,7 @@ public sealed partial class Game : GameHost
     }
 
     /// <summary>
-    /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Host.Game.ResetRendering"/>.
+    /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Global.ResetRendering"/>.
     /// </summary>
     /// <param name="game">The game instance.</param>
     private void MonoGameInit(Microsoft.Xna.Framework.Game game)

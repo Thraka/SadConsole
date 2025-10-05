@@ -382,7 +382,7 @@
         </member>
         <member name="M:SadConsole.Game.MonoGameInit(Microsoft.Xna.Framework.Game)">
             <summary>
-            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="!:Host.Game.ResetRendering"/>.
+            Method called by the <see cref="T:SadConsole.Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="P:SadConsole.Host.Global.ResetRendering"/>.
             </summary>
             <param name="game">The game instance.</param>
         </member>
