@@ -9,6 +9,96 @@ namespace SadConsole.Tests
         [DataTestMethod]
         [DataRow(true)]
         [DataRow(false)]
+        public void Resize_WidthTo1(bool clear)
+        {
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 21;
+            int height = 21;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = 1;
+            int newHeight = height;
+
+            Point point1 = new(2, 20);
+            Point point2 = new(5, 18);
+            Point point3 = new(0, 15);
+
+            ColoredGlyph glyph1 = new();
+            ColoredGlyph glyph2 = new();
+            ColoredGlyph glyph3 = new();
+            surface1[point1].CopyAppearanceTo(glyph1);
+            surface1[point2].CopyAppearanceTo(glyph2);
+            surface1[point3].CopyAppearanceTo(glyph3);
+
+            Assert.IsTrue(surface1.IsValidCell(point1));
+            Assert.IsTrue(surface1.IsValidCell(point2));
+            Assert.IsTrue(surface1.IsValidCell(point3));
+
+            surface1.Resize(newWidth, newHeight - 5, newWidth, newHeight, clear);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+
+            Assert.IsFalse(surface1.IsValidCell(point1));
+            Assert.IsFalse(surface1.IsValidCell(point2));
+            Assert.IsTrue(surface1.IsValidCell(point3));
+            if (!clear)
+                Assert.IsTrue(surface1[point3].Matches(glyph3));
+            else
+                Assert.IsFalse(surface1[point3].Matches(glyph3));
+        }
+
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void Resize_HeightTo1(bool clear)
+        {
+            new SadConsole.Tests.BasicGameHost();
+
+            int width = 21;
+            int height = 21;
+
+            var surface1 = new SadConsole.CellSurface(width, height);
+            surface1.FillWithRandomGarbage(255);
+
+            int newWidth = width;
+            int newHeight = 1;
+
+            Point point1 = new(20, 2);
+            Point point2 = new(18, 5);
+            Point point3 = new(15, 0);
+
+            ColoredGlyph glyph1 = new();
+            ColoredGlyph glyph2 = new();
+            ColoredGlyph glyph3 = new();
+            surface1[point1].CopyAppearanceTo(glyph1);
+            surface1[point2].CopyAppearanceTo(glyph2);
+            surface1[point3].CopyAppearanceTo(glyph3);
+
+            Assert.IsTrue(surface1.IsValidCell(point1));
+            Assert.IsTrue(surface1.IsValidCell(point2));
+            Assert.IsTrue(surface1.IsValidCell(point3));
+
+            surface1.Resize(newWidth - 5, newHeight, newWidth, newHeight, clear);
+
+            Assert.AreEqual(newWidth, surface1.Width);
+            Assert.AreEqual(newHeight, surface1.Height);
+
+            Assert.IsFalse(surface1.IsValidCell(point1));
+            Assert.IsFalse(surface1.IsValidCell(point2));
+            Assert.IsTrue(surface1.IsValidCell(point3));
+            if (!clear)
+                Assert.IsTrue(surface1[point3].Matches(glyph3));
+            else
+                Assert.IsFalse(surface1[point3].Matches(glyph3));
+        }
+
+        [DataTestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void Resize_Smaller(bool clear)
         {
             new SadConsole.Tests.BasicGameHost();
@@ -49,7 +139,6 @@ namespace SadConsole.Tests
                 Assert.IsTrue(surface1[point3].Matches(glyph3));
             else
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
-
         }
 
         [DataTestMethod]
