@@ -364,7 +364,7 @@ public class CellSurface : ICellSurface, ICellSurfaceResize, ICellSurfaceSettabl
                 // If clear set, clear the old cells
                 if (clear)
                 {
-                    for (int i = 0; i < Cells.Length; i++)
+                    for (int i = 0; i < newCells.Length; i++)
                         CellClear(Surface, newCells[i]);
                 }
             }
