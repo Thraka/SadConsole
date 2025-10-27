@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SadConsole.Editor.Documents;
 
@@ -68,6 +70,137 @@ public partial class DocumentAnimated: Document
         // If animation frame changed, sync surface
         if (currentFrameIndex != _baseAnimation.CurrentFrameIndex)
             SetFrameIndex(_baseAnimation.CurrentFrameIndex);
+
+        bool showDeletePopup = false;
+
+        if (Hexa.NET.ImGui.SC.SettingsTable.BeginTable("animation-buttons"))
+        {
+            ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(0);
+            ImGui.AlignTextToFramePadding();
+            ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+            if (ImGui.Button("Add Starting Frame"u8, new Vector2(-1, 0)))
+            {
+                ICellSurface newFrame = _baseAnimation.CreateFrame();
+                _baseAnimation.Frames.Remove(newFrame);
+                _baseAnimation.Frames.Insert(0, newFrame);
+                SetFrameIndex(0);
+            }
+            ImGui.TableSetColumnIndex(1);
+            if (ImGui.Button("Insert Frame"u8, new Vector2(-1, 0)))
+            {
+                ICellSurface newFrame = _baseAnimation.CreateFrame();
+                _baseAnimation.Frames.Remove(newFrame);
+                _baseAnimation.Frames.Insert(_baseAnimation.CurrentFrameIndex + 1, newFrame);
+                SetFrameIndex(_baseAnimation.CurrentFrameIndex + 1);
+            }
+
+            ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(0);
+            ImGui.AlignTextToFramePadding();
+            if (ImGui.Button("Add Ending Frame"u8, new Vector2(-1, 0)))
+            {
+                ICellSurface newFrame = _baseAnimation.CreateFrame();
+                SetFrameIndex(_baseAnimation.Frames.Count - 1);
+            }
+            ImGui.TableSetColumnIndex(1);
+            ImGui.BeginDisabled(_baseAnimation.Frames.Count == 1);
+            if (ImGui.Button("Delete Frame"u8, new Vector2(-1, 0)))
+                showDeletePopup = true;
+            ImGui.EndDisabled();
+
+            ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(0);
+            ImGui.AlignTextToFramePadding();
+            if (ImGui.Button("Clone Frame"u8, new Vector2(-1, 0)))
+            {
+                ICellSurface newFrame = _baseAnimation.CreateFrame();
+                _baseAnimation.Frames.Remove(newFrame);
+                _baseAnimation.CurrentFrame.Copy(newFrame);
+                _baseAnimation.Frames.Insert(_baseAnimation.CurrentFrameIndex + 1, newFrame);
+                SetFrameIndex(_baseAnimation.CurrentFrameIndex + 1);
+            }
+
+            Hexa.NET.ImGui.SC.SettingsTable.EndTable();
+        }
+        
+        if (_baseAnimation.CurrentFrameIndex < _baseAnimation.Frames.Count - 1 && ImGuiP.IsKeyPressed(ImGuiKey.RightBracket))
+        {
+            _baseAnimation.CurrentFrameIndex++;
+            SetFrameIndex(_baseAnimation.CurrentFrameIndex);
+        }
+        else if (_baseAnimation.CurrentFrameIndex >= 0 && ImGuiP.IsKeyPressed(ImGuiKey.LeftBracket))
+        {
+            _baseAnimation.CurrentFrameIndex--;
+            SetFrameIndex(_baseAnimation.CurrentFrameIndex);
+        }
+
+        if (showDeletePopup)
+            ImGui.OpenPopup("delete_frame_popup");
+
+        if (ImGui.BeginPopup("delete_frame_popup"))
+        {
+            ImGui.Text("Are you sure?"u8);
+            if (Hexa.NET.ImGui.SC.Windows.PromptWindow.DrawButtons(out bool result, false, "No", "Yes"))
+            {
+                if (result)
+                {
+                    _baseAnimation.Frames.RemoveAt(_baseAnimation.CurrentFrameIndex);
+                    SetFrameIndex(_baseAnimation.CurrentFrameIndex);
+                }
+                ImGui.CloseCurrentPopup();
+            }
+
+            ImGui.EndPopup();
+        }
+
+        // ========================
+        // Arrange Frames
+        // ========================
+        ImGui.SeparatorText("Move Current Frame");
+
+        ImGui.BeginDisabled(_baseAnimation.CurrentFrameIndex == 0);
+        if (ImGui.Button("First"u8))
+        {
+            ICellSurface currentFrame = _baseAnimation.CurrentFrame;
+            _baseAnimation.Frames.Remove(currentFrame);
+            _baseAnimation.Frames.Insert(0, currentFrame);
+            SetFrameIndex(0);
+        }
+        ImGui.EndDisabled(); ImGui.SameLine();
+
+        ImGui.BeginDisabled(_baseAnimation.CurrentFrameIndex == 0);
+        if (ImGui.Button("Previous"u8))
+        {
+            ICellSurface currentFrame = _baseAnimation.CurrentFrame;
+            _baseAnimation.Frames.Remove(currentFrame);
+            _baseAnimation.Frames.Insert(_baseAnimation.CurrentFrameIndex - 1, currentFrame);
+            SetFrameIndex(_baseAnimation.CurrentFrameIndex - 1);
+        }
+        ImGui.EndDisabled(); ImGui.SameLine();
+
+        ImGui.BeginDisabled(_baseAnimation.CurrentFrameIndex == _baseAnimation.Frames.Count - 1);
+        if (ImGui.Button("Forward"u8))
+        {
+            ICellSurface currentFrame = _baseAnimation.CurrentFrame;
+            _baseAnimation.Frames.Remove(currentFrame);
+            _baseAnimation.Frames.Insert(_baseAnimation.CurrentFrameIndex + 1, currentFrame);
+            SetFrameIndex(_baseAnimation.CurrentFrameIndex + 1);
+        }
+        ImGui.EndDisabled(); ImGui.SameLine();
+
+        ImGui.BeginDisabled(_baseAnimation.CurrentFrameIndex == _baseAnimation.Frames.Count - 1);
+        if (ImGui.Button("Last"u8))
+        {
+            ICellSurface currentFrame = _baseAnimation.CurrentFrame;
+            _baseAnimation.Frames.Remove(currentFrame);
+            _baseAnimation.Frames.Add(currentFrame);
+            SetFrameIndex(_baseAnimation.Frames.Count - 1);
+        }
+        ImGui.EndDisabled();
+
+
+
 
         // ========================
         // Animation Settings
