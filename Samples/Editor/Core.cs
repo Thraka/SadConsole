@@ -15,6 +15,7 @@ public static partial class Core
         public float UIScale = 1f;
 
         public string BlueprintFolder = "blueprints";
+        public string FontsFolder = "fonts";
 
         public int WindowNewDocWidthFactor = 22;
         public int WindowSimpleObjectEditor = 40;
@@ -70,8 +71,9 @@ public static partial class Core
 
         // Test code
         // ===============
-        Documents.DocumentSurface.Builder builder = new();
+        Documents.DocumentAnimated.Builder builder = new();
         builder.ResetBuilder();
+        builder.FrameCount = 5;
         State.Documents.Objects.Add(builder.CreateDocument());
         State.Documents.SelectedItemIndex = 0;
         State.Documents.SelectedItem!.OnSelected();

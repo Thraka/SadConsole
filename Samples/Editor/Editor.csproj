@@ -47,22 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-    <Reference Include="GumCommon">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumCommon.dll</HintPath>
-    </Reference>
-    <Reference Include="GumDataTypesNet6">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumDataTypesNet6.dll</HintPath>
-    </Reference>
-    <Reference Include="ToolsUtilitiesStandard">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\ToolsUtilitiesStandard.dll</HintPath>
-    </Reference>
-    -->
-    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
-    <PackageReference Include="MonoGame.Extended.Graphics" Version="*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="app.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

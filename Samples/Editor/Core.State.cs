@@ -31,6 +31,7 @@ public static partial class Core
         public static EditorPalette Palette = new();
 
         public static ImGuiList<Blueprint> Blueprints = new();
+        public static ImGuiList<IFont> SadConsoleFonts = new();
 
         public static void LoadBlueprints()
         {
@@ -52,6 +53,14 @@ public static partial class Core
             }
 
             Blueprints = new ImGuiList<Blueprint>(blueprints);
+        }
+
+        public static void LoadSadConsoleFonts()
+        {
+            SadConsoleFonts = new(SadConsole.Game.Instance.Fonts.Values)
+            {
+                SelectedItemIndex = 0
+            };
         }
 
         public static void SyncEditorPalette()

@@ -69,11 +69,11 @@ public partial class DocumentAnimated
             Width = 80;
             Height = 25;
             DefaultForeground = Color.White.ToVector4();
-            DefaultBackground = Color.Black.ToVector4();
+            DefaultBackground = Color.Transparent.ToVector4();
         }
 
         public IEnumerable<IFileHandler> GetLoadHandlers() =>
-            [new SurfaceDocument(), new SurfaceFile()];
+            [new AnimatedDocument(), new AnimationFile()];
 
         public override string ToString() =>
             Title;

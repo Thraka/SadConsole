@@ -65,7 +65,7 @@ public class GuiDocumentsHost: ImGuiObjectBase
                                         document.VisualTextureId,
                                         document.VisualTextureSize,
                                         pixelArea,
-                                        out isActive, out isHovered);
+                                        out isActive, out isHovered, true);
 
                     // Draw scrollbars
                     bool enableScrollX = document.EditingSurface.ViewHeight != document.EditingSurface.Height;

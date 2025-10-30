@@ -8,6 +8,7 @@ namespace SadConsole.Editor.Tools;
 
 internal class Selection : ITool
 {
+    private static CellSurface? _clipboardSurface;
     private Point _firstPoint;
     private Point _secondPoint;
     private ShapeParameters _selectionBoxShape;
@@ -58,6 +59,15 @@ internal class Selection : ITool
             };
         }
         ImGui.EndDisabled();
+
+        ImGui.BeginDisabled(_clipboardSurface == null);
+        if (ImGui.Button("Paste from Clipboard"u8))
+        {
+            CancelPaste(document, false);
+            _selectionSurface = _clipboardSurface!;
+            _state = States.Pasting;
+        }
+        ImGui.EndDisabled();
     }
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
@@ -67,6 +77,14 @@ internal class Selection : ITool
         if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
         {
             bool _createBlueprint = false;
+            if (ImGui.Selectable("Copy to Clipboard"u8))
+            {
+                CopySurface(document);
+                _clipboardSurface = _selectionSurface;
+                ClearState();
+                ImGui.CloseCurrentPopup();
+            }
+
             if (ImGui.Selectable("Move"u8))
             {
                 CopySurface(document);

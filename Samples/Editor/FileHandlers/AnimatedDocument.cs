@@ -3,7 +3,7 @@ using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.FileHandlers;
 
-internal class SurfaceDocument: IFileHandler
+internal class AnimatedDocument: IFileHandler
 {
     public bool SupportsLoad => true;
 
@@ -13,29 +13,32 @@ internal class SurfaceDocument: IFileHandler
 
     public FileDialogOptions DefaultLoadOptions { get; } = new(true, false);
 
-    public string Title => "Editor Document";
+    public string Title => "Animation Document";
 
-    public string[] ExtensionsLoading => ["document"];
+    public string[] ExtensionsLoading => ["animdoc"];
 
-    public string[] ExtensionsSaving => ["document"];
+    public string[] ExtensionsSaving => ["animdoc"];
 
-    public string HelpInformation => "Saves or loads the document.";
+    public string HelpInformation => "Saves or loads the animation.";
 
     public object? Load(string file)
     {
-        DocumentSurface doc;
+        DocumentAnimated doc;
         try
         {
             // Try to load the file as uncompressed first
             try
             {
-                doc = Serializer.Load<DocumentSurface>(file, false);
+                doc = Serializer.Load<DocumentAnimated>(file, false);
             }
             catch (Exception e)
             {
                 // Try to load the file as compressed next
-                doc = Serializer.Load<DocumentSurface>(file, true);
+                doc = Serializer.Load<DocumentAnimated>(file, true);
             }
+
+            doc.RefreshDuration();
+            doc.SetFrameIndex(0);
         }
         catch (Exception e)
         {
@@ -55,7 +58,7 @@ internal class SurfaceDocument: IFileHandler
     {
         file = ((IFileHandler)this).GetFileWithValidExtensionForSave(file);
 
-        if (instance is Document doc)
+        if (instance is DocumentAnimated doc)
         {
             try
             {

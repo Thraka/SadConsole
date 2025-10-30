@@ -3,7 +3,7 @@ using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.FileHandlers;
 
-internal class SurfaceFile : IFileHandler
+internal class AnimationFile : IFileHandler
 {
     public bool SupportsLoad => true;
 
@@ -13,40 +13,40 @@ internal class SurfaceFile : IFileHandler
 
     public FileDialogOptions DefaultLoadOptions { get; } = new(false, true);
 
-    public string Title => "Cell Surface";
+    public string Title => "Animated Surface Object";
 
-    public string[] ExtensionsLoading => ["surface"];
+    public string[] ExtensionsLoading => ["animation"];
 
-    public string[] ExtensionsSaving => ["surface"];
+    public string[] ExtensionsSaving => ["animation"];
 
     public string HelpInformation => "Saves just the surface, without any other metadata, such as the document title.";
 
     public object? Load(string file)
     {
         // Try loading uncompressed first.
-        if (!Serializer.TryLoad<CellSurface>(file, false, out CellSurface? surface))
+        if (!Serializer.TryLoad(file, false, out AnimatedScreenObject? surface))
         {
-            if (!Serializer.TryLoad<CellSurface>(file, true, out surface))
+            if (!Serializer.TryLoad(file, true, out surface))
             {
                 MessageWindow.Show($"Unable to load file.\r\n\r\nIs it the wrong type?", "Error");
                 return null;
             }
         }
 
-        return new DocumentSurface(surface);
+        return new DocumentAnimated(surface);
     }
 
     public bool Save(object instance, string file, bool compress)
     {
         file = ((IFileHandler)this).GetFileWithValidExtensionForSave(file);
 
-        if (instance is Document doc)
+        if (instance is DocumentAnimated doc)
         {
-            ScreenSurface surface = doc.EditingSurface;
+            AnimatedScreenObject surface = doc._baseAnimation;
 
             try
             {
-                Serializer.Save(surface.Surface, file, compress);
+                Serializer.Save(surface, file, compress);
 
                 return true;
             }

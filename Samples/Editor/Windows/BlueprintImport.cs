@@ -52,7 +52,7 @@ public class BlueprintImport : ImGuiWindowBase
 
                 if (ImGui.Button("Cancel"))
                 {
-                    DialogResult = true;
+                    DialogResult = false;
                     Close();
                 }
 

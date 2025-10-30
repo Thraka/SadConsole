@@ -13,6 +13,20 @@ public interface IFileHandler: ITitle
     object? Load(string file);
     bool Save(object instance, string file, bool compress);
     string HelpInformation { get; }
+
+    string GetFileWithValidExtensionForSave(string file)
+    {
+        if (Path.HasExtension(file))
+        {
+            foreach (string ext in ExtensionsSaving)
+            {
+                if (Path.GetExtension(file).Equals(ext, StringComparison.InvariantCultureIgnoreCase))
+                    return file;
+            }
+        }
+
+        return Path.ChangeExtension(file, ExtensionsSaving[0]);
+    }
 }
 
 public record struct FileDialogOptions(bool OnlyCompressed, bool ShowCompressionToggle);

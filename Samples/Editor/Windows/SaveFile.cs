@@ -1,5 +1,6 @@
 ﻿using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
+using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
@@ -83,7 +84,21 @@ public class SaveFile : ImGuiWindowBase
                     if (DialogResult)
                     {
                         string file = Path.Combine(_fileListBox.CurrentDirectory.FullName, _selectedFileName);
-                        _fileLoaders.SelectedItem.Save(_document, file, false);
+
+                        if (File.Exists(_fileLoaders.SelectedItem.GetFileWithValidExtensionForSave(file)))
+                        {
+                            PromptWindow window = new("File exists, overwrite the file?", "Save", "Yes", "No");
+                            window.Closed += (s, e) =>
+                            {
+                                if (((PromptWindow)s).DialogResult)
+                                {
+                                    _fileLoaders.SelectedItem.Save(_document, file, useCompression);
+                                }
+                            };
+                            window.Open();
+                        }
+                        else
+                            _fileLoaders.SelectedItem.Save(_document, file, useCompression);
                     }
 
                     Close();

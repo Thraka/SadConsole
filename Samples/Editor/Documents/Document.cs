@@ -5,9 +5,18 @@ using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Tools;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
+
+// TODO:
+// -------------------
+// Move a lot of the common UI stuff like FontSize selection popups and windows
+// into base class methods that render components and handle showing windows/popups
+// when they're closed, call to new base methods like "FontChanged" so that the document
+// can react as needed, like animations set it on the base animation object and surfaces
+// set font on surface
 
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
@@ -49,6 +58,8 @@ public abstract partial class Document : ITitle
 
     public bool HasPalette = false;
     public EditorPalette Palette = new();
+
+    protected FontSelectionWindow? FontSelectionWindow;
 
     protected Document()
     {
