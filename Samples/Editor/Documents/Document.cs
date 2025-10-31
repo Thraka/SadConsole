@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.Serialization;
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Graphics;
@@ -70,6 +71,34 @@ public abstract partial class Document : ITitle
         VisualLayerToolLower = (CellSurface)VisualTool.Layers[0];
         VisualLayerToolUpper = VisualTool.Layers.Create();
     }
+
+    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
+    protected void FontSelectionWindow_Popup()
+    {
+        FontSelectionWindow = new FontSelectionWindow(EditingSurfaceFont, EditingSurfaceFontSize);
+        FontSelectionWindow.IsOpen = true;
+    }
+
+    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
+    protected bool FontSelectionWindow_BuildUI(ImGuiRenderer renderer)
+    {
+        if (FontSelectionWindow != null && FontSelectionWindow.IsOpen)
+        {
+            FontSelectionWindow.BuildUI(renderer);
+
+            if (!FontSelectionWindow.IsOpen)
+            {
+                return FontSelectionWindow.DialogResult;
+            }
+        }
+
+        return false;
+    }
+
+    protected void FontSelectionWindow_Reset() =>
+        FontSelectionWindow = null;
+
+    
 
     public virtual void OnSelected()
     {

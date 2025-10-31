@@ -106,11 +106,8 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
         ImGui.Text("Font: ");
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
-        {
-            //FontPicker popup = new(VisualDocument.Font, SurfaceFontSize);
-            //popup.Closed += FontPicker_Closed;
-            //popup.Show();
-        }
+            base.FontSelectionWindow_Popup();
+
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: ");
         ImGui.SameLine();
@@ -125,6 +122,19 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
 
             // Force overlay to update and match surface
             //ComposeVisual();
+        }
+
+        if (base.FontSelectionWindow_BuildUI(renderer))
+        {
+            EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
+            EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
+            EditorFontSize = FontSelectionWindow.SelectedFontSize;
+            EditingSurface.Font = EditingSurfaceFont;
+            EditingSurface.FontSize = EditorFontSize;
+            EditingSurface.IsDirty = true;
+            VisualTool.Font = EditingSurfaceFont;
+            VisualTool.IsDirty = true;
+            base.FontSelectionWindow_Reset();
         }
 
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))

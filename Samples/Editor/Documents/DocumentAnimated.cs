@@ -11,6 +11,8 @@ public partial class DocumentAnimated: Document
 {
     private const string DurationFormat = @"mm\:ss\.ffff";
 
+    private string[] ParseDurationFormats = [DurationFormat, @"mm\:ss\.fff", @"mm\:ss\.ff", @"mm\:ss\.f", @"mm\:ss", @"mm\:s", @"ss\.ffff", @"ss\.fff", @"ss\.ff", @"ss\.f", @"s\.ffff", @"s\.fff", @"s\.ff", @"s\.f"];
+
     [DataMember(Name = "Animation")]
     public AnimatedScreenObject _baseAnimation;
     private string _animationDurationString;
@@ -190,9 +192,9 @@ public partial class DocumentAnimated: Document
 
             ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(" Animation Time"u8).X);
 
-            if (ImGui.InputTextWithHint("Animation Time"u8, "00:00"u8, ref _animationDurationString, 10, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputTextWithHint("Animation Time"u8, "00:00"u8, ref _animationDurationString, 11, ImGuiInputTextFlags.EnterReturnsTrue))
             {
-                if (TimeSpan.TryParseExact(_animationDurationString, [DurationFormat, @"mm\:ss\.ffff", @"mm\:ss\.ff", @"mm\:ss\.ff", @"mm\:ss"], null, out TimeSpan result))
+                if (TimeSpan.TryParseExact(_animationDurationString, ParseDurationFormats, null, out TimeSpan result))
                     _baseAnimation.AnimationDuration = result;
 
                 _animationDurationString = _baseAnimation.AnimationDuration.ToString(DurationFormat);
@@ -365,48 +367,32 @@ public partial class DocumentAnimated: Document
         ImGui.Text("Font: ");
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
-        {
-            FontSelectionWindow = new(EditingSurfaceFont, EditingSurfaceFontSize);
-            FontSelectionWindow.IsOpen = true;
-        }
+            base.FontSelectionWindow_Popup();
+
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: ");
         ImGui.SameLine();
         if (ImGui.Button(EditorFontSize.ToString()))
-        {
             ImGui.OpenPopup("editorfontsize_select");
-        }
         ImGui.SameLine();
         if (ImGui.Button("Reset"))
-        {
             EditorFontSize = EditingSurfaceFontSize;
-
-            // Force overlay to update and match surface
-            //ComposeVisual();
-        }
 
         ImGui.EndDisabled();
 
-        if (FontSelectionWindow != null && FontSelectionWindow.IsOpen)
+        if (base.FontSelectionWindow_BuildUI(renderer))
         {
-            FontSelectionWindow.BuildUI(renderer);
-
-            if (!FontSelectionWindow.IsOpen)
-            {
-                if (FontSelectionWindow.DialogResult)
-                {
-                    EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
-                    EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
-                    EditorFontSize = FontSelectionWindow.SelectedFontSize;
-                    _baseAnimation.Font = EditingSurfaceFont;
-                    _baseAnimation.FontSize = EditingSurfaceFontSize;
-                    EditingSurface.Font = EditingSurfaceFont;
-                    EditingSurface.FontSize = EditorFontSize;
-                    EditingSurface.IsDirty = true;
-                    VisualTool.IsDirty = true;
-                }
-                FontSelectionWindow = null;
-            }
+            EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
+            EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
+            EditorFontSize = FontSelectionWindow.SelectedFontSize;
+            _baseAnimation.Font = EditingSurfaceFont;
+            _baseAnimation.FontSize = EditingSurfaceFontSize;
+            EditingSurface.Font = EditingSurfaceFont;
+            EditingSurface.FontSize = EditorFontSize;
+            EditingSurface.IsDirty = true;
+            VisualTool.Font = EditingSurfaceFont;
+            VisualTool.IsDirty = true;
+            base.FontSelectionWindow_Reset();
         }
 
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))
