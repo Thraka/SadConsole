@@ -78,6 +78,35 @@ public class GuiTopBar : ImGuiObjectBase
                 ImGui.EndMenu();
             }
 
+            if (ImGui.BeginMenu("Palette"))
+            {
+                if (ImGui.MenuItem("Edit Editor Palette"))
+                {
+                    new Windows.PaletteEditorWindow(Core.State.Palette).Open();
+                }
+                
+                if (Core.State.Documents.SelectedItem is not null)
+                {
+                    if (Core.State.Documents.SelectedItem.HasPalette)
+                    {
+                        if (ImGui.MenuItem("Edit Document Palette"))
+                            new Windows.PaletteEditorWindow(Core.State.Documents.SelectedItem.Palette!).Open();
+                    }
+                    else
+                    {
+                        ImGui.Separator();
+
+                        if (ImGui.MenuItem("Add to Document", "a"))
+                        {
+                            Core.State.Documents.SelectedItem.Palette = new EditorPalette();
+                            Core.State.Documents.SelectedItem.HasPalette = true;
+                        }
+                    }
+                    
+                }
+                ImGui.EndMenu();
+            }
+
             if (ImGui.BeginMenu("Debug"))
             {
                 if (ImGui.MenuItem("Pause", "p"))
