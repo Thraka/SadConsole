@@ -8,13 +8,27 @@ namespace SadConsole.Editor.Windows;
 
 public class FontSelectionWindow: ImGuiWindowBase
 {
-    private static int _selectedSize = -1;
+    private ImGuiList<string> _fontSizes;
+
     private static string[] _sizes = ["x0.25", "x0.50", "x1", "x2", "x3", "x4"];
 
     public const string POPUP_ID = nameof(FontSelectionWindow);
 
     public IFont SelectedFont;
     public Point SelectedFontSize;
+    private ImGuiList<FontSizeItem> _fontSizeItems = new();
+
+    private class FontSizeItem: ITitle
+    {
+        public string Title { get; }
+        public IFont.Sizes Size;
+
+        public FontSizeItem(string name, IFont.Sizes size)
+        {
+            Title = name;
+            Size = size;
+        }
+    }
 
     public FontSelectionWindow(IFont currentFont, Point fontSize)
     {
@@ -22,6 +36,16 @@ public class FontSelectionWindow: ImGuiWindowBase
         SelectedFont = currentFont;
         Core.State.SadConsoleFonts.SelectedItem = currentFont;
         SelectedFontSize = fontSize;
+
+        _fontSizeItems = new(
+            new FontSizeItem("x0.25", IFont.Sizes.Quarter),
+            new FontSizeItem("x0.50", IFont.Sizes.Half),
+            new FontSizeItem("x1", IFont.Sizes.One),
+            new FontSizeItem("x2", IFont.Sizes.Two),
+            new FontSizeItem("x3", IFont.Sizes.Three),
+            new FontSizeItem("x4", IFont.Sizes.Four));
+
+        _fontSizeItems.SelectedItem = _fontSizeItems.Objects.Where(item => fontSize == currentFont.GetFontSize(item.Size)).FirstOrDefault() ?? _fontSizeItems.Objects[2];
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -41,11 +65,6 @@ public class FontSelectionWindow: ImGuiWindowBase
 
                 ImGui.Separator();
 
-                List<Point> _tempSizes = [SelectedFont.GetFontSize(IFont.Sizes.Quarter), SelectedFont.GetFontSize(IFont.Sizes.Half), SelectedFont.GetFontSize(IFont.Sizes.One), SelectedFont.GetFontSize(IFont.Sizes.Two), SelectedFont.GetFontSize(IFont.Sizes.Three), SelectedFont.GetFontSize(IFont.Sizes.Four)];
-                _selectedSize = _tempSizes.IndexOf(SelectedFontSize);
-                if (_selectedSize == -1)
-                    _selectedSize = 2;
-
                 ImGui.Text("Name: ");
                 ImGui.SameLine();
                 ImGui.Text(SelectedFont.Name);
@@ -55,12 +74,12 @@ public class FontSelectionWindow: ImGuiWindowBase
 
                 ImGui.Separator();
                 ImGui.Text("Choose a font size");
-                ImGui.Combo("##fontsizes", ref _selectedSize, _sizes, _sizes.Length, _sizes.Length);
+                ImGui.Combo("##fontsizes", ref _fontSizeItems.SelectedItemIndex, _fontSizeItems.Names, _fontSizeItems.Count, _fontSizeItems.Count);
                 ImGui.Separator();
 
                 if (DrawButtons(out DialogResult, acceptButtonText: "Select"))
                 {
-                    SelectedFontSize = SelectedFont.GetFontSize((IFont.Sizes)_selectedSize);
+                    SelectedFontSize = SelectedFont.GetFontSize(_fontSizeItems.SelectedItem.Size);
                     Close();
                 }
 
