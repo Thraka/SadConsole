@@ -31,26 +31,22 @@ public class PaletteEditorWindow : ImGuiWindowBase
 
             ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(Core.Settings.WindowNewDocWidthFactor * ImGui.GetFontSize(), -1));
-            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.MenuBar))
+            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
             {
-                if (ImGui.BeginMenuBar())
-                {
-                        if (ImGui.MenuItem("Add Color"))
-                            AddNewColor();
-
-                        if (ImGui.MenuItem("Reset to Default"))
-                            ResetToDefault();
-
-                        if (ImGui.MenuItem("Delete Selected"))
-                            RemoveSelectedColor();
-
-                    ImGui.EndMenuBar();
-                }
-
-                ImGui.Separator();
-
                 // Color list
+                ImGui.AlignTextToFramePadding();
                 ImGui.Text("Colors:");
+
+                ImGui.SameLine();
+                if (ImGui.Button("Add"))
+                    AddNewColor();
+
+                ImGui.SameLine();
+                ImGui.BeginDisabled(_selectedColorIndex == -1);
+                if (ImGui.Button("Remove Selected"))
+                    RemoveSelectedColor();
+                ImGui.EndDisabled();
+
                 if (ImGui.BeginChild("ColorList", new Vector2(0, 200), ImGuiChildFlags.Borders))
                 {
                     Vector2 padding = ImGui.GetStyle().FramePadding;
