@@ -37,6 +37,9 @@ public static partial class Core
         {
             List<Blueprint> blueprints = new();
 
+            if (!Directory.Exists(Core.Settings.BlueprintFolder))
+                Directory.CreateDirectory(Core.Settings.BlueprintFolder);
+
             foreach (string file in Directory.GetFiles(Core.Settings.BlueprintFolder))
             {
                 try
@@ -57,7 +60,15 @@ public static partial class Core
 
         public static void LoadSadConsoleFonts()
         {
-            SadConsoleFonts = new(SadConsole.Game.Instance.Fonts.Values)
+            if (!Directory.Exists(Core.Settings.FontsFolder))
+                Directory.CreateDirectory(Core.Settings.FontsFolder);
+
+            // Use this way to load fonts because we want SadConsole to use the normal defaults
+            Directory.GetFiles(Core.Settings.FontsFolder, "*.font")
+                .ToList()
+                .ForEach(file => Game.Instance.LoadFont(file));
+
+            SadConsoleFonts = new(Game.Instance.Fonts.Values)
             {
                 SelectedItemIndex = 0
             };

@@ -21,12 +21,6 @@ Game.Instance.Dispose();
 
 static void StartHandler(object? sender, GameHost host)
 {
-    // Use this way to load fonts because we want SadConsole to use the normal defaults
-    Directory.GetFiles(Core.Settings.FontsFolder, "*.font").ToList().ForEach(file =>
-    {
-        SadConsole.Game.Instance.LoadFont(file);
-    });
-
     Core.State.LoadSadConsoleFonts();
 
     Core.Start();
