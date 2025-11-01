@@ -189,7 +189,7 @@ internal class Recolor : ITool
                 ImGui.OpenPopup($"palettepopup##background_edit");
 
             col = _applyBackground.ToColor();
-            if (PalettePopup.Show($"palettepopup_background_edit", ref col))
+            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
                 _applyBackground = col.ToVector4();
 
             ImGui.EndDisabled();
