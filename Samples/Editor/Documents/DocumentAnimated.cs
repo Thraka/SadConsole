@@ -337,12 +337,10 @@ public partial class DocumentAnimated: Document
                     foreach (var frame in _baseAnimation.Frames)
                         ((ICellSurfaceResize)frame).Resize(viewWidth, viewHeight, _width.CurrentValue, _height.CurrentValue, false);
 
-                    // Resize
-                    ((ICellSurfaceResize)EditingSurface).Resize(viewWidth, viewHeight, _width.CurrentValue, _height.CurrentValue, false);
-
                     // Resync width/height
                     _width = new(_width.CurrentValue);
                     _height = new(_height.CurrentValue);
+                    _baseAnimation.ResyncFrameSize();
 
                     // Redraw
                     SetFrameIndex(_baseAnimation.CurrentFrameIndex);
