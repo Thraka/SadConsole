@@ -1,12 +1,17 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
 public class BlueprintImport : ImGuiWindowBase
 {
+    private ImTextureID? _previewTexture;
+    private Vector2 _previewTextureSize;
+    private ScreenSurface? _previewTextureWrapper;
+
     public BlueprintImport()
     {
         Title = "Blueprints";
@@ -16,6 +21,37 @@ public class BlueprintImport : ImGuiWindowBase
     {
         base.OnOpened();
         Core.State.Blueprints.SelectedItem = null;
+    }
+
+    private void UnloadTexture()
+    {
+        if (_previewTexture.HasValue)
+        {
+            ImGuiCore.Renderer.UnbindTexture(_previewTexture.Value);
+            _previewTexture = null;
+        }
+
+        if (_previewTextureWrapper is not null)
+        {
+            _previewTextureWrapper.Dispose();
+            _previewTextureWrapper = null;
+        }
+    }
+
+    void RenderBlueprintTexture()
+    {
+        UnloadTexture();
+        CellSurface surface = Core.State.Blueprints.SelectedItem.GetSurface();
+        _previewTextureWrapper = new ScreenSurface(surface);
+        _previewTextureWrapper.Font = Core.State.Documents.SelectedItem.EditingSurfaceFont;
+        _previewTextureWrapper.Update(TimeSpan.Zero);
+        _previewTextureWrapper.Render(TimeSpan.Zero);
+
+        //TODO are we generating drawcalls? We should clear those out, yes?
+        _previewTexture = ImGuiCore.Renderer.BindTexture(
+            ((SadConsole.Host.GameTexture)_previewTextureWrapper.Renderer.Output).Texture);
+
+        _previewTextureSize = new Vector2(_previewTextureWrapper.Renderer.Output.Width, _previewTextureWrapper.Renderer.Output.Height);
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -36,7 +72,7 @@ public class BlueprintImport : ImGuiWindowBase
                 ImGui.SetNextItemWidth(-1);
                 if (ImGui.ListBox("##blueprints", ref Core.State.Blueprints.SelectedItemIndex, Core.State.Blueprints.Names, Core.State.Blueprints.Count, 10))
                 {
-                    
+                    RenderBlueprintTexture();
                 }
 
                 ImGui.BeginDisabled(!Core.State.Blueprints.IsItemSelected());
@@ -58,36 +94,43 @@ public class BlueprintImport : ImGuiWindowBase
 
                 ImGui.NextColumn();
 
-                if (Core.State.Blueprints.IsItemSelected())
+                if (Core.State.Blueprints.IsItemSelected() && IsOpen) // second check for IsOpen because closing destroys texture which we need below
                 {
                     if (ImGui.Button("Delete"))
                         ImGui.OpenPopup("ConfirmDelete");
-                    //ColoredGlyph visual = _objects.SelectedItem.Visual;
 
-                    //Vector4 foreground = visual.Foreground.ToVector4();
-                    //Vector4 background = visual.Background.ToVector4();
-                    //int glyph = visual.Glyph;
-                    //ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(visual.Mirror);
-                    //string name = _objects.SelectedItem.Name;
+                    var region = ImGui.GetContentRegionAvail();
 
-                    //if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
-                    //{
-                    //    SettingsTable.DrawString("Name", ref name, 255);
+                    // Calculate scaled region to maintain aspect ratio
+                    var scaledRegion = region;
+                    var textureAspectRatio = _previewTextureSize.X / _previewTextureSize.Y;
+                    var regionAspectRatio = region.X / region.Y;
 
-                    //    SettingsTable.DrawCommonSettings(true, true, true, true, true,
-                    //        ref foreground, _defaultForeground,
-                    //        ref background, _defaultBackground,
-                    //        ref mirror,
-                    //        ref glyph, _font, ImGuiCore.Renderer);
+                    if (textureAspectRatio > regionAspectRatio)
+                    {
+                        // Texture is wider than region
+                        var newHeight = region.X / textureAspectRatio;
+                        if (_previewTextureSize.Y < region.Y || newHeight < region.Y)
+                        {
+                            scaledRegion = new Vector2(region.X, newHeight);
+                        }
+                    }
+                    else
+                    {
+                        // Texture is taller than region
+                        var newWidth = region.Y * textureAspectRatio;
+                        if (_previewTextureSize.X < region.X || newWidth < region.X)
+                        {
+                            scaledRegion = new Vector2(newWidth, region.Y);
+                        }
+                    }
 
-                    //    SettingsTable.EndTable();
-                    //}
-
-                    //visual.Foreground = foreground.ToColor();
-                    //visual.Background = background.ToColor();
-                    //visual.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
-                    //visual.Glyph = glyph;
-                    //_objects.SelectedItem.Name = name;
+                    // Do draw
+                    ImGuiSC.DrawTexture("blueprint_preview", true, ImGuiSC.ZoomFit,
+                                        _previewTexture.Value,
+                                        _previewTextureSize,
+                                        scaledRegion,
+                                        out _, out _, true);
                 }
 
                 ImGui.Columns(1);
@@ -113,5 +156,11 @@ public class BlueprintImport : ImGuiWindowBase
                 ImGui.EndPopup();
             }
         }
+    }
+
+    protected override void OnClosed()
+    {
+        UnloadTexture();
+        base.OnClosed();
     }
 }
