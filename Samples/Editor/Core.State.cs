@@ -83,5 +83,19 @@ public static partial class Core
                 Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Document",
                     Documents.SelectedItem.Palette.Colors));
         }
+
+        public static void LoadEditorPalette()
+        {
+            if (File.Exists("editor.pal"))
+                Palette = EditorPalette.Load("editor.pal");
+        }
+
+        public static void SaveEditorPalette()
+        {
+            if (File.Exists("editor.pal"))
+                File.Delete("editor.pal");
+
+            Palette.Save("editor.pal");
+        }
     }
 }

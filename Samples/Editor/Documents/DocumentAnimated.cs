@@ -145,6 +145,14 @@ public partial class DocumentAnimated: Document
             ImGui.EndDisabled();
 
             ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(0);
+            ImGui.AlignTextToFramePadding();
+            if (ImGui.Button("Reverse"u8, new Vector2(-1, 0)))
+            {
+                _baseAnimation.Frames.Reverse();
+                SetFrameIndex(_baseAnimation.CurrentFrameIndex);
+            }
+
             ImGui.TableSetColumnIndex(1);
             ImGui.BeginDisabled(_baseAnimation.Frames.Count == 1);
             if (ImGui.Button("Copy Next Here"u8, new Vector2(-1, 0)))

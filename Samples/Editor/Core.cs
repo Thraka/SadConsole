@@ -53,15 +53,7 @@ public static partial class Core
                 .Build()
         );
 
-
-        // _fontConfig = new();
-        // _fontConfig.OversampleH = 1;
-        // _fontConfig.OversampleV = 1;
-        // _fontConfig.MergeMode = 1;
-        // _fontConfig.FontBuilderFlags = _fontConfig.FontBuilderFlags | (uint)ImGuiFreeTypeBuilderFlags.LoadColor;
-        // uint[] ranges = [ 0x1, 0x1FFFF, 0 ];
-        //
-        // ImGui.GetIO().Fonts.AddFontFromFileTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f, ref ranges);
+        Core.State.LoadEditorPalette();
 
         ImGui.GetStyle().ScaleAllSizes(Settings.UIScale);
 
