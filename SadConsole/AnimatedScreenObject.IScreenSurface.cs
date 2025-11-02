@@ -321,6 +321,12 @@ public partial class AnimatedScreenObject
     public override string ToString() =>
         "ScreenSurface";
 
+    public void ResyncFrameSize()
+    {
+        NewFrameWidth = Frames[0].Width;
+        NewFrameHeight = Frames[0].Height;
+    }
+
     /// <inheritdoc/>
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
