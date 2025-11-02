@@ -57,7 +57,7 @@ public class ScreenObjectState
 
         IsScreenSurface = Object is IScreenSurface;
         IsWindow = Object is UI.Window;
-        ObjectName = Object.GetDebuggerDisplayValue();
+        ObjectName = Object.GetTitle() ?? Object.GetDebuggerDisplayValue();
 
         RefreshComponents();
 
