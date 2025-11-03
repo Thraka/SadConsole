@@ -1,6 +1,7 @@
 ﻿/* TODO:
 
 - Palette editor doesn't handle duplicate names. It should handle duplicate names and invalidate them.
+- Add a palette save\load system so you can import\export palettes.
 
 */
 
@@ -8,7 +9,7 @@
 using SadConsole.Configuration;
 using SadConsole.Editor;
 
-Settings.WindowTitle = "SadEditor v0.2";
+Settings.WindowTitle = "SadEditor v3.0 Alpha 1";
 
 Builder config =
     new Builder()
