@@ -93,8 +93,8 @@ public class EntityManagerZoned
         manager.EnterZone += (s, e) =>
         {
             enterFlag = true;
-            Assert.IsTrue(e.Zone == zone1);
-            Assert.IsTrue(e.Entity == ent1);
+            Assert.AreEqual(zone1, e.Zone);
+            Assert.AreEqual(ent1, e.Entity);
         };
 
         Assert.IsFalse(zone1.Entities.Contains(ent1));
@@ -151,8 +151,8 @@ public class EntityManagerZoned
         manager.ExitZone += (s, e) =>
         {
             exitFlag = true;
-            Assert.IsTrue(e.Zone == zone1);
-            Assert.IsTrue(e.Entity == ent1);
+            Assert.AreEqual(zone1, e.Zone);
+            Assert.AreEqual(ent1, e.Entity);
         };
 
         Assert.IsTrue(zone1.Entities.Contains(ent1));
@@ -186,15 +186,15 @@ public class EntityManagerZoned
         manager.EnterZone += (s, e) =>
         {
             enterFlag = true;
-            Assert.IsTrue(e.Zone == zone1);
-            Assert.IsTrue(e.Entity == ent1);
+            Assert.AreEqual(zone1, e.Zone);
+            Assert.AreEqual(ent1, e.Entity);
         };
 
         manager.ExitZone += (s, e) =>
         {
             exitFlag = true;
-            Assert.IsTrue(e.Zone == zone1);
-            Assert.IsTrue(e.Entity == ent1);
+            Assert.AreEqual(zone1, e.Zone);
+            Assert.AreEqual(ent1, e.Entity);
         };
 
         // Add entity

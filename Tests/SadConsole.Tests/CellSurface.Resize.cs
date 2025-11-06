@@ -6,7 +6,7 @@ namespace SadConsole.Tests
 {
     public partial class CellSurface
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_WidthTo1(bool clear)
@@ -51,7 +51,7 @@ namespace SadConsole.Tests
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_HeightTo1(bool clear)
@@ -96,7 +96,7 @@ namespace SadConsole.Tests
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_Smaller(bool clear)
@@ -141,7 +141,7 @@ namespace SadConsole.Tests
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_Smaller_MatchingWidth(bool clear)
@@ -187,7 +187,7 @@ namespace SadConsole.Tests
                 Assert.IsFalse(surface1[point3].Matches(glyph3));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_Bigger(bool clear)
@@ -245,7 +245,7 @@ namespace SadConsole.Tests
             Assert.IsTrue(surface1[point4].Matches(glyph4));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_Bigger_MatchingWidth(bool clear)
@@ -304,7 +304,7 @@ namespace SadConsole.Tests
             Assert.IsTrue(surface1[point4].Matches(glyph4));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
         public void Resize_SameSize(bool clear)

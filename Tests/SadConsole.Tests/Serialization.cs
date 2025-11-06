@@ -68,9 +68,9 @@ namespace SadConsole.Tests
             Assert.AreEqual(obj2.UseMouse, newObj.Children[0].UseMouse);
             Assert.AreEqual(obj2.AbsolutePosition, newObj.Children[0].AbsolutePosition);
 
-            Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
-            Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
-            Assert.AreEqual(obj3.SadComponents.Count, newObj.Children[0].Children[0].SadComponents.Count);
+            Assert.HasCount(obj.SadComponents.Count, newObj.SadComponents);
+            Assert.HasCount(obj2.SadComponents.Count, newObj.Children[0].SadComponents);
+            Assert.HasCount(obj3.SadComponents.Count, newObj.Children[0].Children[0].SadComponents);
 
             Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
             Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
@@ -146,8 +146,8 @@ namespace SadConsole.Tests
 
             Assert.IsInstanceOfType(newObj.Children[0], typeof(SadConsole.ScreenSurface));
 
-            Assert.AreEqual(obj.SadComponents.Count, newObj.SadComponents.Count);
-            Assert.AreEqual(obj2.SadComponents.Count, newObj.Children[0].SadComponents.Count);
+            Assert.HasCount(obj.SadComponents.Count, newObj.SadComponents);
+            Assert.HasCount(obj2.SadComponents.Count, newObj.Children[0].SadComponents);
 
             Assert.AreEqual(comp1.Name, ((Component1)newObj.SadComponents[0]).Name);
             Assert.AreEqual(comp2.Name, ((Component1)newObj.Children[0].SadComponents[0]).Name);
@@ -172,7 +172,7 @@ namespace SadConsole.Tests
             Assert.AreEqual(animation.Width, animation2.Width);
             Assert.AreEqual(animation.Height, animation2.Height);
             Assert.AreEqual(animation.Name, animation2.Name);
-            Assert.AreEqual(animation.Frames.Count, animation2.Frames.Count);
+            Assert.HasCount(animation.Frames.Count, animation2.Frames);
             Assert.AreEqual(animation.Font?.Name, animation2.Font?.Name);
             Assert.AreEqual(animation.FontSize, animation2.FontSize);
             Assert.AreEqual(animation.Center, animation2.Center);

@@ -12,18 +12,18 @@ namespace SadConsole.Tests
 
             var effect = new SadConsole.Effects.Blink() { BlinkSpeed = System.TimeSpan.FromSeconds(1) };
             surface1.SetEffect(5, 5, effect);
-            Assert.IsTrue(surface1.Effects.Count == 1);
+            Assert.AreEqual(1, surface1.Effects.Count);
 
             surface1.Resize(30, 30, false);
-            Assert.IsTrue(surface1.Effects.Count == 1);
+            Assert.AreEqual(1, surface1.Effects.Count);
             Assert.IsNotNull(surface1.GetEffect(5, 5));
 
             surface1.Resize(10, 10, false);
-            Assert.IsTrue(surface1.Effects.Count == 1);
+            Assert.AreEqual(1, surface1.Effects.Count);
             Assert.IsNotNull(surface1.GetEffect(5, 5));
 
             surface1.Resize(5, 5, false);
-            Assert.IsTrue(surface1.Effects.Count == 0);
+            Assert.AreEqual(0, surface1.Effects.Count);
 
             surface1.Resize(8, 8, false);
             Assert.IsNull(surface1.GetEffect(5, 5));

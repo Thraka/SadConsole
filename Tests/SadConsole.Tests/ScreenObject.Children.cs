@@ -17,7 +17,7 @@ namespace SadConsole.Tests
                 (ScreenObject[] objects, ScreenObject parent) = CreateObjectsAndParent(3);
 
                 foreach (var item in objects)
-                    Assert.IsTrue(item.Parent == parent);
+                    Assert.AreEqual(parent, item.Parent);
 
                 // Method to test
                 parent.Children.Clear();
@@ -45,7 +45,7 @@ namespace SadConsole.Tests
 
                 foreach (var child in objects)
                 {
-                    Assert.IsTrue(child.Parent == parent);
+                    Assert.AreEqual(parent, child.Parent);
                     Assert.IsTrue(parent.Children.Contains(child));
                 }
             }
@@ -73,12 +73,12 @@ namespace SadConsole.Tests
                 // Method to test
                 parent.Children.Insert(3, insertedObject);
 
-                Assert.IsTrue(parent.Children.IndexOf(objects[0]) == 0);
-                Assert.IsTrue(parent.Children.IndexOf(objects[1]) == 1);
-                Assert.IsTrue(parent.Children.IndexOf(objects[2]) == 2);
-                Assert.IsTrue(parent.Children.IndexOf(insertedObject) == 3);
-                Assert.IsTrue(parent.Children.IndexOf(objects[3]) == 4);
-                Assert.IsTrue(parent.Children.IndexOf(objects[4]) == 5);
+                Assert.AreEqual(0, parent.Children.IndexOf(objects[0]));
+                Assert.AreEqual(1, parent.Children.IndexOf(objects[1]));
+                Assert.AreEqual(2, parent.Children.IndexOf(objects[2]));
+                Assert.AreEqual(3, parent.Children.IndexOf(insertedObject));
+                Assert.AreEqual(4, parent.Children.IndexOf(objects[3]));
+                Assert.AreEqual(5, parent.Children.IndexOf(objects[4]));
             }
 
             [TestMethod]
@@ -87,16 +87,16 @@ namespace SadConsole.Tests
                 (ScreenObject[] objects, ScreenObject parent) = CreateObjectsAndParent(3);
 
                 foreach (var item in objects)
-                    Assert.IsTrue(item.Parent == parent);
+                    Assert.AreEqual(parent, item.Parent);
 
                 Assert.IsFalse(parent.Children.IsTop(objects[0]));
 
                 // Method to test
                 parent.Children.MoveToTop(objects[0]);
 
-                Assert.IsTrue(parent.Children.IndexOf(objects[1]) == 0);
-                Assert.IsTrue(parent.Children.IndexOf(objects[2]) == 1);
-                Assert.IsTrue(parent.Children.IndexOf(objects[0]) == 2);
+                Assert.AreEqual(0, parent.Children.IndexOf(objects[1]));
+                Assert.AreEqual(1, parent.Children.IndexOf(objects[2]));
+                Assert.AreEqual(2, parent.Children.IndexOf(objects[0]));
 
                 Assert.IsTrue(parent.Children.IsTop(objects[0]));
             }
@@ -107,16 +107,16 @@ namespace SadConsole.Tests
                 (ScreenObject[] objects, ScreenObject parent) = CreateObjectsAndParent(3);
 
                 foreach (var item in objects)
-                    Assert.IsTrue(item.Parent == parent);
+                    Assert.AreEqual(parent, item.Parent);
 
                 Assert.IsFalse(parent.Children.IsBottom(objects[2]));
 
                 // Method to test
                 parent.Children.MoveToBottom(objects[2]);
 
-                Assert.IsTrue(parent.Children.IndexOf(objects[2]) == 0);
-                Assert.IsTrue(parent.Children.IndexOf(objects[0]) == 1);
-                Assert.IsTrue(parent.Children.IndexOf(objects[1]) == 2);
+                Assert.AreEqual(0, parent.Children.IndexOf(objects[2]));
+                Assert.AreEqual(1, parent.Children.IndexOf(objects[0]));
+                Assert.AreEqual(2, parent.Children.IndexOf(objects[1]));
 
                 Assert.IsTrue(parent.Children.IsBottom(objects[2]));
             }
@@ -138,20 +138,20 @@ namespace SadConsole.Tests
                 parent.Children.Add(objects[3]);
                 parent.Children.Add(objects[4]);
 
-                Assert.IsTrue(parent.Children[0] == objects[0]);
-                Assert.IsTrue(parent.Children[1] == objects[1]);
-                Assert.IsTrue(parent.Children[2] == objects[2]);
-                Assert.IsTrue(parent.Children[3] == objects[3]);
-                Assert.IsTrue(parent.Children[4] == objects[4]);
+                Assert.AreEqual(objects[0], parent.Children[0]);
+                Assert.AreEqual(objects[1], parent.Children[1]);
+                Assert.AreEqual(objects[2], parent.Children[2]);
+                Assert.AreEqual(objects[3], parent.Children[3]);
+                Assert.AreEqual(objects[4], parent.Children[4]);
 
                 // Method to test
                 parent.Children.Sort(ScreenObjectComparer.Instance);
 
-                Assert.IsTrue(parent.Children[0] == objects[1]);
-                Assert.IsTrue(parent.Children[1] == objects[3]);
-                Assert.IsTrue(parent.Children[2] == objects[0]);
-                Assert.IsTrue(parent.Children[3] == objects[2]);
-                Assert.IsTrue(parent.Children[4] == objects[4]);
+                Assert.AreEqual(objects[1], parent.Children[0]);
+                Assert.AreEqual(objects[3], parent.Children[1]);
+                Assert.AreEqual(objects[0], parent.Children[2]);
+                Assert.AreEqual(objects[2], parent.Children[3]);
+                Assert.AreEqual(objects[4], parent.Children[4]);
             }
         }
     }

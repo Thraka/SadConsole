@@ -37,12 +37,12 @@ namespace SadConsole.Tests
 
             child.Parent = parent;
 
-            Assert.IsTrue(child.Parent == parent);
+            Assert.AreEqual(parent, child.Parent);
             Assert.IsTrue(parent.Children.Contains(child));
 
             child.Parent = null;
 
-            Assert.IsFalse(child.Parent == parent);
+            Assert.AreNotEqual(parent, child.Parent);
             Assert.IsFalse(parent.Children.Contains(child));
         }
 
@@ -82,18 +82,18 @@ namespace SadConsole.Tests
 
             Assert.IsNull(GameHost.Instance.FocusedScreenObjects.ScreenObject);
             obj1.IsFocused = true;
-            Assert.IsTrue(GameHost.Instance.FocusedScreenObjects.ScreenObject == obj1);
+            Assert.AreEqual(obj1, GameHost.Instance.FocusedScreenObjects.ScreenObject);
 
             obj2.FocusedMode = FocusBehavior.Push;
             obj2.IsFocused = true;
-            Assert.IsTrue(GameHost.Instance.FocusedScreenObjects.ScreenObject == obj2);
+            Assert.AreEqual(obj2, GameHost.Instance.FocusedScreenObjects.ScreenObject);
 
             obj3.FocusedMode = FocusBehavior.None;
             obj3.IsFocused = true;
-            Assert.IsTrue(GameHost.Instance.FocusedScreenObjects.ScreenObject == obj2);
+            Assert.AreEqual(obj2, GameHost.Instance.FocusedScreenObjects.ScreenObject);
 
             obj2.IsFocused = false;
-            Assert.IsTrue(GameHost.Instance.FocusedScreenObjects.ScreenObject == obj1);
+            Assert.AreEqual(obj1, GameHost.Instance.FocusedScreenObjects.ScreenObject);
 
             obj1.IsFocused = false;
             Assert.IsNull(GameHost.Instance.FocusedScreenObjects.ScreenObject);

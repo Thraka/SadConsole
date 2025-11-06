@@ -82,8 +82,8 @@ namespace SadConsole.Tests
             Assert.IsTrue(ShiftInputsCol.Any(v => v.shift > SurfaceHeight / 2 && v.shift != SurfaceHeight));
 
             // Also need to test shift of width (everything ends up back where it starts)
-            Assert.IsTrue(ShiftInputsRow.Max(v => v.shift) == SurfaceWidth);
-            Assert.IsTrue(ShiftInputsCol.Max(v => v.shift) == SurfaceHeight);
+            Assert.AreEqual(SurfaceWidth, ShiftInputsRow.Max(v => v.shift));
+            Assert.AreEqual(SurfaceHeight, ShiftInputsCol.Max(v => v.shift));
 
             // Make sure that our other subset test case also tests count
             Assert.IsTrue(ShiftInputsRow.Any(v => v.shift == SubsetOffsetRow));
@@ -96,7 +96,7 @@ namespace SadConsole.Tests
             Assert.IsTrue(ShiftInputsCol.Any(v => v.shift % 2 == 1));
 
             // Necessary to ensure our color indexing will work properly (both here and in ShiftConsole)
-            Assert.IsTrue(SurfaceWidth * SurfaceHeight <= 255);
+            Assert.IsLessThanOrEqualTo(255, SurfaceWidth * SurfaceHeight);
         }
         #endregion
 

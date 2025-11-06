@@ -13,7 +13,7 @@ namespace SadConsole.Tests
             var str2 = "string 2";
             SadConsole.ColoredString result = str1 + str2;
             Assert.IsTrue(result[7].Matches(str1[7]), "ColoredGlyph should match");
-            Assert.IsTrue(result[str1.Length + 3].Glyph == str2[3], "Glyph should match");
+            Assert.AreEqual(str2[3], result[str1.Length + 3].Glyph, "Glyph should match");
             Assert.IsTrue(result[str1.Length - 1].Background == result[str1.Length + 3].Background, "Background should match");
         }
 
@@ -36,16 +36,16 @@ namespace SadConsole.Tests
 
             SadConsole.ColoredString result = str2 + str1;
 
-            Assert.IsTrue(result.Length == 0, "empty + empty should have 0 length");
+            Assert.AreEqual(0, result.Length, "empty + empty should have 0 length");
 
             str2 = "test";
             result = str2 + str1;
-            Assert.IsTrue(result.Length == str2.Length, "empty + Colored should have correct length");
+            Assert.AreEqual(str2.Length, result.Length, "empty + Colored should have correct length");
 
             str1 = new SadConsole.ColoredString("test2", Color.Green, Color.Yellow);
             str2 = "";
             result = str1 + str2;
-            Assert.IsTrue(result.Length == str1.Length, "Colored + empty should have correct length");
+            Assert.AreEqual(str1.Length, result.Length, "Colored + empty should have correct length");
             Assert.IsTrue(result[2].Matches(str1[2]), "Colored + empty should match on glyph");
         }
     }
