@@ -9656,6 +9656,12 @@
             Disposes the <see cref="P:SadConsole.SadFont.Image"/> property.
             </summary>
         </member>
+        <member name="M:SadConsole.SadFont.ToString">
+            <summary>
+            Returns the font name.
+            </summary>
+            <returns>The name of the font.</returns>
+        </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
             A generic object processed by SadConsole. Provides parent/child, components, and position.

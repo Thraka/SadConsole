@@ -3,6 +3,11 @@
 - Cleaned up various warnings and XML comments.
 - [Core] `BlinkChar` supports starting on or off now.
 - [Core] Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
+- [Core] `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
+- [Core] `SadFont.ToString` now returns the font name.
+- [Core] `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
+- [Extended] Added the config builder extension `PopupGlyphPicker`.
+- [SFML] Fixed caps lock bug.
 
 ## v10.6.0 (08/09/2025)
 

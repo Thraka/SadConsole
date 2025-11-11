@@ -439,6 +439,7 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
         {
             if (_surface != null)
                 _surface.IsDirtyChanged -= _isDirtyChangedEventHandler;
+            
             _surface = null!;
             _font = null!;
         }
