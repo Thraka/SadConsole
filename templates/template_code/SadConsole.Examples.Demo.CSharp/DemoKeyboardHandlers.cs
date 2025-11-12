@@ -58,7 +58,7 @@ internal class KeyboardHandlers : ControlsConsole
         Children.Add(_promptScreen);
 
         // Create the controls
-        RadioButton buttonDos = new RadioButton(28, 1)
+        RadioButton buttonDos = new(28, 1)
         {
             Text = "Classic keyboard handler",
             Position = (1, 1),
@@ -68,7 +68,7 @@ internal class KeyboardHandlers : ControlsConsole
         buttonDos.IsSelectedChanged += ButtonHandler_IsSelectedChanged;
         Controls.Add(buttonDos);
 
-        RadioButton buttonC64 = new RadioButton(24, 1)
+        RadioButton buttonC64 = new(24, 1)
         {
             Text = "C64 keyboard handler",
             Tag = 1

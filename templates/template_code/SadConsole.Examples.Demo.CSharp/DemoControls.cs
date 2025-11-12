@@ -151,7 +151,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         selButton2.PreviousSelection = selButton1;
         selButton2.NextSelection = selButton;
 
-        var txt = new TextBox(10)
+        var txt = new TextBox2(10)
         {
             Position = new Point(51, 9),
             Text = "text",
@@ -216,7 +216,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         Controls.Add(checkbox);
 
         // ComboBox
-        ComboBox box = new ComboBox(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
+        ComboBox box = new(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
         {
             Position = (checkbox.Bounds.MaxExtentX + 4, checkbox.Position.Y),
             Name = "combobox"
@@ -226,8 +226,8 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         Controls.FocusedControl = null;
         //DisableControlFocusing = true;
 
-        List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>
-            {
+        List<Tuple<Color, string>> colors = new()
+        {
                 new Tuple<Color, string>(Colors.Default.Red, "Red"),
                 new Tuple<Color, string>(Colors.Default.RedDark, "DRed"),
                 new Tuple<Color, string>(Colors.Default.Purple, "Prp"),
@@ -340,4 +340,109 @@ class ControlsTest : SadConsole.UI.ControlsConsole
     }
 
     private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7) => text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start) + new string((char)219, 15).CreateGradient(start, end) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
+
+    private class TextBox2 : TextBox
+    {
+        private int _oldCaretPosition;
+        private ControlStates _oldState;
+        private string _editingText = string.Empty;
+
+        public TextBox2(int width) : base(width)
+        {
+        }
+
+        public override void UpdateAndRedraw(TimeSpan time)
+        {
+            // IMPORTANT:
+            // Code fixed here should go into the NumberBox control
+
+            if (Surface.Effects.Count != 0)
+            {
+                Surface.Effects.UpdateEffects(time);
+                IsDirty = IsDirty || Surface.IsDirty;
+            }
+
+            if (!IsDirty) return;
+
+            Colors colors = FindThemeColors();
+
+            RefreshThemeStateColors(colors);
+
+            bool isFocusedSameAsBack = ThemeState.Focused.Background == colors.ControlHostBackground;
+
+            ThemeState.Normal.Background = colors.GetOffColor(ThemeState.Normal.Background, colors.ControlHostBackground);
+            ThemeState.MouseOver.Background = colors.GetOffColor(ThemeState.MouseOver.Background, colors.ControlHostBackground);
+            ThemeState.MouseDown.Background = colors.GetOffColor(ThemeState.MouseDown.Background, colors.ControlHostBackground);
+            ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, colors.ControlHostBackground);
+
+            // Further alter the color to indicate focus
+            if (isFocusedSameAsBack)
+                ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Focused.Background);
+
+            // If the focused background color is the same as the non-focused, alter it so it stands out
+            ThemeState.Focused.Background = colors.GetOffColor(ThemeState.Focused.Background, ThemeState.Normal.Background);
+
+            ColoredGlyphBase appearance = ThemeState.GetStateAppearance(State);
+
+            if (IsFocused && (Parent?.Host?.ParentConsole?.IsFocused).GetValueOrDefault(false) && !DisableKeyboard)
+            {
+                // TextBox was just focused
+                if (State.HasFlag(ControlStates.Focused) && !_oldState.HasFlag(ControlStates.Focused))
+                {
+                    _oldCaretPosition = CaretPosition;
+                    _oldState = State;
+                    _editingText = Text;
+                    Surface.Fill(appearance.Foreground, appearance.Background, 0, Mirror.None);
+
+                    if (Mask == null)
+                        Surface.Print(0, 0, Text.Substring(LeftDrawOffset));
+                    else
+                        Surface.Print(0, 0, Text.Substring(LeftDrawOffset).Masked(Mask.Value));
+
+                    Surface.SetEffect(CaretPosition - LeftDrawOffset, 0, CaretEffect);
+                }
+
+                else if (_oldCaretPosition != CaretPosition || _oldState != State || _editingText != Text)
+                {
+                    Surface.Effects.RemoveAll();
+                    Surface.Fill(appearance.Foreground, appearance.Background, 0, Mirror.None);
+
+                    if (Mask == null)
+                        Surface.Print(0, 0, Text.Substring(LeftDrawOffset));
+                    else
+                        Surface.Print(0, 0, Text.Substring(LeftDrawOffset).Masked(Mask.Value));
+
+                    // TODO: If the keyboard repeat is down and the text goes off the end of the textbox and we're hitting the left arrow then sometimes control.LeftDrawOffset can exceed control.CaretPosition
+                    // This causes an Out of Bounds error here.  I don't think it's new - I think it's been in for a long time so I'm gonna check in and come back to this.
+                    // It might be that we just need to take Max(0, "bad value") below but I think it should be checked into to really understand the situation.
+                    Surface.SetEffect(CaretPosition - LeftDrawOffset, 0, CaretEffect);
+                    _oldCaretPosition = CaretPosition;
+                    _oldState = State;
+                    _editingText = Text;
+                }
+            }
+            else
+            {
+                Surface.Effects.RemoveAll();
+                Surface.Fill(appearance.Foreground, appearance.Background, appearance.Glyph, appearance.Mirror);
+                _oldState = State;
+
+                if (Mask == null)
+                    Surface.Print(0, 0, Text.Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+                else
+                    Surface.Print(0, 0, Text.Masked(Mask.Value).Align(HorizontalAlignment.Left, UseDifferentTextAreaWidth ? TextAreaWidth : Width));
+            }
+
+            // Colors for box
+            Color topleftcolor = colors.Lines.ComputedColor.GetDark();
+            Color bottomrightcolor = colors.Lines.ComputedColor.GetBright();
+
+            // Add box
+            Surface.SetDecorator(0, Surface.Width,
+                                new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[1], Mirror.None).CreateCellDecorator(topleftcolor),
+                                new GlyphDefinition(ICellSurface.ConnectedLineThinExtended[7], Mirror.None).CreateCellDecorator(bottomrightcolor));
+            Surface.AddDecorator(0, 1, Parent.Host.ParentConsole.Font.GetDecorator("box-edge-left", topleftcolor));
+            Surface.AddDecorator(Surface.Width - 1, 1, Parent.Host.ParentConsole.Font.GetDecorator("box-edge-right", bottomrightcolor));
+        }
+    }
 }

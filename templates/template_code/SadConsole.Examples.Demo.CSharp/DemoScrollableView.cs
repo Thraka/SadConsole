@@ -55,7 +55,7 @@ internal class ScrollableView: ControlsConsole
         }
 
         // Create viewer controls and attach them to the surface
-        SadConsole.UI.Controls.SurfaceViewer viewer = new SadConsole.UI.Controls.SurfaceViewer(15, 15, _sharedSurface);
+        SadConsole.UI.Controls.SurfaceViewer viewer = new(15, 15, _sharedSurface);
         viewer.ScrollBarMode = SadConsole.UI.Controls.SurfaceViewer.ScrollBarModes.AsNeeded;
         viewer.Position = (2, 1);
         viewer.MouseMove += Viewer_MouseMove;

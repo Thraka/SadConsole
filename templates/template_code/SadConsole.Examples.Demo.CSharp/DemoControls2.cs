@@ -60,7 +60,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         //
         // Table control
         //
-        Table tableControl = new Table(20, 10, 4);
+        Table tableControl = new(20, 10, 4);
 
         int counter = 0;
         tableControl.SetupScrollBar(Orientation.Vertical, 10, (tableControl.Width - 1, 0));
@@ -76,7 +76,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         //
         // Tab control showing two tabs
         //
-        Panel tabPanel1 = new Panel(10, 10);
+        Panel tabPanel1 = new(10, 10);
         {
             RadioButton opt1 = new("Tab Orientation Top") { Position = (1, 1), Tag = TabControl.Orientation.Top };
             opt1.IsSelectedChanged += Opt1_IsSelectedChanged;
@@ -92,7 +92,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             opt1.IsSelectedChanged += Opt1_IsSelectedChanged;
             tabPanel1.Add(opt1);
 
-            CheckBox check = new CheckBox(15, 1) { Text = "Thick Lines" };
+            CheckBox check = new(15, 1) { Text = "Thick Lines" };
             check.IsSelectedChanged += (s, e) =>
             {
                 if (!Controls.HasNamedControl("tab", out ControlBase? tabControl)) return;
@@ -107,9 +107,9 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             check.PlaceRelativeTo(opt1, Direction.Types.Down);
         }
 
-        Panel tabPanel2 = new Panel(10, 10);
+        Panel tabPanel2 = new(10, 10);
         {
-            CheckBox check = new CheckBox("Checkbox 1") { Position = (2, 1) };
+            CheckBox check = new("Checkbox 1") { Position = (2, 1) };
             tabPanel2.Add(check);
             check = new CheckBox(15, 1) { Text = "Checkbox 2", Position = (3, 2) };
             tabPanel2.Add(check);
@@ -124,7 +124,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             tabPanel2.Add(lbox);
         }
 
-        TabControl tab = new TabControl(new[] { new TabItem("Style", tabPanel1) { AutomaticPadding = 0 },
+        TabControl tab = new(new[] { new TabItem("Style", tabPanel1) { AutomaticPadding = 0 },
                                                 new TabItem("Nothing", tabPanel2) { AutomaticPadding = 0 },
                                               },
                                               35, 15) { Name = "tab" };

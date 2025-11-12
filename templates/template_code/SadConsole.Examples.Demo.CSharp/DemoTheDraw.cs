@@ -27,14 +27,14 @@ class TheDrawConsole : ControlsConsole
 
     public TheDrawConsole() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-        Label label = new Label("Type here: ")
+        Label label = new("Type here: ")
         {
             TextColor = Controls.GetThemeColors().Title,
             Position = (0, 1)
         };
         Controls.Add(label);
 
-        Button selectFont = new Button(11, 1);
+        Button selectFont = new(11, 1);
         selectFont.Position = (Width - selectFont.Width - 1, 1);
         selectFont.Text = "Font...";
         selectFont.Click += SelectFont_Click;
@@ -149,7 +149,7 @@ class TheDrawConsole : ControlsConsole
             Cursor.DisableWordBreak = true;
             Cursor.SetPrintAppearance(colors.Title, Surface.DefaultBackground);
 
-            FileDirectoryListbox fileListBox = new FileDirectoryListbox(18, Height - 5);
+            FileDirectoryListbox fileListBox = new(18, Height - 5);
             fileListBox.FileFilter = "*.tdf";
             fileListBox.OnlyRootAndSubDirs = true;
             fileListBox.HideNonFilterFiles = true;
@@ -179,7 +179,7 @@ class TheDrawConsole : ControlsConsole
             fileListBox.SelectedItemChanged += FileListBox_SelectedItemChanged;
             fileListBox.SelectedIndex = 0;
 
-            Button cancelButton = new Button(10, 1)
+            Button cancelButton = new(10, 1)
             {
                 Text = "Cancel",
                 Position = (1, Height - 2)
@@ -187,7 +187,7 @@ class TheDrawConsole : ControlsConsole
             cancelButton.Click += (s, e) => { DialogResult = false; Hide(); };
             Controls.Add(cancelButton);
 
-            Button okButton = new Button(6, 1)
+            Button okButton = new(6, 1)
             {
                 Text = "OK",
                 Position = (Width - 1 - 7, Height - 2)
