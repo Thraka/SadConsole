@@ -1,4 +1,5 @@
-﻿using SadConsole.Input;
+﻿using System.Diagnostics;
+using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
@@ -19,6 +20,7 @@ internal class DemoControls2 : IDemo
         Title;
 }
 
+[DebuggerDisplay("ControlsTest2")]
 class ControlsTest2 : SadConsole.UI.ControlsConsole
 {
     public ControlsTest2() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
@@ -152,9 +154,6 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Controls.Add(colorsBlack);
         Controls.Add(colorsBlue);
 
-        CompTest a = new(22, 10) { Position = (tab.Bounds.MaxExtentX + 1, tab.Position.Y) };
-        Controls.Add(a);
-
         OnInvalidated();
     }
 
@@ -169,11 +168,6 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
                 OnInvalidated();
             }
         }
-    }
-
-    private void PanelButton1_Click(object? sender, EventArgs e)
-    {
-        Window.Ask(ColoredString.Parser.Parse("Enter a [c:r f:blue]number[c:u]          "), "OK", "Cancel", null);
     }
 
     private void Opt1_IsSelectedChanged(object? sender, EventArgs e)
@@ -200,35 +194,3 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         this.Print(1, panel.Bounds.MaxExtentY + 1, "TOGGLE SWITCH", colors.YellowDark);
     }
 }
-
-// This just exists for testing some airspace bugs
-class CompTest : CompositeControl
-{
-    public CompTest(int width, int height) : base(width, height) { }
-
-    protected override void CreateChildControls()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            Button btn = new(Width)
-            {
-                Text = $"Button{i}",
-                Position = (0, i),
-            };
-            AddControl(btn);
-        }
-    }
-
-    public override bool ProcessMouse(MouseScreenObjectState state)
-    {
-
-        bool result = base.ProcessMouse(state);
-        //if (result) System.Diagnostics.Debugger.Break();
-        return result;
-    }
-}
-
-
-
-
-
