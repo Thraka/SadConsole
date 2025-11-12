@@ -9,7 +9,7 @@
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Rework `DebugMouseTint` class and add `DebugFocusedTint` class. Both settable as configuration builder options now.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added the config builder extension `PopupGlyphPicker`.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->

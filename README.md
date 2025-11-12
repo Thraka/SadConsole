@@ -7,7 +7,7 @@ SadConsole is a C#-based .NET cross-platform terminal, ascii, console, game engi
 
 While SadConsole is a generic library that doesn't provide any rendering capabilities, "host" libraries are provided that add renderers to SadConsole. The two hosts provided by this library are for **SadConsole.Host.MonoGame** and **SadConsole.Host.SFML**. When adding a host library to your project, you don't need to reference the base **SadConsole** package. If you use MonoGame, you'll also need to add a rendering NuGet package, such as **MonoGame.Framework.DesktopGL**.
 
-_SadConsole currently targets .NET 6, .NET 7, .NET 8, and .NET 9_
+_SadConsole currently targets .NET 8, .NET 9, and .NET 10_
 
 For the latest changes in this release, see the [notes below](#latest-changes)
 
@@ -44,15 +44,12 @@ Here are some of the features SadConsole supports:
 
 ## Latest changes
 
-Note: .NET 6 has been dropped by the host libraries in favor of .NET 8 as the minimum version. The core SadConsole library still supports .NET 6.
-
-- [Breaking] The MonoGame host no longer has the `ClearScreenComponent`. Instead, the clear screen happens right before the final draw of the main SadConsole component.
-- [Breaking] `Builder.Run` was renamed to `Builder.ProcessConfigs` and a new `Builder.Run` was added to make it simpler to configure and start the game.
-- [Breaking] Custom controls should NO LONGER set `IsDirty = false` when exiting `UpdateAndRedraw`.
-- [Core] A little speed improvement to resize in special cases.
-- [Core] Added `SetGlyph` method overload to `ICellSurface` which takes a `GlyphDefinition` to update the glyph and mirror of a cell.
-- [Core] Fixed a bug with dragging a surface over another surface incorrectly triggering `MoveToFront` functionality.
-- [Extended] Added `MouseDrag` component.
-- [Hosts] Added `OptimizedScreenSurfaceRenderer` which is a renderer that only draws dirty cells.
-- [UI] During control rendering, hosts will set controls `IsDirty = false` when they're actually drawn instead of when the update method of the control says it should be drawn.
-- [UI] Fixed combo box popup with non-1x sized fonts.
+- Cleaned up various warnings and XML comments.
+- [Core] `BlinkChar` supports starting on or off now.
+- [Core] Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
+- [Core] `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
+- [Core] `SadFont.ToString` now returns the font name.
+- [Core] `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
+- [UI] Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
+- [Extended] Added the config builder extension `PopupGlyphPicker`.
+- [SFML] Fixed caps lock bug.

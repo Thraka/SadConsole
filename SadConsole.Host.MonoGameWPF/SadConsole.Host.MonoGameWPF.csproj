@@ -10,7 +10,7 @@
     <Description>A graphics hosting library for SadConsole that targets MonoGame and WPF.</Description>
     <PackageId>SadConsole.Host.MonoGameWPF</PackageId>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
-    <PackageReleaseNotes>Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to MonoGame 3.8.4.1.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,7 +22,7 @@
   <!-- Handle WPF and non WPF versions -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
-    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.3" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />
 
     <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.cs" />
     <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Mono.cs" />

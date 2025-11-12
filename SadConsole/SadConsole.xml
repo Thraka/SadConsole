@@ -12726,11 +12726,6 @@
             Base class for controls that host and render other controls.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.CompositeControl.MouseLastHandledByChild">
-            <summary>
-            Indicates whether the most recent mouse event was handled by a child control.
-            </summary>
-        </member>
         <member name="F:SadConsole.UI.Controls.CompositeControl.Controls">
             <summary>
             The controls this composite control is hosting. Use <see cref="M:SadConsole.UI.Controls.CompositeControl.AddControl(SadConsole.UI.Controls.ControlBase)"/> and <see cref="M:SadConsole.UI.Controls.CompositeControl.RemoveControl(SadConsole.UI.Controls.ControlBase)"/> to manage the collection.

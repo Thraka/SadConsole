@@ -9,7 +9,7 @@
     <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>Use `TitleContainer` for serialization. This was previously removed for some reason. Configurable through the `UseTitleContainer` configuration builder option.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to MonoGame 3.8.4.1.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->
@@ -27,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
