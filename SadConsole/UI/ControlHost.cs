@@ -693,6 +693,12 @@ public class ControlHost : Components.IComponent, IList<ControlBase>, IContainer
     /// <inheritdoc />
     private void Surface_MouseExit(object? sender, MouseScreenObjectState state)
     {
+        if (_controlWithMouse is not null)
+        {
+            _controlWithMouse.LostMouse(state);
+            _controlWithMouse = null;
+        }
+
         ControlBase control;
         for (int i = 0; i < ControlsList.Count; i++)
         {
