@@ -4,6 +4,47 @@
         <name>SadConsole.Debug.MonoGame</name>
     </assembly>
     <members>
+        <member name="T:SadConsole.Components.TitleComponent">
+            <summary>
+            A component that holds a title for a screen object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Components.TitleComponent.Title">
+            <summary>
+            The title of the screen object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Components.TitleComponent.#ctor(System.String)">
+            <summary>
+            Creates a new instance of this component.
+            </summary>
+            <param name="title">The title of the screen object.</param>
+        </member>
+        <member name="T:SadConsole.ScreenObjectExtensionsDebug">
+            <summary>
+            Extensions for working with the <see cref="T:SadConsole.Components.TitleComponent"/> component.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenObjectExtensionsDebug.GetTitle(SadConsole.IScreenObject)">
+            <summary>
+            Gets the title component of the screen object.
+            </summary>
+            <param name="screenObject">The screen object to get the title from.</param>
+            <returns>The title component if found; otherwise, <c>null</c>.</returns>
+        </member>
+        <member name="M:SadConsole.ScreenObjectExtensionsDebug.SetTitle(SadConsole.IScreenObject,System.String)">
+            <summary>
+            Sets the title of the screen object, adding a title component if one does not already exist.
+            </summary>
+            <param name="screenObject">The screen object to set the title for.</param>
+            <param name="title">The title.</param>
+        </member>
+        <member name="M:SadConsole.ScreenObjectExtensionsDebug.RemoveTitle(SadConsole.IScreenObject)">
+            <summary>
+            Removes the title component from the screen object if it exists.
+            </summary>
+            <param name="screenObject">The screen object to remove the title from.</param>
+        </member>
         <member name="T:SadConsole.Configuration.DebugExtensionsImGui">
             <summary>
             Extensions to enable the ImGui debug UI.

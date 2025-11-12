@@ -18,20 +18,32 @@ namespace ThemeEditor
 
         public Container()
         {
-            EditingColors = SadConsole.UI.Colors.Default;
+            EditingColors = SadConsole.UI.Colors.Default.Clone();
             //EditingColors = SadConsole.UI.Colors.CreateSadConsoleBlue();
 
-            OptionsPanel = new ControlsConsole(6, 2);
+            OptionsPanel = new ControlsConsole(7, 3);
             Border.CreateForSurface(OptionsPanel, "");
             OptionsPanel.Position = (2, 1);
 
-            Button button = new Button(6, 1) { Text = "Load", Position = (0, 0) };
+            Button button = new Button(7, 1) { Text = "Load", Position = (0, 0) };
+            button.TextAlignment = HorizontalAlignment.Left;
             button.Click += ButtonLoad_Click;
             OptionsPanel.Controls.Add(button);
 
-            button = new Button(6, 1) { Text = "Save", Position = (0, 1) };
+            button = new Button(7, 1) { Text = "Save", Position = (0, 1) };
+            button.TextAlignment = HorizontalAlignment.Left;
             button.Click += ButtonSave_Click;
             OptionsPanel.Controls.Add(button);
+
+            button = new Button(7, 1) { Text = "Reset", Position = (0, 2) };
+            button.Click += ButtonSave_Click;
+            OptionsPanel.Controls.Add(button);
+            OptionsPanel.Renderer!.Opacity = 78;
+            ((IScreenSurface)OptionsPanel.Children[0]).Renderer!.Opacity = 78;
+
+            OptionsPanel.MouseEnter += (s, e) => { OptionsPanel.Renderer!.Opacity = 255; ((IScreenSurface)OptionsPanel.Children[0]).Renderer!.Opacity = 255; };
+            OptionsPanel.MouseExit += (s, e) => { OptionsPanel.Renderer!.Opacity = 78; ((IScreenSurface)OptionsPanel.Children[0]).Renderer!.Opacity = 78; };
+
 
             SettingsPanel = new SettingsConsole(30, 36);
             Border.CreateForSurface(SettingsPanel, "Settings");

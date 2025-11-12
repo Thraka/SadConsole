@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ZZTGame</RootNamespace>
   </PropertyGroup>
@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="2.6.4" />
-    <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0-rc3" />
+    <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>

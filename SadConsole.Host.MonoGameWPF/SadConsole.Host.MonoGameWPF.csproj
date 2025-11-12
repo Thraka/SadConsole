@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net10.0-windows</TargetFrameworks>
     <!--<Nullable>enable</Nullable>-->
     <Version>$(SadConsole_Host_MonoGameWPF_Version)</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
