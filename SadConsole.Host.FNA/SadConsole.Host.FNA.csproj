@@ -9,7 +9,7 @@
     <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
     <PackageId>SadConsole.Host.FNA</PackageId>
     <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>Reversioning the packages. No changes here, see previous release for changes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated FNA to 25.11.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->
@@ -32,12 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net10.0" />
+    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net9.0" />
     <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net8.0" />
-    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net7.0" />
-    <None Include=".\FNA\*.*" Pack="true" PackagePath="lib\net6.0" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net10.0\FNA" />
+    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net9.0\FNA" />
     <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net8.0\FNA" />
-    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net7.0\FNA" />
-    <None Include=".\FNA\*\*.*" Pack="true" PackagePath="lib\net6.0\FNA" />
   </ItemGroup>
 
   <ItemGroup>
