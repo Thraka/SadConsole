@@ -103,7 +103,11 @@ public abstract partial class Document : ITitle
     public virtual void OnSelected()
     {
         Core.State.Tools.Objects.Clear();
-        
+
+        // Sync the layers
+        VisualTool.Font = EditingSurfaceFont;
+        VisualTool.FontSize = EditingSurfaceFontSize;
+
         foreach (var tool in Tools)
             Core.State.Tools.Objects.Add(tool);
 

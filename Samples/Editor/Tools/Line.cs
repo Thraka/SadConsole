@@ -97,6 +97,22 @@ internal class Line : ITool
                                          SharedToolSettings.Tip.Background,
                                          SharedToolSettings.Tip.Mirror);
             }
+            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            {
+                ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
+
+                if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
+                {
+                    SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
+                    SharedToolSettings.Tip.Background = sourceCell.Background;
+                }
+                else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
+                {
+                    SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
+                }
+                else
+                    document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+            }
             else if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 if (_firstPoint != Point.None)
