@@ -81,6 +81,18 @@ public class ScreenObjectDetailsPanel
                     if (ImGui.Checkbox("Is Focused"u8, ref isFocused))
                         CurrentScreenObject.Object.IsFocused = isFocused;
 
+
+                    if (CurrentScreenObject.IsScreenSurface)
+                    {
+                        bool isDirty = ((IScreenSurface)CurrentScreenObject.Object).IsDirty;
+                        if (ImGui.Checkbox("Is Dirty"u8, ref isDirty))
+                        {
+                            ((IScreenSurface)CurrentScreenObject.Object).IsDirty = isDirty;
+                            if (isDirty)
+                                ((IScreenSurface)CurrentScreenObject.Object).ForceRendererRefresh = true;
+                        }
+                    }
+
                     ImGui.SeparatorText("Input"u8);
 
                     bool useKeyboard = CurrentScreenObject.Object.UseKeyboard;

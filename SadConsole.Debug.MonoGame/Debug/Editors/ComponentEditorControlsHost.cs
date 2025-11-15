@@ -28,6 +28,10 @@ internal class ComponentEditorControlHost : ISadComponentPanel
         // Draw the ImGUI interface
         ImGui.BeginGroup();
         {
+            bool isDirty = _stateComponent.IsDirty;
+            if (ImGui.Checkbox("ControlHost Is Dirty"u8, ref isDirty))
+                _stateComponent.IsDirty = isDirty;
+
             ImGui.Text($"Controls: {_stateComponent.Count}");
 
             ImGui.SetNextItemWidth(-0);
@@ -36,9 +40,15 @@ internal class ComponentEditorControlHost : ISadComponentPanel
 
             }
 
+            if (_controlsList.SelectedItemIndex >= 0)
+            {
+                ImGui.Text(_controlsList.SelectedItem!.Title);
+                bool isDirtyControl = _controlsList.SelectedItem.Control.IsDirty;
+                if (ImGui.Checkbox("Is Dirty##control"u8, ref isDirtyControl))
+                    _controlsList.SelectedItem.Control.IsDirty = isDirtyControl;
+            }
 
-
-            //ImGui.Checkbox("Visible", true)
+            
 
         }
         ImGui.EndGroup();
