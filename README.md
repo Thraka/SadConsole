@@ -50,6 +50,8 @@ Here are some of the features SadConsole supports:
 - [Core] `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
 - [Core] `SadFont.ToString` now returns the font name.
 - [Core] `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
+- [Core] When splashscreen closes, call update on new the new Screen. Fixes a bug with `ControlsHost` not drawing the first state of controls.
 - [UI] Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
 - [Extended] Added the config builder extension `PopupGlyphPicker`.
-- [SFML] Fixed caps lock bug.
+- [SFML] Upgraded to the latest SFML.Net version.
+- [FNA] Upgraded to FNA 25.11.
