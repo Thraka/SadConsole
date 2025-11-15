@@ -17,6 +17,7 @@
 - `SadFont.ToString` now returns the font name.
 - `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
 - Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
+- When splashscreen closes, call update on new the new Screen. Fixes a bug with `ControlsHost` not drawing the first state of controls.
     </PackageReleaseNotes>
   </PropertyGroup>
 
