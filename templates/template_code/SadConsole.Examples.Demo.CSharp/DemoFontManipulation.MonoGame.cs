@@ -79,9 +79,9 @@ internal class FontEditingScreen : ControlsConsole
         //charPicker.SelectedGlyphEffect
         Controls.Add(charPicker);
 
-        GameTexture newFontTexture = new GameTexture(256, 256);
+        GameTexture newFontTexture = new(256, 256);
 
-        SadFont newFont = new SadFont(Game.Instance.DefaultFont.GlyphWidth, Game.Instance.DefaultFont.GlyphHeight, Game.Instance.DefaultFont.GlyphPadding,
+        SadFont newFont = new(Game.Instance.DefaultFont.GlyphWidth, Game.Instance.DefaultFont.GlyphHeight, Game.Instance.DefaultFont.GlyphPadding,
                                       16, 16, Game.Instance.DefaultFont.SolidGlyphIndex, newFontTexture, "NewFont");
 
         newFont.Edit_EnableEditing();

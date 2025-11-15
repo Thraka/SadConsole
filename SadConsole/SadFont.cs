@@ -336,6 +336,13 @@ public sealed class SadFont : IFont
         isDisposed = true;
     }
 
+    /// <summary>
+    /// Returns the font name.
+    /// </summary>
+    /// <returns>The name of the font.</returns>
+    public override string ToString() =>
+        Name;
+
     private record struct IndexMapping
     {
         public int From;

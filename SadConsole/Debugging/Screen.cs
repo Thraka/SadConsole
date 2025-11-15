@@ -21,7 +21,7 @@ public static class Screen
     /// <param name="fontSize">The size of the font.</param>
     public static void Show(IFont font, Point fontSize)
     {
-        DebugWindow window = new DebugWindow(font, fontSize);
+        DebugWindow window = new(font, fontSize);
         window.Show();
         window.Center();
     }

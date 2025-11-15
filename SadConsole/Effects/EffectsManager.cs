@@ -181,7 +181,7 @@ public class EffectsManager
 
         // Get all the cells
         ColoredGlyphBase[] surfaceCells = _backingSurface.GetCells(_backingSurface.Area).ToArray();
-        List<ColoredGlyphBase> missingCells = new List<ColoredGlyphBase>(5);
+        List<ColoredGlyphBase> missingCells = new(5);
 
         foreach (var item in _effectCells)
         {
@@ -273,7 +273,7 @@ public class EffectsManager
     /// <param name="delta">The time elapased since the last update.</param>
     public void UpdateEffects(TimeSpan delta)
     {
-        List<ICellEffect> effectsToRemove = new List<ICellEffect>();
+        List<ICellEffect> effectsToRemove = new();
 
         foreach (ColoredGlyphEffectData effectData in _effects.Values)
         {

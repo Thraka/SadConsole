@@ -31,7 +31,7 @@ public sealed class ColoredGlyphAndEffect : ColoredGlyph, IMatchable<ColoredGlyp
     /// <param name="effect">When provided, sets the <see cref="ColoredGlyphAndEffect.Effect"/>.</param>
     /// <returns></returns>
     public static ColoredGlyphAndEffect FromColoredGlyph(ColoredGlyphBase glyph, ICellEffect? effect = null) =>
-        new ColoredGlyphAndEffect()
+        new()
         {
             Foreground = glyph.Foreground,
             Background = glyph.Background,

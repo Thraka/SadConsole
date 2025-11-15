@@ -12,7 +12,7 @@ public static class ColorExtensions2
     /// <summary>
     /// Custom color mappings for the <see cref="FromName(string)"/> and <see cref="FromParser(Color, string, out bool, out bool, out bool, out bool, out bool)"/> methods. Key names should be lowercase.
     /// </summary>
-    public static Dictionary<string, Color> ColorMappings = new Dictionary<string, Color>(162);
+    public static Dictionary<string, Color> ColorMappings = new(162);
 
     /// <summary>
     /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
@@ -122,7 +122,7 @@ public static class ColorExtensions2
     /// <param name="color">The color object to start with. Will be overridden.</param>
     /// <param name="random">A random object to get numbers from.</param>
     /// <returns>A new color.</returns>
-    public static Color GetRandomColor(this Color color, Random random) => new Color((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
+    public static Color GetRandomColor(this Color color, Random random) => new((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255));
 
     /// <summary>
     /// Gets a darker version of the color. R,G,B channels are * 0.25f.
@@ -184,7 +184,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with only the red channel set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color RedOnly(this Color color) => new Color(color.R, 0, 0);
+    public static Color RedOnly(this Color color) => new(color.R, 0, 0);
 
     /// <summary>
     /// Returns a new Color using only the Green value of this color.
@@ -192,7 +192,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with only the green channel set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color GreenOnly(this Color color) => new Color(0, color.G, 0);
+    public static Color GreenOnly(this Color color) => new(0, color.G, 0);
 
     /// <summary>
     /// Returns a new Color using only the Blue value of this color.
@@ -200,7 +200,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with only the blue channel set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color BlueOnly(this Color color) => new Color(0, 0, color.B);
+    public static Color BlueOnly(this Color color) => new(0, 0, color.B);
 
     /// <summary>
     /// Returns a new Color using only the Alpha value of this color.
@@ -208,7 +208,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with only the alpha channel set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color AlphaOnly(this Color color) => new Color((byte)0, (byte)0, (byte)0, color.A);
+    public static Color AlphaOnly(this Color color) => new((byte)0, (byte)0, (byte)0, color.A);
 
     /// <summary>
     /// Returns a new color with the red channel set to 0.
@@ -216,7 +216,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the red channel cleared.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color ClearRed(this Color color) => new Color((byte)0, color.G, color.B, color.A);
+    public static Color ClearRed(this Color color) => new((byte)0, color.G, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the green channel set to 0.
@@ -224,7 +224,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the green channel cleared.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color ClearGreen(this Color color) => new Color(color.R, (byte)0, color.B, color.A);
+    public static Color ClearGreen(this Color color) => new(color.R, (byte)0, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the blue channel set to 0.
@@ -232,7 +232,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the blue channel cleared.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color ClearBlue(this Color color) => new Color(color.R, color.G, (byte)0, color.A);
+    public static Color ClearBlue(this Color color) => new(color.R, color.G, (byte)0, color.A);
 
     /// <summary>
     /// Returns a new color with the alpha channel set to 0.
@@ -240,7 +240,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the alpha channel cleared.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color ClearAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)0);
+    public static Color ClearAlpha(this Color color) => new(color.R, color.G, color.B, (byte)0);
 
     /// <summary>
     /// Returns a new color with the red channel set to 255.
@@ -248,7 +248,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the red channel fully set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color FillRed(this Color color) => new Color((byte)255, color.G, color.B, color.A);
+    public static Color FillRed(this Color color) => new((byte)255, color.G, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the green channel set to 255.
@@ -256,7 +256,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the green channel fully set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color FillGreen(this Color color) => new Color(color.R, (byte)255, color.B, color.A);
+    public static Color FillGreen(this Color color) => new(color.R, (byte)255, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the blue channel set to 255.
@@ -264,7 +264,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the blue channel fully set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color FillBlue(this Color color) => new Color(color.R, color.G, (byte)255, color.A);
+    public static Color FillBlue(this Color color) => new(color.R, color.G, (byte)255, color.A);
 
     /// <summary>
     /// Returns a new color with the alpha channel set to 255.
@@ -272,7 +272,7 @@ public static class ColorExtensions2
     /// <param name="color">Object instance.</param>
     /// <returns>A color with the alpha channel fully set.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color FillAlpha(this Color color) => new Color(color.R, color.G, color.B, (byte)255);
+    public static Color FillAlpha(this Color color) => new(color.R, color.G, color.B, (byte)255);
 
     /// <summary>
     /// Returns a new color with the red channel set to the specified value.
@@ -281,7 +281,7 @@ public static class ColorExtensions2
     /// <param name="value">The new value for the red channel.</param>
     /// <returns>A color with the red channel altered.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color SetRed(this Color color, byte value) => new Color(value, color.G, color.B, color.A);
+    public static Color SetRed(this Color color, byte value) => new(value, color.G, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the green channel set to the specified value.
@@ -290,7 +290,7 @@ public static class ColorExtensions2
     /// <param name="value">The new value for the green channel.</param>
     /// <returns>A color with the green channel altered.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color SetGreen(this Color color, byte value) => new Color(color.R, value, color.B, color.A);
+    public static Color SetGreen(this Color color, byte value) => new(color.R, value, color.B, color.A);
 
     /// <summary>
     /// Returns a new color with the blue channel set to the specified value.
@@ -299,7 +299,7 @@ public static class ColorExtensions2
     /// <param name="value">The new value for the blue channel.</param>
     /// <returns>A color with the blue channel altered.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color SetBlue(this Color color, byte value) => new Color(color.R, color.G, value, color.A);
+    public static Color SetBlue(this Color color, byte value) => new(color.R, color.G, value, color.A);
 
     /// <summary>
     /// Returns a new color with the alpha channel set to the specified value.
@@ -308,7 +308,7 @@ public static class ColorExtensions2
     /// <param name="value">The new value for the alpha channel.</param>
     /// <returns>A color with the alpha channel altered.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color SetAlpha(this Color color, byte value) => new Color(color.R, color.G, color.B, value);
+    public static Color SetAlpha(this Color color, byte value) => new(color.R, color.G, color.B, value);
 
 
     /// <summary>
@@ -581,7 +581,7 @@ public static class ColorExtensions2
     /// <returns>A new colored string object.</returns>
     public static SadConsole.ColoredString ToColoredString(this Gradient gradient, string text)
     {
-        SadConsole.ColoredString stringObject = new SadConsole.ColoredString(text);
+        SadConsole.ColoredString stringObject = new(text);
 
         switch (gradient.Stops.Length)
         {

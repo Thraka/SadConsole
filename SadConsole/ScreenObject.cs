@@ -21,6 +21,9 @@ public partial class ScreenObject : IScreenObject
     [DataMember(Name = "Position")]
     private Point _position;
 
+    [DataMember(Name = "PositionFontSize")]
+    private Point _positionFontSize = (1, 1);
+
     private IScreenObject? _parentObject;
     private bool _isVisible = true;
     private bool _isEnabled = true;
@@ -55,6 +58,18 @@ public partial class ScreenObject : IScreenObject
 
     /// <inheritdoc/>
     public ScreenObjectCollection Children { get; protected set; }
+
+    /// <summary>
+    /// When set to a value other than (1, 1), the <see cref="AbsolutePosition"/> is scaled by this amount.
+    /// </summary>
+    /// <remarks>
+    /// This causes a <see cref="ScreenObject"/> to position itself similar to how a <see cref="IScreenSurface"/> is positioned.
+    /// </remarks>
+    public Point PositionFontSize
+    {
+        get => _positionFontSize;
+        set {  _positionFontSize = value; UpdateAbsolutePosition(); }
+    }
 
     /// <inheritdoc/>
     public IScreenObject? Parent
@@ -339,7 +354,7 @@ public partial class ScreenObject : IScreenObject
     /// <inheritdoc/>
     public virtual void UpdateAbsolutePosition()
     {
-        AbsolutePosition = !IgnoreParentPosition ? Position + (Parent?.AbsolutePosition ?? Point.Zero) : Position;
+        AbsolutePosition = (!IgnoreParentPosition ? Position * PositionFontSize + (Parent?.AbsolutePosition ?? Point.Zero) : Position * PositionFontSize);
 
         int count = Children.Count;
         for (int i = 0; i < count; i++)

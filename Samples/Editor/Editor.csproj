@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,22 +44,6 @@
     <None Update="appconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <!--
-    <Reference Include="GumCommon">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumCommon.dll</HintPath>
-    </Reference>
-    <Reference Include="GumDataTypesNet6">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\GumDataTypesNet6.dll</HintPath>
-    </Reference>
-    <Reference Include="ToolsUtilitiesStandard">
-      <HintPath>..\..\..\Gum\GumCommon\bin\Debug\net6.0\ToolsUtilitiesStandard.dll</HintPath>
-    </Reference>
-    -->
-    <PackageReference Include="FlatRedBall.GumCommon" Version="2024.1.25.1" />
-    <PackageReference Include="MonoGame.Extended.Graphics" Version="*" />
   </ItemGroup>
 
   <ItemGroup>

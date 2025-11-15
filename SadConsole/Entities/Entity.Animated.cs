@@ -23,7 +23,7 @@ public partial class Entity
         /// </summary>
         public Rectangle DefaultCollisionRectangle
         {
-            get => new Rectangle(0, 0, Animation.ViewWidth, Animation.ViewHeight);
+            get => new(0, 0, Animation.ViewWidth, Animation.ViewHeight);
         }
 
         /// <summary>

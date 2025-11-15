@@ -27,6 +27,11 @@ public static class Serializer
     /// </summary>
     public class Contracts : DefaultContractResolver
     {
+        /// <summary>
+        /// Resolves the appropriate JSON converter for the specified object type.
+        /// </summary>
+        /// <param name="objectType">The type of object to resolve a converter for.</param>
+        /// <returns>The JSON converter for the type, or null if none is found.</returns>
         protected override JsonConverter? ResolveContractConverter(Type objectType)
         {
             if (objectType == typeof(IFont))
@@ -159,7 +164,10 @@ public static class Serializer
         try
         {
             obj = Load<T>(file, isCompressed, settings);
-            return true;
+            if (obj is not null)
+                return true;
+            else
+                return false;
         }
         catch (Exception e)
         {
@@ -176,7 +184,7 @@ public static class Serializer
         /// <summary>
         /// THe string containing the log.
         /// </summary>
-        public readonly StringBuilder Log = new StringBuilder();
+        public readonly StringBuilder Log = new();
 
         private TraceLevel _levelFilter;
 

@@ -11,8 +11,6 @@ namespace SadConsole.UI.Controls;
 /// </summary>
 public abstract class CompositeControl : ControlBase, IContainer
 {
-    protected bool MouseLastHandledByChild = false;
-
     /// <summary>
     /// The controls this composite control is hosting. Use <see cref="AddControl(ControlBase)"/> and <see cref="RemoveControl(ControlBase)"/> to manage the collection.
     /// </summary>
@@ -58,55 +56,16 @@ public abstract class CompositeControl : ControlBase, IContainer
         {
             var newState = new ControlMouseState(this, state);
 
-            if (newState.IsMouseOver)
-            {
-                // Process the child controls first
-                bool processResult = false;
+            bool processResult = base.ProcessMouse(state);
 
-                var controls = new List<ControlBase>(Controls);
-                controls.Reverse();
+            var controls = new List<ControlBase>(Controls);
+            controls.Reverse();
 
-                int count = controls.Count;
-                for (int i = 0; i < count; i++)
-                    processResult |= controls[i].ProcessMouse(state);
+            int count = controls.Count;
+            for (int i = 0; i < count; i++)
+                processResult |= controls[i].ProcessMouse(state);
 
-                // No child control used the mouse, process the base control logic
-                if (!processResult)
-                    processResult = base.ProcessMouse(state);
-
-                else
-                {
-                    // Child control has the mouse over it, so we need to clear the base control as having the mouse over it, if it did have it
-                    if (MouseState_IsMouseOver)
-                    {
-                        MouseState_IsMouseOver = false;
-                        OnMouseExit(newState);
-                    }
-
-                    MouseLastHandledByChild = true;
-                }
-
-                return processResult;
-            }
-            else
-            {
-                if (MouseState_IsMouseOver)
-                {
-                    MouseState_IsMouseOver = false;
-                    OnMouseExit(newState);
-                }
-
-                if (MouseLastHandledByChild)
-                {
-                    var controls = new List<ControlBase>(Controls);
-                    controls.Reverse();
-
-                    for (int i = 0; i < controls.Count; i++)
-                        controls[i].ProcessMouse(state);
-
-                    MouseLastHandledByChild = false;
-                }
-            }
+            return processResult;
         }
 
         return false;

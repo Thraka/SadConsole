@@ -67,14 +67,36 @@ public static partial class Extensions
     }
 }
 
+/// <summary>
+/// Configures event handlers for the game host's lifecycle events.
+/// </summary>
 public class CallbackConfig : IConfigurator
 {
+    /// <summary>
+    /// Gets or sets the event handler for the <see cref="GameHost.Started"/> event.
+    /// </summary>
     public EventHandler<GameHost>? event_Started { get; set; }
+
+    /// <summary>
+    /// Gets or sets the event handler for the <see cref="GameHost.Ending"/> event.
+    /// </summary>
     public EventHandler<GameHost>? event_Ending { get; set; }
 
+    /// <summary>
+    /// Gets or sets the event handler for the <see cref="GameHost.FrameUpdate"/> event.
+    /// </summary>
     public EventHandler<GameHost>? event_FrameUpdate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the event handler for the <see cref="GameHost.FrameRender"/> event.
+    /// </summary>
     public EventHandler<GameHost>? event_FrameRender { get; set; }
 
+    /// <summary>
+    /// Registers the configured event handlers with the game host.
+    /// </summary>
+    /// <param name="config">The builder configuration.</param>
+    /// <param name="game">The game host instance.</param>
     public void Run(BuilderBase config, GameHost game)
     {
         if (event_Started != null)

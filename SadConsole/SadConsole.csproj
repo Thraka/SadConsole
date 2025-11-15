@@ -2,7 +2,7 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Version>$(SadConsole_Version)</Version>
     <AssemblyTitle>SadConsole</AssemblyTitle>
@@ -10,8 +10,13 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Some components that used their own renderers weren't disposing the ones they replaced.
-- Fix bug with mouse moving over composite controls such as the list box.
+- Cleaned up various warnings and XML comments.
+- `BlinkChar` supports starting on or off now.
+- Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
+- `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
+- `SadFont.ToString` now returns the font name.
+- `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
+- Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -43,7 +48,7 @@
 
   <ItemGroup>
     <PackageReference Include="Coroutine" Version="2.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
     <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />

@@ -28,10 +28,21 @@ public static partial class ExtensionsHost
     }
 }
 
+/// <summary>
+/// Configuration for MonoGame-specific settings in SadConsole.
+/// </summary>
 public class MonoGameSettings : IConfigurator
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether to use TitleContainer for opening streams.
+    /// </summary>
     public bool UseTitleContainer { get; set; } = false;
 
+    /// <summary>
+    /// Runs the MonoGame settings configuration.
+    /// </summary>
+    /// <param name="config">The configuration builder.</param>
+    /// <param name="game">The game host.</param>
     public void Run(BuilderBase config, GameHost game)
     {
     }

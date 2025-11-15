@@ -296,7 +296,7 @@ public class Mouse
     /// Clones this mouse into a new object.
     /// </summary>
     /// <returns>A clone.</returns>
-    public Mouse Clone() => new Mouse()
+    public Mouse Clone() => new()
     {
         ScreenPosition = ScreenPosition,
         LeftButtonDown = LeftButtonDown,

@@ -26,8 +26,6 @@ partial class RootScreen : ScreenObject
         Children.Add(_demoDescriptionsScreen);
 
         SetDemo(_listDemosScreen.CurrentDemo);
-
-        UI.Windows.GlyphSelectPopup.AddRootComponent(Input.Keys.F11);
     }
 
     private void SetDemo(IDemo? demo)

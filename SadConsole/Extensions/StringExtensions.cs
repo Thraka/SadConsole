@@ -29,7 +29,7 @@ public static class StringExtensions
     /// <returns>A new string instance.</returns>
     public static string Align(this string value, HorizontalAlignment alignment, int totalWidth, char fillCharacter)
     {
-        string adjustedText = new string(fillCharacter, totalWidth);
+        string adjustedText = new(fillCharacter, totalWidth);
 
         if (!string.IsNullOrEmpty(value))
         {
@@ -76,7 +76,7 @@ public static class StringExtensions
     /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateColored(this string value, Color? foreground = null, Color? background = null, Mirror? mirror = null, CellDecorator[]? decorators = null)
     {
-        ColoredString returnValue = new ColoredString(value);
+        ColoredString returnValue = new(value);
 
         // Foreground
         if (foreground.HasValue)
@@ -114,7 +114,7 @@ public static class StringExtensions
     /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground)
     {
-        ColoredString newString = new ColoredString(value);
+        ColoredString newString = new(value);
 
         for (int i = 0; i < value.Length; i++)
             newString[i].Foreground = Color.Lerp(startingForeground, endingForeground, i / (float)value.Length);
@@ -136,7 +136,7 @@ public static class StringExtensions
     /// <returns>A <see cref="ColoredString"/> object instance.</returns>
     public static ColoredString CreateGradient(this string value, Color startingForeground, Color endingForeground, Color startingBackground, Color endingBackground)
     {
-        ColoredString newString = new ColoredString(value);
+        ColoredString newString = new(value);
 
         for (int i = 0; i < value.Length; i++)
         {
@@ -286,5 +286,5 @@ public static class StringExtensions
     /// <param name="mask">The mask to use.</param>
     /// <returns>A string of masks.</returns>
     public static string Masked(this string toMask, char mask) =>
-        new string(mask, toMask.Length);
+        new(mask, toMask.Length);
 }

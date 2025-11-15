@@ -174,7 +174,7 @@ public class TheDrawFont
     /// <returns>A collection of TheDraw fonts.</returns>
     public static IEnumerable<TheDrawFont> ReadFonts(string file)
     {
-        List<TheDrawFont> fonts = new List<TheDrawFont>();
+        List<TheDrawFont> fonts = new();
 
         byte[] all = System.IO.File.ReadAllBytes(file);
 
@@ -208,11 +208,11 @@ public class TheDrawFont
                     byte[] characterData = reader.ReadBytes(length);
 
                     // Parse character data
-                    List<Character> characters = new List<Character>();
+                    List<Character> characters = new();
 
                     for (int i = 0; i < characterData.Length; i++)
                     {
-                        List<CharacterRow> rows = new List<CharacterRow>();
+                        List<CharacterRow> rows = new();
 
                         int characterOffset = i;
                         int charWidth = characterData[i];
@@ -221,7 +221,7 @@ public class TheDrawFont
 
                         while (i != characterData.Length)
                         {
-                            List<CharacterSpot> row = new List<CharacterSpot>();
+                            List<CharacterSpot> row = new();
 
                             while (true)
                             {

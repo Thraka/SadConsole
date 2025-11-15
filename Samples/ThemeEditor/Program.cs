@@ -3,11 +3,11 @@
 Settings.WindowTitle = "Theme Editor";
 
 Builder startup = new Builder()
-    .SetScreenSize(122, 42)
+    .SetWindowSizeInCells(122, 42)
     .SetStartingScreen<ThemeEditor.Container>()
     .IsStartingScreenFocused(true)
     .ConfigureFonts(true)
-    .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
+    //.SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
     .EnableImGuiDebugger(SadConsole.Input.Keys.F12)
     ;
 

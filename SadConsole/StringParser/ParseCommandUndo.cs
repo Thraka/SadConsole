@@ -123,7 +123,7 @@ public sealed class ParseCommandUndo : ParseCommandBase
 
                 if (behavior != null)
                 {
-                    List<ParseCommandBase> all = new List<ParseCommandBase>(stacks.All);
+                    List<ParseCommandBase> all = new(stacks.All);
                     all.Remove(behavior);
                     stacks.All = new Stack<ParseCommandBase>(all);
                 }

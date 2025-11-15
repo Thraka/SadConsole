@@ -420,7 +420,7 @@ public static class CellSurfaceEditor
     /// <param name="effect">The desired effect.</param>
     public static void SetEffect(this ISurface obj, IEnumerable<int> cells, ICellEffect? effect)
     {
-        List<ColoredGlyphBase> glyphs = new List<ColoredGlyphBase>(5);
+        List<ColoredGlyphBase> glyphs = new(5);
 
         foreach (var index in cells)
             glyphs.Add(obj.Surface[index]);

@@ -145,6 +145,13 @@ public partial class Table
         base.UpdateAndRedraw(time);
     }
 
+    /// <summary>
+    /// Gets the previous row and column values for a cell position from the fake cells or actual cells.
+    /// </summary>
+    /// <param name="fakeCells">The list of fake cells.</param>
+    /// <param name="cellPosition">The position of the cell.</param>
+    /// <param name="oldRow">The previous row value (output).</param>
+    /// <param name="oldCol">The previous column value (output).</param>
     protected void GetOldRowAndColumnValues(List<((int x, int y), (int row, int col))>? fakeCells, Point cellPosition, ref int oldRow, ref int oldCol)
     {
         if (fakeCells == null)
@@ -196,6 +203,12 @@ public partial class Table
         }
     }
 
+
+    /// <summary>
+    /// Sets the visibility of the scroll bars based on the maximum row and column sizes.
+    /// </summary>
+    /// <param name="maxRowsHeight">The maximum height of the rows.</param>
+    /// <param name="maxColumnsWidth">The maximum width of the columns.</param>
     protected void SetScrollBarVisibility(int maxRowsHeight, int maxColumnsWidth)
     {
         if (_checkScrollBarVisibility)
@@ -213,6 +226,11 @@ public partial class Table
         }
     }
 
+    /// <summary>
+    /// Gets the custom state appearance for a cell, such as selected or mouse-over states.
+    /// </summary>
+    /// <param name="cell">The cell to get the appearance for.</param>
+    /// <returns>The custom state appearance, or null if none.</returns>
     protected ColoredGlyphBase? GetCustomStateAppearance(Table.Cell cell)
     {
         if (!cell.IsVisible || (cell.IsSettingsInitialized && !cell.Settings.Interactable))
@@ -257,6 +275,12 @@ public partial class Table
         return null;
     }
 
+    /// <summary>
+    /// Adjusts the control surface for a cell, applying custom state appearance and visibility.
+    /// </summary>
+    /// <param name="cell">The cell to adjust.</param>
+    /// <param name="customStateAppearance">The custom state appearance to apply.</param>
+    /// <param name="adjustVisibility">Whether to adjust visibility.</param>
     protected void AdjustControlSurface(Table.Cell cell, ColoredGlyphBase? customStateAppearance, bool adjustVisibility)
     {
         int width = Cells.GetSizeOrDefault(cell.Column, Table.TableCells.Layout.LayoutType.Column);
@@ -276,6 +300,12 @@ public partial class Table
         }
     }
 
+    /// <summary>
+    /// Hides the visual cell at the specified column, row, and position.
+    /// </summary>
+    /// <param name="column">The column index.</param>
+    /// <param name="row">The row index.</param>
+    /// <param name="position">The position of the cell.</param>
     protected void HideVisualCell(int column, int row, Point position)
     {
         int width = Cells.GetSizeOrDefault(column, Table.TableCells.Layout.LayoutType.Column);
@@ -298,6 +328,10 @@ public partial class Table
         }
     }
 
+    /// <summary>
+    /// Prints the text for a cell, handling alignment and wrapping.
+    /// </summary>
+    /// <param name="cell">The cell to print text for.</param>
     protected void PrintText(Table.Cell cell)
     {
         if (string.IsNullOrWhiteSpace(cell.StringValue) || !cell.IsVisible) return;
@@ -352,6 +386,14 @@ public partial class Table
         }
     }
 
+    /// <summary>
+    /// Gets the total size of a cell in width and height.
+    /// </summary>
+    /// <param name="cell">The cell to measure.</param>
+    /// <param name="width">The width of the cell.</param>
+    /// <param name="height">The height of the cell.</param>
+    /// <param name="totalWidth">The total width (output).</param>
+    /// <param name="totalHeight">The total height (output).</param>
     protected static void GetTotalCellSize(Table.Cell cell, int width, int height, out int totalWidth, out int totalHeight)
     {
         int startX = cell._position.X;
@@ -362,6 +404,13 @@ public partial class Table
         totalHeight = endY - startY;
     }
 
+    /// <summary>
+    /// Gets the horizontal alignment position for a cell.
+    /// </summary>
+    /// <param name="hAlign">The horizontal alignment option.</param>
+    /// <param name="totalWidth">The total width of the cell.</param>
+    /// <param name="textArr">The text array.</param>
+    /// <returns>The starting X position for alignment.</returns>
     protected static int GetHorizontalAlignment(Table.Cell.Options.HorizontalAlign hAlign, int totalWidth, char[] textArr)
     {
         int startPosX = 0;

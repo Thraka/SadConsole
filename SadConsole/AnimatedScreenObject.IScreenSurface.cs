@@ -97,7 +97,7 @@ public partial class AnimatedScreenObject
     }
 
     /// <inheritdoc/>
-    public Rectangle AbsoluteArea => new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, WidthPixels, HeightPixels);
+    public Rectangle AbsoluteArea => new(AbsolutePosition.X, AbsolutePosition.Y, WidthPixels, HeightPixels);
 
     /// <inheritdoc/>
     public bool UsePixelPositioning
@@ -195,6 +195,13 @@ public partial class AnimatedScreenObject
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
     }
 
+    /// <summary>
+    /// Creates a new animation with the specified name, font, font size, and frames.
+    /// </summary>
+    /// <param name="name">The name of the animation.</param>
+    /// <param name="font">The font used by the animation.</param>
+    /// <param name="fontSize">The size of the font.</param>
+    /// <param name="frames">The frames that make up the animation.</param>
     [JsonConstructor]
     public AnimatedScreenObject(string name, IFont font, Point fontSize, IEnumerable<ICellSurface> frames)
     {
@@ -313,6 +320,12 @@ public partial class AnimatedScreenObject
     /// <returns>The string "ScreenSurface".</returns>
     public override string ToString() =>
         "ScreenSurface";
+
+    public void ResyncFrameSize()
+    {
+        NewFrameWidth = Frames[0].Width;
+        NewFrameHeight = Frames[0].Height;
+    }
 
     /// <inheritdoc/>
     [OnDeserialized]

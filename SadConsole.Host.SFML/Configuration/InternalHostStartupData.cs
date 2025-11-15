@@ -22,10 +22,21 @@ public static partial class ExtensionsHost
     }
 }
 
+/// <summary>
+/// Configuration for specifying the target window SadConsole renders to instead of building its own window.
+/// </summary>
 public class InternalHostStartupData : IConfigurator
 {
+    /// <summary>
+    /// Gets or sets the target window to render the game on.
+    /// </summary>
     public SFML.Graphics.RenderWindow? TargetWindow { get; set; }
 
+    /// <summary>
+    /// Runs the internal host startup configuration.
+    /// </summary>
+    /// <param name="config">The configuration builder.</param>
+    /// <param name="game">The game host.</param>
     public void Run(BuilderBase config, GameHost game)
     {
     }

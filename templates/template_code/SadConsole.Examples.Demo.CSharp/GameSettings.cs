@@ -13,9 +13,9 @@ static class GameSettings
     public const int SCREEN_DESCRIPTION_WIDTH = 50;
     public const int SCREEN_DESCRIPTION_HEIGHT = 12;
 
-    public static Rectangle ScreenListBounds = new Rectangle(2, 2, SCREEN_LIST_WIDTH, SCREEN_LIST_HEIGHT);
-    public static Rectangle ScreenDescriptionBounds = new Rectangle(2, ScreenListBounds.MaxExtentY + 4, SCREEN_DESCRIPTION_WIDTH, SCREEN_DESCRIPTION_HEIGHT);
-    public static Rectangle ScreenDemoBounds = new Rectangle(ScreenListBounds.MaxExtentX + 5, 2, SCREEN_DEMO_WIDTH, SCREEN_DEMO_HEIGHT);
+    public static Rectangle ScreenListBounds = new(2, 2, SCREEN_LIST_WIDTH, SCREEN_LIST_HEIGHT);
+    public static Rectangle ScreenDescriptionBounds = new(2, ScreenListBounds.MaxExtentY + 4, SCREEN_DESCRIPTION_WIDTH, SCREEN_DESCRIPTION_HEIGHT);
+    public static Rectangle ScreenDemoBounds = new(ScreenListBounds.MaxExtentX + 5, 2, SCREEN_DEMO_WIDTH, SCREEN_DEMO_HEIGHT);
 
     public static Colors ControlColorScheme = Colors.CreateAnsi();
 

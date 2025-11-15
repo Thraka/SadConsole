@@ -37,7 +37,7 @@ class CustomSurface : ScreenSurface
         // Randomly delete some items
         for (int i = 0; i < 1000; i++)
         {
-            Point location = new Point(GameHost.Instance.Random.Next(0, GameSettings.ScreenDemoBounds.Width),
+            Point location = new(GameHost.Instance.Random.Next(0, GameSettings.ScreenDemoBounds.Width),
                                        GameHost.Instance.Random.Next(0, GameSettings.ScreenDemoBounds.Height));
             Surface[location].Background = Surface.DefaultBackground;
             Surface[location].Glyph = Surface.DefaultGlyph;

@@ -56,7 +56,7 @@ public class Default : IParser
             value = sb.ToString();
         }
 
-        List<ColoredGlyphAndEffect> glyphs = new List<ColoredGlyphAndEffect>(value.Length);
+        List<ColoredGlyphAndEffect> glyphs = new(value.Length);
 
         for (int i = 0; i < value.Length; i++)
         {

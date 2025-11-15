@@ -35,14 +35,28 @@ public static partial class ExtensionsHost
 #endif
 }
 
+/// <summary>
+/// Configuration for FPS settings in SadConsole.
+/// </summary>
 public class FpsConfig : IConfigurator
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether unlimited FPS is enabled.
+    /// </summary>
     public bool UnlimitedFPS { get; set; } = false;
 
 #if MONOGAME
+    /// <summary>
+    /// Gets or sets a value indicating whether to show the FPS visual in MonoGame.
+    /// </summary>
     public bool ShowFPSVisual { get; set; }
 #endif
 
+    /// <summary>
+    /// Runs the FPS configuration.
+    /// </summary>
+    /// <param name="configBuilder">The configuration builder.</param>
+    /// <param name="game">The game host.</param>
     public void Run(BuilderBase configBuilder, GameHost game)
     {
     }

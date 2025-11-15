@@ -34,7 +34,7 @@ public struct AsciiKey
     /// <summary>
     /// A dictionary that is keyed off of a <see cref="Keys"/> and associates that key with a character in a shifted and unshifted state.
     /// </summary>
-    public static readonly Dictionary<Keys, ShiftedCharacterMapping> ShiftKeyMappings = new Dictionary<Keys, ShiftedCharacterMapping>
+    public static readonly Dictionary<Keys, ShiftedCharacterMapping> ShiftKeyMappings = new()
     {
         {Keys.OemComma, new ShiftedCharacterMapping(',', '<')},
         {Keys.OemMinus, new ShiftedCharacterMapping('-', '_')},
@@ -347,7 +347,7 @@ public struct AsciiKey
     /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
     public static AsciiKey Get(Keys key, IKeyboardState state)
     {
-        AsciiKey asciiKey = new AsciiKey();
+        AsciiKey asciiKey = new();
         asciiKey.Fill(key, false, state);
         return asciiKey;
     }
@@ -361,7 +361,7 @@ public struct AsciiKey
     /// <returns>The <see cref="AsciiKey"/> of the <see cref="Keys"/>.</returns>
     public static AsciiKey Get(Keys key, bool shiftPressed, IKeyboardState state)
     {
-        AsciiKey asciiKey = new AsciiKey();
+        AsciiKey asciiKey = new();
         asciiKey.Fill(key, shiftPressed, state);
         return asciiKey;
     }

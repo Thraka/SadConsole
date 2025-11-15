@@ -38,8 +38,7 @@ internal class SurfaceFile : IFileHandler
 
     public bool Save(object instance, string file, bool compress)
     {
-        if (!file.EndsWith(ExtensionsSaving[0], StringComparison.InvariantCultureIgnoreCase))
-            file += "." + ExtensionsSaving[0];
+        file = ((IFileHandler)this).GetFileWithValidExtensionForSave(file);
 
         if (instance is Document doc)
         {

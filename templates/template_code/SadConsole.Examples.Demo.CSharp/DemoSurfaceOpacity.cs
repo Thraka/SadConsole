@@ -68,7 +68,7 @@ internal class SurfaceOpacity : ControlsConsole
         Colors buttonColors = Colors.CreateSadConsoleBlue();
 
         // Create the controls
-        Button buttonIn = new Button(11);
+        Button buttonIn = new(11);
         buttonIn.Text = "Fade In";
         buttonIn.ShowEnds = false;
         buttonIn.Position = (Width - 13, 0);
@@ -76,7 +76,7 @@ internal class SurfaceOpacity : ControlsConsole
         buttonIn.Click += ButtonIn_Click;
         Controls.Add(buttonIn);
 
-        Button buttonOut = new Button(12);
+        Button buttonOut = new(12);
         buttonOut.Text = "Fade Out";
         buttonOut.ShowEnds = false;
         buttonOut.Position = (1, 0);

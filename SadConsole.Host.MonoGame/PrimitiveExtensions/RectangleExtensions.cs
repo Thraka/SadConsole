@@ -18,7 +18,7 @@ namespace SadRogue.Primitives
         [System.Diagnostics.Contracts.Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MonoRectangle ToMonoRectangle(this SadRogueRectangle self)
-            => new MonoRectangle(self.X, self.Y, self.Width, self.Height);
+            => new(self.X, self.Y, self.Width, self.Height);
 
         /// <summary>
         /// Compares a <see cref="SadRogue.Primitives.Rectangle"/> to a <see cref="Microsoft.Xna.Framework.Rectangle"/>.
@@ -49,7 +49,7 @@ namespace Microsoft.Xna.Framework
         [System.Diagnostics.Contracts.Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SadRogueRectangle ToRectangle(this MonoRectangle self)
-            => new SadRogueRectangle(self.X, self.Y, self.Width, self.Height);
+            => new(self.X, self.Y, self.Width, self.Height);
 
         /// <summary>
         /// Compares a <see cref="Microsoft.Xna.Framework.Rectangle"/> to a <see cref="SadRogue.Primitives.Rectangle"/>.

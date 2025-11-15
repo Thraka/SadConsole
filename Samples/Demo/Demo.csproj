@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Examples</RootNamespace>
@@ -55,13 +55,13 @@
 
   <!-- MonoGame host requires you to choose which rendering library you want to use. -->
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
 
     <!-- If you want to use DirectX, you must set the <TargetFramework> to net8.0-windows and change the MonoGame reference -->
-    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.3" />-->
+    <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />-->
 
     <!-- Compile the MonoGame Shaders -->
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
     <MonoGameContentReference Include="Content\Assets.mgcb" />
     <None Remove="Content\bin\**\*" />
     <None Remove="Content\obj\**\*" />
@@ -83,5 +83,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="RestoreTools" BeforeTargets="Build">
+    <Exec Command="dotnet tool restore" />
+  </Target>
 
 </Project>

@@ -62,6 +62,7 @@ public class SplashScreenManager : ScreenObject
                 GameHost.Instance.RestoreGlobalState();
                 SplashScreenFinished?.Invoke(this, EventArgs.Empty);
                 GameHost.Instance._splashScreens = null;
+                GameHost.Instance.Screen?.Update(delta); // Ensure the main screen gets an update right away
             }
         }
     }

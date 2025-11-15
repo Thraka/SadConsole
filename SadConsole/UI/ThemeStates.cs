@@ -150,7 +150,7 @@ public class ThemeStates
     /// Performs a deep copy of this theme.
     /// </summary>
     /// <returns>A new instance of the theme.</returns>
-    public ThemeStates Clone() => new ThemeStates()
+    public ThemeStates Clone() => new()
     {
         Normal = Normal.Clone(),
         Disabled = Disabled.Clone(),

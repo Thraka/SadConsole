@@ -17,7 +17,7 @@ public static class PointExtensions
     /// <returns>The pixel position of the top-left of the cell.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Point SurfaceLocationToPixel(this Point point, int cellWidth, int cellHeight) =>
-        new Point(point.X * cellWidth, point.Y * cellHeight);
+        new(point.X * cellWidth, point.Y * cellHeight);
 
     /// <summary>
     /// Translates a surface cell position to where it appears on the screen in pixels.
@@ -27,7 +27,7 @@ public static class PointExtensions
     /// <returns>The pixel position of the top-left of the cell.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Point SurfaceLocationToPixel(this Point point, Point fontSize) =>
-        new Point(point.X * fontSize.X, point.Y * fontSize.Y);
+        new(point.X * fontSize.X, point.Y * fontSize.Y);
 
     /// <summary>
     /// Translates a pixel to where it appears on a surface cell.
@@ -38,7 +38,7 @@ public static class PointExtensions
     /// <returns>The cell position on the screen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Point PixelLocationToSurface(this Point point, int cellWidth, int cellHeight) =>
-        new Point(point.X / cellWidth, point.Y / cellHeight);
+        new(point.X / cellWidth, point.Y / cellHeight);
 
     /// <summary>
     /// Translates a pixel to where it appears on a surface cell.
@@ -48,7 +48,7 @@ public static class PointExtensions
     /// <returns>The cell position on the screen.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Point PixelLocationToSurface(this Point point, Point fontSize) =>
-        new Point(point.X / fontSize.X, point.Y / fontSize.Y);
+        new(point.X / fontSize.X, point.Y / fontSize.Y);
 
     /// <summary>
     /// Translates the coordinates of a cell from the source font size to a target font size.

@@ -2,14 +2,14 @@
   <Import Project="..\MSBuild\Common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Version>$(SadConsole_Extended_Version)</Version>
     <AssemblyTitle>SadConsole Extended - Common Helpers</AssemblyTitle>
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Rework `DebugMouseTint` class and add `DebugFocusedTint` class. Both settable as configuration builder options now.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added the config builder extension `PopupGlyphPicker`.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->
@@ -24,7 +24,7 @@
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.0" />
 
   </ItemGroup>
 
@@ -38,10 +38,6 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>SadConsole.Tests</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configuration\" />
   </ItemGroup>
 
   <Target Name="CopyPackage" AfterTargets="Pack">

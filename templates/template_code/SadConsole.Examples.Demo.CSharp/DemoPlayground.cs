@@ -6,6 +6,7 @@ using SadConsole.Readers;
 using SadConsole.Renderers;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
+using SadConsole.Entities;
 using static SadConsole.Examples.RootScreen;
 
 namespace SadConsole.Examples;
@@ -27,8 +28,17 @@ internal class DemoPlayground : IDemo
 
 internal class Playground : Console
 {
-    public Playground() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
+    public Playground() : base(80, 25)
     {
-        
+    }
+
+    protected override void OnMouseLeftClicked(MouseScreenObjectState state)
+    {
+        Console surface = new(80, 25, 200, 200);
+        surface.FillWithRandomGarbage(255);
+        surface.UseMouse = false;
+        Children.Add(surface);
+
+
     }
 }

@@ -17,8 +17,16 @@ public static partial class Extensions
     }
 }
 
+/// <summary>
+/// Configures the default starting console for the game.
+/// </summary>
 public class StartingConsoleConfig : IConfigurator
 {
+    /// <summary>
+    /// Creates and configures the default starting console.
+    /// </summary>
+    /// <param name="configBuilder">The builder configuration.</param>
+    /// <param name="game">The game host instance.</param>
     public void Run(BuilderBase configBuilder, GameHost game)
     {
         game.StartingConsole = new Console(game.ScreenCellsX, game.ScreenCellsY);

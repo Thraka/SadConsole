@@ -22,27 +22,27 @@ namespace SadConsole.Tests
 
             Assert.IsTrue(surface1[1, 1].Foreground == foreground);
             Assert.IsTrue(surface1[1, 1].Background == background);
-            Assert.IsTrue(surface1[1, 1].Glyph == (int)'T');
-            Assert.IsTrue(surface1[1, 1].Mirror == mirror);
+            Assert.AreEqual((int)'T', surface1[1, 1].Glyph);
+            Assert.AreEqual(mirror, surface1[1, 1].Mirror);
             Assert.IsNull(surface1[1, 1].Decorators);
 
-            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
-            Assert.IsTrue(surface1[2, 1].Decorators.Count == 1);
+            Assert.AreEqual((int)'e', surface1[2, 1].Glyph);
+            Assert.AreEqual(1, surface1[2, 1].Decorators.Count);
 
             surface1.Print(1, 1, "Test me!", foreground, background, mirror);
-            Assert.IsTrue(surface1[2, 1].Glyph == (int)'e');
-            Assert.IsTrue(surface1[2, 1].Decorators.Count == 1);
+            Assert.AreEqual((int)'e', surface1[2, 1].Glyph);
+            Assert.AreEqual(1, surface1[2, 1].Decorators.Count);
 
             CellDecorator dec1 = new CellDecorator(Color.Wheat, 34, Mirror.None);
             CellDecorator dec2 = new CellDecorator(Color.Purple, 21, Mirror.Vertical);
             CellDecorator dec3 = new CellDecorator(Color.PapayaWhip, 85, Mirror.Horizontal);
 
             surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, new[] { dec1, dec2, dec3 });
-            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
-            Assert.IsTrue(surface1[(4, 1)].Decorators.Count == 3);
+            Assert.AreEqual((int)'\'', surface1[(4, 1)].Glyph);
+            Assert.AreEqual(3, surface1[(4, 1)].Decorators.Count);
 
             surface1.Print(1, 1, "dON'T!pl", foreground, background, mirror, null);
-            Assert.IsTrue(surface1[(4, 1)].Glyph == (int)'\'');
+            Assert.AreEqual((int)'\'', surface1[(4, 1)].Glyph);
             Assert.IsNull(surface1[(4, 1)].Decorators);
         }
 
@@ -91,11 +91,11 @@ namespace SadConsole.Tests
 
             int newGlyph = new System.Random().Next(0, 256);
 
-            Assert.IsFalse(newGlyph == surface1[0, 0].Glyph);
+            Assert.AreNotEqual(surface1[0, 0].Glyph, newGlyph);
 
             surface1.SetGlyph(0, 0, newGlyph);
 
-            Assert.IsTrue(newGlyph == surface1[0, 0].Glyph);
+            Assert.AreEqual(surface1[0, 0].Glyph, newGlyph);
         }
 
         [TestMethod]
@@ -114,11 +114,11 @@ namespace SadConsole.Tests
                 _ => Mirror.None
             };
 
-            Assert.IsFalse(newMirror == surface1[0, 0].Mirror);
+            Assert.AreNotEqual(surface1[0, 0].Mirror, newMirror);
 
             surface1.SetMirror(0, 0, newMirror);
 
-            Assert.IsTrue(newMirror == surface1[0, 0].Mirror);
+            Assert.AreEqual(surface1[0, 0].Mirror, newMirror);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace SadConsole.Tests
 
             surface1.SetDecorator((5, 5), decorator);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator));
+            Assert.Contains(decorator, surface1[5, 5].Decorators);
         }
 
         [TestMethod]
@@ -164,10 +164,10 @@ namespace SadConsole.Tests
 
             surface1.SetDecorator((5, 5), decorator1, decorator2, decorator3);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(3, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
+            Assert.Contains(decorator3, surface1[5, 5].Decorators);
         }
 
         [TestMethod]
@@ -194,10 +194,10 @@ namespace SadConsole.Tests
 
             surface1.SetDecorator((5, 5), decorator1, decorator2, decorator3);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(3, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
+            Assert.Contains(decorator3, surface1[5, 5].Decorators);
 
             surface1.SetDecorator((5, 5), null);
             Assert.IsNull(surface1[5, 5].Decorators);
@@ -219,7 +219,7 @@ namespace SadConsole.Tests
 
             surface1.AddDecorator((5, 5), decorator);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator));
+            Assert.Contains(decorator, surface1[5, 5].Decorators);
         }
 
         [TestMethod]
@@ -246,14 +246,14 @@ namespace SadConsole.Tests
 
             surface1.AddDecorator((5, 5), decorator1, decorator2);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
-            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(2, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
+            Assert.DoesNotContain(decorator3, surface1[5, 5].Decorators);
 
             surface1.AddDecorator((5, 5), decorator3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(3, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator3, surface1[5, 5].Decorators);
         }
 
         [TestMethod]
@@ -280,17 +280,17 @@ namespace SadConsole.Tests
 
             surface1.AddDecorator((5, 5), decorator1, decorator2);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
-            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(2, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
+            Assert.DoesNotContain(decorator3, surface1[5, 5].Decorators);
 
             surface1.AddDecorator((5, 5), decorator3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator3));
+            Assert.AreEqual(3, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator3, surface1[5, 5].Decorators);
 
             surface1.AddDecorator((5, 5), decorator2);
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 3);
+            Assert.AreEqual(3, surface1[5, 5].Decorators.Count);
         }
 
         [TestMethod]
@@ -313,14 +313,14 @@ namespace SadConsole.Tests
 
             surface1.AddDecorator((5, 5), decorator1, decorator2);
 
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 2);
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.AreEqual(2, surface1[5, 5].Decorators.Count);
+            Assert.Contains(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
 
             surface1.RemoveDecorator((5, 5), decorator1);
-            Assert.IsTrue(surface1[5, 5].Decorators.Count == 1);
-            Assert.IsFalse(surface1[5, 5].Decorators.Contains(decorator1));
-            Assert.IsTrue(surface1[5, 5].Decorators.Contains(decorator2));
+            Assert.AreEqual(1, surface1[5, 5].Decorators.Count);
+            Assert.DoesNotContain(decorator1, surface1[5, 5].Decorators);
+            Assert.Contains(decorator2, surface1[5, 5].Decorators);
 
             surface1.RemoveDecorator((5, 5), decorator2);
             Assert.IsNull(surface1[5, 5].Decorators);
@@ -419,7 +419,7 @@ namespace SadConsole.Tests
 
             surface1.FillWithRandomGarbage(255);
             surface1.SetEffect(surface1, effect1);
-            Assert.IsTrue(surface1.Effects.Count != 0);
+            Assert.AreNotEqual(0, surface1.Effects.Count);
             PrintSurfaceGlyphs(surface1, "Before:");
             surface1.Clear();
             PrintSurfaceGlyphs(surface1, "After:");
@@ -428,7 +428,7 @@ namespace SadConsole.Tests
             for (int i = 0; i < surface1.Count; i++)
                 Assert.IsTrue(defaultGlyph.Matches(surface1[i]));
 
-            Assert.IsTrue(surface1.Effects.Count == 0);
+            Assert.AreEqual(0, surface1.Effects.Count);
         }
 
         public void Surface_Equals(ICellSurface surface1, ICellSurface surface2)

@@ -216,7 +216,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         Controls.Add(checkbox);
 
         // ComboBox
-        ComboBox box = new ComboBox(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
+        ComboBox box = new(10, 15, 10, Enumerable.Range(1, 20).Cast<object>().ToArray())
         {
             Position = (checkbox.Bounds.MaxExtentX + 4, checkbox.Position.Y),
             Name = "combobox"
@@ -226,8 +226,8 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         Controls.FocusedControl = null;
         //DisableControlFocusing = true;
 
-        List<Tuple<Color, string>> colors = new List<Tuple<Color, string>>
-            {
+        List<Tuple<Color, string>> colors = new()
+        {
                 new Tuple<Color, string>(Colors.Default.Red, "Red"),
                 new Tuple<Color, string>(Colors.Default.RedDark, "DRed"),
                 new Tuple<Color, string>(Colors.Default.Purple, "Prp"),
@@ -335,9 +335,10 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         this.Print(34, colorsStartY + 5, CreateGradientExample("BROWN", colors.Brown, colors.BrownDark));
         this.Print(34, colorsStartY + 6, CreateGradientExample("GRAY", colors.Gray, colors.GrayDark));
         this.Print(34, colorsStartY + 7, CreateGradientExample("WHITE", colors.White, colors.Black));
-
-        //Print(2, 23, CreateGradientExample("GOLD", Library.Default.Colors.Gold, Library.Default.Colors.GoldDark));
     }
 
-    private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7) => text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start) + new string((char)219, 15).CreateGradient(start, end) + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
+    private ColoredString CreateGradientExample(string text, Color start, Color end, int stringLength = 7) =>
+        text.PadRight(stringLength).Substring(0, stringLength).CreateColored(start)
+        + new string((char)219, 15).CreateGradient(start, end)
+        + text.PadLeft(stringLength).Substring(0, stringLength).CreateColored(end);
 }

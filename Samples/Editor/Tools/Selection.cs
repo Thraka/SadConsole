@@ -8,8 +8,10 @@ namespace SadConsole.Editor.Tools;
 
 internal class Selection : ITool
 {
+    private static CellSurface? _clipboardSurface;
     private Point _firstPoint;
     private Point _secondPoint;
+    private Point _pasteOffset;
     private ShapeParameters _selectionBoxShape;
     private CellSurface _selectionSurface;
     private States _state = States.None;
@@ -41,7 +43,7 @@ internal class Selection : ITool
         ImGui.Checkbox("Ignore empty cells on paste"u8, ref _pasteIgnoreEmpty);
 
         ImGui.BeginDisabled(Core.State.Blueprints.Count == 0);
-        if (ImGui.Button("Import"u8))
+        if (ImGui.Button("Load Blueprint"u8))
         {
             BlueprintImport? window = new();
             window.Open();
@@ -58,15 +60,67 @@ internal class Selection : ITool
             };
         }
         ImGui.EndDisabled();
+
+        if (ImGui.Button("Import Surface"))
+        {
+            Windows.OpenFile fileLoader = new([new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()]);
+            fileLoader.Closed += FileLoader_Closed;
+            fileLoader.Open();
+            
+        }
+
+        ImGui.BeginDisabled(_clipboardSurface == null);
+        if (ImGui.Button("Paste from Clipboard"u8))
+        {
+            CancelPaste(document, false);
+            _selectionSurface = _clipboardSurface!;
+            _state = States.Pasting;
+        }
+        ImGui.EndDisabled();
+    }
+
+    private void FileLoader_Closed(object? sender, EventArgs e)
+    {
+        OpenFile dialog = (OpenFile)sender!;
+
+        if (!dialog.DialogResult) return;
+
+        object? result = dialog.SelectedLoader.Load(dialog.SelectedFile.FullName);
+
+        if (result != null)
+        {
+            CellSurface? surface = null;
+
+            if (result is DocumentSurface doc)
+                surface = (CellSurface)doc.EditingSurface.Surface;
+
+            else if (result is CellSurface resultSurface)
+                surface = resultSurface;
+
+            if (surface is not null)
+            {
+                _clipboardSurface = surface;
+                ClearState();
+                _state = States.PastingMultiple;
+                _selectionSurface = _clipboardSurface;
+            }
+        }
+        dialog.Closed -= FileLoader_Closed;
     }
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        
-
         if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
         {
             bool _createBlueprint = false;
+            if (ImGui.Selectable("Copy to Clipboard"u8))
+            {
+                CopySurface(document);
+                _clipboardSurface = _selectionSurface;
+                ClearState();
+                ImGui.CloseCurrentPopup();
+            }
+
             if (ImGui.Selectable("Move"u8))
             {
                 CopySurface(document);
@@ -216,7 +270,7 @@ internal class Selection : ITool
 
                 document.EditingSurface.Surface.IsDirty = true;
 
-                if (_state == States.PastingMultiple)
+                if (_state != States.PastingMultiple)
                 {
                     CancelPaste(document, false);
                 }
@@ -230,10 +284,20 @@ internal class Selection : ITool
             // Draw the floating surface
             else
             {
+                if (ImGuiP.IsKeyPressed(ImGuiKey.LeftArrow))
+                    _pasteOffset += Direction.Left;
+                else if (ImGuiP.IsKeyPressed(ImGuiKey.RightArrow))
+                    _pasteOffset += Direction.Right;
+
+                if (ImGuiP.IsKeyPressed(ImGuiKey.UpArrow))
+                    _pasteOffset += Direction.Up;
+                else if (ImGuiP.IsKeyPressed(ImGuiKey.DownArrow))
+                    _pasteOffset += Direction.Down;
+
                 document.VisualLayerToolLower.Surface.Clear();
                 document.VisualLayerToolUpper.Surface.Clear();
 
-                Point pos = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2);
+                Point pos = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2) + _pasteOffset;
                 _selectionSurface.Copy(document.VisualLayerToolLower.Surface, pos.X, pos.Y);
                 document.VisualLayerToolUpper.Surface.DrawBox(new Rectangle(pos.X, pos.Y, _selectionSurface.Width, _selectionSurface.Height),
                                                                             _selectionBoxShape);
@@ -297,6 +361,7 @@ internal class Selection : ITool
         document.VisualLayerToolLower.Surface.Clear();
         document.VisualLayerToolUpper.Surface.Clear();
         ClearState();
+        _pasteOffset = Point.Zero;
 
         if (setCancel)
             _state = States.Cancel;

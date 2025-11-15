@@ -18,7 +18,7 @@ public static class FontExtensions
     /// <returns>A rectangle to representing a specific cell.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Rectangle GetRenderRect(this IFont font, int x, int y, Point fontSize) =>
-        new Rectangle(x * fontSize.X, y * fontSize.Y, fontSize.X, fontSize.Y);
+        new(x * fontSize.X, y * fontSize.Y, fontSize.X, fontSize.Y);
 
     /// <summary>
     /// Gets the pixel position of a cell position based on the font size.
@@ -29,7 +29,7 @@ public static class FontExtensions
     /// <returns>A new pixel-positioned point.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Point GetWorldPosition(this IFont font, Point position, Point fontSize) =>
-        new Point(position.X * fontSize.X, position.Y * fontSize.Y);
+        new(position.X * fontSize.X, position.Y * fontSize.Y);
 
 
     /// <summary>

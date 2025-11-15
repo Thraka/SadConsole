@@ -1,13 +1,23 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.Serialization;
 using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Tools;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
+
+// TODO:
+// -------------------
+// Move a lot of the common UI stuff like FontSize selection popups and windows
+// into base class methods that render components and handle showing windows/popups
+// when they're closed, call to new base methods like "FontChanged" so that the document
+// can react as needed, like animations set it on the base animation object and surfaces
+// set font on surface
 
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
@@ -41,7 +51,7 @@ public abstract partial class Document : ITitle
 
     public bool IsDirty => EditingSurface.IsDirty || VisualTool.IsDirty;
 
-    public ITool[] Tools = [new Info(), new Pencil(), new Empty(), new Recolor(), new Text(), new Line(), new Box(), new Circle(), new Fill(), new Selection(), new Operations()];
+    public ITool[] Tools = [new Info(), new Pencil(), new Empty(), new Recolor(), new Text(), new Line(), new LineDraw(), new Box(), new Circle(), new Fill(), new Selection(), new Operations()];
 
 
     protected ImGuiGuardedValue<int> _width;
@@ -49,6 +59,8 @@ public abstract partial class Document : ITitle
 
     public bool HasPalette = false;
     public EditorPalette Palette = new();
+
+    protected FontSelectionWindow? FontSelectionWindow;
 
     protected Document()
     {
@@ -60,10 +72,42 @@ public abstract partial class Document : ITitle
         VisualLayerToolUpper = VisualTool.Layers.Create();
     }
 
+    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
+    protected void FontSelectionWindow_Popup()
+    {
+        FontSelectionWindow = new FontSelectionWindow(EditingSurfaceFont, EditingSurfaceFontSize);
+        FontSelectionWindow.IsOpen = true;
+    }
+
+    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
+    protected bool FontSelectionWindow_BuildUI(ImGuiRenderer renderer)
+    {
+        if (FontSelectionWindow != null && FontSelectionWindow.IsOpen)
+        {
+            FontSelectionWindow.BuildUI(renderer);
+
+            if (!FontSelectionWindow.IsOpen)
+            {
+                return FontSelectionWindow.DialogResult;
+            }
+        }
+
+        return false;
+    }
+
+    protected void FontSelectionWindow_Reset() =>
+        FontSelectionWindow = null;
+
+    
+
     public virtual void OnSelected()
     {
         Core.State.Tools.Objects.Clear();
-        
+
+        // Sync the layers
+        VisualTool.Font = EditingSurfaceFont;
+        VisualTool.FontSize = EditingSurfaceFontSize;
+
         foreach (var tool in Tools)
             Core.State.Tools.Objects.Add(tool);
 

@@ -1,3 +1,17 @@
+## v10.7.0 (11/15/2025)
+
+- Cleaned up various warnings and XML comments.
+- [Core] `BlinkChar` supports starting on or off now.
+- [Core] Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
+- [Core] `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
+- [Core] `SadFont.ToString` now returns the font name.
+- [Core] `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
+- [Core] When splashscreen closes, call update on new the new Screen. Fixes a bug with `ControlsHost` not drawing the first state of controls.
+- [UI] Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
+- [Extended] Added the config builder extension `PopupGlyphPicker`.
+- [SFML] Upgraded to the latest SFML.Net version.
+- [FNA] Upgraded to FNA 25.11.
+
 ## v10.6.0 (08/09/2025)
 
 Note: .NET 6 has been dropped by the host libraries in favor of .NET 8 as the minimum version. The core SadConsole library still supports .NET 6.

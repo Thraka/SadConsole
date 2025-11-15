@@ -24,6 +24,9 @@ public class SadConsoleGameComponent : DrawableGameComponent
     }
 #endif
 
+    /// <summary>
+    /// Initializes the SadConsole game component, setting up graphics device, FPS configuration, and invoking MonoGame initialization callbacks.
+    /// </summary>
     public override void Initialize()
     {
         base.Initialize();

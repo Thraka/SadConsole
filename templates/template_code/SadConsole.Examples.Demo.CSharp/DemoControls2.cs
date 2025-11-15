@@ -1,4 +1,5 @@
-﻿using SadConsole.Input;
+﻿using System.Diagnostics;
+using SadConsole.Input;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 
@@ -19,6 +20,7 @@ internal class DemoControls2 : IDemo
         Title;
 }
 
+[DebuggerDisplay("ControlsTest2")]
 class ControlsTest2 : SadConsole.UI.ControlsConsole
 {
     public ControlsTest2() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
@@ -60,7 +62,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         //
         // Table control
         //
-        Table tableControl = new Table(20, 10, 4);
+        Table tableControl = new(20, 10, 4);
 
         int counter = 0;
         tableControl.SetupScrollBar(Orientation.Vertical, 10, (tableControl.Width - 1, 0));
@@ -76,7 +78,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         //
         // Tab control showing two tabs
         //
-        Panel tabPanel1 = new Panel(10, 10);
+        Panel tabPanel1 = new(10, 10);
         {
             RadioButton opt1 = new("Tab Orientation Top") { Position = (1, 1), Tag = TabControl.Orientation.Top };
             opt1.IsSelectedChanged += Opt1_IsSelectedChanged;
@@ -92,7 +94,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             opt1.IsSelectedChanged += Opt1_IsSelectedChanged;
             tabPanel1.Add(opt1);
 
-            CheckBox check = new CheckBox(15, 1) { Text = "Thick Lines" };
+            CheckBox check = new(15, 1) { Text = "Thick Lines" };
             check.IsSelectedChanged += (s, e) =>
             {
                 if (!Controls.HasNamedControl("tab", out ControlBase? tabControl)) return;
@@ -107,9 +109,9 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             check.PlaceRelativeTo(opt1, Direction.Types.Down);
         }
 
-        Panel tabPanel2 = new Panel(10, 10);
+        Panel tabPanel2 = new(10, 10);
         {
-            CheckBox check = new CheckBox("Checkbox 1") { Position = (2, 1) };
+            CheckBox check = new("Checkbox 1") { Position = (2, 1) };
             tabPanel2.Add(check);
             check = new CheckBox(15, 1) { Text = "Checkbox 2", Position = (3, 2) };
             tabPanel2.Add(check);
@@ -124,7 +126,7 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
             tabPanel2.Add(lbox);
         }
 
-        TabControl tab = new TabControl(new[] { new TabItem("Style", tabPanel1) { AutomaticPadding = 0 },
+        TabControl tab = new(new[] { new TabItem("Style", tabPanel1) { AutomaticPadding = 0 },
                                                 new TabItem("Nothing", tabPanel2) { AutomaticPadding = 0 },
                                               },
                                               35, 15) { Name = "tab" };
@@ -152,9 +154,6 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         Controls.Add(colorsBlack);
         Controls.Add(colorsBlue);
 
-        CompTest a = new(22, 10) { Position = (tab.Bounds.MaxExtentX + 1, tab.Position.Y) };
-        Controls.Add(a);
-
         OnInvalidated();
     }
 
@@ -169,11 +168,6 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
                 OnInvalidated();
             }
         }
-    }
-
-    private void PanelButton1_Click(object? sender, EventArgs e)
-    {
-        Window.Ask(ColoredString.Parser.Parse("Enter a [c:r f:blue]number[c:u]          "), "OK", "Cancel", null);
     }
 
     private void Opt1_IsSelectedChanged(object? sender, EventArgs e)
@@ -200,35 +194,3 @@ class ControlsTest2 : SadConsole.UI.ControlsConsole
         this.Print(1, panel.Bounds.MaxExtentY + 1, "TOGGLE SWITCH", colors.YellowDark);
     }
 }
-
-// This just exists for testing some airspace bugs
-class CompTest : CompositeControl
-{
-    public CompTest(int width, int height) : base(width, height) { }
-
-    protected override void CreateChildControls()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            Button btn = new(Width)
-            {
-                Text = $"Button{i}",
-                Position = (0, i),
-            };
-            AddControl(btn);
-        }
-    }
-
-    public override bool ProcessMouse(MouseScreenObjectState state)
-    {
-
-        bool result = base.ProcessMouse(state);
-        //if (result) System.Diagnostics.Debugger.Break();
-        return result;
-    }
-}
-
-
-
-
-

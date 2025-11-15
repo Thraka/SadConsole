@@ -38,8 +38,6 @@ public sealed partial class Game : GameHost
         set => GameHost.Instance = value;
     }
 
-    internal string _font;
-
     /// <summary>
     /// Creates the game instance.
     /// </summary>

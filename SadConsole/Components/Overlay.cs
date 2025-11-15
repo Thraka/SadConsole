@@ -93,8 +93,7 @@ public sealed class Overlay : UpdateComponent, IDisposable
             Surface.FontSize = host.FontSize;
     }
 
-    /// <inheritdoc/>
-    protected void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
@@ -109,14 +108,12 @@ public sealed class Overlay : UpdateComponent, IDisposable
     /// <inheritdoc/>
     ~Overlay()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: false);
     }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

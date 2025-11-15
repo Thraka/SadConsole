@@ -24,17 +24,21 @@ public static partial class Core
 
         public static ImGuiList<Documents.Document> Documents = new();
 
-        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder());
+        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentAnimated.Builder());
 
         public static ImGuiList<Tools.ITool> Tools = new();
 
         public static EditorPalette Palette = new();
 
         public static ImGuiList<Blueprint> Blueprints = new();
+        public static ImGuiList<IFont> SadConsoleFonts = new();
 
         public static void LoadBlueprints()
         {
             List<Blueprint> blueprints = new();
+
+            if (!Directory.Exists(Core.Settings.BlueprintFolder))
+                Directory.CreateDirectory(Core.Settings.BlueprintFolder);
 
             foreach (string file in Directory.GetFiles(Core.Settings.BlueprintFolder))
             {
@@ -54,6 +58,22 @@ public static partial class Core
             Blueprints = new ImGuiList<Blueprint>(blueprints);
         }
 
+        public static void LoadSadConsoleFonts()
+        {
+            if (!Directory.Exists(Core.Settings.FontsFolder))
+                Directory.CreateDirectory(Core.Settings.FontsFolder);
+
+            // Use this way to load fonts because we want SadConsole to use the normal defaults
+            Directory.GetFiles(Core.Settings.FontsFolder, "*.font")
+                .ToList()
+                .ForEach(file => Game.Instance.LoadFont(file));
+
+            SadConsoleFonts = new(Game.Instance.Fonts.Values)
+            {
+                SelectedItemIndex = 0
+            };
+        }
+
         public static void SyncEditorPalette()
         {
             Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Clear();
@@ -62,6 +82,20 @@ public static partial class Core
             if (Documents.IsItemSelected() && Documents.SelectedItem.HasPalette)
                 Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Document",
                     Documents.SelectedItem.Palette.Colors));
+        }
+
+        public static void LoadEditorPalette()
+        {
+            if (File.Exists("editor.pal"))
+                Palette = EditorPalette.Load("editor.pal");
+        }
+
+        public static void SaveEditorPalette()
+        {
+            if (File.Exists("editor.pal"))
+                File.Delete("editor.pal");
+
+            Palette.Save("editor.pal");
         }
     }
 }

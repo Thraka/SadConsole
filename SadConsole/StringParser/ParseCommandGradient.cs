@@ -39,7 +39,7 @@ public sealed class ParseCommandGradient : ParseCommandBase
             _counter = Length = int.Parse(parametersArray[parametersArray.Length - 1], CultureInfo.InvariantCulture);
 
 
-            List<Color> steps = new List<Color>();
+            List<Color> steps = new();
 
             for (int i = 1; i < parametersArray.Length - 1; i++)
                 steps.Add(Color.White.FromParser(parametersArray[i], out bool keep, out keep, out keep, out keep, out bool useDefault));

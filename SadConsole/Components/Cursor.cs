@@ -24,7 +24,7 @@ public class Cursor : IComponent, IDisposable
     private ColoredGlyphBase _cursorCell;
 
     private ICellSurface? _editor;
-    private Point _position = new Point();
+    private Point _position = new();
     [DataMember]
     private bool _applyCursorEffect = true;
     private Renderers.IRenderStep? _cursorRenderStep;
@@ -1114,7 +1114,7 @@ public class Cursor : IComponent, IDisposable
             // If someone attached an event to KeyboardPreview, process it
             if (KeyboardPreview != null)
             {
-                KeyboardHandledKeyEventArgs args = new KeyboardHandledKeyEventArgs();
+                KeyboardHandledKeyEventArgs args = new();
                 args.Key = key;
                 KeyboardPreview.Invoke(this, args);
                 if (args.IsHandled)

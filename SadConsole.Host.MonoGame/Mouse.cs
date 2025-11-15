@@ -20,7 +20,7 @@ class Mouse : SadConsole.Input.IMouseState
 
     public bool IsMiddleButtonDown => _mouse.MiddleButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed;
 
-    public Point ScreenPosition => new Point(_mouse.X, _mouse.Y);
+    public Point ScreenPosition => new(_mouse.X, _mouse.Y);
 
     public int MouseWheel => _mouse.ScrollWheelValue;
 

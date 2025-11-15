@@ -485,6 +485,15 @@
             <param name="font">The font used with this animation.</param>
             <param name="fontSize">The size of the font.</param>
         </member>
+        <member name="M:SadConsole.AnimatedScreenObject.#ctor(System.String,SadConsole.IFont,SadRogue.Primitives.Point,System.Collections.Generic.IEnumerable{SadConsole.ICellSurface})">
+            <summary>
+            Creates a new animation with the specified name, font, font size, and frames.
+            </summary>
+            <param name="name">The name of the animation.</param>
+            <param name="font">The font used by the animation.</param>
+            <param name="fontSize">The size of the font.</param>
+            <param name="frames">The frames that make up the animation.</param>
+        </member>
         <member name="M:SadConsole.AnimatedScreenObject.UpdateAbsolutePosition">
             <inheritdoc />
         </member>
@@ -2352,9 +2361,6 @@
         <member name="M:SadConsole.Components.Overlay.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <inheritdoc/>
         </member>
-        <member name="M:SadConsole.Components.Overlay.Dispose(System.Boolean)">
-            <inheritdoc/>
-        </member>
         <member name="M:SadConsole.Components.Overlay.Finalize">
             <inheritdoc/>
         </member>
@@ -2690,7 +2696,7 @@
         <member name="M:SadConsole.Configuration.Extensions.SetStartingScreen(SadConsole.Configuration.Builder,System.Func{SadConsole.GameHost,SadConsole.IScreenObject})">
             <summary>
             Sets the <see cref="P:SadConsole.GameHost.Screen"/> property to the return value of the <paramref name="creator"/> parameter.
-            </summary>
+            </summary>  
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="creator">A method that returns an object as the starting screen.</param>
             <returns>The configuration builder.</returns>
@@ -2702,6 +2708,38 @@
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <param name="value">Indicates whether or not <see cref="P:SadConsole.GameHost.Screen"/> is focused.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.CallbackConfig">
+            <summary>
+            Configures event handlers for the game host's lifecycle events.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.CallbackConfig.event_Started">
+            <summary>
+            Gets or sets the event handler for the <see cref="E:SadConsole.GameHost.Started"/> event.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.CallbackConfig.event_Ending">
+            <summary>
+            Gets or sets the event handler for the <see cref="E:SadConsole.GameHost.Ending"/> event.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.CallbackConfig.event_FrameUpdate">
+            <summary>
+            Gets or sets the event handler for the <see cref="E:SadConsole.GameHost.FrameUpdate"/> event.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.CallbackConfig.event_FrameRender">
+            <summary>
+            Gets or sets the event handler for the <see cref="E:SadConsole.GameHost.FrameRender"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.CallbackConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Registers the configured event handlers with the game host.
+            </summary>
+            <param name="config">The builder configuration.</param>
+            <param name="game">The game host instance.</param>
         </member>
         <member name="T:SadConsole.Configuration.ConfigureWindowConfig">
             <summary>
@@ -2791,6 +2829,18 @@
             The method invoked by the <see cref="T:SadConsole.GameHost"/> as fonts are loaded.
             </summary>
         </member>
+        <member name="T:SadConsole.Configuration.StartingConsoleConfig">
+            <summary>
+            Configures the default starting console for the game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.StartingConsoleConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Creates and configures the default starting console.
+            </summary>
+            <param name="configBuilder">The builder configuration.</param>
+            <param name="game">The game host instance.</param>
+        </member>
         <member name="T:SadConsole.Configuration.FontConfig">
             <summary>
             The config settings for loading the default fonts when the game starts.
@@ -2877,6 +2927,35 @@
             <summary>
             A delegate that returns a set of splash screens to use.
             </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.SplashScreenConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the splash screen configuration and sets the splash screens on the game host.
+            </summary>
+            <param name="config">The builder configuration.</param>
+            <param name="game">The game host instance.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.StartingScreenConfig">
+            <summary>
+            Configuration for the game's starting screen.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.StartingScreenConfig.GenerateStartingObject">
+            <summary>
+            Gets or sets the function that generates the starting screen object.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.StartingScreenConfig.FocusStartingScreen">
+            <summary>
+            Gets or sets whether the starting screen should be focused.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.StartingScreenConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Configures the starting screen for the game.
+            </summary>
+            <param name="configBuilder">The builder configuration.</param>
+            <param name="game">The game host instance.</param>
         </member>
         <member name="T:SadConsole.Console">
             <summary>
@@ -3097,6 +3176,11 @@
         <member name="P:SadConsole.Effects.BlinkGlyph.GlyphIndex">
             <summary>
             The glyph index to blink into.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Effects.BlinkGlyph.StartVisible">
+            <summary>
+            When true, starts with the original glyph visible. When false, starts with the target glyph visible.
             </summary>
         </member>
         <member name="P:SadConsole.Effects.BlinkGlyph.BlinkCount">
@@ -9572,6 +9656,12 @@
             Disposes the <see cref="P:SadConsole.SadFont.Image"/> property.
             </summary>
         </member>
+        <member name="M:SadConsole.SadFont.ToString">
+            <summary>
+            Returns the font name.
+            </summary>
+            <returns>The name of the font.</returns>
+        </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
             A generic object processed by SadConsole. Provides parent/child, components, and position.
@@ -9608,6 +9698,14 @@
         </member>
         <member name="P:SadConsole.ScreenObject.Children">
             <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ScreenObject.PositionFontSize">
+            <summary>
+            When set to a value other than (1, 1), the <see cref="P:SadConsole.ScreenObject.AbsolutePosition"/> is scaled by this amount.
+            </summary>
+            <remarks>
+            This causes a <see cref="T:SadConsole.ScreenObject"/> to position itself similar to how a <see cref="T:SadConsole.IScreenSurface"/> is positioned.
+            </remarks>
         </member>
         <member name="P:SadConsole.ScreenObject.Parent">
             <inheritdoc/>
@@ -10221,6 +10319,64 @@
         <member name="M:SadConsole.ScreenSurface.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.SerializedTypes.ColoredGlyphJsonConverter">
+            <summary>
+            JSON converter for <see cref="T:SadConsole.ColoredGlyph"/> type.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.ColoredGlyphJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,SadConsole.ColoredGlyph,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.ColoredGlyphJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,SadConsole.ColoredGlyph,System.Boolean,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.SerializedTypes.ColoredGlyphSerialized">
+            <summary>
+            Serializable form of <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.Decorators">
+            <summary>
+            Gets or sets the decorators for the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.Foreground">
+            <summary>
+            Gets or sets the foreground color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.Background">
+            <summary>
+            Gets or sets the background color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.Glyph">
+            <summary>
+            Gets or sets the glyph index.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.Mirror">
+            <summary>
+            Gets or sets the mirroring of the glyph.
+            </summary>
+        </member>
+        <member name="F:SadConsole.SerializedTypes.ColoredGlyphSerialized.IsVisible">
+            <summary>
+            Gets or sets whether the glyph is visible.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.ColoredGlyphSerialized.op_Implicit(SadConsole.ColoredGlyph)~SadConsole.SerializedTypes.ColoredGlyphSerialized">
+            <summary>
+            Implicitly converts a <see cref="T:SadConsole.ColoredGlyph"/> to a <see cref="T:SadConsole.SerializedTypes.ColoredGlyphSerialized"/>.
+            </summary>
+            <param name="cell">The cell to convert.</param>
+        </member>
+        <member name="M:SadConsole.SerializedTypes.ColoredGlyphSerialized.op_Implicit(SadConsole.SerializedTypes.ColoredGlyphSerialized)~SadConsole.ColoredGlyph">
+            <summary>
+            Implicitly converts a <see cref="T:SadConsole.SerializedTypes.ColoredGlyphSerialized"/> to a <see cref="T:SadConsole.ColoredGlyph"/>.
+            </summary>
+            <param name="cell">The serialized cell to convert.</param>
+        </member>
         <member name="T:SadConsole.SerializedTypes.RendererJsonConverter">
             <summary>
             Converts a <see cref="T:SadConsole.Renderers.IRenderer"/> to its <see cref="P:SadConsole.Renderers.IRenderer.Name"/> value and back.
@@ -10241,6 +10397,13 @@
             <summary>
             Registers the default converters for SadConsole objects, when needed.
             </summary>
+        </member>
+        <member name="M:SadConsole.Serializer.Contracts.ResolveContractConverter(System.Type)">
+            <summary>
+            Resolves the appropriate JSON converter for the specified object type.
+            </summary>
+            <param name="objectType">The type of object to resolve a converter for.</param>
+            <returns>The JSON converter for the type, or null if none is found.</returns>
         </member>
         <member name="P:SadConsole.Serializer.Settings">
             <summary>
@@ -10799,42 +10962,141 @@
             <param name="value">Optional value provided by the BBCode.</param>
             <param name="parameters">Optional parameters provided by the BBCode.</param>
         </member>
+        <member name="T:SadConsole.StringParser.BBCode.Strikethrough">
+            <summary>
+            Implements a BBCode tag for strikethrough text formatting.
+            </summary>
+        </member>
         <member name="F:SadConsole.StringParser.BBCode.Strikethrough.Glyph">
             <summary>
             The glyph used for the strikethrough decorator.
             </summary>
         </member>
+        <member name="M:SadConsole.StringParser.BBCode.Strikethrough.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Strikethrough"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.StringParser.BBCode.Strikethrough.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Strikethrough.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Underline">
+            <summary>
+            Implements a BBCode tag for underlined text formatting.
+            </summary>
         </member>
         <member name="F:SadConsole.StringParser.BBCode.Underline.Glyph">
             <summary>
             The glyph used for the underline decorator.
             </summary>
         </member>
+        <member name="M:SadConsole.StringParser.BBCode.Underline.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Underline"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.StringParser.BBCode.Underline.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Underline.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Recolor">
+            <summary>
+            Implements a BBCode tag for changing text color.
+            </summary>
+        </member>
+        <member name="P:SadConsole.StringParser.BBCode.Recolor.Color">
+            <summary>
+            Gets or sets the color to apply to the text.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Recolor.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Recolor"/> class.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Recolor.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Recolor.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Bold">
+            <summary>
+            Implements a BBCode tag for bold text formatting.
+            </summary>
         </member>
         <member name="F:SadConsole.StringParser.BBCode.Bold.GlyphOffset">
             <summary>
             The offset applied to the glyph to get the emboldened variant.
             </summary>
         </member>
+        <member name="M:SadConsole.StringParser.BBCode.Bold.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Bold"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.StringParser.BBCode.Bold.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Bold.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Italic">
+            <summary>
+            Implements a BBCode tag for italic text formatting.
+            </summary>
         </member>
         <member name="F:SadConsole.StringParser.BBCode.Italic.GlyphOffset">
             <summary>
             The offset applied to the glyph to get the italicized variant.
             </summary>
         </member>
+        <member name="M:SadConsole.StringParser.BBCode.Italic.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Italic"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.StringParser.BBCode.Italic.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Italic.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Upper">
+            <summary>
+            Implements a BBCode tag for converting text to uppercase.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Upper.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Upper"/> class.
+            </summary>
         </member>
         <member name="M:SadConsole.StringParser.BBCode.Upper.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <inheritdoc />
         </member>
+        <member name="M:SadConsole.StringParser.BBCode.Upper.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.StringParser.BBCode.Lower">
+            <summary>
+            Implements a BBCode tag for converting text to lowercase.
+            </summary>
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Lower.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.StringParser.BBCode.Lower"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.StringParser.BBCode.Lower.SetBBCode(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.StringParser.BBCode.Lower.Build(SadConsole.ColoredGlyphAndEffect@,SadConsole.ColoredGlyphAndEffect[],System.Int32,SadConsole.ICellSurface,System.Int32@,System.ReadOnlySpan{System.Char},SadConsole.StringParser.ParseCommandStacks)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.StringParser.Default">
@@ -11343,7 +11605,7 @@
             <code>[a-zA-Z]</code><br/>
             Explanation:<br/>
             <code>
-            ○ Match a character in the set [A-Za-z].<br/>
+            ○ Match an ASCII letter.<br/>
             </code>
             </remarks>
         </member>
@@ -12353,6 +12615,12 @@
             Resizes the control surface based on <see cref="P:SadConsole.UI.Controls.ButtonBase.AutoSize"/> or the <see cref="P:SadConsole.UI.Controls.ControlBase.Width"/> and <see cref="P:SadConsole.UI.Controls.ControlBase.Height"/> properties.
             </summary>
             <returns>The control's surface.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CheckBox.EstimateControlSurface">
+            <summary>
+            Estimates the required surface area for the control based on text length and checkbox components.
+            </summary>
+            <returns>A rectangle representing the estimated surface area needed.</returns>
         </member>
         <member name="T:SadConsole.UI.Controls.ComboBox">
             <summary>
@@ -14605,6 +14873,252 @@
         <member name="M:SadConsole.UI.Controls.TextBox.UpdateAndRedraw(System.TimeSpan)">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.UI.Controls.TextEditor">
+            <summary>
+            A multi-line text editor control that supports scrolling and text editing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.Text">
+            <summary>
+            Gets or sets the text content of the editor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.LineCount">
+            <summary>
+            Gets the number of lines in the editor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.CaretPosition">
+            <summary>
+            Gets or sets the caret position as a 2D point (X = column, Y = line).
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.ScrollOffset">
+            <summary>
+            Gets or sets the scroll offset for the editor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.MaxHorizontalScroll">
+            <summary>
+            Gets the maximum scroll offset for the horizontal scrollbar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.MaxVerticalScroll">
+            <summary>
+            Gets the maximum scroll offset for the vertical scrollbar.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.IsEditing">
+            <summary>
+            Gets or sets whether the editor is currently in editing mode.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.MaxLength">
+            <summary>
+            Gets or sets the maximum number of characters allowed in the editor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.WordWrap">
+            <summary>
+            Gets or sets whether word wrap is enabled.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.ShowLineNumbers">
+            <summary>
+            Gets or sets whether line numbers are displayed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.DisableKeyboard">
+            <summary>
+            Disables the keyboard which turns off keyboard input and hides the cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.TextEditor.CaretEffect">
+            <summary>
+            The style to use for the caret.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextEditor.TextChanged">
+            <summary>
+            Raised when the text has changed.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextEditor.TextChangedPreview">
+            <summary>
+            Raised before the text has changed and allows the change to be cancelled.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextEditor.KeyPressed">
+            <summary>
+            Raised when a key is pressed on the editor.
+            </summary>
+        </member>
+        <member name="E:SadConsole.UI.Controls.TextEditor.CaretPositionChanged">
+            <summary>
+            Raised when the caret position changes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of the text editor.
+            </summary>
+            <param name="width">The width of the editor.</param>
+            <param name="height">The height of the editor.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.GetLine(System.Int32)">
+            <summary>
+            Gets the text at a specific line.
+            </summary>
+            <param name="lineIndex">The line index.</param>
+            <returns>The text at the specified line.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.SetLine(System.Int32,System.String)">
+            <summary>
+            Sets the text at a specific line.
+            </summary>
+            <param name="lineIndex">The line index.</param>
+            <param name="text">The text to set.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.InsertLine(System.Int32,System.String)">
+            <summary>
+            Inserts a new line at the specified position.
+            </summary>
+            <param name="lineIndex">The line index to insert at.</param>
+            <param name="text">The text for the new line.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.RemoveLine(System.Int32)">
+            <summary>
+            Removes a line at the specified position.
+            </summary>
+            <param name="lineIndex">The line index to remove.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ScrollToCaret">
+            <summary>
+            Scrolls the editor to make the caret visible.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ScrollToLine(System.Int32)">
+            <summary>
+            Scrolls the editor to a specific line.
+            </summary>
+            <param name="lineIndex">The line index to scroll to.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ValidateCaretPosition">
+            <summary>
+            Validates the caret position and adjusts scroll offset if necessary.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.GetMaxLineLength">
+            <summary>
+            Gets the maximum line length in the editor.
+            </summary>
+            <returns>The maximum line length.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.InitializeScrollbars">
+            <summary>
+            Initializes the scrollbars for the editor.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessTextInput(SadConsole.Input.AsciiKey)">
+            <summary>
+            Processes text input and handles special keys.
+            </summary>
+            <param name="key">The key that was pressed.</param>
+            <returns>True if the key was handled.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessSpecialKeys(SadConsole.Input.AsciiKey)">
+            <summary>
+            Processes special key commands.
+            </summary>
+            <param name="key">The key that was pressed.</param>
+            <returns>True if the key was handled.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.InsertNewLine">
+            <summary>
+            Inserts a new line at the current caret position.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessBackspace">
+            <summary>
+            Processes the backspace key.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessDelete">
+            <summary>
+            Processes the delete key.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretLeft">
+            <summary>
+            Moves the caret to the left.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretRight">
+            <summary>
+            Moves the caret to the right.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretUp">
+            <summary>
+            Moves the caret up.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretDown">
+            <summary>
+            Moves the caret down.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretToLineStart">
+            <summary>
+            Moves the caret to the start of the current line.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretToLineEnd">
+            <summary>
+            Moves the caret to the end of the current line.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretPageUp">
+            <summary>
+            Moves the caret up by one page.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.MoveCaretPageDown">
+            <summary>
+            Moves the caret down by one page.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.ProcessMouse(SadConsole.Input.MouseScreenObjectState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.Resize(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.CheckKeyPressCancel(SadConsole.Input.AsciiKey)">
+            <summary>
+            Raises the <see cref="E:SadConsole.UI.Controls.TextEditor.KeyPressed"/> event and returns <see langword="true"/> if the keypress was cancelled.
+            </summary>
+            <param name="key">The key to use with the event.</param>
+            <returns><see langword="true"/> to indicate that the keypress should be considered cancelled.</returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.DrawTextContent(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Draws the text content of the editor.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.TextEditor.FilterSpecialCharacters(System.String)">
+            <summary>
+            Filters out special characters that shouldn't be displayed in the text.
+            </summary>
+            <param name="text">The text to filter.</param>
+            <returns>The filtered text with special characters handled appropriately.</returns>
+        </member>
         <member name="T:SadConsole.UI.Controls.ToggleButtonBase">
             <summary>
             Base class for toggle button controls, such as <see cref="T:SadConsole.UI.Controls.CheckBox"/> and <see cref="T:SadConsole.UI.Controls.RadioButton"/>.
@@ -14756,6 +15270,12 @@
             Creates a new instance with the default colors of White and Black.
             </summary>
         </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.#ctor(System.Collections.Generic.IEnumerable{SadConsole.UI.NamedColor})">
+            <summary>
+            Creates a new instance with colors from the provided collection.
+            </summary>
+            <param name="initialCollection">The initial collection of named colors.</param>
+        </member>
         <member name="M:SadConsole.UI.NamedColorCollection.LoadDefaults">
             <summary>
             Clears the collection of colors and adds White and Black colors.
@@ -14773,6 +15293,12 @@
             Saves the <see cref="P:SadConsole.UI.NamedColorCollection.Colors"/> dictionary to a file.
             </summary>
             <param name="file">The file.</param>
+        </member>
+        <member name="M:SadConsole.UI.NamedColorCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection of named colors.
+            </summary>
+            <returns>An enumerator for the named colors.</returns>
         </member>
         <member name="T:SadConsole.UI.ThemeStates">
             <summary>
@@ -15443,4 +15969,6 @@
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
+</doc>
+mbers>
 </doc>

@@ -1384,6 +1384,11 @@
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
         </member>
+        <member name="T:SadConsole.Configuration.ExtensionsHost">
+            <summary>
+            Provides extension methods for configuring and running the SadConsole game host.
+            </summary>
+        </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.Run(SadConsole.Configuration.Builder)">
             <summary>
             Runs the game using the builder configuration.
@@ -1416,7 +1421,7 @@
             The <paramref name="monogameCtorCallback"/> method is called by the MonoGame constructor. Some MonoGame specific settings may only be settable via the constructor.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="monogameCtorCallback">A method.</param>
+            <param name="monogameCtorCallback">A method to call during MonoGame construction.</param>
             <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.WithMonoGameInit(SadConsole.Configuration.Builder,System.Action{MonoGame.Framework.WpfInterop.WpfGame})">
@@ -1424,15 +1429,81 @@
             Internal only. Called by the MonoGame game to finish configuring SadConsole.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
-            <param name="monogameInitCallback">A method.</param>
+            <param name="monogameInitCallback">A method to call during MonoGame initialization.</param>
             <returns>The configuration object.</returns>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.SkipMonoGameGameCreation(SadConsole.Configuration.Builder)">
             <summary>
-            When called, tells the game host not to create the monogame game instance at <see cref="P:SadConsole.Game.MonoGameInstance"/>.
+            When called, tells the game host not to create the MonoGame game instance at <see cref="P:SadConsole.Game.MonoGameInstance"/>.
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration object.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.FpsConfig">
+            <summary>
+            Configuration for FPS settings in SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.FpsConfig.UnlimitedFPS">
+            <summary>
+            Gets or sets a value indicating whether unlimited FPS is enabled.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.FpsConfig.ShowFPSVisual">
+            <summary>
+            Gets or sets a value indicating whether to show the FPS visual in MonoGame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FpsConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the FPS configuration.
+            </summary>
+            <param name="configBuilder">The configuration builder.</param>
+            <param name="game">The game host.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.MonoGameSettings">
+            <summary>
+            Configuration for MonoGame-specific settings in SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.MonoGameSettings.UseTitleContainer">
+            <summary>
+            Gets or sets a value indicating whether to use TitleContainer for opening streams.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.MonoGameSettings.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the MonoGame settings configuration.
+            </summary>
+            <param name="config">The configuration builder.</param>
+            <param name="game">The game host.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.MonoGameCallbackConfig">
+            <summary>
+            Configuration for MonoGame callback settings in SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.MonoGameCallbackConfig.MonoGameCtorCallback">
+            <summary>
+            Gets or sets the callback to invoke during MonoGame construction.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.MonoGameCallbackConfig.MonoGameInitCallback">
+            <summary>
+            Gets or sets the callback to invoke during MonoGame initialization.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.MonoGameCallbackConfig.SkipMonoGameGameCreation">
+            <summary>
+            Gets or sets a value indicating whether to skip MonoGame game creation.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.MonoGameCallbackConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the MonoGame callback configuration.
+            </summary>
+            <param name="config">The configuration builder.</param>
+            <param name="game">The game host.</param>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.MonoGame_TextureExtensions">
             <summary>

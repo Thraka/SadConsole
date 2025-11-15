@@ -71,12 +71,29 @@
             Draws an image on top of a console.
             </summary>
         </member>
+        <member name="M:SadConsole.Components.FpsRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.Components.FpsRenderer"/> class.
+            </summary>
+        </member>
         <member name="M:SadConsole.Components.FpsRenderer.Render(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Draws the image.
             </summary>
             <param name="host">The host of the component.</param>
             <param name="delta">Unused.</param>
+        </member>
+        <member name="M:SadConsole.Components.FpsRenderer.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Updates the FPS counter.
+            </summary>
+            <param name="host">The host of the component.</param>
+            <param name="delta">The elapsed time since the last update.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.ExtensionsHost">
+            <summary>
+            Provides extension methods for configuring and running the SadConsole game host.
+            </summary>
         </member>
         <member name="M:SadConsole.Configuration.ExtensionsHost.SetTargetWindow(SadConsole.Configuration.Builder,SFML.Graphics.RenderWindow)">
             <summary>
@@ -98,6 +115,40 @@
             </summary>
             <param name="configBuilder">The builder object that composes the game startup.</param>
             <returns>The configuration builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.InternalHostStartupData">
+            <summary>
+            Configuration for specifying the target window SadConsole renders to instead of building its own window.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.InternalHostStartupData.TargetWindow">
+            <summary>
+            Gets or sets the target window to render the game on.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.InternalHostStartupData.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the internal host startup configuration.
+            </summary>
+            <param name="config">The configuration builder.</param>
+            <param name="game">The game host.</param>
+        </member>
+        <member name="T:SadConsole.Configuration.FpsConfig">
+            <summary>
+            Configuration for FPS settings in SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Configuration.FpsConfig.UnlimitedFPS">
+            <summary>
+            Gets or sets a value indicating whether unlimited FPS is enabled.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.FpsConfig.Run(SadConsole.Configuration.BuilderBase,SadConsole.GameHost)">
+            <summary>
+            Runs the FPS configuration.
+            </summary>
+            <param name="configBuilder">The configuration builder.</param>
+            <param name="game">The game host.</param>
         </member>
         <member name="T:SadConsole.DrawCalls.DrawCallColor">
             <summary>
@@ -203,6 +254,25 @@
         </member>
         <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Input.Extensions">
+            <summary>
+            Provides extension methods for converting between SadConsole and SFML key types.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Input.Extensions.ToSFML(SadConsole.Input.Keys)">
+            <summary>
+            Converts a SadConsole key to an SFML key.
+            </summary>
+            <param name="key">The SadConsole key to convert.</param>
+            <returns>The corresponding SFML key.</returns>
+        </member>
+        <member name="M:SadConsole.Input.Extensions.ToSadConsole(SFML.Window.Keyboard.Key)">
+            <summary>
+            Converts an SFML key to a SadConsole key.
+            </summary>
+            <param name="key">The SFML key to convert.</param>
+            <returns>The corresponding SadConsole key.</returns>
         </member>
         <member name="T:SadConsole.Game">
             <summary>
@@ -338,6 +408,18 @@
         </member>
         <member name="P:SadConsole.Host.GameTexture.Size">
             <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.String)">
+            <summary>
+            Creates a new game texture from a file path.
+            </summary>
+            <param name="path">The file path to load the texture from.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new game texture from a stream.
+            </summary>
+            <param name="stream">The stream to load the texture from.</param>
         </member>
         <member name="M:SadConsole.Host.GameTexture.#ctor(System.UInt32,System.UInt32)">
             <summary>
@@ -493,12 +575,12 @@
         </member>
         <member name="P:SadConsole.Host.Settings.FPS">
             <summary>
-            The target frames per second for the game window. Set before calling <see cref="!:Game.Create()"/>.
+            The target frames per second for the game window. Set before calling <see cref="M:Game.Create*"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.WindowTitle">
             <summary>
-            The game window title. Set before calling <see cref="!:Game.Create()"/>.
+            The game window title. Set before calling <see cref="M:Game.Create*"/>.
             </summary>
         </member>
         <member name="P:SadConsole.Host.Settings.SFMLSurfaceBlendMode">
@@ -1110,6 +1192,18 @@
         </member>
         <member name="M:SadConsole.Renderers.WindowRenderer.AddDefaultSteps">
              <inheritdoc/>
+        </member>
+        <member name="T:SFML.Graphics.Extensions">
+            <summary>
+            Provides extension methods for SFML graphics types.
+            </summary>
+        </member>
+        <member name="M:SFML.Graphics.Extensions.SaveTexture(SFML.Graphics.Texture,System.String)">
+            <summary>
+            Saves a texture to a file.
+            </summary>
+            <param name="texture">The texture to save.</param>
+            <param name="output">The file path to save the texture to.</param>
         </member>
         <member name="T:SFML.Graphics.SpriteBatch">
             <summary>

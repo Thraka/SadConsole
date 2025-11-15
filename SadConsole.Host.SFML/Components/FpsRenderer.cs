@@ -13,6 +13,9 @@ namespace SadConsole.Components
         private int frameCounter = 0;
         private TimeSpan delta = TimeSpan.Zero;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FpsRenderer"/> class.
+        /// </summary>
         public FpsRenderer()
         {
             surface = new Console(30, 1);
@@ -34,6 +37,11 @@ namespace SadConsole.Components
             surface.Render(delta);
         }
 
+        /// <summary>
+        /// Updates the FPS counter.
+        /// </summary>
+        /// <param name="host">The host of the component.</param>
+        /// <param name="delta">The elapsed time since the last update.</param>
         public override void Update(IScreenObject host, TimeSpan delta)
         {
             this.delta += delta;

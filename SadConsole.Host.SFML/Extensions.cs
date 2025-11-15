@@ -3,8 +3,16 @@ using SFMLKeys = SFML.Window.Keyboard.Key;
 
 namespace SadConsole.Input
 {
+    /// <summary>
+    /// Provides extension methods for converting between SadConsole and SFML key types.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Converts a SadConsole key to an SFML key.
+        /// </summary>
+        /// <param name="key">The SadConsole key to convert.</param>
+        /// <returns>The corresponding SFML key.</returns>
         public static SFMLKeys ToSFML(this Input.Keys key)
         {
             // A-Z
@@ -54,11 +62,11 @@ namespace SadConsole.Input
                 Input.Keys.OemMinus => SFMLKeys.Hyphen,
                 Input.Keys.OemPeriod => SFMLKeys.Period,
                 Input.Keys.OemQuestion => SFMLKeys.Slash,
-                Input.Keys.OemTilde => SFMLKeys.Tilde,
+                Input.Keys.OemTilde => SFMLKeys.Grave,
                 Input.Keys.OemOpenBrackets => SFMLKeys.LBracket,
                 Input.Keys.OemPipe => SFMLKeys.Backslash,
                 Input.Keys.OemCloseBrackets => SFMLKeys.RBracket,
-                Input.Keys.OemQuotes => SFMLKeys.Quote,
+                Input.Keys.OemQuotes => SFMLKeys.Apostrophe,
                 Input.Keys.OemBackslash => SFMLKeys.Backslash,
                 Input.Keys.Pause => SFMLKeys.Pause,
                 _ => SFMLKeys.Unknown
@@ -137,6 +145,11 @@ namespace SadConsole.Input
             */
         }
 
+        /// <summary>
+        /// Converts an SFML key to a SadConsole key.
+        /// </summary>
+        /// <param name="key">The SFML key to convert.</param>
+        /// <returns>The corresponding SadConsole key.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Input.Keys ToSadConsole(this SFMLKeys key)
         {
@@ -186,11 +199,11 @@ namespace SadConsole.Input
                 SFMLKeys.Semicolon => Input.Keys.OemSemicolon,
                 SFMLKeys.Comma => Input.Keys.OemComma,
                 SFMLKeys.Slash => Input.Keys.OemQuestion,
-                SFMLKeys.Tilde => Input.Keys.OemTilde,
+                SFMLKeys.Grave => Input.Keys.OemTilde,
                 SFMLKeys.LBracket => Input.Keys.OemOpenBrackets,
                 SFMLKeys.Backslash => Input.Keys.OemPipe,
                 SFMLKeys.RBracket => Input.Keys.OemCloseBrackets,
-                SFMLKeys.Quote => Input.Keys.OemQuotes,
+                SFMLKeys.Apostrophe => Input.Keys.OemQuotes,
                 SFMLKeys.Pause => Input.Keys.Pause,
                 _ => Input.Keys.None
             };
@@ -208,8 +221,16 @@ namespace SadConsole.Input
 
 namespace SFML.Graphics
 {
+    /// <summary>
+    /// Provides extension methods for SFML graphics types.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Saves a texture to a file.
+        /// </summary>
+        /// <param name="texture">The texture to save.</param>
+        /// <param name="output">The file path to save the texture to.</param>
         public static void SaveTexture(Texture texture, string output)
         {
             using (var image = texture.CopyToImage())

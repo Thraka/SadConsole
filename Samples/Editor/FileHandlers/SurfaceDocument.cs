@@ -53,14 +53,13 @@ internal class SurfaceDocument: IFileHandler
 
     public bool Save(object instance, string file, bool compress)
     {
-        if (!file.EndsWith(((IFileHandler)this).ExtensionsSaving[0], StringComparison.InvariantCulture))
-            file += "." + ((IFileHandler)this).ExtensionsSaving[0];
+        file = ((IFileHandler)this).GetFileWithValidExtensionForSave(file);
 
         if (instance is Document doc)
         {
             try
             {
-                Serializer.Save(doc, file, file.EndsWith('z'));
+                Serializer.Save(doc, file, compress);
 
                 if (doc.HasPalette)
                     doc.SavePalette(file + ".pal");

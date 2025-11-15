@@ -80,7 +80,7 @@ public sealed partial class Game : GameHost
                 );
 
     /// <summary>
-    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the specified font.
+    /// Creates a new game with an initialization callback and a console set to the specific cell count that uses the default SadConsole IBM font.
     /// </summary>
     /// <param name="cellCountX">The width of the screen, in cells.</param>
     /// <param name="cellCountY">The height of the screen, in cells.</param>
@@ -142,7 +142,7 @@ public sealed partial class Game : GameHost
     }
 
     /// <summary>
-    /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Host.Game.ResetRendering"/>.
+    /// Method called by the <see cref="Host.Game"/> class for initializing SadConsole specifics. Called prior to <see cref="Global.ResetRendering"/>.
     /// </summary>
     /// <param name="game">The game instance.</param>
     private void MonoGameInit(Microsoft.Xna.Framework.Game game)
@@ -219,6 +219,9 @@ public sealed partial class Game : GameHost
         SplashScreens.SplashScreenManager.CheckRun();
     }
 
+    /// <summary>
+    /// Updates the game state by processing one frame of the game loop.
+    /// </summary>
     public void Tick()
     {
         MonoGameInstance.Tick();

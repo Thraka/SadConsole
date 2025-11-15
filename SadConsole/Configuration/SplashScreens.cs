@@ -48,6 +48,11 @@ public class SplashScreenConfig : IConfigurator
     /// </summary>
     public Func<GameHost, IScreenSurface[]> GenerateSplashScreen { get; set; }
 
+    /// <summary>
+    /// Runs the splash screen configuration and sets the splash screens on the game host.
+    /// </summary>
+    /// <param name="config">The builder configuration.</param>
+    /// <param name="game">The game host instance.</param>
     public void Run(BuilderBase config, GameHost game)
     {
         game.SetSplashScreens(GenerateSplashScreen(game));

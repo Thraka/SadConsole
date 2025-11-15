@@ -11,7 +11,6 @@ class Keyboard : SadConsole.Input.IKeyboardState
     SadConsole.Input.Keys[] _keys;
     //List<SadConsole.Input.Keys> _keys = new List<Input.Keys>(5);
     private RenderWindow _window;
-    private bool _capslock;
 
     public Keyboard(RenderWindow window)
     {
@@ -43,7 +42,7 @@ class Keyboard : SadConsole.Input.IKeyboardState
     }
 
     // TODO: Figure out capslock!
-    public bool CapsLock => _capslock;
+    public bool CapsLock => SFML.Window.Keyboard.IsScancodePressed(SFML.Window.Keyboard.Scancode.CapsLock);
 
     // Forcing numlock on works as the getpressedkeys method will automatically return the keypad key vs keyboard lock key.
     public bool NumLock => true;
