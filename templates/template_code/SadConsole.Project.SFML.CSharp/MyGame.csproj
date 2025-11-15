@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SadConsole.Host.SFML" Version="10.6.0" />
-    <PackageReference Include="SadConsole.Extended" Version="10.6.0" />
+    <PackageReference Include="SadConsole.Host.SFML" Version="10.7.0" />
+    <PackageReference Include="SadConsole.Extended" Version="10.7.0" />
   </ItemGroup>
 
 </Project>

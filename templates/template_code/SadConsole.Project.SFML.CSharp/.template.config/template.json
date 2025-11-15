@@ -1,47 +1,47 @@
 {
-    "$schema": "http://json.schemastore.org/template",
-    "author": "Thraka",
-    "classifications": [
-        "Console",
-        "Roguelike",
-        "SadConsole",
-        "SFML"
-    ],
-    "identity": "SadConsole.Project.SFML.CSharp",
-    "groupIdentity":"SadConsole.Project.SFML",
-    "name": "SadConsole Game (SFML)",
-    "shortName": "sadconsole.sfml",
-    "preferNameDirectory": true,
-    "symbols": {
-        "Framework": {
-            "type": "parameter",
-            "description": "The target framework for the project.",
-            "datatype": "choice",
-            "choices": [
-                {
-                    "choice": "net6.0",
-                    "description": "Target net6.0",
-                    "displayName": ".NET 6.0"
-                },
-                {
-                    "choice": "net8.0",
-                    "description": "Target net8.0",
-                    "displayName": ".NET 8.0"
-                },
-                {
-                    "choice": "net9.0",
-                    "description": "Target net9.0",
-                    "displayName": ".NET 9.0"
-                }
-            ],
-            "replaces": "net8.0",
-            "defaultValue": "net8.0",
-            "displayName": "Framework"
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Thraka",
+  "classifications": [
+    "Console",
+    "Roguelike",
+    "SadConsole",
+    "SFML"
+  ],
+  "identity": "SadConsole.Project.SFML.CSharp",
+  "groupIdentity": "SadConsole.Project.SFML",
+  "name": "SadConsole Game (SFML)",
+  "shortName": "sadconsole.sfml",
+  "preferNameDirectory": true,
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net8.0",
+          "description": "Target net8.0",
+          "displayName": ".NET 8.0"
+        },
+        {
+          "choice": "net9.0",
+          "description": "Target net9.0",
+          "displayName": ".NET 9.0"
+        },
+        {
+          "choice": "net10.0",
+          "description": "Target net10.0",
+          "displayName": ".NET 10.0"
         }
-    },
-    "tags": {
-        "language": "C#",
-        "type": "project"
-    },
-    "sourceName": "SadConsoleGame"
+      ],
+      "replaces": "net8.0",
+      "defaultValue": "net8.0",
+      "displayName": "Framework"
+    }
+  },
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "SadConsoleGame"
 }
