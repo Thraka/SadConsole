@@ -11605,7 +11605,7 @@
             <code>[a-zA-Z]</code><br/>
             Explanation:<br/>
             <code>
-            ○ Match a character in the set [A-Za-z].<br/>
+            ○ Match an ASCII letter.<br/>
             </code>
             </remarks>
         </member>
@@ -15969,4 +15969,6 @@
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
+</doc>
+mbers>
 </doc>

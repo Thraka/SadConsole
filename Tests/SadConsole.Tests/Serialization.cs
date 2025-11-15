@@ -187,5 +187,20 @@ namespace SadConsole.Tests
                 surfaceTest.Surface_Equals(animation.Frames[i], animation2.Frames[i]);
             }
         }
+
+        [TestMethod]
+        public void Font_SerializeDeserialize()
+        {
+            new SadConsole.Tests.BasicGameHost();
+
+            IFont font = SadConsole.GameHost.Instance.DefaultFont;
+            
+            var json = SadConsole.Serializer.Serialize(font);
+            var restored = SadConsole.Serializer.Deserialize<SadFont>(json);
+
+            Assert.IsNotNull(restored);
+            Assert.AreEqual(font.Name, restored.Name);
+            
+        }
     }
 }

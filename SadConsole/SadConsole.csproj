@@ -48,7 +48,7 @@
 
   <ItemGroup>
     <PackageReference Include="Coroutine" Version="2.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
     <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />

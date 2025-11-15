@@ -164,7 +164,10 @@ public static class Serializer
         try
         {
             obj = Load<T>(file, isCompressed, settings);
-            return true;
+            if (obj is not null)
+                return true;
+            else
+                return false;
         }
         catch (Exception e)
         {
