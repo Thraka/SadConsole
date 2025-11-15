@@ -14,32 +14,21 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <GameHost>monogame</GameHost>
-    <UseProjectReferences>false</UseProjectReferences>
-
-    <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
-    <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
+    <UseProjectReferences>true</UseProjectReferences>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
-    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(GameHost)' == 'sfml' ">
-    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="10.*" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
-
+    
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Extended" Version="10.*" />
 
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    
     <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
 
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
