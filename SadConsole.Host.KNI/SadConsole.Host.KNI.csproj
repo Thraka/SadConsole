@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <Version>$(SadConsole_Host_MonoGameWPF_Version)</Version>
+    <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
+    <AssemblyTitle>SadConsole KNI Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets KNI.</Description>
+    <PackageId>SadConsole.Host.KNI</PackageId>
+    <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
+    <PackageReleaseNotes>
+- Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
+- Change host to be a lot more friendly towards running from an existing MonoGame Game instead of SadConsole's game.
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);MONOGAME;KNI</DefineConstants>
+    <RootNamespace>SadConsole.Host.MonoGame</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Import the MonoGame files-->
+    <Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" Exclude="..\SadConsole.Host.MonoGame\obj\**\*.cs" />
+
+    <!-- Get rid of the WPF-specific files -->
+    <Compile Remove="..\SadConsole.Host.MonoGame\**\*.Wpf.cs" />
+    <Compile Remove="..\SadConsole.Host.MonoGame\Xaml\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+
+    <PackageReference Include="nkast.Xna.Framework" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Content" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Graphics" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Audio" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Media" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Input" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Game" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Devices" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Storage" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.XR" Version="4.2.9001" />
+    <PackageReference Include="nkast.Xna.Framework.Content.Pipeline.Builder" Version="4.2.9001" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <Import Project="..\SadConsole.Host.Shared\SadConsole.Host.Shared.projitems" Label="Shared" />
+
+</Project>
