@@ -13,7 +13,7 @@ public class SaveFile : ImGuiWindowBase
     private ImGuiList<IFileHandler> _fileLoaders = new();
     private string _selectedFileName = "";
     private Document _document;
-    private bool useCompression;
+    private bool _useCompression;
 
     public SaveFile(Document document)
     {
@@ -66,7 +66,7 @@ public class SaveFile : ImGuiWindowBase
                 ImGui.Separator();
 
                 if (_fileLoaders.SelectedItem.DefaultSaveOptions.ShowCompressionToggle)
-                    ImGui.Checkbox("Compress File", ref useCompression);
+                    ImGui.Checkbox("Compress File", ref _useCompression);
 
                 ImGui.AlignTextToFramePadding();
                 ImGui.Text("File name: ");
@@ -92,13 +92,13 @@ public class SaveFile : ImGuiWindowBase
                             {
                                 if (((PromptWindow)s).DialogResult)
                                 {
-                                    _fileLoaders.SelectedItem.Save(_document, file, useCompression);
+                                    _fileLoaders.SelectedItem.Save(_document, file, _useCompression);
                                 }
                             };
                             window.Open();
                         }
                         else
-                            _fileLoaders.SelectedItem.Save(_document, file, useCompression);
+                            _fileLoaders.SelectedItem.Save(_document, file, _useCompression);
                     }
 
                     Close();

@@ -24,7 +24,7 @@ public static partial class Core
 
         public static ImGuiList<Documents.Document> Documents = new();
 
-        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentAnimated.Builder());
+        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentAnimated.Builder(), new Documents.DocumentScene.Builder());
 
         public static ImGuiList<Tools.ITool> Tools = new();
 
