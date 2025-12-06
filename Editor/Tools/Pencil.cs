@@ -71,30 +71,8 @@ internal class Pencil : ITool
         // Objects mode
         else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
         {
-            IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
-
-            ImGui.SetNextItemWidth(-1);
-
-            if (ImGui.BeginListBox("##pencil_simplegameobjects"u8))
-            {
-                SimpleObjectHelpers.DrawSelectables("pencil_simplegameobjects", docSimpleObjects.SimpleObjects, document.EditingSurfaceFont);
-
-                ImGui.EndListBox();
-            }
-
-            bool isItemSelected = docSimpleObjects.SimpleObjects.IsItemSelected();
-
-            if (isItemSelected)
-            {
-                ImGui.SeparatorText("Selected Object"u8);
-
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
-                    document.EditingSurfaceFont,
-                    docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
-                ImGui.SameLine();
-                ImGui.Text(docSimpleObjects.SimpleObjects.SelectedItem!.ToString());
-                SharedToolSettings.Tip = (ColoredGlyph)docSimpleObjects.SimpleObjects.SelectedItem.Visual.Clone();
-            }
+            if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
+                SharedToolSettings.Tip = (ColoredGlyph)obj.Visual.Clone();
         }
     }
 
@@ -136,7 +114,7 @@ internal class Pencil : ITool
 
         if (!isActive) return;
 
-        if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw || document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
+        if (CurrentMode == ToolMode.Modes.Draw || CurrentMode == ToolMode.Modes.Objects)
         {
             if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
             {
@@ -144,7 +122,7 @@ internal class Pencil : ITool
                 SharedToolSettings.Tip.CopyAppearanceTo(document.EditingSurface.Surface[hoveredCellPosition]);
                 document.EditingSurface.IsDirty = true;
             }
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right) && CurrentMode == ToolMode.Modes.Draw)
             {
                 ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
 

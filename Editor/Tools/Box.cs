@@ -16,6 +16,37 @@ internal class Box : ITool
                                                               HasFill = false,
                                                               FillGlyph = new ColoredGlyph()};
 
+    private ImGuiTypes.ShapeSettings _shapeSettingsDraw = new()
+    {
+        HasBorder = true,
+        UseBoxBorderStyle = true,
+        BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+        BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
+        HasFill = false,
+        FillGlyph = new ColoredGlyph()
+    };
+
+    private ImGuiTypes.ShapeSettings _shapeSettingsErase = new()
+    {
+        HasBorder = true,
+        UseBoxBorderStyle = true,
+        BoxBorderStyle = ICellSurface.ConnectedLineThin,
+        BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
+        HasFill = true,
+        FillGlyph = new ColoredGlyph(Color.White, Color.Gray.SetAlpha(100))
+    };
+
+    private ImGuiTypes.ShapeSettings _shapeSettingsOther = new()
+    {
+        HasBorder = true,
+        UseBoxBorderStyle = true,
+        BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+        BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
+        HasFill = false,
+        FillGlyph = new ColoredGlyph()
+    };
+
+
     private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
 
     private bool _isDrawing = false;
@@ -151,10 +182,44 @@ internal class Box : ITool
                 }
             }
         }
+        // Objects mode
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
+        {
+            ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
+            ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
+
+            if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
+            {
+                if (_shapeSettings.HasBorder)
+                {
+                    _shapeSettings.UseBoxBorderStyle = false;
+                    _shapeSettings.BoxBorderStyle = null;
+                    _shapeSettings.BorderGlyph = obj.Visual;
+                }
+
+                if (_shapeSettings.HasFill)
+                    _shapeSettings.FillGlyph = obj.Visual;
+            }
+        }
     }
 
     private void ConfigureToolMode(Document document)
     {
+        // Moving from an old mode, capture shape settings
+        switch (CurrentMode)
+        {
+            case ToolMode.Modes.Draw:
+                _shapeSettingsDraw = _shapeSettings;
+                break;
+            case ToolMode.Modes.Objects:
+            case ToolMode.Modes.Zones:
+                _shapeSettingsOther = _shapeSettings;
+                break;
+            default:
+                break;
+        }
+
+        // Move to new mode
         CurrentMode = document.ToolModes.SelectedItem!.Mode;
 
         // Clear the box layer
@@ -164,6 +229,8 @@ internal class Box : ITool
 
         if (CurrentMode == ToolMode.Modes.Empty)
         {
+            _shapeSettings = _shapeSettingsErase;
+
             document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
             document.VisualLayerToolLower.Clear();
 
@@ -180,8 +247,18 @@ internal class Box : ITool
                     document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
             }
         }
+        else if (CurrentMode == ToolMode.Modes.Draw)
+        {
+            _shapeSettings = _shapeSettingsDraw;
+
+            // Reset empty tool mode
+            document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
+            document.VisualLayerToolLower.Clear();
+        }
         else
         {
+            _shapeSettings = _shapeSettingsOther;
+
             // Reset empty tool mode
             document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
             document.VisualLayerToolLower.Clear();
