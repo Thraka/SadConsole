@@ -6,15 +6,30 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
 
-public partial class DocumentSurface: Document, IDocumentSimpleObjects
+public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumentZones
 {
     public ImGuiList<SimpleObjectDefinition> SimpleObjects { get; } = new();
+    public ImGuiList<Serialization.ZoneSerialized> Zones { get; } = new();
 
     public DocumentSurface()
     {
+        Tools = Tools.Append(new Tools.Zones()).ToArray();
+        Zones.Objects.Add(new Serialization.ZoneSerialized()
+        {
+            Name = "Default Zone",
+            ZoneArea = new(new SadRogue.Primitives.Rectangle(1, 1, 10, 10).Positions()),
+            Appearance = new ColoredGlyph()
+            {
+                Foreground = SadRogue.Primitives.Color.Yellow,
+                Background = SadRogue.Primitives.Color.DarkGray,
+                Glyph = '@',
+                Mirror = SadConsole.Mirror.None
+            }
+        });
+        SyncToolModes();
     }
 
-    public DocumentSurface(CellSurface editingSurface)
+    public DocumentSurface(CellSurface editingSurface): this()
     {
         EditingSurface = new ScreenSurface(editingSurface);
         EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;
@@ -27,25 +42,25 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
 
     public override void BuildUiDocumentSettings(ImGuiRenderer renderer)
     {
-        ImGui.SeparatorText("Surface Settings");
+        ImGui.SeparatorText("Surface Settings"u8);
 
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Name:");
+        ImGui.Text("Name:"u8);
         ImGui.SameLine();
         ImGui.SetNextItemWidth(-1);
 
         string editTitle = Title;
-        if (ImGui.InputText("##name", ref editTitle, 50))
+        if (ImGui.InputText("##name"u8, ref editTitle, 50))
             Title = editTitle;
 
         ImGui.Separator();
 
         ImGui.BeginGroup();
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Width: ");
+        ImGui.Text("Width: "u8);
         ImGui.SameLine();
         ImGui.Text(EditingSurface.Width.ToString());
-        ImGui.Text("Height:");
+        ImGui.Text("Height:"u8);
         ImGui.SameLine();
         ImGui.Text(EditingSurface.Height.ToString());
         ImGui.EndGroup();
@@ -53,7 +68,7 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
 
         if (EditingSurface is ICellSurfaceResize)
         {
-            if (ImGui.Button("Resize"))
+            if (ImGui.Button("Resize"u8))
             {
                 _width = new(EditingSurface.Width);
                 _height = new(EditingSurface.Height);
@@ -87,7 +102,8 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
 
         var DefaultForeground = EditingSurface.Surface.DefaultForeground.ToVector4();
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Def. Foreground: ");
+        ImGui.Text("Def. Foreground: "u8);
+        
         ImGui.SameLine();
         if (ImGui.ColorEdit4("##fore", ref DefaultForeground, ImGuiColorEditFlags.NoInputs))
             EditingSurface.Surface.DefaultForeground = DefaultForeground.ToColor();
@@ -95,7 +111,7 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
 
         var DefaultBackground = EditingSurface.Surface.DefaultBackground.ToVector4();
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Def. Background: ");
+        ImGui.Text("Def. Background: "u8);
         ImGui.SameLine();
         if (ImGui.ColorEdit4("##back", ref DefaultBackground, ImGuiColorEditFlags.NoInputs))
             EditingSurface.Surface.DefaultBackground = DefaultBackground.ToColor();
@@ -103,20 +119,20 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
         ImGui.Separator();
 
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Font: ");
+        ImGui.Text("Font: "u8);
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
             base.FontSelectionWindow_Popup();
 
         ImGui.AlignTextToFramePadding();
-        ImGui.Text("Editor Font Size: ");
+        ImGui.Text("Editor Font Size: "u8);
         ImGui.SameLine();
         if (ImGui.Button(EditorFontSize.ToString()))
         {
             ImGui.OpenPopup("editorfontsize_select");
         }
         ImGui.SameLine();
-        if (ImGui.Button("Reset"))
+        if (ImGui.Button("Reset"u8))
         {
             EditorFontSize = EditingSurfaceFontSize;
 
@@ -143,13 +159,53 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+    }
 
-        ImGui.SeparatorText("Simple Game Objects"u8);
-        if (ImGui.Button("Manage"u8))
-            new Windows.SimpleObjectEditor(SimpleObjects, DefaultForeground, DefaultBackground, EditingSurfaceFont).Open();
+    public override void ImGuiDrawTopBar(ImGuiRenderer renderer)
+    {
+        if (ImGui.BeginMenu("Document Options"))
+        {
+            bool optionChanged = false;
 
-        ImGui.SameLine();
-        ImGui.Button("Import"u8);
+            ImGui.PushItemFlag(ImGuiItemFlags.AutoClosePopups, false);
+
+            bool enableSimpleObjs = Options.UseSimpleObjects;
+            optionChanged |= ImGui.MenuItem("Enable Simple Objs", "", ref enableSimpleObjs);
+            Options.UseSimpleObjects = enableSimpleObjs;
+
+            bool enableZones = Options.UseZones;
+            optionChanged |= ImGui.MenuItem("Enable Zones", "", ref enableZones);
+            Options.UseZones = enableZones;
+
+            if (optionChanged)
+                SyncToolModes();
+
+            ImGui.PopItemFlag();
+
+            if (enableSimpleObjs || enableZones)
+            {
+                if (enableSimpleObjs)
+                {
+                    ImGui.SeparatorText("Simple Objects");
+
+                    if (ImGui.MenuItem("Manage Simple Objects"u8))
+                        new Windows.SimpleObjectEditor(SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont).Open();
+
+                    if (ImGui.MenuItem("Import"u8))
+                        throw new NotImplementedException();
+                }
+
+                if (enableZones)
+                {
+                    ImGui.SeparatorText("Zones");
+
+                    if (ImGui.MenuItem("Edit Zones"u8))
+                        throw new NotImplementedException();
+                }
+            }
+
+            ImGui.EndMenu();
+        }
     }
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>

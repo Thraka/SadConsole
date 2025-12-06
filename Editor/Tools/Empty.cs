@@ -31,8 +31,8 @@ internal class Empty : ITool
         {
             document.EditingSurface.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
 
-            document.VisualLayerToolLower.Surface!.Surface[hoveredCellPosition.X - document.EditingSurface.Surface.ViewPosition.X, hoveredCellPosition.Y - document.EditingSurface.Surface.ViewPosition.Y].Background = _emptyCellColor;
-            document.VisualLayerToolLower.Surface!.IsDirty = true;
+            document.VisualLayerToolMiddle.Surface!.Surface[hoveredCellPosition.X - document.EditingSurface.Surface.ViewPosition.X, hoveredCellPosition.Y - document.EditingSurface.Surface.ViewPosition.Y].Background = _emptyCellColor;
+            document.VisualLayerToolMiddle.Surface!.IsDirty = true;
         }
     }
 
@@ -45,28 +45,26 @@ internal class Empty : ITool
 
     public void OnDeselected(Document document)
     {
-        document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
-        document.VisualLayerToolLower.Clear();
+        document.VisualLayerToolMiddle.Surface.DefaultBackground = Color.Transparent;
+        document.VisualLayerToolMiddle.Clear();
     }
 
     public void DocumentViewChanged(Document document)
     {
-        //document.VisualLayerToolLower.Update(document.VisualToolContainer, TimeSpan.Zero);
-
-        document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-        document.VisualLayerToolLower.Clear();
+        document.VisualLayerToolMiddle.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        document.VisualLayerToolMiddle.Clear();
 
         var clearCell = new ColoredGlyph(document.EditingSurface.Surface.DefaultForeground, document.EditingSurface.Surface.DefaultBackground, 0);
 
-        for (int index = 0; index < document.VisualLayerToolLower.Surface.Surface.Count; index++)
+        for (int index = 0; index < document.VisualLayerToolMiddle.Surface.Surface.Count; index++)
         {
-            ColoredGlyphBase renderCell = document.EditingSurface.Surface[(Point.FromIndex(index, document.VisualLayerToolLower.Surface.Surface.Width) + document.EditingSurface.Surface.ViewPosition).ToIndex(document.EditingSurface.Surface.Width)];
+            ColoredGlyphBase renderCell = document.EditingSurface.Surface[(Point.FromIndex(index, document.VisualLayerToolMiddle.Surface.Surface.Width) + document.EditingSurface.Surface.ViewPosition).ToIndex(document.EditingSurface.Surface.Width)];
 
             if (renderCell.Foreground == clearCell.Foreground &&
                 renderCell.Background == clearCell.Background &&
                 renderCell.Glyph == clearCell.Glyph)
 
-                document.VisualLayerToolLower.Surface.Surface[index].Background = _emptyCellColor;
+                document.VisualLayerToolMiddle.Surface.Surface[index].Background = _emptyCellColor;
         }
 
         //Overlay.Surface.Render(TimeSpan.Zero);

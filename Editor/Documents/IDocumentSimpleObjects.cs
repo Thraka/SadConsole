@@ -4,7 +4,7 @@ namespace SadConsole.Editor.Documents;
 
 public interface IDocumentSimpleObjects
 {
-    public ImGuiList<SimpleObjectDefinition> SimpleObjects { get; }
+    ImGuiList<SimpleObjectDefinition> SimpleObjects { get; }
 
     public bool TryLoadObjects(string file)
     {

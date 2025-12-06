@@ -25,6 +25,7 @@ internal class Box : ITool
     private bool _isCancelled;
 
     public string Title => "\uefa4 Box";
+    public ToolMode.Modes CurrentMode;
 
     public string Description =>
         """
@@ -48,95 +49,142 @@ internal class Box : ITool
 
         ScreenSurface surface = document.EditingSurface;
 
-        //SettingsTable.BeginTable("toolsettings");
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Mode"u8);
+        ImGui.SameLine();
 
-        ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
-        //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
-        if (_shapeSettings.HasBorder)
+        CurrentMode = document.ToolModes.SelectedItem!.Mode;
+
+        if (ImGui.Combo("##toolmode", ref document.ToolModes.SelectedItemIndex, document.ToolModes.Names, document.ToolModes.Count))
+            ConfigureToolMode(document);
+
+        // Drawing mode
+        if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw)
         {
-            if (ImGui.CollapsingHeader("Border Options"))
+
+            ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
+            //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
+            if (_shapeSettings.HasBorder)
             {
-                // Data for border settings
-                ColoredGlyphReference borderGlyph = _shapeSettings.BorderGlyph ??= new ColoredGlyph();
-
-                SettingsTable.BeginTable("bordersettings");
-
-                ImGui.TableNextRow();
-                ImGui.TableSetColumnIndex(0);
-                ImGui.AlignTextToFramePadding();
-                ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
-                ImGui.TableSetColumnIndex(1);
-
-                ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
-                ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
-                ImGui.EndDisabled();
-
-                if (_shapeSettings.UseBoxBorderStyle)
-                    _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
-                else
-                    _shapeSettings.BoxBorderStyle = null;
-
-                if (_shapeSettings.UseBoxBorderStyle)
+                if (ImGui.CollapsingHeader("Border Options"))
                 {
-                    SettingsTable.DrawColor("Foreground", "##borderFore", ref borderGlyph.Foreground, surface.Surface.DefaultForeground.ToVector4(), true, out bool rightClick);
-                    SettingsTable.DrawColor("Background", "##borderBack", ref borderGlyph.Background, surface.Surface.DefaultBackground.ToVector4(), true, out rightClick);
+                    // Data for border settings
+                    ColoredGlyphReference borderGlyph = _shapeSettings.BorderGlyph ??= new ColoredGlyph();
+
+                    SettingsTable.BeginTable("bordersettings");
+
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
+                    ImGui.TableSetColumnIndex(1);
+
+                    ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
+                    ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
+                    ImGui.EndDisabled();
+
+                    if (_shapeSettings.UseBoxBorderStyle)
+                        _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
+                    else
+                        _shapeSettings.BoxBorderStyle = null;
+
+                    if (_shapeSettings.UseBoxBorderStyle)
+                    {
+                        SettingsTable.DrawColor("Foreground", "##borderFore", ref borderGlyph.Foreground, surface.Surface.DefaultForeground.ToVector4(), true, out bool rightClick);
+                        SettingsTable.DrawColor("Background", "##borderBack", ref borderGlyph.Background, surface.Surface.DefaultBackground.ToVector4(), true, out rightClick);
+                    }
+                    else
+                    {
+                        SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                            ref borderGlyph,
+                            surface.Surface.DefaultForeground.ToVector4(),
+                            surface.Surface.DefaultBackground.ToVector4(),
+                            document.EditingSurfaceFont, ImGuiCore.Renderer
+                        );
+                    }
+
+                    SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
+                    SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
+                    SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
+                    SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
+                    SettingsTable.EndTable();
+                    // Store the altered settings
+                    _shapeSettings.BorderGlyph = borderGlyph.ToColoredGlyph();
                 }
-                else
+            }
+
+            // Show a separator line if the previous section is shown
+            if (_shapeSettings.HasBorder)
+                ImGui.Separator();
+
+            ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
+
+            //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
+
+            if (_shapeSettings.HasFill)
+            {
+                if (ImGui.CollapsingHeader("Fill Options"))
                 {
+                    _shapeSettings.FillGlyph ??= new ColoredGlyph();
+
+                    // Data for border settings
+                    ColoredGlyphReference fillGlyph = _shapeSettings.FillGlyph;
+
+                    SettingsTable.BeginTable("fillsettings");
+
                     SettingsTable.DrawCommonSettings(true, true, true, true, true,
-                        ref borderGlyph,
+                        ref fillGlyph,
                         surface.Surface.DefaultForeground.ToVector4(),
                         surface.Surface.DefaultBackground.ToVector4(),
                         document.EditingSurfaceFont, ImGuiCore.Renderer
                     );
-                }
 
-                SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
-                SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
-                SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
-                SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
-                SettingsTable.EndTable();
-                // Store the altered settings
-                _shapeSettings.BorderGlyph = borderGlyph.ToColoredGlyph();
+                    SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
+                    SettingsTable.DrawCheckbox("Ignore Background", "##ignore_Fill_background", ref _shapeSettings.IgnoreFillBackground);
+                    SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_Fill_mirror", ref _shapeSettings.IgnoreFillMirror);
+                    SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_Fill_glyph", ref _shapeSettings.IgnoreFillGlyph);
+
+                    SettingsTable.EndTable();
+
+                    // Store the altered settings
+                    _shapeSettings.FillGlyph = fillGlyph.ToColoredGlyph();
+                }
             }
         }
+    }
 
-        // Show a separator line if the previous section is shown
-        if (_shapeSettings.HasBorder)
-            ImGui.Separator();
+    private void ConfigureToolMode(Document document)
+    {
+        CurrentMode = document.ToolModes.SelectedItem!.Mode;
 
-        ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
+        // Clear the box layer
+        ClearState();
+        document.VisualLayerToolMiddle.Surface.DefaultBackground = Color.Transparent;
+        document.VisualLayerToolMiddle.Clear();
 
-        //SettingsTable.DrawCheckbox("Has Border", "##hasborder", ref _shapeSettings.HasBorder);
-
-        if (_shapeSettings.HasFill)
+        if (CurrentMode == ToolMode.Modes.Empty)
         {
-            if (ImGui.CollapsingHeader("Fill Options"))
+            document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            document.VisualLayerToolLower.Clear();
+
+            var clearCell = new ColoredGlyph(document.EditingSurface.Surface.DefaultForeground, document.EditingSurface.Surface.DefaultBackground, 0);
+
+            for (int index = 0; index < document.VisualLayerToolLower.Surface.Surface.Count; index++)
             {
-                _shapeSettings.FillGlyph ??= new ColoredGlyph();
+                ColoredGlyphBase renderCell = document.EditingSurface.Surface[(Point.FromIndex(index, document.VisualLayerToolLower.Surface.Surface.Width) + document.EditingSurface.Surface.ViewPosition).ToIndex(document.EditingSurface.Surface.Width)];
 
-                // Data for border settings
-                ColoredGlyphReference fillGlyph = _shapeSettings.FillGlyph;
+                if (renderCell.Foreground == clearCell.Foreground &&
+                    renderCell.Background == clearCell.Background &&
+                    renderCell.Glyph == clearCell.Glyph)
 
-                SettingsTable.BeginTable("fillsettings");
-
-                SettingsTable.DrawCommonSettings(true, true, true, true, true,
-                    ref fillGlyph,
-                    surface.Surface.DefaultForeground.ToVector4(),
-                    surface.Surface.DefaultBackground.ToVector4(),
-                    document.EditingSurfaceFont, ImGuiCore.Renderer
-                );
-
-                SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
-                SettingsTable.DrawCheckbox("Ignore Background", "##ignore_Fill_background", ref _shapeSettings.IgnoreFillBackground);
-                SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_Fill_mirror", ref _shapeSettings.IgnoreFillMirror);
-                SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_Fill_glyph", ref _shapeSettings.IgnoreFillGlyph);
-
-                SettingsTable.EndTable();
-
-                // Store the altered settings
-                _shapeSettings.FillGlyph = fillGlyph.ToColoredGlyph();
+                    document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
             }
+        }
+        else
+        {
+            // Reset empty tool mode
+            document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
+            document.VisualLayerToolLower.Clear();
         }
     }
 
@@ -157,7 +205,7 @@ internal class Box : ITool
             {
                 ClearState();
                 _isCancelled = true;
-                document.VisualLayerToolLower.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.Clear();
             }
 
             if (_isCancelled)
@@ -175,8 +223,8 @@ internal class Box : ITool
 
                 _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
-                document.VisualLayerToolLower.Surface.Clear();
-                document.VisualLayerToolLower.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                document.VisualLayerToolMiddle.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
                                                                             new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
                                                                             _shapeSettings.ToShapeParameters());
             }
@@ -184,30 +232,55 @@ internal class Box : ITool
             // Commit
             else if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
             {
+                Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
+                Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
+
+                // TODO: Can you even get Point.None here?
                 if (_firstPoint != Point.None)
                 {
-                    Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
-                    Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
-                    document.EditingSurface.Surface.DrawBox(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
-                                                                          new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
-                                                            _shapeSettings.ToShapeParameters());
+                    // Draw box or object mode
+                    if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw || document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
+                    {
+                        document.EditingSurface.Surface.DrawBox(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                                                                new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
+                                                                _shapeSettings.ToShapeParameters());
+                    }
 
-                    document.VisualLayerToolLower.Surface.Clear();
+                    // Empty cell mode
+                    else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
+                    {
+                        // Erase the editing surface
+                        document.EditingSurface.Surface.Clear(
+                            new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                          new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))));
+
+                        // Fill the empty tool layer
+                        document.VisualLayerToolLower.Surface.Fill(
+                            new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                          new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
+                            background: Core.Settings.EmptyCellColor);
+                    }
                 }
 
+                document.VisualLayerToolMiddle.Surface.Clear();
                 ClearState();
             }
         }
     }
 
-    public void OnSelected(Document document) { }
+    public void OnSelected(Document document) =>
+        ConfigureToolMode(document);
 
-    public void OnDeselected(Document document) =>
+    public void OnDeselected(Document document)
+    {
         ClearState();
+        document.ResetVisualLayers();
+    }
 
     public void Reset(Document document) { }
 
-    public void DocumentViewChanged(Document document) { }
+    public void DocumentViewChanged(Document document) =>
+        ConfigureToolMode(document);
 
     public void DrawOverDocument(Document document) { }
 

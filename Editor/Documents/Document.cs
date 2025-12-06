@@ -34,7 +34,13 @@ public abstract partial class Document : ITitle
 
     public LayeredScreenSurface VisualTool;
     public CellSurface VisualLayerToolUpper;
+    public CellSurface VisualLayerToolMiddle;
     public CellSurface VisualLayerToolLower;
+
+    public ImGuiList<ToolMode> ToolModes = new(ToolMode.DrawMode,
+                                               ToolMode.EmptyMode,
+                                               ToolMode.ObjectsMode,
+                                               ToolMode.ZonesMode);
 
     [DataMember]
     public ScreenSurface EditingSurface;
@@ -69,6 +75,7 @@ public abstract partial class Document : ITitle
         EditorFontSize = EditingSurfaceFontSize;
         VisualTool = new LayeredScreenSurface(1, 1);
         VisualLayerToolLower = (CellSurface)VisualTool.Layers[0];
+        VisualLayerToolMiddle = VisualTool.Layers.Create();
         VisualLayerToolUpper = VisualTool.Layers.Create();
     }
 
@@ -128,9 +135,72 @@ public abstract partial class Document : ITitle
         _height = new(EditingSurface.Height);
     }
 
+    public void SyncToolModes()
+    {
+        ToolMode.Modes previousMode = ToolModes.SelectedItem?.Mode ?? ToolMode.Modes.Draw;
+
+        List<ToolMode> availableModes = [ToolMode.DrawMode, ToolMode.EmptyMode];
+
+        if (Options.UseSimpleObjects)
+            availableModes.Add(ToolMode.ObjectsMode);
+
+        if (Options.UseZones)
+            availableModes.Add(ToolMode.ZonesMode);
+
+        ToolModes = new([.. availableModes]);
+
+        // Restore previous mode if possible
+        ToolModes.SelectedItemIndex = availableModes.FindIndex(mode => mode.Mode == previousMode);
+    }
+
+    public void ResetVisualLayers()
+    {
+        VisualLayerToolLower.DefaultForeground = Color.White;
+        VisualLayerToolLower.DefaultBackground = Color.Transparent;
+        VisualLayerToolLower.Clear();
+        VisualLayerToolMiddle.DefaultForeground = Color.White;
+        VisualLayerToolMiddle.DefaultBackground = Color.Transparent;
+        VisualLayerToolMiddle.Clear();
+        VisualLayerToolUpper.DefaultForeground = Color.White;
+        VisualLayerToolUpper.DefaultBackground = Color.Transparent;
+        VisualLayerToolUpper.Clear();
+    }
+
+    /// <summary>
+    /// If <see cref="DocumentOptions.DrawSelf"/> is true, this method is called when rendering a document to the Document tab.
+    /// </summary>
+    /// <param name="renderer">The ImGuiRenderer instance used to draw ImGui controls. Cannot be null.</param>
     public virtual void ImGuiDraw(ImGuiRenderer renderer) { }
 
-    public void Redraw(bool redrawSurface, bool redrawTooling)
+    /// <summary>
+    /// Performs custom ImGui rendering after all other editor components have been drawn.
+    /// </summary>
+    /// <remarks>Override this method to inject additional ImGui UI elements or overlays.</remarks>
+    /// <param name="renderer">The ImGuiRenderer instance used to issue ImGui draw commands.</param>
+    public virtual void ImGuiDrawAfterEverything(ImGuiRenderer renderer) { }
+
+    /// <summary>
+    /// Renders a main menu item after the File item. This is called during ImGui.BeginMainMenuBar.
+    /// </summary>
+    /// <remarks>Override this method to customize the appearance or behavior of the top bar in the ImGui
+    /// interface.</remarks>
+    /// <param name="renderer">The ImGuiRenderer instance used to draw the top bar components. Cannot be null.</param>
+    public virtual void ImGuiDrawTopBar(ImGuiRenderer renderer) { }
+
+    /// <summary>
+    /// Refreshes the display and tooling layers by re-rendering the editing surface and associated visual tools.
+    /// </summary>
+    /// <remarks>
+    /// Call this method when changes to the editing surface or tooling require the display to be
+    /// updated. This method manages texture resources and ensures that both the main surface and tooling layers are
+    /// rendered with the latest state. Frequent calls may impact performance if large textures are involved.
+    /// <see cref="GuiObjects.GuiFinalDrawDocument"/> automatically calls this method as part of its rendering process.
+    /// </remarks>
+    /// <param name="redrawSurface">Indicates whether the editing surface should be forced to refresh its renderer before rendering. Set to <see
+    /// langword="true"/> to ensure the surface is fully redrawn.</param>
+    /// <param name="redrawTooling">Indicates whether the tooling layer should be forced to refresh its renderer before rendering. Set to <see
+    /// langword="true"/> to ensure the tooling visuals are fully redrawn.</param>
+    public virtual void Redraw(bool redrawSurface, bool redrawTooling)
     {
         if (_displayTexture == null || EditingSurface.WidthPixels != _displayTexture.Width || EditingSurface.HeightPixels != _displayTexture.Height)
         {

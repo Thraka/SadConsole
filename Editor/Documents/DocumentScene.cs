@@ -6,10 +6,8 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
 
-public partial class DocumentScene: Document, IDocumentSimpleObjects
+public partial class DocumentScene: Document
 {
-    public ImGuiList<SimpleObjectDefinition> SimpleObjects { get; } = new();
-
     public DocumentScene()
     {
     }
@@ -153,8 +151,8 @@ public partial class DocumentScene: Document, IDocumentSimpleObjects
         }
 
         ImGui.SeparatorText("Simple Game Objects"u8);
-        if (ImGui.Button("Manage"u8))
-            new Windows.SimpleObjectEditor(SimpleObjects, DefaultForeground, DefaultBackground, EditingSurfaceFont).Open();
+        //if (ImGui.Button("Manage"u8))
+        //    new Windows.SimpleObjectEditor(SimpleObjects, DefaultForeground, DefaultBackground, EditingSurfaceFont).Open();
 
         ImGui.SameLine();
         ImGui.Button("Import"u8);

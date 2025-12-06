@@ -18,6 +18,9 @@ internal class Selection : ITool
     string _saveBlueprintFileName = string.Empty;
     string _saveBlueprintName = string.Empty;
     bool _pasteIgnoreEmpty = false;
+    bool _systemClipboardIgnoreSpace = true;
+    bool _systemClipboardUseDefaultBackground = true;
+    bool _systemClipboardUseDefaultForeground = true;
 
     public string Title => "\uefa4 Selection\\Blueprints";
 
@@ -70,13 +73,59 @@ internal class Selection : ITool
         }
 
         ImGui.BeginDisabled(_clipboardSurface == null);
-        if (ImGui.Button("Paste from Clipboard"u8))
+        if (ImGui.Button("Paste surface from Clipboard"u8))
         {
             CancelPaste(document, false);
             _selectionSurface = _clipboardSurface!;
             _state = States.Pasting;
         }
         ImGui.EndDisabled();
+
+        ImGui.SeparatorText("System Clipboard"u8);
+        ImGui.Checkbox("Convert space to empty"u8, ref _systemClipboardIgnoreSpace);
+        ImGui.Checkbox("Use Document Foreground"u8, ref _systemClipboardUseDefaultForeground);
+        ImGui.Checkbox("Use Document Background"u8, ref _systemClipboardUseDefaultBackground);
+        if (ImGui.Button("Create from clipboard text"u8))
+        {
+            CancelPaste(document, false);
+
+            string convertedString;
+
+            unsafe
+            {
+                byte* clipboardString = ImGui.GetClipboardText();
+                convertedString = System.Runtime.InteropServices.Marshal.PtrToStringUTF8((nint)clipboardString) ?? string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(convertedString))
+            {
+                if (_systemClipboardIgnoreSpace)
+                    convertedString = convertedString.Replace(' ', '\0');
+
+                string[] lines = convertedString.Replace("\r", string.Empty).Split('\n');
+                int biggestLineWidth = lines.Select(line => line.Length).Max();
+                _clipboardSurface = new CellSurface(biggestLineWidth, lines.Length);
+
+                if (_systemClipboardUseDefaultBackground)
+                    _clipboardSurface.DefaultBackground = document.EditingSurface.Surface.DefaultBackground;
+
+                if (_systemClipboardUseDefaultForeground)
+                    _clipboardSurface.DefaultForeground = document.EditingSurface.Surface.DefaultForeground;
+
+                _clipboardSurface.Clear();
+
+                int curY = 0;
+
+                //_clipboardSurface.UsePrintProcessor = false;
+                foreach (var line in lines)
+                {
+                    _clipboardSurface.Print(0, curY, line);
+                    curY++;
+                }
+                _selectionSurface = _clipboardSurface;
+                _state = States.Pasting;
+            }
+        }
     }
 
     private void FileLoader_Closed(object? sender, EventArgs e)
@@ -164,7 +213,7 @@ internal class Selection : ITool
             if (ImGui.Selectable("Erase"u8))
             {
                 ClearSurface(document);
-                document.VisualLayerToolLower.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.Clear();
                 ClearState();
 
                 ImGui.CloseCurrentPopup();
@@ -188,7 +237,7 @@ internal class Selection : ITool
         if (ImGui.BeginPopupModal("create_blueprint"u8))
         {
             ImGui.SetNextItemWidth(400);
-
+            
             ImGui.InputText("Name"u8, ref _saveBlueprintName, 50);
             ImGui.InputText("Filename"u8, ref _saveBlueprintFileName, 50);
 
@@ -294,11 +343,11 @@ internal class Selection : ITool
                 else if (ImGuiP.IsKeyPressed(ImGuiKey.DownArrow))
                     _pasteOffset += Direction.Down;
 
-                document.VisualLayerToolLower.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.Clear();
                 document.VisualLayerToolUpper.Surface.Clear();
 
                 Point pos = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2) + _pasteOffset;
-                _selectionSurface.Copy(document.VisualLayerToolLower.Surface, pos.X, pos.Y);
+                _selectionSurface.Copy(document.VisualLayerToolMiddle.Surface, pos.X, pos.Y);
                 document.VisualLayerToolUpper.Surface.DrawBox(new Rectangle(pos.X, pos.Y, _selectionSurface.Width, _selectionSurface.Height),
                                                                             _selectionBoxShape);
                 //document.VisualLayerToolUpper.Surface.Print(0, 0, pos.ToString());
@@ -321,8 +370,8 @@ internal class Selection : ITool
 
             _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
-            document.VisualLayerToolLower.Surface.Clear();
-            document.VisualLayerToolLower.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+            document.VisualLayerToolMiddle.Surface.Clear();
+            document.VisualLayerToolMiddle.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
                                                                         new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
                                                                         _selectionBoxShape);
         }
@@ -358,7 +407,7 @@ internal class Selection : ITool
 
     private void CancelPaste(Document document, bool setCancel = true)
     {
-        document.VisualLayerToolLower.Surface.Clear();
+        document.VisualLayerToolMiddle.Surface.Clear();
         document.VisualLayerToolUpper.Surface.Clear();
         ClearState();
         _pasteOffset = Point.Zero;

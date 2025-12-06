@@ -78,6 +78,11 @@ public class GuiTopBar : ImGuiObjectBase
                 ImGui.EndMenu();
             }
 
+            // Draw the documents menu items
+            if (Core.State.Documents.IsItemSelected())
+                Core.State.Documents.SelectedItem.ImGuiDrawTopBar(renderer);
+
+            // Draw the palette menu
             if (ImGui.BeginMenu("Palette"))
             {
                 if (ImGui.MenuItem("Edit Editor Palette"))

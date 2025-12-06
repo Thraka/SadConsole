@@ -12,11 +12,10 @@ public static class SimpleObjectHelpers
         bool itemSelected = false;
 
         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
-        ImTextureID fontTexture = ImGuiCore.Renderer.GetBoundTexturePointer(((GameTexture)font.Image).Texture);
+        ImTextureID fontTexture = ImGuiCore.Renderer.BindTexture(((GameTexture)font.Image).Texture);
 
         Vector2 outputSize = new(0, ImGui.GetFrameHeight() - ImGui.GetStyle().FramePadding.Y * 2);
-        outputSize.X = (font.GlyphHeight / outputSize.Y) * font.GlyphWidth;
-        //outputSize = document.EditingSurface.FontSize.ToVector2();
+        outputSize.X = (outputSize.Y / font.GlyphHeight) * font.GlyphWidth;
 
         for (int i = 0; i < objects.Count; i++)
         {

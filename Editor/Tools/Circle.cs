@@ -131,7 +131,7 @@ internal class Circle : ITool
             {
                 ClearState();
                 _isCancelled = true;
-                document.VisualLayerToolLower.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.Clear();
             }
 
             if (_isCancelled)
@@ -149,8 +149,8 @@ internal class Circle : ITool
 
                 _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
-                document.VisualLayerToolLower.Surface.Clear();
-                document.VisualLayerToolLower.Surface.DrawCircle(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                document.VisualLayerToolMiddle.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.DrawCircle(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
                                                                                new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
                                                                  _shapeSettings.ToShapeParameters());
             }
@@ -166,7 +166,7 @@ internal class Circle : ITool
                                                                              new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
                                                                _shapeSettings.ToShapeParameters());
 
-                    document.VisualLayerToolLower.Surface.Clear();
+                    document.VisualLayerToolMiddle.Surface.Clear();
                 }
 
                 ClearState();

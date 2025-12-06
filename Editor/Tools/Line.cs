@@ -72,7 +72,7 @@ internal class Line : ITool
             {
                 ClearState();
                 _isCancelled = true;
-                document.VisualLayerToolLower.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.Clear();
             }
 
             if (_isCancelled)
@@ -89,8 +89,8 @@ internal class Line : ITool
 
                 _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
-                document.VisualLayerToolLower.Surface.Clear();
-                document.VisualLayerToolLower.Surface.DrawLine(_firstPoint,
+                document.VisualLayerToolMiddle.Surface.Clear();
+                document.VisualLayerToolMiddle.Surface.DrawLine(_firstPoint,
                                          _secondPoint,
                                          SharedToolSettings.Tip.Glyph,
                                          SharedToolSettings.Tip.Foreground,
@@ -125,7 +125,7 @@ internal class Line : ITool
                                              SharedToolSettings.Tip.Mirror);
 
 
-                    document.VisualLayerToolLower.Surface.Clear();
+                    document.VisualLayerToolMiddle.Surface.Clear();
                 }
 
                 ClearState();

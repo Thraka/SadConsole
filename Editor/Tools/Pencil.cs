@@ -12,37 +12,35 @@ namespace SadConsole.Editor.Tools;
 
 internal class Pencil : ITool
 {
-    private readonly ImGuiList<string> _modes = new(0, "Draw", "Objects");
-    private Windows.GlyphEditor _glyphEditor;
-
     public string Title => "\uf040 Pencil";
+    public ToolMode.Modes CurrentMode;
 
     public string Description =>
         """
         Draw glyphs on the surface.
 
-        Use the left-mouse button to draw.
+        Use the left mouse button to draw.
 
-        The right-mouse button changes the current pencil tip to the foreground, background, and glyph, that is under the cursor.
-        - Hold shift when clicking to only copy the colors.
-        - Hold ctrl when clicking to only copy the glyph.
+        The right mouse button changes the current pencil tip to the foreground, background, and glyph, that is under the cursor.
+        - Hold shift when right clicking to only copy the colors.
+        - Hold ctrl when right clicking to only copy the glyph.
         """;
 
     public void BuildSettingsPanel(Document document)
     {
         ImGui.SeparatorText(Title);
-        bool supportsObjects = document is IDocumentSimpleObjects;
 
-        if (supportsObjects)
-        {
-            ImGui.AlignTextToFramePadding();
-            ImGui.Text("Mode"u8);
-            ImGui.SameLine();
-            ImGui.Combo("##toolmode", ref _modes.SelectedItemIndex, _modes.Names, _modes.Count);
-        }
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Mode"u8);
+        ImGui.SameLine();
 
-        // Normal settings
-        if (_modes.SelectedItemIndex == 0 || !supportsObjects)
+        CurrentMode = document.ToolModes.SelectedItem!.Mode;
+
+        if (ImGui.Combo("##toolmode", ref document.ToolModes.SelectedItemIndex, document.ToolModes.Names, document.ToolModes.Count))
+            ConfigureToolMode(document);
+
+        // Drawing mode
+        if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw)
         {
             ImGuiSC.BeginGroupPanel("Settings");
 
@@ -53,7 +51,6 @@ internal class Pencil : ITool
 
             if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
             {
-
                 SettingsTable.DrawCommonSettings(true, true, true, true, true,
                     ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                     ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
@@ -71,8 +68,8 @@ internal class Pencil : ITool
             ImGuiSC.EndGroupPanel();
         }
 
-        // Objects
-        else
+        // Objects mode
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
         {
             IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
 
@@ -101,6 +98,36 @@ internal class Pencil : ITool
         }
     }
 
+    private void ConfigureToolMode(Document document)
+    {
+        CurrentMode = document.ToolModes.SelectedItem!.Mode;
+
+        if (CurrentMode == ToolMode.Modes.Empty)
+        {
+            document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            document.VisualLayerToolLower.Clear();
+
+            var clearCell = new ColoredGlyph(document.EditingSurface.Surface.DefaultForeground, document.EditingSurface.Surface.DefaultBackground, 0);
+
+            for (int index = 0; index < document.VisualLayerToolLower.Surface.Surface.Count; index++)
+            {
+                ColoredGlyphBase renderCell = document.EditingSurface.Surface[(Point.FromIndex(index, document.VisualLayerToolLower.Surface.Surface.Width) + document.EditingSurface.Surface.ViewPosition).ToIndex(document.EditingSurface.Surface.Width)];
+
+                if (renderCell.Foreground == clearCell.Foreground &&
+                    renderCell.Background == clearCell.Background &&
+                    renderCell.Glyph == clearCell.Glyph)
+
+                    document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
+            }
+        }
+        else
+        {
+            // Reset empty tool mode
+            document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
+            document.VisualLayerToolLower.Clear();
+        }
+    }
+
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
         if (!isHovered) return;
@@ -109,68 +136,61 @@ internal class Pencil : ITool
 
         if (!isActive) return;
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw || document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
         {
-            document.EditingSurface.Surface[hoveredCellPosition].Clear();
-            SharedToolSettings.Tip.CopyAppearanceTo(document.EditingSurface.Surface[hoveredCellPosition]);
-            document.EditingSurface.IsDirty = true;
-        }
-        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
-        {
-            ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
+            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+            {
+                document.EditingSurface.Surface[hoveredCellPosition].Clear();
+                SharedToolSettings.Tip.CopyAppearanceTo(document.EditingSurface.Surface[hoveredCellPosition]);
+                document.EditingSurface.IsDirty = true;
+            }
+            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            {
+                ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
 
-            if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
-            {
-                SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
-                SharedToolSettings.Tip.Background = sourceCell.Background;
+                if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
+                {
+                    SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
+                    SharedToolSettings.Tip.Background = sourceCell.Background;
+                }
+                else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
+                {
+                    SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
+                }
+                else
+                    document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             }
-            else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
+        }
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
+        {
+            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
             {
-                SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
+                document.EditingSurface.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
+
+                document.VisualLayerToolLower.Surface!.Surface[hoveredCellPosition.X - document.EditingSurface.Surface.ViewPosition.X,
+                                                                hoveredCellPosition.Y - document.EditingSurface.Surface.ViewPosition.Y]
+                                                               .Background = Core.Settings.EmptyCellColor;
+
+                document.VisualLayerToolLower.Surface.IsDirty = true;
             }
-            else
-                document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+        }
+
+        // Zones
+        else
+        {
         }
     }
 
+    public void OnSelected(Document document) =>
+        ConfigureToolMode(document);
 
-    // private void GlyphEditor_Closed(object? sender, EventArgs e)
-    // {
-    //     if (_glyphEditor.DialogResult)
-    //     {
-    //         ColoredGlyph glyph = _glyphEditor.Glyph.ToColoredGlyph();
-    //         if (_isAdding)
-    //         {
-    //             IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
-    //
-    //             docSimpleObjects.SimpleObjects.Objects.Add(
-    //                 new SimpleObjectDefinition() { Visual = _glyphEditor.Glyph.ToColoredGlyph(), Name = _glyphEditor.Name! });
-    //
-    //             _isAdding = false;
-    //         }
-    //         else if (_isEditing)
-    //         {
-    //             IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
-    //
-    //             docSimpleObjects.SimpleObjects.SelectedItem!.Visual = _glyphEditor.Glyph.ToColoredGlyph();
-    //             docSimpleObjects.SimpleObjects.SelectedItem!.Name = _glyphEditor.Name!;
-    //
-    //             SharedToolSettings.Tip = docSimpleObjects.SimpleObjects.SelectedItem.Visual;
-    //
-    //             _isEditing = false;
-    //         }
-    //     }
-    //
-    //     _glyphEditor = null;
-    // }
-
-    public void OnSelected(Document document) { }
-
-    public void OnDeselected(Document document) { }
+    public void OnDeselected(Document document) =>
+        document.ResetVisualLayers();
 
     public void Reset(Document document) { }
 
-    public void DocumentViewChanged(Document document) { }
+    public void DocumentViewChanged(Document document) =>
+        ConfigureToolMode(document);
 
     public void DrawOverDocument(Document document) { }
 
