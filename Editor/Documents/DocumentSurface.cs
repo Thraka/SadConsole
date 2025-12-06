@@ -13,19 +13,6 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
 
     public DocumentSurface()
     {
-        Tools = Tools.Append(new Tools.Zones()).ToArray();
-        Zones.Objects.Add(new Serialization.ZoneSerialized()
-        {
-            Name = "Default Zone",
-            ZoneArea = new(new SadRogue.Primitives.Rectangle(1, 1, 10, 10).Positions()),
-            Appearance = new ColoredGlyph()
-            {
-                Foreground = SadRogue.Primitives.Color.Yellow,
-                Background = SadRogue.Primitives.Color.DarkGray,
-                Glyph = '@',
-                Mirror = SadConsole.Mirror.None
-            }
-        });
         SyncToolModes();
     }
 

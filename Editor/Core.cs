@@ -2,6 +2,7 @@
 using Hexa.NET.ImGui.Utilities;
 using Newtonsoft.Json.Linq;
 using SadConsole.Editor.GuiObjects;
+using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor;
@@ -75,6 +76,31 @@ public static partial class Core
         State.Documents.SelectedItemIndex = 0;
         State.Documents.SelectedItem!.OnSelected();
         State.Tools.SelectedItemIndex = 0;
+
+        ((Documents.DocumentSurface)State.Documents.SelectedItem).Zones.Objects.Add(new Serialization.ZoneSerialized()
+        {
+            Name = "Default Zone",
+            ZoneArea = new(new SadRogue.Primitives.Rectangle(1, 1, 10, 10).Positions()),
+            Appearance = new ColoredGlyph()
+            {
+                Foreground = SadRogue.Primitives.Color.Yellow,
+                Background = SadRogue.Primitives.Color.DarkGray,
+                Glyph = '@',
+                Mirror = SadConsole.Mirror.None
+            }
+        });
+
+        ((Documents.DocumentSurface)State.Documents.SelectedItem).SimpleObjects.Objects.Add(new SimpleObjectDefinition()
+        {
+            Name = "Tree",
+            Visual = new ColoredGlyph()
+            {
+                Foreground = SadRogue.Primitives.Color.DarkGreen.GetDarker(),
+                Background = SadRogue.Primitives.Color.AnsiGreenBright,
+                Glyph = (char)6,
+                Mirror = SadConsole.Mirror.None
+            }
+        });
     }
 
     public static void ResetUIList()
