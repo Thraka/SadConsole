@@ -32,7 +32,7 @@ public class GuiTopBar : ImGuiObjectBase
             if (ImGui.BeginMenu("File"))
             {
                 if (ImGui.MenuItem("\uea7f New", "n"))
-                    new Windows.NewFile().Show();
+                    new Windows.NewDocument().Show();
 
                 if (ImGui.MenuItem("\ue5fe Open", "o"))
                 {

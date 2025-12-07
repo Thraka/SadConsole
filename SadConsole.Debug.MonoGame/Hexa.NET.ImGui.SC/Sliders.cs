@@ -52,30 +52,30 @@ public static partial class ImGuiSC
         // Calculate button size, taken from widgets.cpp in imgui lib
         var style = ImGui.GetStyle();
 
-        ImGui.BeginChild(label, new Vector2(width, 0));
-
-        if (ImGui.Button("-"))
+        if (ImGui.BeginChild(label, new Vector2(width, 0)))
         {
-            returnValue = true;
-            v = Math.Clamp(v - 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
+            if (ImGui.Button("-"))
+            {
+                returnValue = true;
+                v = Math.Clamp(v - 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
+            }
+
+            ImGui.SameLine();
+
+            var buttonWidth = ImGui.GetCursorPosX();
+
+            ImGui.SetNextItemWidth(width - (buttonWidth * 2));
+
+            returnValue = returnValue | ImGui.SliderInt("##width"u8, ref v, v_min, v_max, fmt, flags);
+
+            ImGui.SameLine();
+
+            if (ImGui.Button("+", new Vector2()))
+            {
+                returnValue = true;
+                v = Math.Clamp(v + 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
+            }
         }
-
-        ImGui.SameLine();
-
-        var buttonWidth = ImGui.GetCursorPosX();
-
-        ImGui.SetNextItemWidth(width - (buttonWidth * 2));
-
-        returnValue = returnValue | ImGui.SliderInt("##width"u8, ref v, v_min, v_max, fmt, flags);
-
-        ImGui.SameLine();
-
-        if (ImGui.Button("+", new Vector2()))
-        {
-            returnValue = true;
-            v = Math.Clamp(v + 1, Math.Min(v_min, v_max), Math.Max(v_min, v_max));
-        }
-
         ImGui.EndChild();
 
         return returnValue;

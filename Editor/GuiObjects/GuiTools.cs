@@ -30,9 +30,8 @@ public class GuiToolsList: ImGuiObjectBase
 
                 Core.State.Tools.SelectedItem.BuildSettingsPanel(Core.State.Documents.SelectedItem);
 
-                ImGui.EndChild();
             }
-
+            ImGui.EndChild();
         }
 
         ImGui.End();

@@ -37,19 +37,21 @@ public class GuiPreviews : ImGuiObjectBase
                         ImGui.SameLine();
                         ImGui.RadioButton("Fit", ref _scOutputMode, ModeFit);
 
-                        ImGui.BeginChild("output1", ImGuiWindowFlags.HorizontalScrollbar);
-                        ImGuiSC.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
-                        if (GuiState._hoveredScreenObjectState != null)
+                        if (ImGui.BeginChild("output1", ImGuiWindowFlags.HorizontalScrollbar))
                         {
-                            if (GuiState._hoveredScreenObjectState.IsScreenSurface)
+                            ImGuiSC.DrawTexture("output_preview_image", true, _scOutputMode, texture, new Vector2(Host.Global.RenderOutput.Width, Host.Global.RenderOutput.Height), out _, out _);
+                            if (GuiState._hoveredScreenObjectState != null)
                             {
-                                IScreenSurface surface = (IScreenSurface)GuiState._hoveredScreenObjectState.Object;
+                                if (GuiState._hoveredScreenObjectState.IsScreenSurface)
+                                {
+                                    IScreenSurface surface = (IScreenSurface)GuiState._hoveredScreenObjectState.Object;
 
-                                var drawList = ImGui.GetWindowDrawList();
-                                Vector2 itemRectMin = ImGui.GetItemRectMin();
-                                Vector2 boxTopLeft = new(itemRectMin.X + surface.AbsoluteArea.X, itemRectMin.Y + surface.AbsoluteArea.Y);
-                                Vector2 boxBottomRight = boxTopLeft + new Vector2(surface.AbsoluteArea.Width, surface.AbsoluteArea.Height);
-                                drawList.AddRect(boxTopLeft, boxBottomRight, Color.Violet.PackedValue);
+                                    var drawList = ImGui.GetWindowDrawList();
+                                    Vector2 itemRectMin = ImGui.GetItemRectMin();
+                                    Vector2 boxTopLeft = new(itemRectMin.X + surface.AbsoluteArea.X, itemRectMin.Y + surface.AbsoluteArea.Y);
+                                    Vector2 boxBottomRight = boxTopLeft + new Vector2(surface.AbsoluteArea.Width, surface.AbsoluteArea.Height);
+                                    drawList.AddRect(boxTopLeft, boxBottomRight, Color.Violet.PackedValue);
+                                }
                             }
                         }
                         ImGui.EndChild();
@@ -93,78 +95,80 @@ public class GuiPreviews : ImGuiObjectBase
                             ImGui.RadioButton("Fit", ref _surfaceOutputMode, ModeFit);
 
                             // Render the target texture
-                            ImGui.BeginChild("output2", ImGuiWindowFlags.HorizontalScrollbar);
-                            ImGuiSC.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
-
-                            // Peek the cell if the target type is the final
-                            if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)
+                            if (ImGui.BeginChild("output2", ImGuiWindowFlags.HorizontalScrollbar))
                             {
-                                Vector2 mousePosition = ImGui.GetMousePos();
-                                Vector2 pos = mousePosition - ImGui.GetItemRectMin();
-                                if (surface.AbsoluteArea.WithPosition((0, 0)).Contains(new SadRogue.Primitives.Point((int)pos.X, (int)pos.Y)))
+                                ImGuiSC.DrawTexture("output_preview_surface1", true, _surfaceOutputMode, targetTexture, renderer, out var isActive, out var isHovered);
+
+                                // Peek the cell if the target type is the final
+                                if (GuiState._selectedScreenObjectState.SurfaceState.RenderStepSelectedItem == 0)
                                 {
-                                    SadRogue.Primitives.Point cellPosition = new SadRogue.Primitives.Point((int)pos.X, (int)pos.Y).PixelLocationToSurface(surface.FontSize) + surface.Surface.ViewPosition;
-
-                                    if (ImGui.IsItemHovered())
+                                    Vector2 mousePosition = ImGui.GetMousePos();
+                                    Vector2 pos = mousePosition - ImGui.GetItemRectMin();
+                                    if (surface.AbsoluteArea.WithPosition((0, 0)).Contains(new SadRogue.Primitives.Point((int)pos.X, (int)pos.Y)))
                                     {
-                                        ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
-                                        ImGui.BeginTooltip();
+                                        SadRogue.Primitives.Point cellPosition = new SadRogue.Primitives.Point((int)pos.X, (int)pos.Y).PixelLocationToSurface(surface.FontSize) + surface.Surface.ViewPosition;
 
-                                        var fontTexture = renderer.BindTexture(((Host.GameTexture)surface.Font.Image).Texture);
-                                        var rect = surface.Font.GetGlyphSourceRectangle(surface.Surface[cellPosition].Glyph);
-                                        var textureSize = new SadRogue.Primitives.Point(surface.Font.Image.Width, surface.Font.Image.Height);
-
-                                        ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
-                                        ImGui.SameLine();
-                                        ImGui.SameLine();
-                                        ImGui.BeginGroup();
+                                        if (ImGui.IsItemHovered())
                                         {
-                                            ImGui.Text($"Glyph: {surface.Surface[cellPosition].Glyph}");
-                                            ImGui.Text($"Foreground: ");
+                                            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
+                                            ImGui.BeginTooltip();
+
+                                            var fontTexture = renderer.BindTexture(((Host.GameTexture)surface.Font.Image).Texture);
+                                            var rect = surface.Font.GetGlyphSourceRectangle(surface.Surface[cellPosition].Glyph);
+                                            var textureSize = new SadRogue.Primitives.Point(surface.Font.Image.Width, surface.Font.Image.Height);
+
+                                            ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
                                             ImGui.SameLine();
-                                            ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
-                                            ImGui.Text($"Background: ");
                                             ImGui.SameLine();
-                                            ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                                            ImGui.BeginGroup();
+                                            {
+                                                ImGui.Text($"Glyph: {surface.Surface[cellPosition].Glyph}");
+                                                ImGui.Text($"Foreground: ");
+                                                ImGui.SameLine();
+                                                ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                                                ImGui.Text($"Background: ");
+                                                ImGui.SameLine();
+                                                ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                                            }
+                                            ImGui.EndGroup();
+
+                                            ImGui.EndTooltip();
+                                            ImGui.PopStyleVar();
                                         }
-                                        ImGui.EndGroup();
 
-                                        ImGui.EndTooltip();
-                                        ImGui.PopStyleVar();
+                                        //if (ImGui.IsItemHovered())
+                                        //    ImGui.OpenPopup("surface_cell");
+
+                                        //// TODO: Keep this on the screen
+                                        //ImGui.SetNextWindowPos(mousePosition + new Vector2(10f, 10f));
+
+                                        //ImGui.PushStyleVar(ImGuiStyleVar.PopupRounding, 4f);
+
+                                        //// TODO: Popup shouldn't be used. The color editor has a tooltip presentation before you click that like this. Use that!
+                                        //if (ImGui.BeginPopup("surface_cell"))
+                                        //{
+                                        //    var fontTexture = renderer.BindTexture(((Host.GameTexture)surface.Font.Image).Texture);
+                                        //    var rect = surface.Font.GetGlyphSourceRectangle(surface.Surface[cellPosition].Glyph);
+                                        //    var textureSize = new SadRogue.Primitives.Point(surface.Font.Image.Width, surface.Font.Image.Height);
+
+                                        //    ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
+                                        //    ImGui.SameLine();
+                                        //    ImGui.SameLine();
+                                        //    ImGui.BeginGroup();
+                                        //    {
+                                        //        ImGui.Text($"Glyph: {surface.Surface[cellPosition].Glyph}");
+                                        //        ImGui.Text($"Foreground: ");
+                                        //        ImGui.SameLine();
+                                        //        ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                                        //        ImGui.Text($"Background: ");
+                                        //        ImGui.SameLine();
+                                        //        ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
+                                        //    }
+                                        //    ImGui.EndGroup();
+                                        //    ImGui.EndPopup();
+                                        //}
+                                        //ImGui.PopStyleVar();
                                     }
-
-                                    //if (ImGui.IsItemHovered())
-                                    //    ImGui.OpenPopup("surface_cell");
-
-                                    //// TODO: Keep this on the screen
-                                    //ImGui.SetNextWindowPos(mousePosition + new Vector2(10f, 10f));
-
-                                    //ImGui.PushStyleVar(ImGuiStyleVar.PopupRounding, 4f);
-
-                                    //// TODO: Popup shouldn't be used. The color editor has a tooltip presentation before you click that like this. Use that!
-                                    //if (ImGui.BeginPopup("surface_cell"))
-                                    //{
-                                    //    var fontTexture = renderer.BindTexture(((Host.GameTexture)surface.Font.Image).Texture);
-                                    //    var rect = surface.Font.GetGlyphSourceRectangle(surface.Surface[cellPosition].Glyph);
-                                    //    var textureSize = new SadRogue.Primitives.Point(surface.Font.Image.Width, surface.Font.Image.Height);
-
-                                    //    ImGui.Image(fontTexture, surface.Font.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize), (rect.Position + rect.Size).ToUV(textureSize));
-                                    //    ImGui.SameLine();
-                                    //    ImGui.SameLine();
-                                    //    ImGui.BeginGroup();
-                                    //    {
-                                    //        ImGui.Text($"Glyph: {surface.Surface[cellPosition].Glyph}");
-                                    //        ImGui.Text($"Foreground: ");
-                                    //        ImGui.SameLine();
-                                    //        ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Foreground.ToVector4(), ImGuiColorEditFlags.NoPicker);
-                                    //        ImGui.Text($"Background: ");
-                                    //        ImGui.SameLine();
-                                    //        ImGui.ColorButton("surface_cell_color", surface.Surface[cellPosition].Background.ToVector4(), ImGuiColorEditFlags.NoPicker);
-                                    //    }
-                                    //    ImGui.EndGroup();
-                                    //    ImGui.EndPopup();
-                                    //}
-                                    //ImGui.PopStyleVar();
                                 }
                             }
                             ImGui.EndChild();

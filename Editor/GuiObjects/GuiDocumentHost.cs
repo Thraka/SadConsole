@@ -24,7 +24,7 @@ public class GuiDocumentsHost: ImGuiObjectBase
             }
             else
             {
-                if (ImGui.BeginChild("doc_surface"))
+                if (ImGui.BeginChild("doc_surface"u8))
                 {
                     bool bigX = false;
                     bool isActive = false;
@@ -37,6 +37,9 @@ public class GuiDocumentsHost: ImGuiObjectBase
                     Vector2 availRegion = ImGui.GetContentRegionAvail() - new Vector2(barSize.X, barSize.Y);
                     Vector2 pixelArea = new (document.EditingSurface.Width * document.EditorFontSize.X,
                                              document.EditingSurface.Height * document.EditorFontSize.Y);
+
+                    int previousViewWidth = document.EditingSurface.ViewWidth;
+                    int previousViewHeight = document.EditingSurface.ViewHeight;
 
                     // Set view width of surface
                     if (pixelArea.X <= availRegion.X)
@@ -56,9 +59,13 @@ public class GuiDocumentsHost: ImGuiObjectBase
                         pixelArea.Y = document.EditingSurface.ViewHeight * document.EditorFontSize.Y;
                     }
 
-                    // Redraw if required
-                    //if (document.IsDirty)
-                    //    document.Redraw(false, false);
+                    // If view size changed, notify tool
+                    if (document.EditingSurface.ViewWidth != previousViewWidth ||
+                        document.EditingSurface.ViewHeight != previousViewHeight)
+                    {
+                        document.Redraw(true, true);
+                        Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
+                    }
 
                     // Draw image
                     ImGuiSC.DrawTexture("output_preview_surface1", true, ImGuiSC.ZoomFit,
@@ -123,8 +130,6 @@ public class GuiDocumentsHost: ImGuiObjectBase
                         Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
                     }
                     ImGui.EndDisabled();
-
-
                 }
                 ImGui.EndChild();
             }

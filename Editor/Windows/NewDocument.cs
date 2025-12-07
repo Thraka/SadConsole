@@ -4,9 +4,9 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
 
-public class NewFile : ImGuiWindowBase
+public class NewDocument : ImGuiWindowBase
 {
-    public NewFile()
+    public NewDocument()
     {
         Title = "New file";
     }
