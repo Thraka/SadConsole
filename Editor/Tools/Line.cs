@@ -3,11 +3,17 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiTypes;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Line : ITool
 {
+    private ColoredGlyph _lineSettings = new ColoredGlyph(Color.White, Color.Black, 176);
+    private ColoredGlyph _lineSettingsDraw = new ColoredGlyph(Color.White, Color.Black, 176);
+    private ColoredGlyph _lineSettingsErase = new ColoredGlyph(Core.Settings.EmptyCellColor, Core.Settings.EmptyCellColor.GetDarker().SetAlpha(100), '*');
+    private ColoredGlyph _lineSettingsOther = new ColoredGlyph(Color.White, Color.Black, 176);
+
     private bool _isDrawing = false;
     private bool _isFirstPointSelected = false;
     private Point _firstPoint;
@@ -29,7 +35,7 @@ internal class Line : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
+        ScreenSurface surface = document.EditingSurface;
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Mode"u8);
@@ -45,11 +51,10 @@ internal class Line : ITool
         {
             ImGuiSC.BeginGroupPanel("Settings");
 
-            Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
-            Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
-            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
-            int glyph = SharedToolSettings.Tip.Glyph;
-            IScreenSurface surface = document.EditingSurface;
+            Vector4 foreground = _lineSettings.Foreground.ToVector4();
+            Vector4 background = _lineSettings.Background.ToVector4();
+            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_lineSettings.Mirror);
+            int glyph = _lineSettings.Glyph;
 
             if (SettingsTable.BeginTable("linesettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
             {
@@ -61,17 +66,40 @@ internal class Line : ITool
                 SettingsTable.EndTable();
             }
 
-            SharedToolSettings.Tip.Foreground = foreground.ToColor();
-            SharedToolSettings.Tip.Background = background.ToColor();
-            SharedToolSettings.Tip.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
-            SharedToolSettings.Tip.Glyph = glyph;
+            _lineSettings.Foreground = foreground.ToColor();
+            _lineSettings.Background = background.ToColor();
+            _lineSettings.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            _lineSettings.Glyph = glyph;
 
             ImGuiSC.EndGroupPanel();
+        }
+        // Objects mode
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
+        {
+            if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
+            {
+                _lineSettings.CopyAppearanceFrom(obj.Visual);
+            }
         }
     }
 
     private void ConfigureToolMode(Document document)
     {
+        // Moving from an old mode, capture line settings
+        switch (CurrentMode)
+        {
+            case ToolMode.Modes.Draw:
+                _lineSettingsDraw = _lineSettings;
+                break;
+            case ToolMode.Modes.Objects:
+            case ToolMode.Modes.Zones:
+                _lineSettingsOther = _lineSettings;
+                break;
+            default:
+                break;
+        }
+
+        // Move to new mode
         CurrentMode = document.ToolModes.SelectedItem!.Mode;
 
         // Clear the line layer
@@ -81,6 +109,8 @@ internal class Line : ITool
 
         if (CurrentMode == ToolMode.Modes.Empty)
         {
+            _lineSettings = _lineSettingsErase;
+
             document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.5f, 0.5f, 0.5f, 0.5f);
             document.VisualLayerToolLower.Clear();
 
@@ -97,8 +127,18 @@ internal class Line : ITool
                     document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
             }
         }
+        else if (CurrentMode == ToolMode.Modes.Draw)
+        {
+            _lineSettings = _lineSettingsDraw;
+
+            // Reset empty tool mode
+            document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
+            document.VisualLayerToolLower.Clear();
+        }
         else
         {
+            _lineSettings = _lineSettingsOther;
+
             // Reset empty tool mode
             document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
             document.VisualLayerToolLower.Clear();
@@ -143,26 +183,12 @@ internal class Line : ITool
                 document.VisualLayerToolMiddle.Surface.Clear();
 
                 // Draw preview line based on current mode
-                if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
-                {
-                    // Preview for empty mode - use * glyph with empty cell color
-                    document.VisualLayerToolMiddle.Surface.DrawLine(_firstPoint,
-                                             _secondPoint,
-                                             '*',
-                                             Core.Settings.EmptyCellColor.GetDarker(),
-                                             Core.Settings.EmptyCellColor,
-                                             Mirror.None);
-                }
-                else
-                {
-                    // Preview for draw/objects mode - use current tip settings
-                    document.VisualLayerToolMiddle.Surface.DrawLine(_firstPoint,
-                                             _secondPoint,
-                                             SharedToolSettings.Tip.Glyph,
-                                             SharedToolSettings.Tip.Foreground,
-                                             SharedToolSettings.Tip.Background,
-                                             SharedToolSettings.Tip.Mirror);
-                }
+                document.VisualLayerToolMiddle.Surface.DrawLine(_firstPoint,
+                                         _secondPoint,
+                                         _lineSettings.Glyph,
+                                         _lineSettings.Foreground,
+                                         _lineSettings.Background,
+                                         _lineSettings.Mirror);
             }
             else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
             {
@@ -170,15 +196,15 @@ internal class Line : ITool
 
                 if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
                 {
-                    SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
-                    SharedToolSettings.Tip.Background = sourceCell.Background;
+                    _lineSettings.Foreground = sourceCell.Foreground;
+                    _lineSettings.Background = sourceCell.Background;
                 }
                 else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
                 {
-                    SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
+                    _lineSettings.Glyph = sourceCell.Glyph;
                 }
                 else
-                    document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
+                    document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(_lineSettings);
             }
 
             // Commit
@@ -194,10 +220,10 @@ internal class Line : ITool
                     {
                         document.EditingSurface.Surface.DrawLine(topLeft,
                                                  bottomRight,
-                                                 SharedToolSettings.Tip.Glyph,
-                                                 SharedToolSettings.Tip.Foreground,
-                                                 SharedToolSettings.Tip.Background,
-                                                 SharedToolSettings.Tip.Mirror);
+                                                 _lineSettings.Glyph,
+                                                 _lineSettings.Foreground,
+                                                 _lineSettings.Background,
+                                                 _lineSettings.Mirror);
                     }
 
                     // Empty cell mode
@@ -229,11 +255,19 @@ internal class Line : ITool
         }
     }
 
-    public void OnSelected(Document document) =>
+    public void OnSelected(Document document)
+    {
+        // Copy from shared tip to draw settings only
+        SharedToolSettings.Tip.CopyAppearanceTo(_lineSettingsDraw);
+        
         ConfigureToolMode(document);
+    }
 
     public void OnDeselected(Document document)
     {
+        // Copy draw settings back to shared tip
+        _lineSettingsDraw.CopyAppearanceTo(SharedToolSettings.Tip);
+        
         ClearState();
         document.ResetVisualLayers();
     }

@@ -24,7 +24,15 @@ public class GuiToolsList: ImGuiObjectBase
 
         if (Core.State.Tools.IsItemSelected())
         {
-            Core.State.Tools.SelectedItem.BuildSettingsPanel(Core.State.Documents.SelectedItem);
+            if (ImGui.BeginChild("settings_panel"u8))
+            {
+                ImGui.SeparatorText(Core.State.Tools.SelectedItem.Title);
+
+                Core.State.Tools.SelectedItem.BuildSettingsPanel(Core.State.Documents.SelectedItem);
+
+                ImGui.EndChild();
+            }
+
         }
 
         ImGui.End();

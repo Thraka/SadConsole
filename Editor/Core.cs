@@ -87,6 +87,14 @@ public static partial class Core
                 Background = SadRogue.Primitives.Color.DarkGray,
                 Glyph = '@',
                 Mirror = SadConsole.Mirror.None
+            },
+            Settings = new Dictionary<string, string>()
+            {
+                { "IsBlocking", "true" },
+                { "TriggerOnEnter", "false" },
+                { "ZoneType", "SafeArea" },
+                { "Description", "A default zone for testing" },
+                { "Priority", "1" }
             }
         });
 
@@ -101,6 +109,10 @@ public static partial class Core
                 Mirror = SadConsole.Mirror.None
             }
         });
+
+        State.Documents.SelectedItem.Options.UseSimpleObjects = true;
+        State.Documents.SelectedItem.Options.UseZones = true;
+        State.Documents.SelectedItem.SyncToolModes();
     }
 
     public static void ResetUIList()

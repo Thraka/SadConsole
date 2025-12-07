@@ -41,8 +41,6 @@ internal class Selection : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
-
         ImGui.Checkbox("Ignore empty cells on paste"u8, ref _pasteIgnoreEmpty);
 
         ImGui.BeginDisabled(Core.State.Blueprints.Count == 0);

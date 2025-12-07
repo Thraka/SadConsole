@@ -182,13 +182,13 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
                         throw new NotImplementedException();
                 }
 
-                if (enableZones)
-                {
-                    ImGui.SeparatorText("Zones");
+                //if (enableZones)
+                //{
+                //    ImGui.SeparatorText("Zones");
 
-                    if (ImGui.MenuItem("Edit Zones"u8))
-                        throw new NotImplementedException();
-                }
+                //    if (ImGui.MenuItem("Edit Zones"u8))
+                //        throw new NotImplementedException();
+                //}
             }
 
             ImGui.EndMenu();

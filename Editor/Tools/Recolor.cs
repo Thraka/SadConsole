@@ -41,7 +41,6 @@ internal class Recolor : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
         IScreenSurface surface = document.EditingSurface;
 
         ImGuiSC.BeginGroupPanel("Match");

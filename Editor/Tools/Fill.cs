@@ -26,8 +26,6 @@ internal class Fill : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
-
         bool supportsObjects = document is IDocumentSimpleObjects;
 
         if (supportsObjects)

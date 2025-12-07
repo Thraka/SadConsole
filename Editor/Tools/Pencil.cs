@@ -28,8 +28,6 @@ internal class Pencil : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
-
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Mode"u8);
         ImGui.SameLine();
@@ -73,6 +71,14 @@ internal class Pencil : ITool
         {
             if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
                 SharedToolSettings.Tip = (ColoredGlyph)obj.Visual.Clone();
+        }
+
+        // Zones mode
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Zones)
+        {
+            bool debugZones = false;
+
+            SharedToolSettings.ImGuiDrawZones(document, ref debugZones, out var obj);
         }
     }
 

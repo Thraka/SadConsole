@@ -76,8 +76,6 @@ internal class Box : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
-
         ScreenSurface surface = document.EditingSurface;
 
         ImGui.AlignTextToFramePadding();

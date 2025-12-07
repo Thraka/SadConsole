@@ -29,8 +29,6 @@ internal class Text : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ImGui.SeparatorText(Title);
-
         ImGuiSC.BeginGroupPanel("Settings");
 
         Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
