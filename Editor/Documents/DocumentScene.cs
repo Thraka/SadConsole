@@ -126,6 +126,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         EditingSurfaceFont = child.Document.EditingSurfaceFont;
         EditingSurfaceFontSize = child.Document.EditingSurfaceFontSize;
         EditorFontSize = child.Document.EditorFontSize;
+        Resync();
 
         // Sync visual tool layers
         VisualTool = child.Document.VisualTool;
