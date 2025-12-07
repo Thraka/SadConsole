@@ -22,15 +22,44 @@ internal class LayeredSurfaceDocument : IFileHandler
 
     public string HelpInformation => "Saves or loads the layered surface document.";
 
-    public object? Load(string file)
+    public object? GetSerializedObject(object instance)
     {
-        bool loaded = false;
-        DocumentLayeredSurface? doc;
-
-        if (Serializer.TryLoad(file, true, out LayeredSurfaceDocumentSerialized? serializedObj))
+        if (instance is DocumentLayeredSurface doc)
         {
-            loaded = true;
+            CellSurface[] layers = new CellSurface[doc.LayeredEditingSurface.Layers.Count];
+            bool[] layerVisibility = new bool[doc.LayeredEditingSurface.Layers.Count];
+            for (int i = 0; i < doc.LayeredEditingSurface.Layers.Count; i++)
+            {
+                layers[i] = (CellSurface)doc.LayeredEditingSurface.Layers[i];
+                layerVisibility[i] = doc.LayeredEditingSurface.Layers.GetLayerVisibility(i);
+            }
 
+            return new LayeredSurfaceDocumentSerialized()
+            {
+                Title = doc.Title,
+                Layers = layers,
+                LayerVisibility = layerVisibility,
+                SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
+                SurfaceFontSize = doc.EditingSurfaceFontSize,
+                EditorFontSize = doc.EditorFontSize,
+                Options = doc.Options,
+                Zones = doc.Options.UseZones ? doc.Zones.Objects.Select(z => new ZoneSerialized
+                {
+                    Name = z.Name,
+                    ZoneArea = z.ZoneArea.ToArray(),
+                    Appearance = z.Appearance,
+                    Settings = z.Settings
+                }).ToArray() : null,
+                SimpleObjects = doc.Options.UseSimpleObjects ? [.. doc.SimpleObjects.Objects] : null
+            };
+        }
+        return null;
+    }
+
+    public object? CreateFromSerialized(object serializedObject)
+    {
+        if (serializedObject is LayeredSurfaceDocumentSerialized serializedObj)
+        {
             // Create the layered screen surface from the serialized layers
             LayeredScreenSurface layeredSurface = new(serializedObj.Layers[0]);
 
@@ -44,7 +73,7 @@ internal class LayeredSurfaceDocument : IFileHandler
                     layeredSurface.Layers.SetLayerVisibility(i, serializedObj.LayerVisibility[i]);
             }
 
-            doc = new DocumentLayeredSurface(layeredSurface);
+            var doc = new DocumentLayeredSurface(layeredSurface);
             doc.Title = serializedObj.Title;
             doc.EditingSurfaceFont = SerializedTypes.FontSerialized.ToFont(serializedObj.SurfaceFont);
             doc.EditingSurfaceFontSize = serializedObj.SurfaceFontSize;
@@ -67,13 +96,22 @@ internal class LayeredSurfaceDocument : IFileHandler
 
             doc.SyncToolModes();
             doc.Resync();
+            return doc;
         }
-        else
+        return null;
+    }
+
+    public object? Load(string file)
+    {
+        if (!Serializer.TryLoad(file, true, out LayeredSurfaceDocumentSerialized? serializedObj))
         {
-            doc = null;
+            MessageWindow.Show($"Unable to load file.", "Error");
+            return null;
         }
 
-        if (!loaded || doc == null)
+        var doc = CreateFromSerialized(serializedObj) as DocumentLayeredSurface;
+
+        if (doc == null)
         {
             MessageWindow.Show($"Unable to load file.", "Error");
             return null;
@@ -95,32 +133,13 @@ internal class LayeredSurfaceDocument : IFileHandler
         {
             try
             {
-                CellSurface[] layers = new CellSurface[doc.LayeredEditingSurface.Layers.Count];
-                bool[] layerVisibility = new bool[doc.LayeredEditingSurface.Layers.Count];
-                for (int i = 0; i < doc.LayeredEditingSurface.Layers.Count; i++)
-                {
-                    layers[i] = (CellSurface)doc.LayeredEditingSurface.Layers[i];
-                    layerVisibility[i] = doc.LayeredEditingSurface.Layers.GetLayerVisibility(i);
-                }
+                var convertedObj = GetSerializedObject(doc) as LayeredSurfaceDocumentSerialized;
 
-                LayeredSurfaceDocumentSerialized convertedObj = new()
+                if (convertedObj == null)
                 {
-                    Title = doc.Title,
-                    Layers = layers,
-                    LayerVisibility = layerVisibility,
-                    SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
-                    SurfaceFontSize = doc.EditingSurfaceFontSize,
-                    EditorFontSize = doc.EditorFontSize,
-                    Options = doc.Options,
-                    Zones = doc.Options.UseZones ? doc.Zones.Objects.Select(z => new ZoneSerialized
-                    {
-                        Name = z.Name,
-                        ZoneArea = z.ZoneArea.ToArray(),
-                        Appearance = z.Appearance,
-                        Settings = z.Settings
-                    }).ToArray() : null,
-                    SimpleObjects = doc.Options.UseSimpleObjects ? [.. doc.SimpleObjects.Objects] : null
-                };
+                    MessageWindow.Show($"Unable to serialize document.", "Error");
+                    return false;
+                }
 
                 Serializer.Save(convertedObj, file, true);
 
