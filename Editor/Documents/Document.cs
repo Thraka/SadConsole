@@ -151,6 +151,9 @@ public abstract partial class Document : ITitle
 
         // Restore previous mode if possible
         ToolModes.SelectedItemIndex = availableModes.FindIndex(mode => mode.Mode == previousMode);
+
+        if (!ToolModes.IsItemSelected())
+            ToolModes.SelectedItemIndex = 0;
     }
 
     public void ResetVisualLayers()

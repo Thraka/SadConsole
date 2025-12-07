@@ -64,7 +64,7 @@ public class OpenFile : ImGuiWindowBase
                     if (ImGui.ListBox("##doctypes",
                                       ref Core.State.DocumentBuilders.SelectedItemIndex,
                                       Core.State.DocumentBuilders.Names,
-                                      Core.State.DocumentBuilders.Count, 3))
+                                      Core.State.DocumentBuilders.Count))
                     {
                         _fileLoaders = new ImGuiList<IFileHandler>(0, Core.State.DocumentBuilders.SelectedItem.GetLoadHandlers());
                     }

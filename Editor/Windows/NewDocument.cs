@@ -47,7 +47,8 @@ public class NewDocument : ImGuiWindowBase
 
                 ImGui.Text("Document Type:");
                 ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-                if (ImGui.ListBox("##doctypes", ref Core.State.DocumentBuilders.SelectedItemIndex, Core.State.DocumentBuilders.Names, Core.State.DocumentBuilders.Count, 4))
+                if (ImGui.ListBox("##doctypes", ref Core.State.DocumentBuilders.SelectedItemIndex, Core.State.DocumentBuilders.Names,
+                                  Core.State.DocumentBuilders.Count))
                 {
                     Core.State.DocumentBuilders.SelectedItem!.ResetBuilder();
                 }
