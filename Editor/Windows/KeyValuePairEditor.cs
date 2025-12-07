@@ -26,6 +26,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
     private string _editingKey = string.Empty;
     private string _editingValue = string.Empty;
     private bool _keyConflict;
+    private bool _keyEmpty;
 
     /// <summary>
     /// Creates a new key-value pair editor.
@@ -111,7 +112,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                         if (ImGui.Selectable(_items.Objects[i].ToString(), isSelected))
                         {
                             // Apply pending changes before switching selection
-                            if (_items.IsItemSelected() && !_keyConflict)
+                            if (_items.IsItemSelected() && !_keyConflict && !_keyEmpty)
                             {
                                 _items.SelectedItem.Key = _editingKey;
                                 _items.SelectedItem.Value = _editingValue;
@@ -123,6 +124,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                             _editingKey = _items.SelectedItem.Key;
                             _editingValue = _items.SelectedItem.Value;
                             _keyConflict = false;
+                            _keyEmpty = false;
                         }
 
                         if (isSelected)
@@ -135,7 +137,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                 if (ImGui.Button("Add New"))
                 {
                     // Apply pending changes before adding new item
-                    if (_items.IsItemSelected() && !_keyConflict)
+                    if (_items.IsItemSelected() && !_keyConflict && !_keyEmpty)
                     {
                         _items.SelectedItem.Key = _editingKey;
                         _items.SelectedItem.Value = _editingValue;
@@ -159,6 +161,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                     _editingKey = newItem.Key;
                     _editingValue = newItem.Value;
                     _keyConflict = false;
+                    _keyEmpty = false;
                 }
 
                 float pos = ImGui.CalcTextSize("Delete").X + framePadding.X / 2;
@@ -177,7 +180,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                 if (isItemSelected)
                 {
                     // Initialize editing values if they haven't been set
-                    if (_editingKey != _items.SelectedItem.Key && !_keyConflict)
+                    if (_editingKey != _items.SelectedItem.Key && !_keyConflict && !_keyEmpty)
                     {
                         _editingKey = _items.SelectedItem.Key;
                         _editingValue = _items.SelectedItem.Value;
@@ -187,10 +190,22 @@ public class KeyValuePairEditor : ImGuiWindowBase
                     {
                         SettingsTable.DrawString("Key", ref _editingKey, 255);
 
+                        // Check for empty key
+                        _keyEmpty = string.IsNullOrEmpty(_editingKey);
+
                         // Check for duplicate key
                         _keyConflict = IsKeyDuplicate(_editingKey, _items.SelectedItem);
 
-                        if (_keyConflict)
+                        if (_keyEmpty)
+                        {
+                            ImGui.TableNextRow();
+                            ImGui.TableNextColumn();
+                            ImGui.TableNextColumn();
+                            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.3f, 0.3f, 1.0f));
+                            ImGui.TextWrapped("Key cannot be empty.");
+                            ImGui.PopStyleColor();
+                        }
+                        else if (_keyConflict)
                         {
                             ImGui.TableNextRow();
                             ImGui.TableNextColumn();
@@ -205,15 +220,15 @@ public class KeyValuePairEditor : ImGuiWindowBase
                         SettingsTable.EndTable();
                     }
 
-                    // Only apply changes if there's no key conflict
-                    if (!_keyConflict)
+                    // Only apply changes if there's no key conflict and key is not empty
+                    if (!_keyConflict && !_keyEmpty)
                     {
                         _items.SelectedItem.Key = _editingKey;
                         _items.SelectedItem.Value = _editingValue;
                     }
                     else
                     {
-                        // Still update the value even if key conflicts
+                        // Still update the value even if key conflicts or is empty
                         _items.SelectedItem.Value = _editingValue;
                     }
                 }
@@ -240,6 +255,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                         _editingKey = string.Empty;
                         _editingValue = string.Empty;
                         _keyConflict = false;
+                        _keyEmpty = false;
                         ImGui.CloseCurrentPopup();
                     }
 

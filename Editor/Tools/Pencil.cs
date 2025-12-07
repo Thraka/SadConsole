@@ -3,6 +3,8 @@ using System.Reflection.Metadata;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
+using SadConsole.Editor.Serialization;
+using SadConsole.Entities;
 using SadConsole.Host;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI.Controls;
@@ -14,6 +16,7 @@ internal class Pencil : ITool
 {
     public string Title => "\uf040 Pencil";
     public ToolMode.Modes CurrentMode;
+    private ZoneSerialized? _currentZone;
 
     public string Description =>
         """
@@ -76,9 +79,10 @@ internal class Pencil : ITool
         // Zones mode
         else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Zones)
         {
-            bool debugZones = false;
+            ZoneHelpers.ImGuiDrawZones(document, out _currentZone, out bool zoneVisualChanged);
 
-            SharedToolSettings.ImGuiDrawZones(document, ref debugZones, out var obj);
+            if (zoneVisualChanged)
+                ConfigureToolMode(document);
         }
     }
 
@@ -103,6 +107,40 @@ internal class Pencil : ITool
 
                     document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
             }
+        }
+        else if (CurrentMode == ToolMode.Modes.Zones)
+        {
+            // Set a darkened semi-transparent background for the zone layer
+            document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.3f, 0.3f, 0.3f, 0.5f);
+            document.VisualLayerToolLower.Clear();
+
+            // Get zones from document
+            IDocumentZones docZones = (IDocumentZones)document;
+            Point viewPosition = document.EditingSurface.Surface.ViewPosition;
+            int viewWidth = document.VisualLayerToolLower.Surface.Surface.Width;
+            int viewHeight = document.VisualLayerToolLower.Surface.Surface.Height;
+
+            // Iterate through all zones and color their positions
+            foreach (var zone in docZones.Zones.Objects)
+            {
+                if (zone.ZoneArea == null) continue;
+
+                foreach (Point position in zone.ZoneArea)
+                {
+                    // Convert from surface coordinates to view coordinates
+                    int viewX = position.X - viewPosition.X;
+                    int viewY = position.Y - viewPosition.Y;
+
+                    // Check if position is within the current viewport
+                    if (viewX >= 0 && viewX < viewWidth && viewY >= 0 && viewY < viewHeight)
+                    {
+                        var cell = document.VisualLayerToolLower.Surface.Surface[viewX, viewY];
+                        zone.Appearance.CopyAppearanceTo(cell);
+                    }
+                }
+            }
+
+            document.VisualLayerToolLower.Surface.IsDirty = true;
         }
         else
         {
@@ -145,7 +183,7 @@ internal class Pencil : ITool
                     document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             }
         }
-        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
+        else if (CurrentMode == ToolMode.Modes.Empty)
         {
             if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
             {
@@ -159,9 +197,32 @@ internal class Pencil : ITool
             }
         }
 
-        // Zones
-        else
+        // Zones mode
+        else if (_currentZone != null)
         {
+            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+            {
+                _currentZone.ZoneArea ??= new();
+                _currentZone.ZoneArea.Add(hoveredCellPosition);
+
+                ColoredGlyphBase cell = document.VisualLayerToolLower.Surface.Surface[hoveredCellPosition - document.EditingSurface.Surface.ViewPosition];
+                _currentZone.Appearance.CopyAppearanceTo(cell);
+
+                document.VisualLayerToolLower.Surface.IsDirty = true;
+            }
+            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            {
+                if (_currentZone.ZoneArea != null && _currentZone.ZoneArea.Contains(hoveredCellPosition))
+                {
+                    _currentZone.ZoneArea.Remove(hoveredCellPosition);
+
+                    // Reset the cell appearance in the visual layer
+                    var cell = document.VisualLayerToolLower.Surface.Surface[hoveredCellPosition - document.EditingSurface.Surface.ViewPosition];
+                    document.VisualLayerToolLower.Surface.Clear(hoveredCellPosition.X - document.EditingSurface.Surface.ViewPosition.X,
+                                                                hoveredCellPosition.Y - document.EditingSurface.Surface.ViewPosition.Y);
+                    document.VisualLayerToolLower.Surface.IsDirty = true;
+                }
+            }
         }
     }
 

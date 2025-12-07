@@ -2,6 +2,7 @@
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
+using SadConsole.Editor.Serialization;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiTypes;
 
@@ -46,14 +47,16 @@ internal class Box : ITool
         FillGlyph = new ColoredGlyph()
     };
 
+    private ZoneSerialized? _currentZone;
+    private SimpleObjectDefinition? _currentObject;
 
     private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
 
-    private bool _isDrawing = false;
     private bool _isFirstPointSelected = false;
     private Point _firstPoint;
     private Point _secondPoint;
     private bool _isCancelled;
+    private bool _isRightClickDrag;
 
     public string Title => "\uefa4 Box";
     public ToolMode.Modes CurrentMode;
@@ -186,18 +189,27 @@ internal class Box : ITool
             ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
             ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
 
-            if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
+            if (SharedToolSettings.ImGuiDrawObjects(document, out _currentObject))
             {
                 if (_shapeSettings.HasBorder)
                 {
                     _shapeSettings.UseBoxBorderStyle = false;
                     _shapeSettings.BoxBorderStyle = null;
-                    _shapeSettings.BorderGlyph = obj.Visual;
+                    _shapeSettings.BorderGlyph = _currentObject.Visual;
                 }
 
                 if (_shapeSettings.HasFill)
-                    _shapeSettings.FillGlyph = obj.Visual;
+                    _shapeSettings.FillGlyph = _currentObject.Visual;
             }
+        }
+
+        // Zones mode
+        else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Zones)
+        {
+            ZoneHelpers.ImGuiDrawZones(document, out _currentZone, out bool zoneVisualChanged);
+
+            if (zoneVisualChanged)
+                ConfigureToolMode(document);
         }
     }
 
@@ -245,6 +257,42 @@ internal class Box : ITool
                     document.VisualLayerToolLower.Surface.Surface[index].Background = Core.Settings.EmptyCellColor;
             }
         }
+        else if (CurrentMode == ToolMode.Modes.Zones)
+        {
+            _shapeSettings = _shapeSettingsOther;
+
+            // Set a darkened semi-transparent background for the zone layer
+            document.VisualLayerToolLower.Surface.DefaultBackground = new Color(0.3f, 0.3f, 0.3f, 0.5f);
+            document.VisualLayerToolLower.Clear();
+
+            // Get zones from document
+            IDocumentZones docZones = (IDocumentZones)document;
+            Point viewPosition = document.EditingSurface.Surface.ViewPosition;
+            int viewWidth = document.VisualLayerToolLower.Surface.Surface.Width;
+            int viewHeight = document.VisualLayerToolLower.Surface.Surface.Height;
+
+            // Iterate through all zones and color their positions
+            foreach (var zone in docZones.Zones.Objects)
+            {
+                if (zone.ZoneArea == null) continue;
+
+                foreach (Point position in zone.ZoneArea)
+                {
+                    // Convert from surface coordinates to view coordinates
+                    int viewX = position.X - viewPosition.X;
+                    int viewY = position.Y - viewPosition.Y;
+
+                    // Check if position is within the current viewport
+                    if (viewX >= 0 && viewX < viewWidth && viewY >= 0 && viewY < viewHeight)
+                    {
+                        var cell = document.VisualLayerToolLower.Surface.Surface[viewX, viewY];
+                        zone.Appearance.CopyAppearanceTo(cell);
+                    }
+                }
+            }
+
+            document.VisualLayerToolLower.Surface.IsDirty = true;
+        }
         else if (CurrentMode == ToolMode.Modes.Draw)
         {
             _shapeSettings = _shapeSettingsDraw;
@@ -253,6 +301,8 @@ internal class Box : ITool
             document.VisualLayerToolLower.Surface.DefaultBackground = Color.Transparent;
             document.VisualLayerToolLower.Clear();
         }
+
+        // Objects
         else
         {
             _shapeSettings = _shapeSettingsOther;
@@ -269,13 +319,18 @@ internal class Box : ITool
 
         ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
 
-        if (!_isDrawing)
+        // Cancelled but mouse button finally released, exit cancelled
+        if (_isCancelled)
         {
-            // Cancelled but left mouse finally released, exit cancelled
-            if (_isCancelled && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+            if (!ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && !ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
                 _isCancelled = false;
 
-            // Cancelled
+            return;
+        }
+
+        // Cancelled - only for non-zone modes
+        if (CurrentMode != ToolMode.Modes.Zones)
+        {
             if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
             {
                 ClearState();
@@ -285,61 +340,187 @@ internal class Box : ITool
 
             if (_isCancelled)
                 return;
+        }
 
-            // Preview
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        // For zones mode, handle escape to cancel
+        if (CurrentMode == ToolMode.Modes.Zones && _isFirstPointSelected
+            && (ImGuiP.IsKeyReleased(ImGuiKey.Escape) ||
+                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) && !_isRightClickDrag) ||
+                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Left) && _isRightClickDrag)
+               )
+           )
+        {
+            ClearState();
+            _isCancelled = true;
+            document.VisualLayerToolMiddle.Surface.Clear();
+            return;
+        }
+
+        // Determine which mouse button is being used for drawing
+        bool isLeftDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool isRightDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
+        bool isLeftReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Left);
+        bool isRightReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Right);
+
+        // For zones mode, allow right-click to start a clear operation
+        bool isDrawingButton = isLeftDown || (CurrentMode == ToolMode.Modes.Zones && isRightDown && !_isFirstPointSelected);
+        bool isDrawingButtonReleased = _isRightClickDrag ? isRightReleased : isLeftReleased;
+
+        // Track if we started with right-click (for zones clear)
+        if (CurrentMode == ToolMode.Modes.Zones && isRightDown && !_isFirstPointSelected && !isLeftDown)
+            _isRightClickDrag = true;
+
+        else if (!_isFirstPointSelected && isLeftDown)
+            _isRightClickDrag = false;
+
+        // Continue tracking the correct button during drag
+        if (_isFirstPointSelected)
+        {
+            isDrawingButton = _isRightClickDrag ? isRightDown : isLeftDown;
+        }
+
+        // For zones mode, require a zone to be selected before drawing
+        if (CurrentMode == ToolMode.Modes.Zones && _currentZone == null)
+            return;
+
+        // For objects mode, require an object to be selected before drawing
+        if (CurrentMode == ToolMode.Modes.Objects && _currentObject == null)
+            return;
+
+        // Preview
+        if (isDrawingButton && isActive)
+        {
+            if (!_isFirstPointSelected)
             {
-                if (!_isFirstPointSelected)
-                {
-                    _isFirstPointSelected = true;
+                _isFirstPointSelected = true;
+                _firstPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
+            }
 
-                    _firstPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
-                }
+            _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
-                _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
+            document.VisualLayerToolMiddle.Surface.Clear();
 
-                document.VisualLayerToolMiddle.Surface.Clear();
+            // For zone clear mode, use a different visual
+            if (CurrentMode == ToolMode.Modes.Zones && _isRightClickDrag)
+            {
+                // Draw a simple filled rectangle to indicate clear area
+                document.VisualLayerToolMiddle.Surface.Fill(
+                    new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                    new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
+                    foreground: Color.White,
+                    background: Color.Red.SetAlpha(100));
+            }
+            // For zone add mode, use the zone's appearance
+            else if (CurrentMode == ToolMode.Modes.Zones)
+            {
+                // Fill the entire box area with the zone's appearance
+                document.VisualLayerToolMiddle.Surface.Fill(
+                    new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                    new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
+                    _currentZone!.Appearance.Foreground,
+                    _currentZone.Appearance.Background,
+                    _currentZone.Appearance.Glyph);
+            }
+            else
+            {
                 document.VisualLayerToolMiddle.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
                                                                             new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
                                                                             _shapeSettings.ToShapeParameters());
             }
+        }
 
-            // Commit
-            else if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        // Commit
+        else if (isDrawingButtonReleased && _isFirstPointSelected)
+        {
+            Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
+            Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
+
+            // TODO: Can you even get Point.None here?
+            if (_firstPoint != Point.None)
             {
-                Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
-                Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
-
-                // TODO: Can you even get Point.None here?
-                if (_firstPoint != Point.None)
+                // Draw box or object mode
+                if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw || document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
                 {
-                    // Draw box or object mode
-                    if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Draw || document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
-                    {
-                        document.EditingSurface.Surface.DrawBox(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
-                                                                                new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
-                                                                _shapeSettings.ToShapeParameters());
-                    }
-
-                    // Empty cell mode
-                    else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
-                    {
-                        // Erase the editing surface
-                        document.EditingSurface.Surface.Clear(
-                            new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
-                                          new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))));
-
-                        // Fill the empty tool layer
-                        document.VisualLayerToolLower.Surface.Fill(
-                            new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
-                                          new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
-                            background: Core.Settings.EmptyCellColor);
-                    }
+                    document.EditingSurface.Surface.DrawBox(new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                                                            new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))),
+                                                            _shapeSettings.ToShapeParameters());
                 }
 
-                document.VisualLayerToolMiddle.Surface.Clear();
-                ClearState();
+                // Empty cell mode
+                else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Empty)
+                {
+                    // Erase the editing surface
+                    document.EditingSurface.Surface.Clear(
+                        new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                        new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y))));
+
+                    // Fill the empty tool layer
+                    document.VisualLayerToolLower.Surface.Fill(
+                        new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                        new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
+                        background: Core.Settings.EmptyCellColor);
+                }
+
+                // Zones mode
+                else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Zones && _currentZone != null)
+                {
+                    Rectangle boxRect = new Rectangle(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                                        new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y)));
+
+                    Rectangle viewRect = new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                                        new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
+
+                    // Right-click drag clears the zone area
+                    if (_isRightClickDrag)
+                    {
+                        if (_currentZone.ZoneArea != null)
+                        {
+                            // Remove all positions in the box from the zone
+                            foreach (Point position in boxRect.Positions())
+                            {
+                                _currentZone.ZoneArea.Remove(position);
+                            }
+
+                            // Clear the visual layer for the box area
+                            foreach (Point position in viewRect.Positions())
+                            {
+                                if (position.X >= 0 && position.X < document.VisualLayerToolLower.Surface.Surface.Width &&
+                                    position.Y >= 0 && position.Y < document.VisualLayerToolLower.Surface.Surface.Height)
+                                {
+                                    document.VisualLayerToolLower.Surface.Clear(position.X, position.Y);
+                                }
+                            }
+                        }
+                    }
+                    // Left-click drag adds to the zone area
+                    else
+                    {
+                        _currentZone.ZoneArea ??= new();
+
+                        // Add all positions in the box to the zone
+                        foreach (Point position in boxRect.Positions())
+                        {
+                            _currentZone.ZoneArea.Add(position);
+                        }
+
+                        // Update the visual layer for the box area
+                        foreach (Point position in viewRect.Positions())
+                        {
+                            if (position.X >= 0 && position.X < document.VisualLayerToolLower.Surface.Surface.Width &&
+                                position.Y >= 0 && position.Y < document.VisualLayerToolLower.Surface.Surface.Height)
+                            {
+                                var cell = document.VisualLayerToolLower.Surface.Surface[position];
+                                _currentZone.Appearance.CopyAppearanceTo(cell);
+                            }
+                        }
+                    }
+
+                    document.VisualLayerToolLower.Surface.IsDirty = true;
+                }
             }
+
+            document.VisualLayerToolMiddle.Surface.Clear();
+            ClearState();
         }
     }
 
@@ -362,9 +543,9 @@ internal class Box : ITool
     public void ClearState()
     {
         _isCancelled = false;
-        _isDrawing = false;
         _firstPoint = Point.None;
         _isFirstPointSelected = false;
+        _isRightClickDrag = false;
     }
 
     public override string ToString() =>
