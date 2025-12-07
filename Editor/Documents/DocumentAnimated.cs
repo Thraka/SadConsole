@@ -42,7 +42,7 @@ public partial class DocumentAnimated: Document
     {
         _baseAnimation.CurrentFrameIndex = frameIndex;
 
-        EditingSurface.Surface = _baseAnimation.CurrentFrame;
+        ((ScreenSurface)EditingSurface).Surface = _baseAnimation.CurrentFrame;
         EditingSurface.IsDirty = true;
 
         Redraw(true, true);
@@ -184,7 +184,7 @@ public partial class DocumentAnimated: Document
 
                 if (EditingSurface.Surface != _baseAnimation.CurrentFrame)
                 {
-                    EditingSurface.Surface = _baseAnimation.CurrentFrame;
+                    ((ScreenSurface)EditingSurface).Surface = _baseAnimation.CurrentFrame;
                     EditingSurface.IsDirty = true;
                     Redraw(true, true);
                 }
@@ -310,10 +310,10 @@ public partial class DocumentAnimated: Document
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Width: ");
         ImGui.SameLine();
-        ImGui.Text(EditingSurface.Width.ToString());
+        ImGui.Text(EditingSurface.Surface.Width.ToString());
         ImGui.Text("Height:");
         ImGui.SameLine();
-        ImGui.Text(EditingSurface.Height.ToString());
+        ImGui.Text(EditingSurface.Surface.Height.ToString());
         ImGui.EndGroup();
         ImGui.SameLine(0, ImGui.GetFontSize());
 
@@ -321,8 +321,8 @@ public partial class DocumentAnimated: Document
         {
             if (ImGui.Button("Resize"))
             {
-                _width = new(EditingSurface.Width);
-                _height = new(EditingSurface.Height);
+                _width = new(EditingSurface.Surface.Width);
+                _height = new(EditingSurface.Surface.Height);
                 ImGui.OpenPopup("resize_document");
             }
 
@@ -331,8 +331,8 @@ public partial class DocumentAnimated: Document
                 if (dialogResult && (_width.IsChanged() || _height.IsChanged()))
                 {
                     // Don't sync just the view because the view should be set by the drawing of the surface based on available screen space
-                    int viewWidth = Math.Min(EditingSurface.ViewWidth, _width.CurrentValue);
-                    int viewHeight = Math.Min(EditingSurface.ViewHeight, _height.CurrentValue);
+                    int viewWidth = Math.Min(EditingSurface.Surface.ViewWidth, _width.CurrentValue);
+                    int viewHeight = Math.Min(EditingSurface.Surface.ViewHeight, _height.CurrentValue);
 
                     foreach (var frame in _baseAnimation.Frames)
                         ((ICellSurfaceResize)frame).Resize(viewWidth, viewHeight, _width.CurrentValue, _height.CurrentValue, false);

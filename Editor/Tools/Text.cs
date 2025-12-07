@@ -60,7 +60,7 @@ internal class Text : ITool
         if (_isTyping)
         {
             if (isHovered)
-                ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+                ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
             // Cancelled
             if (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape))
@@ -71,7 +71,7 @@ internal class Text : ITool
             else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
             {
                 _cursorActual!.Position =
-                _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.ViewPosition;
+                _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
             }
 
             else
@@ -95,17 +95,17 @@ internal class Text : ITool
 
         ImGuiRenderer theRenderer = ImGuiCore.Renderer;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
         {
             document.VisualTool.SadComponents.Add(_cursorVisual);
 
-            _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.ViewPosition;
-            _cursorActual = new(document.EditingSurface.Surface.GetSubSurface(new Rectangle(document.EditingSurface.ViewPosition.X,
-                                                                                            document.EditingSurface.ViewPosition.Y,
-                                                                                            document.EditingSurface.ViewWidth,
-                                                                                            document.EditingSurface.ViewHeight)));
+            _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
+            _cursorActual = new(document.EditingSurface.Surface.GetSubSurface(new Rectangle(document.EditingSurface.Surface.ViewPosition.X,
+                                                                                            document.EditingSurface.Surface.ViewPosition.Y,
+                                                                                            document.EditingSurface.Surface.ViewWidth,
+                                                                                            document.EditingSurface.Surface.ViewHeight)));
             _cursorActual.PrintAppearance = SharedToolSettings.Tip;
             _cursorActual.PrintAppearanceMatchesHost = false;
             _cursorActual.AutomaticallyShiftRowsUp = false;

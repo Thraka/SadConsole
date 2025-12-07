@@ -25,7 +25,7 @@ internal class Operations : ITool
         ImGui.Checkbox("Wrap Cells", ref _wrap);
 
         ISurface surfaceArea;
-        ScreenSurface doc = document.EditingSurface;
+        IScreenSurface doc = document.EditingSurface;
 
         if (_onlyVisible)
             surfaceArea = document.EditingSurface.Surface.GetSubSurface(document.EditingSurface.Surface.View);

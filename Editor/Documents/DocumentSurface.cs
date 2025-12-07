@@ -47,10 +47,10 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Width: "u8);
         ImGui.SameLine();
-        ImGui.Text(EditingSurface.Width.ToString());
+        ImGui.Text(EditingSurface.Surface.Width.ToString());
         ImGui.Text("Height:"u8);
         ImGui.SameLine();
-        ImGui.Text(EditingSurface.Height.ToString());
+        ImGui.Text(EditingSurface.Surface.Height.ToString());
         ImGui.EndGroup();
         ImGui.SameLine(0, ImGui.GetFontSize());
 
@@ -58,8 +58,8 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
         {
             if (ImGui.Button("Resize"u8))
             {
-                _width = new(EditingSurface.Width);
-                _height = new(EditingSurface.Height);
+                _width = new(EditingSurface.Surface.Width);
+                _height = new(EditingSurface.Surface.Height);
                 ImGui.OpenPopup("resize_document");
             }
 
@@ -68,15 +68,15 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
                 if (dialogResult && (_width.IsChanged() || _height.IsChanged()))
                 {
                     // Don't sync just the view because the view should be set by the drawing of the surface based on available screen space
-                    int viewWidth = Math.Min(EditingSurface.ViewWidth, _width.CurrentValue);
-                    int viewHeight = Math.Min(EditingSurface.ViewHeight, _height.CurrentValue);
+                    int viewWidth = Math.Min(EditingSurface.Surface.ViewWidth, _width.CurrentValue);
+                    int viewHeight = Math.Min(EditingSurface.Surface.ViewHeight, _height.CurrentValue);
 
                     // Resize
                     ((ICellSurfaceResize)EditingSurface).Resize(viewWidth, viewHeight, _width.CurrentValue, _height.CurrentValue, false);
 
                     // Resync width/height
-                    _width = new(EditingSurface.Width);
-                    _height = new(EditingSurface.Height);
+                    _width = new(EditingSurface.Surface.Width);
+                    _height = new(EditingSurface.Surface.Height);
 
                     // Redraw
                     EditingSurface.IsDirty = true;

@@ -37,7 +37,7 @@ internal class Line : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ScreenSurface surface = document.EditingSurface;
+        IScreenSurface surface = document.EditingSurface;
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Mode"u8);

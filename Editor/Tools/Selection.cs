@@ -272,7 +272,7 @@ internal class Selection : ITool
 
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         // Cancelled but left mouse finally released, exit cancelled
         if (_state == States.Cancel && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))

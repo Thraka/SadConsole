@@ -43,7 +43,7 @@ public abstract partial class Document : ITitle
                                                ToolMode.ZonesMode);
 
     [DataMember]
-    public ScreenSurface EditingSurface;
+    public IScreenSurface EditingSurface;
 
     [DataMember]
     [JsonConverter(typeof(SerializedTypes.FontJsonConverter))]
@@ -131,8 +131,8 @@ public abstract partial class Document : ITitle
 
     public virtual void Resync()
     {
-        _width = new(EditingSurface.Width);
-        _height = new(EditingSurface.Height);
+        _width = new(EditingSurface.Surface.Width);
+        _height = new(EditingSurface.Surface.Height);
     }
 
     public void SyncToolModes()
@@ -220,9 +220,9 @@ public abstract partial class Document : ITitle
         EditingSurface.Render(Game.Instance.UpdateFrameDelta);
 
         // Check for tooling layer changes
-        if (VisualTool.Width != EditingSurface.ViewWidth || VisualTool.Height != EditingSurface.ViewHeight)
+        if (VisualTool.Width != EditingSurface.Surface.ViewWidth || VisualTool.Height != EditingSurface.Surface.ViewHeight)
         {
-            VisualTool.Resize(EditingSurface.ViewWidth, EditingSurface.ViewHeight, true);
+            VisualTool.Resize(EditingSurface.Surface.ViewWidth, EditingSurface.Surface.ViewHeight, true);
         }
 
         VisualTool.Update(Game.Instance.UpdateFrameDelta);

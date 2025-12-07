@@ -78,7 +78,7 @@ internal class Box : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ScreenSurface surface = document.EditingSurface;
+        IScreenSurface surface = document.EditingSurface;
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Mode"u8);
@@ -316,7 +316,7 @@ internal class Box : ITool
     {
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         // Cancelled but mouse button finally released, exit cancelled
         if (_isCancelled)

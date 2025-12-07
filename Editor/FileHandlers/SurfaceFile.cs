@@ -42,11 +42,9 @@ internal class SurfaceFile : IFileHandler
 
         if (instance is Document doc)
         {
-            ScreenSurface surface = doc.EditingSurface;
-
             try
             {
-                Serializer.Save(surface.Surface, file, compress);
+                Serializer.Save(doc.EditingSurface.Surface, file, compress);
 
                 return true;
             }

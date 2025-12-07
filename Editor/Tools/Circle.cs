@@ -41,7 +41,7 @@ internal class Circle : ITool
 
     public void BuildSettingsPanel(Document document)
     {
-        ScreenSurface surface = document.EditingSurface;
+        IScreenSurface surface = document.EditingSurface;
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Mode"u8);
@@ -144,7 +144,7 @@ internal class Circle : ITool
     {
         if (!isHovered) return;
 
-        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.ViewPosition, document.EditorFontSize, Color.Green);
+        ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         if (CurrentMode == ToolMode.Modes.Draw)
         {
