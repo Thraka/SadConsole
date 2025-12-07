@@ -532,7 +532,8 @@ internal class Box : ITool
         document.ResetVisualLayers();
     }
 
-    public void Reset(Document document) { }
+    public void Reset(Document document) =>
+        ConfigureToolMode(document);
 
     public void DocumentViewChanged(Document document) =>
         ConfigureToolMode(document);

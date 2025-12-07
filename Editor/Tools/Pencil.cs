@@ -231,7 +231,8 @@ internal class Pencil : ITool
     public void OnDeselected(Document document) =>
         document.ResetVisualLayers();
 
-    public void Reset(Document document) { }
+    public void Reset(Document document) =>
+        ConfigureToolMode(document);
 
     public void DocumentViewChanged(Document document) =>
         ConfigureToolMode(document);

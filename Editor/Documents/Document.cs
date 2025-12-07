@@ -166,6 +166,13 @@ public abstract partial class Document : ITitle
         VisualLayerToolUpper.Clear();
     }
 
+    public virtual void SetSurfaceView(int x, int y, int width, int height)
+    {
+        EditingSurface.Surface.ViewPosition = new Point(x, y);
+        EditingSurface.Surface.ViewWidth = width;
+        EditingSurface.Surface.ViewHeight = height;
+    }
+
     /// <summary>
     /// If <see cref="DocumentOptions.DrawSelf"/> is true, this method is called when rendering a document to the Document tab.
     /// </summary>

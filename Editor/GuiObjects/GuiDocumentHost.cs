@@ -43,19 +43,37 @@ public class GuiDocumentsHost: ImGuiObjectBase
 
                     // Set view width of surface
                     if (pixelArea.X <= availRegion.X)
-                        document.EditingSurface.Surface.ViewWidth = document.EditingSurface.Surface.Width;
+                    {
+                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                document.EditingSurface.Surface.ViewPosition.Y,
+                                                document.EditingSurface.Surface.Width,
+                                                document.EditingSurface.Surface.ViewHeight);
+                    }
                     else
                     {
-                        document.EditingSurface.Surface.ViewWidth = Math.Max((int)(availRegion.X / document.EditorFontSize.X), 1);
+                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                document.EditingSurface.Surface.ViewPosition.Y,
+                                                Math.Max((int)(availRegion.X / document.EditorFontSize.X), 1),
+                                                document.EditingSurface.Surface.ViewHeight);
+
                         pixelArea.X = document.EditingSurface.Surface.ViewWidth * document.EditorFontSize.X;
                     }
 
                     // Set view height of surface
                     if (pixelArea.Y <= availRegion.Y)
-                        document.EditingSurface.Surface.ViewHeight = document.EditingSurface.Surface.Height;
+                    {
+                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                document.EditingSurface.Surface.ViewPosition.Y,
+                                                document.EditingSurface.Surface.ViewWidth,
+                                                document.EditingSurface.Surface.Height);
+                    }
                     else
                     {
-                        document.EditingSurface.Surface.ViewHeight = Math.Max((int)(availRegion.Y / document.EditorFontSize.Y), 1);
+                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                document.EditingSurface.Surface.ViewPosition.Y,
+                                                document.EditingSurface.Surface.ViewWidth,
+                                                Math.Max((int)(availRegion.Y / document.EditorFontSize.Y), 1));
+
                         pixelArea.Y = document.EditingSurface.Surface.ViewHeight * document.EditorFontSize.Y;
                     }
 
@@ -114,7 +132,11 @@ public class GuiDocumentsHost: ImGuiObjectBase
                     if (ImGuiSC.VSliderIntNudges("##height", new Vector2(barSize.X, pixelArea.Y), ref sliderValueY,
                                                 document.EditingSurface.Surface.Height - view.Height, 0, ImGuiSliderFlags.AlwaysClamp))
                     {
-                        document.EditingSurface.Surface.ViewPosition = document.EditingSurface.Surface.ViewPosition.WithY(sliderValueY);
+                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                sliderValueY,
+                                                document.EditingSurface.Surface.ViewWidth,
+                                                document.EditingSurface.Surface.ViewHeight);
+
                         viewChanged = true;
                         Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
                     }
@@ -126,7 +148,11 @@ public class GuiDocumentsHost: ImGuiObjectBase
                     if (ImGuiSC.SliderIntNudges("##width", (int)pixelArea.X, ref sliderValueX, 0,
                                                document.EditingSurface.Surface.Width - view.Width, bigX ? "BIG" : "%d", ImGuiSliderFlags.AlwaysClamp))
                     {
-                        document.EditingSurface.Surface.ViewPosition = document.EditingSurface.Surface.ViewPosition.WithX(sliderValueX);
+                        document.SetSurfaceView(sliderValueX,
+                                                document.EditingSurface.Surface.ViewPosition.Y,
+                                                document.EditingSurface.Surface.ViewWidth,
+                                                document.EditingSurface.Surface.ViewHeight);
+
                         Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
                     }
                     ImGui.EndDisabled();

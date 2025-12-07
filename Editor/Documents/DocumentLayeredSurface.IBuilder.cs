@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
@@ -6,17 +6,18 @@ using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
 
-public partial class DocumentScene
+public partial class DocumentLayeredSurface
 {
     public class Builder : IBuilder
     {
         public string Name;
         public int Width;
         public int Height;
+        public int LayerCount;
         public Vector4 DefaultForeground;
         public Vector4 DefaultBackground;
 
-        public string Title => "Scene";
+        public string Title => "Layered Surface";
 
         public Builder() =>
             ResetBuilder();
@@ -33,6 +34,7 @@ public partial class DocumentScene
 
             if (SettingsTable.BeginTable("new_doc_table"))
             {
+                SettingsTable.DrawInt("Layers", "##doclayercount", ref LayerCount, 1, 50);
                 SettingsTable.DrawInt("Width", "##docwidth", ref Width, 1, 2000);
                 SettingsTable.DrawInt("Height", "##docheight", ref Height, 1, 2000);
                 SettingsTable.DrawColor("Def. Foreground", "##fore", ref DefaultForeground, Color.White.ToVector4(), true, out _);
@@ -44,31 +46,39 @@ public partial class DocumentScene
 
         public bool IsDocumentValid()
         {
-            return !string.IsNullOrWhiteSpace(Name) && Width > 0 && Height > 0;
+            return !string.IsNullOrWhiteSpace(Name) && Width > 0 && Height > 0 && LayerCount > 0;
         }
 
         public Document CreateDocument()
         {
-            CellSurface surface = new(Width, Height);
-            surface.DefaultForeground = DefaultForeground.ToColor();
-            surface.DefaultBackground = DefaultBackground.ToColor();
-            surface.Clear();
-            //surface.FillWithRandomGarbage(100);
+            LayeredScreenSurface layeredSurface = new(Width, Height);
+            layeredSurface.Surface.DefaultForeground = DefaultForeground.ToColor();
+            layeredSurface.Surface.DefaultBackground = DefaultBackground.ToColor();
+            layeredSurface.Surface.Clear();
 
-            return new DocumentScene(surface) { Title = Name };
+            for (int i = 1; i < LayerCount; i++)
+            {
+                var layer = layeredSurface.Layers.Create();
+                layer.DefaultForeground = DefaultForeground.ToColor();
+                layer.DefaultBackground = Color.Transparent;
+                layer.Clear();
+            }
+
+            return new DocumentLayeredSurface(layeredSurface) { Title = Name };
         }
 
         public void ResetBuilder()
         {
-            Name = Document.GenerateName("Surface");
+            Name = Document.GenerateName("LayeredSurface");
             Width = 80;
             Height = 25;
+            LayerCount = 1;
             DefaultForeground = Color.White.ToVector4();
             DefaultBackground = Color.Black.ToVector4();
         }
 
         public IEnumerable<IFileHandler> GetLoadHandlers() =>
-            [new SurfaceDocument(), new SurfaceFile()];
+            [new LayeredSurfaceDocument(), new LayeredSurfaceFile()];
 
         public override string ToString() =>
             Title;
