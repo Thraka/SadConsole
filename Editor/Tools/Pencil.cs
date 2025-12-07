@@ -72,7 +72,7 @@ internal class Pencil : ITool
         // Objects mode
         else if (document.ToolModes.SelectedItem!.Mode == ToolMode.Modes.Objects)
         {
-            if (SharedToolSettings.ImGuiDrawObjects(document, out var obj))
+            if (SimpleObjectHelpers.ImGuiDrawObjectsList(document, out var obj))
                 SharedToolSettings.Tip = (ColoredGlyph)obj.Visual.Clone();
         }
 

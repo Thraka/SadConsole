@@ -189,7 +189,7 @@ internal class Box : ITool
             ImGui.Checkbox("Has Border", ref _shapeSettings.HasBorder);
             ImGui.Checkbox("Has Fill", ref _shapeSettings.HasFill);
 
-            if (SharedToolSettings.ImGuiDrawObjects(document, out _currentObject))
+            if (SimpleObjectHelpers.ImGuiDrawObjectsList(document, out _currentObject))
             {
                 if (_shapeSettings.HasBorder)
                 {
