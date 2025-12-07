@@ -3,7 +3,6 @@ using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
-using SadConsole.Editor.Serialization;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Tools;
@@ -14,7 +13,7 @@ namespace SadConsole.Editor.Tools;
 internal static class ZoneHelpers
 {
     // State tracking for zone name editing
-    private static ZoneSerialized? _lastSelectedZone;
+    private static ZoneSimplified? _lastSelectedZone;
     private static string _editingZoneName = string.Empty;
     private static string _lastValidZoneName = string.Empty;
     private static bool _zoneNameConflict;
@@ -22,7 +21,7 @@ internal static class ZoneHelpers
     /// <summary>
     /// Checks if the specified zone name already exists in another zone.
     /// </summary>
-    private static bool IsZoneNameDuplicate(string name, ZoneSerialized excludeZone, ImGuiList<ZoneSerialized> zones)
+    private static bool IsZoneNameDuplicate(string name, ZoneSimplified excludeZone, ImGuiList<ZoneSimplified> zones)
     {
         if (string.IsNullOrEmpty(name))
             return false;
@@ -41,13 +40,13 @@ internal static class ZoneHelpers
     /// <param name="document">The document containing zones.</param>
     /// <param name="zone">The currently selected zone, if any.</param>
     /// <returns>True if a zone is selected; otherwise, false.</returns>
-    public static bool ImGuiDrawZones(Document document, [NotNullWhen(true)] out ZoneSerialized? zone, out bool zoneVisualChanged)
+    public static bool ImGuiDrawZones(Document document, [NotNullWhen(true)] out ZoneSimplified? zone, out bool zoneVisualChanged)
     {
         zoneVisualChanged = false;
 
         ImGui.SeparatorText("Defined Zones"u8);
 
-        ImGuiList<ZoneSerialized> zones = ((IDocumentZones)document).Zones;
+        ImGuiList<ZoneSimplified> zones = ((IDocumentZones)document).Zones;
 
         ImGui.SetNextItemWidth(-1);
         int previousSelection = zones.SelectedItemIndex;
@@ -88,7 +87,7 @@ internal static class ZoneHelpers
                 counter++;
             }
 
-            var newZone = new ZoneSerialized
+            var newZone = new ZoneSimplified
             {
                 Name = newName,
                 ZoneArea = new SadRogue.Primitives.Area(),

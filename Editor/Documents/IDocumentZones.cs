@@ -4,7 +4,7 @@ namespace SadConsole.Editor.Documents;
 
 public interface IDocumentZones
 {
-    ImGuiList<Serialization.ZoneSerialized> Zones { get; }
+    ImGuiList<ZoneSimplified> Zones { get; }
 
     public bool TryLoadZones(string file)
     {

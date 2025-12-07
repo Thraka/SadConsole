@@ -3,7 +3,6 @@ using System.Reflection.Metadata;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
-using SadConsole.Editor.Serialization;
 using SadConsole.Entities;
 using SadConsole.Host;
 using SadConsole.ImGuiSystem;
@@ -16,7 +15,7 @@ internal class Pencil : ITool
 {
     public string Title => "\uf040 Pencil";
     public ToolMode.Modes CurrentMode;
-    private ZoneSerialized? _currentZone;
+    private ZoneSimplified? _currentZone;
 
     public string Description =>
         """

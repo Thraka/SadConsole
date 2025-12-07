@@ -10,4 +10,7 @@ public class SurfaceDocumentSerialized
     public FontSerialized SurfaceFont;
     public Point SurfaceFontSize;
     public Point EditorFontSize;
+    public DocumentOptions Options;
+    public ZoneSerialized[]? Zones;
+    public SimpleObjectDefinition[]? SimpleObjects;
 }

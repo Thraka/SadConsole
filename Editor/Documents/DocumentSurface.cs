@@ -9,7 +9,8 @@ namespace SadConsole.Editor.Documents;
 public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumentZones
 {
     public ImGuiList<SimpleObjectDefinition> SimpleObjects { get; } = new();
-    public ImGuiList<Serialization.ZoneSerialized> Zones { get; } = new();
+
+    public ImGuiList<ZoneSimplified> Zones { get; } = new();
 
     public DocumentSurface()
     {
@@ -175,11 +176,108 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
                 {
                     ImGui.SeparatorText("Simple Objects");
 
-                    if (ImGui.MenuItem("Manage Simple Objects"u8))
+                    ImGui.PushID("objects_menu");
+
+                    if (ImGui.MenuItem("Manage"u8))
                         new Windows.SimpleObjectEditor(SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont).Open();
 
-                    if (ImGui.MenuItem("Import"u8))
-                        throw new NotImplementedException();
+                    bool doImport = false;
+                    bool replace = false;
+
+                    if (ImGui.MenuItem("Import (add)"u8))
+                    {
+                        doImport = true;
+                        replace = false;
+                    }
+
+                    if (ImGui.MenuItem("Import (replace)"u8))
+                    {
+                        doImport = true;
+                        replace = true;
+                    }
+
+                    if (doImport)
+                    {
+                        Windows.OpenFile window = new([new SimpleObjectsHandler()]);
+
+                        window.Closed += (s, e) =>
+                        {
+                            if (window.DialogResult)
+                            {
+                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is SimpleObjectDefinition[] objects)
+                                {
+                                    if (replace)
+                                        SimpleObjects.Objects.Clear();
+
+                                    foreach (SimpleObjectDefinition obj in objects)
+                                    {
+                                        if (!SimpleObjects.Objects.Where(o => o.Name.Equals(obj.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                            SimpleObjects.Objects.Add(obj);
+                                    }
+                                }
+                            }
+                        };
+                        window.Open();
+                    }
+
+                    if (ImGui.MenuItem("Export"u8))
+                        new SaveFile(SimpleObjects.Objects.ToArray(), [new SimpleObjectsHandler()]).Open();
+
+                    ImGui.PopID();
+                }
+
+                if (enableZones)
+                {
+                    ImGui.SeparatorText("Zones");
+
+                    bool doImport = false;
+                    bool replace = false;
+
+                    ImGui.PushID("zones_menu");
+
+                    if (ImGui.MenuItem("Import (add)"u8))
+                    {
+                        doImport = true;
+                        replace = false;
+                    }
+
+                    if (ImGui.MenuItem("Import (replace)"u8))
+                    {
+                        doImport = true;
+                        replace = true;
+                    }
+
+
+                    if (doImport)
+                    {
+                        Windows.OpenFile window = new([new ZonesHandler()]);
+                        
+                        window.Closed += (s, e) =>
+                        {
+                            if (window.DialogResult)
+                            {
+                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is ZoneSimplified[] zones)
+                                {
+                                    if (replace)
+                                        Zones.Objects.Clear();
+
+                                    foreach (ZoneSimplified zone in zones)
+                                    {
+                                        if (!Zones.Objects.Where(z => z.Name.Equals(zone.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                            Zones.Objects.Add(zone);
+                                    }
+
+                                    Core.State.Tools.SelectedItem?.DocumentViewChanged(this);
+                                }
+                            }
+                        };
+                        window.Open();
+                    }
+
+                    if (ImGui.MenuItem("Export"u8))
+                        new SaveFile(Zones.Objects.ToArray(), [new ZonesHandler()]).Open();
+
+                    ImGui.PopID();
                 }
             }
 

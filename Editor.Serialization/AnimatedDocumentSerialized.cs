@@ -10,4 +10,5 @@ public class AnimatedDocumentSerialized
     public FontSerialized SurfaceFont;
     public Point SurfaceFontSize;
     public Point EditorFontSize;
+    public DocumentOptions Options;
 }

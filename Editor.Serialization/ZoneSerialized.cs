@@ -8,7 +8,7 @@ namespace SadConsole.Editor.Serialization;
 public class ZoneSerialized
 {
     public string Name;
-    public Area ZoneArea;
+    public Point[] ZoneArea;
     public ColoredGlyph Appearance;
     public Dictionary<string, string> Settings = new();
 

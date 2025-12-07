@@ -1,5 +1,6 @@
 ﻿using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
+using SadConsole.Editor.Serialization;
 
 namespace SadConsole.Editor.FileHandlers;
 
@@ -38,6 +39,21 @@ internal class SurfaceDocument: IFileHandler
             doc.EditorFontSize = serializedObj.EditorFontSize;
             doc.EditingSurface.Font = doc.EditingSurfaceFont;
             doc.EditingSurface.FontSize = doc.EditingSurfaceFontSize;
+            doc.Options = serializedObj.Options ?? new Serialization.DocumentOptions();
+
+            if (doc.Options.UseZones && serializedObj.Zones != null)
+            {
+                foreach (ZoneSerialized item in serializedObj.Zones)
+                    doc.Zones.Objects.Add((ZoneSimplified)item);
+            }
+
+            if (doc.Options.UseSimpleObjects && serializedObj.SimpleObjects != null)
+            {
+                foreach (SimpleObjectDefinition item in serializedObj.SimpleObjects)
+                    doc.SimpleObjects.Objects.Add(item);
+            }
+
+            doc.SyncToolModes();
             doc.Resync();
         }
         else
@@ -68,7 +84,7 @@ internal class SurfaceDocument: IFileHandler
     {
         file = ((IFileHandler)this).GetFileWithValidExtensionForSave(file);
 
-        if (instance is Document doc)
+        if (instance is DocumentSurface doc)
         {
             try
             {
@@ -78,16 +94,22 @@ internal class SurfaceDocument: IFileHandler
                     Surface = (CellSurface)doc.EditingSurface.Surface,
                     SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
                     SurfaceFontSize = doc.EditingSurfaceFontSize,
-                    EditorFontSize = doc.EditorFontSize
+                    EditorFontSize = doc.EditorFontSize,
+                    Options = doc.Options,
+                    Zones = doc.Options.UseZones ? doc.Zones.Objects.Select(z => new ZoneSerialized
+                    {
+                        Name = z.Name,
+                        ZoneArea = z.ZoneArea.ToArray(),
+                        Appearance = z.Appearance,
+                        Settings = z.Settings
+                    }).ToArray() : null,
+                    SimpleObjects = doc.Options.UseSimpleObjects ? [.. doc.SimpleObjects.Objects] : null
                 };
 
                 Serializer.Save(convertedObj, file, true);
 
                 if (doc.HasPalette)
                     doc.SavePalette(file + ".pal");
-
-                if (doc is IDocumentSimpleObjects docObjs && docObjs.SimpleObjects.Count != 0)
-                    docObjs.SaveObjects(file + ".objs");
 
                 return true;
             }

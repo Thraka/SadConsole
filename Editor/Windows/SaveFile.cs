@@ -12,16 +12,25 @@ public class SaveFile : ImGuiWindowBase
     private FileListBox _fileListBox;
     private ImGuiList<IFileHandler> _fileLoaders = new();
     private string _selectedFileName = "";
-    private Document _document;
+    private Document? _document;
     private bool _useCompression;
+    private object _alternativeObject;
 
     public SaveFile(Document document)
     {
         Title = "Save file";
         _fileListBox = new(Directory.GetCurrentDirectory());
         _document = document;
-
         _fileLoaders = new ImGuiList<IFileHandler>(0, _document.GetSaveHandlers());
+    }
+
+    public SaveFile(object alternativeObject, IEnumerable<IFileHandler> fileHandlers)
+    {
+        Title = "Save file";
+        _fileListBox = new(Directory.GetCurrentDirectory());
+        _fileLoaders = new ImGuiList<IFileHandler>(0, fileHandlers);
+        _alternativeObject = alternativeObject;
+        _document = null;
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -92,13 +101,13 @@ public class SaveFile : ImGuiWindowBase
                             {
                                 if (((PromptWindow)s).DialogResult)
                                 {
-                                    _fileLoaders.SelectedItem.Save(_document, file, _useCompression);
+                                    _fileLoaders.SelectedItem.Save(_document ?? _alternativeObject, file, _useCompression);
                                 }
                             };
                             window.Open();
                         }
                         else
-                            _fileLoaders.SelectedItem.Save(_document, file, _useCompression);
+                            _fileLoaders.SelectedItem.Save(_document ?? _alternativeObject, file, _useCompression);
                     }
 
                     Close();

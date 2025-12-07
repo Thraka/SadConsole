@@ -69,6 +69,8 @@ public static partial class Core
         //Documents.DocumentAnimated.Builder builder = new();
         //builder.ResetBuilder();
         //builder.FrameCount = 5;
+
+        /*
         Documents.DocumentSurface.Builder builder = new();
         builder.ResetBuilder();
 
@@ -77,7 +79,7 @@ public static partial class Core
         State.Documents.SelectedItem!.OnSelected();
         State.Tools.SelectedItemIndex = 0;
 
-        ((Documents.DocumentSurface)State.Documents.SelectedItem).Zones.Objects.Add(new Serialization.ZoneSerialized()
+        ((Documents.DocumentSurface)State.Documents.SelectedItem).Zones.Objects.Add(new ZoneSimplified()
         {
             Name = "Default Zone",
             ZoneArea = new(new SadRogue.Primitives.Rectangle(1, 1, 10, 10).Positions()),
@@ -113,6 +115,7 @@ public static partial class Core
         State.Documents.SelectedItem.Options.UseSimpleObjects = true;
         State.Documents.SelectedItem.Options.UseZones = true;
         State.Documents.SelectedItem.SyncToolModes();
+        */
     }
 
     public static void ResetUIList()

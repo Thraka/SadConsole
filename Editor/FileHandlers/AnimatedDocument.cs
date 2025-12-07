@@ -38,6 +38,8 @@ internal class AnimatedDocument: IFileHandler
             doc.EditorFontSize = serializedObj.EditorFontSize;
             doc.EditingSurface.Font = doc.EditingSurfaceFont;
             doc.EditingSurface.FontSize = doc.EditingSurfaceFontSize;
+            doc.Options = serializedObj.Options ?? new Serialization.DocumentOptions();
+            doc.SyncToolModes();
             doc.RefreshDuration();
             doc.SetFrameIndex(0);
             doc.Resync();
@@ -84,7 +86,8 @@ internal class AnimatedDocument: IFileHandler
                     Animation = doc._baseAnimation,
                     SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
                     SurfaceFontSize = doc.EditingSurfaceFontSize,
-                    EditorFontSize = doc.EditorFontSize
+                    EditorFontSize = doc.EditorFontSize,
+                    Options = doc.Options
                 };
 
                 Serializer.Save(convertedObj, file, true);

@@ -2,7 +2,6 @@
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
-using SadConsole.Editor.Serialization;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiTypes;
 
@@ -15,7 +14,7 @@ internal class Line : ITool
     private ColoredGlyph _lineSettingsErase = new ColoredGlyph(Core.Settings.EmptyCellColor, Core.Settings.EmptyCellColor.GetDarker().SetAlpha(100), '*');
     private ColoredGlyph _lineSettingsOther = new ColoredGlyph(Color.White, Color.Black, 176);
 
-    private ZoneSerialized? _currentZone;
+    private ZoneSimplified? _currentZone;
 
     private bool _isFirstPointSelected = false;
     private Point _firstPoint;

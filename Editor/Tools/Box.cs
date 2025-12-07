@@ -2,7 +2,6 @@
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
-using SadConsole.Editor.Serialization;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiTypes;
 
@@ -47,7 +46,7 @@ internal class Box : ITool
         FillGlyph = new ColoredGlyph()
     };
 
-    private ZoneSerialized? _currentZone;
+    private ZoneSimplified? _currentZone;
     private SimpleObjectDefinition? _currentObject;
 
     private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
