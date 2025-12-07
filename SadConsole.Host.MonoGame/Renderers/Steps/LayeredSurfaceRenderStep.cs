@@ -85,8 +85,13 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
             if (layerObject.DefaultBackground.A != 0)
                 Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), layerObject.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
-            foreach (ICellSurface layer in layerObject)
+            for (int layerIndex = 0; layerIndex < layerObject.Count; layerIndex++)
             {
+                ICellSurface layer = layerObject[layerIndex];
+
+                if (layerObject.GetLayerVisibility(layerIndex) == false)
+                    continue;
+
                 int rectIndex = 0;
 
                 for (int y = 0; y < layer.View.Height; y++)
@@ -100,7 +105,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
 
                         if (cell.IsVisible)
                         {
-                            if (cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != layer.DefaultBackground)
+                            if (cell.Background != SadRogue.Primitives.Color.Transparent)
                                 Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                             if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)

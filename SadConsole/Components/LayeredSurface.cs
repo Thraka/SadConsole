@@ -39,6 +39,12 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     protected List<ICellSurface> _layers = new(3);
 
     /// <summary>
+    /// Visibility state for each layer.
+    /// </summary>
+    [DataMember(Name = "LayerVisibility")]
+    protected List<bool> _layerVisibility = new(3);
+
+    /// <summary>
     /// Internal use only
     /// </summary>
     public Renderers.IRenderStep? RenderStep;
@@ -84,6 +90,26 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     public bool IsReadOnly => false;
 
     /// <summary>
+    /// Gets or sets the visibility of a layer at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the layer.</param>
+    /// <returns><see langword="true"/> if the layer is visible; otherwise, <see langword="false"/>.</returns>
+    public bool GetLayerVisibility(int index) => _layerVisibility[index];
+
+    /// <summary>
+    /// Sets the visibility of a layer at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the layer.</param>
+    /// <param name="isVisible"><see langword="true"/> to make the layer visible; otherwise, <see langword="false"/>.</param>
+    public void SetLayerVisibility(int index, bool isVisible)
+    {
+        _layerVisibility[index] = isVisible;
+
+        if (IsAttached)
+            _screen.IsDirty = true;
+    }
+
+    /// <summary>
     /// Gets or sets a layer by index.
     /// </summary>
     /// <param name="index">The index of the layer to get or set.</param>
@@ -114,6 +140,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
                 _screenCachedView = layer.View;
             }
             _layers.Add(layer);
+            _layerVisibility.Add(true);
             layer.View = _screenCachedView;
         }
     }
@@ -124,7 +151,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     /// <param name="layers">The layers to add.</param>
     public void AddRange(IEnumerable<ICellSurface> layers)
     {
-        foreach (ICellSurface layer in _layers)
+        foreach (ICellSurface layer in layers)
             Add(layer);
     }
 
@@ -159,8 +186,17 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     /// Removes a layer from this component.
     /// </summary>
     /// <param name="layer">The layer to remove.</param>
-    public bool Remove(ICellSurface layer) =>
-        _layers.Remove(layer);
+    public bool Remove(ICellSurface layer)
+    {
+        int index = _layers.IndexOf(layer);
+        if (index != -1)
+        {
+            _layers.RemoveAt(index);
+            _layerVisibility.RemoveAt(index);
+            return true;
+        }
+        return false;
+    }
 
     /// <summary>
     /// Returns the index of the specified layer.
@@ -186,25 +222,30 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
                 ((ISurfaceSettable)_screen).Surface = layer;
                 _screenCachedView = layer.View;
             }
-            _layers.Add(layer);
+            _layers.Insert(index, layer);
+            _layerVisibility.Insert(index, true);
             layer.View = _screenCachedView;
         }
-
-        _layers.Insert(index, layer);
     }
 
     /// <summary>
     /// Removes a layer at the specified index.
     /// </summary>
     /// <param name="index">The index of the layer to remove.</param>
-    public void RemoveAt(int index) =>
+    public void RemoveAt(int index)
+    {
         _layers.RemoveAt(index);
+        _layerVisibility.RemoveAt(index);
+    }
 
     /// <summary>
     /// Removes all layers.
     /// </summary>
-    public void Clear() =>
+    public void Clear()
+    {
         _layers.Clear();
+        _layerVisibility.Clear();
+    }
 
     /// <summary>
     /// Removes all layers and adds the <paramref name="initialLayer"/> parameter as the first layer.
@@ -213,6 +254,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
     public void Clear(ICellSurface initialLayer)
     {
         _layers.Clear();
+        _layerVisibility.Clear();
         Add(initialLayer);
     }
 
@@ -250,6 +292,7 @@ public class LayeredSurface : Components.UpdateComponent, Components.IComponent,
         newSurface.View = _screenCachedView;
 
         _layers.Add(newSurface);
+        _layerVisibility.Add(true);
 
         return newSurface;
     }
