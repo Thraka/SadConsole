@@ -32,4 +32,10 @@ public class SceneChildSerialized
     /// The serialized document data. The actual type depends on DocumentType.
     /// </summary>
     public object? SerializedDocument { get; set; }
+
+    /// <summary>
+    /// The viewport rectangle defining which portion of the document to render.
+    /// If null, the entire document surface is rendered.
+    /// </summary>
+    public Rectangle? Viewport { get; set; }
 }

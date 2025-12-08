@@ -71,7 +71,8 @@ internal class SceneDocument : IFileHandler
                     Position = child.Position,
                     UsePixelPositioning = child.UsePixelPositioning,
                     Label = child.Label,
-                    SerializedDocument = serializedChild
+                    SerializedDocument = serializedChild,
+                    Viewport = child.Viewport
                 });
             }
 
@@ -112,6 +113,7 @@ internal class SceneDocument : IFileHandler
                     sceneChild.Position = childSerialized.Position;
                     sceneChild.UsePixelPositioning = childSerialized.UsePixelPositioning;
                     sceneChild.Label = childSerialized.Label;
+                    sceneChild.Viewport = childSerialized.Viewport;
 
                     // Apply position to the document's surface
                     childDoc.EditingSurface.Position = sceneChild.Position;
