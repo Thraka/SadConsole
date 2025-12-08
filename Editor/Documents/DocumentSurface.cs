@@ -12,6 +12,11 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
 
     public ImGuiList<ZoneSimplified> Zones { get; } = new();
 
+    /// <summary>
+    /// Gets the icon for surface documents.
+    /// </summary>
+    public override string DocumentIcon => "\uf009"; // table/grid icon
+
     public DocumentSurface()
     {
         SyncToolModes();

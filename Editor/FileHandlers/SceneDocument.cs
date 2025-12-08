@@ -53,7 +53,7 @@ internal class SceneDocument : IFileHandler
         {
             var childrenSerialized = new List<SceneChildSerialized>();
 
-            foreach (var child in doc.Children)
+            foreach (var child in doc.ChildSceneItems)
             {
                 string docType = GetDocumentType(child.Document);
                 var handler = GetHandlerForDocumentType(docType);
@@ -107,18 +107,15 @@ internal class SceneDocument : IFileHandler
                     if (childDoc == null)
                         continue;
 
-                    var sceneChild = new SceneChild(childDoc)
-                    {
-                        Position = childSerialized.Position,
-                        UsePixelPositioning = childSerialized.UsePixelPositioning,
-                        Label = childSerialized.Label
-                    };
+                    // Use AddChildDocument to properly set Parent relationship
+                    var sceneChild = doc.AddChildDocument(childDoc);
+                    sceneChild.Position = childSerialized.Position;
+                    sceneChild.UsePixelPositioning = childSerialized.UsePixelPositioning;
+                    sceneChild.Label = childSerialized.Label;
 
                     // Apply position to the document's surface
                     childDoc.EditingSurface.Position = sceneChild.Position;
                     childDoc.EditingSurface.UsePixelPositioning = sceneChild.UsePixelPositioning;
-
-                    doc.Children.Add(sceneChild);
                 }
             }
 

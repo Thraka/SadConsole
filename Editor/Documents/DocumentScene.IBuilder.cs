@@ -1,4 +1,5 @@
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
 
@@ -21,12 +22,10 @@ public partial class DocumentScene
             ImGui.InputText("##name"u8, ref Name, 50);
 
             ImGui.Separator();
-
             ImGui.TextWrapped("A scene is a container for other documents. It allows you to position multiple surfaces, layered surfaces, and animations together.");
             
             ImGui.Spacing();
-            
-            ImGui.TextDisabled("After creating the scene, use 'Document Options > Import document from list' to add existing documents to the scene.");
+            ImGuiSC.TextWrappedDisabled("After creating the scene, use 'Document Options > Import document from list' to add existing documents to the scene.");
         }
 
         public bool IsDocumentValid()

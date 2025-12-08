@@ -52,22 +52,38 @@ public class GuiTopBar : ImGuiObjectBase
                 }
 
                 ImGui.Separator();
-                ImGui.BeginDisabled(!Core.State.Documents.IsItemSelected());
+                ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
                 if (ImGui.MenuItem("\ueb4b Save", "s"))
                 {
-                    Windows.SaveFile window = new(Core.State.Documents.SelectedItem);
+                    // Get the root document for saving (if child is selected, save the parent scene)
+                    var docToSave = Core.State.SelectedDocument!.Parent != null 
+                        ? HierarchyHelper.GetRoot(Core.State.SelectedDocument) 
+                        : Core.State.SelectedDocument;
+                    Windows.SaveFile window = new(docToSave);
                     window.Open();
                 }
 
                 if (ImGui.MenuItem("Close", "c"))
                 {
-                    PromptWindow window = new("Are you sure you want to close this window?", "Close", "Yes", "No");
+                    PromptWindow window = new("Are you sure you want to close this document?", "Close", "Yes", "No");
                     window.Closed += (s, e) =>
                     {
                         if (((PromptWindow)s).DialogResult)
                         {
-                            Core.State.Documents.Objects.Remove(Core.State.Documents.SelectedItem);
-                            Core.State.Documents.SelectedItemIndex = Core.State.Documents.Count > 0 ? 0 : -1;
+                            // Get the root document for closing
+                            var docToClose = Core.State.SelectedDocument!.Parent != null 
+                                ? HierarchyHelper.GetRoot(Core.State.SelectedDocument) 
+                                : Core.State.SelectedDocument;
+                            
+                            Core.State.Documents.Objects.Remove(docToClose);
+                            Core.State.SelectedDocument = null;
+                            
+                            // Select first available document if any
+                            if (Core.State.Documents.Count > 0)
+                            {
+                                Core.State.SelectedDocument = Core.State.Documents.Objects[0];
+                                Core.State.SelectedDocument.OnSelected();
+                            }
                         }
                     };
                     window.Open();
@@ -79,8 +95,8 @@ public class GuiTopBar : ImGuiObjectBase
             }
 
             // Draw the documents menu items
-            if (Core.State.Documents.IsItemSelected())
-                Core.State.Documents.SelectedItem.ImGuiDrawTopBar(renderer);
+            if (Core.State.HasSelectedDocument)
+                Core.State.SelectedDocument!.ImGuiDrawTopBar(renderer);
 
             // Draw the palette menu
             if (ImGui.BeginMenu("Palette"))
@@ -90,12 +106,12 @@ public class GuiTopBar : ImGuiObjectBase
                     new Windows.PaletteEditorWindow(Core.State.Palette).Open();
                 }
                 
-                if (Core.State.Documents.SelectedItem is not null)
+                if (Core.State.SelectedDocument is not null)
                 {
-                    if (Core.State.Documents.SelectedItem.HasPalette)
+                    if (Core.State.SelectedDocument.HasPalette)
                     {
                         if (ImGui.MenuItem("Edit Document Palette"))
-                            new Windows.PaletteEditorWindow(Core.State.Documents.SelectedItem.Palette!).Open();
+                            new Windows.PaletteEditorWindow(Core.State.SelectedDocument.Palette!).Open();
                     }
                     else
                     {
@@ -103,8 +119,8 @@ public class GuiTopBar : ImGuiObjectBase
 
                         if (ImGui.MenuItem("Add to Document", "a"))
                         {
-                            Core.State.Documents.SelectedItem.Palette = new EditorPalette();
-                            Core.State.Documents.SelectedItem.HasPalette = true;
+                            Core.State.SelectedDocument.Palette = new EditorPalette();
+                            Core.State.SelectedDocument.HasPalette = true;
                         }
                     }
                     

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using SadRogue.Primitives;
 
 namespace Hexa.NET.ImGui.SC;

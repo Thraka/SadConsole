@@ -6,7 +6,7 @@ public class GuiToolsList: ImGuiObjectBase
 {
     public override void BuildUI(ImGuiRenderer renderer)
     {
-        if (!Core.State.Documents.IsItemSelected() || !Core.State.Documents.SelectedItem.Options.UseToolsWindow) return;
+        if (!Core.State.HasSelectedDocument || !Core.State.SelectedDocument!.Options.UseToolsWindow) return;
 
         ImGui.Begin(GuiDockSpace.ID_RIGHT_PANEL);
         ImGuiGuardedValue<int> _itemIndex = new(Core.State.Tools.SelectedItemIndex);
@@ -15,9 +15,9 @@ public class GuiToolsList: ImGuiObjectBase
                 Core.State.Tools.Names, Core.State.Tools.Count, Core.State.Tools.Count))
         {
             if (_itemIndex.IsChanged() && _itemIndex.OriginalValue != -1)
-                Core.State.Tools.Objects[_itemIndex.OriginalValue].OnDeselected(Core.State.Documents.SelectedItem);
+                Core.State.Tools.Objects[_itemIndex.OriginalValue].OnDeselected(Core.State.SelectedDocument);
 
-            Core.State.Tools.Objects[_itemIndex.CurrentValue].OnSelected(Core.State.Documents.SelectedItem);
+            Core.State.Tools.Objects[_itemIndex.CurrentValue].OnSelected(Core.State.SelectedDocument);
 
             Core.State.Tools.SelectedItemIndex = _itemIndex.CurrentValue;
         }
@@ -28,7 +28,7 @@ public class GuiToolsList: ImGuiObjectBase
             {
                 ImGui.SeparatorText(Core.State.Tools.SelectedItem.Title);
 
-                Core.State.Tools.SelectedItem.BuildSettingsPanel(Core.State.Documents.SelectedItem);
+                Core.State.Tools.SelectedItem.BuildSettingsPanel(Core.State.SelectedDocument);
 
             }
             ImGui.EndChild();

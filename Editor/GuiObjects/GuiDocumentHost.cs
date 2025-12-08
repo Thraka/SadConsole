@@ -11,12 +11,12 @@ public class GuiDocumentsHost: ImGuiObjectBase
     {
         ImGui.Begin(GuiDockSpace.ID_CENTER_PANEL);
 
-        if (Core.State.Documents.IsItemSelected())
+        if (Core.State.HasSelectedDocument)
         {
-            //ImGuiSC.DrawTexture(Core.State.Documents.SelectedItem.)
+            //ImGuiSC.DrawTexture(Core.State.SelectedDocument.)
             //ImGuiSC.DrawTexture("output_preview_surface1", true, _zoom ? ImGuiExt.Zoom2x : ImGuiExt.ZoomNormal, gameTexture.Texture, renderer, out _, out _);
 
-            Documents.Document document = Core.State.Documents.SelectedItem;
+            Documents.Document document = Core.State.SelectedDocument!;
 
             if (document.Options.DrawSelf)
             {

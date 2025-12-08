@@ -8,10 +8,10 @@ public class GuiFinalDrawDocument : ImGuiObjectBase
 {
     public override void BuildUI(ImGuiRenderer renderer)
     {
-        if (Core.State.Documents.IsItemSelected())
+        if (Core.State.HasSelectedDocument)
         {
-            Core.State.Documents.SelectedItem.Redraw(false, false);
-            Core.State.Documents.SelectedItem.ImGuiDrawAfterEverything(renderer);
+            Core.State.SelectedDocument!.Redraw(false, false);
+            Core.State.SelectedDocument.ImGuiDrawAfterEverything(renderer);
         }
     }
 }

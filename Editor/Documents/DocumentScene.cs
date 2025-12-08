@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
+using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
@@ -50,45 +51,91 @@ public class SceneChild : ITitle
 
 /// <summary>
 /// A document that represents a scene containing multiple child documents positioned in space.
-/// The scene itself is not directly editable - you select child documents to edit them.
+/// Child documents are selected directly in the document list hierarchy.
 /// </summary>
 public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocumentZones
 {
     private readonly ScreenSurface _placeholderSurface;
-    private SceneChild? _activeChild;
 
     /// <summary>
-    /// The list of child documents in this scene.
+    /// The list of scene child items with their metadata (position, label, etc.).
     /// </summary>
-    public List<SceneChild> Children { get; } = [];
+    public List<SceneChild> ChildSceneItems { get; } = [];
 
     /// <summary>
-    /// The currently selected child for editing. Null when in scene overview mode.
+    /// Gets the icon for scene documents.
     /// </summary>
-    public SceneChild? ActiveChild
+    public override string DocumentIcon => "\uf02d"; // object-group / scene icon
+
+    #region IHierarchicalItem Overrides
+
+    /// <summary>
+    /// Gets the child documents of this scene.
+    /// </summary>
+    public override IReadOnlyList<Document> Children => ChildSceneItems.Select(c => c.Document).ToList();
+
+    /// <summary>
+    /// Gets a value indicating that scenes can contain children.
+    /// </summary>
+    public override bool CanHaveChildren => true;
+
+    /// <summary>
+    /// Gets a value indicating that scene children should be displayed in the hierarchy.
+    /// </summary>
+    public override bool ShowChildrenInHierarchy => true;
+
+    /// <summary>
+    /// Adds a child document to this scene with default metadata.
+    /// </summary>
+    /// <param name="document">The document to add as a child.</param>
+    /// <returns>The created SceneChild wrapper.</returns>
+    public SceneChild AddChildDocument(Document document)
     {
-        get => _activeChild;
-        private set => _activeChild = value;
+        var child = new SceneChild(document);
+        document.Parent = this;
+        ChildSceneItems.Add(child);
+        return child;
     }
 
     /// <summary>
-    /// Returns true when a child document is currently being edited.
+    /// Removes a child document from this scene.
     /// </summary>
-    [MemberNotNullWhen(true, nameof(ActiveChild))]
-    public bool IsEditingChild => ActiveChild != null;
+    /// <param name="document">The document to remove.</param>
+    /// <returns><see langword="true"/> if the document was found and removed; otherwise, <see langword="false"/>.</returns>
+    public bool RemoveChildDocument(Document document)
+    {
+        var child = ChildSceneItems.FirstOrDefault(c => c.Document == document);
+        if (child != null)
+        {
+            document.Parent = null;
+            ChildSceneItems.Remove(child);
+            return true;
+        }
+        return false;
+    }
 
     /// <summary>
-    /// Index of the selected child in the children list UI.
+    /// Gets the SceneChild metadata for a child document.
+    /// </summary>
+    /// <param name="document">The document to find metadata for.</param>
+    /// <returns>The SceneChild if found; otherwise, <see langword="null"/>.</returns>
+    public SceneChild? GetSceneChild(Document document) =>
+        ChildSceneItems.FirstOrDefault(c => c.Document == document);
+
+    #endregion
+
+    /// <summary>
+    /// Index of the selected child in the settings panel child properties list.
     /// </summary>
     public int SelectedChildIndex { get; set; } = -1;
 
-    public ImGuiList<ZoneSimplified> Zones => (ActiveChild?.Document as IDocumentZones)?.Zones ?? new ImGuiList<ZoneSimplified>();
+    public ImGuiList<ZoneSimplified> Zones => new ImGuiList<ZoneSimplified>();
 
-    public ImGuiList<SimpleObjectDefinition> SimpleObjects => (ActiveChild?.Document as IDocumentSimpleObjects)?.SimpleObjects ?? new ImGuiList<SimpleObjectDefinition>();
+    public ImGuiList<SimpleObjectDefinition> SimpleObjects => new ImGuiList<SimpleObjectDefinition>();
 
     public DocumentScene()
     {
-        // Create a minimal placeholder surface for when no child is being edited
+        // Create a minimal placeholder surface for scene overview
         _placeholderSurface = new ScreenSurface(1, 1);
         _placeholderSurface.Surface.DefaultBackground = Color.DarkSlateGray;
         _placeholderSurface.Surface.Clear();
@@ -98,80 +145,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         EditingSurfaceFontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
         EditorFontSize = EditingSurfaceFontSize;
 
-        // Scene draws itself (custom UI)
-        Options.DrawSelf = true;
-        Options.UseToolsWindow = false;
-        Options.DisableScrolling = true;
-
-        // No tool modes for scene itself
-        //ToolModes = new([ToolMode.EmptyMode]);
-    }
-
-    /// <summary>
-    /// Begins editing a child document.
-    /// </summary>
-    public void BeginEditChild(SceneChild child)
-    {
-        if (!Children.Contains(child))
-            return;
-
-        // Deselect current tool if any
-        if (Core.State.Tools.IsItemSelected())
-            Core.State.Tools.SelectedItem.OnDeselected(this);
-
-        ActiveChild = child;
-
-        // Delegate to child's surface
-        EditingSurface = child.Document.EditingSurface;
-        EditingSurfaceFont = child.Document.EditingSurfaceFont;
-        EditingSurfaceFontSize = child.Document.EditingSurfaceFontSize;
-        EditorFontSize = child.Document.EditorFontSize;
-        Resync();
-
-        // Sync visual tool layers
-        VisualTool = child.Document.VisualTool;
-        VisualLayerToolLower = child.Document.VisualLayerToolLower;
-        VisualLayerToolMiddle = child.Document.VisualLayerToolMiddle;
-        VisualLayerToolUpper = child.Document.VisualLayerToolUpper;
-
-        // Load child's tools
-        Core.State.Tools.Objects.Clear();
-        foreach (var tool in child.Document.Tools)
-            Core.State.Tools.Objects.Add(tool);
-
-        // Copy child's tool modes
-        Options = child.Document.Options;
-        ToolModes = child.Document.ToolModes;
-
-        // Trigger redraw
-        child.Document.Redraw(true, true);
-    }
-
-    /// <summary>
-    /// Ends editing the current child and returns to scene overview.
-    /// </summary>
-    public void EndEditChild()
-    {
-        if (!IsEditingChild)
-            return;
-
-        // Deselect current tool
-        if (Core.State.Tools.IsItemSelected())
-            Core.State.Tools.SelectedItem.OnDeselected(ActiveChild!.Document);
-
-        ActiveChild = null;
-
-        // Return to placeholder surface
-        EditingSurface = _placeholderSurface;
-        EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;
-        EditingSurfaceFontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
-        EditorFontSize = EditingSurfaceFontSize;
-
-        // Clear tools - scene has no editing tools
-        Core.State.Tools.Objects.Clear();
-        ToolModes = new([ToolMode.EmptyMode]);
-
-        Options = new();
+        // Scene draws itself (custom UI for overview)
         Options.DrawSelf = true;
         Options.UseToolsWindow = false;
         Options.DisableScrolling = true;
@@ -179,51 +153,19 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
     public override void OnSelected()
     {
-        if (IsEditingChild)
-        {
-            // Delegate to child
-            ActiveChild!.Document.OnSelected();
-        }
-        else
-        {
-            // Scene overview mode - no tools
-            Core.State.Tools.Objects.Clear();
-            Core.State.SyncEditorPalette();
-        }
+        // Scene overview mode - no tools
+        Core.State.Tools.Objects.Clear();
+        Core.State.SyncEditorPalette();
     }
 
     public override void OnDeselected()
     {
-        if (IsEditingChild)
-        {
-            ActiveChild!.Document.OnDeselected();
-        }
-        else
-        {
-            Core.State.Tools.Objects.Clear();
-        }
+        Core.State.Tools.Objects.Clear();
     }
 
     public override void BuildUiDocumentSettings(ImGuiRenderer renderer)
     {
-        if (IsEditingChild)
-        {
-            // Show breadcrumb to return to scene
-            if (ImGui.Button($"\uf060 Back to {Title}"))
-            {
-                EndEditChild();
-                return;
-            }
-
-            ImGui.Separator();
-
-            // Show child's settings
-            ActiveChild!.Document.BuildUiDocumentSettings(renderer);
-        }
-        else
-        {
-            BuildSceneSettings(renderer);
-        }
+        BuildSceneSettings(renderer);
     }
 
     private void BuildSceneSettings(ImGuiRenderer renderer)
@@ -241,52 +183,43 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
         ImGui.Separator();
 
-        // Child documents list
+        // Child documents info
         ImGui.SeparatorText("Child Documents"u8);
 
-        int childCount = Children.Count;
+        int childCount = ChildSceneItems.Count;
 
         if (childCount == 0)
         {
-            ImGui.TextDisabled("No child documents. Use Document Options menu to import."u8);
+            ImGuiSC.TextWrappedDisabled("No child documents. Use Document Options menu to import."u8);
         }
         else
         {
-            // Child list
-            if (ImGui.BeginChild("child_list"u8, new Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * Math.Min(8, childCount + 1)), ImGuiChildFlags.Borders))
+            ImGui.Text($"Contains {childCount} child document(s).");
+            ImGui.TextDisabled("Select a child in the document list above to edit it."u8);
+
+            ImGui.Separator();
+
+            // Child list for metadata editing (position, label)
+            ImGui.SeparatorText("Child Properties"u8);
+
+            if (ImGui.BeginChild("child_props_list"u8, new Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * Math.Min(5, childCount + 1)), ImGuiChildFlags.Borders))
             {
                 for (int i = 0; i < childCount; i++)
                 {
                     ImGui.PushID(i);
 
                     bool isSelected = SelectedChildIndex == i;
-                    if (ImGui.Selectable(Children[i].Title, isSelected))
+                    if (ImGui.Selectable(ChildSceneItems[i].Title, isSelected))
                         SelectedChildIndex = i;
-
-                    // Double-click to edit
-                    if (ImGui.IsItemHovered() && ImGuiP.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-                    {
-                        BeginEditChild(Children[i]);
-                    }
 
                     ImGui.PopID();
                 }
             }
             ImGui.EndChild();
 
-            // Edit button
-            ImGui.BeginDisabled(SelectedChildIndex < 0 || SelectedChildIndex >= childCount);
-            if (ImGui.Button("Edit Selected"u8))
-            {
-                BeginEditChild(Children[SelectedChildIndex]);
-            }
-            ImGui.EndDisabled();
-
-            ImGui.SameLine();
-
             // Remove button
             ImGui.BeginDisabled(SelectedChildIndex < 0 || SelectedChildIndex >= childCount);
-            if (ImGui.Button("Remove"u8))
+            if (ImGui.Button("Remove from Scene"u8))
             {
                 ImGui.OpenPopup("remove_child_popup");
             }
@@ -301,8 +234,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 ImGui.SameLine();
                 if (ImGui.Button("Remove"u8))
                 {
-                    Children.RemoveAt(SelectedChildIndex);
-                    SelectedChildIndex = Math.Min(SelectedChildIndex, Children.Count - 1);
+                    var childToRemove = ChildSceneItems[SelectedChildIndex];
+                    RemoveChildDocument(childToRemove.Document);
+                    SelectedChildIndex = Math.Min(SelectedChildIndex, ChildSceneItems.Count - 1);
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
@@ -312,9 +246,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             if (SelectedChildIndex >= 0 && SelectedChildIndex < childCount)
             {
                 ImGui.Separator();
-                ImGui.SeparatorText("Selected Child Properties"u8);
 
-                var child = Children[SelectedChildIndex];
+                var child = ChildSceneItems[SelectedChildIndex];
 
                 // Label
                 ImGui.AlignTextToFramePadding();
@@ -365,17 +298,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
     public override void ImGuiDraw(ImGuiRenderer renderer)
     {
-        if (IsEditingChild)
-        {
-            // Let the normal document host handle rendering via the delegated EditingSurface
-            // This is handled by GuiDocumentsHost since Options.DrawSelf delegates here,
-            // but we're in editing mode so we need to NOT draw self
-        }
-        else
-        {
-            // Scene overview mode
-            DrawSceneOverview(renderer);
-        }
+        // Scene overview mode
+        DrawSceneOverview(renderer);
     }
 
     private void DrawSceneOverview(ImGuiRenderer renderer)
@@ -383,16 +307,14 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         ImGui.Text($"Scene: {Title}");
         ImGui.Separator();
 
-        if (Children.Count == 0)
+        if (ChildSceneItems.Count == 0)
         {
-            ImGui.TextDisabled("This scene has no child documents."u8);
-            ImGui.TextDisabled("Use 'Document Options > Import document from list' to add documents."u8);
+            ImGuiSC.TextWrappedDisabled("This scene has no child documents."u8);
+            ImGuiSC.TextWrappedDisabled("Use 'Document Options > Import document from list' to add documents."u8);
         }
         else
         {
-            ImGui.Text($"Contains {Children.Count} child document(s).");
-            ImGui.TextDisabled("Select a child in the settings panel and click 'Edit Selected' to edit it."u8);
-            ImGui.TextDisabled("Or double-click a child in the list."u8);
+            ImGui.Text($"Contains {ChildSceneItems.Count} child document(s).");
 
             // TODO: Future iteration - render composite preview of all children
         }
@@ -419,14 +341,13 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         // Remove from main list
                         Core.State.Documents.Objects.Remove(doc);
                         
-                        // Add to scene
-                        var child = new SceneChild(doc);
-                        Children.Add(child);
-                        SelectedChildIndex = Children.Count - 1;
+                        // Add to scene using helper method that sets Parent
+                        AddChildDocument(doc);
+                        SelectedChildIndex = ChildSceneItems.Count - 1;
 
-                        // If this was the selected document, update selection
-                        if (Core.State.Documents.SelectedItemIndex >= Core.State.Documents.Count)
-                            Core.State.Documents.SelectedItemIndex = Core.State.Documents.Count - 1;
+                        // If this was the selected document, clear selection
+                        if (Core.State.SelectedDocument == doc)
+                            Core.State.SelectedDocument = this;
                     }
                 }
                 ImGui.EndMenu();
@@ -434,24 +355,24 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             ImGui.EndDisabled();
 
             // Transfer back to main list
-            ImGui.BeginDisabled(Children.Count == 0);
+            ImGui.BeginDisabled(ChildSceneItems.Count == 0);
             if (ImGui.BeginMenu("Transfer document to list"u8))
             {
-                for (int i = 0; i < Children.Count; i++)
+                for (int i = 0; i < ChildSceneItems.Count; i++)
                 {
-                    if (ImGui.MenuItem(Children[i].Title))
+                    if (ImGui.MenuItem(ChildSceneItems[i].Title))
                     {
-                        var child = Children[i];
+                        var child = ChildSceneItems[i];
                         
-                        // Remove from scene
-                        Children.RemoveAt(i);
+                        // Remove from scene using helper method that clears Parent
+                        RemoveChildDocument(child.Document);
                         
                         // Add to main list
                         Core.State.Documents.Objects.Add(child.Document);
                         
                         // Update selection
-                        if (SelectedChildIndex >= Children.Count)
-                            SelectedChildIndex = Children.Count - 1;
+                        if (SelectedChildIndex >= ChildSceneItems.Count)
+                            SelectedChildIndex = ChildSceneItems.Count - 1;
                     }
                 }
                 ImGui.EndMenu();
@@ -460,47 +381,18 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
             ImGui.EndMenu();
         }
-
-        // If editing a child, also show child's menu items
-        if (IsEditingChild)
-        {
-            bool oldZones = ActiveChild.Document.Options.UseZones;
-            bool oldObjects = ActiveChild.Document.Options.UseSimpleObjects;
-
-            ActiveChild.Document.ImGuiDrawTopBar(renderer);
-
-            if (oldZones != ActiveChild.Document.Options.UseZones || oldObjects != ActiveChild.Document.Options.UseSimpleObjects)
-            {
-                ToolModes = ActiveChild.Document.ToolModes;
-            }
-        }
     }
 
     public override void Redraw(bool redrawSurface, bool redrawTooling)
     {
-        if (IsEditingChild)
-        {
-            // Delegate to child
-            ActiveChild!.Document.Redraw(redrawSurface, redrawTooling);
-            
-            // Copy texture info from child
-            VisualTextureId = ActiveChild.Document.VisualTextureId;
-            VisualTextureSize = ActiveChild.Document.VisualTextureSize;
-        }
-        else
-        {
-            // Scene overview doesn't need complex rendering
-            // Just ensure placeholder is valid
-            _placeholderSurface.Render(Game.Instance.UpdateFrameDelta);
-        }
+        // Scene overview doesn't need complex rendering
+        // Just ensure placeholder is valid
+        _placeholderSurface.Render(Game.Instance.UpdateFrameDelta);
     }
 
     public override void SetSurfaceView(int x, int y, int width, int height)
     {
-        if (IsEditingChild)
-        {
-            ActiveChild!.Document.SetSurfaceView(x, y, width, height);
-        }
+        // Scene overview doesn't have a scrollable view
     }
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>

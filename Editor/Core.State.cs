@@ -24,6 +24,17 @@ public static partial class Core
 
         public static ImGuiList<Documents.Document> Documents = new();
 
+        /// <summary>
+        /// The currently selected document for editing. This can be a root document or a child document.
+        /// This property is managed by <see cref="GuiDocumentsList"/> and should be used by all editor components.
+        /// </summary>
+        public static Documents.Document? SelectedDocument { get; set; }
+
+        /// <summary>
+        /// Returns true if a document is currently selected.
+        /// </summary>
+        public static bool HasSelectedDocument => SelectedDocument != null;
+
         public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentLayeredSurface.Builder(), new Documents.DocumentAnimated.Builder(), new Documents.DocumentScene.Builder());
 
         public static ImGuiList<Tools.ITool> Tools = new();
@@ -79,9 +90,9 @@ public static partial class Core
             Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Clear();
             Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Editor", Palette.Colors));
 
-            if (Documents.IsItemSelected() && Documents.SelectedItem.HasPalette)
+            if (HasSelectedDocument && SelectedDocument!.HasPalette)
                 Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Document",
-                    Documents.SelectedItem.Palette.Colors));
+                    SelectedDocument.Palette.Colors));
         }
 
         public static void LoadEditorPalette()

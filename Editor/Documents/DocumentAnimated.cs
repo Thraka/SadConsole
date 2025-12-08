@@ -17,6 +17,11 @@ public partial class DocumentAnimated: Document
     public AnimatedScreenObject _baseAnimation;
     private string _animationDurationString;
 
+    /// <summary>
+    /// Gets the icon for animation documents.
+    /// </summary>
+    public override string DocumentIcon => "\uf008"; // film icon
+
     public DocumentAnimated()
     {
     }

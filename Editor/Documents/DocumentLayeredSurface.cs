@@ -16,6 +16,11 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
 
     public LayeredScreenSurface LayeredEditingSurface => (LayeredScreenSurface)EditingSurface;
 
+    /// <summary>
+    /// Gets the icon for layered surface documents.
+    /// </summary>
+    public override string DocumentIcon => "\ue257"; // layer-group icon
+
     public DocumentLayeredSurface()
     {
         SyncToolModes();

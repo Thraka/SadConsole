@@ -21,7 +21,7 @@ namespace SadConsole.Editor.Documents;
 
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-public abstract partial class Document : ITitle
+public abstract partial class Document : ITitle, IHierarchicalItem<Document>
 {
     protected string _uniqueIdentifier = GenerateCharacterId();
     protected RenderTarget2D? _displayTexture;
@@ -67,6 +67,12 @@ public abstract partial class Document : ITitle
     public EditorPalette Palette = new();
 
     protected FontSelectionWindow? FontSelectionWindow;
+
+    /// <summary>
+    /// Gets the icon to display for this document type in the hierarchy.
+    /// Override in derived classes to provide a custom icon.
+    /// </summary>
+    public virtual string DocumentIcon => "\uf15b"; // Default: file icon
 
     protected Document()
     {
@@ -292,4 +298,41 @@ public abstract partial class Document : ITitle
 
     public override string ToString() =>
         Title;
+
+    #region IHierarchicalItem Implementation
+
+    /// <summary>
+    /// Gets or sets the parent document, or <see langword="null"/> if this is a root document.
+    /// </summary>
+    public Document? Parent { get; set; }
+
+    /// <summary>
+    /// Gets the child documents of this document.
+    /// Override in derived classes that support children.
+    /// </summary>
+    public virtual IReadOnlyList<Document> Children => [];
+
+    /// <summary>
+    /// Gets a value indicating whether this document can contain children.
+    /// Override in derived classes that support children.
+    /// </summary>
+    public virtual bool CanHaveChildren => false;
+
+    /// <summary>
+    /// Gets a value indicating whether children should be displayed in the hierarchy UI.
+    /// Override in derived classes to control visibility.
+    /// </summary>
+    public virtual bool ShowChildrenInHierarchy => false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this document's children are expanded in the UI.
+    /// </summary>
+    public bool IsExpanded { get; set; } = true;
+
+    /// <summary>
+    /// Gets the depth of this document in the hierarchy (0 for root documents).
+    /// </summary>
+    public int Depth => Parent == null ? 0 : Parent.Depth + 1;
+
+    #endregion
 }
