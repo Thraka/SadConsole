@@ -20,7 +20,7 @@ public partial class DocumentAnimated: Document
     /// <summary>
     /// Gets the icon for animation documents.
     /// </summary>
-    public override string DocumentIcon => "\uf008"; // film icon
+    public override string DocumentIcon => "󰿎"; // nf-md-movie_open
 
     public DocumentAnimated()
     {

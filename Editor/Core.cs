@@ -52,7 +52,7 @@ public static partial class Core
                     config.FontBuilderFlags |= (uint)ImGuiFreeTypeBuilderFlags.LoadColor;
                     //config.MergeMode = true;
                 })
-                .AddFontFromFileTTF(Settings.Font, Settings.FontSize, [0x01, 0x1FFFF])
+                .AddFontFromFileTTF(Settings.Font, Settings.FontSize, [0x01, 0xFFFFF])
                 .Build()
         );
 

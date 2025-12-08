@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
@@ -309,10 +309,12 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// </summary>
     private const float ResizeGripSize = 12f;
 
+    private Windows.SceneFontSizeCalculatorWindow? _sceneSizeCalculatorWindow;
+
     /// <summary>
     /// Gets the icon for scene documents.
     /// </summary>
-    public override string DocumentIcon => "\uf02d"; // object-group / scene icon
+    public override string DocumentIcon => ""; // nf-fa-object_group
 
     #region IHierarchicalItem Overrides
 
@@ -454,6 +456,26 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         {
             sceneHeight = Math.Max(1, sceneHeight);
             ScenePixelSize = new Point(ScenePixelSize.X, sceneHeight);
+        }
+
+        if (ImGui.Button("Set By Font"))
+        {
+            _sceneSizeCalculatorWindow = new Windows.SceneFontSizeCalculatorWindow();
+            _sceneSizeCalculatorWindow.AddOnOpen = false;
+            _sceneSizeCalculatorWindow.Open();
+        }
+
+        if (_sceneSizeCalculatorWindow != null)
+        {
+            _sceneSizeCalculatorWindow.BuildUI(renderer);
+
+            if (!_sceneSizeCalculatorWindow.IsOpen)
+            {
+                if (_sceneSizeCalculatorWindow.DialogResult)
+                    ScenePixelSize = _sceneSizeCalculatorWindow.CalculatedPixelSize;
+
+                _sceneSizeCalculatorWindow = null;
+            }
         }
 
         ImGui.Separator();

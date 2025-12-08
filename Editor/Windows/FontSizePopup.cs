@@ -1,4 +1,4 @@
-﻿using Hexa.NET.ImGui;
+using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;

@@ -15,7 +15,7 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
     /// <summary>
     /// Gets the icon for surface documents.
     /// </summary>
-    public override string DocumentIcon => "\uf009"; // table/grid icon
+    public override string DocumentIcon => "󰋁"; // nf-md-grid
 
     public DocumentSurface()
     {
