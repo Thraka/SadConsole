@@ -1,4 +1,5 @@
-﻿using SadConsole.Editor.GuiObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using SadConsole.Editor.GuiObjects;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI;
 
@@ -33,6 +34,7 @@ public static partial class Core
         /// <summary>
         /// Returns true if a document is currently selected.
         /// </summary>
+        [MemberNotNullWhen(true, nameof(SelectedDocument))]
         public static bool HasSelectedDocument => SelectedDocument != null;
 
         public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentLayeredSurface.Builder(), new Documents.DocumentAnimated.Builder(), new Documents.DocumentScene.Builder());

@@ -5,6 +5,7 @@ using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using SadConsole.Editor.FileHandlers;
+using SadConsole.Editor.Serialization;
 using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
@@ -28,6 +29,8 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
 
     [DataMember]
     public string Title { get; set; } = GenerateName("Document");
+
+    public DocumentOptions Options = new();
 
     public ImTextureID VisualTextureId;
     public Vector2 VisualTextureSize;

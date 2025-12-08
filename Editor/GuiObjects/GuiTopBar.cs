@@ -63,6 +63,7 @@ public class GuiTopBar : ImGuiObjectBase
                     window.Open();
                 }
 
+                ImGui.BeginDisabled(Core.State.HasSelectedDocument && Core.State.SelectedDocument.Parent != null);
                 if (ImGui.MenuItem("Close", "c"))
                 {
                     PromptWindow window = new("Are you sure you want to close this document?", "Close", "Yes", "No");
@@ -88,6 +89,7 @@ public class GuiTopBar : ImGuiObjectBase
                     };
                     window.Open();
                 }
+                ImGui.EndDisabled();
 
                 ImGui.EndDisabled();
 
