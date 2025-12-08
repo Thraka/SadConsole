@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
@@ -11,8 +12,11 @@ namespace SadConsole.Editor.Documents;
 /// <summary>
 /// Represents a child document within a scene, including its position and metadata.
 /// </summary>
-public class SceneChild : ITitle
+public class SceneChild : ITitle, IDisposable
 {
+    private RenderTarget2D? _sceneTexture;
+    private bool _disposed;
+
     /// <summary>
     /// The child document.
     /// </summary>
@@ -39,14 +43,187 @@ public class SceneChild : ITitle
     /// </summary>
     public string Title => string.IsNullOrWhiteSpace(Label) ? Document.Title : Label;
 
+    /// <summary>
+    /// The viewport rectangle defining which portion of the document to render.
+    /// If null, the entire document surface is rendered.
+    /// </summary>
+    public Rectangle? Viewport { get; set; }
+
+    /// <summary>
+    /// The ImGui texture ID for this child's scene rendering.
+    /// </summary>
+    public ImTextureID SceneTextureId { get; private set; }
+
+    /// <summary>
+    /// The size of the scene texture in pixels.
+    /// </summary>
+    public Vector2 SceneTextureSize { get; private set; }
+
+    /// <summary>
+    /// Gets a value indicating whether this child has a valid scene texture.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(_sceneTexture))]
+    public bool HasValidTexture => _sceneTexture != null && !_sceneTexture.IsDisposed && SceneTextureId != IntPtr.Zero;
+
     public SceneChild(Document document)
     {
         Document = document;
         Position = Point.Zero;
         UsePixelPositioning = false;
+        Viewport = null; // Default to full surface
+    }
+
+    /// <summary>
+    /// Refreshes the scene texture by rendering the document's surface.
+    /// Uses the Viewport if set, otherwise renders the full surface.
+    /// </summary>
+    public void RefreshTexture()
+    {
+        var surface = Document.EditingSurface;
+        var fontSizePoint = Document.EditingSurfaceFontSize;
+
+        // Determine the area to render
+        int renderWidth, renderHeight;
+        Point viewPosition;
+
+        if (Viewport.HasValue)
+        {
+            // Use specified viewport
+            renderWidth = Viewport.Value.Width;
+            renderHeight = Viewport.Value.Height;
+            viewPosition = Viewport.Value.Position;
+        }
+        else
+        {
+            // Render full surface
+            renderWidth = surface.Surface.Width;
+            renderHeight = surface.Surface.Height;
+            viewPosition = Point.Zero;
+        }
+
+        // Calculate pixel dimensions
+        int pixelWidth = renderWidth * fontSizePoint.X;
+        int pixelHeight = renderHeight * fontSizePoint.Y;
+
+        if (pixelWidth <= 0 || pixelHeight <= 0)
+            return;
+
+        // Store original view settings
+        Point originalViewPosition = surface.Surface.ViewPosition;
+        int originalViewWidth = surface.Surface.ViewWidth;
+        int originalViewHeight = surface.Surface.ViewHeight;
+
+        // Set view to render the desired area
+        surface.Surface.ViewWidth = renderWidth;
+        surface.Surface.ViewHeight = renderHeight;
+        surface.Surface.ViewPosition = viewPosition;
+
+        // Force render the surface
+        surface.ForceRendererRefresh = true;
+        surface.Render(Game.Instance.UpdateFrameDelta);
+
+        // Create or resize the render target if needed
+        if (_sceneTexture == null || _sceneTexture.IsDisposed || 
+            _sceneTexture.Width != pixelWidth || _sceneTexture.Height != pixelHeight)
+        {
+            _sceneTexture?.Dispose();
+            _sceneTexture = new RenderTarget2D(
+                Host.Global.GraphicsDevice, 
+                pixelWidth, 
+                pixelHeight, 
+                false, 
+                Host.Global.GraphicsDevice.DisplayMode.Format, 
+                DepthFormat.Depth24, 
+                0, 
+                RenderTargetUsage.DiscardContents);
+
+            // Bind or rebind to ImGui
+            if (SceneTextureId == IntPtr.Zero)
+                SceneTextureId = ImGuiCore.Renderer.BindTexture(_sceneTexture);
+            else
+                ImGuiCore.Renderer.ReplaceBoundTexture(SceneTextureId, _sceneTexture);
+        }
+
+        SceneTextureSize = new Vector2(pixelWidth, pixelHeight);
+
+        // Render to our texture
+        Host.Global.GraphicsDevice.SetRenderTarget(_sceneTexture);
+        Host.Global.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+        Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+
+        // Draw the surface renderer output
+        if (surface.Renderer?.Output != null)
+        {
+            Host.Global.SharedSpriteBatch.Draw(
+                ((Host.GameTexture)surface.Renderer.Output).Texture, 
+                Microsoft.Xna.Framework.Vector2.Zero, 
+                Microsoft.Xna.Framework.Color.White);
+        }
+
+        Host.Global.SharedSpriteBatch.End();
+        Host.Global.GraphicsDevice.SetRenderTarget(null);
+
+        // Restore original view settings
+        surface.Surface.ViewWidth = originalViewWidth;
+        surface.Surface.ViewHeight = originalViewHeight;
+        surface.Surface.ViewPosition = originalViewPosition;
+
+        // Re-render with original settings so the document's normal texture is correct
+        surface.ForceRendererRefresh = true;
+        surface.Render(Game.Instance.UpdateFrameDelta);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is SceneChild other)
+        {
+            return Document.Equals(other.Document) &&
+                   Position.Equals(other.Position) &&
+                   UsePixelPositioning == other.UsePixelPositioning &&
+                   Label == other.Label &&
+                   EqualityComparer<Rectangle?>.Default.Equals(Viewport, other.Viewport);
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Document, Position, UsePixelPositioning, Label, Viewport);
     }
 
     public override string ToString() => Title;
+
+    #region IDisposable
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Unbind from ImGui if bound
+                if (SceneTextureId != IntPtr.Zero)
+                {
+                    ImGuiCore.Renderer.UnbindTexture(SceneTextureId);
+                    SceneTextureId = default;
+                }
+
+                // Dispose the render target
+                _sceneTexture?.Dispose();
+                _sceneTexture = null;
+            }
+
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }
 
 /// <summary>
@@ -76,6 +253,61 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// The list of scene child items with their metadata (position, label, etc.).
     /// </summary>
     public List<SceneChild> ChildSceneItems { get; } = [];
+
+    /// <summary>
+    /// The child currently being dragged, or null if no drag is in progress.
+    /// </summary>
+    private SceneChild? _draggingChild;
+
+    /// <summary>
+    /// The offset from the mouse position to the child's position when drag started.
+    /// </summary>
+    private Vector2 _dragOffset;
+
+    /// <summary>
+    /// Tracks if the mouse was down last frame for click detection.
+    /// </summary>
+    private bool _wasDragging;
+
+    /// <summary>
+    /// The child currently being resized, or null if no resize is in progress.
+    /// </summary>
+    private SceneChild? _resizingChild;
+
+    /// <summary>
+    /// The original viewport size when resize started, used to calculate delta.
+    /// </summary>
+    private Vector2 _resizeStartSize;
+
+    /// <summary>
+    /// The mouse position when resize started.
+    /// </summary>
+    private Vector2 _resizeStartMousePos;
+
+    /// <summary>
+    /// The child currently having its viewport panned, or null if no pan is in progress.
+    /// </summary>
+    private SceneChild? _panningChild;
+
+    /// <summary>
+    /// The original viewport position when pan started.
+    /// </summary>
+    private Point _panStartViewportPos;
+
+    /// <summary>
+    /// The mouse position when pan started.
+    /// </summary>
+    private Vector2 _panStartMousePos;
+
+    /// <summary>
+    /// Tracks if right mouse was down last frame for pan click detection.
+    /// </summary>
+    private bool _wasPanning;
+
+    /// <summary>
+    /// The size of the resize grip handle in pixels.
+    /// </summary>
+    private const float ResizeGripSize = 12f;
 
     /// <summary>
     /// Gets the icon for scene documents.
@@ -124,6 +356,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         {
             document.Parent = null;
             ChildSceneItems.Remove(child);
+            child.Dispose(); // Dispose texture resources
             return true;
         }
         return false;
@@ -222,8 +455,6 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             sceneHeight = Math.Max(1, sceneHeight);
             ScenePixelSize = new Point(ScenePixelSize.X, sceneHeight);
         }
-
-        ImGui.TextDisabled($"View: {ViewPixelSize.X}x{ViewPixelSize.Y} at ({ViewPosition.X}, {ViewPosition.Y})");
 
         ImGui.Separator();
 
@@ -371,6 +602,14 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             bool isHovered = ImGui.IsItemHovered();
             bool isActive = ImGui.IsItemActive();
 
+            // Get mouse position relative to scene
+            Vector2 mousePosition = ImGui.GetMousePos();
+            Vector2 relativeMousePos = mousePosition - startPos;
+            Vector2 sceneMousePos = relativeMousePos + new Vector2(ViewPosition.X, ViewPosition.Y);
+
+            // Handle mouse drag for child positioning
+            HandleChildDragging(startPos, pixelArea, sceneMousePos, isHovered, isActive);
+
             // Draw checkerboard background for the scene area
             ImGuiP.RenderColorRectWithAlphaCheckerboard(drawList, startPos, startPos + pixelArea, 
                 ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 1f)), 16f, Vector2.Zero);
@@ -381,30 +620,18 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             // Draw each child document at its position (offset by view position)
             foreach (var child in ChildSceneItems)
             {
-                // Ensure child document has a valid texture
-                if (child.Document.VisualTextureId == IntPtr.Zero)
+                // Ensure child has a valid scene texture
+                if (!child.HasValidTexture)
                     continue;
 
                 // Calculate child position in pixels relative to the scene
-                Vector2 childPixelPos;
-                if (child.UsePixelPositioning)
-                {
-                    childPixelPos = new Vector2(child.Position.X, child.Position.Y);
-                }
-                else
-                {
-                    // Cell positioning - convert to pixels using the child's font size
-                    childPixelPos = new Vector2(
-                        child.Position.X * child.Document.EditorFontSize.X,
-                        child.Position.Y * child.Document.EditorFontSize.Y
-                    );
-                }
+                Vector2 childPixelPos = GetChildPixelPosition(child);
 
                 // Offset by current view position
                 Vector2 screenPos = startPos + childPixelPos - new Vector2(ViewPosition.X, ViewPosition.Y);
 
-                // Get child texture size
-                Vector2 childSize = child.Document.VisualTextureSize;
+                // Get child's scene texture size (full document, not viewport-clipped)
+                Vector2 childSize = child.SceneTextureSize;
 
                 // Calculate visible portion of the child (clipping)
                 Vector2 minPos = screenPos;
@@ -421,26 +648,85 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     Vector2 uvMin = (clampedMin - minPos) / childSize;
                     Vector2 uvMax = Vector2.One - (maxPos - clampedMax) / childSize;
 
-                    // Draw the child document texture
-                    drawList.AddImage(child.Document.VisualTextureId, clampedMin, clampedMax, uvMin, uvMax);
+                    // Draw the child's scene texture (full document)
+                    drawList.AddImage(child.SceneTextureId, clampedMin, clampedMax, uvMin, uvMax);
 
-                    // Draw a subtle border around the child
-                    drawList.AddRect(clampedMin, clampedMax, ImGui.GetColorU32(new Vector4(0.5f, 0.5f, 0.5f, 0.5f)));
+                    // Highlight if being dragged or selected
+                    bool isBeingDragged = _draggingChild == child;
+                    bool isBeingResized = _resizingChild == child;
+                    bool isSelected = SelectedChildIndex >= 0 && SelectedChildIndex < ChildSceneItems.Count && 
+                                     ChildSceneItems[SelectedChildIndex] == child;
+
+                    uint borderColor;
+                    if (isBeingDragged || isBeingResized)
+                        borderColor = ImGui.GetColorU32(new Vector4(1f, 1f, 0f, 1f)); // Yellow when dragging/resizing
+                    else if (isSelected)
+                        borderColor = ImGui.GetColorU32(new Vector4(0f, 1f, 1f, 1f)); // Cyan when selected
+                    else
+                        borderColor = ImGui.GetColorU32(new Vector4(0.5f, 0.5f, 0.5f, 0.5f)); // Gray otherwise
+
+                    drawList.AddRect(clampedMin, clampedMax, borderColor);
+
+                    // Draw resize grip at bottom-right corner (only if selected or hovered)
+                    if (isSelected || isBeingResized)
+                    {
+                        Vector2 gripMin = new Vector2(maxPos.X - ResizeGripSize, maxPos.Y - ResizeGripSize);
+                        Vector2 gripMax = maxPos;
+
+                        // Clamp grip to visible area
+                        gripMin = Vector2.Max(gripMin, startPos);
+                        gripMax = Vector2.Min(gripMax, startPos + pixelArea);
+
+                        if (gripMin.X < gripMax.X && gripMin.Y < gripMax.Y)
+                        {
+                            // Draw grip handle (filled triangle or rectangle)
+                            uint gripColor = isBeingResized 
+                                ? ImGui.GetColorU32(new Vector4(1f, 1f, 0f, 1f))  // Yellow when resizing
+                                : ImGui.GetColorU32(new Vector4(0f, 1f, 1f, 0.8f)); // Cyan otherwise
+                            
+                            // Draw a filled triangle in the corner
+                            drawList.AddTriangleFilled(
+                                new Vector2(gripMax.X, gripMin.Y),
+                                gripMax,
+                                new Vector2(gripMin.X, gripMax.Y),
+                                gripColor);
+                        }
+                    }
                 }
             }
 
             // Handle mouse position for status bar
             if (isHovered)
             {
-                Vector2 mousePosition = ImGui.GetMousePos();
-                Vector2 relativeMousePos = mousePosition - startPos;
-                Point sceneMousePos = new Point(
-                    (int)relativeMousePos.X + ViewPosition.X,
-                    (int)relativeMousePos.Y + ViewPosition.Y
-                );
-
                 Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Scene Pos:"));
-                Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), sceneMousePos.ToString()));
+                Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), $"({(int)sceneMousePos.X}, {(int)sceneMousePos.Y})"));
+
+                if (_draggingChild != null)
+                {
+                    Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Dragging:"));
+                    Core.State.GuiTopBar.StatusItems.Add((Color.Cyan.ToVector4(), _draggingChild.Title));
+                }
+                else if (_resizingChild != null)
+                {
+                    Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Resizing:"));
+                    Core.State.GuiTopBar.StatusItems.Add((Color.Cyan.ToVector4(), _resizingChild.Title));
+                    if (_resizingChild.Viewport.HasValue)
+                    {
+                        Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, $"({_resizingChild.Viewport.Value.Width}x{_resizingChild.Viewport.Value.Height})"));
+                    }
+                }
+                else if (_panningChild != null)
+                {
+                    Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Panning:"));
+                    Core.State.GuiTopBar.StatusItems.Add((Color.Cyan.ToVector4(), _panningChild.Title));
+                    if (_panningChild.Viewport.HasValue)
+                    {
+                        var vp = _panningChild.Viewport.Value;
+                        int fullW = _panningChild.Document.EditingSurface.Surface.Width;
+                        int fullH = _panningChild.Document.EditingSurface.Surface.Height;
+                        Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, $"at ({vp.X},{vp.Y}) size ({vp.Width}x{vp.Height}) max ({fullW},{fullH})"));
+                    }
+                }
             }
 
             // Print viewport stats
@@ -475,15 +761,289 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         ImGui.EndChild();
     }
 
+    /// <summary>
+    /// Gets the pixel position of a child in scene coordinates.
+    /// </summary>
+    private Vector2 GetChildPixelPosition(SceneChild child)
+    {
+        if (child.UsePixelPositioning)
+        {
+            return new Vector2(child.Position.X, child.Position.Y);
+        }
+        else
+        {
+            // Cell positioning - convert to pixels using the child's font size
+            return new Vector2(
+                child.Position.X * child.Document.EditorFontSize.X,
+                child.Position.Y * child.Document.EditorFontSize.Y
+            );
+        }
+    }
+
+    /// <summary>
+    /// Handles mouse dragging of child objects for repositioning, resizing, and viewport panning.
+    /// </summary>
+    private void HandleChildDragging(Vector2 startPos, Vector2 pixelArea, Vector2 sceneMousePos, bool isHovered, bool isActive)
+    {
+        bool leftMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool leftMouseClicked = isHovered && leftMouseDown && !_wasDragging;
+        bool rightMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
+        bool rightMouseClicked = isHovered && rightMouseDown && !_wasPanning;
+
+        // Handle ongoing viewport pan (right-click drag)
+        if (_panningChild != null)
+        {
+            if (rightMouseDown)
+            {
+                // Calculate mouse delta from start position
+                Vector2 mouseDelta = sceneMousePos - _panStartMousePos;
+                Point fontSizePoint = _panningChild.Document.EditingSurfaceFontSize;
+
+                // Convert pixel delta to cell delta (inverted for natural panning feel)
+                int cellDeltaX = (int)(mouseDelta.X / fontSizePoint.X);
+                int cellDeltaY = (int)(mouseDelta.Y / fontSizePoint.Y);
+
+                // Calculate new viewport position based on start position plus delta
+                int newX = _panStartViewportPos.X - cellDeltaX;
+                int newY = _panStartViewportPos.Y - cellDeltaY;
+
+                // Get the full surface dimensions and current viewport size
+                int fullWidth = _panningChild.Document.EditingSurface.Surface.Width;
+                int fullHeight = _panningChild.Document.EditingSurface.Surface.Height;
+                int viewportWidth = _panningChild.Viewport?.Width ?? fullWidth;
+                int viewportHeight = _panningChild.Viewport?.Height ?? fullHeight;
+
+                // Clamp to valid range (viewport can't go past surface bounds)
+                newX = Math.Clamp(newX, 0, Math.Max(0, fullWidth - viewportWidth));
+                newY = Math.Clamp(newY, 0, Math.Max(0, fullHeight - viewportHeight));
+
+                // Update viewport position
+                _panningChild.Viewport = new Rectangle(newX, newY, viewportWidth, viewportHeight);
+            }
+            else
+            {
+                // Mouse released, stop panning
+                _panningChild = null;
+            }
+        }
+        // Handle ongoing resize
+        else if (_resizingChild != null)
+        {
+            if (leftMouseDown)
+            {
+                // Calculate size delta from start position
+                Vector2 mouseDelta = sceneMousePos - _resizeStartMousePos;
+                Point fontSizePoint = _resizingChild.Document.EditingSurfaceFontSize;
+
+                // Convert pixel delta to cell delta
+                float cellDeltaX = mouseDelta.X / fontSizePoint.X;
+                float cellDeltaY = mouseDelta.Y / fontSizePoint.Y;
+
+                // Calculate new size based on start size plus delta
+                int newCellWidth = Math.Max(1, (int)(_resizeStartSize.X + cellDeltaX));
+                int newCellHeight = Math.Max(1, (int)(_resizeStartSize.Y + cellDeltaY));
+
+                // Get the full surface dimensions and clamp
+                int fullWidth = _resizingChild.Document.EditingSurface.Surface.Width;
+                int fullHeight = _resizingChild.Document.EditingSurface.Surface.Height;
+                newCellWidth = Math.Min(newCellWidth, fullWidth);
+                newCellHeight = Math.Min(newCellHeight, fullHeight);
+
+                // Update viewport (preserve position if set)
+                int posX = _resizingChild.Viewport?.Position.X ?? 0;
+                int posY = _resizingChild.Viewport?.Position.Y ?? 0;
+                
+                // Ensure position is still valid with new size
+                posX = Math.Min(posX, Math.Max(0, fullWidth - newCellWidth));
+                posY = Math.Min(posY, Math.Max(0, fullHeight - newCellHeight));
+                
+                _resizingChild.Viewport = new Rectangle(posX, posY, newCellWidth, newCellHeight);
+            }
+            else
+            {
+                // Mouse released, stop resizing
+                _resizingChild = null;
+            }
+        }
+        // Handle ongoing drag
+        else if (_draggingChild != null)
+        {
+            if (leftMouseDown)
+            {
+                // Update position while dragging
+                Vector2 newPos = sceneMousePos - _dragOffset;
+
+                if (_draggingChild.UsePixelPositioning)
+                {
+                    _draggingChild.Position = new Point((int)newPos.X, (int)newPos.Y);
+                }
+                else
+                {
+                    // Convert back to cell coordinates
+                    int cellX = (int)(newPos.X / _draggingChild.Document.EditorFontSize.X);
+                    int cellY = (int)(newPos.Y / _draggingChild.Document.EditorFontSize.Y);
+                    _draggingChild.Position = new Point(cellX, cellY);
+                }
+
+                // Sync with document's surface position
+                _draggingChild.Document.EditingSurface.Position = _draggingChild.Position;
+            }
+            else
+            {
+                // Mouse released, stop dragging
+                _draggingChild = null;
+            }
+        }
+        // Check for new interactions
+        else if (leftMouseClicked || rightMouseClicked)
+        {
+            // Check if we clicked on a child's resize grip or body (iterate in reverse for top-most first)
+            for (int i = ChildSceneItems.Count - 1; i >= 0; i--)
+            {
+                var child = ChildSceneItems[i];
+                if (!child.HasValidTexture)
+                    continue;
+
+                Vector2 childPixelPos = GetChildPixelPosition(child);
+                Vector2 childSize = child.SceneTextureSize;
+                Vector2 childMax = childPixelPos + childSize;
+
+                // Check if mouse is on the resize grip (bottom-right corner)
+                Vector2 gripMin = new Vector2(childMax.X - ResizeGripSize, childMax.Y - ResizeGripSize);
+                bool isOnGrip = sceneMousePos.X >= gripMin.X && sceneMousePos.X < childMax.X &&
+                               sceneMousePos.Y >= gripMin.Y && sceneMousePos.Y < childMax.Y;
+
+                // Check if mouse is within child bounds
+                bool isOnChild = sceneMousePos.X >= childPixelPos.X && sceneMousePos.X < childMax.X &&
+                                sceneMousePos.Y >= childPixelPos.Y && sceneMousePos.Y < childMax.Y;
+
+                if (isOnChild)
+                {
+                    // Right-click on child: start panning viewport
+                    if (rightMouseClicked)
+                    {
+                        _panningChild = child;
+                        _panStartMousePos = sceneMousePos;
+                        SelectedChildIndex = i;
+
+                        // Initialize viewport if not set
+                        if (!child.Viewport.HasValue)
+                        {
+                            child.Viewport = new Rectangle(0, 0,
+                                child.Document.EditingSurface.Surface.Width,
+                                child.Document.EditingSurface.Surface.Height);
+                        }
+                        _panStartViewportPos = child.Viewport.Value.Position;
+                        break;
+                    }
+                    // Left-click on resize grip: start resizing
+                    else if (leftMouseClicked && isOnGrip)
+                    {
+                        _resizingChild = child;
+                        _resizeStartMousePos = sceneMousePos;
+                        SelectedChildIndex = i;
+
+                        // Initialize viewport if not set, and store starting size
+                        if (!child.Viewport.HasValue)
+                        {
+                            child.Viewport = new Rectangle(0, 0,
+                                child.Document.EditingSurface.Surface.Width,
+                                child.Document.EditingSurface.Surface.Height);
+                        }
+                        _resizeStartSize = new Vector2(child.Viewport.Value.Width, child.Viewport.Value.Height);
+                        break;
+                    }
+                    // Left-click on child body: start dragging
+                    else if (leftMouseClicked)
+                    {
+                        _draggingChild = child;
+                        _dragOffset = sceneMousePos - childPixelPos;
+
+                        // Also select this child in the properties list
+                        SelectedChildIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Track if mouse was down this frame for next frame's click detection
+        _wasDragging = leftMouseDown;
+        _wasPanning = rightMouseDown;
+    }
+
+    public override void ImGuiDrawTopBar(ImGuiRenderer renderer)
+    {
+        if (ImGui.BeginMenu("Document Options"u8))
+        {
+            // Import from main document list
+            ImGui.BeginDisabled(Core.State.Documents.Count <= 1); // Need at least one other document besides this scene
+            if (ImGui.BeginMenu("Import document from list"u8))
+            {
+                for (int i = 0; i < Core.State.Documents.Count; i++)
+                {
+                    var doc = Core.State.Documents.Objects[i];
+                    
+                    // Can't import self or other scenes
+                    if (doc == this || doc is DocumentScene)
+                        continue;
+
+                    if (ImGui.MenuItem(doc.Title))
+                    {
+                        // Remove from main list
+                        Core.State.Documents.Objects.Remove(doc);
+                        
+                        // Add to scene using helper method that sets Parent
+                        AddChildDocument(doc);
+                        SelectedChildIndex = ChildSceneItems.Count - 1;
+
+                        // If this was the selected document, clear selection
+                        if (Core.State.SelectedDocument == doc)
+                            Core.State.SelectedDocument = this;
+                    }
+                }
+                ImGui.EndMenu();
+            }
+            ImGui.EndDisabled();
+
+            // Transfer back to main list
+            ImGui.BeginDisabled(ChildSceneItems.Count == 0);
+            if (ImGui.BeginMenu("Transfer document to list"u8))
+            {
+                for (int i = 0; i < ChildSceneItems.Count; i++)
+                {
+                    if (ImGui.MenuItem(ChildSceneItems[i].Title))
+                    {
+                        var child = ChildSceneItems[i];
+                        
+                        // Remove from scene using helper method that clears Parent and disposes texture
+                        RemoveChildDocument(child.Document);
+                        
+                        // Add to main list
+                        Core.State.Documents.Objects.Add(child.Document);
+                        
+                        // Update selection
+                        if (SelectedChildIndex >= ChildSceneItems.Count)
+                            SelectedChildIndex = ChildSceneItems.Count - 1;
+                    }
+                }
+                ImGui.EndMenu();
+            }
+            ImGui.EndDisabled();
+
+            ImGui.EndMenu();
+        }
+    }
+
     public override void Redraw(bool redrawSurface, bool redrawTooling)
     {
         // Ensure placeholder is valid
         _placeholderSurface.Render(Game.Instance.UpdateFrameDelta);
 
-        // Redraw all child documents to ensure their textures are up to date
+        // Refresh all child document textures for scene rendering
         foreach (var child in ChildSceneItems)
         {
-            child.Document.Redraw(redrawSurface, redrawTooling);
+            child.RefreshTexture();
         }
     }
 
