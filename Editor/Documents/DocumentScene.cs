@@ -58,6 +58,21 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     private readonly ScreenSurface _placeholderSurface;
 
     /// <summary>
+    /// The total size of the scene in pixels. This defines the virtual space bounds.
+    /// </summary>
+    public Point ScenePixelSize { get; set; } = new Point(640, 480);
+
+    /// <summary>
+    /// The current view position (top-left corner) within the scene in pixels.
+    /// </summary>
+    public Point ViewPosition { get; set; } = Point.Zero;
+
+    /// <summary>
+    /// The size of the visible area in the editor in pixels. This is calculated based on the available ImGui region.
+    /// </summary>
+    public Point ViewPixelSize { get; private set; } = Point.Zero;
+
+    /// <summary>
     /// The list of scene child items with their metadata (position, label, etc.).
     /// </summary>
     public List<SceneChild> ChildSceneItems { get; } = [];
@@ -145,10 +160,14 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         EditingSurfaceFontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
         EditorFontSize = EditingSurfaceFontSize;
 
-        // Scene draws itself (custom UI for overview)
+        // Scene draws itself with custom rendering
         Options.DrawSelf = true;
         Options.UseToolsWindow = false;
-        Options.DisableScrolling = true;
+        Options.DisableScrolling = false; // Enable scrolling for scene view
+
+        // Initialize scene bounds (default 640x480 virtual space)
+        ScenePixelSize = new Point(640, 480);
+        ViewPosition = Point.Zero;
     }
 
     public override void OnSelected()
@@ -180,6 +199,31 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         string editTitle = Title;
         if (ImGui.InputText("##name"u8, ref editTitle, 50))
             Title = editTitle;
+
+        // Scene size configuration
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Width (px):"u8);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(-1);
+        int sceneWidth = ScenePixelSize.X;
+        if (ImGui.InputInt("##scenewidth"u8, ref sceneWidth))
+        {
+            sceneWidth = Math.Max(1, sceneWidth);
+            ScenePixelSize = new Point(sceneWidth, ScenePixelSize.Y);
+        }
+
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Height (px):"u8);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(-1);
+        int sceneHeight = ScenePixelSize.Y;
+        if (ImGui.InputInt("##sceneheight"u8, ref sceneHeight))
+        {
+            sceneHeight = Math.Max(1, sceneHeight);
+            ScenePixelSize = new Point(ScenePixelSize.X, sceneHeight);
+        }
+
+        ImGui.TextDisabled($"View: {ViewPixelSize.X}x{ViewPixelSize.Y} at ({ViewPosition.X}, {ViewPosition.Y})");
 
         ImGui.Separator();
 
@@ -298,101 +342,161 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
     public override void ImGuiDraw(ImGuiRenderer renderer)
     {
-        // Scene overview mode
-        DrawSceneOverview(renderer);
-    }
-
-    private void DrawSceneOverview(ImGuiRenderer renderer)
-    {
-        ImGui.Text($"Scene: {Title}");
-        ImGui.Separator();
-
-        if (ChildSceneItems.Count == 0)
+        if (ImGui.BeginChild("scene_viewport"u8))
         {
-            ImGuiSC.TextWrappedDisabled("This scene has no child documents."u8);
-            ImGuiSC.TextWrappedDisabled("Use 'Document Options > Import document from list' to add documents."u8);
-        }
-        else
-        {
-            ImGui.Text($"Contains {ChildSceneItems.Count} child document(s).");
+            int fontSize = (int)ImGui.GetFontSize();
+            Vector2 padding = ImGui.GetStyle().FramePadding;
+            Vector2 barSize = new Vector2(fontSize + padding.X * 2, fontSize + padding.Y * 2);
 
-            // TODO: Future iteration - render composite preview of all children
-        }
-    }
+            // Calculate available region for the scene view (minus scrollbars)
+            Vector2 availRegion = ImGui.GetContentRegionAvail() - new Vector2(barSize.X, barSize.Y);
 
-    public override void ImGuiDrawTopBar(ImGuiRenderer renderer)
-    {
-        if (ImGui.BeginMenu("Document Options"u8))
-        {
-            // Import from main document list
-            ImGui.BeginDisabled(Core.State.Documents.Count <= 1); // Need at least one other document besides this scene
-            if (ImGui.BeginMenu("Import document from list"u8))
+            // Update view pixel size based on available region
+            int viewWidth = Math.Max(1, (int)availRegion.X);
+            int viewHeight = Math.Max(1, (int)availRegion.Y);
+            ViewPixelSize = new Point(viewWidth, viewHeight);
+
+            // Determine the actual drawable area (smaller of scene size or available region)
+            Vector2 pixelArea = new Vector2(
+                Math.Min(ScenePixelSize.X, viewWidth),
+                Math.Min(ScenePixelSize.Y, viewHeight)
+            );
+
+            // Get draw list for custom rendering
+            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+            Vector2 startPos = ImGui.GetCursorScreenPos();
+
+            // Create invisible button for interaction area
+            ImGui.InvisibleButton("##scene_area"u8, pixelArea, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight);
+            bool isHovered = ImGui.IsItemHovered();
+            bool isActive = ImGui.IsItemActive();
+
+            // Draw checkerboard background for the scene area
+            ImGuiP.RenderColorRectWithAlphaCheckerboard(drawList, startPos, startPos + pixelArea, 
+                ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 1f)), 16f, Vector2.Zero);
+
+            // Draw border around scene area
+            drawList.AddRect(startPos, startPos + pixelArea, ImGuiSC.Color_White);
+
+            // Draw each child document at its position (offset by view position)
+            foreach (var child in ChildSceneItems)
             {
-                for (int i = 0; i < Core.State.Documents.Count; i++)
+                // Ensure child document has a valid texture
+                if (child.Document.VisualTextureId == IntPtr.Zero)
+                    continue;
+
+                // Calculate child position in pixels relative to the scene
+                Vector2 childPixelPos;
+                if (child.UsePixelPositioning)
                 {
-                    var doc = Core.State.Documents.Objects[i];
-                    
-                    // Can't import self or other scenes
-                    if (doc == this || doc is DocumentScene)
-                        continue;
-
-                    if (ImGui.MenuItem(doc.Title))
-                    {
-                        // Remove from main list
-                        Core.State.Documents.Objects.Remove(doc);
-                        
-                        // Add to scene using helper method that sets Parent
-                        AddChildDocument(doc);
-                        SelectedChildIndex = ChildSceneItems.Count - 1;
-
-                        // If this was the selected document, clear selection
-                        if (Core.State.SelectedDocument == doc)
-                            Core.State.SelectedDocument = this;
-                    }
+                    childPixelPos = new Vector2(child.Position.X, child.Position.Y);
                 }
-                ImGui.EndMenu();
+                else
+                {
+                    // Cell positioning - convert to pixels using the child's font size
+                    childPixelPos = new Vector2(
+                        child.Position.X * child.Document.EditorFontSize.X,
+                        child.Position.Y * child.Document.EditorFontSize.Y
+                    );
+                }
+
+                // Offset by current view position
+                Vector2 screenPos = startPos + childPixelPos - new Vector2(ViewPosition.X, ViewPosition.Y);
+
+                // Get child texture size
+                Vector2 childSize = child.Document.VisualTextureSize;
+
+                // Calculate visible portion of the child (clipping)
+                Vector2 minPos = screenPos;
+                Vector2 maxPos = screenPos + childSize;
+
+                // Clamp to visible area
+                Vector2 clampedMin = Vector2.Max(minPos, startPos);
+                Vector2 clampedMax = Vector2.Min(maxPos, startPos + pixelArea);
+
+                // Only draw if there's something visible
+                if (clampedMin.X < clampedMax.X && clampedMin.Y < clampedMax.Y)
+                {
+                    // Calculate UV coordinates for clipping
+                    Vector2 uvMin = (clampedMin - minPos) / childSize;
+                    Vector2 uvMax = Vector2.One - (maxPos - clampedMax) / childSize;
+
+                    // Draw the child document texture
+                    drawList.AddImage(child.Document.VisualTextureId, clampedMin, clampedMax, uvMin, uvMax);
+
+                    // Draw a subtle border around the child
+                    drawList.AddRect(clampedMin, clampedMax, ImGui.GetColorU32(new Vector4(0.5f, 0.5f, 0.5f, 0.5f)));
+                }
+            }
+
+            // Handle mouse position for status bar
+            if (isHovered)
+            {
+                Vector2 mousePosition = ImGui.GetMousePos();
+                Vector2 relativeMousePos = mousePosition - startPos;
+                Point sceneMousePos = new Point(
+                    (int)relativeMousePos.X + ViewPosition.X,
+                    (int)relativeMousePos.Y + ViewPosition.Y
+                );
+
+                Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Scene Pos:"));
+                Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), sceneMousePos.ToString()));
+            }
+
+            // Print viewport stats
+            Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| View:"));
+            Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), $"{ViewPixelSize.X}x{ViewPixelSize.Y} at ({ViewPosition.X},{ViewPosition.Y})"));
+
+            // Draw vertical scrollbar
+            bool enableScrollY = ScenePixelSize.Y > ViewPixelSize.Y;
+            int sliderValueY = ViewPosition.Y;
+
+            ImGui.SameLine();
+            ImGui.BeginDisabled(!enableScrollY);
+            if (ImGuiSC.VSliderIntNudges("##scene_scrolly", new Vector2(barSize.X, pixelArea.Y), ref sliderValueY,
+                                        Math.Max(0, ScenePixelSize.Y - ViewPixelSize.Y), 0, ImGuiSliderFlags.AlwaysClamp))
+            {
+                SetSurfaceView(ViewPosition.X, sliderValueY, 0, 0);
             }
             ImGui.EndDisabled();
 
-            // Transfer back to main list
-            ImGui.BeginDisabled(ChildSceneItems.Count == 0);
-            if (ImGui.BeginMenu("Transfer document to list"u8))
+            // Draw horizontal scrollbar
+            bool enableScrollX = ScenePixelSize.X > ViewPixelSize.X;
+            int sliderValueX = ViewPosition.X;
+
+            ImGui.BeginDisabled(!enableScrollX);
+            if (ImGuiSC.SliderIntNudges("##scene_scrollx", (int)pixelArea.X, ref sliderValueX, 0,
+                                       Math.Max(0, ScenePixelSize.X - ViewPixelSize.X), "%d", ImGuiSliderFlags.AlwaysClamp))
             {
-                for (int i = 0; i < ChildSceneItems.Count; i++)
-                {
-                    if (ImGui.MenuItem(ChildSceneItems[i].Title))
-                    {
-                        var child = ChildSceneItems[i];
-                        
-                        // Remove from scene using helper method that clears Parent
-                        RemoveChildDocument(child.Document);
-                        
-                        // Add to main list
-                        Core.State.Documents.Objects.Add(child.Document);
-                        
-                        // Update selection
-                        if (SelectedChildIndex >= ChildSceneItems.Count)
-                            SelectedChildIndex = ChildSceneItems.Count - 1;
-                    }
-                }
-                ImGui.EndMenu();
+                SetSurfaceView(sliderValueX, ViewPosition.Y, 0, 0);
             }
             ImGui.EndDisabled();
-
-            ImGui.EndMenu();
         }
+        ImGui.EndChild();
     }
 
     public override void Redraw(bool redrawSurface, bool redrawTooling)
     {
-        // Scene overview doesn't need complex rendering
-        // Just ensure placeholder is valid
+        // Ensure placeholder is valid
         _placeholderSurface.Render(Game.Instance.UpdateFrameDelta);
+
+        // Redraw all child documents to ensure their textures are up to date
+        foreach (var child in ChildSceneItems)
+        {
+            child.Document.Redraw(redrawSurface, redrawTooling);
+        }
     }
 
     public override void SetSurfaceView(int x, int y, int width, int height)
     {
-        // Scene overview doesn't have a scrollable view
+        // Clamp view position within scene bounds
+        int maxX = Math.Max(0, ScenePixelSize.X - ViewPixelSize.X);
+        int maxY = Math.Max(0, ScenePixelSize.Y - ViewPixelSize.Y);
+        
+        ViewPosition = new Point(
+            Math.Clamp(x, 0, maxX),
+            Math.Clamp(y, 0, maxY)
+        );
     }
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>
