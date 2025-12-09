@@ -1,3 +1,5 @@
+using SadRogue.Primitives;
+
 namespace SadConsole.Editor.Serialization;
 
 /// <summary>
@@ -9,6 +11,11 @@ public class SceneDocumentSerialized
     /// The title of the scene.
     /// </summary>
     public string Title { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the size of the scene in pixels.
+    /// </summary>
+    public Point ScenePixelSize { get; set; }
 
     /// <summary>
     /// The serialized child documents with their positions and type information.

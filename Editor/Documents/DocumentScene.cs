@@ -85,6 +85,14 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     private bool _wasPanning;
 
     /// <summary>
+    /// Sets the non-selected docs to be semi transparent in the scene view.
+    /// </summary>
+    private bool _otherDocsTranparent = false;
+
+    private uint _docsTransparent = Color.White.SetAlpha(200).PackedValue;
+    private uint _docsNormal = Color.White.PackedValue;
+
+    /// <summary>
     /// The size of the resize grip handle in pixels.
     /// </summary>
     private const float ResizeGripSize = 12f;
@@ -271,28 +279,38 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         }
         else
         {
+            float buttonSize = ImGui.GetFrameHeight();
+            Vector2 squareButtonSize = new Vector2(buttonSize, buttonSize);
+            ImGui.GetStyle().GetSpacing(out Vector2 framePadding, out Vector2 itemSpacing);
+
             if (ImGui.BeginChild("child_props_list"u8, new Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * Math.Min(5, childCount + 1)), ImGuiChildFlags.Borders))
             {
+                Vector2 iconSize = ImGui.CalcTextSize("\uf06e\uf06e"u8);
+
                 for (int i = 0; i < childCount; i++)
                 {
                     ImGui.PushID(i);
+                    var child = ChildSceneItems[i];
 
+                    char icon = child.IsVisible ? '\uf06e' : '\uf070';
                     bool isSelected = SelectedChildIndex == i;
-                    if (ImGui.Selectable(ChildSceneItems[i].Title, isSelected))
+                    Vector2 pos = ImGui.GetCursorScreenPos();
+                    if (ImGui.Selectable($"{icon}  {child.Title}", isSelected, ImGuiSelectableFlags.AllowOverlap))
                         SelectedChildIndex = i;
+
+                    ImGui.SetCursorScreenPos(pos);
+                    if (ImGui.InvisibleButton("##vis", iconSize))
+                        child.IsVisible = !child.IsVisible;
 
                     ImGui.PopID();
                 }
             }
             ImGui.EndChild();
 
-            float buttonSize = ImGui.GetFrameHeight();
-            Vector2 squareButtonSize = new Vector2(buttonSize, buttonSize);
-            ImGui.GetStyle().GetSpacing(out Vector2 framePadding, out Vector2 itemSpacing);
-
             // Reorder and Remove buttons
+            // Arrow up
             ImGui.BeginDisabled(SelectedChildIndex <= 0);
-            if (ImGui.Button("\uf062"u8, squareButtonSize)) // Arrow up
+            if (ImGui.Button("\uf062"u8, squareButtonSize))
             {
                 var item = ChildSceneItems[SelectedChildIndex];
                 ChildSceneItems.RemoveAt(SelectedChildIndex);
@@ -303,6 +321,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
             ImGui.SameLine();
 
+            // Arrow down
             ImGui.BeginDisabled(SelectedChildIndex < 0 || SelectedChildIndex >= childCount - 1);
             if (ImGui.Button("\uf063"u8, squareButtonSize)) // Arrow down
             {
@@ -339,6 +358,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 }
                 ImGui.EndPopup();
             }
+
+            // Option to make semi transparent non-selected docs
+            ImGui.Checkbox("Show Non-Selected Transparent"u8, ref _otherDocsTranparent);
 
             // Selected child properties
             if (SelectedChildIndex >= 0 && SelectedChildIndex < childCount)
@@ -555,6 +577,10 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             // Draw each child document at its position (offset by view position)
             foreach (var child in ChildSceneItems)
             {
+                // Skip if not visible
+                if (!child.IsVisible)
+                    continue;
+
                 // Ensure child has a valid scene texture
                 if (!child.HasValidTexture)
                     continue;
@@ -584,7 +610,16 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     Vector2 uvMax = Vector2.One - (maxPos - clampedMax) / childSize;
 
                     // Draw the child's scene texture (full document)
-                    drawList.AddImage(child.SceneTextureId, clampedMin, clampedMax, uvMin, uvMax);
+                    uint color =
+                                 SelectedChildIndex != -1
+                                    ? child == ChildSceneItems[SelectedChildIndex]
+                                        ? _docsNormal
+                                        : _otherDocsTranparent
+                                            ? _docsTransparent
+                                            : _docsNormal
+                                    : _docsNormal;
+
+                    drawList.AddImage(child.SceneTextureId, clampedMin, clampedMax, uvMin, uvMax, color);
 
                     // Highlight if being dragged or selected
                     bool isBeingDragged = _draggingChild == child;
@@ -836,7 +871,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             for (int i = ChildSceneItems.Count - 1; i >= 0; i--)
             {
                 var child = ChildSceneItems[i];
-                if (!child.HasValidTexture)
+                if (!child.HasValidTexture || !child.IsVisible)
                     continue;
 
                 Vector2 childPixelPos = GetChildPixelPosition(child);

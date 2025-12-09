@@ -55,11 +55,7 @@ public class GuiTopBar : ImGuiObjectBase
                 ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
                 if (ImGui.MenuItem("\ueb4b Save", "s"))
                 {
-                    // Get the root document for saving (if child is selected, save the parent scene)
-                    var docToSave = Core.State.SelectedDocument!.Parent != null 
-                        ? HierarchyHelper.GetRoot(Core.State.SelectedDocument) 
-                        : Core.State.SelectedDocument;
-                    Windows.SaveFile window = new(docToSave);
+                    Windows.SaveFile window = new(Core.State.SelectedDocument!);
                     window.Open();
                 }
 

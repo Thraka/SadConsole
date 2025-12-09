@@ -80,6 +80,7 @@ internal class SceneDocument : IFileHandler
             {
                 Title = doc.Title,
                 Children = childrenSerialized.ToArray(),
+                ScenePixelSize = doc.ScenePixelSize,
                 Options = doc.Options
             };
         }
@@ -92,7 +93,8 @@ internal class SceneDocument : IFileHandler
         {
             var doc = new DocumentScene();
             doc.Title = serializedObj.Title;
-            
+            doc.ScenePixelSize = serializedObj.ScenePixelSize;
+
             if (serializedObj.Options != null)
                 doc.Options = serializedObj.Options;
 

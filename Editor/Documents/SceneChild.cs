@@ -47,6 +47,11 @@ public class SceneChild : ITitle, IDisposable
     public Rectangle? Viewport { get; set; }
 
     /// <summary>
+    /// Controls whether the child is visible in the scene view.
+    /// </summary>
+    public bool IsVisible { get; set; } = true;
+
+    /// <summary>
     /// The ImGui texture ID for this child's scene rendering.
     /// </summary>
     public ImTextureID SceneTextureId { get; private set; }
@@ -178,6 +183,7 @@ public class SceneChild : ITitle, IDisposable
                    Position.Equals(other.Position) &&
                    UsePixelPositioning == other.UsePixelPositioning &&
                    Label == other.Label &&
+                   IsVisible == other.IsVisible &&
                    EqualityComparer<Rectangle?>.Default.Equals(Viewport, other.Viewport);
         }
         return false;
@@ -185,7 +191,7 @@ public class SceneChild : ITitle, IDisposable
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Document, Position, UsePixelPositioning, Label, Viewport);
+        return HashCode.Combine(Document, Position, UsePixelPositioning, Label, Viewport, IsVisible);
     }
 
     public override string ToString() => Title;
