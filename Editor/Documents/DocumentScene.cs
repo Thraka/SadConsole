@@ -952,7 +952,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             {
                 for (int i = 0; i < Core.State.Documents.Count; i++)
                 {
-                    var doc = Core.State.Documents.Objects[i];
+                    var doc = Core.State.Documents[i];
                     
                     // Can't import self or other scenes
                     if (doc == this || doc is DocumentScene)
@@ -961,7 +961,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     if (ImGui.MenuItem(doc.Title))
                     {
                         // Remove from main list
-                        Core.State.Documents.Objects.Remove(doc);
+                        Core.State.Documents.Remove(doc);
                         
                         // Add to scene using helper method that sets Parent
                         AddChildDocument(doc);
@@ -990,7 +990,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         RemoveChildDocument(child.Document);
                         
                         // Add to main list
-                        Core.State.Documents.Objects.Add(child.Document);
+                        Core.State.Documents.Add(child.Document);
                         
                         // Update selection
                         if (SelectedChildIndex >= ChildSceneItems.Count)

@@ -27,7 +27,7 @@ public class NewDocument : ImGuiWindowBase
         if (DialogResult)
         {
             if (Core.State.DocumentBuilders.IsItemSelected())
-                Core.State.Documents.Objects.Add(Core.State.DocumentBuilders.SelectedItem.CreateDocument());
+                Core.State.Documents.Add(Core.State.DocumentBuilders.SelectedItem.CreateDocument());
         }
 
         Core.State.DocumentBuilders.SelectedItem = null;

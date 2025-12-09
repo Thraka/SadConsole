@@ -43,8 +43,8 @@ public class GuiTopBar : ImGuiObjectBase
                         {
                             if (window.SelectedLoader.Load(window.SelectedFile.FullName) is Document document)
                             {
-                                Core.State.Documents.Objects.Add(document);
-                                //Core.State.Documents.SelectedItemIndex = Core.State.Documents.Objects.Count - 1;
+                                Core.State.Documents.Add(document);
+                                //Core.State.Documents.SelectedItemIndex = Core.State.Documents.Count - 1;
                             }
                         }
                     };
@@ -72,13 +72,13 @@ public class GuiTopBar : ImGuiObjectBase
                                 ? HierarchyHelper.GetRoot(Core.State.SelectedDocument) 
                                 : Core.State.SelectedDocument;
                             
-                            Core.State.Documents.Objects.Remove(docToClose);
+                            Core.State.Documents.Remove(docToClose);
                             Core.State.SelectedDocument = null;
                             
                             // Select first available document if any
                             if (Core.State.Documents.Count > 0)
                             {
-                                Core.State.SelectedDocument = Core.State.Documents.Objects[0];
+                                Core.State.SelectedDocument = Core.State.Documents[0];
                                 Core.State.SelectedDocument.OnSelected();
                             }
                         }

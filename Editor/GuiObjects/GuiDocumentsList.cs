@@ -15,7 +15,7 @@ public class GuiDocumentsList : ImGuiObjectBase
         // Render the hierarchical document list
         if (ImGui.BeginChild("##doclist", new System.Numerics.Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * 6), ImGuiChildFlags.Borders))
         {
-            RenderDocumentHierarchy(Core.State.Documents.Objects, ref oldDocument);
+            RenderDocumentHierarchy(Core.State.Documents, ref oldDocument);
         }
         ImGui.EndChild();
 

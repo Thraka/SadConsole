@@ -41,9 +41,9 @@ public class BlueprintImport : ImGuiWindowBase
     void RenderBlueprintTexture()
     {
         UnloadTexture();
-        CellSurface surface = Core.State.Blueprints.SelectedItem.GetSurface();
+        CellSurface surface = Core.State.Blueprints.SelectedItem!.GetSurface();
         _previewTextureWrapper = new ScreenSurface(surface);
-        _previewTextureWrapper.Font = Core.State.Documents.SelectedItem.EditingSurfaceFont;
+        _previewTextureWrapper.Font = Core.State.SelectedDocument!.EditingSurfaceFont;
         _previewTextureWrapper.Update(TimeSpan.Zero);
         _previewTextureWrapper.Render(TimeSpan.Zero);
 

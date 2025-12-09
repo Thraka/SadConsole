@@ -74,7 +74,7 @@ public static partial class Core
         Documents.DocumentSurface.Builder builder = new();
         builder.ResetBuilder();
 
-        State.Documents.Objects.Add(builder.CreateDocument());
+        State.Documents.Add(builder.CreateDocument());
         State.Documents.SelectedItemIndex = 0;
         State.Documents.SelectedItem!.OnSelected();
         State.Tools.SelectedItemIndex = 0;

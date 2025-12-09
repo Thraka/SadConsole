@@ -23,7 +23,7 @@ public static partial class Core
         public static GuiTopBar GuiTopBar = new();
         public static GuiDockSpace GuiDockSpace = new();
 
-        public static ImGuiList<Documents.Document> Documents = new();
+        public static List<Documents.Document> Documents = new();
 
         /// <summary>
         /// The currently selected document for editing. This can be a root document or a child document.

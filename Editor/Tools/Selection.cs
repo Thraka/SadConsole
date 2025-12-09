@@ -400,7 +400,7 @@ internal class Selection : ITool
         doc.EditorFontSize = document.EditorFontSize;
         doc.Title = Document.GenerateName("Surface");
 
-        Core.State.Documents.Objects.Add(doc);
+        Core.State.Documents.Add(doc);
     }
 
     private void CancelPaste(Document document, bool setCancel = true)

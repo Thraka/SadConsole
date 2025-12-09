@@ -137,7 +137,7 @@ internal class Fill : ITool
             ColoredGlyph glyph = _glyphEditor.Glyph.ToColoredGlyph();
             if (_isAdding)
             {
-                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
+                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
 
                 docSimpleObjects.SimpleObjects.Objects.Add(
                     new SimpleObjectDefinition() { Visual = _glyphEditor.Glyph.ToColoredGlyph(), Name = _glyphEditor.Name! });
@@ -146,7 +146,7 @@ internal class Fill : ITool
             }
             else if (_isEditing)
             {
-                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.Documents.SelectedItem!;
+                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
 
                 docSimpleObjects.SimpleObjects.SelectedItem!.Visual = _glyphEditor.Glyph.ToColoredGlyph();
                 docSimpleObjects.SimpleObjects.SelectedItem!.Name = _glyphEditor.Name!;
