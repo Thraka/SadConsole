@@ -9,7 +9,7 @@
 using SadConsole.Configuration;
 using SadConsole.Editor;
 
-Settings.WindowTitle = "SadEditor v3.0 Alpha 1";
+Settings.WindowTitle = "SadEditor v3.0 Beta 1";
 
 Builder config =
     new Builder()
