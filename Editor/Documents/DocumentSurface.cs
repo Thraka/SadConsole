@@ -17,12 +17,7 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
     /// </summary>
     public override string DocumentIcon => "󰋁"; // nf-md-grid
 
-    public DocumentSurface()
-    {
-        SyncToolModes();
-    }
-
-    public DocumentSurface(CellSurface editingSurface): this()
+    public DocumentSurface(CellSurface editingSurface)
     {
         EditingSurface = new ScreenSurface(editingSurface);
         EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;

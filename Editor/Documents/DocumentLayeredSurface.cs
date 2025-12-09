@@ -21,12 +21,7 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
     /// </summary>
     public override string DocumentIcon => "\ue257"; // layer-group icon
 
-    public DocumentLayeredSurface()
-    {
-        SyncToolModes();
-    }
-
-    public DocumentLayeredSurface(LayeredScreenSurface editingSurface) : this()
+    public DocumentLayeredSurface(LayeredScreenSurface editingSurface)
     {
         EditingSurface = editingSurface;
         EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;

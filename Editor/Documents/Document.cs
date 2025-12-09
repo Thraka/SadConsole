@@ -86,6 +86,7 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         VisualLayerToolLower = (CellSurface)VisualTool.Layers[0];
         VisualLayerToolMiddle = VisualTool.Layers.Create();
         VisualLayerToolUpper = VisualTool.Layers.Create();
+        SyncToolModes();
     }
 
     [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
