@@ -1,14 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Nuget.props" />
+
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <Version>1.0.0.0</Version>
+    <Version>3.0.0-Beta1</Version>
     <AssemblyTitle>SadConsole Editor types for serialization</AssemblyTitle>
+    <Description>Loads files saved by the SadConsole editor.</Description>
+    <PackageId>SadConsole.Editor.Serialization</PackageId>
+    <PackageTags>sadconsole</PackageTags>
+    <PackageReleaseNotes>
+      Nothing special for this release.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedAllSources>true</EmbedAllSources>
+    <PackageReadmeFile></PackageReadmeFile>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Extended\SadConsole.Extended.csproj" />
-    <ProjectReference Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Include="SadConsole.Extended" Version="10.7.0" PrivateAssets="All" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
 
 </Project>
