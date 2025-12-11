@@ -133,36 +133,40 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     protected void RenderControlCells(UI.Controls.ControlBase control, ScreenSurfaceRenderer renderer, IFont font, Point fontSize, Rectangle parentViewRect)
     {
         font = control.AlternateFont ?? font;
-        ColoredGlyphBase cell;
 
-        //if (control.Surface.DefaultBackground.A != 0)
-        //{
-        //    (int x, int y) = (control.AbsolutePosition - parentViewRect.Position).SurfaceLocationToPixel(fontSize);
-        //    (int width, int height) = new Point(control.Surface.View.Width, control.Surface.View.Height) * fontSize;
-
-        //    Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(x, y, x + width, y + height), font.SolidGlyphRectangle.ToIntRect(), control.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
-        //}
-        for (int y = 0; y < control.Surface.View.Height; y++)
+        // Iterate through the control's viewport
+        for (int controlViewY = 0; controlViewY < control.Surface.View.Height; controlViewY++)
         {
-            int i = ((y + control.Surface.ViewPosition.Y) * control.Surface.Width) + control.Surface.ViewPosition.X;
-
-            for (int x = 0; x < control.Surface.View.Width; x++)
+            for (int controlViewX = 0; controlViewX < control.Surface.View.Width; controlViewX++)
             {
-                cell = control.Surface[i];
+                // Calculate the actual surface position within the control
+                int controlSurfaceX = controlViewX + control.Surface.ViewPosition.X;
+                int controlSurfaceY = controlViewY + control.Surface.ViewPosition.Y;
+                
+                // Get the cell index in the control's surface
+                int cellIndex = controlSurfaceY * control.Surface.Width + controlSurfaceX;
+                ColoredGlyphBase cell = control.Surface[cellIndex];
                 cell.IsDirty = false;
 
-                if (cell.IsVisible)
-                {
-                    SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
+                if (!cell.IsVisible) continue;
 
-                    if (!parentViewRect.Contains(cellRenderPosition)) continue;
+                // Calculate where this control cell appears in parent surface coordinates
+                // control.AbsolutePosition is in parent surface coordinates
+                // controlViewX/Y represent the offset from the control's position
+                SadRogue.Primitives.Point positionInParentSurface = control.AbsolutePosition + (controlViewX, controlViewY);
 
-                    IntRect renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
+                // Check if this position is within the parent's view rectangle
+                if (!parentViewRect.Contains(positionInParentSurface)) continue;
 
-                    Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
-                }
+                // Calculate the position within the parent's view (0-based)
+                SadRogue.Primitives.Point positionInParentView = positionInParentSurface - parentViewRect.Position;
 
-                i++;
+                // Get the render rectangle from the cached array
+                int renderRectIndex = positionInParentView.ToIndex(parentViewRect.Width);
+                IntRect renderRect = renderer.CachedRenderRects[renderRectIndex];
+
+                // Draw the cell
+                Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, true, font);
             }
         }
     }

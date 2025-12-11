@@ -156,39 +156,48 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
         font = control.AlternateFont ?? font;
 
         Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
-        ColoredGlyphBase cell;
 
-        for (int y = 0; y < control.Surface.View.Height; y++)
+        // Iterate through the control's viewport
+        for (int controlViewY = 0; controlViewY < control.Surface.View.Height; controlViewY++)
         {
-            int i = ((y + control.Surface.ViewPosition.Y) * control.Surface.Width) + control.Surface.ViewPosition.X;
-
-            for (int x = 0; x < control.Surface.View.Width; x++)
+            for (int controlViewX = 0; controlViewX < control.Surface.View.Width; controlViewX++)
             {
-                cell = control.Surface[i];
+                // Calculate the actual surface position within the control
+                int controlSurfaceX = controlViewX + control.Surface.ViewPosition.X;
+                int controlSurfaceY = controlViewY + control.Surface.ViewPosition.Y;
+
+                // Get the cell index in the control's surface
+                int cellIndex = controlSurfaceY * control.Surface.Width + controlSurfaceX;
+                ColoredGlyphBase cell = control.Surface[cellIndex];
                 cell.IsDirty = false;
 
-                if (cell.IsVisible)
-                {
-                    SadRogue.Primitives.Point cellRenderPosition = control.AbsolutePosition + (x, y);
+                if (!cell.IsVisible) continue;
 
-                    if (!parentViewRect.Contains(cellRenderPosition)) continue;
-                    //if (!parentViewRect.Contains(cellRenderPosition) || !clipRect.Contains(cellRenderPosition)) continue;
+                // Calculate where this control cell appears in parent surface coordinates
+                // control.AbsolutePosition is in parent surface coordinates
+                // controlViewX/Y represent the offset from the control's position
+                SadRogue.Primitives.Point positionInParentSurface = control.AbsolutePosition + (controlViewX, controlViewY);
 
-                    XnaRectangle renderRect = renderer.CachedRenderRects[(cellRenderPosition - parentViewRect.Position).ToIndex(parentViewRect.Width)];
+                // Check if this position is within the parent's view rectangle
+                if (!parentViewRect.Contains(positionInParentSurface)) continue;
 
-                    if (cell.Background != SadRogue.Primitives.Color.Transparent)
-                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                // Calculate the position within the parent's view (0-based)
+                SadRogue.Primitives.Point positionInParentView = positionInParentSurface - parentViewRect.Position;
 
-                    if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent)
-                        Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                // Get the render rectangle from the cached array
+                int renderRectIndex = positionInParentView.ToIndex(parentViewRect.Width);
+                XnaRectangle renderRect = renderer.CachedRenderRects[renderRectIndex];
 
-                    if (cell.Decorators != null)
-                        for (int d = 0; d < cell.Decorators.Count; d++)
-                            if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
-                                Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
-                }
+                if (cell.Background != SadRogue.Primitives.Color.Transparent)
+                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
-                i++;
+                if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent)
+                    Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+
+                if (cell.Decorators != null)
+                    for (int d = 0; d < cell.Decorators.Count; d++)
+                        if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
+                            Host.Global.SharedSpriteBatch.Draw(fontImage, renderRect, font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
             }
         }
     }
