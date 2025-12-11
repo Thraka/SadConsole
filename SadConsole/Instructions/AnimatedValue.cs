@@ -94,7 +94,15 @@ public class AnimatedValue : Wait
 
             if (oldValue != Value)
                 ValueChanged?.Invoke(this, Value);
+
+            if (IsFinished)
+                base.OnFinished(console);
         }
+    }
+
+    protected override void OnFinished(IScreenObject componentHost)
+    {
+        // Ignore the normal onfinished behavior as we don't want to raise the event
     }
 
     private double GetValueForDuration(double time)
