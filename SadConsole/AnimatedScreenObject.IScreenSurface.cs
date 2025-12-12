@@ -210,6 +210,10 @@ public partial class AnimatedScreenObject
         FontSize = fontSize;
 
         Frames = new List<ICellSurface>(frames);
+
+        NewFrameWidth = Frames[0].Width;
+        NewFrameHeight = Frames[0].Height;
+
         Renderer = GameHost.Instance.GetRenderer(DefaultRendererName);
     }
 
