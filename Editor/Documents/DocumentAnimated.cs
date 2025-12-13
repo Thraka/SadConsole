@@ -414,6 +414,14 @@ public partial class DocumentAnimated: Document
         }
     }
 
+    public override void Resync()
+    {
+        base.Resync();
+
+        _baseAnimation.Font = EditingSurfaceFont;
+        _baseAnimation.FontSize = EditingSurfaceFontSize;
+    }
+
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>
         [new AnimatedDocument(), new AnimationFile(), new SurfaceFile()];
 
