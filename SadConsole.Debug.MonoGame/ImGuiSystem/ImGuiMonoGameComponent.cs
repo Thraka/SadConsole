@@ -22,6 +22,8 @@ namespace SadConsole.ImGuiSystem
 
         public List<ImGuiObjectBase> UIComponents { get; } = [ ];
 
+        public ImGuiObjectBase? BeforeNewFrameLayoutObject { get; set; }
+
         public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game, bool enableDocking): base(game)
         {
             // Run after (and thus draw on top of) the normal SadConsole MonoGame component
@@ -51,6 +53,9 @@ namespace SadConsole.ImGuiSystem
         public override void Draw(GameTime gameTime)
         {
             // Call BeforeLayout first to set things up
+            if (BeforeNewFrameLayoutObject != null)
+                BeforeNewFrameLayoutObject.BuildUI(ImGuiRenderer);
+
             ImGuiRenderer.BeforeLayout(gameTime);
 
             // Draw our UI

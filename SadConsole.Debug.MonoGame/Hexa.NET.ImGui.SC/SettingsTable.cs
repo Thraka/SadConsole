@@ -22,6 +22,9 @@ public static partial class SettingsTable
         return false;
     }
 
+    /// <summary>
+    /// Call if <see cref="BeginTable"/> returns true."/>
+    /// </summary>
     public static void EndTable()
     {
         ImGui.EndTable();
