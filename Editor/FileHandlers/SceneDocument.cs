@@ -96,7 +96,14 @@ internal class SceneDocument : IFileHandler
             doc.ScenePixelSize = serializedObj.ScenePixelSize;
 
             if (serializedObj.Options != null)
+            {
                 doc.Options = serializedObj.Options;
+
+                // Force these core options
+                doc.Options.UseToolsWindow = true;
+                doc.Options.ToolsWindowShowToolsList = false;
+                doc.Options.DisableScrolling = false;
+            }
 
             if (serializedObj.Children != null)
             {
