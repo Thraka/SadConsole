@@ -192,11 +192,27 @@ internal class Selection : ITool
             }
 
             ImGui.Separator();
-            if (ImGui.Selectable("Create Document"u8))
+            ImGui.Text("Create Document"u8);
+            ImGui.Indent();
+            if (ImGui.Selectable("Surface Document"u8))
             {
-                CopyToDocument(document);
+                ImGui.Indent();
+                CopyToSurfaceDocument(document);
                 ImGui.CloseCurrentPopup();
             }
+            if (ImGui.Selectable("Layered Document"u8))
+            {
+                ImGui.Indent();
+                CopyToLayeredDocument(document);
+                ImGui.CloseCurrentPopup();
+            }
+            if (ImGui.Selectable("Animated Document"u8))
+            {
+                ImGui.Indent();
+                CopyToAnimatedDocument(document);
+                ImGui.CloseCurrentPopup();
+            }
+            ImGui.Unindent();
 
             if (ImGui.Selectable("Create Blueprint"u8))
             {
@@ -382,7 +398,7 @@ internal class Selection : ITool
         }
     }
 
-    private void CopyToDocument(Document document)
+    private void CopyToSurfaceDocument(Document document)
     {
         Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
         Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
@@ -398,7 +414,57 @@ internal class Selection : ITool
         doc.EditingSurfaceFont = document.EditingSurfaceFont;
         doc.EditingSurfaceFontSize = document.EditingSurfaceFontSize;
         doc.EditorFontSize = document.EditorFontSize;
+        doc.EditingSurface.Font = document.EditingSurface.Font;
+        doc.EditingSurface.FontSize = document.EditingSurface.FontSize;
+
         doc.Title = Document.GenerateName("Surface");
+
+        Core.State.Documents.Add(doc);
+    }
+
+    private void CopyToLayeredDocument(Document document)
+    {
+        Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
+        Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
+
+        Rectangle selectionArea = new(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                       new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y)));
+
+        _selectionSurface = new(selectionArea.Width, selectionArea.Height);
+
+        document.EditingSurface.Surface.Copy(selectionArea, _selectionSurface, 0, 0);
+
+        DocumentLayeredSurface doc = new(new (_selectionSurface, document.EditingSurface.Font, document.EditingSurface.FontSize));
+        doc.EditingSurfaceFont = document.EditingSurfaceFont;
+        doc.EditingSurfaceFontSize = document.EditingSurfaceFontSize;
+        doc.EditorFontSize = document.EditorFontSize;
+
+        doc.Title = Document.GenerateName("Layered");
+
+        Core.State.Documents.Add(doc);
+    }
+
+    private void CopyToAnimatedDocument(Document document)
+    {
+        Point topLeft = _firstPoint + document.EditingSurface.Surface.ViewPosition;
+        Point bottomRight = _secondPoint + document.EditingSurface.Surface.ViewPosition;
+
+        Rectangle selectionArea = new(new Point(Math.Min(topLeft.X, bottomRight.X), Math.Min(topLeft.Y, bottomRight.Y)),
+                                       new Point(Math.Max(topLeft.X, bottomRight.X), Math.Max(topLeft.Y, bottomRight.Y)));
+
+        _selectionSurface = new(selectionArea.Width, selectionArea.Height);
+
+        document.EditingSurface.Surface.Copy(selectionArea, _selectionSurface, 0, 0);
+
+        DocumentAnimated doc = new(new AnimatedScreenObject("Animation1", document.EditingSurface.Font, document.EditingSurface.FontSize, [ _selectionSurface ]));
+        doc.EditingSurfaceFont = document.EditingSurfaceFont;
+        doc.EditingSurfaceFontSize = document.EditingSurfaceFontSize;
+        doc.EditorFontSize = document.EditorFontSize;
+        doc.EditingSurface.Font = doc.EditingSurfaceFont;
+        doc.EditingSurface.FontSize = doc.EditingSurfaceFontSize;
+        doc.Resync();
+
+        doc.Title = Document.GenerateName("Animation");
 
         Core.State.Documents.Add(doc);
     }
