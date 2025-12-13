@@ -37,6 +37,11 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
     private bool _isControlMode = true;
 
+    // Control name editing state
+    private ControlBase? _lastSelectedControl;
+    private string _editingControlName = string.Empty;
+    private bool _controlNameConflict;
+
     private const float HandleSize = 6f;
 
     private enum ResizeHandle
@@ -88,6 +93,63 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
         // Handle mouse input for selection
         HandleControlInteraction(startPos, ImGui.GetMousePos(), isHovered);
+
+        // Handle right-click context menu
+        if (isHovered && ImGuiP.IsMouseClicked(ImGuiMouseButton.Right))
+        {
+            Point viewPos = EditingSurface.Surface.ViewPosition;
+            Vector2 viewOffset = new Vector2(viewPos.X * EditorFontSize.X, viewPos.Y * EditorFontSize.Y);
+            Vector2 consoleMousePos = (ImGui.GetMousePos() - startPos) + viewOffset;
+            Point cellPos = new Point(
+                (int)(consoleMousePos.X / EditorFontSize.X),
+                (int)(consoleMousePos.Y / EditorFontSize.Y)
+            );
+
+            // Find control under mouse for right-click
+            for (int i = Console.Controls.Count - 1; i >= 0; i--)
+            {
+                var control = Console.Controls[i];
+                if (control.Bounds.Contains(cellPos))
+                {
+                    SelectedControl = control;
+                    break;
+                }
+            }
+
+            if (SelectedControl != null)
+                ImGui.OpenPopup("control_context_menu"u8);
+        }
+
+        // Draw context menu
+        if (ImGui.BeginPopup("control_context_menu"u8))
+        {
+            if (SelectedControl != null)
+            {
+                ImGui.Text(SelectedControl.Name ?? SelectedControl.GetType().Name);
+                ImGui.Separator();
+
+                if (ImGui.MenuItem("Bring to Front"u8))
+                    BringToFront(SelectedControl);
+
+                if (ImGui.MenuItem("Bring Forward"u8))
+                    BringForward(SelectedControl);
+
+                if (ImGui.MenuItem("Send Backward"u8))
+                    SendBackward(SelectedControl);
+
+                if (ImGui.MenuItem("Send to Back"u8))
+                    SendToBack(SelectedControl);
+
+                ImGui.Separator();
+
+                if (ImGui.MenuItem("Delete"u8))
+                {
+                    Console.Controls.Remove(SelectedControl);
+                    SelectedControl = null;
+                }
+            }
+            ImGui.EndPopup();
+        }
 
         // Draw selection box
         if (SelectedControl != null)
@@ -442,97 +504,352 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
     private void BuildControlsSettings(ImGuiRenderer renderer)
     {
-        ImGui.SeparatorText("Controls"u8);
+        if (ImGui.BeginTabBar("controls_tabbar"u8, ImGuiTabBarFlags.None))
+        {
+            if (ImGui.BeginTabItem("Toolbox"u8))
+            {
+                BuildToolboxPanel(renderer);
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Properties"u8))
+            {
+                BuildPropertiesPanel(renderer);
+                ImGui.EndTabItem();
+            }
+
+            ImGui.EndTabBar();
+        }
+    }
+
+    private void BuildToolboxPanel(ImGuiRenderer renderer)
+    {
+        ImGui.Text("Double-click to add:"u8);
+        ImGui.Separator();
+
+        DrawToolboxItem("Button"u8, () => new Button(10, 1) { Text = "Button" });
+        DrawToolboxItem("CheckBox"u8, () => new CheckBox(15, 1) { Text = "CheckBox" });
+        DrawToolboxItem("RadioButton"u8, () => new RadioButton(15, 1) { Text = "RadioButton" });
+        DrawToolboxItem("TextBox"u8, () => new TextBox(10));
+        DrawToolboxItem("Label"u8, () => new Label("Label"));
+        DrawToolboxItem("ProgressBar"u8, () => new ProgressBar(10, 1, HorizontalAlignment.Left));
+        DrawToolboxItem("ToggleSwitch"u8, () => new ToggleSwitch(5, 1));
+        DrawToolboxItem("SelectionButton"u8, () => new SelectionButton(15, 1));
+        DrawToolboxItem("ListBox"u8, () => new ListBox(15, 5));
+        DrawToolboxItem("Panel"u8, () => new Panel(10, 5));
+        DrawToolboxItem("ScrollBar (H)"u8, () => new ScrollBar(Orientation.Horizontal, 10, 10));
+        DrawToolboxItem("ScrollBar (V)"u8, () => new ScrollBar(Orientation.Vertical, 10, 10));
+    }
+
+    private void DrawToolboxItem(ReadOnlySpan<byte> name, Func<ControlBase> createControl)
+    {
+        ImGui.Selectable(name);
+
+        // Double-click to add at default position
+        if (ImGui.IsItemHovered() && ImGuiP.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+        {
+            ControlBase control = createControl();
+            control.Position = new Point(1, 1);
+            AddControl(control);
+            SelectedControl = control;
+        }
+    }
+
+    private void BuildPropertiesPanel(ImGuiRenderer renderer)
+    {
+        // Control list for selection
+        ImGui.Text("Select Control:"u8);
+        string currentControlName = SelectedControl != null 
+            ? (string.IsNullOrEmpty(SelectedControl.Name) ? $"{SelectedControl.GetType().Name}#{SelectedControl.GetHashCode()}" : SelectedControl.Name)
+            : "<none>";
         
-        if (ImGui.Button("Add Control"u8))
+        if (ImGui.BeginCombo("##selectcontrol"u8, currentControlName))
         {
-            ImGui.OpenPopup("add_control_popup"u8);
+            for (int i = 0; i < Console.Controls.Count; i++)
+            {
+                var control = Console.Controls[i];
+                string name = string.IsNullOrEmpty(control.Name) ? $"{control.GetType().Name}#{control.GetHashCode()}" : control.Name;
+                bool isSelected = SelectedControl == control;
+                
+                if (ImGui.Selectable($"{name}##{i}", isSelected))
+                {
+                    SelectedControl = control;
+                    
+                    // Load the new control's name for editing
+                    _editingControlName = control.Name ?? "";
+                    _lastSelectedControl = control;
+                    _controlNameConflict = false;
+                }
+                
+                if (isSelected)
+                    ImGui.SetItemDefaultFocus();
+            }
+            ImGui.EndCombo();
         }
 
-        if (ImGui.BeginPopup("add_control_popup"u8))
+        ImGui.Separator();
+
+        if (SelectedControl == null)
         {
-            if (ImGui.MenuItem("Button"u8)) AddControl(new Button(10, 1) { Text = "Button" });
-            if (ImGui.MenuItem("CheckBox"u8)) AddControl(new CheckBox(15, 1) { Text = "CheckBox" });
-            if (ImGui.MenuItem("RadioButton"u8)) AddControl(new RadioButton(15, 1) { Text = "RadioButton" });
-            if (ImGui.MenuItem("TextBox"u8)) AddControl(new TextBox(10));
-            if (ImGui.MenuItem("Label"u8)) AddControl(new Label("Label"));
-            if (ImGui.MenuItem("ProgressBar"u8)) AddControl(new ProgressBar(10, 1, HorizontalAlignment.Left));
-            if (ImGui.MenuItem("ToggleSwitch"u8)) AddControl(new ToggleSwitch(5, 1));
-            if (ImGui.MenuItem("SelectionButton"u8)) AddControl(new SelectionButton(15, 1));
-            ImGui.EndPopup();
+            ImGui.TextDisabled("No control selected"u8);
+            return;
         }
 
-        ImGui.BeginChild("controls_list"u8, new Vector2(0, 150), ImGuiChildFlags.Borders);
+        // Initialize or update editing state when selection changes
+        if (_lastSelectedControl != SelectedControl)
+        {
+            _editingControlName = SelectedControl.Name ?? "";
+            _lastSelectedControl = SelectedControl;
+            _controlNameConflict = false;
+        }
+
+        ImGui.Text($"Type: {SelectedControl.GetType().Name}");
+        ImGui.Separator();
+
+        // Name editing with validation
+        ImGui.Text("Name:"u8);
+        ImGui.SetNextItemWidth(-1);
+        if (ImGui.InputText("##control_name", ref _editingControlName, 256))
+        {
+            // Check for duplicate name on each change
+            _controlNameConflict = IsControlNameDuplicate(_editingControlName, SelectedControl);
+        }
+
+        if (_controlNameConflict)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.3f, 0.3f, 1.0f));
+            ImGui.TextWrapped("Name already exists. Please use a unique name.");
+            ImGui.PopStyleColor();
+        }
+        else if (_editingControlName != (SelectedControl.Name ?? ""))
+        {
+            // Name is different and valid - show apply button
+            if (ImGui.Button("Apply Name"u8))
+            {
+                ApplyControlName(SelectedControl, _editingControlName);
+            }
+            ImGui.SameLine();
+            ImGui.TextDisabled("(recreates control)"u8);
+        }
+
+        ImGui.Separator();
+
+        // Common properties
+        if (SettingsTable.BeginTable("control_props"))
+        {
+            // Position
+            int x = SelectedControl.Position.X;
+            int y = SelectedControl.Position.Y;
+            bool posChanged = false;
+
+            if (SettingsTable.DrawInt("X", "##control.x", ref x, -1000, 1000)) posChanged = true;
+            if (SettingsTable.DrawInt("Y", "##control.y", ref y, -1000, 1000)) posChanged = true;
+
+            if (posChanged)
+            {
+                SelectedControl.Position = new Point(x, y);
+                SelectedControl.IsDirty = true;
+            }
+
+            // Size
+            int width = SelectedControl.Width;
+            int height = SelectedControl.Height;
+            bool sizeChanged = false;
+
+            if (SettingsTable.DrawInt("Width", "##control.width", ref width, 1, 1000)) sizeChanged = true;
+            if (SettingsTable.DrawInt("Height", "##control.height", ref height, 1, 1000)) sizeChanged = true;
+
+            if (sizeChanged && SelectedControl.CanResize)
+                SelectedControl.Resize(width, height);
+
+            // Common ControlBase properties
+            bool isVisible = SelectedControl.IsVisible;
+            if (SettingsTable.DrawCheckbox("IsVisible", "##control.visible", ref isVisible))
+                SelectedControl.IsVisible = isVisible;
+
+            bool isEnabled = SelectedControl.IsEnabled;
+            if (SettingsTable.DrawCheckbox("IsEnabled", "##control.enabled", ref isEnabled))
+                SelectedControl.IsEnabled = isEnabled;
+
+            bool tabStop = SelectedControl.TabStop;
+            if (SettingsTable.DrawCheckbox("TabStop", "##control.tabstop", ref tabStop))
+                SelectedControl.TabStop = tabStop;
+
+            int tabIndex = SelectedControl.TabIndex;
+            if (SettingsTable.DrawInt("TabIndex", "##control.tabindex", ref tabIndex, 0, 1000))
+                SelectedControl.TabIndex = tabIndex;
+
+            bool useMouse = SelectedControl.UseMouse;
+            if (SettingsTable.DrawCheckbox("UseMouse", "##control.usemouse", ref useMouse))
+                SelectedControl.UseMouse = useMouse;
+
+            bool useKeyboard = SelectedControl.UseKeyboard;
+            if (SettingsTable.DrawCheckbox("UseKeyboard", "##control.usekeyboard", ref useKeyboard))
+                SelectedControl.UseKeyboard = useKeyboard;
+
+            bool canFocus = SelectedControl.CanFocus;
+            if (SettingsTable.DrawCheckbox("CanFocus", "##control.canfocus", ref canFocus))
+                SelectedControl.CanFocus = canFocus;
+
+            SettingsTable.EndTable();
+        }
+
+        // Type-specific properties
+        ImGui.Separator();
+        BuildTypeSpecificProperties(renderer);
+
+        // Delete button
+        ImGui.Separator();
+        if (ImGui.Button("Delete Control"u8, new Vector2(-1, 0)))
+        {
+            Console.Controls.Remove(SelectedControl);
+            SelectedControl = null;
+            _lastSelectedControl = null;
+            _editingControlName = "";
+        }
+    }
+
+    /// <summary>
+    /// Applies a new name to a control by recreating it with the new name.
+    /// </summary>
+    private void ApplyControlName(ControlBase oldControl, string newName)
+    {
+        // Get the index of the old control to maintain z-order
+        int index = Console.Controls.IndexOf(oldControl);
+        if (index < 0) return;
+
+        // Create a new control of the same type with the new name
+        ControlBase? newControl = RecreateControlWithName(oldControl, newName);
+        if (newControl == null) return;
+
+        // Remove old and insert new at same position
+        Console.Controls.Remove(oldControl);
+        Console.Controls.Insert(index, newControl);
+
+        // Update selection
+        SelectedControl = newControl;
+        _lastSelectedControl = newControl;
+        _editingControlName = newName;
+
+        Console.Controls.IsDirty = true;
+    }
+
+    /// <summary>
+    /// Recreates a control with a new name, copying all properties from the original.
+    /// </summary>
+    private ControlBase? RecreateControlWithName(ControlBase original, string newName)
+    {
+        // Note: Order matters - more specific types must come before base types (e.g., SelectionButton before Button)
+        ControlBase? newControl = original switch
+        {
+            SelectionButton selBtn => new SelectionButton(selBtn.Width, selBtn.Height) { Name = newName, Text = selBtn.Text },
+            RadioButton rad => new RadioButton(rad.Width, rad.Height) { Name = newName, Text = rad.Text, IsSelected = rad.IsSelected },
+            CheckBox chk => new CheckBox(chk.Width, chk.Height) { Name = newName, Text = chk.Text, IsSelected = chk.IsSelected },
+            Button btn => new Button(btn.Width, btn.Height) { Name = newName, Text = btn.Text, ShowEnds = btn.ShowEnds },
+            TextBox txt => new TextBox(txt.Width) { Name = newName, Text = txt.Text, MaxLength = txt.MaxLength },
+            Label lbl => new Label(lbl.Width) { Name = newName, DisplayText = lbl.DisplayText, ShowUnderline = lbl.ShowUnderline, ShowStrikethrough = lbl.ShowStrikethrough },
+            ProgressBar prog => new ProgressBar(prog.Width, prog.Height, prog.HorizontalAlignment) { Name = newName, Progress = prog.Progress },
+            ToggleSwitch toggle => new ToggleSwitch(toggle.Width, toggle.Height) { Name = newName, IsSelected = toggle.IsSelected },
+            ListBox listBox => new ListBox(listBox.Width, listBox.Height) { Name = newName },
+            Panel panel => new Panel(panel.Width, panel.Height) { Name = newName },
+            ScrollBar scrollBar => new ScrollBar(scrollBar.Orientation, scrollBar.Width, scrollBar.Height) { Name = newName, MaximumValue = scrollBar.MaximumValue, Value = scrollBar.Value },
+            _ => null
+        };
+
+        if (newControl == null) return null;
+
+        // Copy common properties
+        newControl.Position = original.Position;
+        newControl.IsVisible = original.IsVisible;
+        newControl.IsEnabled = original.IsEnabled;
+        newControl.TabStop = original.TabStop;
+        newControl.TabIndex = original.TabIndex;
+        newControl.UseMouse = original.UseMouse;
+        newControl.UseKeyboard = original.UseKeyboard;
+        newControl.CanFocus = original.CanFocus;
+
+        return newControl;
+    }
+
+    /// <summary>
+    /// Checks if the specified control name already exists in another control.
+    /// </summary>
+    private bool IsControlNameDuplicate(string name, ControlBase excludeControl)
+    {
+        if (string.IsNullOrEmpty(name))
+            return false;
+
         foreach (var control in Console.Controls)
         {
-            string name = string.IsNullOrEmpty(control.Name) ? control.GetType().Name : control.Name;
-            if (ImGui.Selectable($"{name}##{control.GetHashCode()}", SelectedControl == control))
+            if (control != excludeControl && string.Equals(control.Name, name, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
+    private void BuildTypeSpecificProperties(ImGuiRenderer renderer)
+    {
+        if (SelectedControl is Button btn)
+        {
+            string text = btn.Text ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 100)) btn.Text = text;
+            
+            bool showEnds = btn.ShowEnds;
+            if (ImGui.Checkbox("ShowEnds"u8, ref showEnds)) btn.ShowEnds = showEnds;
+        }
+        else if (SelectedControl is CheckBox chk)
+        {
+            string text = chk.Text ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 100)) chk.Text = text;
+            
+            bool isSelected = chk.IsSelected;
+            if (ImGui.Checkbox("IsSelected"u8, ref isSelected)) chk.IsSelected = isSelected;
+        }
+        else if (SelectedControl is RadioButton rad)
+        {
+            string text = rad.Text ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 100)) rad.Text = text;
+            
+            bool isSelected = rad.IsSelected;
+            if (ImGui.Checkbox("IsSelected"u8, ref isSelected)) rad.IsSelected = isSelected;
+        }
+        else if (SelectedControl is Label lbl)
+        {
+            string text = lbl.DisplayText ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 100)) lbl.DisplayText = text;
+
+            bool showUnderline = lbl.ShowUnderline;
+            if (ImGui.Checkbox("ShowUnderline"u8, ref showUnderline)) lbl.ShowUnderline = showUnderline;
+
+            bool showStrikethrough = lbl.ShowStrikethrough;
+            if (ImGui.Checkbox("ShowStrikethrough"u8, ref showStrikethrough)) lbl.ShowStrikethrough = showStrikethrough;
+        }
+        else if (SelectedControl is TextBox txt)
+        {
+            string text = txt.Text ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 500)) txt.Text = text;
+
+            int maxLength = txt.MaxLength;
+            if (ImGui.InputInt("MaxLength"u8, ref maxLength))
             {
-                SelectedControl = control;
+                if (maxLength > 0) txt.MaxLength = maxLength;
             }
         }
-        ImGui.EndChild();
-
-        if (SelectedControl != null)
+        else if (SelectedControl is ProgressBar prog)
         {
-            ImGui.SeparatorText("Selected Control Properties"u8);
-            
-            ImGui.Text($"Name: {SelectedControl.Name ?? "<unnamed>"}");
-
-            if (SettingsTable.BeginTable("control_props_possize"))
-            {
-                int x = SelectedControl.Position.X;
-                int y = SelectedControl.Position.Y;
-                bool posChanged = false;
-
-                if (SettingsTable.DrawInt("X", "control.x",ref x, -100)) posChanged = true;
-                if (SettingsTable.DrawInt("Y", "control.y", ref y, -100)) posChanged = true;
-
-                if (posChanged)
-                {
-                    SelectedControl.Position = new Point(x, y);
-                    SelectedControl.IsDirty = true;
-                }
-
-                int width = SelectedControl.Width;
-                int height = SelectedControl.Height;
-
-                bool sizeChanged = false;
-
-                if (SettingsTable.DrawInt("Width", "control.width", ref width, 1, Console.Surface.Width)) sizeChanged = true;
-                if (SettingsTable.DrawInt("Height", "control.height", ref height, 1, Console.Surface.Height)) sizeChanged = true;
-
-                if (sizeChanged) SelectedControl.Resize(width, height);
-
-                SettingsTable.EndTable();
-            }
-
-            if (SelectedControl is Button btn)
-            {
-                string text = btn.Text;
-                if (ImGui.InputText("Text"u8, ref text, 100)) btn.Text = text;
-            }
-            else if (SelectedControl is CheckBox chk)
-            {
-                string text = chk.Text;
-                if (ImGui.InputText("Text"u8, ref text, 100)) chk.Text = text;
-            }
-            else if (SelectedControl is RadioButton rad)
-            {
-                string text = rad.Text;
-                if (ImGui.InputText("Text"u8, ref text, 100)) rad.Text = text;
-            }
-            else if (SelectedControl is Label lbl)
-            {
-                string text = lbl.DisplayText;
-                if (ImGui.InputText("Text"u8, ref text, 100)) lbl.DisplayText = text;
-            }
-            
-            if (ImGui.Button("Remove Control"u8))
-            {
-                Console.Controls.Remove(SelectedControl);
-                SelectedControl = null;
-            }
+            float progress = prog.Progress;
+            if (ImGui.SliderFloat("Progress"u8, ref progress, 0f, 1f))
+                prog.Progress = progress;
+        }
+        else if (SelectedControl is ToggleSwitch toggle)
+        {
+            bool isSelected = toggle.IsSelected;
+            if (ImGui.Checkbox("IsSelected"u8, ref isSelected)) toggle.IsSelected = isSelected;
+        }
+        else if (SelectedControl is SelectionButton selBtn)
+        {
+            string text = selBtn.Text ?? "";
+            if (ImGui.InputText("Text"u8, ref text, 100)) selBtn.Text = text;
         }
     }
 
@@ -565,7 +882,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
             if (enableSimpleObjs || enableZones)
             {
-                 if (enableSimpleObjs)
+                if (enableSimpleObjs)
                 {
                     ImGui.SeparatorText("Simple Objects");
 
@@ -640,11 +957,10 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
                         replace = true;
                     }
 
-
                     if (doImport)
                     {
                         Windows.OpenFile window = new([new ZonesHandler()]);
-                        
+
                         window.Closed += (s, e) =>
                         {
                             if (window.DialogResult)
@@ -687,4 +1003,104 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
     public override IEnumerable<IFileHandler> GetSaveHandlers() =>
         []; // Placeholder
+
+    private void BringToFront(ControlBase control)
+    {
+        // Find the highest TabIndex among all controls
+        int maxTabIndex = 0;
+        foreach (var c in Console.Controls)
+        {
+            if (c.TabIndex > maxTabIndex)
+                maxTabIndex = c.TabIndex;
+        }
+
+        // Set this control's TabIndex higher than all others
+        control.TabIndex = maxTabIndex + 1;
+        Console.Controls.ReOrderControls();
+        Console.Controls.IsDirty = true;
+    }
+
+    private void SendToBack(ControlBase control)
+    {
+        // Find the lowest TabIndex among all controls
+        int minTabIndex = int.MaxValue;
+        foreach (var c in Console.Controls)
+        {
+            if (c.TabIndex < minTabIndex)
+                minTabIndex = c.TabIndex;
+        }
+
+        // Set this control's TabIndex lower than all others
+        control.TabIndex = minTabIndex > 0 ? minTabIndex - 1 : 0;
+
+        // If we hit 0, normalize all TabIndex values
+        if (control.TabIndex == 0)
+            NormalizeTabIndexes();
+
+        Console.Controls.ReOrderControls();
+        Console.Controls.IsDirty = true;
+    }
+
+    private void BringForward(ControlBase control)
+    {
+        // Find the control with the next higher TabIndex
+        int currentTabIndex = control.TabIndex;
+        ControlBase? nextControl = null;
+        int nextTabIndex = int.MaxValue;
+
+        foreach (var c in Console.Controls)
+        {
+            if (c != control && c.TabIndex > currentTabIndex && c.TabIndex < nextTabIndex)
+            {
+                nextControl = c;
+                nextTabIndex = c.TabIndex;
+            }
+        }
+
+        if (nextControl != null)
+        {
+            // Swap TabIndex values
+            control.TabIndex = nextTabIndex;
+            nextControl.TabIndex = currentTabIndex;
+            Console.Controls.ReOrderControls();
+            Console.Controls.IsDirty = true;
+        }
+    }
+
+    private void SendBackward(ControlBase control)
+    {
+        // Find the control with the next lower TabIndex
+        int currentTabIndex = control.TabIndex;
+        ControlBase? prevControl = null;
+        int prevTabIndex = -1;
+
+        foreach (var c in Console.Controls)
+        {
+            if (c != control && c.TabIndex < currentTabIndex && c.TabIndex > prevTabIndex)
+            {
+                prevControl = c;
+                prevTabIndex = c.TabIndex;
+            }
+        }
+
+        if (prevControl != null)
+        {
+            // Swap TabIndex values
+            control.TabIndex = prevTabIndex;
+            prevControl.TabIndex = currentTabIndex;
+            Console.Controls.ReOrderControls();
+            Console.Controls.IsDirty = true;
+        }
+    }
+
+    private void NormalizeTabIndexes()
+    {
+        // Sort controls by current TabIndex and reassign sequential values
+        var sortedControls = Console.Controls.OrderBy(c => c.TabIndex).ToList();
+        for (int i = 0; i < sortedControls.Count; i++)
+        {
+            sortedControls[i].TabIndex = i;
+        }
+        Console.Controls.ReOrderControls();
+    }
 }
