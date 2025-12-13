@@ -190,7 +190,16 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
     /// If <see cref="DocumentOptions.DrawSelf"/> is true, this method is called when rendering a document to the Document tab.
     /// </summary>
     /// <param name="renderer">The ImGuiRenderer instance used to draw ImGui controls. Cannot be null.</param>
-    public virtual void ImGuiDraw(ImGuiRenderer renderer) { }
+    public virtual void ImGuiDrawSelf(ImGuiRenderer renderer) { }
+
+    /// <summary>
+    /// Performs custom ImGui rendering operations on the document tab after the main surface has been drawn.
+    /// </summary>
+    /// <remarks>Override this method to add additional ImGui UI elements or overlays that should appear on
+    /// top of the main surface rendering. This method is called after the primary surface draw pass is
+    /// complete.</remarks>
+    /// <param name="renderer">The ImGuiRenderer instance used to issue ImGui draw commands.</param>
+    public virtual void ImGuiDrawSurfaceTextureAfter(ImGuiRenderer renderer, Point hoveredCellPosition, bool isHovered, bool isActive) { }
 
     /// <summary>
     /// Performs custom ImGui rendering after all other editor components have been drawn.
@@ -206,6 +215,14 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
     /// interface.</remarks>
     /// <param name="renderer">The ImGuiRenderer instance used to draw the top bar components. Cannot be null.</param>
     public virtual void ImGuiDrawTopBar(ImGuiRenderer renderer) { }
+
+    /// <summary>
+    /// Draws custom ImGui controls in the tools panel using the specified renderer.
+    /// </summary>
+    /// <remarks>Override this method to add custom controls or UI elements to the tools panel. This method is
+    /// typically called during the tools panel rendering phase.</remarks>
+    /// <param name="renderer">The ImGuiRenderer instance used to render ImGui controls in the tools panel. Cannot be null.</param>
+    public virtual void ImGuiDrawInToolsPanel(ImGuiRenderer renderer) { }
 
     /// <summary>
     /// Refreshes the display and tooling layers by re-rendering the editing surface and associated visual tools.
@@ -236,6 +253,7 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         VisualTextureSize = new Vector2(_displayTexture.Bounds.Width, _displayTexture.Bounds.Height);
 
         // Redraw the objects before projecting
+        EditingSurface.Update(TimeSpan.Zero);
         EditingSurface.ForceRendererRefresh = redrawSurface;
         EditingSurface.Render(Game.Instance.UpdateFrameDelta);
 

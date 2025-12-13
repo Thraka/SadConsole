@@ -20,7 +20,7 @@ public class GuiDocumentsHost: ImGuiObjectBase
 
             if (document.Options.DrawSelf)
             {
-                document.ImGuiDraw(renderer);
+                document.ImGuiDrawSelf(renderer);
             }
             else
             {
@@ -117,6 +117,9 @@ public class GuiDocumentsHost: ImGuiObjectBase
                         Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Mouse:"));
                         Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), hoveredCellPosition.ToString()));
                     }
+
+                    // ImGui drawing by the document after surface
+                    document.ImGuiDrawSurfaceTextureAfter(renderer, hoveredCellPosition, isHovered, isActive);
 
                     // Handle selected tool
                     if (Core.State.Tools.IsItemSelected())

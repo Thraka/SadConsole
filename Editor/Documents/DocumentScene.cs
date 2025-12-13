@@ -89,7 +89,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// </summary>
     private bool _otherDocsTranparent = false;
 
-    private uint _docsTransparent = Color.White.SetAlpha(200).PackedValue;
+    private uint _docsTransparent = Color.White.SetAlpha(150).PackedValue;
     private uint _docsNormal = Color.White.PackedValue;
 
     /// <summary>
@@ -185,8 +185,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
         // Scene draws itself with custom rendering
         Options.DrawSelf = true;
-        Options.UseToolsWindow = false;
-        Options.DisableScrolling = false; // Enable scrolling for scene view
+        Options.UseToolsWindow = true;
+        Options.ToolsWindowShowToolsList = false;
+        Options.DisableScrolling = false;
 
         // Initialize scene bounds (default 640x480 virtual space)
         ScenePixelSize = new Point(640, 480);
@@ -210,6 +211,11 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         BuildSceneSettings(renderer);
     }
 
+    public override void ImGuiDrawInToolsPanel(ImGuiRenderer renderer)
+    {
+        BuildChildDocumentsSettings(renderer);
+    }
+
     private void BuildSceneSettings(ImGuiRenderer renderer)
     {
         ImGui.SeparatorText("Scene Settings"u8);
@@ -222,6 +228,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         string editTitle = Title;
         if (ImGui.InputText("##name"u8, ref editTitle, 50))
             Title = editTitle;
+
+        ImGui.Separator();
 
         // Scene size configuration
         ImGui.AlignTextToFramePadding();
@@ -265,9 +273,10 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 _sceneSizeCalculatorWindow = null;
             }
         }
+    }
 
-        ImGui.Separator();
-
+    private void BuildChildDocumentsSettings(ImGuiRenderer renderer)
+    {
         // Child documents info
         ImGui.SeparatorText("Child Documents"u8);
 
@@ -295,7 +304,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     char icon = child.IsVisible ? '\uf06e' : '\uf070';
                     bool isSelected = SelectedChildIndex == i;
                     Vector2 pos = ImGui.GetCursorScreenPos();
-                    if (ImGui.Selectable($"{icon}  {child.Title}", isSelected, ImGuiSelectableFlags.AllowOverlap))
+                    if (ImGui.Selectable($"{icon}  {child.Document.DocumentIcon} {child.Title}", isSelected, ImGuiSelectableFlags.AllowOverlap))
                         SelectedChildIndex = i;
 
                     ImGui.SetCursorScreenPos(pos);
@@ -522,13 +531,96 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         viewWidth,
                         viewHeight
                     );
+
+                    // Animation controls for DocumentAnimated children
+                    if (child.Document is DocumentAnimated animDoc)
+                    {
+                        ImGui.SeparatorText("Animation Controls"u8);
+
+                        // Reset button
+                        if (ImGui.Button("\uf0e2##animreset"u8, squareButtonSize))
+                        {
+                            animDoc._baseAnimation.Stop();
+                            animDoc._baseAnimation.CurrentFrameIndex = 0;
+                            animDoc.SetFrameIndex(0);
+                            child.RefreshTexture();
+                        }
+
+                        ImGui.SameLine();
+
+                        int currentFrameIndex = animDoc._baseAnimation.CurrentFrameIndex;
+
+                        // Play/Stop button
+                        if (animDoc._baseAnimation.IsPlaying)
+                        {
+                            if (ImGui.Button("\uf04d Stop"u8))
+                                animDoc._baseAnimation.Stop();
+
+                            animDoc._baseAnimation.Update(Game.Instance.UpdateFrameDelta);
+
+                            if (animDoc.EditingSurface.Surface != animDoc._baseAnimation.CurrentFrame)
+                            {
+                                ((ScreenSurface)animDoc.EditingSurface).Surface = animDoc._baseAnimation.CurrentFrame;
+                                animDoc.EditingSurface.IsDirty = true;
+                                child.RefreshTexture();
+                            }
+                        }
+                        else
+                        {
+                            if (ImGui.Button("\uf04b Play"u8))
+                                animDoc._baseAnimation.Restart();
+                        }
+
+                        ImGui.SameLine();
+
+                        // Repeat checkbox
+                        bool repeat = animDoc._baseAnimation.Repeat;
+                        if (ImGui.Checkbox("Repeat"u8, ref repeat))
+                            animDoc._baseAnimation.Repeat = repeat;
+
+
+                        // Frame navigation (disabled while playing)
+                        ImGui.BeginDisabled(animDoc._baseAnimation.IsPlaying);
+
+                        float frameButtonArea = ImGui.GetStyle().ItemSpacing.X * 2 + ImGui.GetStyle().FramePadding.X * 4 + ImGui.CalcTextSize("\uf049 "u8).X + ImGui.CalcTextSize("\uf04a "u8).X;
+
+                        ImGui.BeginDisabled(animDoc._baseAnimation.CurrentFrameIndex == 0);
+                        if (ImGui.Button("\uf049 "u8)) animDoc._baseAnimation.MoveStart(); ImGui.EndDisabled(); ImGui.SameLine();
+                        ImGui.BeginDisabled(animDoc._baseAnimation.CurrentFrameIndex == 0);
+                        if (ImGui.Button("\uf04a "u8)) animDoc._baseAnimation.MovePrevious(); ImGui.EndDisabled(); ImGui.SameLine();
+
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - frameButtonArea);
+                        int frameIndex = animDoc._baseAnimation.CurrentFrameIndex + 1;
+                        if (ImGui.SliderInt("##frameslider"u8, ref frameIndex, 1, animDoc._baseAnimation.Frames.Count))
+                            animDoc._baseAnimation.CurrentFrameIndex = frameIndex - 1;
+
+                        ImGui.SameLine();
+
+                        ImGui.BeginDisabled(animDoc._baseAnimation.CurrentFrameIndex == animDoc._baseAnimation.Frames.Count - 1);
+                        if (ImGui.Button("\uf04e "u8)) animDoc._baseAnimation.MoveNext(); ImGui.EndDisabled(); ImGui.SameLine();
+                        ImGui.BeginDisabled(animDoc._baseAnimation.CurrentFrameIndex == animDoc._baseAnimation.Frames.Count - 1);
+                        if (ImGui.Button("\uf050 "u8)) animDoc._baseAnimation.MoveEnd(); ImGui.EndDisabled();
+
+                        // If animation frame changed, sync surface
+                        if (currentFrameIndex != animDoc._baseAnimation.CurrentFrameIndex)
+                        {
+                            animDoc.SetFrameIndex(animDoc._baseAnimation.CurrentFrameIndex);
+                            child.RefreshTexture();
+                        }
+
+                        ImGui.EndDisabled();
+
+                        ImGui.Separator();
+                    }
+
                 }
+
                 ImGui.EndChild();
             }
         }
     }
 
-    public override void ImGuiDraw(ImGuiRenderer renderer)
+    public override void ImGuiDrawSelf(ImGuiRenderer renderer)
     {
         if (ImGui.BeginChild("scene_viewport"u8))
         {
