@@ -37,7 +37,7 @@ public static partial class Core
         [MemberNotNullWhen(true, nameof(SelectedDocument))]
         public static bool HasSelectedDocument => SelectedDocument != null;
 
-        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentLayeredSurface.Builder(), new Documents.DocumentAnimated.Builder(), new Documents.DocumentScene.Builder());
+        public static ImGuiList<Documents.IBuilder> DocumentBuilders = new(new Documents.DocumentSurface.Builder(), new Documents.DocumentLayeredSurface.Builder(), new Documents.DocumentAnimated.Builder(), new Documents.DocumentScene.Builder(), new Documents.DocumentControlConsole.Builder());
 
         public static ImGuiList<Tools.ITool> Tools = new();
 
