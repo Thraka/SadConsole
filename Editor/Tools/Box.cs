@@ -102,43 +102,45 @@ internal class Box : ITool
                     // Data for border settings
                     ColoredGlyphReference borderGlyph = _shapeSettings.BorderGlyph ??= new ColoredGlyph();
 
-                    SettingsTable.BeginTable("bordersettings");
-
-                    ImGui.TableNextRow();
-                    ImGui.TableSetColumnIndex(0);
-                    ImGui.AlignTextToFramePadding();
-                    ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
-                    ImGui.TableSetColumnIndex(1);
-
-                    ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
-                    ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
-                    ImGui.EndDisabled();
-
-                    if (_shapeSettings.UseBoxBorderStyle)
-                        _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
-                    else
-                        _shapeSettings.BoxBorderStyle = null;
-
-                    if (_shapeSettings.UseBoxBorderStyle)
+                    if (SettingsTable.BeginTable("bordersettings"))
                     {
-                        SettingsTable.DrawColor("Foreground", "##borderFore", ref borderGlyph.Foreground, surface.Surface.DefaultForeground.ToVector4(), true, out bool rightClick);
-                        SettingsTable.DrawColor("Background", "##borderBack", ref borderGlyph.Background, surface.Surface.DefaultBackground.ToVector4(), true, out rightClick);
-                    }
-                    else
-                    {
-                        SettingsTable.DrawCommonSettings(true, true, true, true, true,
-                            ref borderGlyph,
-                            surface.Surface.DefaultForeground.ToVector4(),
-                            surface.Surface.DefaultBackground.ToVector4(),
-                            document.EditingSurfaceFont, ImGuiCore.Renderer
-                        );
-                    }
 
-                    SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
-                    SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
-                    SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
-                    SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
-                    SettingsTable.EndTable();
+                        ImGui.TableNextRow();
+                        ImGui.TableSetColumnIndex(0);
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Checkbox("Use Line Style", ref _shapeSettings.UseBoxBorderStyle);
+                        ImGui.TableSetColumnIndex(1);
+
+                        ImGui.BeginDisabled(!_shapeSettings.UseBoxBorderStyle);
+                        ImGui.Combo("##border_line_style", ref _lineTypes.SelectedItemIndex, _lineTypes.Names, _lineTypes.Count);
+                        ImGui.EndDisabled();
+
+                        if (_shapeSettings.UseBoxBorderStyle)
+                            _shapeSettings.BoxBorderStyle = _lineTypes.SelectedItem!.ConnectedLineStyle;
+                        else
+                            _shapeSettings.BoxBorderStyle = null;
+
+                        if (_shapeSettings.UseBoxBorderStyle)
+                        {
+                            SettingsTable.DrawColor("Foreground", "##borderFore", ref borderGlyph.Foreground, surface.Surface.DefaultForeground.ToVector4(), true, out bool rightClick);
+                            SettingsTable.DrawColor("Background", "##borderBack", ref borderGlyph.Background, surface.Surface.DefaultBackground.ToVector4(), true, out rightClick);
+                        }
+                        else
+                        {
+                            SettingsTable.DrawCommonSettings(true, true, true, true, true,
+                                ref borderGlyph,
+                                surface.Surface.DefaultForeground.ToVector4(),
+                                surface.Surface.DefaultBackground.ToVector4(),
+                                document.EditingSurfaceFont, ImGuiCore.Renderer
+                            );
+                        }
+
+                        SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
+                        SettingsTable.DrawCheckbox("Ignore Background", "##ignore_border_background", ref _shapeSettings.IgnoreBorderBackground);
+                        SettingsTable.DrawCheckbox("Ignore Mirror", "##ignore_border_mirror", ref _shapeSettings.IgnoreBorderMirror);
+                        SettingsTable.DrawCheckbox("Ignore Glyph", "##ignore_border_glyph", ref _shapeSettings.IgnoreBorderGlyph);
+                        SettingsTable.EndTable();
+                    }
                     // Store the altered settings
                     _shapeSettings.BorderGlyph = borderGlyph.ToColoredGlyph();
                 }

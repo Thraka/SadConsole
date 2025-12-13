@@ -39,6 +39,12 @@ public class GuiDockSpace : ImGuiObjectBase
 
         uint idRootDockspace = ImGui.GetID("RootDockspace");
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.PassthruCentralNode;
+
+        bool isFirstRun = false;
+
+        if (ImGuiP.DockBuilderGetNode(idRootDockspace) == ImGuiDockNodePtr.Null)
+            isFirstRun = true;
+
         ImGui.DockSpace(idRootDockspace, new Vector2(0.0f, 0.0f), dockspace_flags);
         ImGui.End();
 
@@ -55,7 +61,7 @@ public class GuiDockSpace : ImGuiObjectBase
             
             Vector2 workCenter = ImGui.GetMainViewport().GetWorkCenter();
 
-            ImGuiP.DockBuilderRemoveNode(idRootDockspace);             // Clear any preexisting layouts associated with this ID
+            //ImGuiP.DockBuilderRemoveNode(idRootDockspace);             // Clear any preexisting layouts associated with this ID
             ImGuiP.DockBuilderAddNode(idRootDockspace, ImGuiDockNodeFlags.PassthruCentralNode);                // Create a new dock node to use
 
             float heightSpace = ImGui.GetFrameHeight();
@@ -66,22 +72,25 @@ public class GuiDockSpace : ImGuiObjectBase
             ImGuiP.DockBuilderSetNodeSize(idRootDockspace, size);
             ImGuiP.DockBuilderSetNodePos(idRootDockspace, nodePos);
 
-            uint idLeftPanel = 0;
-            uint idTopPanel = 0;
-            uint idCenterPanel = 0;
-            uint idRightPanel = 0;
-            uint idBottomPanel = 0;
+            //if (isFirstRun)
+            {
+                uint idLeftPanel = 0;
+                uint idTopPanel = 0;
+                uint idCenterPanel = 0;
+                uint idRightPanel = 0;
+                uint idBottomPanel = 0;
 
-            ImGuiP.DockBuilderSplitNode(idRootDockspace, ImGuiDir.Left, 0.3f, ref idLeftPanel, ref idCenterPanel);
-            ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Right, 0.3f, ref idRightPanel, ref idCenterPanel);
-            ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Up, 0.3f, ref idTopPanel, ref idCenterPanel);
-            ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Down, 0.3f, ref idBottomPanel, ref idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idRootDockspace, ImGuiDir.Left, 0.2f, ref idLeftPanel, ref idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Right, 0.3f, ref idRightPanel, ref idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Up, 0.3f, ref idTopPanel, ref idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Down, 0.3f, ref idBottomPanel, ref idCenterPanel);
 
-            ImGuiP.DockBuilderDockWindow(ID_LEFT_PANEL, idLeftPanel);
-            ImGuiP.DockBuilderDockWindow(ID_TOP_PANEL, idTopPanel);
-            ImGuiP.DockBuilderDockWindow(ID_RIGHT_PANEL, idRightPanel);
-            ImGuiP.DockBuilderDockWindow(ID_BOTTOM_PANEL, idBottomPanel);
-            ImGuiP.DockBuilderDockWindow(ID_CENTER_PANEL, idCenterPanel);
+                ImGuiP.DockBuilderDockWindow(ID_LEFT_PANEL, idLeftPanel);
+                ImGuiP.DockBuilderDockWindow(ID_TOP_PANEL, idTopPanel);
+                ImGuiP.DockBuilderDockWindow(ID_RIGHT_PANEL, idRightPanel);
+                ImGuiP.DockBuilderDockWindow(ID_BOTTOM_PANEL, idBottomPanel);
+                ImGuiP.DockBuilderDockWindow(ID_CENTER_PANEL, idCenterPanel);
+            }
 
             ImGuiP.DockBuilderFinish(idRootDockspace);
         }
