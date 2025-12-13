@@ -9,11 +9,15 @@
 using SadConsole.Configuration;
 using SadConsole.Editor;
 
-Settings.WindowTitle = "SadEditor v3.0 Beta 1";
+Settings.WindowTitle = "SadEditor v3.0 Beta 2";
 
 Builder config =
     new Builder()
-        .SetWindowSizeInCells(130, 50)
+        .ConfigureWindow((windowCfg, builder, host) =>
+        {
+            host.GetDeviceScreenSize(out int width, out int height); 
+            windowCfg.SetWindowSizeInPixels(width - (int)(width * 0.10f), height - (int)(height * 0.10f));
+        })
         .OnStart(StartHandler)
         .OnEnd(EndHandler);
 
