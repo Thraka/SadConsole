@@ -111,21 +111,23 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
         // Layer list
         if (ImGui.BeginChild("layer_list"u8, new Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * Math.Min(8, layerCount + 1)), ImGuiChildFlags.Borders))
         {
+            Vector2 iconSize = ImGui.CalcTextSize("\uf06e\uf06e"u8);
+
             for (int i = layerCount - 1; i >= 0; i--)
             {
                 ImGui.PushID(i);
 
-                // Visibility toggle
                 bool isVisible = LayeredEditingSurface.Layers.GetLayerVisibility(i);
-                if (ImGui.Checkbox("##visible"u8, ref isVisible))
-                    LayeredEditingSurface.Layers.SetLayerVisibility(i, isVisible);
-
-                ImGui.SameLine();
-
-                // Layer selection
+                char icon = isVisible ? '\uf06e' : '\uf070';
                 bool isSelected = _selectedLayerIndex == i;
-                if (ImGui.Selectable($"Layer {i + 1}", isSelected))
+                Vector2 pos = ImGui.GetCursorScreenPos();
+                
+                if (ImGui.Selectable($"{icon}  Layer {i + 1}", isSelected, ImGuiSelectableFlags.AllowOverlap))
                     SetActiveLayer(i);
+
+                ImGui.SetCursorScreenPos(pos);
+                if (ImGui.InvisibleButton("##vis", iconSize))
+                    LayeredEditingSurface.Layers.SetLayerVisibility(i, !isVisible);
 
                 ImGui.PopID();
             }
