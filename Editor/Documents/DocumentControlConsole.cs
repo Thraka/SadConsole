@@ -500,6 +500,9 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+
+        if (Options.SupportsMetadata)
+            base.ImGuiDrawMetadataSettings();
     }
 
     private void BuildControlsSettings(ImGuiRenderer renderer)

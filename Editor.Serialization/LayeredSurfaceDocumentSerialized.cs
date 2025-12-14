@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
@@ -14,4 +15,5 @@ public class LayeredSurfaceDocumentSerialized
     public DocumentOptions Options;
     public ZoneSerialized[]? Zones;
     public SimpleObjectDefinition[]? SimpleObjects;
+    public Dictionary<string, string> Metadata = new();
 }

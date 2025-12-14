@@ -32,7 +32,8 @@ internal class AnimatedDocument: IFileHandler
                 SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
                 SurfaceFontSize = doc.EditingSurfaceFontSize,
                 EditorFontSize = doc.EditorFontSize,
-                Options = doc.Options
+                Options = doc.Options,
+                Metadata = doc.Metadata
             };
         }
         return null;
@@ -50,6 +51,10 @@ internal class AnimatedDocument: IFileHandler
             doc.EditingSurface.Font = doc.EditingSurfaceFont;
             doc.EditingSurface.FontSize = doc.EditingSurfaceFontSize;
             doc.Options = serializedObj.Options ?? new Serialization.DocumentOptions();
+
+            if (serializedObj.Metadata != null)
+                doc.Metadata = serializedObj.Metadata;
+
             doc.SyncToolModes();
             doc.RefreshDuration();
             doc.SetFrameIndex(0);

@@ -1,4 +1,5 @@
-﻿using SadConsole.SerializedTypes;
+﻿using System.Collections.Generic;
+using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Serialization;
@@ -11,4 +12,5 @@ public class AnimatedDocumentSerialized
     public Point SurfaceFontSize;
     public Point EditorFontSize;
     public DocumentOptions Options;
+    public Dictionary<string, string> Metadata = new();
 }

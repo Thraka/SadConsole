@@ -245,6 +245,9 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+
+        if (Options.SupportsMetadata)
+            base.ImGuiDrawMetadataSettings();
     }
 
     public override void ImGuiDrawTopBar(ImGuiRenderer renderer)

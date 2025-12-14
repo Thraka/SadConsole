@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Serialization;
@@ -26,4 +27,9 @@ public class SceneDocumentSerialized
     /// Document options for the scene.
     /// </summary>
     public DocumentOptions? Options { get; set; }
+
+    /// <summary>
+    /// Metadata dictionary for the scene document.
+    /// </summary>
+    public Dictionary<string, string> Metadata { get; set; } = new();
 }

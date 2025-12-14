@@ -233,9 +233,10 @@ internal static class ZoneHelpers
             {
                 var tempZone = zone;
                 var window = new Windows.KeyValuePairEditor(zone.Settings);
-                window.Closed += (_, _) =>
+                window.Closed += (windowObj, _) =>
                 {
-                    tempZone.Settings = window.ToDictionary();
+                    if (((ImGuiWindowBase)windowObj).DialogResult)
+                        tempZone.Settings = window.ToDictionary();
                 };
                 window.Open();
             }

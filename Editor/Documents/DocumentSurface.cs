@@ -147,6 +147,9 @@ public partial class DocumentSurface: Document, IDocumentSimpleObjects, IDocumen
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+
+        if (Options.SupportsMetadata)
+            base.ImGuiDrawMetadataSettings();
     }
 
     public override void ImGuiDrawTopBar(ImGuiRenderer renderer)

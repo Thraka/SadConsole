@@ -50,7 +50,8 @@ internal class LayeredSurfaceDocument : IFileHandler
                     Appearance = z.Appearance,
                     Settings = z.Settings
                 }).ToArray() : null,
-                SimpleObjects = doc.Options.UseSimpleObjects ? [.. doc.SimpleObjects.Objects] : null
+                SimpleObjects = doc.Options.UseSimpleObjects ? [.. doc.SimpleObjects.Objects] : null,
+                Metadata = doc.Metadata
             };
         }
         return null;
@@ -93,6 +94,9 @@ internal class LayeredSurfaceDocument : IFileHandler
                 foreach (SimpleObjectDefinition item in serializedObj.SimpleObjects)
                     doc.SimpleObjects.Objects.Add(item);
             }
+
+            if (serializedObj.Metadata != null)
+                doc.Metadata = serializedObj.Metadata;
 
             doc.SyncToolModes();
             doc.Resync();

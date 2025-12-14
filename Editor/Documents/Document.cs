@@ -8,6 +8,7 @@ using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Serialization;
 using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
+using SadConsole.Entities;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Documents;
@@ -44,6 +45,9 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
                                                ToolMode.EmptyMode,
                                                ToolMode.ObjectsMode,
                                                ToolMode.ZonesMode);
+
+    [DataMember]
+    public Dictionary<string, string> Metadata = new();
 
     [DataMember]
     public IScreenSurface EditingSurface;
@@ -320,6 +324,49 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
 
     public override string ToString() =>
         Title;
+
+    protected void ImGuiDrawMetadataSettings()
+    {
+        ImGui.SeparatorText("Metadata"u8);
+        if (ImGui.Button("Edit"u8))
+        {
+            var window = new Windows.KeyValuePairEditor(Metadata);
+            window.Closed += (windowObj, _) =>
+            {
+                if (((ImGuiWindowBase)windowObj).DialogResult)
+                    Metadata = window.ToDictionary();
+            };
+            window.Open();
+        }
+
+        if (Metadata.Count > 0)
+        {
+            // Help wrap the table so that it can stretch and still show all rows plus the scroll bars
+            if (ImGui.BeginChild("##doc_metadata_child", new Vector2(-1, ImGui.GetFrameHeight() * Metadata.Count + ImGui.GetStyle().FramePadding.Y * 2)))
+            {
+                if (ImGui.BeginTable("zone_settings_table", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollX))
+                {
+                    ImGui.TableSetupColumn("Key"u8);
+                    ImGui.TableSetupColumn("Value"u8);
+                    ImGui.TableHeadersRow();
+
+                    foreach (var kvp in Metadata)
+                    {
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+                        ImGui.Text(kvp.Key);
+                        ImGui.TableNextColumn();
+                        ImGui.Text(kvp.Value);
+                    }
+
+                    ImGui.EndTable();
+                }
+            }
+            ImGui.EndChild();
+        }
+        else
+            ImGui.Text("No metadata defined."u8);
+    }
 
     #region IHierarchicalItem Implementation
 

@@ -412,6 +412,9 @@ public partial class DocumentAnimated: Document
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+
+        if (Options.SupportsMetadata)
+            base.ImGuiDrawMetadataSettings();
     }
 
     public override void Resync()

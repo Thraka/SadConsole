@@ -21,4 +21,5 @@ public class DocumentOptions
     public bool UsePalette;
     public bool UseSimpleObjects;
     public bool UseZones;
+    public bool SupportsMetadata = true;
 }

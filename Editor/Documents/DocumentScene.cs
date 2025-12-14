@@ -273,6 +273,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 _sceneSizeCalculatorWindow = null;
             }
         }
+
+        if (Options.SupportsMetadata)
+            base.ImGuiDrawMetadataSettings();
     }
 
     private void BuildChildDocumentsSettings(ImGuiRenderer renderer)

@@ -81,7 +81,8 @@ internal class SceneDocument : IFileHandler
                 Title = doc.Title,
                 Children = childrenSerialized.ToArray(),
                 ScenePixelSize = doc.ScenePixelSize,
-                Options = doc.Options
+                Options = doc.Options,
+                Metadata = doc.Metadata
             };
         }
         return null;
@@ -104,6 +105,9 @@ internal class SceneDocument : IFileHandler
                 doc.Options.ToolsWindowShowToolsList = false;
                 doc.Options.DisableScrolling = false;
             }
+
+            if (serializedObj.Metadata != null)
+                doc.Metadata = serializedObj.Metadata;
 
             if (serializedObj.Children != null)
             {
