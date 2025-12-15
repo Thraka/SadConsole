@@ -28,6 +28,18 @@ public class KeyValuePairEditor : ImGuiWindowBase
     private bool _keyConflict;
     private bool _keyEmpty;
 
+    public bool ShowHelper { get; set; } = true;
+
+    private Serialization.MetadataTypeEnum _selectedMetadataType;
+    private int _helperIntValue;
+    private float _helperFloatValue;
+    private bool _helperBoolValue;
+    private int _helperPointX;
+    private int _helperPointY;
+    private float _helperPointFloatX;
+    private float _helperPointFloatY;
+    private Vector4 _helperColorValue = new(1f, 1f, 1f, 1f);
+
     /// <summary>
     /// Creates a new key-value pair editor.
     /// </summary>
@@ -218,6 +230,12 @@ public class KeyValuePairEditor : ImGuiWindowBase
                         SettingsTable.DrawString("Value", ref _editingValue, 1024);
 
                         SettingsTable.EndTable();
+
+                        if (ShowHelper)
+                        {
+                            ImGui.TextWrapped("This helper will help format a value to a specific type. It doesn't enforce anything on the actual value used, it only helps set the value.");
+                            ImGuiDrawHelpers(renderer, ref _editingValue);
+                        }
                     }
 
                     // Only apply changes if there's no key conflict and key is not empty
@@ -272,6 +290,175 @@ public class KeyValuePairEditor : ImGuiWindowBase
 
                 ImGui.EndPopup();
             }
+        }
+    }
+
+    private void ImGuiDrawHelpers(ImGuiRenderer renderer, ref string editingValue)
+    {
+        if (SettingsTable.BeginTable("keyvaluepair_helpers", column1Flags: ImGuiTableColumnFlags.WidthFixed))
+        {
+            ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(0);
+            ImGui.AlignTextToFramePadding();
+            ImGui.Text("Type");
+            ImGui.TableSetColumnIndex(1);
+
+            int typeIndex = (int)_selectedMetadataType;
+            ImGui.SetNextItemWidth(-1);
+            if (ImGui.Combo("##helper_type", ref typeIndex, 
+                ImGuiListEnum<Serialization.MetadataTypeEnum>.Names, 
+                ImGuiListEnum<Serialization.MetadataTypeEnum>.Count))
+            {
+                _selectedMetadataType = (Serialization.MetadataTypeEnum)typeIndex;
+                
+                // Try to parse the current value when type changes
+                var parsedValue = Serialization.MetadataParser.ParseMetadataValue(editingValue, _selectedMetadataType);
+                switch (_selectedMetadataType)
+                {
+                    case Serialization.MetadataTypeEnum.Integer:
+                        _helperIntValue = parsedValue as int? ?? 0;
+                        break;
+                    case Serialization.MetadataTypeEnum.Float:
+                        _helperFloatValue = parsedValue as float? ?? 0f;
+                        break;
+                    case Serialization.MetadataTypeEnum.Boolean:
+                        _helperBoolValue = parsedValue as bool? ?? false;
+                        break;
+                    case Serialization.MetadataTypeEnum.Point:
+                        var point = parsedValue as SadRogue.Primitives.Point?;
+                        _helperPointX = point?.X ?? 0;
+                        _helperPointY = point?.Y ?? 0;
+                        break;
+                    case Serialization.MetadataTypeEnum.PointFloat:
+                        var pointFloat = parsedValue as Vector2?;
+                        _helperPointFloatX = pointFloat?.X ?? 0f;
+                        _helperPointFloatY = pointFloat?.Y ?? 0f;
+                        break;
+                    case Serialization.MetadataTypeEnum.Color:
+                        var color = parsedValue as SadRogue.Primitives.Color?;
+                        _helperColorValue = color?.ToVector4() ?? new Vector4(1f, 1f, 1f, 1f);
+                        break;
+                }
+            }
+
+            // Draw type-specific input controls
+            switch (_selectedMetadataType)
+            {
+                case Serialization.MetadataTypeEnum.String:
+                    break;
+
+                case Serialization.MetadataTypeEnum.Integer:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Integer Value");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputInt("##helper_int", ref _helperIntValue))
+                    {
+                        editingValue = _helperIntValue.ToString();
+                    }
+                    break;
+
+                case Serialization.MetadataTypeEnum.Float:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Float Value");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputFloat("##helper_float", ref _helperFloatValue))
+                    {
+                        editingValue = _helperFloatValue.ToString();
+                    }
+                    break;
+
+                case Serialization.MetadataTypeEnum.Boolean:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Boolean Value");
+                    ImGui.TableSetColumnIndex(1);
+                    if (ImGui.Checkbox("##helper_bool", ref _helperBoolValue))
+                    {
+                        editingValue = _helperBoolValue.ToString();
+                    }
+                    break;
+
+                case Serialization.MetadataTypeEnum.Point:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Point X");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputInt("##helper_point_x", ref _helperPointX))
+                    {
+                        editingValue = $"{_helperPointX},{_helperPointY}";
+                    }
+
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Point Y");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputInt("##helper_point_y", ref _helperPointY))
+                    {
+                        editingValue = $"{_helperPointX},{_helperPointY}";
+                    }
+                    break;
+
+                case Serialization.MetadataTypeEnum.PointFloat:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Point X");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputFloat("##helper_pointf_x", ref _helperPointFloatX))
+                    {
+                        editingValue = $"{_helperPointFloatX},{_helperPointFloatY}";
+                    }
+
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Point Y");
+                    ImGui.TableSetColumnIndex(1);
+                    ImGui.SetNextItemWidth(-1);
+                    if (ImGui.InputFloat("##helper_pointf_y", ref _helperPointFloatY))
+                    {
+                        editingValue = $"{_helperPointFloatX},{_helperPointFloatY}";
+                    }
+                    break;
+
+                case Serialization.MetadataTypeEnum.Color:
+                    ImGui.TableNextRow();
+                    ImGui.TableSetColumnIndex(0);
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text("Color");
+                    ImGui.TableSetColumnIndex(1);
+                    if (ImGui.ColorEdit4("##helper_color", ref _helperColorValue, 
+                        ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar | ImGuiColorEditFlags.NoInputs))
+                    {
+                        var color = _helperColorValue.ToColor();
+                        editingValue = Serialization.MetadataParser.ColorToHex(color);
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button($"Palette"))
+                        ImGui.OpenPopup($"palettepopup");
+
+                    Color palColor = _helperColorValue.ToColor();
+                    if (Hexa.NET.ImGui.SC.Windows.PalettePopup.Show($"palettepopup", ref palColor))
+                    {
+                        _helperColorValue = palColor.ToVector4();
+                        editingValue = Serialization.MetadataParser.ColorToHex(_helperColorValue.ToColor());
+                    }
+                    break;
+            }
+
+            SettingsTable.EndTable();
         }
     }
 }
