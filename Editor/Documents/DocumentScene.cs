@@ -160,6 +160,37 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     public SceneChild? GetSceneChild(Document document) =>
         ChildSceneItems.FirstOrDefault(c => c.Document == document);
 
+    /// <summary>
+    /// Checks if this scene is a descendant of another scene (directly or indirectly).
+    /// Used to prevent circular references when importing scenes.
+    /// </summary>
+    /// <param name="potentialAncestor">The scene to check as a potential ancestor.</param>
+    /// <returns><see langword="true"/> if this scene is a descendant of the specified scene; otherwise, <see langword="false"/>.</returns>
+    public bool IsDescendantOf(DocumentScene potentialAncestor)
+    {
+        // Check if this scene exists anywhere in the potentialAncestor's child hierarchy
+        return ContainsDocumentRecursive(potentialAncestor, this);
+    }
+
+    /// <summary>
+    /// Recursively checks if a scene contains a specific document.
+    /// </summary>
+    private static bool ContainsDocumentRecursive(DocumentScene scene, Document documentToFind)
+    {
+        foreach (var child in scene.ChildSceneItems)
+        {
+            if (child.Document == documentToFind)
+                return true;
+
+            if (child.Document is DocumentScene childScene)
+            {
+                if (ContainsDocumentRecursive(childScene, documentToFind))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     #endregion
 
     /// <summary>
@@ -447,7 +478,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         }
                         else
                         {
-                            Point fontSize = child.Document.EditingSurfaceFontSize;
+                            Point fontSize = child.GetEffectiveFontSize();
                             child.Position = new Point((int)(pixelPos.X / fontSize.X), (int)(pixelPos.Y / fontSize.Y));
                         }
                         child.Document.EditingSurface.Position = child.Position;
@@ -479,59 +510,110 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     ImGui.EndGroup();
                     ImGui.Separator();
 
-                    // Viewport input
-                    int viewWidth = child.Viewport?.Width ?? child.Document.EditingSurface.Surface.View.Width;
-                    int viewHeight = child.Viewport?.Height ?? child.Document.EditingSurface.Surface.View.Height;
-                    int viewPositionX = child.Viewport?.X ?? 0;
-                    int viewPositionY = child.Viewport?.Y ?? 0;
-                    float resetButtonSize = ImGui.CalcTextSize("Reset"u8).X;
+                    // For DocumentScene children, show size info but no viewport controls
+                    // For other documents, show viewport controls
+                    if (child.Document is DocumentScene childSceneDoc)
+                    {
+                        // Show scene size info (read-only)
+                        ImGui.TextDisabled($"Scene Size: {childSceneDoc.ScenePixelSize.X}x{childSceneDoc.ScenePixelSize.Y} px");
 
-                    ImGui.AlignTextToFramePadding();
-                    ImGui.Text("View Pos X:"u8);
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
-                    if (ImGui.InputInt("##viewposx"u8, ref viewPositionX))
-                        viewPositionX = Math.Max(viewPositionX, 0);
-                    ImGui.SameLine();
-                    if (ImGui.Button("\uf0e2##viewposx"u8, squareButtonSize))
-                        viewPositionX = 0;
+                        // Show font selector for cell-based positioning when not using pixel positioning
+                        if (!child.UsePixelPositioning)
+                        {
+                            ImGui.SeparatorText("Cell Size (for positioning)"u8);
 
-                    ImGui.AlignTextToFramePadding();
-                    ImGui.Text("View Pos Y:"u8);
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
-                    if (ImGui.InputInt("##viewposy"u8, ref viewPositionY))
-                        viewPositionY = Math.Max(viewPositionY, 0);
-                    ImGui.SameLine();
-                    if (ImGui.Button("\uf0e2##viewposy"u8, squareButtonSize))
-                        viewPositionY = 0;
+                            ImGui.AlignTextToFramePadding();
+                            ImGui.Text("Cell Width:"u8);
+                            ImGui.SameLine();
+                            ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                            int cellWidth = child.SceneFontSize.X;
+                            if (ImGui.InputInt("##cellwidth"u8, ref cellWidth))
+                            {
+                                cellWidth = Math.Max(1, cellWidth);
+                                child.SceneFontSize = new Point(cellWidth, child.SceneFontSize.Y);
+                            }
 
-                    ImGui.AlignTextToFramePadding();
-                    ImGui.Text("View Width:"u8);
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
-                    if (ImGui.InputInt("##viewwidth"u8, ref viewWidth))
-                        viewWidth = Math.Clamp(viewWidth, 1, child.Document.EditingSurface.Surface.Width);
-                    ImGui.SameLine();
-                    if (ImGui.Button("\uf0e2##viewwidth"u8, squareButtonSize))
-                        viewWidth = child.Document.EditingSurface.Surface.Width;
+                            ImGui.AlignTextToFramePadding();
+                            ImGui.Text("Cell Height:"u8);
+                            ImGui.SameLine();
+                            ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                            int cellHeight = child.SceneFontSize.Y;
+                            if (ImGui.InputInt("##cellheight"u8, ref cellHeight))
+                            {
+                                cellHeight = Math.Max(1, cellHeight);
+                                child.SceneFontSize = new Point(child.SceneFontSize.X, cellHeight);
+                            }
 
-                    ImGui.AlignTextToFramePadding();
-                    ImGui.Text("View Height:"u8);
-                    ImGui.SameLine();
-                    ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
-                    if (ImGui.InputInt("##viewheight"u8, ref viewHeight))
-                        viewHeight = Math.Clamp(viewHeight, 1, child.Document.EditingSurface.Surface.Height);
-                    ImGui.SameLine();
-                    if (ImGui.Button("\uf0e2##viewheight"u8, squareButtonSize))
-                        viewHeight = child.Document.EditingSurface.Surface.Height;
+                            // Quick font size selection from available fonts
+                            if (ImGui.BeginCombo("##fontpreset"u8, "Set from font..."u8))
+                            {
+                                foreach (var font in Core.State.SadConsoleFonts.Objects)
+                                {
+                                    Point fontSize = font.GetFontSize(IFont.Sizes.One);
+                                    if (ImGui.Selectable($"{font.Name} ({fontSize.X}x{fontSize.Y})"))
+                                    {
+                                        child.SceneFontSize = fontSize;
+                                    }
+                                }
+                                ImGui.EndCombo();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Viewport input for non-scene documents
+                        int viewWidth = child.Viewport?.Width ?? child.Document.EditingSurface.Surface.View.Width;
+                        int viewHeight = child.Viewport?.Height ?? child.Document.EditingSurface.Surface.View.Height;
+                        int viewPositionX = child.Viewport?.X ?? 0;
+                        int viewPositionY = child.Viewport?.Y ?? 0;
 
-                    child.Viewport = new Rectangle(
-                        viewPositionX,
-                        viewPositionY,
-                        viewWidth,
-                        viewHeight
-                    );
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("View Pos X:"u8);
+                        ImGui.SameLine();
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
+                        if (ImGui.InputInt("##viewposx"u8, ref viewPositionX))
+                            viewPositionX = Math.Max(viewPositionX, 0);
+                        ImGui.SameLine();
+                        if (ImGui.Button("\uf0e2##viewposx"u8, squareButtonSize))
+                            viewPositionX = 0;
+
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("View Pos Y:"u8);
+                        ImGui.SameLine();
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
+                        if (ImGui.InputInt("##viewposy"u8, ref viewPositionY))
+                            viewPositionY = Math.Max(viewPositionY, 0);
+                        ImGui.SameLine();
+                        if (ImGui.Button("\uf0e2##viewposy"u8, squareButtonSize))
+                            viewPositionY = 0;
+
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("View Width:"u8);
+                        ImGui.SameLine();
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
+                        if (ImGui.InputInt("##viewwidth"u8, ref viewWidth))
+                            viewWidth = Math.Clamp(viewWidth, 1, child.Document.EditingSurface.Surface.Width);
+                        ImGui.SameLine();
+                        if (ImGui.Button("\uf0e2##viewwidth"u8, squareButtonSize))
+                            viewWidth = child.Document.EditingSurface.Surface.Width;
+
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("View Height:"u8);
+                        ImGui.SameLine();
+                        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - squareButtonSize.X - itemSpacing.X - 1);
+                        if (ImGui.InputInt("##viewheight"u8, ref viewHeight))
+                            viewHeight = Math.Clamp(viewHeight, 1, child.Document.EditingSurface.Surface.Height);
+                        ImGui.SameLine();
+                        if (ImGui.Button("\uf0e2##viewheight"u8, squareButtonSize))
+                            viewHeight = child.Document.EditingSurface.Surface.Height;
+
+                        child.Viewport = new Rectangle(
+                            viewPositionX,
+                            viewPositionY,
+                            viewWidth,
+                            viewHeight
+                        );
+                    }
 
                     // Animation controls for DocumentAnimated children
                     if (child.Document is DocumentAnimated animDoc)
@@ -730,8 +812,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
                     drawList.AddRect(clampedMin, clampedMax, borderColor);
 
-                    // Draw resize grip at bottom-right corner (only if selected or hovered)
-                    if (isSelected || isBeingResized)
+                    // Draw resize grip at bottom-right corner (only if selected or hovered, and not a scene document)
+                    bool isSceneChild = child.Document is DocumentScene;
+                    if ((isSelected || isBeingResized) && !isSceneChild)
                     {
                         Vector2 gripMin = new Vector2(maxPos.X - ResizeGripSize, maxPos.Y - ResizeGripSize);
                         Vector2 gripMax = maxPos;
@@ -747,6 +830,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                                 ? ImGui.GetColorU32(new Vector4(1f, 1f, 0f, 1f))  // Yellow when resizing
                                 : ImGui.GetColorU32(new Vector4(0f, 1f, 1f, 0.8f)); // Cyan otherwise
                             
+
                             // Draw a filled triangle in the corner
                             drawList.AddTriangleFilled(
                                 new Vector2(gripMax.X, gripMin.Y),
@@ -835,10 +919,11 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         }
         else
         {
-            // Cell positioning - convert to pixels using the child's font size
+            // Cell positioning - convert to pixels using the effective font size
+            Point fontSize = child.GetEffectiveFontSize();
             return new Vector2(
-                child.Position.X * child.Document.EditingSurfaceFontSize.X,
-                child.Position.Y * child.Document.EditingSurfaceFontSize.Y
+                child.Position.X * fontSize.X,
+                child.Position.Y * fontSize.Y
             );
         }
     }
@@ -942,9 +1027,10 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 }
                 else
                 {
-                    // Convert back to cell coordinates
-                    int cellX = (int)(newPos.X / _draggingChild.Document.EditingSurfaceFontSize.X);
-                    int cellY = (int)(newPos.Y / _draggingChild.Document.EditingSurfaceFontSize.Y);
+                    // Convert back to cell coordinates using effective font size
+                    Point fontSize = _draggingChild.GetEffectiveFontSize();
+                    int cellX = (int)(newPos.X / fontSize.X);
+                    int cellY = (int)(newPos.Y / fontSize.Y);
                     _draggingChild.Position = new Point(cellX, cellY);
                 }
 
@@ -982,8 +1068,10 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
                 if (isOnChild)
                 {
-                    // Right-click on child: start panning viewport
-                    if (rightMouseClicked)
+                    bool isSceneChild = child.Document is DocumentScene;
+
+                    // Right-click on child: start panning viewport (not for scene documents)
+                    if (rightMouseClicked && !isSceneChild)
                     {
                         _panningChild = child;
                         _panStartMousePos = sceneMousePos;
@@ -999,8 +1087,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         _panStartViewportPos = child.Viewport.Value.Position;
                         break;
                     }
-                    // Left-click on resize grip: start resizing
-                    else if (leftMouseClicked && isOnGrip)
+                    // Left-click on resize grip: start resizing (not for scene documents)
+                    else if (leftMouseClicked && isOnGrip && !isSceneChild)
                     {
                         _resizingChild = child;
                         _resizeStartMousePos = sceneMousePos;
@@ -1026,6 +1114,12 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         SelectedChildIndex = i;
                         break;
                     }
+                    // Right-click on scene child: just select it
+                    else if (rightMouseClicked && isSceneChild)
+                    {
+                        SelectedChildIndex = i;
+                        break;
+                    }
                 }
             }
         }
@@ -1047,8 +1141,12 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 {
                     var doc = Core.State.Documents[i];
                     
-                    // Can't import self or other scenes
-                    if (doc == this || doc is DocumentScene)
+                    // Can't import self
+                    if (doc == this)
+                        continue;
+
+                    // Can't import a scene that contains this scene (would create circular reference)
+                    if (doc is DocumentScene sceneDoc && IsDescendantOf(sceneDoc))
                         continue;
 
                     if (ImGui.MenuItem(doc.Title))

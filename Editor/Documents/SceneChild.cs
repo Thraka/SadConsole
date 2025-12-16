@@ -30,6 +30,13 @@ public class SceneChild : ITitle, IDisposable
     public bool UsePixelPositioning { get; set; }
 
     /// <summary>
+    /// The font size used for cell-based positioning when UsePixelPositioning is false.
+    /// This property is only used for DocumentScene children to determine the cell size for positioning.
+    /// For other document types, EditingSurfaceFontSize is used instead.
+    /// </summary>
+    public Point SceneFontSize { get; set; }
+
+    /// <summary>
     /// Optional display label for the child in the scene editor.
     /// If empty, the document's Title is used.
     /// </summary>
@@ -71,16 +78,36 @@ public class SceneChild : ITitle, IDisposable
     {
         Document = document;
         Position = Point.Zero;
-        UsePixelPositioning = false;
         Viewport = null; // Default to full surface
+
+        // Scene documents default to pixel positioning
+        if (document is DocumentScene)
+        {
+            UsePixelPositioning = true;
+            // Default scene font size for cell-based positioning (when pixel positioning is turned off)
+            SceneFontSize = document.EditingSurfaceFontSize;
+        }
+        else
+        {
+            UsePixelPositioning = false;
+            SceneFontSize = Point.Zero; // Not used for non-scene documents
+        }
     }
 
     /// <summary>
     /// Refreshes the scene texture by rendering the document's surface.
-    /// Uses the Viewport if set, otherwise renders the full surface.
+    /// For DocumentScene children, renders at ScenePixelSize.
+    /// For other documents, uses the Viewport if set, otherwise renders the full surface.
     /// </summary>
     public void RefreshTexture()
     {
+        // Handle DocumentScene children differently - they use ScenePixelSize
+        if (Document is DocumentScene sceneDoc)
+        {
+            RefreshSceneTexture(sceneDoc);
+            return;
+        }
+
         var surface = Document.EditingSurface;
         var fontSizePoint = Document.EditingSurfaceFontSize;
 
@@ -173,6 +200,88 @@ public class SceneChild : ITitle, IDisposable
         // Re-render with original settings so the document's normal texture is correct
         surface.ForceRendererRefresh = true;
         surface.Render(Game.Instance.UpdateFrameDelta);
+    }
+
+    /// <summary>
+    /// Refreshes the texture for a DocumentScene child using its ScenePixelSize.
+    /// </summary>
+    private void RefreshSceneTexture(DocumentScene sceneDoc)
+    {
+        int pixelWidth = sceneDoc.ScenePixelSize.X;
+        int pixelHeight = sceneDoc.ScenePixelSize.Y;
+
+        if (pixelWidth <= 0 || pixelHeight <= 0)
+            return;
+
+        // Ensure all child documents of the scene are rendered
+        sceneDoc.Redraw(true, false);
+
+        // Create or resize the render target if needed
+        if (_sceneTexture == null || _sceneTexture.IsDisposed || 
+            _sceneTexture.Width != pixelWidth || _sceneTexture.Height != pixelHeight)
+        {
+            _sceneTexture?.Dispose();
+            _sceneTexture = new RenderTarget2D(
+                Host.Global.GraphicsDevice, 
+                pixelWidth, 
+                pixelHeight, 
+                false, 
+                Host.Global.GraphicsDevice.DisplayMode.Format, 
+                DepthFormat.Depth24, 
+                0, 
+                RenderTargetUsage.DiscardContents);
+
+            // Bind or rebind to ImGui
+            if (SceneTextureId == IntPtr.Zero)
+                SceneTextureId = ImGuiCore.Renderer.BindTexture(_sceneTexture);
+            else
+                ImGuiCore.Renderer.ReplaceBoundTexture(SceneTextureId, _sceneTexture);
+        }
+
+        SceneTextureSize = new Vector2(pixelWidth, pixelHeight);
+
+        // Render to our texture
+        Host.Global.GraphicsDevice.SetRenderTarget(_sceneTexture);
+        Host.Global.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
+        Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+
+        // Draw each visible child of the scene at its position
+        foreach (var child in sceneDoc.ChildSceneItems)
+        {
+            if (!child.IsVisible || !child.HasValidTexture)
+                continue;
+
+            // Calculate child position in pixels
+            var childPixelPos = child.UsePixelPositioning
+                ? new Microsoft.Xna.Framework.Vector2(child.Position.X, child.Position.Y)
+                : new Microsoft.Xna.Framework.Vector2(
+                    child.Position.X * child.GetEffectiveFontSize().X,
+                    child.Position.Y * child.GetEffectiveFontSize().Y);
+
+            // Draw the child's texture at its position
+            if (child._sceneTexture != null && !child._sceneTexture.IsDisposed)
+            {
+                Host.Global.SharedSpriteBatch.Draw(
+                    child._sceneTexture,
+                    childPixelPos,
+                    Microsoft.Xna.Framework.Color.White);
+            }
+        }
+
+        Host.Global.SharedSpriteBatch.End();
+        Host.Global.GraphicsDevice.SetRenderTarget(null);
+    }
+
+    /// <summary>
+    /// Gets the effective font size for cell-based positioning.
+    /// For DocumentScene children, uses SceneFontSize.
+    /// For other documents, uses EditingSurfaceFontSize.
+    /// </summary>
+    public Point GetEffectiveFontSize()
+    {
+        if (Document is DocumentScene)
+            return SceneFontSize;
+        return Document.EditingSurfaceFontSize;
     }
 
     public override bool Equals(object obj)

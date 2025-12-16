@@ -33,6 +33,7 @@ internal class SceneDocument : IFileHandler
         "DocumentSurface" => new SurfaceDocument(),
         "DocumentLayeredSurface" => new LayeredSurfaceDocument(),
         "DocumentAnimated" => new AnimatedDocument(),
+        "DocumentScene" => new SceneDocument(),
         _ => null
     };
 
@@ -44,6 +45,7 @@ internal class SceneDocument : IFileHandler
         DocumentSurface => KnownDocumentTypes.SurfaceDocument,
         DocumentLayeredSurface => KnownDocumentTypes.LayeredSurfaceDocument,
         DocumentAnimated => KnownDocumentTypes.AnimatedSurfaceDocument,
+        DocumentScene => KnownDocumentTypes.SceneDocument,
         _ => throw new NotSupportedException($"Document type {doc.GetType().Name} is not supported in scenes.")
     };
 
@@ -70,6 +72,7 @@ internal class SceneDocument : IFileHandler
                     DocumentType = docType,
                     Position = child.Position,
                     UsePixelPositioning = child.UsePixelPositioning,
+                    SceneFontSize = child.SceneFontSize,
                     Label = child.Label,
                     SerializedDocument = serializedChild,
                     Viewport = child.Viewport
@@ -125,6 +128,9 @@ internal class SceneDocument : IFileHandler
                     var sceneChild = doc.AddChildDocument(childDoc);
                     sceneChild.Position = childSerialized.Position;
                     sceneChild.UsePixelPositioning = childSerialized.UsePixelPositioning;
+                    sceneChild.SceneFontSize = childSerialized.SceneFontSize != Point.Zero 
+                        ? childSerialized.SceneFontSize 
+                        : childDoc.EditingSurfaceFontSize;
                     sceneChild.Label = childSerialized.Label;
                     sceneChild.Viewport = childSerialized.Viewport;
 

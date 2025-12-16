@@ -24,6 +24,12 @@ public class SceneChildSerialized
     public bool UsePixelPositioning { get; set; }
 
     /// <summary>
+    /// The font size used for cell-based positioning when UsePixelPositioning is false.
+    /// This property is only used for DocumentScene children to determine the cell size for positioning.
+    /// </summary>
+    public Point SceneFontSize { get; set; }
+
+    /// <summary>
     /// Optional display label for the child in the scene editor.
     /// </summary>
     public string Label { get; set; } = string.Empty;

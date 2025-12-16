@@ -47,10 +47,13 @@ public class SceneDocumentSerialized
                 else if (child.SerializedDocument is SurfaceDocumentSerialized surfaceDoc && surfaceDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
                     yield return child;
 
-                else if (child.SerializedDocument is LayeredSurfaceDocumentSerialized sceneDoc && sceneDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                else if (child.SerializedDocument is LayeredSurfaceDocumentSerialized layeredDoc && layeredDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
                     yield return child;
 
                 else if (child.SerializedDocument is AnimatedDocumentSerialized animDoc && animDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                    yield return child;
+
+                else if (child.SerializedDocument is SceneDocumentSerialized sceneDoc && sceneDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
                     yield return child;
             }
         }
