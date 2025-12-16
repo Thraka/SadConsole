@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SadConsole.Entities;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
@@ -13,4 +14,11 @@ public class AnimatedDocumentSerialized
     public Point EditorFontSize;
     public DocumentOptions Options;
     public Dictionary<string, string> Metadata = new();
+
+    public AnimatedScreenObject GetAnimatedScreenObject()
+    {
+        Animation.Font = FontSerialized.ToFont(SurfaceFont);
+        Animation.FontSize = SurfaceFontSize;
+        return Animation;
+    }
 }

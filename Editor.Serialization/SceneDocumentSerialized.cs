@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Serialization;
@@ -32,4 +31,28 @@ public class SceneDocumentSerialized
     /// Metadata dictionary for the scene document.
     /// </summary>
     public Dictionary<string, string> Metadata { get; set; } = new();
+
+    public IEnumerable<SceneChildSerialized> FindChild(string title, string documentType)
+    {
+        foreach (var child in Children ?? Array.Empty<SceneChildSerialized>())
+        {
+            if (child.DocumentType.Equals(documentType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (child.Label.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                    yield return child;
+
+                //else if (child.SerializedDocument is ITitle titleDoc && titleDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                //    yield return child;
+
+                else if (child.SerializedDocument is SurfaceDocumentSerialized surfaceDoc && surfaceDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                    yield return child;
+
+                else if (child.SerializedDocument is LayeredSurfaceDocumentSerialized sceneDoc && sceneDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                    yield return child;
+
+                else if (child.SerializedDocument is AnimatedDocumentSerialized animDoc && animDoc.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase))
+                    yield return child;
+            }
+        }
+    }
 }

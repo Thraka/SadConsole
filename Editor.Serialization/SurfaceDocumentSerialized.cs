@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SadConsole.Entities;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 
@@ -15,4 +16,16 @@ public class SurfaceDocumentSerialized
     public ZoneSerialized[]? Zones;
     public SimpleObjectDefinition[]? SimpleObjects;
     public Dictionary<string, string> Metadata = new();
+
+    public ScreenSurface GetScreenSurface() =>
+        new(Surface, FontSerialized.ToFont(SurfaceFont), SurfaceFontSize);
+
+    public IEnumerable<Zone> GetZones()
+    {
+        if (Zones == null || Zones.Length == 0)
+            throw new System.Exception("No zones defined in document.");
+
+        foreach (var item in Zones)
+            yield return item.ToZone();
+    }
 }
