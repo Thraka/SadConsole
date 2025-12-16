@@ -1,7 +1,7 @@
-﻿namespace SadConsole.ImGuiSystem;
+﻿namespace SadConsole;
 
 /// <summary>
-/// Defines a title on an object.
+/// Simple interface for objects that have a title.
 /// </summary>
 public interface ITitle
 {
