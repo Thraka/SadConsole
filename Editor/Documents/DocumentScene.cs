@@ -412,7 +412,6 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     if (ImGui.InputInt("##posx"u8, ref posX))
                     {
                         child.Position = new Point(posX, child.Position.Y);
-                        child.Document.EditingSurface.Position = child.Position;
                     }
 
                     ImGui.AlignTextToFramePadding();
@@ -422,7 +421,6 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                     if (ImGui.InputInt("##posy"u8, ref posY))
                     {
                         child.Position = new Point(child.Position.X, posY);
-                        child.Document.EditingSurface.Position = child.Position;
                     }
 
                     // Pixel positioning
@@ -449,7 +447,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                         }
                         else
                         {
-                            Point fontSize = child.Document.EditorFontSize;
+                            Point fontSize = child.Document.EditingSurfaceFontSize;
                             child.Position = new Point((int)(pixelPos.X / fontSize.X), (int)(pixelPos.Y / fontSize.Y));
                         }
                         child.Document.EditingSurface.Position = child.Position;
@@ -839,8 +837,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         {
             // Cell positioning - convert to pixels using the child's font size
             return new Vector2(
-                child.Position.X * child.Document.EditorFontSize.X,
-                child.Position.Y * child.Document.EditorFontSize.Y
+                child.Position.X * child.Document.EditingSurfaceFontSize.X,
+                child.Position.Y * child.Document.EditingSurfaceFontSize.Y
             );
         }
     }
@@ -945,8 +943,8 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
                 else
                 {
                     // Convert back to cell coordinates
-                    int cellX = (int)(newPos.X / _draggingChild.Document.EditorFontSize.X);
-                    int cellY = (int)(newPos.Y / _draggingChild.Document.EditorFontSize.Y);
+                    int cellX = (int)(newPos.X / _draggingChild.Document.EditingSurfaceFontSize.X);
+                    int cellY = (int)(newPos.Y / _draggingChild.Document.EditingSurfaceFontSize.Y);
                     _draggingChild.Position = new Point(cellX, cellY);
                 }
 

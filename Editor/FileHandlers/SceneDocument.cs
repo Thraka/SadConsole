@@ -41,9 +41,9 @@ internal class SceneDocument : IFileHandler
     /// </summary>
     private static string GetDocumentType(Document doc) => doc switch
     {
-        DocumentSurface => "DocumentSurface",
-        DocumentLayeredSurface => "DocumentLayeredSurface",
-        DocumentAnimated => "DocumentAnimated",
+        DocumentSurface => KnownDocumentTypes.SurfaceDocument,
+        DocumentLayeredSurface => KnownDocumentTypes.LayeredSurfaceDocument,
+        DocumentAnimated => KnownDocumentTypes.AnimatedSurfaceDocument,
         _ => throw new NotSupportedException($"Document type {doc.GetType().Name} is not supported in scenes.")
     };
 
