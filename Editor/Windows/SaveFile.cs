@@ -19,7 +19,7 @@ public class SaveFile : ImGuiWindowBase
     public SaveFile(Document document)
     {
         Title = "Save file";
-        _fileListBox = new(Directory.GetCurrentDirectory());
+        _fileListBox = new(Core.State.RootFolder);
         _document = document;
         _fileLoaders = new ImGuiList<IFileHandler>(0, _document.GetSaveHandlers());
     }
@@ -27,7 +27,7 @@ public class SaveFile : ImGuiWindowBase
     public SaveFile(object alternativeObject, IEnumerable<IFileHandler> fileHandlers)
     {
         Title = "Save file";
-        _fileListBox = new(Directory.GetCurrentDirectory());
+        _fileListBox = new(Core.State.RootFolder);
         _fileLoaders = new ImGuiList<IFileHandler>(0, fileHandlers);
         _alternativeObject = alternativeObject;
         _document = null;

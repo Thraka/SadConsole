@@ -34,6 +34,11 @@ Game.Instance.Dispose();
 
 void StartHandler(object? sender, GameHost host)
 {
+    if (args.Length > 0)
+        if (Directory.Exists(args[0]))
+            Core.State.RootFolder = args[0];
+
+
     Core.State.LoadSadConsoleFonts();
 
     Core.Start();

@@ -9,6 +9,8 @@ public static partial class Core
 {
     public static class State
     {
+        public static string RootFolder = Directory.GetCurrentDirectory();
+
         public static class LayoutInfo
         {
             public static float ColorEditBoxWidth = 20;

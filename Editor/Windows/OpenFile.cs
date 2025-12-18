@@ -19,7 +19,7 @@ public class OpenFile : ImGuiWindowBase
     public OpenFile(IEnumerable<IFileHandler> fileHandlers)
     {
         Title = "Open file";
-        _fileListBox = new(Directory.GetCurrentDirectory());
+        _fileListBox = new(Core.State.RootFolder);
         _fileLoaders = new ImGuiList<IFileHandler>(0, fileHandlers);
         _showDocumentTypes = false;
     }
@@ -27,7 +27,7 @@ public class OpenFile : ImGuiWindowBase
     public OpenFile()
     {
         Title = "Open file";
-        _fileListBox = new(Directory.GetCurrentDirectory());
+        _fileListBox = new(Core.State.RootFolder);
         _showDocumentTypes = true;
     }
     protected override void OnOpened()
