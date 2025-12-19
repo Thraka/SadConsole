@@ -20,15 +20,22 @@ public class LayeredSurfaceDocumentSerialized
 
     public LayeredScreenSurface GetLayeredScreenSurface()
     {
-        LayeredScreenSurface layeredScreenSurface = new(Layers[0], FontSerialized.ToFont(SurfaceFont), SurfaceFontSize);
+        LayeredScreenSurface layeredScreenSurface = new(Layers[0], GameHost.Instance.Fonts[SurfaceFont.Name], SurfaceFontSize);
         for (int i = 1; i < Layers.Length; i++)
-        {
             layeredScreenSurface.Layers.Add(Layers[i]);
-        }
 
         return layeredScreenSurface;
     }
-    
+
+    public LayeredScreenSurface GetLayeredScreenSurfaceAndFont()
+    {
+        LayeredScreenSurface layeredScreenSurface = new(Layers[0], FontSerialized.ToFont(SurfaceFont), SurfaceFontSize);
+        for (int i = 1; i < Layers.Length; i++)
+            layeredScreenSurface.Layers.Add(Layers[i]);
+
+        return layeredScreenSurface;
+    }
+
     public IEnumerable<Zone> GetZones()
     {
         if (Zones == null || Zones.Length == 0)

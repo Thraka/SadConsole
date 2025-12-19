@@ -17,6 +17,13 @@ public class AnimatedDocumentSerialized
 
     public AnimatedScreenObject GetAnimatedScreenObject()
     {
+        Animation.Font = GameHost.Instance.Fonts[SurfaceFont.Name];
+        Animation.FontSize = SurfaceFontSize;
+        return Animation;
+    }
+
+    public AnimatedScreenObject GetAnimatedScreenObjectAndFont()
+    {
         Animation.Font = FontSerialized.ToFont(SurfaceFont);
         Animation.FontSize = SurfaceFontSize;
         return Animation;
