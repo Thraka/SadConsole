@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Hexa.NET.ImGui;
 using SadConsole.Editor.FileHandlers;
+using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
 
@@ -24,11 +25,14 @@ public partial class DocumentAnimated: Document
 
     public DocumentAnimated()
     {
+        Tools = [.. Tools, new Center()];
     }
 
     public DocumentAnimated(AnimatedScreenObject animationObject)
     {
         _baseAnimation = animationObject;
+
+        Tools = [.. Tools, new Center()];
 
         EditingSurface = new ScreenSurface(animationObject.CurrentFrame);
         EditingSurfaceFont = (SadFont)Game.Instance.DefaultFont;
