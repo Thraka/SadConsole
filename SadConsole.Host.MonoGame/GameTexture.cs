@@ -248,17 +248,16 @@ public class GameTexture : ITexture
         int fontSizeY = _texture.Height / surfaceHeight;
 
         global::System.Threading.Tasks.Parallel.For(0, _texture.Height / fontSizeY, (h) =>
-        //for (int h = 0; h < imageHeight / fontSizeY; h++)
         {
             int startY = h * fontSizeY;
-            //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
             for (int w = 0; w < _texture.Width / fontSizeX; w++)
             {
                 int startX = w * fontSizeX;
 
-                float allR = 0;
-                float allG = 0;
-                float allB = 0;
+                double allR = 0;
+                double allG = 0;
+                double allB = 0;
+                int pixelCount = fontSizeX * fontSizeY;
 
                 for (int y = 0; y < fontSizeY; y++)
                 {
@@ -269,15 +268,21 @@ public class GameTexture : ITexture
 
                         Color color = pixels[cY * _texture.Width + cX];
 
-                        allR += color.R;
-                        allG += color.G;
-                        allB += color.B;
+                        // Weight color contribution by alpha, but divide by total pixels
+                        // This way, transparent pixels contribute black (0,0,0) to the average
+                        // rather than inflating the color values
+                        double alpha = color.A / 255.0;
+                        allR += color.R * alpha;
+                        allG += color.G * alpha;
+                        allB += color.B * alpha;
                     }
                 }
 
-                byte sr = (byte)(allR / (fontSizeX * fontSizeY));
-                byte sg = (byte)(allG / (fontSizeX * fontSizeY));
-                byte sb = (byte)(allB / (fontSizeX * fontSizeY));
+                // Divide by total pixel count, not by alpha weight
+                // This treats transparent pixels as contributing darkness
+                byte sr = (byte)Math.Clamp(Math.Round(allR / pixelCount), 0, 255);
+                byte sg = (byte)Math.Clamp(Math.Round(allG / pixelCount), 0, 255);
+                byte sb = (byte)Math.Clamp(Math.Round(allB / pixelCount), 0, 255);
 
                 var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
 
@@ -286,41 +291,56 @@ public class GameTexture : ITexture
 
                 else if (foregroundStyle == TextureConvertForegroundStyle.Block)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
+                    // Calculate perceptual luminance using ITU-R BT.601 weights
+                    // and apply gamma correction (approximate sRGB gamma of 2.2)
+                    // to better match perceived brightness
+                    float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
+                    float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
 
-                    if (sbri > 204)
+                    // Map to glyphs based on approximate glyph coverage:
+                    // █ (219) = 100% coverage -> use for brightest
+                    // ▓ (178) = ~75% coverage
+                    // ▒ (177) = ~50% coverage  
+                    // ░ (176) = ~25% coverage -> use for darkest (no blank to avoid transparent look)
+                    if (perceivedBrightness > 191)
                         surface.SetGlyph(w, h, 219, newColor); //█
-                    else if (sbri > 152)
+                    else if (perceivedBrightness > 127)
                         surface.SetGlyph(w, h, 178, newColor); //▓
-                    else if (sbri > 100)
+                    else if (perceivedBrightness > 63)
                         surface.SetGlyph(w, h, 177, newColor); //▒
-                    else if (sbri > 48)
+                    else if (perceivedBrightness > 0)
                         surface.SetGlyph(w, h, 176, newColor); //░
                 }
                 else //else if (foregroundStyle == TextureConvertForegroundStyle.AsciiSymbol)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
+                    // Calculate perceptual luminance with gamma correction
+                    float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
+                    float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
 
-                    if (sbri > 230)
+                    // Map to ASCII characters by approximate visual density
+                    // Ordered from highest to lowest density: # @ & $ X x = + ; : , .
+                    if (perceivedBrightness > 230)
                         surface.SetGlyph(w, h, '#', newColor);
-                    else if (sbri > 207)
+                    else if (perceivedBrightness > 207)
+                        surface.SetGlyph(w, h, '@', newColor);
+                    else if (perceivedBrightness > 184)
                         surface.SetGlyph(w, h, '&', newColor);
-                    else if (sbri > 184)
+                    else if (perceivedBrightness > 161)
                         surface.SetGlyph(w, h, '$', newColor);
-                    else if (sbri > 161)
+                    else if (perceivedBrightness > 138)
                         surface.SetGlyph(w, h, 'X', newColor);
-                    else if (sbri > 138)
+                    else if (perceivedBrightness > 115)
                         surface.SetGlyph(w, h, 'x', newColor);
-                    else if (sbri > 115)
+                    else if (perceivedBrightness > 92)
                         surface.SetGlyph(w, h, '=', newColor);
-                    else if (sbri > 92)
+                    else if (perceivedBrightness > 69)
                         surface.SetGlyph(w, h, '+', newColor);
-                    else if (sbri > 69)
+                    else if (perceivedBrightness > 46)
                         surface.SetGlyph(w, h, ';', newColor);
-                    else if (sbri > 46)
+                    else if (perceivedBrightness > 23)
                         surface.SetGlyph(w, h, ':', newColor);
-                    else if (sbri > 23)
-                        surface.SetGlyph(w, h, '.', newColor);
+                    else if (perceivedBrightness > 0)
+                        surface.SetGlyph(w, h, ',', newColor);
                 }
             }
         }
