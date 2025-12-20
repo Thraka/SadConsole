@@ -18,6 +18,11 @@ public class GameTexture : ITexture
     private Microsoft.Xna.Framework.Graphics.Texture2D _texture;
     private string _resourcePath;
 
+    /// <summary>
+    /// Minimum brightness threshold for edge detection - below this is considered "dark/empty".
+    /// </summary>
+    private const float EdgeDetectionBrightnessThreshold = 15.0f;
+
     /// <inheritdoc />
     public Microsoft.Xna.Framework.Graphics.Texture2D Texture => _texture;
 
@@ -254,100 +259,364 @@ public class GameTexture : ITexture
             {
                 int startX = w * fontSizeX;
 
-                double allR = 0;
-                double allG = 0;
-                double allB = 0;
-                int pixelCount = fontSizeX * fontSizeY;
-
-                for (int y = 0; y < fontSizeY; y++)
-                {
-                    for (int x = 0; x < fontSizeX; x++)
-                    {
-                        int cY = y + startY;
-                        int cX = x + startX;
-
-                        Color color = pixels[cY * _texture.Width + cX];
-
-                        // Weight color contribution by alpha, but divide by total pixels
-                        // This way, transparent pixels contribute black (0,0,0) to the average
-                        // rather than inflating the color values
-                        double alpha = color.A / 255.0;
-                        allR += color.R * alpha;
-                        allG += color.G * alpha;
-                        allB += color.B * alpha;
-                    }
-                }
-
-                // Divide by total pixel count, not by alpha weight
-                // This treats transparent pixels as contributing darkness
-                byte sr = (byte)Math.Clamp(Math.Round(allR / pixelCount), 0, 255);
-                byte sg = (byte)Math.Clamp(Math.Round(allG / pixelCount), 0, 255);
-                byte sb = (byte)Math.Clamp(Math.Round(allB / pixelCount), 0, 255);
-
-                var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+                // Calculate average color for this cell
+                var (cellColor, cellBrightness) = CalculateCellColor(pixels, startX, startY, fontSizeX, fontSizeY);
 
                 if (mode == TextureConvertMode.Background)
-                    surface.SetBackground(w, h, newColor);
-
-                else if (foregroundStyle == TextureConvertForegroundStyle.Block)
                 {
-                    // Calculate perceptual luminance using ITU-R BT.601 weights
-                    // and apply gamma correction (approximate sRGB gamma of 2.2)
-                    // to better match perceived brightness
-                    float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
-                    float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
-
-                    // Map to glyphs based on approximate glyph coverage:
-                    // █ (219) = 100% coverage -> use for brightest
-                    // ▓ (178) = ~75% coverage
-                    // ▒ (177) = ~50% coverage  
-                    // ░ (176) = ~25% coverage -> use for darkest (no blank to avoid transparent look)
-                    if (perceivedBrightness > 191)
-                        surface.SetGlyph(w, h, 219, newColor); //█
-                    else if (perceivedBrightness > 127)
-                        surface.SetGlyph(w, h, 178, newColor); //▓
-                    else if (perceivedBrightness > 63)
-                        surface.SetGlyph(w, h, 177, newColor); //▒
-                    else if (perceivedBrightness > 0)
-                        surface.SetGlyph(w, h, 176, newColor); //░
+                    surface.SetBackground(w, h, cellColor);
                 }
-                else //else if (foregroundStyle == TextureConvertForegroundStyle.AsciiSymbol)
+                else if (mode == TextureConvertMode.Foreground)
                 {
-                    // Calculate perceptual luminance with gamma correction
-                    float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
-                    float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
-
-                    // Map to ASCII characters by approximate visual density
-                    // Ordered from highest to lowest density: # @ & $ X x = + ; : , .
-                    if (perceivedBrightness > 230)
-                        surface.SetGlyph(w, h, '#', newColor);
-                    else if (perceivedBrightness > 207)
-                        surface.SetGlyph(w, h, '@', newColor);
-                    else if (perceivedBrightness > 184)
-                        surface.SetGlyph(w, h, '&', newColor);
-                    else if (perceivedBrightness > 161)
-                        surface.SetGlyph(w, h, '$', newColor);
-                    else if (perceivedBrightness > 138)
-                        surface.SetGlyph(w, h, 'X', newColor);
-                    else if (perceivedBrightness > 115)
-                        surface.SetGlyph(w, h, 'x', newColor);
-                    else if (perceivedBrightness > 92)
-                        surface.SetGlyph(w, h, '=', newColor);
-                    else if (perceivedBrightness > 69)
-                        surface.SetGlyph(w, h, '+', newColor);
-                    else if (perceivedBrightness > 46)
-                        surface.SetGlyph(w, h, ';', newColor);
-                    else if (perceivedBrightness > 23)
-                        surface.SetGlyph(w, h, ':', newColor);
-                    else if (perceivedBrightness > 0)
-                        surface.SetGlyph(w, h, ',', newColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle, 
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight);
+                }
+                else if (mode == TextureConvertMode.BothFocusBackground)
+                {
+                    // Background is the main color, foreground is darker
+                    var foreColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, cellColor);
+                    ProcessForegroundCell(surface, w, h, foreColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight);
+                }
+                else if (mode == TextureConvertMode.BothFocusForeground)
+                {
+                    // Foreground is the main color, background is darker
+                    var backColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, backColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight);
                 }
             }
-        }
-        );
+        });
 
         return surface;
     }
+
+    /// <summary>
+    /// Processes the foreground glyph for a cell based on the selected style.
+    /// </summary>
+    private void ProcessForegroundCell(ICellSurface surface, int w, int h, Color color, float brightness,
+        TextureConvertForegroundStyle style, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight)
+    {
+        switch (style)
+        {
+            case TextureConvertForegroundStyle.Block:
+                ProcessBlockStyle(surface, w, h, color, brightness);
+                break;
+            case TextureConvertForegroundStyle.EdgeShapes:
+                ProcessEdgeShapesStyle(surface, w, h, color, brightness, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight);
+                break;
+            case TextureConvertForegroundStyle.AsciiSymbol:
+            default:
+                ProcessAsciiSymbolStyle(surface, w, h, color, brightness);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Calculates the average color and brightness for a cell region of the texture.
+    /// </summary>
+    private (Color color, float brightness) CalculateCellColor(Color[] pixels, int startX, int startY, int fontSizeX, int fontSizeY)
+    {
+        double allR = 0;
+        double allG = 0;
+        double allB = 0;
+        int pixelCount = fontSizeX * fontSizeY;
+
+        for (int y = 0; y < fontSizeY; y++)
+        {
+            for (int x = 0; x < fontSizeX; x++)
+            {
+                int cY = y + startY;
+                int cX = x + startX;
+
+                Color color = pixels[cY * _texture.Width + cX];
+
+                // Weight color contribution by alpha, but divide by total pixels
+                // This way, transparent pixels contribute black (0,0,0) to the average
+                double alpha = color.A / 255.0;
+                allR += color.R * alpha;
+                allG += color.G * alpha;
+                allB += color.B * alpha;
+            }
+        }
+
+        // Divide by total pixel count, not by alpha weight
+        byte sr = (byte)Math.Clamp(Math.Round(allR / pixelCount), 0, 255);
+        byte sg = (byte)Math.Clamp(Math.Round(allG / pixelCount), 0, 255);
+        byte sb = (byte)Math.Clamp(Math.Round(allB / pixelCount), 0, 255);
+
+        var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+
+        // Calculate perceptual luminance using ITU-R BT.601 weights with gamma correction
+        float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
+        float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
+
+        return (newColor, perceivedBrightness);
+    }
+
+    /// <summary>
+    /// Processes a cell using block characters (█▓▒░) based on brightness.
+    /// </summary>
+    private static void ProcessBlockStyle(ICellSurface surface, int w, int h, Color color, float brightness)
+    {
+        // Map to glyphs based on approximate glyph coverage:
+        // █ (219) = 100% coverage -> use for brightest
+        // ▓ (178) = ~75% coverage
+        // ▒ (177) = ~50% coverage  
+        // ░ (176) = ~25% coverage -> use for darkest (no blank to avoid transparent look)
+        if (brightness > 191)
+            surface.SetGlyph(w, h, 219, color); //█
+        else if (brightness > 127)
+            surface.SetGlyph(w, h, 178, color); //▓
+        else if (brightness > 63)
+            surface.SetGlyph(w, h, 177, color); //▒
+        else if (brightness > 0)
+            surface.SetGlyph(w, h, 176, color); //░
+    }
+
+    /// <summary>
+    /// Processes a cell using ASCII density characters based on brightness.
+    /// </summary>
+    private static void ProcessAsciiSymbolStyle(ICellSurface surface, int w, int h, Color color, float brightness)
+    {
+        // Map to ASCII characters by approximate visual density
+        // Ordered from highest to lowest density: # @ & $ X x = + ; : , .
+        char glyph = brightness switch
+        {
+            > 230 => '#',
+            > 207 => '@',
+            > 184 => '&',
+            > 161 => '$',
+            > 138 => 'X',
+            > 115 => 'x',
+            > 92 => '=',
+            > 69 => '+',
+            > 46 => ';',
+            > 23 => ':',
+            > 0 => ',',
+            _ => ' '
+        };
+
+        if (glyph != ' ')
+            surface.SetGlyph(w, h, glyph, color);
+    }
+
+    /// <summary>
+    /// Processes a cell using edge-detecting shaped characters for curves and edges.
+    /// </summary>
+    private void ProcessEdgeShapesStyle(ICellSurface surface, int w, int h, Color color, float cellBrightness,
+        Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight)
+    {
+        if (cellBrightness < EdgeDetectionBrightnessThreshold)
+        {
+            surface.SetGlyph(w, h, ' ', color);
+            return;
+        }
+
+        // Get brightness of all 8 neighbors
+        var neighbors = GetNeighborBrightness(w, h, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight);
+
+        // Determine which neighbors are dark
+        bool topDark = neighbors.Top < EdgeDetectionBrightnessThreshold;
+        bool bottomDark = neighbors.Bottom < EdgeDetectionBrightnessThreshold;
+        bool leftDark = neighbors.Left < EdgeDetectionBrightnessThreshold;
+        bool rightDark = neighbors.Right < EdgeDetectionBrightnessThreshold;
+        bool tlDark = neighbors.TopLeft < EdgeDetectionBrightnessThreshold;
+        bool trDark = neighbors.TopRight < EdgeDetectionBrightnessThreshold;
+        bool blDark = neighbors.BottomLeft < EdgeDetectionBrightnessThreshold;
+        bool brDark = neighbors.BottomRight < EdgeDetectionBrightnessThreshold;
+
+        // Build cardinal pattern: T=1, R=2, B=4, L=8
+        int darkPattern = (topDark ? 1 : 0) | (rightDark ? 2 : 0) |
+                          (bottomDark ? 4 : 0) | (leftDark ? 8 : 0);
+
+        char edgeChar = SelectEdgeCharacter(darkPattern, cellBrightness, tlDark, trDark, blDark, brDark);
+        surface.SetGlyph(w, h, edgeChar, color);
+    }
+
+    /// <summary>
+    /// Gets the brightness values of all 8 neighboring cells.
+    /// </summary>
+    private (float Top, float Bottom, float Left, float Right, float TopLeft, float TopRight, float BottomLeft, float BottomRight)
+        GetNeighborBrightness(int cellW, int cellH, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight)
+    {
+        float GetBrightness(int cellX, int cellY)
+        {
+            if (cellX < 0 || cellX >= surfaceWidth || cellY < 0 || cellY >= surfaceHeight)
+                return 0;
+
+            int nStartX = cellX * fontSizeX;
+            int nStartY = cellY * fontSizeY;
+
+            double nR = 0, nG = 0, nB = 0;
+            int nPixelCount = fontSizeX * fontSizeY;
+
+            for (int y = 0; y < fontSizeY; y++)
+            {
+                for (int x = 0; x < fontSizeX; x++)
+                {
+                    int cY = y + nStartY;
+                    int cX = x + nStartX;
+                    if (cY < _texture.Height && cX < _texture.Width)
+                    {
+                        Color color = pixels[cY * _texture.Width + cX];
+                        double alpha = color.A / 255.0;
+                        nR += color.R * alpha;
+                        nG += color.G * alpha;
+                        nB += color.B * alpha;
+                    }
+                }
+            }
+
+            byte nsr = (byte)Math.Clamp(Math.Round(nR / nPixelCount), 0, 255);
+            byte nsg = (byte)Math.Clamp(Math.Round(nG / nPixelCount), 0, 255);
+            byte nsb = (byte)Math.Clamp(Math.Round(nB / nPixelCount), 0, 255);
+
+            float nLinear = (0.299f * nsr + 0.587f * nsg + 0.114f * nsb) / 255f;
+            return MathF.Pow(nLinear, 0.45f) * 255f;
+        }
+
+        return (
+            Top: GetBrightness(cellW, cellH - 1),
+            Bottom: GetBrightness(cellW, cellH + 1),
+            Left: GetBrightness(cellW - 1, cellH),
+            Right: GetBrightness(cellW + 1, cellH),
+            TopLeft: GetBrightness(cellW - 1, cellH - 1),
+            TopRight: GetBrightness(cellW + 1, cellH - 1),
+            BottomLeft: GetBrightness(cellW - 1, cellH + 1),
+            BottomRight: GetBrightness(cellW + 1, cellH + 1)
+        );
+    }
+
+    /// <summary>
+    /// Selects the appropriate edge/shape character based on the dark neighbor pattern.
+    /// </summary>
+    private static char SelectEdgeCharacter(int darkPattern, float cellBrightness,
+        bool tlDark, bool trDark, bool blDark, bool brDark)
+    {
+        return darkPattern switch
+        {
+            // Interior - no dark cardinal neighbors
+            0b0000 => cellBrightness > 200 ? '@' :
+                      cellBrightness > 150 ? '#' :
+                      cellBrightness > 100 ? '=' : '+',
+
+            // Single dark side - edge cells with transitional options
+            0b0001 => SelectTopDarkChar(tlDark, trDark),      // Top dark
+            0b0100 => SelectBottomDarkChar(blDark, brDark),   // Bottom dark
+            0b0010 => SelectRightDarkChar(trDark, brDark),    // Right dark
+            0b1000 => SelectLeftDarkChar(tlDark, blDark),     // Left dark
+
+            // Two adjacent dark sides - corners
+            0b0011 => SelectTopRightCornerChar(trDark, tlDark, brDark),
+            0b0110 => SelectBottomRightCornerChar(brDark, trDark, blDark),
+            0b1100 => SelectBottomLeftCornerChar(blDark, brDark, tlDark),
+            0b1001 => SelectTopLeftCornerChar(tlDark, trDark, blDark),
+
+            // Two opposite dark sides - thin lines
+            0b0101 => '|',  // Top+Bottom dark
+            0b1010 => '-',  // Left+Right dark
+
+            // Three dark sides - end caps
+            0b0111 => SelectLeftPointingEndCap(tlDark, blDark),
+            0b1110 => SelectRightPointingEndCap(trDark, brDark),
+            0b1101 => SelectUpPointingEndCap(tlDark, trDark),
+            0b1011 => SelectDownPointingEndCap(blDark, brDark),
+
+            // All sides dark - isolated
+            0b1111 => 'o',
+
+            _ => '+'
+        };
+    }
+
+    // Edge character selection helpers
+
+    private static char SelectTopDarkChar(bool tlDark, bool trDark) =>
+        (tlDark, trDark) switch
+        {
+            (true, true) => '_',   // Flat top edge
+            (true, false) => ',',  // Transitioning down-left
+            (false, true) => '.',  // Transitioning down-right
+            _ => '_'               // Default flat top
+        };
+
+    private static char SelectBottomDarkChar(bool blDark, bool brDark) =>
+        (blDark, brDark) switch
+        {
+            (true, true) => '-',   // Flat bottom edge
+            (true, false) => '\'', // Transitioning up-left
+            (false, true) => '`',  // Transitioning up-right
+            _ => '-'               // Default flat bottom
+        };
+
+    private static char SelectRightDarkChar(bool trDark, bool brDark) =>
+        (trDark, brDark) switch
+        {
+            (true, true) => ')',   // Full right curve
+            (true, false) => 'b',  // Transitioning - curves at top-right
+            (false, true) => 'P',  // Transitioning - curves at bottom-right
+            _ => ')'               // Default right curve
+        };
+
+    private static char SelectLeftDarkChar(bool tlDark, bool blDark) =>
+        (tlDark, blDark) switch
+        {
+            (true, true) => '(',   // Full left curve
+            (true, false) => 'd',  // Transitioning - curves at top-left
+            (false, true) => 'q',  // Transitioning - curves at bottom-left
+            _ => '('               // Default left curve
+        };
+
+    private static char SelectTopRightCornerChar(bool trDark, bool tlDark, bool brDark) =>
+        trDark ? ',' : (!tlDark && !brDark) ? 'J' : '/';
+
+    private static char SelectBottomRightCornerChar(bool brDark, bool trDark, bool blDark) =>
+        brDark ? '\'' : (!trDark && !blDark) ? '7' : '\\';
+
+    private static char SelectBottomLeftCornerChar(bool blDark, bool brDark, bool tlDark) =>
+        blDark ? '`' : (!brDark && !tlDark) ? 'r' : '/';
+
+    private static char SelectTopLeftCornerChar(bool tlDark, bool trDark, bool blDark) =>
+        tlDark ? '.' : (!trDark && !blDark) ? 'L' : '\\';
+
+    private static char SelectLeftPointingEndCap(bool tlDark, bool blDark) =>
+        (tlDark, blDark) switch
+        {
+            (true, true) => '<',
+            (true, false) => 'J',
+            (false, true) => '7',
+            _ => '<'
+        };
+
+    private static char SelectRightPointingEndCap(bool trDark, bool brDark) =>
+        (trDark, brDark) switch
+        {
+            (true, true) => '>',
+            (true, false) => 'L',
+            (false, true) => 'r',
+            _ => '>'
+        };
+
+    private static char SelectUpPointingEndCap(bool tlDark, bool trDark) =>
+        (tlDark, trDark) switch
+        {
+            (true, true) => '^',
+            (true, false) => '/',
+            (false, true) => '\\',
+            _ => '^'
+        };
+
+    private static char SelectDownPointingEndCap(bool blDark, bool brDark) =>
+        (blDark, brDark) switch
+        {
+            (true, true) => 'v',
+            (true, false) => '\\',
+            (false, true) => '/',
+            _ => 'v'
+        };
 
     private Microsoft.Xna.Framework.Graphics.RenderTarget2D GetResizedTexture(int width, int height)
     {
