@@ -4,13 +4,14 @@ using SadRogue.Primitives;
 using SFML.Graphics;
 using SFMLColor = SFML.Graphics.Color;
 using Color = SadRogue.Primitives.Color;
+using static SadConsole.Host.GameTextureHelpers;
 
 namespace SadConsole.Host;
 
 /// <summary>
 /// Wraps a <see cref="SFML.Graphics.Texture"/> object in a way that SadConsole can interact with it.
 /// </summary>
-public class GameTexture : ITexture
+public partial class GameTexture : ITexture
 {
     private bool _skipDispose;
     private Texture _texture;
@@ -264,90 +265,52 @@ public class GameTexture : ITexture
             return surface;
         }
 
+        int textureWidth = (int)_texture.Size.X;
+        int textureHeight = (int)_texture.Size.Y;
+
         // Calculating color based on surrounding pixels
         Color[] pixels = GetPixels();
 
-        int fontSizeX = (int)_texture.Size.X / surfaceWidth;
-        int fontSizeY = (int)_texture.Size.Y / surfaceHeight;
+        int fontSizeX = textureWidth / surfaceWidth;
+        int fontSizeY = textureHeight / surfaceHeight;
 
-        global::System.Threading.Tasks.Parallel.For(0, (int)_texture.Size.Y / fontSizeY, (h) =>
-        //for (int h = 0; h < imageHeight / fontSizeY; h++)
+        global::System.Threading.Tasks.Parallel.For(0, textureHeight / fontSizeY, (h) =>
         {
             int startY = h * fontSizeY;
-            //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
-            for (int w = 0; w < _texture.Size.X / fontSizeX; w++)
+            for (int w = 0; w < textureWidth / fontSizeX; w++)
             {
                 int startX = w * fontSizeX;
 
-                float allR = 0;
-                float allG = 0;
-                float allB = 0;
-
-                for (int y = 0; y < fontSizeY; y++)
-                {
-                    for (int x = 0; x < fontSizeX; x++)
-                    {
-                        int cY = y + startY;
-                        int cX = x + startX;
-
-                        Color color = pixels[cY * _texture.Size.X + cX];
-
-                        allR += color.R;
-                        allG += color.G;
-                        allB += color.B;
-                    }
-                }
-
-                byte sr = (byte)(allR / (fontSizeX * fontSizeY));
-                byte sg = (byte)(allG / (fontSizeX * fontSizeY));
-                byte sb = (byte)(allB / (fontSizeX * fontSizeY));
-
-                var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+                // Calculate average color for this cell
+                var (cellColor, cellBrightness) = CalculateCellColor(pixels, startX, startY, fontSizeX, fontSizeY, textureWidth);
 
                 if (mode == TextureConvertMode.Background)
-                    surface.SetBackground(w, h, newColor);
-
-                else if (foregroundStyle == TextureConvertForegroundStyle.Block)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
-
-                    if (sbri > 204)
-                        surface.SetGlyph(w, h, 219, newColor); //█
-                    else if (sbri > 152)
-                        surface.SetGlyph(w, h, 178, newColor); //▓
-                    else if (sbri > 100)
-                        surface.SetGlyph(w, h, 177, newColor); //▒
-                    else if (sbri > 48)
-                        surface.SetGlyph(w, h, 176, newColor); //░
+                    surface.SetBackground(w, h, cellColor);
                 }
-                else //else if (foregroundStyle == TextureConvertForegroundStyle.AsciiSymbol)
+                else if (mode == TextureConvertMode.Foreground)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
-
-                    if (sbri > 230)
-                        surface.SetGlyph(w, h, '#', newColor);
-                    else if (sbri > 207)
-                        surface.SetGlyph(w, h, '&', newColor);
-                    else if (sbri > 184)
-                        surface.SetGlyph(w, h, '$', newColor);
-                    else if (sbri > 161)
-                        surface.SetGlyph(w, h, 'X', newColor);
-                    else if (sbri > 138)
-                        surface.SetGlyph(w, h, 'x', newColor);
-                    else if (sbri > 115)
-                        surface.SetGlyph(w, h, '=', newColor);
-                    else if (sbri > 92)
-                        surface.SetGlyph(w, h, '+', newColor);
-                    else if (sbri > 69)
-                        surface.SetGlyph(w, h, ';', newColor);
-                    else if (sbri > 46)
-                        surface.SetGlyph(w, h, ':', newColor);
-                    else if (sbri > 23)
-                        surface.SetGlyph(w, h, '.', newColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                }
+                else if (mode == TextureConvertMode.BothFocusBackground)
+                {
+                    // Background is the main color, foreground is darker
+                    var foreColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, cellColor);
+                    ProcessForegroundCell(surface, w, h, foreColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                }
+                else if (mode == TextureConvertMode.BothFocusForeground)
+                {
+                    // Foreground is the main color, background is darker
+                    var backColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, backColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
                 }
             }
-        }
-        );
+        });
 
         return surface;
     }

@@ -104,7 +104,15 @@ public enum TextureConvertMode
     /// <summary>
     /// Fills the foreground of each cell with the pixel color.
     /// </summary>
-    Foreground
+    Foreground,
+    /// <summary>
+    /// Uses both background and foregroun mode, with the background being brighter than the foreground.
+    /// </summary>
+    BothFocusBackground,
+    /// <summary>
+    /// Uses both background and foregroun mode, with the foreground being brighter than the background.
+    /// </summary>
+    BothFocusForeground
 }
 
 /// <summary>
@@ -120,12 +128,11 @@ public enum TextureConvertForegroundStyle
     /// Fills the surface with ascii symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
     /// </summary>
     AsciiSymbol,
-    /* TODO
     /// <summary>
-    /// Fills the surface with block ascii letters and symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
+    /// Uses edge detection to fill the surface with shaped ascii characters that represent edges, curves, and corners.
+    /// Characters like ( ) / \ | _ b d are used to match the detected edge direction.
     /// </summary>
-    AsciiLetter
-    */
+    EdgeShapes,
 }
 
 /// <summary>
