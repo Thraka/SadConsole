@@ -15,7 +15,7 @@ static class GameTextureHelpers
     /// Processes the foreground glyph for a cell based on the selected style.
     /// </summary>
     public static void ProcessForegroundCell(ICellSurface surface, int w, int h, Color color, float brightness,
-        TextureConvertForegroundStyle style, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight)
+        TextureConvertForegroundStyle style, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight, Color colorKey)
     {
         switch (style)
         {
@@ -23,7 +23,7 @@ static class GameTextureHelpers
                 ProcessBlockStyle(surface, w, h, color, brightness);
                 break;
             case TextureConvertForegroundStyle.EdgeShapes:
-                ProcessEdgeShapesStyle(surface, w, h, color, brightness, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                ProcessEdgeShapesStyle(surface, w, h, color, brightness, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, colorKey);
                 break;
             case TextureConvertForegroundStyle.AsciiSymbol:
             default:
@@ -33,14 +33,23 @@ static class GameTextureHelpers
     }
 
     /// <summary>
-    /// Calculates the average color and brightness for a cell region of the texture.
+    /// Calculates the average color and brightness for a cell region of the texture, excluding colorKey pixels.
     /// </summary>
-    public static (Color color, float brightness) CalculateCellColor(Color[] pixels, int startX, int startY, int fontSizeX, int fontSizeY, int textureWidth)
+    /// <param name="pixels">The pixel array.</param>
+    /// <param name="startX">Starting X coordinate in the texture.</param>
+    /// <param name="startY">Starting Y coordinate in the texture.</param>
+    /// <param name="fontSizeX">Width of the cell region.</param>
+    /// <param name="fontSizeY">Height of the cell region.</param>
+    /// <param name="textureWidth">Width of the texture.</param>
+    /// <param name="colorKey">Color to treat as transparent/excluded.</param>
+    /// <returns>A tuple containing the calculated color, brightness, and whether the cell has any valid content.</returns>
+    public static (Color color, float brightness, bool hasContent) CalculateCellColor(Color[] pixels, int startX, int startY, int fontSizeX, int fontSizeY, int textureWidth, Color colorKey)
     {
         double allR = 0;
         double allG = 0;
         double allB = 0;
-        int pixelCount = fontSizeX * fontSizeY;
+        int validPixelCount = 0;
+        int totalPixelCount = fontSizeX * fontSizeY;
 
         for (int y = 0; y < fontSizeY; y++)
         {
@@ -51,27 +60,37 @@ static class GameTextureHelpers
 
                 Color color = pixels[cY * textureWidth + cX];
 
-                // Weight color contribution by alpha, but divide by total pixels
-                // This way, transparent pixels contribute black (0,0,0) to the average
+                // Skip transparent pixels and colorKey pixels
+                if (color.A == 0 || color == colorKey)
+                    continue;
+
+                // Weight color contribution by alpha
                 double alpha = color.A / 255.0;
                 allR += color.R * alpha;
                 allG += color.G * alpha;
                 allB += color.B * alpha;
+                validPixelCount++;
             }
         }
 
-        // Divide by total pixel count, not by alpha weight
-        byte sr = (byte)Math.Clamp(Math.Round(allR / pixelCount), 0, 255);
-        byte sg = (byte)Math.Clamp(Math.Round(allG / pixelCount), 0, 255);
-        byte sb = (byte)Math.Clamp(Math.Round(allB / pixelCount), 0, 255);
+        // If no valid pixels, return empty result
+        if (validPixelCount == 0)
+            return (Color.Transparent, 0f, false);
+
+        // Divide by valid pixel count for accurate color, but scale brightness by coverage
+        byte sr = (byte)Math.Clamp(Math.Round(allR / validPixelCount), 0, 255);
+        byte sg = (byte)Math.Clamp(Math.Round(allG / validPixelCount), 0, 255);
+        byte sb = (byte)Math.Clamp(Math.Round(allB / validPixelCount), 0, 255);
 
         var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
 
         // Calculate perceptual luminance using ITU-R BT.601 weights with gamma correction
+        // Scale by coverage ratio so partially transparent cells appear dimmer
+        float coverage = (float)validPixelCount / totalPixelCount;
         float linearLuminance = (0.299f * sr + 0.587f * sg + 0.114f * sb) / 255f;
-        float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f;
+        float perceivedBrightness = MathF.Pow(linearLuminance, 0.45f) * 255f * coverage;
 
-        return (newColor, perceivedBrightness);
+        return (newColor, perceivedBrightness, true);
     }
 
     /// <summary>
@@ -125,7 +144,7 @@ static class GameTextureHelpers
     /// Processes a cell using edge-detecting shaped characters for curves and edges.
     /// </summary>
     public static void ProcessEdgeShapesStyle(ICellSurface surface, int w, int h, Color color, float cellBrightness,
-        Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight)
+        Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight, Color colorKey)
     {
         if (cellBrightness < EdgeDetectionBrightnessThreshold)
         {
@@ -134,7 +153,7 @@ static class GameTextureHelpers
         }
 
         // Get brightness of all 8 neighbors
-        var neighbors = GetNeighborBrightness(w, h, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+        var neighbors = GetNeighborBrightness(w, h, pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, colorKey);
 
         // Determine which neighbors are dark
         bool topDark = neighbors.Top < EdgeDetectionBrightnessThreshold;
@@ -158,7 +177,7 @@ static class GameTextureHelpers
     /// Gets the brightness values of all 8 neighboring cells.
     /// </summary>
     static (float Top, float Bottom, float Left, float Right, float TopLeft, float TopRight, float BottomLeft, float BottomRight)
-        GetNeighborBrightness(int cellW, int cellH, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight)
+        GetNeighborBrightness(int cellW, int cellH, Color[] pixels, int fontSizeX, int fontSizeY, int surfaceWidth, int surfaceHeight, int textureWidth, int textureHeight, Color colorKey)
     {
         float GetBrightness(int cellX, int cellY)
         {
@@ -169,7 +188,8 @@ static class GameTextureHelpers
             int nStartY = cellY * fontSizeY;
 
             double nR = 0, nG = 0, nB = 0;
-            int nPixelCount = fontSizeX * fontSizeY;
+            int validPixelCount = 0;
+            int totalPixelCount = fontSizeX * fontSizeY;
 
             for (int y = 0; y < fontSizeY; y++)
             {
@@ -180,20 +200,30 @@ static class GameTextureHelpers
                     if (cY < textureHeight && cX < textureWidth)
                     {
                         Color color = pixels[cY * textureWidth + cX];
+                        
+                        // Skip transparent and colorKey pixels
+                        if (color.A == 0 || color == colorKey)
+                            continue;
+
                         double alpha = color.A / 255.0;
                         nR += color.R * alpha;
                         nG += color.G * alpha;
                         nB += color.B * alpha;
+                        validPixelCount++;
                     }
                 }
             }
 
-            byte nsr = (byte)Math.Clamp(Math.Round(nR / nPixelCount), 0, 255);
-            byte nsg = (byte)Math.Clamp(Math.Round(nG / nPixelCount), 0, 255);
-            byte nsb = (byte)Math.Clamp(Math.Round(nB / nPixelCount), 0, 255);
+            if (validPixelCount == 0)
+                return 0;
 
+            byte nsr = (byte)Math.Clamp(Math.Round(nR / validPixelCount), 0, 255);
+            byte nsg = (byte)Math.Clamp(Math.Round(nG / validPixelCount), 0, 255);
+            byte nsb = (byte)Math.Clamp(Math.Round(nB / validPixelCount), 0, 255);
+
+            float coverage = (float)validPixelCount / totalPixelCount;
             float nLinear = (0.299f * nsr + 0.587f * nsg + 0.114f * nsb) / 255f;
-            return MathF.Pow(nLinear, 0.45f) * 255f;
+            return MathF.Pow(nLinear, 0.45f) * 255f * coverage;
         }
 
         return (

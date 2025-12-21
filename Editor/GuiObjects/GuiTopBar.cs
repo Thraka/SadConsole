@@ -51,6 +51,13 @@ public class GuiTopBar : ImGuiObjectBase
                     window.Open();
                 }
 
+                if (ImGui.MenuItem("\U000f044e Import Image", "i"))
+                {
+                    Windows.ImageToAsciiWindow imageToAscii = new(Game.Instance.DefaultFont, Game.Instance.DefaultFont.GetFontSize(Game.Instance.DefaultFontSize));
+                    imageToAscii.Closed += ImportImage_Closed;
+                    imageToAscii.Open();
+                }
+
                 ImGui.Separator();
                 ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
                 if (ImGui.MenuItem("\ueb4b Save", "s"))
@@ -147,6 +154,22 @@ public class GuiTopBar : ImGuiObjectBase
             StatusItems.Clear();
             ImGui.EndMainMenuBar();
         }
+    }
+
+    private void ImportImage_Closed(object? sender, EventArgs e)
+    {
+        Windows.ImageToAsciiWindow window = (Windows.ImageToAsciiWindow)sender!;
+        if (!window.DialogResult) return;
+
+        DocumentSurface.Builder builder = new();
+        builder.Width = window.ResultSurface!.Width;
+        builder.Height = window.ResultSurface.Height;
+
+        DocumentSurface document = (DocumentSurface)builder.CreateDocument();
+        window.ResultSurface.Copy(document.EditingSurface.Surface);
+        document.EditingSurface.IsDirty = true;
+
+        Core.State.Documents.Add(document);
     }
 }
 

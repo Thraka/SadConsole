@@ -220,12 +220,15 @@ public partial class GameTexture : ITexture
     }
 
     /// <inheritdoc />
-    public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
+    public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color? colorKey = null, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
     {
         if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth > _texture.Width || surfaceHeight > _texture.Height)
             throw new ArgumentOutOfRangeException("The size of the surface must be equal to or smaller than the texture.");
 
         ICellSurface surface = cachedSurface ?? new CellSurface(surfaceWidth, surfaceHeight);
+
+        // Use transparent as default colorKey
+        Color effectiveColorKey = colorKey ?? Color.Transparent;
 
         // Background mode with simple resizing.
         if (mode == TextureConvertMode.Background && backgroundStyle == TextureConvertBackgroundStyle.Pixel)
@@ -237,7 +240,13 @@ public partial class GameTexture : ITexture
             Color[] sadColors = System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(colors).ToArray();
 
             for (int i = 0; i < colors.Length; i++)
-                surface[i].Background = sadColors[i];
+            {
+                Color pixelColor = sadColors[i];
+                // Skip colorKey pixels (leave cell as default/transparent)
+                if (pixelColor == effectiveColorKey || pixelColor.A == 0)
+                    continue;
+                surface[i].Background = pixelColor;
+            }
 
             return surface;
         }
@@ -258,8 +267,12 @@ public partial class GameTexture : ITexture
             {
                 int startX = w * fontSizeX;
 
-                // Calculate average color for this cell
-                var (cellColor, cellBrightness) = CalculateCellColor(pixels, startX, startY, fontSizeX, fontSizeY, textureWidth);
+                // Calculate average color for this cell, excluding colorKey pixels
+                var (cellColor, cellBrightness, hasContent) = CalculateCellColor(pixels, startX, startY, fontSizeX, fontSizeY, textureWidth, effectiveColorKey);
+
+                // Skip cells with no valid content (all pixels were colorKey or transparent)
+                if (!hasContent)
+                    continue;
 
                 if (mode == TextureConvertMode.Background)
                 {
@@ -268,7 +281,7 @@ public partial class GameTexture : ITexture
                 else if (mode == TextureConvertMode.Foreground)
                 {
                     ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle, 
-                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
                 }
                 else if (mode == TextureConvertMode.BothFocusBackground)
                 {
@@ -276,7 +289,7 @@ public partial class GameTexture : ITexture
                     var foreColor = cellColor.GetDarker();
                     surface.SetBackground(w, h, cellColor);
                     ProcessForegroundCell(surface, w, h, foreColor, cellBrightness, foregroundStyle,
-                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
                 }
                 else if (mode == TextureConvertMode.BothFocusForeground)
                 {
@@ -284,7 +297,7 @@ public partial class GameTexture : ITexture
                     var backColor = cellColor.GetDarker();
                     surface.SetBackground(w, h, backColor);
                     ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle,
-                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight);
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
                 }
             }
         });

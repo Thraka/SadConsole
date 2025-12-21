@@ -70,6 +70,13 @@ internal class Selection : ITool
             
         }
 
+        if (ImGui.Button("Import Surface from Image"))
+        {
+            Windows.ImageToAsciiWindow imageToAscii = new(document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One));
+            imageToAscii.Closed += ImageToAscii_Closed;
+            imageToAscii.Open();
+        }
+
         ImGui.BeginDisabled(_clipboardSurface == null);
         if (ImGui.Button("Paste surface from Clipboard"u8))
         {
@@ -123,6 +130,19 @@ internal class Selection : ITool
                 _selectionSurface = _clipboardSurface;
                 _state = States.Pasting;
             }
+        }
+    }
+
+    private void ImageToAscii_Closed(object? sender, EventArgs e)
+    {
+        if (sender is not ImageToAsciiWindow dialog) return;
+        if (!dialog.DialogResult) return;
+        if (dialog.ResultSurface is CellSurface surface)
+        {
+            _clipboardSurface = surface;
+            ClearState();
+            _state = States.PastingMultiple;
+            _selectionSurface = _clipboardSurface;
         }
     }
 

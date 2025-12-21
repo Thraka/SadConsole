@@ -81,6 +81,7 @@ public interface ITexture : IDisposable
     /// <param name="surfaceHeight">How many cells high the returned surface is.</param>
     /// <param name="backgroundStyle">The style to use when <paramref name="mode"/> is <see cref="TextureConvertMode.Background"/>.</param>
     /// <param name="foregroundStyle">The style to use when <paramref name="mode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
+    /// <param name="colorKey">Pixels matching this color are treated as transparent and excluded from conversion. Defaults to <see cref="Color.Transparent"/>.</param>
     /// <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="GetPixels"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
     /// <param name="cachedSurface">The cell surface to use instead of creating a new one. Used with <paramref name="cachedColorArray"/>.</param>
     /// <returns>A new surface.</returns>
@@ -88,6 +89,7 @@ public interface ITexture : IDisposable
     ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight,
                            TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel,
                            TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block,
+                           Color? colorKey = null,
                            Color[]? cachedColorArray = null,
                            ICellSurface? cachedSurface = null);
 }

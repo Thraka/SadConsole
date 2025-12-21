@@ -53,7 +53,6 @@ public partial class DocumentSurface
             surface.DefaultForeground = DefaultForeground.ToColor();
             surface.DefaultBackground = DefaultBackground.ToColor();
             surface.Clear();
-            //surface.FillWithRandomGarbage(100);
 
             return new DocumentSurface(surface) { Title = Name };
         }
