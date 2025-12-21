@@ -58,7 +58,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
             fullRedraw = true;
         }
 
-        var monoRenderer = (IRendererMonoGame)renderer;
+        IRendererMonoGame monoRenderer = (IRendererMonoGame)renderer;
         
         // Redraw is needed
         if (fullRedraw || screenObject.IsDirty || isForced)
@@ -69,14 +69,14 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
             if (fullRedraw)
                 Host.Global.GraphicsDevice.Clear(Color.Transparent);
 
-            Host.Global.SharedSpriteBatch.Begin(SpriteSortMode.Deferred, monoRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+            monoRenderer.LocalSpriteBatch.Begin(SpriteSortMode.Deferred, monoRenderer.MonoGameBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
             IFont font = screenObject.Font;
             Texture2D fontImage = ((Host.GameTexture)font.Image).Texture;
             ColoredGlyphBase cell;
 
             if (fullRedraw)
-                Host.Global.SharedSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), screenObject.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
+                monoRenderer.LocalSpriteBatch.Draw(fontImage, new XnaRectangle(0, 0, BackingTexture.Width, BackingTexture.Height), font.SolidGlyphRectangle.ToMonoRectangle(), screenObject.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.2f);
 
             int rectIndex = 0;
 
@@ -94,26 +94,26 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
 
                         if (cell.IsVisible)
                         {
-                            Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            monoRenderer.LocalSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), cell.Background.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
                             if (cell.Glyph != 0 && cell.Foreground != SadRogue.Primitives.Color.Transparent && cell.Foreground != cell.Background)
-                                Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
+                                monoRenderer.LocalSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Glyph).ToMonoRectangle(), cell.Foreground.ToMonoColor(), 0f, Vector2.Zero, cell.Mirror.ToMonoGame(), 0.4f);
 
                             if (cell.Decorators != null)
                                 for (int d = 0; d < cell.Decorators.Count; d++)
                                     if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
-                                        Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
+                                        monoRenderer.LocalSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToMonoRectangle(), cell.Decorators[d].Color.ToMonoColor(), 0f, Vector2.Zero, cell.Decorators[d].Mirror.ToMonoGame(), 0.5f);
                         }
                         else
                             // Draw the default background
-                            Host.Global.SharedSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), screenObject.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            monoRenderer.LocalSpriteBatch.Draw(fontImage, monoRenderer.CachedRenderRects[rectIndex], font.SolidGlyphRectangle.ToMonoRectangle(), screenObject.Surface.DefaultBackground.ToMonoColor(), 0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                     }
                     i++;
                     rectIndex++;
                 }
             }
 
-            Host.Global.SharedSpriteBatch.End();
+            monoRenderer.LocalSpriteBatch.End();
             Host.Global.GraphicsDevice.SetRenderTarget(null);
 
             fullRedraw = true;
