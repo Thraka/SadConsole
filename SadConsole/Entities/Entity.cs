@@ -12,7 +12,7 @@ namespace SadConsole.Entities;
 /// </summary>
 //[JsonConverter(typeof(EntityJsonConverter))]
 [DataContract]
-public partial class Entity : ScreenObject, IHasID
+public partial class Entity : ScreenObject, IHasID, IHasLayer
 {
     private static uint s_idGenerator;
 
@@ -38,6 +38,8 @@ public partial class Entity : ScreenObject, IHasID
     /// </summary>
     [DataMember]
     public int ZIndex { get; set; }
+
+    int IHasLayer.Layer => ZIndex;
 
     /// <summary>
     /// Indicates this entity's visual appearance has changed.
