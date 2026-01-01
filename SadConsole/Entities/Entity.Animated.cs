@@ -41,11 +41,14 @@ public partial class Entity
         public bool IsDirty { get => Animation.IsDirty; set => Animation.IsDirty = value; }
 
         /// <summary>
-        /// Creates a new instance of this type from an animated screen surface.
+        /// Creates a new instance of this type from an animated screen surface. The renderer for the animation will be destroyed.
         /// </summary>
         /// <param name="surface">The animation to use.</param>
-        public Animated(AnimatedScreenObject surface) =>
+        public Animated(AnimatedScreenObject surface)
+        {
             Animation = surface;
+            Animation.DestroyRenderer();
+        }
 
         /// <summary>
         /// Updates the <see cref="Animation"/>.

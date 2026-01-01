@@ -396,6 +396,15 @@ public partial class ScreenSurface : ScreenObject, IDisposable, IScreenSurfaceEd
     protected virtual void OnRendererChanged() { }
 
     /// <summary>
+    /// Diposes and removes the current <see cref="Renderer"/>. This is irreversible.
+    /// </summary>
+    public void DestroyRenderer()
+    {
+        _renderer?.Dispose();
+        Renderer = null;
+    }
+
+    /// <summary>
     /// Returns the value "ScreenSurface".
     /// </summary>
     /// <returns>The string "ScreenSurface".</returns>
