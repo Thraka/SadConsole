@@ -93,8 +93,8 @@ public class GuiDocumentsHost: ImGuiObjectBase
                                         out isActive, out isHovered, true);
 
                     // Draw scrollbars
-                    bool enableScrollX = document.EditingSurface.Surface.ViewHeight != document.EditingSurface.Surface.Height;
-                    bool enableScrollY = document.EditingSurface.Surface.ViewWidth != document.EditingSurface.Surface.Width;
+                    bool enableScrollY = document.EditingSurface.Surface.ViewHeight != document.EditingSurface.Surface.Height;
+                    bool enableScrollX = document.EditingSurface.Surface.ViewWidth != document.EditingSurface.Surface.Width;
 
                     // Print stats
                     Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| ViewPort:"));
@@ -130,35 +130,41 @@ public class GuiDocumentsHost: ImGuiObjectBase
 
                     int sliderValueY = view.Position.Y;
 
-                    ImGui.SameLine();
-                    ImGui.BeginDisabled(document.Options.DisableScrolling || !enableScrollX);
-                    if (ImGuiSC.VSliderIntNudges("##height", new Vector2(barSize.X, pixelArea.Y), ref sliderValueY,
-                                                document.EditingSurface.Surface.Height - view.Height, 0, ImGuiSliderFlags.AlwaysClamp))
+                    if (enableScrollY)
                     {
-                        document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
-                                                sliderValueY,
-                                                document.EditingSurface.Surface.ViewWidth,
-                                                document.EditingSurface.Surface.ViewHeight);
+                        ImGui.SameLine();
+                        ImGui.BeginDisabled(document.Options.DisableScrolling);
+                        if (ImGuiSC.VSliderIntNudges("##height", new Vector2(barSize.X, pixelArea.Y), ref sliderValueY,
+                                                    document.EditingSurface.Surface.Height - view.Height, 0, ImGuiSliderFlags.AlwaysClamp))
+                        {
+                            document.SetSurfaceView(document.EditingSurface.Surface.ViewPosition.X,
+                                                    sliderValueY,
+                                                    document.EditingSurface.Surface.ViewWidth,
+                                                    document.EditingSurface.Surface.ViewHeight);
 
-                        viewChanged = true;
-                        Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
+                            viewChanged = true;
+                            Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
+                        }
+                        ImGui.EndDisabled();
                     }
-                    ImGui.EndDisabled();
 
                     int sliderValueX = view.Position.X;
 
-                    ImGui.BeginDisabled(document.Options.DisableScrolling || !enableScrollY);
-                    if (ImGuiSC.SliderIntNudges("##width", (int)pixelArea.X, ref sliderValueX, 0,
-                                               document.EditingSurface.Surface.Width - view.Width, bigX ? "BIG" : "%d", ImGuiSliderFlags.AlwaysClamp))
+                    if (enableScrollX)
                     {
-                        document.SetSurfaceView(sliderValueX,
-                                                document.EditingSurface.Surface.ViewPosition.Y,
-                                                document.EditingSurface.Surface.ViewWidth,
-                                                document.EditingSurface.Surface.ViewHeight);
+                        ImGui.BeginDisabled(document.Options.DisableScrolling);
+                        if (ImGuiSC.SliderIntNudges("##width", (int)pixelArea.X, ref sliderValueX, 0,
+                                                   document.EditingSurface.Surface.Width - view.Width, bigX ? "BIG" : "%d", ImGuiSliderFlags.AlwaysClamp))
+                        {
+                            document.SetSurfaceView(sliderValueX,
+                                                    document.EditingSurface.Surface.ViewPosition.Y,
+                                                    document.EditingSurface.Surface.ViewWidth,
+                                                    document.EditingSurface.Surface.ViewHeight);
 
-                        Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
+                            Core.State.Tools.SelectedItem?.DocumentViewChanged(document);
+                        }
+                        ImGui.EndDisabled();
                     }
-                    ImGui.EndDisabled();
                 }
                 ImGui.EndChild();
             }
