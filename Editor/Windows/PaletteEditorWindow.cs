@@ -15,12 +15,14 @@ public class PaletteEditorWindow : ImGuiWindowBase
     private Vector4 _editingColorValue = Vector4.One;
 
     private EditorPalette _palette;
+    private Documents.Document? _sourceDocument;
 
     public PaletteEditorWindow(EditorPalette palette)
     {
         Title = "Palette Editor";
         _palette = palette ?? throw new ArgumentNullException(nameof(palette));
-        _editingColors = new List<NamedColor>(palette.Colors);
+        _editingColors = [.. palette.Colors];
+        _sourceDocument = Core.State.SelectedDocument;
     }
 
     public override void BuildUI(ImGuiRenderer renderer)
@@ -31,8 +33,65 @@ public class PaletteEditorWindow : ImGuiWindowBase
 
             ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(Core.Settings.WindowNewDocWidthFactor * ImGui.GetFontSize(), -1));
-            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
+            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.MenuBar))
             {
+                bool menuClearAll = false;
+                bool menuImportColors = false;
+
+                if (ImGui.BeginMenuBar())
+                {
+                    if (ImGui.BeginMenu("Options"u8))
+                    {
+                        if (ImGui.MenuItem("Clear All"u8))
+                            menuClearAll = true;
+
+                        ImGui.BeginDisabled(_sourceDocument == null);
+                        if (ImGui.MenuItem("Import from Document"u8))
+                            menuImportColors = true;
+
+                        ImGui.EndDisabled();
+
+                        ImGui.EndMenu();
+                    }
+
+                    ImGui.EndMenuBar();
+                }
+
+                // Sub popups
+                if (menuClearAll)
+                    ImGui.OpenPopup("clear_all_popup"u8);
+
+                if (ImGui.BeginPopup("clear_all_popup"u8))
+                {
+                    ImGui.Text("Are you sure?"u8);
+                    if (DrawButtons(out bool result, false, "No", "Yes"))
+                    {
+                        if (result)
+                            ResetToDefault();
+
+                        ImGui.CloseCurrentPopup();
+                    }
+                    ImGui.EndPopup();
+                }
+
+                if (menuImportColors)
+                    ImGui.OpenPopup("import_colors"u8);
+
+                if (ImGui.BeginPopup("import_colors"u8))
+                {
+                    ImGui.Text("Erase existing before importing?"u8);
+                    if (DrawButtons(out bool result, false, "No", "Yes"))
+                    {
+                        if (result)
+                            ImportColorsFromDocument(true);
+                        else
+                            ImportColorsFromDocument(false);
+
+                        ImGui.CloseCurrentPopup();
+                    }
+                    ImGui.EndPopup();
+                }
+
                 // Color list
                 ImGui.AlignTextToFramePadding();
                 ImGui.Text("Colors:");
@@ -46,6 +105,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 if (ImGui.Button("Remove Selected"))
                     RemoveSelectedColor();
                 ImGui.EndDisabled();
+
 
                 if (ImGui.BeginChild("ColorList", new Vector2(0, 200), ImGuiChildFlags.Borders))
                 {
@@ -99,7 +159,32 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 // Color editor
                 if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count)
                 {
+                    ImGui.AlignTextToFramePadding();
                     ImGui.Text("Edit Selected Color:");
+                    
+                    ImGui.SameLine();
+                    ImGui.BeginDisabled(_selectedColorIndex == 0);
+                    if (ImGui.Button("\uf102##totop"u8))
+                        MoveColorToTop();
+                    ImGui.EndDisabled();
+                    
+                    ImGui.SameLine();
+                    ImGui.BeginDisabled(_selectedColorIndex == 0);
+                    if (ImGui.Button("\uf062##up"u8))
+                        MoveColorUp();
+                    ImGui.EndDisabled();
+                    
+                    ImGui.SameLine();
+                    ImGui.BeginDisabled(_selectedColorIndex >= _editingColors.Count - 1);
+                    if (ImGui.Button("\uf063##down"u8))
+                        MoveColorDown();
+                    ImGui.EndDisabled();
+                    
+                    ImGui.SameLine();
+                    ImGui.BeginDisabled(_selectedColorIndex >= _editingColors.Count - 1);
+                    if (ImGui.Button("\uf103##tobottom"u8))
+                        MoveColorToBottom();
+                    ImGui.EndDisabled();
                     
                     // Name input
                     ImGui.AlignTextToFramePadding();
@@ -144,7 +229,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                     Close();
                 }
 
-                ImGui.End();
+                ImGui.EndPopup();
             }
             else
             {
@@ -162,6 +247,50 @@ public class PaletteEditorWindow : ImGuiWindowBase
         {
             _editingColors.RemoveAt(_selectedColorIndex);
             _selectedColorIndex = -1;
+        }
+    }
+
+    private void MoveColorToTop()
+    {
+        if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
+        {
+            var color = _editingColors[_selectedColorIndex];
+            _editingColors.RemoveAt(_selectedColorIndex);
+            _editingColors.Insert(0, color);
+            _selectedColorIndex = 0;
+        }
+    }
+
+    private void MoveColorUp()
+    {
+        if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
+        {
+            var color = _editingColors[_selectedColorIndex];
+            _editingColors.RemoveAt(_selectedColorIndex);
+            _editingColors.Insert(_selectedColorIndex - 1, color);
+            _selectedColorIndex--;
+        }
+    }
+
+    private void MoveColorDown()
+    {
+        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
+        {
+            var color = _editingColors[_selectedColorIndex];
+            _editingColors.RemoveAt(_selectedColorIndex);
+            _editingColors.Insert(_selectedColorIndex + 1, color);
+            _selectedColorIndex++;
+        }
+    }
+
+    private void MoveColorToBottom()
+    {
+        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
+        {
+            var color = _editingColors[_selectedColorIndex];
+            _editingColors.RemoveAt(_selectedColorIndex);
+            _editingColors.Add(color);
+            _selectedColorIndex = _editingColors.Count - 1;
         }
     }
 
@@ -191,11 +320,44 @@ public class PaletteEditorWindow : ImGuiWindowBase
         Core.State.SyncEditorPalette();
     }
 
+    private void ImportColorsFromDocument(bool clear)
+    {
+        if (_sourceDocument == null) return;
+
+        // Use a HashSet to track unique colors
+        HashSet<SadRogue.Primitives.Color> uniqueColors = new();
+
+        // Iterate through all cells in the surface
+        var surface = _sourceDocument.EditingSurface.Surface;
+        for (int i = 0; i < surface.Count; i++)
+        {
+            var cell = surface[i];
+            uniqueColors.Add(cell.Foreground);
+            uniqueColors.Add(cell.Background);
+        }
+
+        // Clear existing colors and add the unique colors found
+        if (clear)
+            _editingColors.Clear();
+
+        int colorIndex = 1;
+        foreach (var color in uniqueColors.OrderBy(c => c.GetHSLLightness()))
+        {
+            string colorName = Documents.Document.GenerateName($"Color{colorIndex}");
+            _editingColors.Add(new NamedColor(colorName, color));
+            colorIndex++;
+        }
+
+        // Reset selection
+        _selectedColorIndex = -1;
+    }
+
     protected override void OnOpened()
     {
         base.OnOpened();
         // Refresh the editing colors when window opens
-        _editingColors = new List<NamedColor>(_palette.Colors);
+        _editingColors = [.. _palette.Colors];
         _selectedColorIndex = -1;
+        _sourceDocument = Core.State.SelectedDocument;
     }
 }
