@@ -6,18 +6,32 @@ namespace SadConsole.Editor.GuiObjects;
 
 public class GuiDocumentsList : ImGuiObjectBase
 {
+    private float _docListHeight = 200f;
+
     public override void BuildUI(ImGuiRenderer renderer)
     {
         ImGui.Begin(GuiDockSpace.ID_LEFT_PANEL);
 
         Document? oldDocument = Core.State.SelectedDocument;
 
-        // Render the hierarchical document list
-        if (ImGui.BeginChild("##doclist", new System.Numerics.Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * 6), ImGuiChildFlags.Borders))
+        // Render the hierarchical document list with resizable height
+        if (ImGui.BeginChild("##doclist", new System.Numerics.Vector2(-1, _docListHeight), ImGuiChildFlags.Borders))
         {
             RenderDocumentHierarchy(Core.State.Documents, ref oldDocument);
         }
         ImGui.EndChild();
+
+        // Horizontal splitter
+        ImGui.Button("##splitter", new System.Numerics.Vector2(-1, 4));
+        if (ImGui.IsItemActive())
+        {
+            _docListHeight += ImGui.GetIO().MouseDelta.Y;
+            if (_docListHeight < 50f) _docListHeight = 50f;
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetMouseCursor(ImGuiMouseCursor.ResizeNs);
+        }
 
         // Handle selection changes
         if (oldDocument != Core.State.SelectedDocument)
