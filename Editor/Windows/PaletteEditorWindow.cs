@@ -324,7 +324,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
     {
         if (_sourceDocument == null) return;
 
-        // Use a HashSet to track unique colors
+        // Use a HashSet to track unique colors from the document
         HashSet<SadRogue.Primitives.Color> uniqueColors = new();
 
         // Iterate through all cells in the surface
@@ -336,13 +336,28 @@ public class PaletteEditorWindow : ImGuiWindowBase
             uniqueColors.Add(cell.Background);
         }
 
-        // Clear existing colors and add the unique colors found
-        if (clear)
+        // If not clearing, build a set of existing colors to skip
+        HashSet<SadRogue.Primitives.Color> existingColors = new();
+        if (!clear)
+        {
+            foreach (var namedColor in _editingColors)
+            {
+                existingColors.Add(namedColor.Color);
+            }
+        }
+        else
+        {
+            // Clear existing colors
             _editingColors.Clear();
+        }
 
         int colorIndex = 1;
         foreach (var color in uniqueColors.OrderBy(c => c.GetHSLLightness()))
         {
+            // Skip colors that already exist in the palette
+            if (existingColors.Contains(color))
+                continue;
+
             string colorName = Documents.Document.GenerateName($"Color{colorIndex}");
             _editingColors.Add(new NamedColor(colorName, color));
             colorIndex++;

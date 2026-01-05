@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using SadConsole.Editor.GuiObjects;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI;
@@ -107,16 +108,33 @@ public static partial class Core
 
         public static void LoadEditorPalette()
         {
-            if (File.Exists("editor.pal"))
+            string fullPath = Path.Combine(RootFolder, "editor.pal");
+
+            if (File.Exists(fullPath))
+                Palette = EditorPalette.Load(fullPath);
+
+            else if (File.Exists("editor.pal"))
                 Palette = EditorPalette.Load("editor.pal");
         }
 
         public static void SaveEditorPalette()
         {
-            if (File.Exists("editor.pal"))
-                File.Delete("editor.pal");
+            string fullPath = Path.Combine(RootFolder, "editor.pal");
 
-            Palette.Save("editor.pal");
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+                Palette.Save(fullPath);
+            }
+            else if (File.Exists("editor.pal"))
+            {
+                File.Delete("editor.pal");
+                Palette.Save("editor.pal");
+            }
+            else
+            {
+                Palette.Save(fullPath);
+            }
         }
     }
 }
