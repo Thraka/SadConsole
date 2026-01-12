@@ -8,10 +8,11 @@ using SadRogue.Primitives;
 namespace SadConsole.UI.Controls;
 
 /// <summary>
-/// A scrollable list control.
+/// A scrollable list control with strongly-typed items.
 /// </summary>
+/// <typeparam name="T">The type of items in the list.</typeparam>
 [DataContract]
-public partial class ListBox : CompositeControl
+public partial class ListBox<T> : CompositeControl
 {
     /// <summary>
     /// The event args used when the selected item changes.
@@ -21,19 +22,19 @@ public partial class ListBox : CompositeControl
         /// <summary>
         /// The item selected.
         /// </summary>
-        public readonly object? Item;
+        public readonly T? Item;
 
         /// <summary>
         /// Creates a new instance of this type with the specified item.
         /// </summary>
         /// <param name="item">The selected item from the list.</param>
-        public SelectedItemEventArgs(object? item) =>
+        public SelectedItemEventArgs(T? item) =>
             Item = item;
     }
 
     [DataMember(Name = "SelectedIndex")]
     private int _selectedIndex = -1;
-    private object? _selectedItem;
+    private T? _selectedItem;
     private DateTime _leftMouseLastClick = DateTime.Now;
 
     [DataMember]
@@ -106,7 +107,7 @@ public partial class ListBox : CompositeControl
     /// The items in the listbox.
     /// </summary>
     [DataMember]
-    public ObservableCollection<object> Items { get; private set; }
+    public ObservableCollection<T> Items { get; private set; }
 
     /// <summary>
     /// Gets or sets the index of the selected item.
@@ -119,7 +120,7 @@ public partial class ListBox : CompositeControl
             if (value == -1)
             {
                 _selectedIndex = -1;
-                _selectedItem = null;
+                _selectedItem = default;
                 IsDirty = true;
                 OnSelectedItemChanged();
             }
@@ -138,15 +139,15 @@ public partial class ListBox : CompositeControl
     /// <summary>
     /// Gets or sets the selected item.
     /// </summary>
-    public object? SelectedItem
+    public T? SelectedItem
     {
         get => _selectedItem;
         set
         {
-            if (value == null)
+            if (value == null || (value is object obj && obj == null))
             {
                 _selectedIndex = -1;
-                _selectedItem = null;
+                _selectedItem = default;
                 IsDirty = true;
                 OnSelectedItemChanged();
             }
@@ -186,21 +187,21 @@ public partial class ListBox : CompositeControl
     }
 
     /// <summary>
-    /// Creates a new instance of the listbox control with the default theme for the items.
+    /// Creates a new instance of the generic listbox control with the default theme for the items.
     /// </summary>
     /// <param name="width">The width of the listbox.</param>
     /// <param name="height">The height of the listbox.</param>
     public ListBox(int width, int height) : base(width, height)
     {
         _reconfigureScrollBar = true;
-        Items = new ObservableCollection<object>();
+        Items = new ObservableCollection<T>();
         Items.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Items_CollectionChanged);
         ItemTheme = new ListBoxItemTheme();
         SetupScrollBar();
     }
 
     /// <summary>
-    /// Creates a new instance of the listbox control with the specified item theme.
+    /// Creates a new instance of the generic listbox control with the specified item theme.
     /// </summary>
     /// <param name="width">The width of the listbox.</param>
     /// <param name="height">The height of the listbox.</param>
@@ -251,7 +252,6 @@ public partial class ListBox : CompositeControl
             scrollBarExists = true;
         }
 
-        //_scrollBar.Width, height < 3 ? 3 : height - _scrollBarSizeAdjust
         ScrollBar = new ScrollBar(Orientation.Vertical, sizeValue);
 
         if (scrollBarExists)
@@ -287,7 +287,12 @@ public partial class ListBox : CompositeControl
         }
     }
 
-    private void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    /// <summary>
+    /// Called when the collection of items changes.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
+    protected internal void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
         {
@@ -305,7 +310,7 @@ public partial class ListBox : CompositeControl
 
         if (_selectedItem != null && !Items.Contains(_selectedItem))
         {
-            SelectedItem = null;
+            SelectedItem = default;
         }
 
         IsDirty = true;
@@ -393,11 +398,11 @@ public partial class ListBox : CompositeControl
         bool doubleClicked = (click - _leftMouseLastClick).TotalSeconds <= 0.5;
         _leftMouseLastClick = click;
 
-        (object? item, _) = GetItemAndIndexUnderMouse(state);
+        (T? item, _) = GetItemAndIndexUnderMouse(state);
 
-        if (item == null) return;
+        if (item == null || (item is object obj && obj == null)) return;
 
-        object? oldItem = _selectedItem;
+        T? oldItem = _selectedItem;
         bool sameObject;
 
         if (CompareByReference)
@@ -423,7 +428,7 @@ public partial class ListBox : CompositeControl
     /// <param name="state">The mouse state.</param>
     /// <returns>A tuple containing the item and the item's array position.</returns> 
     /// <exception cref="Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
-    public (object? item, int itemIndex) GetItemAndIndexUnderMouse(ControlMouseState state)
+    public (T? item, int itemIndex) GetItemAndIndexUnderMouse(ControlMouseState state)
     {
         Point mouseControlPosition = state.MousePosition;
         if (ItemsArea.Contains(mouseControlPosition))
@@ -437,7 +442,7 @@ public partial class ListBox : CompositeControl
                 return (Items[itemIndex], itemIndex);
         }
 
-        return (null, -1);
+        return (default, -1);
     }
 
     [OnSerializing]
@@ -468,6 +473,30 @@ public partial class ListBox : CompositeControl
         DetermineState();
         IsDirty = true;
     }
+}
 
+/// <summary>
+/// A scrollable list control.
+/// </summary>
+[DataContract]
+public partial class ListBox : ListBox<object>
+{
+    /// <summary>
+    /// Creates a new instance of the listbox control with the default theme for the items.
+    /// </summary>
+    /// <param name="width">The width of the listbox.</param>
+    /// <param name="height">The height of the listbox.</param>
+    public ListBox(int width, int height) : base(width, height)
+    {
+    }
 
+    /// <summary>
+    /// Creates a new instance of the listbox control with the specified item theme.
+    /// </summary>
+    /// <param name="width">The width of the listbox.</param>
+    /// <param name="height">The height of the listbox.</param>
+    /// <param name="itemTheme">The theme to use with rendering the listbox items.</param>
+    public ListBox(int width, int height, ListBoxItemTheme itemTheme) : base(width, height, itemTheme)
+    {
+    }
 }

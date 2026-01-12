@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace SadConsole.UI.Controls;
 
-public partial class ComboBox
+public partial class ComboBox<T>
 {
     /// <summary>
     /// When <see langword="true"/>, uses the <see cref="PopupHorizontal"/> value from the interior of the control. When <see langword="false"/>, it's used from the outside of the control.

@@ -2,17 +2,35 @@
 using SadConsole.Quick;
 using System.Linq;
 using SadRogue.Primitives;
-using static SadConsole.UI.Controls.ListBox;
 using System;
 
 namespace SadConsole.UI.Controls;
 
 /// <summary>
-/// Represents a button that can be toggled on/off within a group of other buttons.
+/// Represents a dropdown combo box control with strongly-typed items.
 /// </summary>
+/// <typeparam name="T">The type of items in the dropdown.</typeparam>
 [DataContract]
-public partial class ComboBox : CheckBox
+public partial class ComboBox<T> : CheckBox
 {
+    /// <summary>
+    /// The event args used when the selected item changes.
+    /// </summary>
+    public class SelectedItemEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The item selected.
+        /// </summary>
+        public readonly T? Item;
+
+        /// <summary>
+        /// Creates a new instance of this type with the specified item.
+        /// </summary>
+        /// <param name="item">The selected item from the list.</param>
+        public SelectedItemEventArgs(T? item) =>
+            Item = item;
+    }
+
     /// <summary>
     /// Surface that contains the listbox
     /// </summary>
@@ -21,7 +39,7 @@ public partial class ComboBox : CheckBox
     /// <summary>
     /// Listbox used to control the items
     /// </summary>
-    protected readonly ListBox ListBox;
+    protected readonly ListBox<T> ListBox;
 
     /// <summary>
     /// An event that triggers when the <see cref="SelectedItem"/> property changes.
@@ -40,7 +58,7 @@ public partial class ComboBox : CheckBox
     /// <summary>
     /// Gets or sets the selected item.
     /// </summary>
-    public object? SelectedItem
+    public T? SelectedItem
     {
         get => ListBox.SelectedItem;
         set => ListBox.SelectedItem = value;
@@ -53,20 +71,20 @@ public partial class ComboBox : CheckBox
     /// <param name="dropdownWidth">The width of the dropdown container.</param>
     /// <param name="dropdownHeight">The height of the dropdown container.</param>
     /// <param name="items">The items to seed the dropdown with.</param>
-    public ComboBox(int width, int dropdownWidth, int dropdownHeight, object[] items) : base(width, 1)
+    public ComboBox(int width, int dropdownWidth, int dropdownHeight, T[] items) : base(width, 1)
     {
         DropdownContainer = new ScreenSurface(dropdownWidth, dropdownHeight);
-        ListBox = new ListBox(dropdownWidth, dropdownHeight);
+        ListBox = new ListBox<T>(dropdownWidth, dropdownHeight);
 
         ControlHost listboxHost = new();
         DropdownContainer.SadComponents.Add(listboxHost);
         listboxHost.Add(ListBox);
 
-        foreach (object item in items)
+        foreach (T item in items)
             ListBox.Items.Add(item);
 
         ListBox.SelectedItemChanged += _listBox_SelectedItemChanged;
-        ListBox.SelectedItemReselected += _listBox_SelectedItemReselected; ;
+        ListBox.SelectedItemReselected += _listBox_SelectedItemReselected;
         ListBox.SelectedIndex = 0;
 
         // Setup popup container console to watch the mouse
@@ -124,11 +142,11 @@ public partial class ComboBox : CheckBox
     /// Sets the items in the dropdown listbox.
     /// </summary>
     /// <param name="items">The items to set.</param>
-    public void SetItems(params object[] items)
+    public void SetItems(params T[] items)
     {
         ListBox.Items.Clear();
 
-        foreach (object item in items)
+        foreach (T item in items)
             ListBox.Items.Add(item);
 
         IsDirty = true;
@@ -138,10 +156,10 @@ public partial class ComboBox : CheckBox
     /// Gets an array of items from the dropdown listbox.
     /// </summary>
     /// <returns></returns>
-    public object[] GetItems() =>
+    public T[] GetItems() =>
         ListBox.Items.ToArray();
 
-    private void _listBox_SelectedItemChanged(object? sender, SelectedItemEventArgs e)
+    private void _listBox_SelectedItemChanged(object? sender, ListBox<T>.SelectedItemEventArgs e)
     {
         Text = e.Item?.ToString() ?? string.Empty;
         IsDirty = true;
@@ -149,7 +167,7 @@ public partial class ComboBox : CheckBox
         SelectedItemChanged?.Invoke(this, new SelectedItemEventArgs(SelectedItem));
     }
 
-    private void _listBox_SelectedItemReselected(object? sender, SelectedItemEventArgs e)
+    private void _listBox_SelectedItemReselected(object? sender, ListBox<T>.SelectedItemEventArgs e)
     {
         IsSelected = false;
     }
@@ -251,5 +269,24 @@ public partial class ComboBox : CheckBox
                 DropdownContainer.Parent = null;
             }
         }
+    }
+}
+
+/// <summary>
+/// Represents a button that can be toggled on/off within a group of other buttons.
+/// </summary>
+[DataContract]
+public partial class ComboBox : ComboBox<object>
+{
+    /// <summary>
+    /// Creates a new instance of the combobox control.
+    /// </summary>
+    /// <param name="width">The width of the control.</param>
+    /// <param name="dropdownWidth">The width of the dropdown container.</param>
+    /// <param name="dropdownHeight">The height of the dropdown container.</param>
+    /// <param name="items">The items to seed the dropdown with.</param>
+    public ComboBox(int width, int dropdownWidth, int dropdownHeight, object[] items) 
+        : base(width, dropdownWidth, dropdownHeight, items)
+    {
     }
 }
