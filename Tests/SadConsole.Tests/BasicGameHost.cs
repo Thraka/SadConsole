@@ -80,6 +80,11 @@ namespace SadConsole.Tests
                 throw new NotImplementedException();
             }
 
+            public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color? colorKey = null, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
+            {
+                throw new NotImplementedException();
+            }
+
             public Texture(string path)
             {
                 using (Stream fontStream = new FileStream(path, FileMode.Open))
