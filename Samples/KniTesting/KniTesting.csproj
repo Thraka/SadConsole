@@ -1,16 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
+    <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>KniTesting</RootNamespace>
     <AssemblyName>KniTesting</AssemblyName>
     <DefineConstants>$(DefineConstants);BLAZORGL</DefineConstants>
 	<KniPlatform>BlazorGL</KniPlatform>
+
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
     <!--<InvariantGlobalization>true</InvariantGlobalization>-->
@@ -23,9 +25,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Pages\Index.razor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="KniTestingGame.cs" />
+    <Compile Include="SadConsoleFiles\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +63,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SadConsole.Host.KNI\SadConsole.Host.KNI.csproj" />
+    <ProjectReference Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
   </ItemGroup>
 
 </Project>
