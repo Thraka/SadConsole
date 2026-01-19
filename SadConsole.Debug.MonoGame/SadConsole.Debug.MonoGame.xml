@@ -576,16 +576,6 @@
             When <see langword="true"/>, indicates thats the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
             </summary>
         </member>
-        <member name="T:SadConsole.ImGuiSystem.ITitle">
-            <summary>
-            Defines a title on an object.
-            </summary>
-        </member>
-        <member name="P:SadConsole.ImGuiSystem.ITitle.Title">
-            <summary>
-            The title of the object.
-            </summary>
-        </member>
         <member name="T:SadConsole.ImGuiTypes.Mirror">
             <summary>
             The mirroring mode
@@ -697,6 +687,11 @@
             </summary>
             <param name="itemHighlighted">True when an item is single-clicked and <see cref="P:Hexa.NET.ImGui.SC.FileListBox.DoubleClickToSelect"/> is true.</param>
             <returns>True when an item is selected or highlighted.</returns>
+        </member>
+        <member name="M:Hexa.NET.ImGui.SC.SettingsTable.EndTable">
+            <summary>
+            Call if <see cref="M:Hexa.NET.ImGui.SC.SettingsTable.BeginTable(System.String,Hexa.NET.ImGui.ImGuiTableFlags,Hexa.NET.ImGui.ImGuiTableColumnFlags,Hexa.NET.ImGui.ImGuiTableColumnFlags)"/> returns true."/>
+            </summary>
         </member>
         <member name="T:Hexa.NET.ImGui.StyleExtensions">
             <summary>
