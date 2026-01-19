@@ -213,6 +213,11 @@
             Changes the <see cref="P:SadConsole.AnimatedScreenObject.CurrentFrame"/> to the first frame.
             </summary>
         </member>
+        <member name="M:SadConsole.AnimatedScreenObject.DestroyRenderer">
+            <summary>
+            Diposes and removes the current <see cref="P:SadConsole.AnimatedScreenObject.Renderer"/>.
+            </summary>
+        </member>
         <member name="M:SadConsole.AnimatedScreenObject.CreateStatic(System.Int32,System.Int32,System.Int32,System.Double,System.Nullable{SadRogue.Primitives.Color},System.Nullable{SadRogue.Primitives.Color})">
             <summary>
             Creates an animated surface that looks like static noise.
@@ -2091,6 +2096,11 @@
             The layers.
             </summary>
         </member>
+        <member name="F:SadConsole.Components.LayeredSurface._layerVisibility">
+            <summary>
+            Visibility state for each layer.
+            </summary>
+        </member>
         <member name="F:SadConsole.Components.LayeredSurface.RenderStep">
             <summary>
             Internal use only
@@ -2115,6 +2125,20 @@
             <summary>
             Always returns <see langword="false"/>.
             </summary>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.GetLayerVisibility(System.Int32)">
+            <summary>
+            Gets or sets the visibility of a layer at the specified index.
+            </summary>
+            <param name="index">The index of the layer.</param>
+            <returns><see langword="true"/> if the layer is visible; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Components.LayeredSurface.SetLayerVisibility(System.Int32,System.Boolean)">
+            <summary>
+            Sets the visibility of a layer at the specified index.
+            </summary>
+            <param name="index">The index of the layer.</param>
+            <param name="isVisible"><see langword="true"/> to make the layer visible; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="P:SadConsole.Components.LayeredSurface.Item(System.Int32)">
             <summary>
@@ -3863,7 +3887,7 @@
         </member>
         <member name="M:SadConsole.Entities.Entity.Animated.#ctor(SadConsole.AnimatedScreenObject)">
             <summary>
-            Creates a new instance of this type from an animated screen surface.
+            Creates a new instance of this type from an animated screen surface. The renderer for the animation will be destroyed.
             </summary>
             <param name="surface">The animation to use.</param>
         </member>
@@ -3872,6 +3896,11 @@
             Updates the <see cref="P:SadConsole.Entities.Entity.Animated.Animation"/>.
             </summary>
             <param name="delta">The time that has elapsed since this method was last called.</param>
+        </member>
+        <member name="F:SadConsole.Entities.Entity.IDGenerator">
+            <summary>
+            A shared ID generator for all entities. While you can set an <see cref="P:SadConsole.Entities.Entity.ID"/> directly, this value is used and increased by 1 every time an entity is created.
+            </summary>
         </member>
         <member name="E:SadConsole.Entities.Entity.IsDirtyChanged">
             <summary>
@@ -3911,6 +3940,11 @@
         <member name="P:SadConsole.Entities.Entity.IsSingleCell">
             <summary>
             When <see langword="true"/>, indicates that this entity is a single cell entity; otherwise <see langword="false"/> and it's an animated surface entity.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Entities.Entity.ID">
+            <summary>
+            Unique identifier.
             </summary>
         </member>
         <member name="M:SadConsole.Entities.Entity.#ctor(SadConsole.Entities.Entity.Animated,System.Int32)">
@@ -4633,6 +4667,50 @@
             <param name="fontSize">The glyph size of the font used.</param>
             <returns>A tuple with the names (X, Y) where X is the difference of width to height and Y is the difference of height to width.</returns>
         </member>
+        <member name="T:SadConsole.FontChangedEventArgs">
+            <summary>
+            Event arguments for when the default font changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FontChangedEventArgs.OldFont">
+            <summary>
+            The font that was previously set as the default.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FontChangedEventArgs.NewFont">
+            <summary>
+            The new font that is now set as the default.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FontChangedEventArgs.#ctor(SadConsole.IFont,SadConsole.IFont)">
+            <summary>
+            Creates a new instance of the font changed event arguments.
+            </summary>
+            <param name="oldFont">The previous default font.</param>
+            <param name="newFont">The new default font.</param>
+        </member>
+        <member name="T:SadConsole.FontSizeChangedEventArgs">
+            <summary>
+            Event arguments for when the default font size changes.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FontSizeChangedEventArgs.OldSize">
+            <summary>
+            The font size that was previously set as the default.
+            </summary>
+        </member>
+        <member name="P:SadConsole.FontSizeChangedEventArgs.NewSize">
+            <summary>
+            The new font size that is now set as the default.
+            </summary>
+        </member>
+        <member name="M:SadConsole.FontSizeChangedEventArgs.#ctor(SadConsole.IFont.Sizes,SadConsole.IFont.Sizes)">
+            <summary>
+            Creates a new instance of the font size changed event arguments.
+            </summary>
+            <param name="oldSize">The previous default font size.</param>
+            <param name="newSize">The new default font size.</param>
+        </member>
         <member name="T:SadConsole.GameHost">
              <summary>
              Represents the SadConsole game engine.
@@ -4690,6 +4768,16 @@
         <member name="E:SadConsole.GameHost.Ending">
             <summary>
             A callback to run after the <see cref="M:SadConsole.GameHost.Run"/> method is called;
+            </summary>
+        </member>
+        <member name="E:SadConsole.GameHost.DefaultFontChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.GameHost.DefaultFont"/> property changes.
+            </summary>
+        </member>
+        <member name="E:SadConsole.GameHost.DefaultFontSizeChanged">
+            <summary>
+            Raised when the <see cref="P:SadConsole.GameHost.DefaultFontSize"/> property changes.
             </summary>
         </member>
         <member name="P:SadConsole.GameHost.DrawCalls">
@@ -4944,6 +5032,11 @@
             Uses reflection to examine the <see cref="T:SadRogue.Primitives.Color"/> type and add any predefined colors into <see cref="F:SadRogue.Primitives.ColorExtensions2.ColorMappings"/>.
             </summary>
         </member>
+        <member name="M:SadConsole.GameHost.ToggleFullScreen">
+            <summary>
+            Toggles between windowed and full screen rendering for SadConsole.
+            </summary>
+        </member>
         <member name="M:SadConsole.GameHost.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
             <summary>
             Resizes the window to the specified dimensions.
@@ -4983,6 +5076,34 @@
             <summary>
             Disposes this object.
             </summary>
+        </member>
+        <member name="M:SadConsole.GameHost.OnDefaultFontChanged(SadConsole.FontChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:SadConsole.GameHost.DefaultFontChanged"/> event and updates existing screen objects that are using the old default font.
+            </summary>
+            <param name="e">Event args containing the old and new font references.</param>
+        </member>
+        <member name="M:SadConsole.GameHost.OnDefaultFontSizeChanged(SadConsole.FontSizeChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:SadConsole.GameHost.DefaultFontSizeChanged"/> event and updates existing screen objects that are using the old default font size.
+            </summary>
+            <param name="e">Event args containing the old and new font size.</param>
+        </member>
+        <member name="M:SadConsole.GameHost.UpdateScreenObjectFonts(SadConsole.IScreenObject,SadConsole.IFont,SadConsole.IFont)">
+            <summary>
+            Recursively updates the font of screen objects that are using the old default font.
+            </summary>
+            <param name="obj">The screen object to check and update.</param>
+            <param name="oldFont">The old default font to check for.</param>
+            <param name="newFont">The new default font to apply.</param>
+        </member>
+        <member name="M:SadConsole.GameHost.UpdateScreenObjectFontSizes(SadConsole.IScreenObject,SadConsole.IFont.Sizes,SadConsole.IFont.Sizes)">
+            <summary>
+            Recursively updates the font size of screen objects that are using the old default font size.
+            </summary>
+            <param name="obj">The screen object to check and update.</param>
+            <param name="oldSize">The old default font size to check for.</param>
+            <param name="newSize">The new default font size to apply.</param>
         </member>
         <member name="T:SadConsole.GlyphDefinition">
             <summary>
@@ -8518,7 +8639,7 @@
             <param name="index">The index of the pixel.</param>
             <returns>The color of the pixel.</returns>
         </member>
-        <member name="M:SadConsole.ITexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+        <member name="M:SadConsole.ITexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,System.Nullable{SadRogue.Primitives.Color},SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <summary>
             Converts the texture into a cell surface based on the specified mode.
             </summary>
@@ -8527,6 +8648,7 @@
             <param name="surfaceHeight">How many cells high the returned surface is.</param>
             <param name="backgroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Background"/>.</param>
             <param name="foregroundStyle">The style to use when <paramref name="mode"/> is <see cref="F:SadConsole.TextureConvertMode.Foreground"/>.</param>
+            <param name="colorKey">Pixels matching this color are treated as transparent and excluded from conversion. Defaults to <see cref="F:SadRogue.Primitives.Color.Transparent"/>.</param>
             <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="M:SadConsole.ITexture.GetPixels"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
             <param name="cachedSurface">The cell surface to use instead of creating a new one. Used with <paramref name="cachedColorArray"/>.</param>
             <returns>A new surface.</returns>
@@ -8547,6 +8669,16 @@
             Fills the foreground of each cell with the pixel color.
             </summary>
         </member>
+        <member name="F:SadConsole.TextureConvertMode.BothFocusBackground">
+            <summary>
+            Uses both background and foregroun mode, with the background being brighter than the foreground.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertMode.BothFocusForeground">
+            <summary>
+            Uses both background and foregroun mode, with the foreground being brighter than the background.
+            </summary>
+        </member>
         <member name="T:SadConsole.TextureConvertForegroundStyle">
             <summary>
             The style applied when <see cref="F:SadConsole.TextureConvertMode.Foreground"/> is set.
@@ -8560,6 +8692,12 @@
         <member name="F:SadConsole.TextureConvertForegroundStyle.AsciiSymbol">
             <summary>
             Fills the surface with ascii symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
+            </summary>
+        </member>
+        <member name="F:SadConsole.TextureConvertForegroundStyle.EdgeShapes">
+            <summary>
+            Uses edge detection to fill the surface with shaped ascii characters that represent edges, curves, and corners.
+            Characters like ( ) / \ | _ b d are used to match the detected edge direction.
             </summary>
         </member>
         <member name="T:SadConsole.TextureConvertBackgroundStyle">
@@ -8577,22 +8715,33 @@
             Calculates the cell color based on the surrounding colors of the image.
             </summary>
         </member>
+        <member name="T:SadConsole.ITitle">
+            <summary>
+            Simple interface for objects that have a title.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ITitle.Title">
+            <summary>
+            The title of the object.
+            </summary>
+        </member>
         <member name="T:SadConsole.LayeredScreenSurface">
             <summary>
-            A basic console that can contain controls.
+            A surface that contains multiple layers
             </summary>
         </member>
         <member name="P:SadConsole.LayeredScreenSurface.Layers">
             <summary>
-            The controls host holding all the controls.
+            The component that contains the layers for this surface.
             </summary>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32)">
             <summary>
-            Creates a new console.
+            Creates a new layered surface with the specified width and height, using default cells.
             </summary>
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
+            <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
@@ -8601,33 +8750,37 @@
             <param name="width">The width in cells of the surface.</param>
             <param name="height">The height in cells of the surface.</param>
             <param name="initialCells">The initial cells to seed the surface.</param>
+            <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Creates a new console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a new surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The visible width of the console in cells.</param>
-            <param name="height">The visible height of the console in cells.</param>
-            <param name="bufferWidth">The total width of the console in cells.</param>
-            <param name="bufferHeight">The total height of the console in cells.</param>
+            <param name="width">The visible width of the surface in cells.</param>
+            <param name="height">The visible height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
-            Creates a console with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
+            Creates a surface with the specified width and height, with <see cref="F:SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="F:SadRogue.Primitives.Color.White"/> for the foreground.
             </summary>
-            <param name="width">The width of the console in cells.</param>
-            <param name="height">The height of the console in cells.</param>
-            <param name="bufferWidth">The total width of the console in cells.</param>
-            <param name="bufferHeight">The total height of the console in cells.</param>
-            <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+            <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cells for you.</param>
+            <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.#ctor(SadConsole.ICellSurface,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
             <summary>
-            Creates a new console using the existing surface.
+            Creates a new surface using the existing surface.
             </summary>
             <param name="surface">The surface.</param>
             <param name="font">The font to use with the surface.</param>
             <param name="fontSize">The font size.</param>
+            <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
         </member>
         <member name="M:SadConsole.LayeredScreenSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
@@ -10228,6 +10381,11 @@
         <member name="M:SadConsole.ScreenSurface.OnRendererChanged">
             <summary>
             Called when the <see cref="P:SadConsole.ScreenSurface.Renderer"/> property is changed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ScreenSurface.DestroyRenderer">
+            <summary>
+            Diposes and removes the current <see cref="P:SadConsole.ScreenSurface.Renderer"/>. This is irreversible.
             </summary>
         </member>
         <member name="M:SadConsole.ScreenSurface.ToString">
@@ -12622,34 +12780,125 @@
             </summary>
             <returns>A rectangle representing the estimated surface area needed.</returns>
         </member>
-        <member name="T:SadConsole.UI.Controls.ComboBox">
+        <member name="T:SadConsole.UI.Controls.ComboBox`1">
             <summary>
-            Represents a button that can be toggled on/off within a group of other buttons.
+            Represents a dropdown combo box control with strongly-typed items.
+            </summary>
+            <typeparam name="T">The type of items in the dropdown.</typeparam>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ComboBox`1.SelectedItemEventArgs">
+            <summary>
+            The event args used when the selected item changes.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ComboBox.DropdownContainer">
+        <member name="F:SadConsole.UI.Controls.ComboBox`1.SelectedItemEventArgs.Item">
+            <summary>
+            The item selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.SelectedItemEventArgs.#ctor(`0)">
+            <summary>
+            Creates a new instance of this type with the specified item.
+            </summary>
+            <param name="item">The selected item from the list.</param>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ComboBox`1.DropdownContainer">
             <summary>
             Surface that contains the listbox
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ComboBox.ListBox">
+        <member name="F:SadConsole.UI.Controls.ComboBox`1.ListBox">
             <summary>
             Listbox used to control the items
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Controls.ComboBox.SelectedItemChanged">
+        <member name="E:SadConsole.UI.Controls.ComboBox`1.SelectedItemChanged">
             <summary>
-            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ComboBox.SelectedItem"/> property changes.
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ComboBox`1.SelectedItem"/> property changes.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.SelectedIndex">
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.SelectedIndex">
             <summary>
             Gets or sets the index of the selected item.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.SelectedItem">
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.SelectedItem">
             <summary>
             Gets or sets the selected item.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.#ctor(System.Int32,System.Int32,System.Int32,`0[])">
+            <summary>
+            Creates a new instance of the combobox control.
+            </summary>
+            <param name="width">The width of the control.</param>
+            <param name="dropdownWidth">The width of the dropdown container.</param>
+            <param name="dropdownHeight">The height of the dropdown container.</param>
+            <param name="items">The items to seed the dropdown with.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.ResizeDropDown(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Resizes the dropdown container to the given width/height
+            </summary>
+            <param name="width">Width of the dropdown</param>
+            <param name="height">Height of the dropdown</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.SetItems(`0[])">
+            <summary>
+            Sets the items in the dropdown listbox.
+            </summary>
+            <param name="items">The items to set.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.GetItems">
+            <summary>
+            Gets an array of items from the dropdown listbox.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.RepositionOffScreenContainer">
+            <summary>
+            Checks if the dropdown container is off-screen, and pushes it back in.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.OnIsSelected">
+            <summary>
+            When <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is <see langword="true"/>, displays the popup container. When <see langword="false"/>, hides the popup container.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.PopupInnerAligned">
+            <summary>
+            When <see langword="true"/>, uses the <see cref="P:SadConsole.UI.Controls.ComboBox`1.PopupHorizontal"/> value from the interior of the control. When <see langword="false"/>, it's used from the outside of the control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.PopupHorizontal">
+            <summary>
+            Sets the horizontal orientation of the of the dropdown popup.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.PopupVertical">
+            <summary>
+            Sets the vertical orientation of the of the dropdown popup.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.CollapsedButtonGlyph">
+            <summary>
+            The glyph to use on the control when it's collapsed.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ComboBox`1.ExpandedButtonGlyph">
+            <summary>
+            The glyph to use on the control when it's expanded.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ComboBox`1.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ComboBox">
+            <summary>
+            Represents a button that can be toggled on/off within a group of other buttons.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ComboBox.#ctor(System.Int32,System.Int32,System.Int32,System.Object[])">
@@ -12660,66 +12909,6 @@
             <param name="dropdownWidth">The width of the dropdown container.</param>
             <param name="dropdownHeight">The height of the dropdown container.</param>
             <param name="items">The items to seed the dropdown with.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.ResizeDropDown(System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>
-            Resizes the dropdown container to the given width/height
-            </summary>
-            <param name="width">Width of the dropdown</param>
-            <param name="height">Height of the dropdown</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.SetItems(System.Object[])">
-            <summary>
-            Sets the items in the dropdown listbox.
-            </summary>
-            <param name="items">The items to set.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.GetItems">
-            <summary>
-            Gets an array of items from the dropdown listbox.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.RepositionOffScreenContainer">
-            <summary>
-            Checks if the dropdown container is off-screen, and pushes it back in.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.OnIsSelected">
-            <summary>
-            When <see cref="P:SadConsole.UI.Controls.ToggleButtonBase.IsSelected"/> is <see langword="true"/>, displays the popup container. When <see langword="false"/>, hides the popup container.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.PopupInnerAligned">
-            <summary>
-            When <see langword="true"/>, uses the <see cref="P:SadConsole.UI.Controls.ComboBox.PopupHorizontal"/> value from the interior of the control. When <see langword="false"/>, it's used from the outside of the control.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.PopupHorizontal">
-            <summary>
-            Sets the horizontal orientation of the of the dropdown popup.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.PopupVertical">
-            <summary>
-            Sets the vertical orientation of the of the dropdown popup.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.CollapsedButtonGlyph">
-            <summary>
-            The glyph to use on the control when it's collapsed.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ComboBox.ExpandedButtonGlyph">
-            <summary>
-            The glyph to use on the control when it's expanded.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ComboBox.UpdateAndRedraw(System.TimeSpan)">
-            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.CompositeControl">
             <summary>
@@ -13129,7 +13318,7 @@
             <summary>
             Called as the mouse moves around the control area. Raises the MouseMove event and calls the <see cref="M:SadConsole.UI.Controls.ControlBase.DetermineState"/> method.
             </summary>
-            <param name="state">The current mouse data</param>
+            <param          <param name="state">The current mouse data</param>
         </member>
         <member name="M:SadConsole.UI.Controls.ControlBase.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
             <summary>
@@ -13201,8 +13390,7 @@
         </member>
         <member name="F:SadConsole.UI.Controls.ControlStates.Disabled">
             <summary>
-            The control is disabled.
-            </summary>
+            The control is        </summary>
         </member>
         <member name="F:SadConsole.UI.Controls.ControlStates.Focused">
             <summary>
@@ -13295,7 +13483,7 @@
         </member>
         <member name="M:SadConsole.UI.Controls.IContainer.HasNamedControl(System.String,SadConsole.UI.Controls.ControlBase@)">
             <summary>
-            Checks whether or not the container has a control registered with the given name. If found, the instance is assigned to the <paramref name="control"/> parameter.
+            Checks whether or not the container has a control registered with tegistered with the given name. If found, the instance is assigned to the <paramref name="control"/> parameter.
             </summary>
             <param name="name">The name to check.</param>
             <param name="control">The control instance found.</param>
@@ -13391,90 +13579,207 @@
             <param name="color">The color to shade the decorator.</param>
             <returns>The cell decorator.</returns>
         </member>
-        <member name="T:SadConsole.UI.Controls.ListBox">
+        <member name="T:SadConsole.UI.Controls.ListBox`1">
             <summary>
-            A scrollable list control.
+            A scrollable list control with strongly-typed items.
             </summary>
+            <typeparam name="T">The type of items in the list.</typeparam>
         </member>
-        <member name="T:SadConsole.UI.Controls.ListBox.SelectedItemEventArgs">
+        <member name="T:SadConsole.UI.Controls.ListBox`1.SelectedItemEventArgs">
             <summary>
             The event args used when the selected item changes.
             </summary>
         </member>
-        <member name="F:SadConsole.UI.Controls.ListBox.SelectedItemEventArgs.Item">
+        <member name="F:SadConsole.UI.Controls.ListBox`1.SelectedItemEventArgs.Item">
             <summary>
             The item selected.
             </summary>
         </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.SelectedItemEventArgs.#ctor(System.Object)">
+        <member name="M:SadConsole.UI.Controls.ListBox`1.SelectedItemEventArgs.#ctor(`0)">
             <summary>
             Creates a new instance of this type with the specified item.
             </summary>
             <param name="item">The selected item from the list.</param>
         </member>
-        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemChanged">
+        <member name="E:SadConsole.UI.Controls.ListBox`1.SelectedItemChanged">
             <summary>
-            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> property changes.
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox`1.SelectedItem"/> property changes.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemReselected">
+        <member name="E:SadConsole.UI.Controls.ListBox`1.SelectedItemReselected">
             <summary>
-            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> property is reselected by the mouse.
+            An event that triggers when the <see cref="P:SadConsole.UI.Controls.ListBox`1.SelectedItem"/> property is reselected by the mouse.
             </summary>
         </member>
-        <member name="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted">
+        <member name="E:SadConsole.UI.Controls.ListBox`1.SelectedItemExecuted">
             <summary>
             An event that triggers when an item is double clicked or the Enter key is pressed while the listbox has focus.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.IsScrollBarVisible">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.IsScrollBarVisible">
             <summary>
             Internal use only; used in rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.ScrollBar">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.ScrollBar">
             <summary>
             The scroll bar control used with this list box.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.ItemIndexMouseOver">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.ItemIndexMouseOver">
             <summary>
             Used in rendering.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.VisibleItemsTotal">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.VisibleItemsTotal">
             <summary>
             The total items visible in the listbox.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.VisibleItemsMax">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.VisibleItemsMax">
             <summary>
             The maximum amount of items that can be shown in the listbox.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.CompareByReference">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.CompareByReference">
             <summary>
-            When the <see cref="P:SadConsole.UI.Controls.ListBox.SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
+            When the <see cref="P:SadConsole.UI.Controls.ListBox`1.SelectedItem"/> changes, and this property is true, objects will be compared by reference. If false, they will be compared by value.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.SingleClickItemExecute">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.SingleClickItemExecute">
             <summary>
-            When set to <see langword="true"/>, the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event will fire when an item is single-clicked instead of double-clicked.
+            When set to <see langword="true"/>, the <see cref="E:SadConsole.UI.Controls.ListBox`1.SelectedItemExecuted"/> event will fire when an item is single-clicked instead of double-clicked.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.Items">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.Items">
             <summary>
             The items in the listbox.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.SelectedIndex">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.SelectedIndex">
             <summary>
             Gets or sets the index of the selected item.
             </summary>
         </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.SelectedItem">
+        <member name="P:SadConsole.UI.Controls.ListBox`1.SelectedItem">
             <summary>
             Gets or sets the selected item.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of the generic listbox control with the default theme for the items.
+            </summary>
+            <param name="width">The width of the listbox.</param>
+            <param name="height">The height of the listbox.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.#ctor(System.Int32,System.Int32,SadConsole.UI.Controls.ListBoxItemTheme)">
+            <summary>
+            Creates a new instance of the generic listbox control with the specified item theme.
+            </summary>
+            <param name="width">The width of the listbox.</param>
+            <param name="height">The height of the listbox.</param>
+            <param name="itemTheme">The theme to use with rendering the listbox items.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.OnSelectedItemChanged">
+            <summary>
+            Invokes the <see cref="E:SadConsole.UI.Controls.ListBox`1.SelectedItemChanged"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.OnItemAction">
+            <summary>
+            Invokes the <see cref="E:SadConsole.UI.Controls.ListBox`1.SelectedItemExecuted"/> event.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.OnResized">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.SetupScrollBar(SadConsole.Orientation,System.Int32,SadRogue.Primitives.Point)">
+            <summary>
+            Configures the associated <see cref="P:SadConsole.UI.Controls.ListBox`1.ScrollBar"/>.
+            </summary>
+            <param name="orientation">The orientation of the scrollbar.</param>
+            <param name="sizeValue">The size of the scrollbar.</param>
+            <param name="position">The position of the scrollbar.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.ScrollToSelectedItem">
+            <summary>
+            Scrolls the list to the item currently selected.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.Items_CollectionChanged(System.Object,System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            Called when the collection of items changes.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The event data.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.GetItemAndIndexUnderMouse(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
+            <summary>
+            Returns the item under the mouse, and its array position.
+            </summary>
+            <param name="state">The mouse state.</param>
+            <returns>A tuple containing the item and the item's array position.</returns> 
+            <exception cref="T:System.Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
+        </member>
+        <member name="F:SadConsole.UI.Controls.ListBox`1._reconfigureScrollBar">
+            <summary>
+            Internal flag to indicate the scroll bar needs to be reconfigured.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox`1.BorderTheme">
+            <summary>
+            The drawing theme for the border when <see cref="P:SadConsole.UI.Controls.ListBox`1.DrawBorder"/> is true.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox`1.BorderLineStyle">
+            <summary>
+            The line style for the border when <see cref="P:SadConsole.UI.Controls.ListBox`1.DrawBorder"/> is true.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox`1.DrawBorder">
+            <summary>
+            If false the border will not be drawn.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox`1.ItemTheme">
+            <summary>
+            The appearance of the items displayed by the listbox control.
+            </summary>
+        </member>
+        <member name="P:SadConsole.UI.Controls.ListBox`1.ItemsArea">
+            <summary>
+            The area on the control where items are drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.SetupScrollBar">
+            <summary>
+            Sets up the scroll bar for the listbox.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.ShowHideScrollBar">
+            <summary>
+            Shows the scroll bar when there are too many items to display; otherwise, hides it.
+            </summary>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.RefreshThemeStateColors(SadConsole.UI.Colors)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.UI.Controls.ListBox`1.UpdateAndRedraw(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.UI.Controls.ListBox">
+            <summary>
+            A scrollable list control.
             </summary>
         </member>
         <member name="M:SadConsole.UI.Controls.ListBox.#ctor(System.Int32,System.Int32)">
@@ -13491,95 +13796,6 @@
             <param name="width">The width of the listbox.</param>
             <param name="height">The height of the listbox.</param>
             <param name="itemTheme">The theme to use with rendering the listbox items.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.OnSelectedItemChanged">
-            <summary>
-            Invokes the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemChanged"/> event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.OnItemAction">
-            <summary>
-            Invokes the <see cref="E:SadConsole.UI.Controls.ListBox.SelectedItemExecuted"/> event.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.OnResized">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.SetupScrollBar(SadConsole.Orientation,System.Int32,SadRogue.Primitives.Point)">
-            <summary>
-            Configures the associated <see cref="P:SadConsole.UI.Controls.ListBox.ScrollBar"/>.
-            </summary>
-            <param name="orientation">The orientation of the scrollbar.</param>
-            <param name="sizeValue">The size of the scrollbar.</param>
-            <param name="position">The position of the scrollbar.</param>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.ScrollToSelectedItem">
-            <summary>
-            Scrolls the list to the item currently selected.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.ProcessKeyboard(SadConsole.Input.Keyboard)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.OnMouseIn(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.OnLeftMouseClicked(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
-            <inheritdoc />
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.GetItemAndIndexUnderMouse(SadConsole.UI.Controls.ControlBase.ControlMouseState)">
-            <summary>
-            Returns the item under the mouse, and its array position.
-            </summary>
-            <param name="state">The mouse state.</param>
-            <returns>A tuple containing the item and the item's array position.</returns> 
-            <exception cref="T:System.Exception">Thrown when the theme for the listbox isn't based on ListBoxTheme.</exception>
-        </member>
-        <member name="F:SadConsole.UI.Controls.ListBox._reconfigureScrollBar">
-            <summary>
-            Internal flag to indicate the scroll bar needs to be reconfigured.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.BorderTheme">
-            <summary>
-            The drawing theme for the border when <see cref="P:SadConsole.UI.Controls.ListBox.DrawBorder"/> is true.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.BorderLineStyle">
-            <summary>
-            The line style for the border when <see cref="P:SadConsole.UI.Controls.ListBox.DrawBorder"/> is true.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.DrawBorder">
-            <summary>
-            If false the border will not be drawn.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.ItemTheme">
-            <summary>
-            The appearance of the items displayed by the listbox control.
-            </summary>
-        </member>
-        <member name="P:SadConsole.UI.Controls.ListBox.ItemsArea">
-            <summary>
-            The area on the control where items are drawn.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.SetupScrollBar">
-            <summary>
-            Sets up the scroll bar for the listbox.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.ShowHideScrollBar">
-            <summary>
-            Shows the scroll bar when there are too many items to display; otherwise, hides it.
-            </summary>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.RefreshThemeStateColors(SadConsole.UI.Colors)">
-            <inheritdoc/>
-        </member>
-        <member name="M:SadConsole.UI.Controls.ListBox.UpdateAndRedraw(System.TimeSpan)">
-            <inheritdoc/>
         </member>
         <member name="T:SadConsole.UI.Controls.ListBoxItemTheme">
             <summary>

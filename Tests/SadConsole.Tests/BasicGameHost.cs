@@ -156,5 +156,10 @@ namespace SadConsole.Tests
         {
             throw new NotImplementedException();
         }
+
+        public override void ToggleFullScreen()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

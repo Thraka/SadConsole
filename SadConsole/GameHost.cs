@@ -491,6 +491,11 @@ public abstract partial class GameHost : IDisposable
     }
 
     /// <summary>
+    /// Toggles between windowed and full screen rendering for SadConsole.
+    /// </summary>
+    public abstract void ToggleFullScreen();
+
+    /// <summary>
     /// Resizes the window to the specified dimensions.
     /// </summary>
     /// <param name="width">The width of the window in pixels.</param>
