@@ -1,3 +1,20 @@
+## v10.8.0 (01/18/2026)
+
+- [Core] `ColoredGlyph` deserialization correctly handles decorators.
+- [Core] `LayeredSurface` layers can be hidden now.
+- [Controls] Rendering controls on a surface with a viewport now correctly handles mouse input and drawing of the controls.
+- [Core] `AnimatedValue` was sending the finished event before it was completed.
+- [Core] `AnimatedScreenSurface` didn't set the new frame sizes when deserialized.
+- [Core] `ITitle` moved from debug library to core.
+- [Host] Hosts have new logic for converting images into surfaces.
+- [MonoGame] Render steps now use local spritebatches, which can help with memory allocation in some cases.
+- [Core] Entities now have `IHasLayer` from the primitives library which matches the `ZIndex` property.
+- [Core] Entities expose the `IHasID` interface now.
+- [Core] `EntityManager` correctly handles animated entity visibility.
+- [UI] `ListBox` and `ComboBox` have generic versions now.
+- [UI] `ComboBox` Placement of the dropdown is correctly kept on the screen.
+- [Core] Changing `Game.Instance.DefaultFont` and `DefaultFontSize` now update all objects on the screen with the new defaults when they use the defaults.
+
 ## v10.7.0 (11/15/2025)
 
 - Cleaned up various warnings and XML comments.
