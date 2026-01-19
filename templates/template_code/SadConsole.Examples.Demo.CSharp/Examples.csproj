@@ -28,10 +28,10 @@
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup>
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.7.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.7.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'fna' " Include="SadConsole.Host.FNA" Version="10.7.0" />
-    <PackageReference Include="SadConsole.Extended" Version="10.7.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.8.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.8.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'fna' " Include="SadConsole.Host.FNA" Version="10.8.0" />
+    <PackageReference Include="SadConsole.Extended" Version="10.8.0" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->

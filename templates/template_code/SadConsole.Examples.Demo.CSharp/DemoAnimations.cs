@@ -79,7 +79,6 @@ class AnimationSlide : ScreenSurface
 
     public AnimationSlide() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-        Surface.DefaultBackground = Color.White;
         Surface.Clear();
     }
 
@@ -126,8 +125,12 @@ class AnimatedFlip : AnimationSlide
     public AnimatedFlip() : base()
     {
 
-        Add(AnimatedScreenObject.FromImage("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), TimeSpan.FromSeconds(0.1d),
-            pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black));
+        AnimatedScreenObject animation = AnimatedScreenObject.FromImage("Acrobatic Flip", "Res/Images/Animations/flip_anim.png", (9, 3), TimeSpan.FromSeconds(0.1d),
+            pixelPadding: (1, 1), frameStartAndFinish: (0, 23), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black);
+
+        animation.FontSize = animation.Font.GetFontSize(Game.Instance.DefaultFontSize);
+
+        Add(animation);
 
         PrintInfo("Square 8 x 8", Children[0]);
     }
@@ -137,8 +140,12 @@ class AnimatedSkater : AnimationSlide
 {
     public AnimatedSkater() : base()
     {
-        Add(AnimatedScreenObject.FromImage("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), TimeSpan.FromSeconds(0.15d),
-            pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black));
+        AnimatedScreenObject animation = AnimatedScreenObject.FromImage("Clumsy Skater", "Res/Images/Animations/skater_anim.png", (6, 3), TimeSpan.FromSeconds(0.15d),
+            pixelPadding: (1, 1), frameStartAndFinish: (0, 15), font: Game.Instance.Fonts["ThickSquare8"], frameDefaultBackground: Color.Black);
+
+        animation.FontSize = animation.Font.GetFontSize(Game.Instance.DefaultFontSize);
+
+        Add(animation);
 
         PrintInfo("Square 8 x 8", Children[0]);
     }
@@ -161,6 +168,7 @@ class AnimatedGlobe : AnimationSlide
         _clip = AnimatedScreenObject.FromImage("Globe", "Res/Images/Animations/globe_anim.png", (48, 1), TimeSpan.FromSeconds(0.17d),
                     action: (c) => { if (c.Foreground.GetHSLLightness() < 1f) c.Background = c.Background.FillAlpha(); });
 
+        _clip.FontSize = _clip.Font.GetFontSize(Game.Instance.DefaultFontSize);
         _clip.Position = ((Width / 2) - (_clip.Width / 2), (Height / 2) - (_clip.Height / 2));
         _clip.Repeat = true;
 

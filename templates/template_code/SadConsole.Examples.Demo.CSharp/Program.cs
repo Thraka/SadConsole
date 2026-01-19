@@ -57,7 +57,7 @@ Builder
         config.DefaultFontSize = defaultFontSize;
         config.UseExtendedFont = true;
     })
-
+    
     .SetStartingScreen<RootScreen>()
     .IsStartingScreenFocused(false) // Don't want RootScreen to be focused because RootScreen automatically focuses the selected demo console
     .SetWindowSizeInCells(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
