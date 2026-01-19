@@ -12,9 +12,12 @@ namespace SadConsole.Entities;
 /// </summary>
 //[JsonConverter(typeof(EntityJsonConverter))]
 [DataContract]
-public partial class Entity : ScreenObject, IHasID
+public partial class Entity : ScreenObject, IHasID, IHasLayer
 {
-    private static uint s_idGenerator;
+    /// <summary>
+    /// A shared ID generator for all entities. While you can set an <see cref="ID"/> directly, this value is used and increased by 1 every time an entity is created.
+    /// </summary>
+    public static uint IDGenerator;
 
     // TODO Change this to where Position/Center/Absolute values all come from this object instead of the AnimatedScreenSurface
     private SingleCell? _appearanceSingleCell;
@@ -38,6 +41,8 @@ public partial class Entity : ScreenObject, IHasID
     /// </summary>
     [DataMember]
     public int ZIndex { get; set; }
+
+    int IHasLayer.Layer => ZIndex;
 
     /// <summary>
     /// Indicates this entity's visual appearance has changed.
@@ -124,7 +129,10 @@ public partial class Entity : ScreenObject, IHasID
         }
     }
 
-    uint IHasID.ID { get; } = s_idGenerator++;
+    /// <summary>
+    /// Unique identifier.
+    /// </summary>
+    public uint ID { get; protected set; } = IDGenerator++;
 
     /// <summary>
     /// Creates a new entity as an animated surface.

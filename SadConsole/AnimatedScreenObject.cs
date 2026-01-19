@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using SadConsole.Renderers;
 using SadRogue.Primitives;
 
 namespace SadConsole;
@@ -241,6 +242,15 @@ public partial class AnimatedScreenObject : ScreenObject, IScreenSurface
     /// </summary>
     public void MoveStart() =>
         CurrentFrameIndex = 0;
+
+    /// <summary>
+    /// Diposes and removes the current <see cref="Renderer"/>.
+    /// </summary>
+    public void DestroyRenderer()
+    {
+        Renderer?.Dispose();
+        Renderer = null;
+    }
 
     /// <summary>
     /// Creates an animated surface that looks like static noise.

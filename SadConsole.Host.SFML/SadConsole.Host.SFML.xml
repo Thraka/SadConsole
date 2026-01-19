@@ -525,7 +525,7 @@
             <param name="index">The index of the pixel.</param>
             <returns>The color of the pixel.</returns>
         </member>
-        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,System.Nullable{SadRogue.Primitives.Color},SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
             <inheritdoc />
         </member>
         <member name="T:SadConsole.Host.Global">
@@ -596,6 +596,54 @@
         <member name="P:SadConsole.Host.Settings.SFMLScreenShader">
             <summary>
             A shader used when drawing the final texture to the screen.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Host.GameTextureHelpers.EdgeDetectionBrightnessThreshold">
+            <summary>
+            Minimum brightness threshold for edge detection - below this is considered "dark/empty".
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessForegroundCell(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Processes the foreground glyph for a cell based on the selected style.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.CalculateCellColor(SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Calculates the average color and brightness for a cell region of the texture, excluding colorKey pixels.
+            </summary>
+            <param name="pixels">The pixel array.</param>
+            <param name="startX">Starting X coordinate in the texture.</param>
+            <param name="startY">Starting Y coordinate in the texture.</param>
+            <param name="fontSizeX">Width of the cell region.</param>
+            <param name="fontSizeY">Height of the cell region.</param>
+            <param name="textureWidth">Width of the texture.</param>
+            <param name="colorKey">Color to treat as transparent/excluded.</param>
+            <returns>A tuple containing the calculated color, brightness, and whether the cell has any valid content.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessBlockStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single)">
+            <summary>
+            Processes a cell using block characters (█▓▒░) based on brightness.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessAsciiSymbolStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single)">
+            <summary>
+            Processes a cell using ASCII density characters based on brightness.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessEdgeShapesStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Processes a cell using edge-detecting shaped characters for curves and edges.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.GetNeighborBrightness(System.Int32,System.Int32,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Gets the brightness values of all 8 neighboring cells.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.SelectEdgeCharacter(System.Int32,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Selects the appropriate edge/shape character based on the dark neighbor pattern.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.OptimizedScreenSurfaceRenderer">

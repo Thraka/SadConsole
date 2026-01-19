@@ -6,22 +6,23 @@ using SadConsole.Renderers;
 namespace SadConsole;
 
 /// <summary>
-/// A basic console that can contain controls.
+/// A surface that contains multiple layers
 /// </summary>
 [DataContract]
 [System.Diagnostics.DebuggerDisplay("ScreenSurface (Layered)")]
 public class LayeredScreenSurface : ScreenSurface, ILayeredData, ICellSurfaceResize
 {
     /// <summary>
-    /// The controls host holding all the controls.
+    /// The component that contains the layers for this surface.
     /// </summary>
     public LayeredSurface Layers { get; }
 
     /// <summary>
-    /// Creates a new console.
+    /// Creates a new layered surface with the specified width and height, using default cells.
     /// </summary>
     /// <param name="width">The width in cells of the surface.</param>
     /// <param name="height">The height in cells of the surface.</param>
+    /// <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
     public LayeredScreenSurface(int width, int height) : this(width, height, width, height, null) { }
 
     /// <summary>
@@ -30,25 +31,28 @@ public class LayeredScreenSurface : ScreenSurface, ILayeredData, ICellSurfaceRes
     /// <param name="width">The width in cells of the surface.</param>
     /// <param name="height">The height in cells of the surface.</param>
     /// <param name="initialCells">The initial cells to seed the surface.</param>
+    /// <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
     public LayeredScreenSurface(int width, int height, ColoredGlyphBase[] initialCells) : this(width, height, width, height, initialCells) { }
 
     /// <summary>
-    /// Creates a new console with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
+    /// Creates a new surface with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
     /// </summary>
-    /// <param name="width">The visible width of the console in cells.</param>
-    /// <param name="height">The visible height of the console in cells.</param>
-    /// <param name="bufferWidth">The total width of the console in cells.</param>
-    /// <param name="bufferHeight">The total height of the console in cells.</param>
+    /// <param name="width">The visible width of the surface in cells.</param>
+    /// <param name="height">The visible height of the surface in cells.</param>
+    /// <param name="bufferWidth">The total width of the surface in cells.</param>
+    /// <param name="bufferHeight">The total height of the surface in cells.</param>
+    /// <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
     public LayeredScreenSurface(int width, int height, int bufferWidth, int bufferHeight) : this(width, height, bufferWidth, bufferHeight, null) { }
 
     /// <summary>
-    /// Creates a console with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
+    /// Creates a surface with the specified width and height, with <see cref="SadRogue.Primitives.Color.Transparent"/> for the background and <see cref="SadRogue.Primitives.Color.White"/> for the foreground.
     /// </summary>
-    /// <param name="width">The width of the console in cells.</param>
-    /// <param name="height">The height of the console in cells.</param>
-    /// <param name="bufferWidth">The total width of the console in cells.</param>
-    /// <param name="bufferHeight">The total height of the console in cells.</param>
-    /// <param name="initialCells">The cells to seed the console with. If <see langword="null"/>, creates the cells for you.</param>
+    /// <param name="width">The width of the surface in cells.</param>
+    /// <param name="height">The height of the surface in cells.</param>
+    /// <param name="bufferWidth">The total width of the surface in cells.</param>
+    /// <param name="bufferHeight">The total height of the surface in cells.</param>
+    /// <param name="initialCells">The cells to seed the surface with. If <see langword="null"/>, creates the cells for you.</param>
+    /// <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
     public LayeredScreenSurface(int width, int height, int bufferWidth, int bufferHeight, ColoredGlyphBase[]? initialCells) : base(width, height, bufferWidth, bufferHeight, initialCells)
     {
         Layers = new LayeredSurface();
@@ -60,11 +64,12 @@ public class LayeredScreenSurface : ScreenSurface, ILayeredData, ICellSurfaceRes
     }
 
     /// <summary>
-    /// Creates a new console using the existing surface.
+    /// Creates a new surface using the existing surface.
     /// </summary>
     /// <param name="surface">The surface.</param>
     /// <param name="font">The font to use with the surface.</param>
     /// <param name="fontSize">The font size.</param>
+    /// <remarks>The surface of the base class is added to the layers component as the first layer.</remarks>
     public LayeredScreenSurface(ICellSurface surface, IFont? font = null, Point? fontSize = null) : base(surface, font, fontSize)
     {
         Layers = new LayeredSurface();

@@ -6,6 +6,12 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Game = Microsoft.Xna.Framework.Game;
+using Color = Microsoft.Xna.Framework.Color;
+
+
+// Not used. Just leaving here for now.
+
 
 namespace KniTesting
 {

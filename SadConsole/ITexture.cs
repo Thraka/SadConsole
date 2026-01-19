@@ -81,6 +81,7 @@ public interface ITexture : IDisposable
     /// <param name="surfaceHeight">How many cells high the returned surface is.</param>
     /// <param name="backgroundStyle">The style to use when <paramref name="mode"/> is <see cref="TextureConvertMode.Background"/>.</param>
     /// <param name="foregroundStyle">The style to use when <paramref name="mode"/> is <see cref="TextureConvertMode.Foreground"/>.</param>
+    /// <param name="colorKey">Pixels matching this color are treated as transparent and excluded from conversion. Defaults to <see cref="Color.Transparent"/>.</param>
     /// <param name="cachedColorArray">When provided, this array is used for color data. It must match the texture's expected <see cref="GetPixels"/> bounds. Used with <paramref name="cachedColorArray"/>.</param>
     /// <param name="cachedSurface">The cell surface to use instead of creating a new one. Used with <paramref name="cachedColorArray"/>.</param>
     /// <returns>A new surface.</returns>
@@ -88,6 +89,7 @@ public interface ITexture : IDisposable
     ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight,
                            TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel,
                            TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block,
+                           Color? colorKey = null,
                            Color[]? cachedColorArray = null,
                            ICellSurface? cachedSurface = null);
 }
@@ -104,7 +106,15 @@ public enum TextureConvertMode
     /// <summary>
     /// Fills the foreground of each cell with the pixel color.
     /// </summary>
-    Foreground
+    Foreground,
+    /// <summary>
+    /// Uses both background and foregroun mode, with the background being brighter than the foreground.
+    /// </summary>
+    BothFocusBackground,
+    /// <summary>
+    /// Uses both background and foregroun mode, with the foreground being brighter than the background.
+    /// </summary>
+    BothFocusForeground
 }
 
 /// <summary>
@@ -120,12 +130,11 @@ public enum TextureConvertForegroundStyle
     /// Fills the surface with ascii symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
     /// </summary>
     AsciiSymbol,
-    /* TODO
     /// <summary>
-    /// Fills the surface with block ascii letters and symbols that represents the brightness of the pixel. Foreground is set to the pixel color.
+    /// Uses edge detection to fill the surface with shaped ascii characters that represent edges, curves, and corners.
+    /// Characters like ( ) / \ | _ b d are used to match the detected edge direction.
     /// </summary>
-    AsciiLetter
-    */
+    EdgeShapes,
 }
 
 /// <summary>

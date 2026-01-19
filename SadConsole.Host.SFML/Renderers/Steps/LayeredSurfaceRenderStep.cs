@@ -81,8 +81,13 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
             if (layerObject.DefaultBackground.A != 0)
                 Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), layerObject.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
-            foreach (ICellSurface layer in layerObject)
+            for (int layerIndex = 0; layerIndex < layerObject.Count; layerIndex++)
             {
+                ICellSurface layer = layerObject[layerIndex];
+
+                if (layerObject.GetLayerVisibility(layerIndex) == false)
+                    continue;
+
                 int rectIndex = 0;
 
                 for (int y = 0; y < layer.Surface.View.Height; y++)
@@ -95,7 +100,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
                         cell.IsDirty = false;
 
                         if (cell.IsVisible)
-                            Host.Global.SharedSpriteBatch.DrawCell(cell, sfmlRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != layer.Surface.DefaultBackground, font);
+                            Host.Global.SharedSpriteBatch.DrawCell(cell, sfmlRenderer.CachedRenderRects[rectIndex], cell.Background != SadRogue.Primitives.Color.Transparent, font);
 
                         i++;
                         rectIndex++;

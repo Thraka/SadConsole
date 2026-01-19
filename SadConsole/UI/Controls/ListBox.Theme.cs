@@ -6,7 +6,7 @@ using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
 
-public partial class ListBox
+public partial class ListBox<T>
 {
     private bool _drawBorder;
     private int _previousMouseItemIndex;

@@ -349,7 +349,7 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// Toggles between windowed and full screen rendering for SadConsole.
     /// </summary>
-    public void ToggleFullScreen()
+    public override void ToggleFullScreen()
     {
         throw new NotSupportedException("SFML doesn't support full screen yet.");
         // Check out https://stackoverflow.com/questions/61992029/sfml-c-sharp-how-do-i-switch-between-fullscreen

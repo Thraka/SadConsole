@@ -25,7 +25,8 @@ namespace SadConsole;
 public abstract partial class GameHost : IDisposable
 {
     private GlobalState? _state;
-    private IFont _defaultFont; //TODO: Create a better prescriptive guidance on creating a gamehost that initializes everything correctly.
+    private IFont _defaultFont;
+    private IFont.Sizes _defaultFontSize = IFont.Sizes.One;
 
     /// <summary>
     /// Holds all of the <see cref="IRenderer"/> types.
@@ -71,6 +72,16 @@ public abstract partial class GameHost : IDisposable
     /// A callback to run after the <see cref="Run"/> method is called;
     /// </summary>
     public event EventHandler<GameHost>? Ending;
+
+    /// <summary>
+    /// Raised when the <see cref="DefaultFont"/> property changes.
+    /// </summary>
+    public event EventHandler<FontChangedEventArgs>? DefaultFontChanged;
+
+    /// <summary>
+    /// Raised when the <see cref="DefaultFontSize"/> property changes.
+    /// </summary>
+    public event EventHandler<FontSizeChangedEventArgs>? DefaultFontSizeChanged;
 
     /// <summary>
     /// Draw calls registered for the next drawing frame.
@@ -120,14 +131,31 @@ public abstract partial class GameHost : IDisposable
         get => _defaultFont;
         set
         {
+            if (_defaultFont == value) return;
+
+            IFont oldFont = _defaultFont;
             _defaultFont = value ?? throw new NullReferenceException("The default font can't be set to a null value.");
+
+            OnDefaultFontChanged(new FontChangedEventArgs(oldFont, _defaultFont));
         }
     }
 
     /// <summary>
     /// The default font size to use with the <see cref="DefaultFont"/>.
     /// </summary>
-    public IFont.Sizes DefaultFontSize { get; set; } = IFont.Sizes.One;
+    public IFont.Sizes DefaultFontSize
+    {
+        get => _defaultFontSize;
+        set
+        {
+            if (_defaultFontSize == value) return;
+
+            IFont.Sizes oldSize = _defaultFontSize;
+            _defaultFontSize = value;
+
+            OnDefaultFontSizeChanged(new FontSizeChangedEventArgs(oldSize, _defaultFontSize));
+        }
+    }
 
     /// <summary>
     /// Global keyboard object used by SadConsole during the update frame.
@@ -463,6 +491,11 @@ public abstract partial class GameHost : IDisposable
     }
 
     /// <summary>
+    /// Toggles between windowed and full screen rendering for SadConsole.
+    /// </summary>
+    public abstract void ToggleFullScreen();
+
+    /// <summary>
     /// Resizes the window to the specified dimensions.
     /// </summary>
     /// <param name="width">The width of the window in pixels.</param>
@@ -557,6 +590,115 @@ public abstract partial class GameHost : IDisposable
             Screen = screen;
             DefaultFont = defaultFont;
             DefaultFontSize = defaultFontSize;
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DefaultFontChanged"/> event and updates existing screen objects that are using the old default font.
+    /// </summary>
+    /// <param name="e">Event args containing the old and new font references.</param>
+    protected virtual void OnDefaultFontChanged(FontChangedEventArgs e)
+    {
+        DefaultFontChanged?.Invoke(this, e);
+
+        // Update all existing screen objects that were using the old default font
+        UpdateScreenObjectFonts(Screen, e.OldFont, e.NewFont);
+
+        // re-layout all of the children
+        Screen?.UpdateAbsolutePosition();
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DefaultFontSizeChanged"/> event and updates existing screen objects that are using the old default font size.
+    /// </summary>
+    /// <param name="e">Event args containing the old and new font size.</param>
+    protected virtual void OnDefaultFontSizeChanged(FontSizeChangedEventArgs e)
+    {
+        DefaultFontSizeChanged?.Invoke(this, e);
+
+        // Update all existing screen objects that were using the old default font size
+        UpdateScreenObjectFontSizes(Screen, e.OldSize, e.NewSize);
+
+        // re-layout all of the children
+        Screen?.UpdateAbsolutePosition();
+    }
+
+    /// <summary>
+    /// Recursively updates the font of screen objects that are using the old default font.
+    /// </summary>
+    /// <param name="obj">The screen object to check and update.</param>
+    /// <param name="oldFont">The old default font to check for.</param>
+    /// <param name="newFont">The new default font to apply.</param>
+    private void UpdateScreenObjectFonts(IScreenObject? obj, IFont oldFont, IFont newFont)
+    {
+        if (obj == null) return;
+
+        // If this is a screen surface and it's using the old default font, update it
+        if (obj is IScreenSurface surface && ReferenceEquals(surface.Font, oldFont))
+        {
+            Point currentPixelSize = surface.FontSize;
+            
+            // Try to determine which IFont.Sizes enum was used with the old font
+            IFont.Sizes? detectedSize = null;
+            foreach (IFont.Sizes size in Enum.GetValues<IFont.Sizes>())
+            {
+                if (oldFont.GetFontSize(size) == currentPixelSize)
+                {
+                    detectedSize = size;
+                    break;
+                }
+            }
+            
+            // Update the font
+            surface.Font = newFont;
+            
+            // If we detected the size enum, reapply it with the new font
+            // Otherwise, keep the current pixel size (it may be custom)
+            if (detectedSize.HasValue)
+            {
+                surface.FontSize = newFont.GetFontSize(detectedSize.Value);
+            }
+            else
+            {
+                // Keep the existing pixel size (custom size)
+                surface.FontSize = currentPixelSize;
+            }
+        }
+
+        // Recursively update all children
+        for (int i = 0; i < obj.Children.Count; i++)
+        {
+            UpdateScreenObjectFonts(obj.Children[i], oldFont, newFont);
+        }
+    }
+
+    /// <summary>
+    /// Recursively updates the font size of screen objects that are using the old default font size.
+    /// </summary>
+    /// <param name="obj">The screen object to check and update.</param>
+    /// <param name="oldSize">The old default font size to check for.</param>
+    /// <param name="newSize">The new default font size to apply.</param>
+    private void UpdateScreenObjectFontSizes(IScreenObject? obj, IFont.Sizes oldSize, IFont.Sizes newSize)
+    {
+        if (obj == null) return;
+
+        // If this is a screen surface, check if it's using the default font and old font size
+        if (obj is IScreenSurface surface && ReferenceEquals(surface.Font, _defaultFont))
+        {
+            Point currentPixelSize = surface.FontSize;
+            Point oldDefaultPixelSize = surface.Font.GetFontSize(oldSize);
+            
+            // If the surface is using the old default font size, update it to the new default
+            if (currentPixelSize == oldDefaultPixelSize)
+            {
+                surface.FontSize = surface.Font.GetFontSize(newSize);
+            }
+        }
+
+        // Recursively update all children
+        for (int i = 0; i < obj.Children.Count; i++)
+        {
+            UpdateScreenObjectFontSizes(obj.Children[i], oldSize, newSize);
         }
     }
 }

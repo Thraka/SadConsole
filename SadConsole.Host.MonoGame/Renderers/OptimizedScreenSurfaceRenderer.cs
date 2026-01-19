@@ -56,6 +56,11 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer, IRendererMonoGam
     public RenderTargetUsage BackingTextureUsageMode { get; set; } = RenderTargetUsage.DiscardContents;
 
     /// <summary>
+    /// Sprite batch shared by the steps.
+    /// </summary>
+    public SpriteBatch LocalSpriteBatch { get; set; } = new(Host.Global.GraphicsDevice);
+
+    /// <summary>
     /// A 0 to 255 value representing how transparent the surface is when it's drawn to the screen. 255 represents full visibility.
     /// </summary>
     public byte Opacity

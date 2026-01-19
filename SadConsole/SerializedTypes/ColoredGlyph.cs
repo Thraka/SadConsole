@@ -76,8 +76,9 @@ public class ColoredGlyphSerialized
         var newCell = new ColoredGlyph(cell.Foreground, cell.Background, cell.Glyph, cell.Mirror)
         {
             IsVisible = cell.IsVisible,
-            Decorators = cell.Decorators != null ? new List<CellDecorator>(cell.Decorators) : null
         };
+
+        CellDecoratorHelpers.SetDecorators(cell.Decorators, newCell);
 
         return newCell;
     }

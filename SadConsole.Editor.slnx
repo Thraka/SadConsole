@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Editor.Serialization/SadConsole.Editor.Serialization.csproj" />
+  <Project Path="Editor/Editor.csproj" />
+  <Project Path="SadConsole.Debug.MonoGame/SadConsole.Debug.MonoGame.csproj" />
+  <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />
+  <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
+  <Project Path="SadConsole.Host.Shared/SadConsole.Host.Shared.shproj" Id="595434c5-2192-495b-903c-7922d7e8b149" />
+  <Project Path="SadConsole/SadConsole.csproj" />
+</Solution>

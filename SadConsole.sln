@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31825.309
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SadConsole", "SadConsole\SadConsole.csproj", "{47532D92-BB78-493A-A693-CC3687F609F6}"
 EndProject
@@ -73,6 +73,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Analyzers.Tests", "SadConsole.Analyzers\SadConsole.Analyzers.Tests\SadConsole.Analyzers.Tests.csproj", "{20344BE2-C611-20A4-1E99-F258C381E747}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadConsole.Analyzers.Package", "SadConsole.Analyzers\SadConsole.Analyzers.Package\SadConsole.Analyzers.Package.csproj", "{B89E8355-436D-9043-C085-480282786F03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KniTesting", "Samples\KniTesting\KniTesting.csproj", "{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -258,6 +260,14 @@ Global
 		{B89E8355-436D-9043-C085-480282786F03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B89E8355-436D-9043-C085-480282786F03}.Release|x64.ActiveCfg = Release|Any CPU
 		{B89E8355-436D-9043-C085-480282786F03}.Release|x64.Build.0 = Release|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Debug|x64.Build.0 = Debug|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Release|x64.ActiveCfg = Release|Any CPU
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -285,6 +295,7 @@ Global
 		{B5442D59-8D91-1FBE-EE79-523CD7257B32} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{20344BE2-C611-20A4-1E99-F258C381E747} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B89E8355-436D-9043-C085-480282786F03} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{538B0F8B-D5DC-9F7C-FE56-743A91D27CE0} = {E0F64D5F-67B3-4882-9F49-FB71BCF91325}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55A32531-B44C-4843-9FC5-052AAE7525A3}

@@ -250,4 +250,9 @@ public partial class Game : GameHost
 
     internal void InvokeFrameUpdate() =>
         OnFrameUpdate();
+
+    public override void ToggleFullScreen()
+    {
+        throw new NotSupportedException();
+    }
 }

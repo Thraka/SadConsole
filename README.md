@@ -44,14 +44,17 @@ Here are some of the features SadConsole supports:
 
 ## Latest changes
 
-- Cleaned up various warnings and XML comments.
-- [Core] `BlinkChar` supports starting on or off now.
-- [Core] Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
-- [Core] `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
-- [Core] `SadFont.ToString` now returns the font name.
-- [Core] `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
-- [Core] When splashscreen closes, call update on new the new Screen. Fixes a bug with `ControlsHost` not drawing the first state of controls.
-- [UI] Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
-- [Extended] Added the config builder extension `PopupGlyphPicker`.
-- [SFML] Upgraded to the latest SFML.Net version.
-- [FNA] Upgraded to FNA 25.11.
+- [Core] `ColoredGlyph` deserialization correctly handles decorators.
+- [Core] `LayeredSurface` layers can be hidden now.
+- [Controls] Rendering controls on a surface with a viewport now correctly handles mouse input and drawing of the controls.
+- [Core] `AnimatedValue` was sending the finished event before it was completed.
+- [Core] `AnimatedScreenSurface` didn't set the new frame sizes when deserialized.
+- [Core] `ITitle` moved from debug library to core.
+- [Host] Hosts have new logic for converting images into surfaces.
+- [MonoGame] Render steps now use local spritebatches, which can help with memory allocation in some cases.
+- [Core] Entities now have `IHasLayer` from the primitives library which matches the `ZIndex` property.
+- [Core] Entities expose the `IHasID` interface now.
+- [Core] `EntityManager` correctly handles animated entity visibility.
+- [UI] `ListBox` and `ComboBox` have generic versions now.
+- [UI] `ComboBox` Placement of the dropdown is correctly kept on the screen.
+- [Core] Changing `Game.Instance.DefaultFont` and `DefaultFontSize` now update all objects on the screen with the new defaults when they use the defaults.

@@ -293,7 +293,7 @@ public sealed partial class Game : GameHost
     /// <summary>
     /// Toggles between windowed and full screen rendering for SadConsole.
     /// </summary>
-    public void ToggleFullScreen()
+    public override void ToggleFullScreen()
     {
         Host.Global.GraphicsDeviceManager.ApplyChanges();
 

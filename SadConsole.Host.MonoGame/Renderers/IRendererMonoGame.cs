@@ -17,4 +17,9 @@ public interface IRendererMonoGame
     /// Cached set of rectangles used in rendering each cell.
     /// </summary>
     XnaRectangle[] CachedRenderRects { get; }
+
+    /// <summary>
+    /// A local sprite batch shared by child steps.
+    /// </summary>
+    SpriteBatch LocalSpriteBatch { get; }
 }

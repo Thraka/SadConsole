@@ -1,4 +1,5 @@
-﻿using SadConsole.UI;
+﻿using System.ComponentModel;
+using SadConsole.UI;
 
 namespace SadConsole.Examples;
 
@@ -36,7 +37,11 @@ partial class RootScreen : ScreenObject
 
         // Clear old demo screen
         if (_demoObject != null)
+        {
             Children.Remove(_demoObject);
+            if (_demoObject is IDisposable disposable)
+                disposable.Dispose();
+        }
 
         // Add the new demo screen
         IScreenSurface demoSurface = demo.CreateDemoScreen();

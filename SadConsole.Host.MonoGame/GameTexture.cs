@@ -6,13 +6,14 @@ using Microsoft.Xna.Framework;
 using Color = SadRogue.Primitives.Color;
 using Point = SadRogue.Primitives.Point;
 using System.Runtime.InteropServices;
+using static SadConsole.Host.GameTextureHelpers;
 
 namespace SadConsole.Host;
 
 /// <summary>
 /// Creates a <see cref="Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="GameHost.GetTexture(string)"/> method.
 /// </summary>
-public class GameTexture : ITexture
+public partial class GameTexture : ITexture
 {
     private bool _skipDispose;
     private Microsoft.Xna.Framework.Graphics.Texture2D _texture;
@@ -219,12 +220,15 @@ public class GameTexture : ITexture
     }
 
     /// <inheritdoc />
-    public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
+    public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color? colorKey = null, Color[] cachedColorArray = null, ICellSurface cachedSurface = null)
     {
         if (surfaceWidth <= 0 || surfaceHeight <= 0 || surfaceWidth > _texture.Width || surfaceHeight > _texture.Height)
             throw new ArgumentOutOfRangeException("The size of the surface must be equal to or smaller than the texture.");
 
         ICellSurface surface = cachedSurface ?? new CellSurface(surfaceWidth, surfaceHeight);
+
+        // Use transparent as default colorKey
+        Color effectiveColorKey = colorKey ?? Color.Transparent;
 
         // Background mode with simple resizing.
         if (mode == TextureConvertMode.Background && backgroundStyle == TextureConvertBackgroundStyle.Pixel)
@@ -236,95 +240,67 @@ public class GameTexture : ITexture
             Color[] sadColors = System.Runtime.InteropServices.MemoryMarshal.Cast<MonoColor, Color>(colors).ToArray();
 
             for (int i = 0; i < colors.Length; i++)
-                surface[i].Background = sadColors[i];
+            {
+                Color pixelColor = sadColors[i];
+                // Skip colorKey pixels (leave cell as default/transparent)
+                if (pixelColor == effectiveColorKey || pixelColor.A == 0)
+                    continue;
+                surface[i].Background = pixelColor;
+            }
 
             return surface;
         }
 
+        int textureWidth = _texture.Width;
+        int textureHeight = _texture.Height;
+
         // Calculating color based on surrounding pixels
         Color[] pixels = GetPixels();
 
-        int fontSizeX = _texture.Width / surfaceWidth;
-        int fontSizeY = _texture.Height / surfaceHeight;
+        int fontSizeX = textureWidth / surfaceWidth;
+        int fontSizeY = textureHeight / surfaceHeight;
 
-        global::System.Threading.Tasks.Parallel.For(0, _texture.Height / fontSizeY, (h) =>
-        //for (int h = 0; h < imageHeight / fontSizeY; h++)
+        global::System.Threading.Tasks.Parallel.For(0, textureHeight / fontSizeY, (h) =>
         {
             int startY = h * fontSizeY;
-            //System.Threading.Tasks.Parallel.For(0, imageWidth / fontSizeX, (w) =>
-            for (int w = 0; w < _texture.Width / fontSizeX; w++)
+            for (int w = 0; w < textureWidth / fontSizeX; w++)
             {
                 int startX = w * fontSizeX;
 
-                float allR = 0;
-                float allG = 0;
-                float allB = 0;
+                // Calculate average color for this cell, excluding colorKey pixels
+                var (cellColor, cellBrightness, hasContent) = CalculateCellColor(pixels, startX, startY, fontSizeX, fontSizeY, textureWidth, effectiveColorKey);
 
-                for (int y = 0; y < fontSizeY; y++)
-                {
-                    for (int x = 0; x < fontSizeX; x++)
-                    {
-                        int cY = y + startY;
-                        int cX = x + startX;
-
-                        Color color = pixels[cY * _texture.Width + cX];
-
-                        allR += color.R;
-                        allG += color.G;
-                        allB += color.B;
-                    }
-                }
-
-                byte sr = (byte)(allR / (fontSizeX * fontSizeY));
-                byte sg = (byte)(allG / (fontSizeX * fontSizeY));
-                byte sb = (byte)(allB / (fontSizeX * fontSizeY));
-
-                var newColor = new SadRogue.Primitives.Color(sr, sg, sb);
+                // Skip cells with no valid content (all pixels were colorKey or transparent)
+                if (!hasContent)
+                    continue;
 
                 if (mode == TextureConvertMode.Background)
-                    surface.SetBackground(w, h, newColor);
-
-                else if (foregroundStyle == TextureConvertForegroundStyle.Block)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
-
-                    if (sbri > 204)
-                        surface.SetGlyph(w, h, 219, newColor); //█
-                    else if (sbri > 152)
-                        surface.SetGlyph(w, h, 178, newColor); //▓
-                    else if (sbri > 100)
-                        surface.SetGlyph(w, h, 177, newColor); //▒
-                    else if (sbri > 48)
-                        surface.SetGlyph(w, h, 176, newColor); //░
+                    surface.SetBackground(w, h, cellColor);
                 }
-                else //else if (foregroundStyle == TextureConvertForegroundStyle.AsciiSymbol)
+                else if (mode == TextureConvertMode.Foreground)
                 {
-                    float sbri = newColor.GetHSLLightness() * 255;
-
-                    if (sbri > 230)
-                        surface.SetGlyph(w, h, '#', newColor);
-                    else if (sbri > 207)
-                        surface.SetGlyph(w, h, '&', newColor);
-                    else if (sbri > 184)
-                        surface.SetGlyph(w, h, '$', newColor);
-                    else if (sbri > 161)
-                        surface.SetGlyph(w, h, 'X', newColor);
-                    else if (sbri > 138)
-                        surface.SetGlyph(w, h, 'x', newColor);
-                    else if (sbri > 115)
-                        surface.SetGlyph(w, h, '=', newColor);
-                    else if (sbri > 92)
-                        surface.SetGlyph(w, h, '+', newColor);
-                    else if (sbri > 69)
-                        surface.SetGlyph(w, h, ';', newColor);
-                    else if (sbri > 46)
-                        surface.SetGlyph(w, h, ':', newColor);
-                    else if (sbri > 23)
-                        surface.SetGlyph(w, h, '.', newColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle, 
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
+                }
+                else if (mode == TextureConvertMode.BothFocusBackground)
+                {
+                    // Background is the main color, foreground is darker
+                    var foreColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, cellColor);
+                    ProcessForegroundCell(surface, w, h, foreColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
+                }
+                else if (mode == TextureConvertMode.BothFocusForeground)
+                {
+                    // Foreground is the main color, background is darker
+                    var backColor = cellColor.GetDarker();
+                    surface.SetBackground(w, h, backColor);
+                    ProcessForegroundCell(surface, w, h, cellColor, cellBrightness, foregroundStyle,
+                        pixels, fontSizeX, fontSizeY, surfaceWidth, surfaceHeight, textureWidth, textureHeight, effectiveColorKey);
                 }
             }
-        }
-        );
+        });
 
         return surface;
     }

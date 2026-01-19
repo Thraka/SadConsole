@@ -29,7 +29,6 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
     public ControlsTest() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-
         Controls.ThemeColors = GameSettings.ControlColorScheme;
 
         var prog1 = new ProgressBar(10, 1, HorizontalAlignment.Left)
@@ -193,10 +192,9 @@ class ControlsTest : SadConsole.UI.ControlsConsole
         button = new Button3d(11, 3)
         {
             Text = "Click",
+            Name = "SomeButton",
             Position = new Point(1, 5),
         };
-        button.Click += (s, a) => listbox.ScrollToSelectedItem();
-        //button.AlternateFont = SadConsole.Global.LoadFont("Fonts/Cheepicus12.font").GetFont(Font.FontSizes.One);
         Controls.Add(button);
 
         button = new ButtonBox(11, 3)
@@ -204,7 +202,7 @@ class ControlsTest : SadConsole.UI.ControlsConsole
             Text = "Click",
             Position = new Point(1, 10),
         };
-        button.Click += (s, a) => Game.Instance.ResizeWindow(1800, 980, true);
+        button.Click += (s, a) => listbox.ScrollToSelectedItem();
         Controls.Add(button);
 
         var checkbox = new CheckBox(13, 1)

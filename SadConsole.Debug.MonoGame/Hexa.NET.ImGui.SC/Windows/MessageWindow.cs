@@ -25,7 +25,7 @@ public class MessageWindow : ImGuiWindowBase
                 ImGui.TextWrapped(_message);
 
                 // Right-align button
-                float pos = ImGui.CalcTextSize("Close"u8).X + ImGui.GetStyle().ItemSpacing.X * 2;
+                float pos = ImGui.CalcTextSize("Close"u8).X + ImGui.GetStyle().WindowPadding.X * 2;
                 ImGui.SetCursorPosX(ImGui.GetWindowWidth() - pos);
                 if (ImGui.Button("Close"u8)) { DialogResult = false; IsOpen = false; }
                 ImGui.EndPopup();

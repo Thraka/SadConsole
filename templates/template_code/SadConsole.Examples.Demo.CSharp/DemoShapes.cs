@@ -46,7 +46,7 @@ class ShapesSurface : ScreenSurface
         _mouseCursor = new SadConsole.ScreenSurface(1, 1);
         _mouseCursor.Surface.SetGlyph(0, 0, 178);
         _mouseCursor.UseMouse = false;
-
+        
         Children.Add(_mouseCursor);
     }
 

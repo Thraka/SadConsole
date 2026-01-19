@@ -234,3 +234,4 @@ nuget/
 .vscode/
 /Fonts/MRMOTEXTEX_dont_check_in.zip
 /.idea
+/Editor/Properties/launchSettings.json
