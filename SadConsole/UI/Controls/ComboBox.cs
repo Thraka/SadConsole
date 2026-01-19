@@ -179,26 +179,11 @@ public partial class ComboBox<T> : CheckBox
     {
         if (Parent?.Host?.ParentConsole is not null)
         {
-            // Calculate based on the fontsize
-            IScreenSurface console = Parent.Host.ParentConsole;
-            int screenBoundsX = console.Surface.Width;
-            int screenBoundsY = console.Surface.Height;
-            int containerBoundsX = (DropdownContainer.Position.X + DropdownContainer.Width);
-            int containerBoundsY = (DropdownContainer.Position.Y + DropdownContainer.Height);
+            BoundedRectangle outputRectangle = new((DropdownContainer.Position.X, DropdownContainer.Position.Y, DropdownContainer.Width, DropdownContainer.Height),
+                                                   (0,0, Settings.Rendering.RenderWidth / Parent.Host.ParentConsole.FontSize.X, Settings.Rendering.RenderHeight / Parent.Host.ParentConsole.FontSize.Y));
 
-            // We are going off the screen horizontally
-            if (containerBoundsX >= screenBoundsX)
-            {
-                int diff = containerBoundsX - screenBoundsX;
-                DropdownContainer.Position = new Point(DropdownContainer.Position.X - (int)Math.Round((decimal)diff / (console.FontSize.X / console.Font.GlyphWidth)), DropdownContainer.Position.Y);
-            }
 
-            // We are going off the screen vertically
-            if (containerBoundsY >= screenBoundsY)
-            {
-                int diff = containerBoundsY - screenBoundsY;
-                DropdownContainer.Position = new Point(DropdownContainer.Position.X, DropdownContainer.Position.Y - (int)Math.Round((decimal)diff / (console.FontSize.Y / console.Font.GlyphHeight)));
-            }
+            DropdownContainer.Position = outputRectangle.Area.Position;
         }
     }
 
