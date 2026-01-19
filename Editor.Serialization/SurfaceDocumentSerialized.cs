@@ -18,7 +18,7 @@ public class SurfaceDocumentSerialized
     public Dictionary<string, string> Metadata = new();
 
     public ScreenSurface GetScreenSurface() =>
-        new(Surface, GameHost.Instance.Fonts[SurfaceFont.Name], SurfaceFontSize);
+        new(Surface, GameHost.Instance.DefaultFont, SurfaceFontSize);
 
     public ScreenSurface GetScreenSurfaceAndFont() =>
         new(Surface, FontSerialized.ToFont(SurfaceFont), SurfaceFontSize);
