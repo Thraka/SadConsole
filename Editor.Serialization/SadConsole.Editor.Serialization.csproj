@@ -25,7 +25,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="SadConsole.Extended" Version="10.7.0" PrivateAssets="All" />
+    <PackageReference Include="SadConsole.Extended" Version="10.8.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
