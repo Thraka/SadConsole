@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Tools;
 
@@ -179,6 +180,7 @@ internal class Selection : ITool
     {
         if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
         {
+
             bool _createBlueprint = false;
             if (ImGui.Selectable("Copy to Clipboard"u8))
             {
@@ -265,6 +267,11 @@ internal class Selection : ITool
             if (_createBlueprint)
                 ImGui.OpenPopup("create_blueprint"u8);
 
+            Rectangle area = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                 new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
+
+            PrintSurfaceAreaSize(area.Width, area.Height);
+
             return;
         }
 
@@ -325,6 +332,8 @@ internal class Selection : ITool
 
         else if (_state is States.Pasting or States.PastingMultiple)
         {
+            PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
+
             if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 Point pos = hoveredCellPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2);
@@ -349,8 +358,6 @@ internal class Selection : ITool
                     }
                 }
 
-                
-
                 document.EditingSurface.Surface.IsDirty = true;
 
                 if (_state != States.PastingMultiple)
@@ -367,6 +374,8 @@ internal class Selection : ITool
             // Draw the floating surface
             else
             {
+                PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
+
                 if (ImGuiP.IsKeyPressed(ImGuiKey.LeftArrow))
                     _pasteOffset += Direction.Left;
                 else if (ImGuiP.IsKeyPressed(ImGuiKey.RightArrow))
@@ -381,10 +390,11 @@ internal class Selection : ITool
                 document.VisualLayerToolUpper.Surface.Clear();
 
                 Point pos = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2) + _pasteOffset;
+
                 _selectionSurface.Copy(document.VisualLayerToolMiddle.Surface, pos.X, pos.Y);
+
                 document.VisualLayerToolUpper.Surface.DrawBox(new Rectangle(pos.X, pos.Y, _selectionSurface.Width, _selectionSurface.Height),
-                                                                            _selectionBoxShape);
-                //document.VisualLayerToolUpper.Surface.Print(0, 0, pos.ToString());
+                                                              _selectionBoxShape);
             }
 
             return;
@@ -404,10 +414,13 @@ internal class Selection : ITool
 
             _secondPoint = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
 
+            Rectangle area = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                 new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
+
             document.VisualLayerToolMiddle.Surface.Clear();
-            document.VisualLayerToolMiddle.Surface.DrawBox(new Rectangle(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
-                                                                        new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y))),
-                                                                        _selectionBoxShape);
+            document.VisualLayerToolMiddle.Surface.DrawBox(area, _selectionBoxShape);
+
+            PrintSurfaceAreaSize(area.Width, area.Height);
         }
 
         // Commit selection
@@ -416,6 +429,19 @@ internal class Selection : ITool
             _state = States.SelectionDone;
             ImGui.OpenPopup("selection_rightmenu"u8);
         }
+        else if (_state == States.SelectionDone)
+        {
+            Rectangle area = new(new Point(Math.Min(_firstPoint.X, _secondPoint.X), Math.Min(_firstPoint.Y, _secondPoint.Y)),
+                                 new Point(Math.Max(_firstPoint.X, _secondPoint.X), Math.Max(_firstPoint.Y, _secondPoint.Y)));
+
+            PrintSurfaceAreaSize(area.Width, area.Height);
+        }
+    }
+
+    private void PrintSurfaceAreaSize(int width, int height)
+    {
+        Core.State.GuiTopBar.StatusItems.Add((Vector4.Zero, "| Area Size: "));
+        Core.State.GuiTopBar.StatusItems.Add((Color.Yellow.ToVector4(), $"{width},{height}"));
     }
 
     private void CopyToSurfaceDocument(Document document)
