@@ -92,6 +92,53 @@ public class GuiDocumentsHost: ImGuiObjectBase
                                         pixelArea,
                                         out isActive, out isHovered, true);
 
+                    // Draw grid lines
+                    if (Core.State.GuideGrid.Enabled)
+                    {
+                        ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+                        Vector2 texturePos = ImGui.GetItemRectMin();
+                        uint lineColor = Core.State.GuideGrid.GetLineColorImGui();
+
+                        int cellsX = Core.State.GuideGrid.CellsX;
+                        int cellsY = Core.State.GuideGrid.CellsY;
+
+                        // Calculate the cell size in pixels based on font size
+                        float cellPixelWidth = document.EditorFontSize.X * cellsX;
+                        float cellPixelHeight = document.EditorFontSize.Y * cellsY;
+
+                        // Calculate offset based on view position
+                        float offsetX = (document.EditingSurface.Surface.ViewPosition.X % cellsX) * document.EditorFontSize.X;
+                        float offsetY = (document.EditingSurface.Surface.ViewPosition.Y % cellsY) * document.EditorFontSize.Y;
+
+                        // Draw vertical lines
+                        float startX = texturePos.X - offsetX + cellPixelWidth;
+                        for (float x = startX; x < texturePos.X + pixelArea.X; x += cellPixelWidth)
+                        {
+                            if (x >= texturePos.X)
+                            {
+                                drawList.AddLine(
+                                    new Vector2(x, texturePos.Y),
+                                    new Vector2(x, texturePos.Y + pixelArea.Y),
+                                    lineColor,
+                                    1.0f);
+                            }
+                        }
+
+                        // Draw horizontal lines
+                        float startY = texturePos.Y - offsetY + cellPixelHeight;
+                        for (float y = startY; y < texturePos.Y + pixelArea.Y; y += cellPixelHeight)
+                        {
+                            if (y >= texturePos.Y)
+                            {
+                                drawList.AddLine(
+                                    new Vector2(texturePos.X, y),
+                                    new Vector2(texturePos.X + pixelArea.X, y),
+                                    lineColor,
+                                    1.0f);
+                            }
+                        }
+                    }
+
                     // Draw scrollbars
                     bool enableScrollY = document.EditingSurface.Surface.ViewHeight != document.EditingSurface.Surface.Height;
                     bool enableScrollX = document.EditingSurface.Surface.ViewWidth != document.EditingSurface.Surface.Width;

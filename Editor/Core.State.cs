@@ -18,6 +18,28 @@ public static partial class Core
             public static int TopBarHeight = 0;
         }
 
+        public static class GuideGrid
+        {
+            public enum LineMode
+            {
+                Light,
+                Dark
+            }
+
+            public static bool Enabled = false;
+            public static int CellsX = 8;
+            public static int CellsY = 8;
+            public static LineMode Mode = LineMode.Light;
+
+            public static uint GetLineColorImGui()
+            {
+                // ImGui uses ABGR format
+                return Mode == LineMode.Light
+                    ? 0xFFFF8800u // Bright blue in ABGR
+                    : 0xFF404040u; // Dark gray in ABGR
+            }
+        }
+
         static State()
         {
             LoadBlueprints();
