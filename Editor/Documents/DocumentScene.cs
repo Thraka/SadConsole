@@ -305,8 +305,41 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
             }
         }
 
-        if (Options.SupportsMetadata)
-            base.ImGuiDrawMetadataSettings();
+        ImGui.BeginDisabled(ChildSceneItems.Count == 0);
+        if (ImGui.Button("Set By Child"))
+            ImGui.OpenPopup("set_by_child"u8);
+        ImGui.EndDisabled();
+
+        if (ImGui.BeginPopup("set_by_child"u8))
+        {
+            if (ChildSceneItems.Count == 0)
+            {
+                ImGui.TextDisabled("No child documents available"u8);
+            }
+            else
+            {
+                for (int i = 0; i < ChildSceneItems.Count; i++)
+                {
+                    SceneChild child = ChildSceneItems[i];
+                    if (ImGui.Selectable($"{child.Document.DocumentIcon} {child.Title}"))
+                    {
+                        // Calculate the pixel size based on the child's surface and font size
+                        Point fontSize = child.GetEffectiveFontSize();
+                        int surfaceWidth = child.Document.EditingSurface.Surface.Width;
+                        int surfaceHeight = child.Document.EditingSurface.Surface.Height;
+
+                        // Calculate pixel dimensions
+                        int pixelWidth = surfaceWidth * fontSize.X;
+                        int pixelHeight = surfaceHeight * fontSize.Y;
+
+                        ScenePixelSize = new Point(pixelWidth, pixelHeight);
+                        ImGui.CloseCurrentPopup();
+                    }
+                }
+            }
+
+            ImGui.EndPopup();
+        }
     }
 
     private void BuildChildDocumentsSettings(ImGuiRenderer renderer)
