@@ -7,7 +7,7 @@ internal class DemoRotatedSurface : IDemo
 
     public string Description => "This demo is only supported on MonoGame";
 
-    public string CodeFile => "DemoShapes.Other.cs";
+    public string CodeFile => "DemoRotated.Other.cs";
 
     public IScreenSurface CreateDemoScreen() =>
         new RotatedSurface();
