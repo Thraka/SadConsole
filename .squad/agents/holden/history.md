@@ -47,3 +47,9 @@ I come in fresh. I read documentation and specs, then verify them against the ac
 - `ICellSurfaceSettable.SetSurface` ≠ replacing ICellSurface on ScreenSurface. Keep these distinct.
 - The 5-list component pattern (Update/Render/Keyboard/Mouse/Empty) is robust and correctly documented.
 - EffectsManager tracks dirty state via `ApplyToCell()` return value, NOT by subscribing to ColoredGlyphBase.IsDirtySet.
+
+### 2026-02-25 — Cross-agent brief for Deckard
+
+**Output:** `.squad/decisions/inbox/holden-surfaces-findings-for-deckard.md`
+
+Summarized all findings from `docs/architecture-surfaces-review.md` into a structured brief for Deckard. Covered 8 inaccuracies, 5 gaps, and a list of confirmed-correct items. Flagged action owners (Roy/Pris for interface stub corrections, Deckard for conceptual/architectural clarifications). Three items remain unverified pending host renderer knowledge.
