@@ -1,0 +1,8 @@
+{
+  "universe": "Blade Runner",
+  "assignment_id": "sadconsole-2026-02-24",
+  "created_at": "2026-02-24T21:11:25Z",
+  "allowlist": ["Blade Runner"],
+  "max_agents": 10,
+  "allow_overflow": true
+}
