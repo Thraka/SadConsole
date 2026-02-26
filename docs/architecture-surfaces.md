@@ -93,7 +93,7 @@ public bool IsDirty
 }
 ```
 
-`ScreenSurface` subscribes to `Surface.IsDirtyChanged` and calls its own virtual `OnIsDirtyChanged()`, forwarding the signal up the display chain.
+`ScreenSurface` subscribes to `Surface.IsDirtyChanged` and calls its own virtual `OnIsDirtyChanged()`. The base-class implementation is a no-op; subclasses may override it to react to the dirty signal.
 
 ### Viewport System
 
@@ -184,6 +184,7 @@ ICellSurface.ConnectedLineThin        // ┌─┐│┼│└─┘ etc.
 ICellSurface.ConnectedLineThick       // ╔═╗║╬║╚═╝ etc.
 ICellSurface.Connected3dBox
 ICellSurface.ConnectedLineThinExtended // extended font variants
+ICellSurface.ConnectedLineEmpty        // all zeros (no connection)
 ```
 
 `ShapeParameters` (`ShapeParameters.cs`) captures all glyph, color, fill, and border configuration for shapes.
@@ -197,7 +198,7 @@ void Resize(int viewWidth, int viewHeight, int totalWidth, int totalHeight, bool
 void Resize(int width, int height, bool clear)
 ```
 
-The resize algorithm preserves existing cells by copying the overlapping region into a new array. When `clear = true`, the preserved cells are also wiped. After resize, `Effects.DropInvalidCells()` prunes effect bindings referencing cells that no longer exist, and `OnCellsReset()` fires — a virtual hook for subclasses to respond (e.g., the renderer invalidates its backing texture).
+The resize algorithm preserves existing cells by copying the overlapping region into a new array. When `clear = true`, the preserved cells are also wiped. After resize, if `clear = true`, `Effects.RemoveAll()` removes all effect bindings; if `clear = false`, `Effects.DropInvalidCells()` prunes effect bindings referencing cells that no longer exist. Then `OnCellsReset()` fires — a virtual hook for subclasses to respond (e.g., the renderer invalidates its backing texture).
 
 ### Effects Manager
 
@@ -206,7 +207,7 @@ The resize algorithm preserves existing cells by copying the overlapping region 
 - `Dictionary<ICellEffect, ColoredGlyphEffectData>` — effect → affected cells
 - `Dictionary<ColoredGlyphBase, ColoredGlyphEffectData>` — cell → active effect
 
-`UpdateEffects(TimeSpan delta)` is called every frame by `ScreenSurface.Update`. Each active effect ticks, potentially modifying cell appearance (color, glyph, visibility) and setting the surface `IsDirty = true` when a change occurs. Effects are transient: they do not persist the cell's original state to disk.
+`UpdateEffects(TimeSpan delta)` is called every frame by `ScreenSurface.Update`. Each active effect ticks, potentially modifying cell appearance (color, glyph, visibility) and setting the surface `IsDirty = true` when a change occurs. Effects are transient: they do not persist the cell's original state to disk. However, `EffectsManager` maintains an in-memory snapshot of each affected cell's original state (via an internal `ColoredGlyphWithState` record that stores a `Clone()` of the cell at the time the effect was applied), which is used to restore the cell when the effect is removed.
 
 ---
 
@@ -237,7 +238,12 @@ object
 
 ### Surface Ownership
 
-`ScreenSurface` holds a **reference** to an `ICellSurface`, not ownership in the strict sense. The surface can be replaced at runtime via `Surface { set; }` or `SetSurface(...)`. When the surface is swapped, the old surface's `IsDirtyChanged` event is unsubscribed and the new one subscribed, then `OnSurfaceChanged(old)` fires for subclasses to react (e.g., the renderer discards its cached texture).
+`ScreenSurface` holds a **reference** to an `ICellSurface`, not ownership in the strict sense. The surface can be replaced at runtime via two distinct mechanisms:
+
+- **`Surface { set; }`** (from `ISurfaceSettable`) — replaces the entire `ICellSurface` object reference held by `ScreenSurface`. The old surface's `IsDirtyChanged` event is unsubscribed, the new one is subscribed, and `OnSurfaceChanged(old)` fires for subclasses to react (e.g., the renderer discards its cached texture).
+- **`SetSurface(ICellSurface surface, Rectangle view)`** (from `ICellSurfaceSettable`) — rebinds the internal cell array *within* the existing `CellSurface` to point to a different data source. This is not an object replacement; it remaps what underlying cells the surface wraps.
+
+These are not interchangeable alternatives — they operate at different levels.
 
 This design allows multiple `ScreenSurface` instances to share the same `ICellSurface` (with `QuietSurfaceHandling = true` on secondary consumers).
 
@@ -270,17 +276,20 @@ The `IRenderer` contract:
 ```csharp
 public interface IRenderer : IDisposable
 {
-    ITexture? Output { get; }            // backing texture (result of Refresh)
-    List<IRenderStep> Steps { get; }     // ordered pipeline steps
+    string Name { get; set; }             // renderer identifier
+    ITexture Output { get; }              // backing texture (result of Refresh)
+    byte Opacity { get; set; }            // overall opacity of the renderer output
+    bool IsForced { get; set; }           // when true, forces a refresh on next frame
+    List<IRenderStep> Steps { get; set; } // ordered pipeline steps
     void Refresh(IScreenSurface surface, bool force);   // cell data → texture
     void Render(IScreenSurface surface);                // texture → draw call queue
-    void OnHostUpdated(IScreenSurface surface);         // called when surface/font changes
+    void OnHostUpdated(IScreenObject host);             // called when surface/font changes
 }
 ```
 
 `Refresh` is guarded by `IsDirty || force`. It orchestrates `IRenderStep.Refresh` → `IRenderStep.Composing` → `IRenderStep.Render` for each registered step (sorted ascending by `SortOrder`). If _any_ step's `Refresh` returns `true`, the `Composing` pass runs for all steps; otherwise it is skipped (texture cache hit).
 
-The renderer is obtained from `GameHost.Instance.GetRenderer(DefaultRendererName)` during `ScreenSurface` construction. The default name is `Renderers.Constants.RendererNames.Default` (`"ScreenSurface"`). Subclasses override `DefaultRendererName` to request a different renderer (e.g., `LayeredScreenSurface` requests `"LayeredScreenSurface"`).
+The renderer is obtained from `GameHost.Instance.GetRenderer(DefaultRendererName)` during `ScreenSurface` construction. The default name is `Renderers.Constants.RendererNames.Default` (`"ScreenSurface"`). Subclasses can override `DefaultRendererName` to request a different renderer. Note that `LayeredScreenSurface` does not use this override mechanism — its constructor disposes the default renderer and directly assigns a new one by calling `GameHost.Instance.GetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface)`.
 
 `ForceRendererRefresh` is a one-shot flag that bypasses the dirty check for a single frame — useful after font changes or surface swaps.
 
@@ -469,6 +478,8 @@ This pattern threads extension methods through composite types. `ScreenSurface` 
 | `ICellSurface.Editor.cs` | `CellSurfaceEditor` static class — all extension methods |
 | `ICellSurface.Static.cs` | Static line-style arrays (`ConnectedLineThin`, etc.) and helpers |
 
+`ICellSurface` also extends `SadRogue.Primitives.GridViews.IGridView<ColoredGlyphBase>`, `IEnumerable<ColoredGlyphBase>`, and `ISurface`. The `IGridView` inheritance means any `CellSurface` can be passed directly to SadRogue grid algorithms (pathfinding, field-of-view, etc.) without wrapping or adapting.
+
 `ScreenSurface` is `partial` and split across:
 
 | File | Contents |
@@ -482,7 +493,7 @@ The dirty signal propagates as follows:
 
 ```
 ColoredGlyphBase.IsDirty = true
-    → IsDirtySet event  (used by EffectsManager internally)
+    → IsDirtySet event
 
 CellSurface.IsDirty = true
     → IsDirtyChanged event
@@ -499,10 +510,14 @@ Setting any property on a `ColoredGlyphBase` sets `cell.IsDirty = true`. Most ed
 ```csharp
 interface IRenderStep
 {
+    string Name { get; }                 // step identifier
     uint SortOrder { get; set; }
-    bool Refresh(IRenderer renderer, IScreenSurface screenObject);  // cells → step texture
+    void SetData(object data);           // pass arbitrary data into the step
+    void Reset();                        // reset step state
+    bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced);  // cells → step texture
     void Composing(IRenderer renderer, IScreenSurface screenObject); // step → renderer output
     void Render(IRenderer renderer, IScreenSurface screenObject);    // renderer output → draw queue
+    void OnHostUpdated(IScreenObject host);  // called when host surface/font changes (default interface method)
 }
 ```
 

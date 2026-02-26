@@ -25,6 +25,35 @@
 
 ## Learnings
 
+### 2026-02-25 — Correction Workflow Established
+
+After verifying Holden's review and producing a separate verification file (`docs/architecture-surfaces-deckard-verification.md`), all corrections were applied directly to `docs/architecture-surfaces.md` and the verification file deleted.
+
+**Going forward: verify → correct source doc directly. No intermediate verification files.**
+The review file (`docs/architecture-surfaces-review.md`) may remain as a record of the review process, but any resulting corrections go straight into the source document.
+
+**Task:** Independently verify Holden's findings about `docs/architecture-surfaces.md` against source code.
+
+**Result: All of Holden's findings confirmed. Zero disputes.**
+
+Key confirmed errors in the doc:
+
+- `IRenderer.OnHostUpdated` — wrong parameter type (`IScreenSurface` vs actual `IScreenObject`). Confirmed at `IRenderer.cs:53`.
+- `IRenderStep.Refresh` — two parameters missing from doc stub. Actual signature has 4 params. Confirmed at `IRenderStep.cs:39`.
+- `IRenderer` stub — `Output` wrongly nullable, `Steps` wrongly get-only, three members absent (`Name`, `Opacity`, `IsForced`). Confirmed at `IRenderer.cs:14–34`.
+- `IRenderStep` stub — four members absent: `Name`, `SetData`, `Reset`, `OnHostUpdated`. Confirmed at `IRenderStep.cs:13–59`.
+- `LayeredScreenSurface` does NOT override `DefaultRendererName` — constructor directly assigns renderer via `GetRenderer(...)`. Confirmed at `LayeredScreenSurface.cs:60–61`.
+- `SetSurface(...)` and `Surface { set; }` are distinct operations (cell-array rebind vs object reference swap). Confirmed via `ICellSurfaceSettable.cs` and `ISurfaceSettable.cs`.
+- `Resize` effects: `RemoveAll()` called when `clear=true`, not `DropInvalidCells()`. Confirmed at `CellSurface.cs:409–413`.
+- `IsDirtySet` parenthetical wrong — EffectsManager never subscribes to this event. Confirmed by grep with zero hits.
+- `OnIsDirtyChanged()` is an empty no-op in base class — doc's "forwarding" description is misleading. Confirmed at `ScreenSurface.cs:376`.
+- Missing: `ConnectedLineEmpty` static array, `ICellSurface` base interfaces (`IGridView<ColoredGlyphBase>`, `IEnumerable<ColoredGlyphBase>`), `EffectsManager` in-memory `ColoredGlyphWithState` clone.
+
+**Pattern observed:** The `IRenderer` and `IRenderStep` interface stubs appear to have been written from an older or partial version of the interfaces. The core data model (CellSurface, ScreenSurface fields, viewport, indexers) was accurately documented; the contract stubs were not. Holden's review was high quality and thorough.
+
+**Verification output:** `docs/architecture-surfaces-deckard-verification.md`  
+**Decision file written:** `.squad/decisions/inbox/deckard-surfaces-doc-corrections.md`
+
 ### 2026 — Rendering Architecture Document
 
 **Rendering pipeline facts confirmed:**
