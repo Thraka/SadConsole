@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Editor.Addin/SadConsole.Editor.Addin.csproj" />
   <Project Path="Editor.Serialization/SadConsole.Editor.Serialization.csproj" />
   <Project Path="Editor/Editor.csproj" />
   <Project Path="SadConsole.Debug.MonoGame/SadConsole.Debug.MonoGame.csproj" />
