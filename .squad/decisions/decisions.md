@@ -91,3 +91,149 @@ Source: `IRenderStep.cs:13–59`
 | 10–12 | Roy   | P4 (backlog) |
 
 Rachael: once P1 fixes are in, please spot-check the updated stubs against the actual interface files to confirm accuracy before the doc is shared externally.
+
+---
+
+## RowFontSurface — Multi-Font Row Surface Architecture
+
+**Date:** 2026-03-02T21  
+**Author:** Deckard (Lead)  
+**Category:** Architecture — New Surface Type  
+**Status:** Specification complete. Implementation by Roy (core) and Gaff (hosts) in progress.
+
+### Summary
+
+A new surface type where **each row can use a different font**. Extends `ScreenSurface` without modifying existing surfaces. Enables rich typography (mixed font sizes per row) and per-row font overlays.
+
+### Key Design Decisions
+
+**1. No Cached Rectangles**  
+Variable row heights prevent pre-caching destination rects. Renderers compute `destRect` on the fly:
+```csharp
+XnaRectangle destRect = new XnaRectangle(
+    x * rowFontSize.X,
+    rowYOffset,
+    rowFontSize.X,
+    rowFontSize.Y);
+```
+
+**2. Sparse Row Font Storage**  
+`Dictionary<int, IFont>` and `Dictionary<int, Point>` provide sparse storage. Rows not in dictionary fall back to default `Font` and `FontSize` properties. Efficient for typical use cases where only a few rows have custom fonts.
+
+**3. Pre-Calculated RowYOffsets Array**  
+Array indexed by row number caches Y pixel offsets. Recalculated via `RecalculateRowOffsets()` whenever fonts or sizes change. Avoids redundant calculation during rendering.
+
+**4. Variable Height Calculation**  
+`HeightPixels` is no longer `View.Height * FontSize.Y`. New formula:
+```csharp
+public override int HeightPixels => 
+    RowYOffsets[RowYOffsets.Length - 1] + GetRowHeight(RowYOffsets.Length - 1);
+```
+
+**5. Uniform Width Calculation**  
+Width uses default `FontSize.X` for column alignment. All cells in a column align horizontally regardless of row font. Per-column fonts out of scope.
+
+**6. Mouse Input Coordinate Mapping**  
+`PixelToCell(Point pixelPosition)` method uses linear search through `RowYOffsets` to find which row contains Y coordinate. Necessary for variable-height row mouse input.
+
+**7. Resize Behavior**  
+Override `Resize()` to call `RecalculateRowOffsets()`. User responsible for managing `RowFonts` and `RowFontSizes` dictionaries if rows are added/removed.
+
+**8. Serialization via Font Names**  
+`RowFonts` and `RowFontSizes` marked with `[DataMember]` and `[JsonConverter(typeof(RowFontDictionaryConverter))]`. Fonts serialized by name, resolved from `GameHost.Fonts` at load time.
+
+### Core Implementation (Roy)
+
+**File:** `SadConsole/RowFontSurface.cs`  
+**Extends:** `ScreenSurface`
+
+**Key Properties:**
+- `RowFonts: Dictionary<int, IFont>` — row to font mapping
+- `RowFontSizes: Dictionary<int, Point>` — row to font size mapping
+- `RowYOffsets: int[]` — cached Y pixel offsets per row
+
+**Key Methods:**
+- `SetRowFont(int row, IFont font, Point? fontSize = null)` — assign font to row
+- `GetRowFont(int row): IFont` — get font with fallback
+- `GetRowFontSize(int row): Point` — get size with fallback
+- `RecalculateRowOffsets()` — pre-calculate Y offsets
+- `GetRowYOffset(int row): int` — O(1) lookup
+- `GetRowHeight(int row): int` — row height in pixels
+- `PixelToCell(Point pixelPosition): Point` — mouse coordinate mapping
+
+**Constants:** `SadConsole/Renderers/Constants.cs`
+- `RendererNames.RowFontSurface = "rowfontsurface"`
+- `RenderStepNames.RowFontSurface = "rowfontsurface"`
+- `RenderStepSortValues.RowFontSurface = 50`
+
+### Host Implementations (Gaff)
+
+**MonoGame Host:**
+- `SadConsole.Host.MonoGame/Renderers/RowFontSurfaceRenderer.cs`
+- `SadConsole.Host.MonoGame/Renderers/Steps/RowFontSurfaceRenderStep.cs`
+- Registration in `Game.Mono.cs`
+
+**SFML Host:**
+- `SadConsole.Host.SFML/Renderers/RowFontSurfaceRenderer.cs`
+- `SadConsole.Host.SFML/Renderers/Steps/RowFontSurfaceRenderStep.cs`
+- Registration in `Game.cs`
+
+**FNA Host:**
+- Shares MonoGame via compile includes; no separate files needed
+
+**Renderer Pattern:**
+1. Clear base `ScreenSurfaceRenderer` steps
+2. Add `RowFontSurfaceRenderStep` (draws surface)
+3. Add `OutputSurfaceRenderStep` (blits to output)
+4. Add `TintSurfaceRenderStep` (applies tint)
+
+**Render Loop Structure:**
+```csharp
+for (int y = 0; y < surface.View.Height; y++)
+{
+    IFont rowFont = rowFontSurface.GetRowFont(y);
+    Point rowFontSize = rowFontSurface.GetRowFontSize(y);
+    int rowYOffset = rowFontSurface.GetRowYOffset(y);
+    
+    for (int x = 0; x < surface.View.Width; x++)
+    {
+        Rectangle destRect = new Rectangle(
+            x * rowFontSize.X,
+            rowYOffset,
+            rowFontSize.X,
+            rowFontSize.Y);
+        // Draw background, glyph, decorators...
+    }
+}
+```
+
+### Performance Implications
+
+- **No cached rects:** Small performance hit vs. `ScreenSurfaceRenderer` due to on-the-fly rect calculation
+- **Per-row font lookups:** Dictionary lookups on every row — negligible for typical row counts (< 100)
+- **Multiple texture switches:** If rows use different fonts, texture switching per row — acceptable for < 5 unique fonts
+
+Future optimization: Batch rows by font to minimize texture switches.
+
+### Testing Strategy (Rachael)
+
+1. Basic multi-font rendering — 3 rows with different fonts
+2. Height calculation — `HeightPixels` matches sum of row heights
+3. Mouse input — `PixelToCell` returns correct coordinates
+4. Viewport scrolling — rows render correctly when scrolled
+5. Runtime font change — `SetRowFont` triggers re-render
+6. Surface resize — `RowYOffsets` recalculates correctly
+7. Serialization — custom row fonts persist/restore
+8. Fallback behavior — unset rows use default font
+
+### Related Documents
+
+- Specification: `.squad/decisions/inbox/deckard-multifont-surface.md` (detailed)
+- Orchestration logs: `.squad/orchestration-log/2026-03-02T21-{deckard,roy,gaff}.md`
+- Session log: `.squad/log/2026-03-02T21-rowfontsurface.md`
+
+### Sign-Off
+
+**Deckard (Lead):** Specification ready for implementation.  
+**Roy (Core Dev):** Implementation in progress. Builds clean.  
+**Gaff (Host Dev):** Implementation in progress. All hosts build clean.

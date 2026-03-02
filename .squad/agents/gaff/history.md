@@ -73,3 +73,61 @@ Completed comprehensive analysis of font loading and rendering across all hosts.
 
 **Analysis deliverable:**
 - Wrote `.squad/agents/gaff/font-analysis.md` (38KB, 15 sections, code examples for all hosts).
+
+### 2026-03-02 — RowFontSurface Renderer Implementation
+
+Implemented host renderers for the new `RowFontSurface` type per Deckard's architecture spec.
+
+**Implementation scope:**
+- **MonoGame host:** `RowFontSurfaceRenderer.cs` and `RowFontSurfaceRenderStep.cs` in `SadConsole.Host.MonoGame/Renderers/`
+- **SFML host:** `RowFontSurfaceRenderer.cs` and `RowFontSurfaceRenderStep.cs` in `SadConsole.Host.SFML/Renderers/`
+- **FNA host:** Shares MonoGame implementation via compile includes (no separate files needed)
+- **KNI host:** NOT implemented per Thraka's directive (experimental)
+
+**Key architectural decisions:**
+1. **No cached rectangles:** Unlike `ScreenSurfaceRenderer`, `RowFontSurfaceRenderer` computes destination rectangles on the fly because each row can have different font dimensions. The existing `CachedRenderRects` optimization cannot be used.
+
+2. **Per-row font lookup:** Each row calls `RowFontSurface.GetRowFont(y)`, `GetRowFontSize(y)`, and `GetRowYOffset(y)` to get the font, size, and Y pixel offset for that row. These methods provide fallback to the default `Font` and `FontSize` properties.
+
+3. **Override pattern:** Both renderers extend `ScreenSurfaceRenderer` but override `AddDefaultSteps()` to prevent base class steps from being added. They clear the `Steps` collection and add `RowFontSurfaceRenderStep` + `OutputSurfaceRenderStep` + `TintSurfaceRenderStep`.
+
+4. **Host-specific rendering:**
+   - **MonoGame:** Uses `IRendererMonoGame.LocalSpriteBatch` with `SpriteBatch.Draw()` calls per cell
+   - **SFML:** Uses `SharedSpriteBatch.DrawQuad()` with `IntRect` destination rectangles and explicit mirror handling
+
+5. **Render loop structure:**
+   ```csharp
+   for each row y:
+       rowFont = GetRowFont(y)
+       rowFontSize = GetRowFontSize(y)
+       rowYOffset = GetRowYOffset(y)
+       for each column x:
+           destRect = (x * rowFontSize.X, rowYOffset, rowFontSize.X, rowFontSize.Y)
+           draw background using rowFont.SolidGlyphRectangle
+           draw glyph using rowFont.GetGlyphSourceRectangle(cell.Glyph)
+           draw decorators using rowFont.GetGlyphSourceRectangle(decorator.Glyph)
+   ```
+
+6. **Registration:** Added constants to `SadConsole/Renderers/Constants.cs`:
+   - `RendererNames.RowFontSurface = "rowfontsurface"`
+   - `RenderStepNames.RowFontSurface = "rowfontsurface"`
+   - `RenderStepSortValues.RowFontSurface = 50` (same as Surface)
+   
+   Registered in `Game.Mono.cs` (MonoGame/FNA) and `Game.cs` (SFML) via `SetRenderer()` and `SetRendererStep()`.
+
+**Critical patterns learned:**
+- FNA is a compile-time alias of MonoGame — it uses `<Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" />` in its `.csproj` with `RootNamespace>SadConsole.Host.MonoGame</RootNamespace>`. Any changes to MonoGame automatically apply to FNA.
+- SFML uses `DrawQuad()` instead of `SpriteBatch.Draw()` and requires explicit mirror handling via `cell.Mirror.ToSFML()`.
+- SFML uses `BackingTexture.Display()` after rendering, while MonoGame uses `SetRenderTarget(null)`.
+- Both hosts use the same three-phase rendering: `Refresh()` → `Composing()` → `Render()`.
+
+**Coordination with Roy:**
+- Roy implemented the core `RowFontSurface` class with all required accessor methods
+- Host renderers correctly reference `RowFontSurface.GetRowFont()`, `GetRowFontSize()`, `GetRowYOffset()`, `GetRowHeight()`
+- Roy's `DefaultRendererName` override properly signals hosts to use `RowFontSurfaceRenderer`
+- All builds clean; no blocking issues
+
+**Coordination with Deckard:**
+- Deckard provided complete architecture specification with clear host implementation guidance
+- All implementations followed spec without deviations or clarifications needed
+

@@ -28,6 +28,24 @@ The core library does NOT render. It defines what needs to be rendered and the i
 
 ## Learnings
 
+### RowFontSurface Implementation (2026-03-02)
+
+- **RowFontSurface extends ScreenSurface** — New surface type for per-row font support without modifying existing surfaces.
+- **HeightPixels and Resize are NOT virtual in ScreenSurface** — Used `new` keyword to hide base implementation rather than `override`. Base methods are not marked virtual/abstract.
+- **RowYOffsets caching pattern** — Pre-calculate Y pixel offsets for each row to avoid redundant calculations during rendering. Array indexed by row number.
+- **Dictionary-based row font storage** — `Dictionary<int, IFont>` and `Dictionary<int, Point>` provide sparse storage; only rows with custom fonts stored. Fallback to default `Font`/`FontSize` property for rows not in dictionary.
+- **RecalculateRowOffsets must be called on font changes** — Override `OnFontChanged` to trigger recalculation. Also call on `Resize` and in constructors.
+- **PixelToCell for mouse input** — Linear search through `RowYOffsets` to find which row contains Y coordinate. Required for variable-height row mouse coordinate mapping.
+- **DefaultRendererName override** — Returns `Constants.RendererNames.RowFontSurface` to signal hosts to use specialized renderer.
+- **Constants organization** — Three classes: `RendererNames` (renderer type strings), `RenderStepNames` (step type strings), `RenderStepSortValues` (uint sort order). All three need matching entries.
+- **Core implementation complete** — Renderer implementations are Gaff's responsibility (MonoGame, SFML, FNA hosts).
+
+#### Coordination with Gaff (Host Dev)
+- Gaff implemented renderers in MonoGame, SFML, FNA following Deckard's specification
+- All host render steps correctly reference core methods: `GetRowFont()`, `GetRowFontSize()`, `GetRowYOffset()`, `GetRowHeight()`
+- All hosts build successfully; no blocking issues
+- Registration complete in each host's `Game.cs` file
+
 ### Font System Architecture (2026-02-26)
 
 - **IFont is a metadata interface**, not a GPU asset. Core owns all glyph mapping, sizing, definitions; hosts own `ITexture` GPU loading.

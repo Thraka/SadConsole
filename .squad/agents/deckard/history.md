@@ -67,3 +67,31 @@ Holden reviewed `docs/architecture-surfaces.md` against source code and found 12
 **P4 (omissions):** `ConnectedLineEmpty` static array, `ICellSurface` base interfaces, `EffectsManager` in-memory state clone.
 
 **Deckard action:** Independently verified all 12 findings against source — all confirmed, zero disputes. Applied corrections directly to `docs/architecture-surfaces.md` per user directive (no intermediate verification files). Decision record written to `.squad/decisions/inbox/deckard-surfaces-doc-corrections.md`.
+
+## Cross-Agent Updates
+
+### 2026-03-02 — RowFontSurface Implementation Coordination
+
+**Status:** All agents completed their scope successfully. Zero blockers.
+
+**Roy's Coordination with Gaff:**
+- Core `RowFontSurface` class implements `GetRowFont(int row)`, `GetRowFontSize(int row)`, `GetRowYOffset(int row)`, `GetRowHeight(int row)` methods
+- Host renderers reference these core methods in their render loops
+- Roy's `DefaultRendererName` override returns `Constants.RendererNames.RowFontSurface` to signal host to use specialized renderer
+- Gaff verified core methods match host renderer expectations
+
+**Gaff's Coordination with Roy:**
+- Implemented renderers in MonoGame, SFML, FNA following Deckard's architecture specification
+- All hosts build successfully; no blocking issues with Roy's core implementation
+- Host render steps correctly call core methods and handle variable row heights
+- Registered in each host's `Game.cs` file via `SetRenderer()` and `SetRendererStep()`
+
+**Deckard's Oversight:**
+- Provided complete specification with clear separation of core vs. host responsibilities
+- All implementation followed spec without deviations
+- Zero design conflicts between core and hosts
+
+**Next Phase:**
+- Rachael (Tester) — integration testing per testing strategy
+- Monitor performance if many unique fonts per surface
+- Future optimization: batch rows by font if texture switching overhead detected
