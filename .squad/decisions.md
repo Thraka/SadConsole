@@ -44,6 +44,39 @@ Created `docs/architecture-fonts.md` — comprehensive architecture reference do
 
 ---
 
+## 2026-03-02 — Font Architecture Verification & Corrections Complete
+
+**Author:** Holden (verification), Deckard (corrections) | **Date:** 2026-03-02 | **Status:** Complete
+
+Holden verified `docs/architecture-fonts.md` against SadConsole source and found the document 99% accurate, with one minor gap identified in Section 7 (font change notification mechanism). The gap: Section 7 incorrectly stated that `Renderer?.OnHostUpdated(this)` is explicitly called on font changes. Actual behavior is **passive**: `SurfaceRenderStep.Refresh()` automatically detects dimension changes via `AbsoluteArea` and reallocates the backing texture.
+
+Deckard applied 5 corrections:
+1. Section 3: Clarified `IsSadExtended` as a **feature flag** in `GlyphDefinition` (distinct from SadFont.Extended readonly bool)
+2. Section 3: Documented `GlyphDefinition` **independence from SadFont** — design pattern for named glyphs without file changes
+3. Section 6: Added documentation for **`CellDecoratorHelpers`** utilities (GetRectangleFromDecorators, GetCountFromDecorators, MirrorDecorators)
+4. Section 2: Removed KNI host reference per Thraka directive (experimental)
+5. Section 7: Revised font change notification to explain **passive texture reallocation detection**
+
+**Files modified:** `docs/architecture-fonts.md`
+
+**Team directives captured:**
+- **KNI host:** Experimental — do not document (Thraka)
+- **SadConsole.Fonting:** Excluded (already done)
+
+**Status:** ✅ Font architecture documentation complete, verified, and corrected.
+
+---
+
+## 2026-03-02 — User Directive: KNI Host is Experimental
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-02 | **Status:** Record
+
+User directive: **KNI host is experimental** — do not document it in any way. Do not include in team documentation or architecture analysis.
+
+**Rationale:** User request to exclude unfinished/experimental work from team documentation.
+
+---
+
 ## 2026-03-02 — User Directive: Ignore SadConsole.Fonting
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-02 | **Status:** Record

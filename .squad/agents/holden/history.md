@@ -53,3 +53,27 @@ I come in fresh. I read documentation and specs, then verify them against the ac
 **Output:** `.squad/decisions/inbox/holden-surfaces-findings-for-deckard.md`
 
 Summarized all findings from `docs/architecture-surfaces-review.md` into a structured brief for Deckard. Covered 8 inaccuracies, 5 gaps, and a list of confirmed-correct items. Flagged action owners (Roy/Pris for interface stub corrections, Deckard for conceptual/architectural clarifications). Three items remain unverified pending host renderer knowledge.
+
+### 2026-02-25 — Verification of `docs/architecture-fonts.md`
+
+**Output:** `.squad/agents/holden/font-doc-review.md`, `.squad/decisions/inbox/holden-font-doc-review.md`
+
+**Status:** MOSTLY ACCURATE — 1 minor gap found
+
+Verified new font architecture document across 50+ checkpoints covering IFont/SadFont interfaces, GlyphDefinition/CellDecorator/Mirror types, enum values, method signatures, file paths, JSON format, serialization, font loading/registration, ScreenSurface integration, host rendering pipelines (MonoGame/SFML), and design principles.
+
+**Key finding:** Section 7 (Font Change Notification) claims `Renderer?.OnHostUpdated(this)` is called when Font/FontSize changes, but this is misleading. The actual behavior: OnFontChanged() is an empty virtual no-op in ScreenSurface base class. The renderer's backing texture reallocation happens passively—the SurfaceRenderStep.Refresh() phase automatically detects AbsoluteArea dimension changes and reallocates. Same end result, different mechanism. Minor revision recommended to clarify.
+
+**Key verified items:**
+- IFont/SadFont contracts match code exactly
+- All enum values correct (Mirror, Sizes, etc.)
+- Glyph indexing and padding formulas verified
+- Font file JSON structure matches IBM.font and IBM_ext.font
+- GameHost font registry and loading verified
+- Embedded resource paths correct (res: prefix)
+- FilePath resolution (disk/assembly) verified
+- FontConfig fluent API verified
+- ScreenSurface font integration verified
+- Host rendering (MonoGame/SFML) verified
+- FontJsonConverter serialization verified
+- Font editing extensions verified
