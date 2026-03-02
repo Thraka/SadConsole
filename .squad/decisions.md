@@ -4,7 +4,53 @@ This file is the authoritative decision ledger. All agents read this. Only Scrib
 
 ---
 
-<!-- Decisions will be appended here by Scribe as they are made. -->
+## 2026-03-02 — Font Architecture Analysis Complete
+
+**Author:** Roy | **Date:** 2026-02-26 | **Status:** Informational
+
+Completed deep-dive analysis of the SadConsole font system. Full technical specification written to `.squad/agents/roy/font-analysis.md` for use in Deckard's architecture document.
+
+**Key findings:** Clean core/host separation (no circular dependencies); font size scaling is logical, not physical (Quarter/Half/One/Two/Three/Four multipliers apply at render time); named glyphs via GlyphDefinition enable rich typography without extra surface layers; cell decorators are lightweight and stackable (~3 ints + flags per decorator); font serialization avoids texture bloat by storing only font name (resolved at deserialization); legacy remapping code preserved for backward compatibility.
+
+**Deliverables:** `.squad/agents/roy/font-analysis.md` (30KB+, 17 sections); updated `.squad/agents/roy/history.md`.
+
+---
+
+## 2026-02-25 — Font Architecture is Sound Across All Hosts
+
+**Author:** Gaff (Host Dev) | **Date:** 2026-02-25 | **Status:** Informational
+
+Deep analysis of font loading, glyph mapping, and rendering across MonoGame, SFML, FNA, and KNI hosts concludes the font architecture is **cross-host consistent and well-designed**. No breaking changes or architectural refactors are needed.
+
+**Key findings:** Grid layout calculation is identical across all hosts (single formula in `SadFont.GenerateGlyphSourceRectangle()`); texture type abstraction (`ITexture` → per-host `GameTexture`) works well; rendering patterns are parallel (all use same glyph rect lookup); extended fonts, decorators, and font scaling work consistently; rectangle types, font editing, and texture disposal are all correct (not issues).
+
+**Recommendations for Deckard's architecture document:** Include 7 sections (data model, grid formula, texture loading, rendering pipeline, scaling, extended fonts, fallback). For Rachael: 6 regression tests needed. For future hosts: 4-step integration guide.
+
+**Deliverables:** `.squad/agents/gaff/font-analysis.md` (38.7KB); updated `.squad/agents/gaff/history.md`.
+
+---
+
+## 2026-02-26 — Font System Architecture Document Created
+
+**Author:** Deckard | **Date:** 2026-02-26 | **Status:** Informational
+
+Created `docs/architecture-fonts.md` — comprehensive architecture reference document for SadConsole's font system. Synthesized from Roy's core font analysis and Gaff's host rendering analysis.
+
+**Scope:** IFont interface and SadFont implementation; .font JSON format and PNG spritesheet layout; glyph indexing and rectangle lookup; extended font support (GlyphDefinition, CellDecorator); font size scaling model; font registration and loading pipeline (GameHost.Fonts, LoadFont, FontConfig); surface-font integration and coordinate impact; host rendering pipeline across all hosts (MonoGame, SFML, FNA, KNI); font serialization strategy (name-based); design principles. **Excluded per user directive:** SadConsole.Fonting (unfinished experiment).
+
+**Team implications:** Roy — font metadata types fully documented (refer contributors to this doc for font-related core changes); Gaff — host rendering pipeline captured (verify accuracy against future host changes); Pris — Font/FontSize independence section documents control usage; Rachael — test coverage gaps documented per Gaff's analysis; All — SadConsole.Fonting deliberately excluded.
+
+**Status:** ✅ Complete. Architecture document ready for team reference and contributor onboarding.
+
+---
+
+## 2026-03-02 — User Directive: Ignore SadConsole.Fonting
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-02 | **Status:** Record
+
+User directive: **Ignore SadConsole.Fonting** — it is an unfinished experiment. Do not include it in documentation or analysis of the font system.
+
+**Rationale:** User request to exclude incomplete work from team documentation.
 
 ---
 

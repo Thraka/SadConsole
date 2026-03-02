@@ -39,6 +39,17 @@ Completed comprehensive documentation of core architecture:
 
 ## Learnings
 
+### 2026-02-26 — Font System Architecture Document
+
+Wrote `docs/architecture-fonts.md` — comprehensive font system architecture reference covering all 10 sections requested. Synthesized Roy's core analysis (IFont, SadFont, glyph system, serialization) and Gaff's host analysis (MonoGame/SFML/FNA/KNI texture loading, rendering pipeline) into a single unified document.
+
+Key architectural insights documented:
+- **Font/FontSize independence** is the core scaling design: `Font` is the atlas, `FontSize` is the display scale, they are decoupled on `ScreenSurface`. Multiple surfaces share one font at different scales.
+- **Core/host boundary** is clean: core owns `IFont`/`SadFont` (metadata + glyph rectangles), hosts own `ITexture`/`GameTexture` (GPU textures) and `SurfaceRenderStep` (per-cell glyph blitting).
+- **Serialization strategy** is name-based: surface saves store only font name, resolved from `GameHost.Fonts` at load time. Font files themselves use `TypeNameHandling.All` for polymorphic JSON.
+- **Extended font system** (`IsSadExtended`, `GlyphDefinition`, `CellDecorator`) enables overlay glyphs without extra surface layers — decorators are rendered on top of base glyphs in the same render pass.
+- **SadConsole.Fonting excluded** per directive — it's an unfinished experiment not part of the documented architecture.
+
 ### 2026-02-25 — Correction Workflow Established
 
 ## Cross-Agent Updates
