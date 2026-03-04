@@ -58,3 +58,25 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - **Cell-level dirty tracking independent from surface dirty tracking**. `ColoredGlyph.IsDirty` used by effects system; `CellSurface.IsDirty` polls renderer. Different concerns, same dirty signal chain.
 - **No built-in color mapping**. Fonts are monochrome spritesheets; color applied at render time via `ColoredGlyph.Foreground`/`Background`. Enables unlimited color combinations without palette bloat.
 - **FontConfig builder pattern** decouples font loading from host initialization. Supports built-in, custom default, or custom delegate. Runs after GameHost construction but before game loop.
+
+### Terminal Parser Phase 0 (2026-03-04)
+
+- **SadConsole.Terminal is standalone** — New parser work lives under `SadConsole/Terminal/` with no coupling to the legacy `SadConsole.Ansi` system.
+- **ECMA-48 state machine core** — Implemented Ground/Escape/CSI/DCS/OSC states with case-sensitive dispatch and explicit handling for Fp/Fe/Fs sequences.
+- **Zero-allocation dispatch** — Parser calls an `ITerminalHandler` interface and passes spans over preallocated parameter/intermediate arrays.
+- **String payload capture** — OSC/DCS payloads are buffered as bytes and dispatched via `CollectionsMarshal.AsSpan` to avoid allocations.
+- **UTF-8 decoding in Ground** — Bytes > 0x7F are decoded before invoking `OnPrint`.
+
+### Terminal Parser Test Reconciliation (2026-03-04)
+
+- **Fixed ITerminalHandler signature mismatches** — Rachael's `MockTerminalHandler` had wrong parameter order and types for `OnCsiDispatch`. Corrected to match actual interface: `(params, intermediates, byte final, byte? privatePrefix)`.
+- **Nullable private prefix** — Changed `CsiPrivatePrefix` from `byte` to `byte?` in test handler. Non-private sequences now correctly assert `null` instead of `0`.
+- **TerminalParserDemo created** — Built interactive console app at `Samples/TerminalParserDemo/` that reads ANSI files, feeds bytes through the parser, and logs all dispatched events with a summary. Includes logging handler that prints readable names for common sequences (SGR, CUP, DECSET, etc.).
+- **Pre-existing test failures are not interface issues** — Three tests fail (SGR no params, OSC BEL terminator, ESC recovery) due to parser implementation details, not interface signature problems. These are implementation bugs to be addressed separately.
+
+### Terminal Parser Bug Fixes (2026-03-04)
+
+- **Empty CSI params** — Fixed `ESC[m` parsing to correctly dispatch with default param 0.
+- **BEL-terminated OSC** — Fixed OSC sequences ending with BEL (0x07) to dispatch properly.
+- **ESC invalid byte recovery** — Fixed parser recovery from invalid escape sequences to reset to Ground state.
+- **Final status:** 87/87 tests pass on net8.0/net9.0/net10.0. Interface reconciliation complete.

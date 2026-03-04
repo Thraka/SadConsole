@@ -39,6 +39,23 @@ Completed comprehensive documentation of core architecture:
 
 ## Learnings
 
+### 2025-07-15 — ANSI Parser Overhaul Plan
+
+Produced comprehensive implementation plan for overhauling `SadConsole.Ansi` to support the CTerm/SyncTERM spec (`docs/cterm.adoc`). Plan written to `.squad/decisions/inbox/deckard-ansi-overhaul-plan.md`.
+
+**Key findings from gap analysis:**
+- Current parser is fundamentally broken: case-insensitive dispatch means `'H'` (CUP) and `'h'` (DECSET) are conflated, `'M'` (DL) and `'m'` (SGR) are conflated. This is the #1 fix.
+- Parser only recognizes `ESC [` (CSI) — no Fp/Fe/Fs escape sequences, no DCS, no OSC strings.
+- `ValidAnsiCodes` string approach cannot distinguish intermediate bytes (space before final char) or private prefixes (`?`, `=`).
+- Color system is hard-coded to 8 ANSI colors + 8 bright — no 256-color palette, no true color, no palette redefinition.
+- State tracking is minimal (bold, reverse, concealed, fg, bg) — needs scroll margins, tab stops, origin mode, auto-wrap mode, DEC mode flags, and full saved cursor state.
+
+**Architecture decision:** Replace inline parsing with a proper ECMA-48 state machine (`AnsiParser`) that emits typed commands, consumed by the refactored `AnsiWriter`. This cleanly separates parsing from execution, makes the parser unit-testable, and scales to the full spec.
+
+**Plan:** 10 phases, 25 work items. Phase 0 (state machine parser) is the load-bearing XL item — everything depends on it. Phases 3-7 are parallelizable. Phase 8 (scroll margins + DEC modes) is highest-risk due to behavioral tentacles into all other operations.
+
+**Assigned:** Roy for all core implementation, Rachael for all test suites. Pris and Gaff not needed — ANSI parsing is entirely within core, no host or controls impact.
+
 ### 2026-02-26 — Font System Architecture Document
 
 Wrote `docs/architecture-fonts.md` — comprehensive font system architecture reference covering all 10 sections requested. Synthesized Roy's core analysis (IFont, SadFont, glyph system, serialization) and Gaff's host analysis (MonoGame/SFML/FNA/KNI texture loading, rendering pipeline) into a single unified document.

@@ -154,3 +154,99 @@ Holden reviewed `docs/architecture-surfaces.md` against source. Document is broa
 6. `SetSurface(...)` vs `Surface { set; }` conflated — `SetSurface` (from `ICellSurfaceSettable`) remaps cell array within a `CellSurface`; `Surface { set; }` (from `ISurfaceSettable`) replaces the `ICellSurface` reference on `ScreenSurface`. Different operations, not interchangeable.
 
 **Secondary issues:** `Effects.DropInvalidCells()` vs `Effects.RemoveAll()` on resize with `clear=true`; `IsDirtySet` not subscribed by `EffectsManager` (propagation only via subclass override of `OnIsDirtyChanged()`); `OnIsDirtyChanged()` base is a no-op; `EffectsManager` clones cell state (undocumented); `ICellSurface` base interfaces (`IGridView<ColoredGlyphBase>`, `IEnumerable<ColoredGlyphBase>`) not documented; `ConnectedLineEmpty` static array missing from doc.
+
+---
+
+## 2026-03-04 — User Directive: ANSI Parser Overhaul Scope
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
+
+Overhaul the ANSI parser (SadConsole/Ansi/) to support the cterm.adoc spec.
+
+**IN SCOPE:**
+- Core CSI sequences: full cursor movement (CUU/CUD/CUF/CUB/CHA/CUP/CNL/CPL/HVP), erase (ED/EL/ECH), insert/delete (ICH/DCH/IL/DL), scroll (SU/SD/SL/SR), repeat (REP), tab stops (CHT/CBT/TBC/HTS)
+- Full SGR: 256-color palette (38;5;N / 48;5;N), 24-bit true color (38;2;R;G;B / 48;2;R;G;B), dim, blink, concealed, bright fg/bg (90-107), default colors (39/49)
+- Fe/Fp/Fs escape sequences: DECSC/DECRC, NEL, RI, HTS, RIS
+- DEC private modes (DECSET/DECRST): auto-wrap, origin mode, cursor show/hide, bright background/blink modes
+- Scroll margins: DECSTBM (top/bottom), DECSLRM (left/right)
+- OSC palette redefinition: OSC 4
+- DCS loadable fonts
+
+**OUT OF SCOPE:**
+- Device status/attribute queries (DA, DSR)
+- Mouse reporting modes
+- Sixel graphics
+- ANSI music
+- SyncTERM-specific APC commands
+
+---
+
+## 2026-03-04 — User Directive: Terminal Namespace with Standalone SadConsole.Terminal
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
+
+**First directive:** SadConsole.Terminal uses namespace `SadConsole.Terminal`. Existing `SadConsole.Ansi.*` classes are deprecated with `[Obsolete]` attributes and thin-wrapper delegation to the new system. New files go under `SadConsole/Terminal/`. Side-by-side coexistence — old code keeps working, removal on Thraka's timeline.
+
+**Clarifying directive:** SadConsole.Terminal is a completely independent, standalone API. The existing SadConsole.Ansi classes do NOT delegate to the new system. No [Obsolete] wrappers, no thin delegation. The two systems coexist side-by-side and users choose which to use. The old Ansi system remains untouched.
+
+---
+
+## 2026-03-04 — User Directive: Terminal.Parser Handler Callback Pattern
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
+
+Terminal.Parser uses the handler callback pattern. Parser calls methods on an `ITerminalHandler` interface (e.g., `OnPrint(char)`, `OnCsiDispatch(params, final)`, `OnEscDispatch(final)`, `OnOscString(payload)`) instead of emitting command objects. Zero allocation, no command classes or structs.
+
+---
+
+## 2026-03-04 — Terminal.Parser Test Contract (WI-0.2)
+
+**Author:** Rachael (Tester) | **Date:** 2026-03-04 | **Status:** Complete
+
+Per Deckard's overhaul plan WI-0.2 and Thraka's directives on namespace (`SadConsole.Terminal`) and handler callback pattern (`ITerminalHandler`), wrote the full test suite for `Terminal.Parser` before the implementation exists (TDD).
+
+**ITerminalHandler contract:**
+```csharp
+public interface ITerminalHandler
+{
+    void OnPrint(char ch);
+    void OnC0Control(byte b);
+    void OnEscDispatch(byte intermediate, byte final_);
+    void OnCsiDispatch(ReadOnlySpan<int> parameters, ReadOnlySpan<byte> intermediates, byte privatePrefix, byte final_);
+    void OnOscDispatch(ReadOnlySpan<byte> payload);
+    void OnDcsDispatch(ReadOnlySpan<int> parameters, ReadOnlySpan<byte> intermediates, byte final_, ReadOnlySpan<byte> payload);
+}
+```
+
+**Key decisions:**
+- Empty CSI params default to 0 (ECMA-48 spec compliance)
+- Private prefix as `byte` (0 = absent, simpler than nullable)
+- DEL (0x7F) is ignored
+- UTF-8 decoding is parser's responsibility
+- CAN/SUB abort without dispatch
+
+**Deliverables:** `Tests/SadConsole.Tests/TerminalParserTests.cs` — 87 test methods across 10 categories plus edge cases and integration scenarios.
+
+---
+
+## 2026-03-04 — Terminal Parser Phase 0 Implemented
+
+**Author:** Roy (Core Dev) | **Date:** 2026-03-04 | **Status:** Complete
+
+Implemented `SadConsole.Terminal.ITerminalHandler` and the ECMA-48 `Parser` state machine under `SadConsole/Terminal/`. 
+
+**Architecture:**
+- Standalone system with handler callbacks
+- Preallocated parameter/intermediate arrays (zero allocation)
+- OSC/DCS payload buffering via `CollectionsMarshal.AsSpan`
+- UTF-8 decoding in Ground state
+- Ground/Escape/CSI/DCS/OSC states with case-sensitive dispatch
+
+**Test Reconciliation:** Fixed `MockTerminalHandler` signature mismatches (parameter order, nullable private prefix).
+
+**Bug Fixes:** Fixed 3 parser implementation bugs:
+1. Empty CSI params — `ESC[m` now correctly dispatches with `params=[0]`
+2. BEL-terminated OSC — OSC sequences ending with BEL now dispatch
+3. ESC invalid byte recovery — Parser now resets to Ground on invalid escape bytes
+
+**Status:** ✅ All 87 tests pass on net8.0/net9.0/net10.0

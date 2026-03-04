@@ -103,3 +103,50 @@
 - Default `IgnoreDecorators` is `true`; all other Ignore* flags default to `false`
 - `String` setter expanding copies the last character's style (important behavior to cover)
 - String parser tests remain a gap (ColoredString.Parse.cs / StringParser/) — flagged in previous coverage analysis
+
+### 2026-03-04 — Terminal.Parser Test Suite (WI-0.2)
+
+**Task:** Write comprehensive contract-defining tests for the new `SadConsole.Terminal.Parser` before implementation exists (TDD / test-first).
+
+**Test file:** `Tests/SadConsole.Tests/TerminalParserTests.cs`
+
+**Total test methods:** 87
+
+**Mock handler:** `MockTerminalHandler` implements `ITerminalHandler` — records all dispatched calls (Print, C0Control, EscDispatch, CsiDispatch, OscDispatch, DcsDispatch) for assertion.
+
+**Test categories (10):**
+1. Printable characters (0x20–0x7E) → OnPrint — 4 tests
+2. C0 controls (BEL/BS/HT/LF/CR) → OnC0Control — 6 tests
+3. Simple ESC sequences (DECSC/DECRC/RIS/NEL/RI/HTS) → OnEscDispatch — 6 tests
+4. CSI case sensitivity (H≠h, M≠m, S≠s) — 9 tests (CRITICAL per Deckard's plan)
+5. CSI with parameters (single, multiple, empty defaults, none, truecolor) — 8 tests
+6. CSI with private prefix (?, =) — 5 tests
+7. CSI with intermediates (SP before final) — 4 tests
+8. OSC strings (ST terminator, BEL terminator, window title, empty) — 5 tests
+9. DCS strings (basic, with params) — 2 tests
+10. Edge cases — 18 tests: CAN/SUB abort, ESC-within-sequence, C0 mid-CSI, large params, many params, UTF-8 multibyte (2/3/4 byte), parser reset, single-byte feed, split-across-spans, DEL ignored, empty input
+Plus: 12 mixed/integration scenarios and additional CSI final characters (all common ECMA-48 operations)
+
+**ITerminalHandler contract assumed (from directives):**
+- `OnPrint(char)` — printable character
+- `OnC0Control(byte)` — C0 control byte
+- `OnEscDispatch(byte intermediate, byte final)` — ESC sequence
+- `OnCsiDispatch(ReadOnlySpan<int> params, ReadOnlySpan<byte> intermediates, byte privatePrefix, byte final)` — CSI
+- `OnOscDispatch(ReadOnlySpan<byte> payload)` — OSC string
+- `OnDcsDispatch(ReadOnlySpan<int> params, ReadOnlySpan<byte> intermediates, byte final, ReadOnlySpan<byte> payload)` — DCS
+
+**Parser public API assumed:**
+- `Parser(ITerminalHandler handler)` — constructor
+- `void Feed(ReadOnlySpan<byte> data)` — bulk feed
+- `void Feed(byte b)` — single byte feed
+- `void Reset()` — reset state machine
+
+**Key decisions:**
+- Tests will NOT compile until Roy creates `ITerminalHandler` and `Parser` in `SadConsole.Terminal` — this is intentional (test-first)
+- Mock records `ReadOnlySpan<>` params by copying to arrays (necessary since spans can't outlive the call)
+- Empty CSI params (`;`) default to 0 per ECMA-48 spec
+- DEL (0x7F) expected to be ignored
+- UTF-8 decoding is the parser's responsibility (tests validate decoded chars)
+- Private prefix byte is 0 when absent (not nullable — simpler for the handler)
+
+**Status:** ✅ All 87 tests pass after Roy reconciled interface signatures and fixed 3 parser bugs.
