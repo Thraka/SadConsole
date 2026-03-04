@@ -150,3 +150,56 @@ Plus: 12 mixed/integration scenarios and additional CSI final characters (all co
 - Private prefix byte is 0 when absent (not nullable — simpler for the handler)
 
 **Status:** ✅ All 87 tests pass after Roy reconciled interface signatures and fixed 3 parser bugs.
+
+### 2026-03-04 — Terminal.Writer Integration Test Suite (Phase 1)
+
+**Task:** Write comprehensive integration tests for `SadConsole.Terminal.Writer` → `ICellSurface` rendering BEFORE Writer exists (test-first, defining the integration contract).
+
+**Test file:** `Tests/SadConsole.Tests/TerminalWriterTests.cs`
+
+**Total test methods:** 73
+
+**Writer public API assumed (from task directives):**
+- `Writer(ICellSurface surface)` — constructor, takes a real CellSurface
+- `Writer.Feed(string text)` — feed ANSI text (convenience)
+- `Writer.Feed(ReadOnlySpan<byte> data)` — feed raw bytes
+- `Writer.State.CursorX` / `Writer.State.CursorY` — cursor position accessors
+- `Writer.Palette` — 256-color palette array (indexable, ≥256 entries)
+- `Writer.Encoding` — CharacterEncoding property (CP437/Unicode)
+- `Writer.LineFeeds` — LineFeedMode property (Strict/Implicit)
+- Writer implements `ITerminalHandler` internally (fed via Parser)
+
+**Test categories (13):**
+1. Basic rendering (5) — Hello glyphs, LF, CR, CR+LF, cursor advance
+2. SGR colors (13) — red/blue/green fg/bg, reset, bold+yellow→bright, 256-color, truecolor fg/bg, reverse video, reverse+color, default fg (39), default bg (49), bright fg (90-97), bright bg (100-107), combined SGR
+3. Cursor movement (8) — CUP, CUP defaults, CUU, CUD, CUF, CUB, CHA, clamping (top/left/bottom/right)
+4. Erase operations (5) — ED 0/1/2, EL 0/1/2
+5. Cursor save/restore (3) — CSI s/u, DECSC/DECRC, attribute preservation
+6. Special controls (4) — BS, BS clamp, HT (tab stops), CR+LF sequence
+7. Auto-wrap (2) — row fill wrap, cursor position after wrap
+8. Scroll behavior (3) — write past bottom, fill then write, new row cleared
+9. RIS full reset (3) — clears screen, cursor to home, resets colors
+10. Integration/mixed (6) — colored text at position, clear+redraw, multiple color changes, ANSI art line, byte span feed, split sequence across feeds, overwrite
+11. Palette (2) — 256 entries, distinct standard colors
+12. State accessors (3) — initial position, after print, after newline
+13. Edge cases (5) — empty feed, empty span, CUP 1-based, CUP 0→1, CUP beyond bounds, unrecognized CSI, single-cell surface
+
+**Key contract decisions:**
+- Default terminal colors: fg=White, bg=Black (standard VT100)
+- CUP params are 1-based (row;col), 0 treated as 1 per ECMA-48
+- CUP/cursor movement clamps to surface bounds
+- Bold (SGR 1) + standard color → bright variant
+- Reverse video (SGR 7) swaps rendered fg/bg (display-level swap)
+- LF alone implies CR+LF behavior (moves to column 0 and down) — standard terminal convention, configurable via LineFeedMode
+- Tab stops default to every 8 columns
+- Scroll triggers when writing past the last row
+- After scroll, new bottom row is cleared to spaces
+- RIS (ESC c) clears screen, resets cursor, resets all attributes
+- Unrecognized CSI sequences are silently ignored
+- Erase operations use space (0x20) for cleared cells
+- CharacterEncoding supports CP437 mode (font-first, then CP437 map) and Unicode pass-through
+
+**Status:** ✅ All 73 tests pass after Roy implemented Writer with encoding support and line feed modes.
+
+**Key learning:** CGA palette != .NET Color enum. ANSI tests must use actual terminal color values (170,0,0 for red, not 255,0,0). Fixed 16 color assertions and all tests now pass.
+

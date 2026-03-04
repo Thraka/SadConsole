@@ -94,6 +94,147 @@ Rachael: once P1 fixes are in, please spot-check the updated stubs against the a
 
 ---
 
+## User Directive: Encoding-Aware Glyph Handling for Terminal.Writer
+
+**Date:** 2026-03-04T18:35:00Z  
+**By:** Thraka (via Copilot)  
+**Category:** Implementation Directive  
+**Status:** Implemented
+
+The Writer needs encoding-aware glyph handling. SadConsole generally only supports CP437 (0-255 glyphs). Characters need conversion to CP437 when the font doesn't define the Unicode code point. Use `_font.GlyphRectangles.ContainsKey(charIndex)` — if the font defines it, print as-is; if not, try CP437 conversion; if that fails, print as-is (SadConsole shows invalid glyph). There should be a configurable encoding setting on the Writer.
+
+**Rationale:** User request — SadConsole's font system is CP437-based but may support Unicode fonts in the future.
+
+**Implementation:** Added `CharacterEncoding` enum (Codepage437/Unicode) and `Writer.Encoding` property. CP437 mode checks font first, then maps Unicode→CP437. Unicode mode passes through as-is.
+
+---
+
+## User Directive: Line Ending Mode for Terminal.Writer
+
+**Date:** 2026-03-04T18:35:01Z  
+**By:** Thraka (via Copilot)  
+**Category:** Implementation Directive  
+**Status:** Implemented
+
+The Writer needs a configurable line ending mode (Linux vs Windows). In Linux mode, LF alone moves to the next line (implicit CR). In Windows mode, CR+LF is required — LF without preceding CR only moves down, not to column 0. Users need to know the type of data they're feeding the parser and configure accordingly.
+
+**Rationale:** User request — different data sources use different line ending conventions.
+
+**Implementation:** Added `LineFeedMode` enum (Strict/Implicit) and `Writer.LineFeeds` property. Default is Implicit (LF = CR+LF, Linux/BBS behavior). Users working with raw VT100 can switch to Strict.
+
+---
+
+## Terminal.Writer Integration Test Contract — Phase 1
+
+**Author:** Rachael (Tester) | **Date:** 2026-03-04 | **Status:** Complete
+
+Wrote 73 integration tests at `Tests/SadConsole.Tests/TerminalWriterTests.cs` defining the contract for `SadConsole.Terminal.Writer` rendering onto `ICellSurface`. Tests use real `CellSurface` instances (not mocks).
+
+### Writer API Contract Assumed
+
+```csharp
+public class Writer : ITerminalHandler
+{
+    public Writer(ICellSurface surface);
+    public void Feed(string text);
+    public void Feed(ReadOnlySpan<byte> data);
+    public TerminalState State { get; }  // .CursorX, .CursorY
+    public Color[] Palette { get; }      // 256-color palette
+    public CharacterEncoding Encoding { get; set; }  // CP437/Unicode
+    public LineFeedMode LineFeeds { get; set; }      // Strict/Implicit
+}
+```
+
+### Key Behavioral Decisions (team-relevant)
+
+1. **Default colors:** fg=White, bg=Black — standard VT100 convention (not CellSurface's default Transparent bg)
+2. **LF behavior:** LF alone moves cursor to column 0 and down one row (implicit CR+LF) — standard terminal behavior (can be switched to Strict mode)
+3. **CUP parameters:** 1-based row;col, with 0 treated as 1 per ECMA-48
+4. **Bold + standard color:** Produces bright variant (palette index + 8)
+5. **Reverse video (SGR 7):** Display-level fg/bg swap — the cell's Foreground gets the bg color, Background gets the fg color
+6. **Scroll:** Triggered when cursor moves past last row; top row scrolled out, new bottom row cleared to spaces
+7. **RIS (ESC c):** Full reset — clears screen, cursor to home, resets all SGR attributes
+8. **Erase:** Cleared cells get space (0x20) glyph with current default colors
+9. **Tab stops:** Default every 8 columns
+10. **Unrecognized CSI:** Silently ignored (no crash, no output)
+11. **CharacterEncoding:** CP437 mode checks font first, then maps Unicode→CP437. Unicode mode passes through as-is for Unicode fonts.
+12. **CP437 Glyph Handling:** Static lookup table avoids NuGet dependency. If font defines Unicode point, uses it directly; otherwise tries CP437 mapping.
+
+### Team Impact
+
+- **Roy:** These tests define what Writer must do. Build to make them pass. The `State` object needs `.CursorX` / `.CursorY` properties. `Palette` should be `Color[]` with ≥256 entries. Encoding and LineFeeds properties configurable.
+- **Deckard:** LF-implies-CR decision is simplification. Real terminals differ. Mode flag allows per-data-source configuration.
+- **Gaff:** No host impact — Writer is purely data-layer (CellSurface manipulation).
+
+---
+
+## Decision: Encoding-Aware Glyph Handling & LineFeed Mode for Terminal.Writer
+
+**Author:** Roy (Core Dev) | **Date:** 2026-03-05 | **Status:** Implemented
+
+### Summary
+
+Added two configurable behaviors to `SadConsole.Terminal.Writer`:
+
+1. **CharacterEncoding mode** (`Writer.Encoding` property) — Controls how incoming Unicode characters are mapped to font glyph indices. Default `Codepage437` checks the font's `GlyphRectangles` first, then falls back to a static CP437 lookup table. `Unicode` mode passes characters through as-is for Unicode-capable fonts.
+
+2. **LineFeedMode** (`Writer.LineFeeds` property) — Controls how LF (0x0A) is handled. Default `Implicit` treats LF as CR+LF (move to column 0 and down), matching Linux terminal behavior and BBS ANSI art conventions. `Strict` mode treats LF as down-only (classic ANSI/VT behavior where CR must be explicit).
+
+### Key Design Decisions
+
+- **Static CP437 table instead of System.Text.Encoding.CodePages** — Avoids adding a NuGet dependency. The 256-character CP437 mapping is well-known and static. Reverse lookup table built once at class load.
+- **Font-first glyph resolution** — In CP437 mode, if the font's `GlyphRectangles` already contains the Unicode code point, use it directly. Only fall back to CP437 mapping when the font doesn't know the character. This allows fonts with extended Unicode support to work correctly in CP437 mode.
+- **`cell.Glyph` (int) instead of `cell.GlyphCharacter` (char)** — Resolved glyph values are set as integers since they may be CP437 byte indices (0–255), not Unicode code points.
+- **Implicit LF as default** — Most ANSI art sources and Linux terminals treat LF as CR+LF. Users working with raw VT100 streams can switch to `Strict`.
+
+### Files Modified
+
+- `SadConsole/Terminal/Writer.cs` — Added enums, properties, `ResolveGlyph()`, CP437 table, LF mode logic
+- `Tests/SadConsole.Tests/TerminalWriterTests.cs` — Updated LF test, added Strict mode test
+
+### Team Implications
+
+- **Gaff (Host Dev):** No impact — all changes are in core Writer, no host rendering changes needed.
+- **Pris (Controls Dev):** No impact — Terminal.Writer is independent of controls.
+- **Rachael (Tester):** New `Encoding` and `LineFeeds` properties available for test coverage. Consider adding tests for CP437 mapping edge cases (box-drawing chars, Greek letters) and Unicode pass-through mode.
+
+---
+
+## Decision: Parser Encoding Modes (CP437/UTF-8)
+
+**Author:** Roy (Core Dev) | **Date:** 2026-03-05 | **Status:** Implemented
+
+### Summary
+
+Added `ParserEncoding` enum and `Parser.Encoding` property to control how high bytes (0x80–0xFF) are interpreted.
+
+**Codepage437 mode (default):** Bytes > 0x7F are passed directly to `OnPrint()` as CP437 glyph indices. No UTF-8 decoding.
+
+**UTF-8 mode:** Bytes > 0x7F trigger `DecodeUtf8()` to accumulate and decode multibyte sequences before dispatching to `OnPrint()`.
+
+### Rationale
+
+CP437 box-drawing characters (e.g., 0xC9 = ╔) were being mangled by unconditional UTF-8 decoding in the parser. Different data sources require different byte interpretations:
+- ANSI art files (CP437 encoded) — use CP437 mode
+- Modern UTF-8 streams — use UTF-8 mode
+
+### Key Design Decisions
+
+- **ParserEncoding enum** — Not the same as `System.Text.Encoding`. Used only for Parser high-byte handling.
+- **Conditional decoder reset** — `_utf8Decoder.Reset()` only called when `Encoding == ParserEncoding.Utf8`.
+- **HandleGround branching** — Bytes 0x80–0xFF dispatch to `OnPrint((char)b)` in CP437, `DecodeUtf8(b)` in UTF-8.
+
+### Files Modified
+
+- `SadConsole/Terminal/Parser.cs` — `ParserEncoding` enum, `Encoding` property, `HandleGround` branching
+- `Tests/SadConsole.Tests/TerminalParserTests.cs` — 4 UTF-8 multibyte tests updated
+
+### Test Status
+
+All 87 Parser tests pass with dual-mode support. 4 UTF-8 multibyte tests set `_parser.Encoding = ParserEncoding.Utf8` explicitly.
+
+---
+
 ## RowFontSurface — Multi-Font Row Surface Architecture
 
 **Date:** 2026-03-02T21  
