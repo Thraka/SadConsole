@@ -31,6 +31,11 @@ public static class RendererNames
     public const string Window = "window";
 
     /// <summary>
+    /// The renderer for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const string RowFontSurface = "rowfontsurface";
+
+    /// <summary>
     /// An absent renderer.
     /// </summary>
     public const string None = "none";
@@ -85,6 +90,11 @@ public static class RenderStepNames
     /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
     /// </summary>
     public const string Tint = "tint";
+
+    /// <summary>
+    /// The render step for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const string RowFontSurface = "rowfontsurface";
 }
 
 /// <summary>
@@ -126,4 +136,9 @@ public static class RenderStepSortValues
     /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
     /// </summary>
     public const uint Tint = 90;
+
+    /// <summary>
+    /// The render step for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const uint RowFontSurface = 50;
 }

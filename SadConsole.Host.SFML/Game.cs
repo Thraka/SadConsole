@@ -193,6 +193,7 @@ public sealed partial class Game : GameHost
         SetRenderer(Renderers.Constants.RendererNames.OptimizedScreenSurface, typeof(Renderers.OptimizedScreenSurfaceRenderer));
         SetRenderer(Renderers.Constants.RendererNames.Window, typeof(Renderers.WindowRenderer));
         SetRenderer(Renderers.Constants.RendererNames.LayeredScreenSurface, typeof(Renderers.LayeredRenderer));
+        SetRenderer(Renderers.Constants.RendererNames.RowFontSurface, typeof(Renderers.RowFontSurfaceRenderer));
 
         SetRendererStep(Renderers.Constants.RenderStepNames.ControlHost, typeof(Renderers.ControlHostRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Cursor, typeof(Renderers.CursorRenderStep));
@@ -203,6 +204,7 @@ public sealed partial class Game : GameHost
         SetRendererStep(Renderers.Constants.RenderStepNames.Tint, typeof(Renderers.TintSurfaceRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.Window, typeof(Renderers.WindowRenderStep));
         SetRendererStep(Renderers.Constants.RenderStepNames.SurfaceLayered, typeof(Renderers.LayeredSurfaceRenderStep));
+        SetRendererStep(Renderers.Constants.RenderStepNames.RowFontSurface, typeof(Renderers.RowFontSurfaceRenderStep));
 
         // Load the mapped colors
         if (Settings.AutomaticAddColorsToMappings)

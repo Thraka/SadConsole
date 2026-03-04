@@ -728,6 +728,26 @@
         <member name="M:SadConsole.Renderers.OptimizedScreenSurfaceRenderer.Dispose">
             <inheritdoc/>
         </member>
+        <member name="T:SadConsole.Renderers.RowFontSurfaceRenderer">
+            <summary>
+            Draws a <see cref="T:SadConsole.RowFontSurface"/>.
+            </summary>
+            <remarks>
+            This renderer handles surfaces where each row can have a different font with different glyph dimensions.
+            Unlike <see cref="T:SadConsole.Renderers.ScreenSurfaceRenderer"/>, this renderer computes destination rectangles on the fly
+            because cached rectangles cannot be used with variable row heights.
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderer.#ctor">
+            <summary>
+            Creates a new instance of this renderer with the default steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the render steps this renderer uses.
+            </summary>
+        </member>
         <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
             <summary>
             Draws a <see cref="T:SadConsole.IScreenSurface"/>.
@@ -1053,6 +1073,66 @@
         </member>
         <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
              <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Renderers.RowFontSurfaceRenderStep">
+            <summary>
+            Draws a <see cref="T:SadConsole.RowFontSurface"/> object.
+            </summary>
+            <remarks>
+            This render step handles surfaces where each row can use a different font with different glyph dimensions.
+            Destination rectangles are computed on the fly using each row's font size and Y offset, rather than using
+            cached rectangles like <see cref="T:SadConsole.Renderers.SurfaceRenderStep"/>.
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Renderers.RowFontSurfaceRenderStep.BackingTexture">
+            <summary>
+            The cached texture of the drawn surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.RowFontSurfaceRenderStep.CachedTexture">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.RowFontSurfaceRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.RowFontSurfaceRenderStep.SortOrder">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.RowFontSurfaceRenderStep.ComposeTint">
+            <summary>
+            The color applied when the sprite batch draws this surface on the renderer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.SetData(System.Object)">
+            <summary>
+            Sets an alternative <see cref="T:SadConsole.IScreenSurface"/> to render. If null, the surface associated with the parent renderer is drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing"><see langword="true"/> to indicate this method was called from <see cref="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Dispose"/>.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.RowFontSurfaceRenderStep.Finalize">
+            <summary>
+            Finalizes the object for collection.
+            </summary>
         </member>
         <member name="T:SadConsole.Renderers.SurfaceDirtyCellsRenderStep">
             <summary>
