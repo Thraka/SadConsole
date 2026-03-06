@@ -27,7 +27,23 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - Gaff — Host Dev (implements my interfaces)
 - Rachael — Tester
 
-## Learnings — Key Foundations (2026-02-26 to 03-02)
+## Core Context
+
+**Key Architecture Patterns:**
+- **Surfaces:** `CellSurface` is pure data (no rendering); `ScreenSurface` wraps it with rendering; effects system is mutation-aware via dirty flags
+- **Fonts:** IFont is core metadata; hosts own GPU textures. Extended fonts via GlyphDefinition + CellDecorator. Pre-computed glyph rects, registered in GameHost.Fonts
+- **RowFontSurface:** Per-row font support via sparse Dictionary; pixel-to-cell lookup via Y offset caching
+- **Terminal system:** Standalone under `SadConsole/Terminal/`. Parser (state machine), Writer (renders to ICellSurface), Measurer (dimensions only). Handler callback pattern, zero allocation, CP437/UTF-8 encoding support
+
+**Key Learnings:**
+- Font system is sound across all hosts (no cross-host issues)
+- Parser contracts defined via test-first (87 tests); Writer contracts via integration tests (160+ tests)
+- Encoding matters: Parser.Encoding (byte→char), Writer.Encoding (char→glyph)
+- LF defaults to implicit (CR+LF) — standard terminal behavior
+- SGR 0 = full reset, Bold shifts palettes 0-7 only, Dim halves RGB
+- Auto-wrap defers until next printable character (pending-wrap state critical for ANSI art)
+
+## Learnings — Early Foundations (2026-02-26 to 03-02)
 
 ### Surface Architecture & Rendering Pipeline
 - **IFont metadata interface** — Core owns glyph mapping; hosts own GPU textures

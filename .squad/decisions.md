@@ -250,3 +250,25 @@ Implemented `SadConsole.Terminal.ITerminalHandler` and the ECMA-48 `Parser` stat
 3. ESC invalid byte recovery — Parser now resets to Ground on invalid escape bytes
 
 **Status:** ✅ All 87 tests pass on net8.0/net9.0/net10.0
+
+---
+
+## 2026-03-04 — User Directive: Parser Encoding API
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
+
+Future enhancement: Replace Parser's `ParserEncoding` enum with accepting a `System.Text.Encoding` instance. Default to null (passthrough: `(char)b` for raw byte-as-glyph, the current CP437 behavior). When an Encoding is provided, use its Decoder for byte→char conversion. This enables `Encoding.GetEncoding(437)`, `Encoding.UTF8`, or any custom encoding. Requires `System.Text.Encoding.CodePages` NuGet for CP437. Not blocking — current enum works fine for now.
+
+---
+
+## 2026-03-04 — User Directive: Auto-Grow Writer & Measurer
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
+
+Two mechanisms for handling ANSI content taller than the surface:
+
+1. **Auto-grow in Writer**: When a scroll-up would occur, check if `_surface is ICellSurfaceResize`. If so, grow the surface height instead of scrolling — call `Resize(viewWidth, viewHeight, totalWidth, totalHeight + 1)` keeping view size the same (it maps to the visible portion). Content accumulates below the viewport. If the surface doesn't implement ICellSurfaceResize, fall back to normal scrolling behavior.
+
+2. **Measuring Writer (Terminal.Measurer)**: A lightweight `ITerminalHandler` that tracks cursor position and scroll count without any surface. Feed a file through it to determine the required height, then create a properly-sized surface and render with the real Writer. For use when the surface doesn't support resizing or when you need to know dimensions upfront.
+
+**Why:** User request — replaces the old double-parse hack in SadConsole.Ansi that read files twice. Auto-grow is preferred (single pass), Measurer is the fallback.
