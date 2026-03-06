@@ -329,7 +329,7 @@ public class Writer : ITerminalHandler
             case 'n': // DSR — ignore for now, does NOT clear PendingWrap
                 break;
 
-            // Phase 5 — Insert/Delete/Scroll
+            // Insert/Delete/Scroll
             case '@': // ICH — Insert Character
                 State.PendingWrap = false;
                 InsertCharacters(Param(parameters, 0, 1));
@@ -359,7 +359,7 @@ public class Writer : ITerminalHandler
                 RepeatLastCharacter(Param(parameters, 0, 1));
                 break;
 
-            // Phase 6 — Tab Stop Commands
+            // Tab Stop Commands
             case 'I': // CHT — Cursor Forward Tabulation
                 if (State.PendingWrap && State.AutoWrap)
                 {
@@ -383,7 +383,7 @@ public class Writer : ITerminalHandler
                 HandleTabClear(Param(parameters, 0, 0));
                 break;
 
-            // Phase 8 — DECSTBM (Set Top and Bottom Margins)
+            // DECSTBM (Set Top and Bottom Margins)
             case 'r': // DECSTBM — homes cursor on set
                 State.PendingWrap = false;
                 HandleSetScrollMargins(parameters);
@@ -540,7 +540,7 @@ public class Writer : ITerminalHandler
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Phase 5 — Insert / Delete / Scroll operations
+    //  Insert / Delete / Scroll operations
     // ═══════════════════════════════════════════════════════════
 
     private void InsertCharacters(int n)
@@ -653,7 +653,7 @@ public class Writer : ITerminalHandler
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Phase 6 — Tab Stop Commands
+    //  Tab Stop Commands
     // ═══════════════════════════════════════════════════════════
 
     private void CursorForwardTab(int n)
@@ -682,7 +682,7 @@ public class Writer : ITerminalHandler
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Phase 8 — DEC Private Modes + Scroll Margins
+    //  DEC Private Modes + Scroll Margins
     // ═══════════════════════════════════════════════════════════
 
     private void HandleSetScrollMargins(ReadOnlySpan<int> parameters)
@@ -1183,7 +1183,7 @@ public class Writer : ITerminalHandler
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Phase 3 — Cell decorator application
+    //  Cell decorator application
     // ═══════════════════════════════════════════════════════════
 
     private void ApplyDecorators(ColoredGlyphBase cell, Color fg)
@@ -1217,7 +1217,7 @@ public class Writer : ITerminalHandler
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  Phase 9 — OSC helpers
+    //  OSC helpers
     // ═══════════════════════════════════════════════════════════
 
     private void HandleOsc4(ReadOnlySpan<byte> data)

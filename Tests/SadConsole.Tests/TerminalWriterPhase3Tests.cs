@@ -9,10 +9,10 @@ using SadRogue.Primitives;
 namespace SadConsole.Tests;
 
 /// <summary>
-/// Integration tests for Terminal.Writer — Phases 3, 9, and 10.
-/// Phase 3: Visual SGR rendering (decorators, reverse, blink, italic).
-/// Phase 9: OSC palette redefinition (OSC 4, 10, 11).
-/// Phase 10: Polish (ED modes, CSI s edge cases, pending wrap clearing).
+/// Integration tests for Terminal.Writer — visual SGR, OSC palette, and polish.
+/// Visual SGR rendering (decorators, reverse, blink, italic).
+/// OSC palette redefinition (OSC 4, 10, 11).
+/// Polish (ED modes, CSI s edge cases, pending wrap clearing).
 /// </summary>
 [TestClass]
 public class TerminalWriterPhase3Tests
@@ -39,7 +39,7 @@ public class TerminalWriterPhase3Tests
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  PHASE 3 — Visual SGR Rendering
+    //  Visual SGR Rendering
     // ══════════════════════════════════════════════════════════════
 
     // ── Underline (SGR 4 / SGR 24) ──
@@ -273,7 +273,7 @@ public class TerminalWriterPhase3Tests
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  PHASE 9 — OSC Palette Redefinition
+    //  OSC Palette Redefinition
     // ══════════════════════════════════════════════════════════════
 
     // ── OSC 4 — Set palette color ──
@@ -420,7 +420,7 @@ public class TerminalWriterPhase3Tests
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  PHASE 10 — Polish
+    //  Polish
     // ══════════════════════════════════════════════════════════════
 
     // ── ED modes (CSI J) ──
