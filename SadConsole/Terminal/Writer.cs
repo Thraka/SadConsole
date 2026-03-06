@@ -992,7 +992,9 @@ public class Writer : ITerminalHandler
                 color = Palette.GetColor(idx);
                 break;
             default:
-                color = State.DefaultForeground;
+                // CGA convention: default foreground is palette 7.
+                // Bold brightens it to palette 15 (bright white).
+                color = State.Bold ? Palette.GetColor(15) : State.DefaultForeground;
                 break;
         }
 

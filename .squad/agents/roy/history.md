@@ -146,3 +146,13 @@ Only forward-moving handlers that clamp at the right margin exhibit this bug. Ba
 - CHT: Added PendingWrap resolution block (same pattern as CUF) in CSI dispatcher
 - C0 HT: Extracted from blanket PendingWrap=false in OnC0Control, added early-return path with wrap resolution
 - **Tests:** 679/679 pass (6 new tests added). Zero regressions on existing 673.
+
+## Learnings — Bold + Default Foreground Color Bug (2025-07-18)
+
+### Bug: White-vs-Gray After "Your stats" in b5-ans01.ans
+- **Symptom:** Line after "Your stats" starts with gray (170,170,170) instead of bright white (255,255,255).
+- **Root cause:** `ResolveForeground()` only applied bold brightening (palette 0-7 → 8-15) when `ForegroundMode == Palette`. When `ForegroundMode == Default` (after SGR 0 reset), bold was ignored entirely. The default foreground (170,170,170 = palette 7) was returned as-is.
+- **ANSI sequence triggering the bug:** `ESC[0m` (reset) → `ESC[1;46m` (bold + bg cyan). No explicit foreground set, so ForegroundMode stays Default. Bold is true but default path didn't brighten.
+- **Fix:** In `ResolveForeground()`, the Default case now checks `State.Bold` and returns `Palette.GetColor(15)` (bright white) instead of `State.DefaultForeground` when bold is active. This follows CGA convention where the default foreground IS palette index 7, and bold shifts it to palette 15.
+- **Key insight:** In CGA/ANSI terminals, the "default" foreground is semantically palette index 7. Any code path that resolves foreground color must apply bold brightening consistently, not just the explicit Palette path.
+- **Tests:** 682/682 pass (3 new tests added). Zero regressions on existing 679.

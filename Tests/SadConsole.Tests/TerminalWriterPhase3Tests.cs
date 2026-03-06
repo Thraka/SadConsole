@@ -1169,4 +1169,49 @@ public class TerminalWriterPhase3Tests
         Assert.AreEqual(0, writer.State.CursorRow, "Cursor should stay on row 0");
         Assert.AreEqual(8, writer.State.CursorColumn, "CHT 1 from col 4 should land at col 8");
     }
+
+    // ══════════════════════════════════════════════════════════════
+    //  Bold + Default Foreground = Bright White (CGA convention)
+    // ══════════════════════════════════════════════════════════════
+
+    [TestMethod]
+    public void BoldWithDefaultForeground_ResolvesBrightWhite()
+    {
+        // CGA: SGR 0 (reset) + SGR 1 (bold) with no explicit foreground
+        // should resolve to bright white (palette 15 = 255,255,255), not gray.
+        _writer.Feed("\x1b[0m\x1b[1mA");
+
+        var cell = _surface[0, 0];
+        Color brightWhite = new Color(255, 255, 255);
+        Assert.AreEqual(brightWhite, cell.Foreground,
+            "Bold + default foreground should be bright white (palette 15), not gray");
+    }
+
+    [TestMethod]
+    public void BoldWithDefaultForeground_B5Ans01Sequence()
+    {
+        // Exact sequence from b5-ans01.ans after "Your stats":
+        // ESC[0m (reset all) → ESC[1;46m (bold + bg cyan) → print
+        // Foreground should be bright white, not gray.
+        _writer.Feed("\x1b[0m\x1b[1;46mX");
+
+        var cell = _surface[0, 0];
+        Color brightWhite = new Color(255, 255, 255);
+        Color bgCyan = new Color(0, 170, 170);
+        Assert.AreEqual(brightWhite, cell.Foreground,
+            "After ESC[0m ESC[1;46m], foreground should be bright white (bold + default)");
+        Assert.AreEqual(bgCyan, cell.Background,
+            "Background should be cyan (palette 6)");
+    }
+
+    [TestMethod]
+    public void NoBoldWithDefaultForeground_StaysGray()
+    {
+        // Without bold, default foreground stays gray (170,170,170).
+        _writer.Feed("\x1b[0mA");
+
+        var cell = _surface[0, 0];
+        Assert.AreEqual(DefaultFg, cell.Foreground,
+            "Default foreground without bold should be gray (170,170,170)");
+    }
 }
