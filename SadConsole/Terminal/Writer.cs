@@ -155,6 +155,21 @@ public class Writer : ITerminalHandler
     /// <inheritdoc/>
     public void OnC0Control(byte controlCode)
     {
+        // HT needs special PendingWrap handling (same pattern as CUF/CHT):
+        // forward tab from the right margin is a no-op without wrap resolution.
+        if (controlCode == 0x09)
+        {
+            if (State.PendingWrap && State.AutoWrap)
+            {
+                State.CursorColumn = 0;
+                LineFeed();
+            }
+            State.PendingWrap = false;
+            State.CursorColumn = State.NextTabStop(State.CursorColumn);
+            SyncCursorPosition();
+            return;
+        }
+
         State.PendingWrap = false;
 
         switch (controlCode)
@@ -164,9 +179,6 @@ public class Writer : ITerminalHandler
             case 0x08: // BS
                 if (State.CursorColumn > 0)
                     State.CursorColumn--;
-                break;
-            case 0x09: // HT
-                State.CursorColumn = State.NextTabStop(State.CursorColumn);
                 break;
             case 0x0A: // LF
                 if (LineFeeds == LineFeedMode.Implicit)
@@ -349,7 +361,18 @@ public class Writer : ITerminalHandler
 
             // Phase 6 — Tab Stop Commands
             case 'I': // CHT — Cursor Forward Tabulation
-                State.PendingWrap = false;
+                if (State.PendingWrap && State.AutoWrap)
+                {
+                    // Resolve pending wrap: same pattern as CUF — forward tab from
+                    // the right margin is a no-op without this (NextTabStop(width-1) = width-1).
+                    State.PendingWrap = false;
+                    State.CursorColumn = 0;
+                    LineFeed();
+                }
+                else
+                {
+                    State.PendingWrap = false;
+                }
                 CursorForwardTab(Param(parameters, 0, 1));
                 break;
             case 'Z': // CBT — Cursor Backward Tabulation

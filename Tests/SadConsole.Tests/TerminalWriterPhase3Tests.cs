@@ -1064,4 +1064,109 @@ public class TerminalWriterPhase3Tests
                 $"Row 14 col {c} should not be a high-byte block glyph (CUF 6 skipped these columns)");
         }
     }
+
+    // ══════════════════════════════════════════════════════════════
+    //  CHT (CSI I) resolves PendingWrap at right margin
+    // ══════════════════════════════════════════════════════════════
+
+    [TestMethod]
+    public void ChtAtPendingWrap_ResolvesWrapThenTabsForward()
+    {
+        // CHT at right margin with PendingWrap: same bug pattern as CUF.
+        // NextTabStop(79) returns 79 (no tab stop beyond margin) → no-op.
+        // Fix: resolve wrap first (next line col 0), then tab forward.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('A', 80));   // fills row 0, PendingWrap = true
+        Assert.IsTrue(writer.State.PendingWrap, "PendingWrap should be set after 80 chars");
+        Assert.AreEqual(0, writer.State.CursorRow);
+
+        writer.Feed("\x1b[I");              // CHT 1 (one forward tab)
+
+        Assert.IsFalse(writer.State.PendingWrap, "CHT must clear PendingWrap");
+        Assert.AreEqual(1, writer.State.CursorRow, "CHT should resolve wrap to next row");
+        Assert.AreEqual(8, writer.State.CursorColumn, "CHT 1 from col 0 should land at first tab stop (col 8)");
+    }
+
+    [TestMethod]
+    public void ChtAtPendingWrap_PrintsAtCorrectPosition()
+    {
+        // Verify printing after CHT-during-PendingWrap lands at correct cell.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('X', 80));   // fills row 0, PendingWrap = true
+        writer.Feed("\x1b[I");              // CHT 1: resolve wrap → row 1, col 8
+        writer.Feed("Q");                   // print at row 1, col 8
+
+        Assert.AreEqual((int)'Q', surface[8, 1].Glyph,
+            "Character after CHT-during-PendingWrap should land at row 1, col 8");
+        Assert.AreEqual(9, writer.State.CursorColumn, "Cursor should advance to col 9");
+    }
+
+    [TestMethod]
+    public void ChtWithMultipleTabs_ResolvesWrapThenAdvances()
+    {
+        // CHT 2 at right margin: resolve wrap, then advance 2 tab stops.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('A', 80));   // fills row 0, PendingWrap = true
+        writer.Feed("\x1b[2I");             // CHT 2 (two forward tabs)
+
+        Assert.AreEqual(1, writer.State.CursorRow, "CHT should resolve wrap to next row");
+        Assert.AreEqual(16, writer.State.CursorColumn, "CHT 2 from col 0 should land at second tab stop (col 16)");
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  C0 HT (0x09) resolves PendingWrap at right margin
+    // ══════════════════════════════════════════════════════════════
+
+    [TestMethod]
+    public void C0HtAtPendingWrap_ResolvesWrapThenTabsForward()
+    {
+        // C0 HT (tab character) at right margin with PendingWrap: same pattern.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('A', 80));   // fills row 0, PendingWrap = true
+        Assert.IsTrue(writer.State.PendingWrap, "PendingWrap should be set after 80 chars");
+
+        writer.Feed("\t");                  // C0 HT (0x09)
+
+        Assert.IsFalse(writer.State.PendingWrap, "HT must clear PendingWrap");
+        Assert.AreEqual(1, writer.State.CursorRow, "HT should resolve wrap to next row");
+        Assert.AreEqual(8, writer.State.CursorColumn, "HT from col 0 should land at first tab stop (col 8)");
+    }
+
+    [TestMethod]
+    public void C0HtAtPendingWrap_PrintsAtCorrectPosition()
+    {
+        // Verify printing after C0 HT-during-PendingWrap.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('X', 80));   // fills row 0, PendingWrap = true
+        writer.Feed("\t");                  // HT: resolve wrap → row 1, col 8
+        writer.Feed("Z");                   // print at row 1, col 8
+
+        Assert.AreEqual((int)'Z', surface[8, 1].Glyph,
+            "Character after HT-during-PendingWrap should land at row 1, col 8");
+        Assert.AreEqual(9, writer.State.CursorColumn, "Cursor should advance to col 9");
+    }
+
+    [TestMethod]
+    public void ChtWithoutPendingWrap_NormalBehavior()
+    {
+        // CHT without PendingWrap should work normally (no wrap resolution).
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed("ABCD");               // cursor at col 4, row 0
+        writer.Feed("\x1b[I");              // CHT 1
+
+        Assert.AreEqual(0, writer.State.CursorRow, "Cursor should stay on row 0");
+        Assert.AreEqual(8, writer.State.CursorColumn, "CHT 1 from col 4 should land at col 8");
+    }
 }

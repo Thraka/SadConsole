@@ -107,3 +107,42 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - **Key insight:** CUF from the right margin with PendingWrap is always a no-op without resolution. The only useful behavior is to resolve the wrap first, making this fix strictly correct for all terminal styles.
 - **Tests:** 673/673 pass (3 new regression tests added). Zero regressions on existing 670.
 - **Specification compliance:** ECMA-48 §7.1 strict adherence via opt-in architecture.
+
+## Learnings — PendingWrap Comprehensive Audit (2025-07-17)
+
+### Full Audit of All Cursor-Movement Handlers
+
+Thraka requested audit of every cursor-movement handler for the same "stuck at right margin" bug found in CUF. The bug pattern: PendingWrap=true at col width-1, handler clears flag but forward movement clamps to width-1 → no-op.
+
+### Categorization
+
+**✅ SAFE — Absolute positioning (position set regardless of current col):**
+- CUP/HVP (H/f) — absolute row+col
+- CHA (G) — absolute column
+- VPA (d) — absolute row
+- DECSTBM (r) — homes cursor
+- DECOM (mode 6) — homes cursor
+- CSI u (restore) — restores saved position
+- NEL (ESC E) — explicit col 0 + linefeed
+- RI (ESC M) — vertical reverse index
+
+**✅ SAFE — Movement is meaningful from right margin (not forward-clamped):**
+- CUU (A) — moves up, cursor moves to different row
+- CUD (B) — moves down, cursor moves to different row
+- CUB (D) — moves backward, cursor moves to different column
+- CNL (E) — moves down + col 0, cursor moves to different row and column
+- CPL (F) — moves up + col 0, cursor moves to different row and column
+- CBT (Z) — backward tab, PreviousTabStop(79) returns previous stop
+- ICH (@), DCH (P), IL (L), DL (M) — edit-in-place, no forward movement
+
+**⚠️ AT RISK — Fixed in this audit (same stuck-at-margin bug as CUF):**
+- CHT (CSI I) — forward tab: NextTabStop(width-1) returns width-1 → no-op. Fixed: resolve wrap first.
+- C0 HT (0x09) — tab character: same NextTabStop clamping. Fixed: resolve wrap first.
+
+### Key Insight: The Bug Pattern Requires "Forward + Clamp"
+Only forward-moving handlers that clamp at the right margin exhibit this bug. Backward/vertical/absolute handlers can't get stuck because their target position is different from the margin. This narrows the at-risk set to: CUF (already fixed), CHT, and C0 HT (both fixed here).
+
+### Implementation
+- CHT: Added PendingWrap resolution block (same pattern as CUF) in CSI dispatcher
+- C0 HT: Extracted from blanket PendingWrap=false in OnC0Control, added early-return path with wrap resolution
+- **Tests:** 679/679 pass (6 new tests added). Zero regressions on existing 673.

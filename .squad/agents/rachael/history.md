@@ -165,3 +165,28 @@ Plus: 12 mixed/integration scenarios and additional CSI final characters (all co
 - **Coverage:** Tests validate all CSI sequence categories — cursor-moving (clear), non-cursor-moving (preserve), and DEC private modes.
 - **Spec compliance:** ECMA-48 §7.1 strict adherence achieved via opt-in clearing architecture.
 
+## 2026-03-06 — PendingWrap Forward Tab Comprehensive Audit
+
+**Task:** Roy audited all cursor-movement handlers in `Writer.cs` for the same "stuck at right margin" bug found in CUF. Found two additional bugs and fixed both with regression tests.
+
+**Test file:** `Tests/SadConsole.Tests/TerminalWriterPhase3Tests.cs` — added 6 new test methods.
+
+**Bugs found and fixed:**
+1. **CHT (CSI I — Forward Tab):** When PendingWrap=true at col 79 on 80-column surface, CHT clears flag and calls `NextTabStop(79)` → returns 79 (no-op). Fixed: resolve wrap first (LineFeed to next line col 0) then apply tab.
+2. **C0 HT (0x09 — Tab Character):** Identical bug pattern; was in blanket PendingWrap=false epilogue losing wrap state. Fixed: extracted to early-return path with wrap resolution.
+
+**All other handlers verified safe:**
+- Absolute positioning (CUP, CHA, VPA, DECSTBM, DECOM, CSI u, NEL, RI)
+- Backward/vertical (CUU, CUD, CUB, CNL, CPL, CBT) 
+- Edit-in-place (ICH, DCH, IL, DL)
+
+**Tests added (6):**
+- `Test_CHT_PendingWrap_ResolvesAndTabs()` — forward tab resolves wrap
+- `Test_CHT_AutoWrapOff_NoResolve()` — no resolution if AutoWrap false
+- `Test_C0_HT_PendingWrap_ResolvesAndTabs()` — C0 HT also resolves
+- `Test_C0_HT_TabStop_Scenarios()` — tab stops with wrap
+- `Test_CHT_MultiTab_Sequence()` — multiple consecutive tabs
+- `Test_Forward_Tab_Consistency()` — CHT and C0 HT align behavior
+
+**Status:** ✅ 679/679 tests pass (6 new, 673 existing). Zero regressions. ECMA-48 §7.1 strict adherence.
+
