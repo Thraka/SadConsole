@@ -272,3 +272,89 @@ Two mechanisms for handling ANSI content taller than the surface:
 2. **Measuring Writer (Terminal.Measurer)**: A lightweight `ITerminalHandler` that tracks cursor position and scroll count without any surface. Feed a file through it to determine the required height, then create a properly-sized surface and render with the real Writer. For use when the surface doesn't support resizing or when you need to know dimensions upfront.
 
 **Why:** User request — replaces the old double-parse hack in SadConsole.Ansi that read files twice. Auto-grow is preferred (single pass), Measurer is the fallback.
+
+---
+
+## 2026-03-06 — Terminal Writer — Phases 5, 6, and 8 Implemented
+
+**Author:** Roy (Core Dev) | **Date:** 2026-03-06 | **Status:** Complete
+
+Implemented three phase groups in `SadConsole/Terminal/Writer.cs` and `SadConsole/Terminal/State.cs`:
+
+### Phase 5 — Insert/Delete/Scroll Operations
+- **ICH** (`@`) — Insert N blank characters at cursor, shifting right within row
+- **DCH** (`P`) — Delete N characters at cursor, shifting left, blanks from right
+- **IL** (`L`) — Insert N blank lines at cursor row within scroll region
+- **DL** (`M`) — Delete N lines at cursor row within scroll region
+- **SU** (`S`) — Scroll content up N lines (reuses existing `ScrollUp`)
+- **SD** (`T`) — Scroll content down N lines (reuses existing `ScrollDown`)
+- **ECH** (`X`) — Erase N characters at cursor (overwrite with blanks, no shift)
+- **REP** (`b`) — Repeat last printed character N times (tracks via `_lastPrintedChar` field)
+
+### Phase 6 — Tab Stop Commands
+- **CHT** (`I`) — Cursor forward N tab stops
+- **CBT** (`Z`) — Cursor backward N tab stops (uses new `State.PreviousTabStop`)
+- **TBC** (`g`) — Tab clear: param 0 = clear at cursor column, param 3 = clear all
+
+### Phase 8 — DEC Private Modes + Scroll Margins
+- **DECSTBM** (`r`) — Set scroll region top/bottom margins; cursor homes after set
+- **DECSET/DECRST** (`?h`/`?l`) — Private mode handler with modes:
+  - Mode 1 (DECCKM) — cursor key mode flag
+  - Mode 5 (DECSCNM) — screen reverse video flag
+  - Mode 6 (DECOM) — origin mode: CUP addresses relative to scroll region
+  - Mode 7 (DECAWM) — auto-wrap wired to `State.AutoWrap`
+  - Mode 25 (DECTCEM) — cursor visibility wired to `Cursor.IsVisible`
+
+## State.cs Changes
+- Added `CursorKeyMode`, `ScreenReverseVideo` properties
+- Added `PreviousTabStop(int column)` method
+- `SaveCursor()`/`RestoreCursor()` now include `OriginMode`
+- `Reset()` resets all new flags
+
+## Key Design Decisions
+- Private prefix routing: `?` is handled; other unknown prefixes are silently ignored
+- Origin mode affects `HandleCursorPosition` only (CUP/HVP); cursor movement (CUU/CUD) already uses scroll region bounds
+- IL/DL only operate when cursor is within the scroll region
+- REP reuses `OnPrint` to get full wrapping/SGR behavior
+
+## Build & Test
+- **Build:** 0 errors, 48 pre-existing warnings (unchanged)
+- **Tests:** 614/614 pass on net8.0 (includes 58 Phase 2 tests + fix for 3 failures)
+
+**Team impact:** Phases 5, 6, 8 are complete and production-ready. All contract behaviors verified by Rachael's test suite.
+
+---
+
+## 2026-03-06 — Phase 2 Test Contracts (Phases 5, 6, 8)
+
+**Author:** Rachael (Tester) | **Date:** 2026-03-06 | **Status:** Complete
+
+Wrote 58 contract-defining tests in `Tests/SadConsole.Tests/TerminalWriterPhase2Tests.cs` covering Phase 5 (insert/delete/scroll), Phase 6 (tab stops), and Phase 8 (DEC modes + scroll margins). These define the expected behavior for Roy's parallel implementation.
+
+## Key Behavioral Contracts
+
+**Phase 5:**
+- ICH (CSI @): Blanks inserted at cursor use **current background color**. Chars pushed past right edge are **lost** (not wrapped).
+- DCH (CSI P): Deleting more chars than remaining **clears to end of line** (blanks fill from right).
+- IL/DL (CSI L/M): Operate **within scroll region only**. Lines outside the region are never touched. Lines pushed past scroll boundary are lost.
+- ECH (CSI X): Erases chars but **cursor does not move** (unlike DCH).
+- REP (CSI b): Repeats last printed char and **advances cursor with wrapping**.
+
+**Phase 6:**
+- CHT (CSI I) and CBT (CSI Z): Use `State.NextTabStop`/`State.PreviousTabStop`. Clamp at edges (right margin for CHT, column 0 for CBT).
+- TBC 0g clears single tab stop at cursor column; TBC 3g clears all. After clearing all, HT goes to right edge.
+
+**Phase 8:**
+- DECSTBM (CSI r): Sets scroll region **and moves cursor to home** (row 0, col 0). Default `ESC[r` resets to full screen.
+- Origin mode (?6): CUP positions are **relative to scroll region top**. Cursor is **clamped to scroll region**.
+- Auto-wrap (?7): Default ON. When OFF, chars at right margin **overwrite last column** (no wrap, no advance).
+- Cursor visibility (?25): Maps to both `State.CursorVisible` and `Cursor.IsVisible`.
+- DECSC/DECRC preserves origin mode (already in `SavedCursorState`).
+
+## Test Status
+- Tests written: 58 across all phase groups
+- Initial pass: 55/58 (3 expected failures for unimplemented dispatch)
+- After Roy's implementation and fix: **614/614 pass** (including all 556 existing tests + 58 new tests)
+- Compilation: ✅ net8.0/net9.0/net10.0 pass without errors
+
+**Team impact:** All Phase 2 behavioral contracts are locked. Ready for integration testing and code review.
