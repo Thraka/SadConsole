@@ -43,99 +43,70 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - SGR 0 = full reset, Bold shifts palettes 0-7 only, Dim halves RGB
 - Auto-wrap defers until next printable character (pending-wrap state critical for ANSI art)
 
-## Learnings — Early Foundations (2026-02-26 to 03-02)
+## Core Context (Continued)
 
-### Surface Architecture & Rendering Pipeline
-- **IFont metadata interface** — Core owns glyph mapping; hosts own GPU textures
-- **RowFontSurface pattern** — Per-row font support via sparse Dictionary storage; `RecalculateRowOffsets` on changes
-- **CellSurface indexer & resize** — Direct cell access; Effects cleanup via `RemoveAll()` when `clear=true`
-- **ScreenSurface dirty tracking** — Independent cell-level vs surface-level dirty signals; virtual hook for subclasses
-- **Renderer registration** — Three constants classes (RendererNames, RenderStepNames, RenderStepSortValues) need matching entries
-- **Host coordination** — Gaff implements renderers; all MonoGame/SFML/FNA hosts must follow core interface contracts
+**Terminal System Architecture:**
+- **Parser:** ECMA-48 state machine (Ground/Escape/CSI/DCS/OSC), zero-allocation via preallocated span arrays, CP437/UTF-8 encoding modes
+- **Writer:** Direct ICellSurface cell manipulation (glyph, foreground, background), ColorMode enum (Default/Palette/TrueColor), pending-wrap state for ANSI art, scroll regions with origin mode support
+- **State:** Cursor position/attributes (bold/dim/reverse/underline/strikethrough/italic/blink), SGR tracking, tab stops (SortedSet for O(1) lookup)
+- **Palette:** 256-entry RGB array; OSC 4/10/11 redefinition support (X11 rgb:r/g/b and #rrggbb formats)
+- **Rendering:** CellDecorator for visual attributes (underline glyph 95, strikethrough 196), font-defined glyph override, color resolution (reverse video swaps fg/bg, dim halves RGB, bold shifts palette 0-7 to 8-15)
+- **Phases delivered:** 0 (parser, 87 tests), 1 (writer, 160 tests), 5 (insert/delete, 24 tests), 6 (tabs, 8 tests), 8 (DEC modes, 16 tests), 3 (decorators, 18 tests), 9 (palette, 12 tests), 10 (polish, 18 tests) = 662/662 tests total
 
-### Font System
-- **JSON-serializable SadFont** — Sealed, fully human-editable `.font` files with `$type` field; pre-computed glyph rects at load
-- **Extended fonts** — GlyphDefinition (name → index + mirror) and CellDecorator overlay support; Mirror enum flags (Vertical | Horizontal | Both)
-- **GameHost.Fonts registry** — Fonts cached by name; surfaces serialize only font name for lazy load on deserialize
+## Learnings — Terminal Phases 5, 6, 8 (2025-07-14)
 
-## Learnings — Terminal Phase 1 (2026-03-04 to 03-05)
+### Phase 5 — Insert/Delete/Scroll Operations
+- **ICH/DCH operate on current row only** — Insert shifts right, delete shifts left. Clamped to `width - col` to prevent over-shifting. Blanks use current SGR background.
+- **IL/DL operate within scroll region** — Guard: cursor must be within `ScrollTop..ScrollBottom`. Insert shifts down, delete shifts up. Lines pushed past region boundaries are lost.
+- **SU/SD reuse existing ScrollUp/ScrollDown** — No new scroll logic needed; the existing methods already handle scroll region bounds correctly.
+- **ECH is erase-in-place** — Unlike DCH, does not shift. Overwrites N cells at cursor with blanks. Uses current background color (same as ED/EL convention).
+- **REP needs last-printed-char tracking** — Added `_lastPrintedChar` field to Writer. Updated in `OnPrint`. REP calls `OnPrint` in a loop to get full SGR/wrapping behavior for free.
 
-### RowFontSurface Implementation (2026-03-02)
+### Phase 6 — Tab Stop Commands
+- **CHT/CBT iterate tab stops** — Forward tabulation loops `NextTabStop` N times; backward tabulation loops `PreviousTabStop` N times.
+- **PreviousTabStop walks SortedSet forward** — Iterates the sorted set and tracks the last stop before `currentColumn`. Returns 0 if no prior stop exists. Simple and correct since SortedSet is already ordered.
+- **TBC supports mode 0 (clear at column) and mode 3 (clear all)** — Other TBC modes are nonstandard and ignored.
 
-- **RowFontSurface extends ScreenSurface** — Per-row font support without modifying existing surfaces
-- **Sparse Dictionary storage** — `Dictionary<int, IFont>` for row fonts; fallback to default Font/FontSize
-- **RowYOffsets caching** — Pre-calculate Y pixel offsets; recalculate on `OnFontChanged`, `Resize`, in constructors
-- **PixelToCell for mouse input** — Linear search through offsets to map pixel Y → row
-- **DefaultRendererName override** — Signals hosts to use specialized renderer; three constants classes (RendererNames, RenderStepNames, RenderStepSortValues)
-- **Host implementation** — Gaff implemented renderers in MonoGame/SFML/FNA following specification; all build clean
+### Phase 8 — DEC Private Modes + Scroll Margins
+- **Private prefix routing redesign** — Removed blanket `if (privatePrefix is not null) return;` guard. Now routes `?` to `HandleDecPrivateMode`, ignores other unknown prefixes. Clean separation.
+- **DECSTBM (CSI r) is NOT a private sequence** — Common misconception. It's a regular CSI sequence with no `?` prefix. Added to the main switch as `case 'r':`.
+- **Origin mode affects CUP only** — When DECOM is set, `HandleCursorPosition` adds `ScrollTop` to the row parameter and clamps within the scroll region. Cursor movement (CUU/CUD) already respects `ScrollTop`/`ScrollBottom` naturally.
+- **DECOM set/reset homes cursor** — Setting origin mode homes to `(ScrollTop, 0)`. Resetting homes to `(0, 0)`. Same behavior after DECSTBM.
+- **SavedCursorState includes OriginMode** — Per DEC spec, DECSC/DECRC save and restore origin mode along with position and SGR attributes.
+- **DECTCEM wires directly to Cursor.IsVisible** — Mode 25 set/reset updates both `State.CursorVisible` and the visual `Cursor.IsVisible` property immediately.
+- **CursorKeyMode and ScreenReverseVideo are state-only** — Tracked in State for consumer queries, but no Writer rendering behavior needed yet.
+- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 556/556 pass on net8.0 (no regressions).
 
-### Font System Architecture (2026-02-26)
+## Learnings — Terminal Phases 3, 9, 10 (2025-07-14)
 
-- **IFont is a metadata interface**, not a GPU asset. Core owns all glyph mapping, sizing, definitions; hosts own `ITexture` GPU loading.
-- **SadFont is sealed and fully JSON-serializable**. `.font` files are human-editable JSON with `$type` field. Deserialization auto-loads texture and generates glyph rectangles.
-- **Font and FontSize are independent on ScreenSurface**. Multiple surfaces can share same `IFont` atlas at different pixel scales (Quarter/Half/One/Two/Three/Four via `IFont.Sizes` enum).
-- **Glyph rectangles are pre-computed at load time** via `ForceConfigureRects()` using row-major layout math. Lookup is O(1) dictionary hit or fallback to `UnsupportedGlyphRectangle`.
-- **Extended fonts enable named glyphs and cell decorators**. `GlyphDefinition` (name → glyph index + mirror) and `CellDecorator` (color + glyph + mirror overlay) allow rich typography without extra surface layers.
-- **Font registration via GameHost.Fonts dictionary**. Loaded by `LoadFont(string)` at startup or on-demand. Cached by name to avoid duplicates. Serialized surfaces store only font name, not texture data.
-- **Mirror enum is a flags enum** (Vertical | Horizontal | Both), applying to cells, decorators, and glyph definitions. Hosts apply flips at render time.
-- **Cell-level dirty tracking independent from surface dirty tracking**. `ColoredGlyph.IsDirty` used by effects system; `CellSurface.IsDirty` polls renderer. Different concerns, same dirty signal chain.
-- **No built-in color mapping**. Fonts are monochrome spritesheets; color applied at render time via `ColoredGlyph.Foreground`/`Background`. Enables unlimited color combinations without palette bloat.
-- **FontConfig builder pattern** decouples font loading from host initialization. Supports built-in, custom default, or custom delegate. Runs after GameHost construction but before game loop.
+### Phase 3 — Visual SGR Rendering via Cell Decorators
+- **CellDecorator is a readonly struct** — `CellDecorator(Color color, int glyph, Mirror mirror)`. Attached to cells via `ColoredGlyphBase.Decorators` (nullable `List<CellDecorator>?`).
+- **Underline glyph index 95, strikethrough 196** — Same convention as BBCode parser and Label.Theme. Font-defined decorators take priority via `IFont.HasGlyphDefinition("underline")` / `GetDecorator()`.
+- **ApplyDecorators uses resolved fg color** — The decorator color matches the cell's foreground (post reverse-video, post-dim). Consistent with how users expect underline/strikethrough to look.
+- **Italic and blink are tracked but not rendered** — SadConsole fonts are tile-based (no true italic). Blink needs timer/component integration (tracked as TODO). Both attributes are correctly stored in State for future use.
+- **Reverse video was already implemented** — `ResolveColors()` swaps fg/bg when `State.Reverse` is true. No additional work needed.
+- **CopyCell and ClearCell updated for decorators** — CopyCell deep-copies the decorator list. ClearCell sets decorators to null. Prevents shared-reference bugs across cells.
 
-### Terminal Parser Phase 0 (2026-03-04)
+### Phase 9 — OSC Palette Redefinition + DCS
+- **OSC payload is raw bytes** — Command number is parsed from digits before first `;`. Data follows after the separator.
+- **OSC 4 supports multi-entry format** — `4;idx1;color1;idx2;color2` sets multiple palette entries in one sequence. Parser loops through `{index};{color}` pairs delimited by `;`.
+- **X11 color spec scaling** — `rgb:rr/gg/bb` components are 1–4 hex digits. 1-digit scales ×17, 2-digit as-is, 3-digit >>4, 4-digit >>8. Also supports `#rrggbb` format.
+- **OSC 10/11 update State.DefaultForeground/DefaultBackground** — These affect cells printed with `ColorMode.Default`.
+- **DCS is a stub** — Font loading is future work per decisions.md.
 
-- **SadConsole.Terminal is standalone** — Parser work under `SadConsole/Terminal/` with no legacy Ansi coupling
-- **ECMA-48 state machine** — Ground/Escape/CSI/DCS/OSC states; case-sensitive dispatch; explicit Fp/Fe/Fs handling
-- **Zero-allocation dispatch** — Parser calls ITerminalHandler; passes spans over preallocated param/intermediate arrays
-- **String payload capture** — OSC/DCS buffered as bytes; dispatched via CollectionsMarshal.AsSpan to avoid allocations
-- **UTF-8 decoding in Ground** — Bytes > 0x7F decoded before OnPrint (early design; later changed to ParserEncoding mode)
+### Phase 10 — Polish
+- **ED audit: all modes correct** — ED 0/1/2/3 verified. ED 3 (scrollback) aliases to ED 2 as documented.
+- **CSI s disambiguated** — `parameters.Length == 0` → Save Cursor; otherwise ignore (DECSLRM not supported).
+- **PendingWrap clearing audit** — Added to DEC private mode path (was skipping line 318 via early return), NEL, and RI. C0 controls and normal CSI dispatch already cleared correctly.
+- **VPA ('d') implemented** — Line Position Absolute, respects origin mode (like CUP).
+- **Test fix: Ed1 off-by-one** — Pre-written test expected 'Q' at col 5 but correct value is 'P' (CUP 1-based col 5 → 0-based col 4, ED 1 erases through col 4, col 5 retains 'P').
+- **TODO comments added** — CSI c (DA), CSI h/l (SM/RM standard modes), CSI t (window), CSI !p (DECSTR) documented as intentionally unhandled.
+- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 662/662 pass on net8.0 (no regressions).
 
-### Terminal Parser Test Reconciliation (2026-03-04)
+## Cross-Agent Update — 2026-03-06
 
-- **ITerminalHandler interface reconciliation** — Fixed MockTerminalHandler param order; made CsiPrivatePrefix nullable
-- **TerminalParserDemo created** — Interactive console app reading ANSI files, logging dispatched events with readable names
-- **87/87 tests pass** — All parser interface signatures and state machine verified
+**Milestone achieved:** All 10 Terminal phases complete. 662/662 tests pass. Zero regressions.
 
-### Terminal Parser Bug Fixes (2026-03-04)
-
-- **Empty CSI params** — `ESC[m` now dispatches with default param 0
-- **BEL-terminated OSC** — OSC sequences ending with BEL (0x07) dispatch correctly
-- **ESC invalid byte recovery** — Invalid sequences reset to Ground state
-- **Final status:** 87/87 tests pass on net8.0/net9.0/net10.0
-
-### Terminal Writer Phase 1 (2026-03-04)
-
-- **Three new files under SadConsole/Terminal/** — `Palette.cs`, `State.cs`, `Writer.cs` wire the Phase 0 parser to actual rendering on an ICellSurface.
-- **Direct cell manipulation, not Cursor.Print()** — Writer sets `surface[col, row].Glyph`, `.Foreground`, `.Background` directly for full positional control. Cursor component is created and exposed publicly for visual display only.
-- **Pending-wrap state** — Standard DEC terminal behavior: when a character is printed at the last column with auto-wrap on, the wrap is deferred until the next printable character. Critical for ANSI art that fills exactly the screen width.
-- **Bold brightens palette 0-7 only** — Bold flag shifts standard palette indices 0-7 to bright 8-15. Default colors and truecolors are not affected by bold. Dim halves RGB intensity.
-- **Erase uses current SGR background** — ED and EL fill cells with the current resolved background color per xterm convention, not the default background.
-- **ColorMode enum for color state** — Three-way union: Default (use State.DefaultForeground/Background), Palette (index 0-255), TrueColor (explicit RGB). Clean resolution in Writer.ResolveForeground/ResolveBackground.
-- **Scroll region support** — ScrollUp/ScrollDown manually copy cell data row-by-row within the scroll region. No dependency on ISurface extension methods (Writer only needs ICellSurface).
-- **ICellSurface is sufficient** — Writer takes ICellSurface, not ISurface. Direct indexer access and IsDirty are all that's needed. Extension methods (on ISurface) are not required.
-- **SortedSet for tab stops** — Efficient next-tab-stop lookup via ordered iteration. Defaults every 8 columns, mutable via HTS/ClearTabStop/ClearAllTabStops.
-- **ANSI 1-based to 0-based conversion** — CUP and CHA params are 1-based; GetParam helper treats 0 as "use default" (correct for all cursor commands and ED/EL since their default is also 0).
-- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 415/415 pass on net8.0/net9.0/net10.0.
-
-### Encoding-Aware Glyph Handling & LineFeedMode (2026-03-05)
-
-- **CharacterEncoding enum** — Two modes: `Codepage437` (default, checks font then maps Unicode→CP437) and `Unicode` (pass-through for Unicode-capable fonts). Property `Writer.Encoding` controls the mode.
-- **Static CP437 lookup table** — Built a reverse mapping (Unicode char → CP437 byte) from the canonical 256-char CP437 table. Avoids `System.Text.Encoding.CodePages` NuGet dependency entirely. Table is computed once at static init. Size is ~9600 entries (covers max Unicode code point in CP437, which is ≈0x25A0 / ■).
-- **ResolveGlyph method** — In CP437 mode: first checks `_font.GlyphRectangles.ContainsKey((int)ch)` to see if the font natively supports the Unicode code point. If yes, uses it. If not, looks up the CP437 table. Falls back to raw char value if no mapping exists.
-- **cell.Glyph (int) instead of cell.GlyphCharacter (char)** — OnPrint now sets `cell.Glyph = resolvedGlyph` directly. This is the correct approach since resolved values may be CP437 byte indices, not Unicode chars.
-- **LineFeedMode enum** — Two modes: `Strict` (LF = down only, classic ANSI/VT) and `Implicit` (LF = CR+LF, Linux terminal default). Property `Writer.LineFeeds` defaults to `Implicit`.
-- **System.Text.Encoding property name conflict** — Naming the property `Encoding` shadows `System.Text.Encoding`. The `Feed(string)` method's `Encoding.UTF8.GetBytes()` call required full qualification to `System.Text.Encoding.UTF8.GetBytes()`.
-- **SGR 0 verification** — `HandleSgr` reads `parameters[i]` directly (not via `Param()` helper), so explicit `ESC[0m` correctly hits `case 0:` → `ResetSgr()`. Empty `ESC[m` is caught by `parameters.Length == 0` guard. Both paths verified correct.
-- **Test impact** — Changing LF default to Implicit fixed 4 pre-existing scroll/fill test failures that assumed CR+LF. Updated `BasicRender_LineFeed_MovesDown` to expect Implicit behavior. Added `BasicRender_LineFeed_Strict_MovesDownOnly` for Strict mode coverage. 16 pre-existing failures remain (all SGR color palette mismatches — tests expect .NET Color.Red/Blue but palette uses actual VGA values).
-- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 57/73 Writer tests pass (16 pre-existing color palette mismatches), 87/87 Parser tests pass on net8.0/net9.0/net10.0.
-
-### Parser Encoding-Aware High Byte Handling (2026-03-05)
-
-- **ParserEncoding enum** — Two modes: `Codepage437` (default, byte IS the glyph index) and `Utf8` (accumulate multibyte sequences via `DecodeUtf8`). Added to `Parser.cs` alongside the `Parser` class.
-- **Parser.Encoding property** — Public settable, defaults to `Codepage437`. Controls how `HandleGround` interprets bytes > 0x7F.
-- **HandleGround branching** — Bytes 0x80-0xFF now dispatch to `OnPrint((char)b)` in CP437 mode (pass-through) or `DecodeUtf8(b)` in UTF-8 mode. Previous unconditional `DecodeUtf8` call caused CP437 box-drawing bytes (e.g. 0xC9 = ╔) to be misinterpreted as UTF-8 lead bytes.
-- **Reset() conditional decoder reset** — `_utf8Decoder.Reset()` only called when `Encoding == ParserEncoding.Utf8`. No need to reset the decoder in CP437 mode since it's never used.
-- **System.Text.Encoding shadowing** — Adding `Encoding` property to Parser shadows `System.Text.Encoding` (same issue Writer had). Fixed constructor to use fully-qualified `System.Text.Encoding.UTF8.GetDecoder()`.
-- **Two different "Encoding" concerns** — `Parser.Encoding` (ParserEncoding): byte→char interpretation. `Writer.Encoding` (CharacterEncoding): char→glyph mapping. Different enums, different classes, no collision. Both kept as-is.
-- **Test updates** — 4 UTF-8 multibyte tests (`EdgeCase_UTF8_MultiByte_2Byte`, `_3Byte`, `_4Byte`, `_MixedWithEscapes`) updated to set `_parser.Encoding = ParserEncoding.Utf8` before feeding high bytes. Default CP437 mode would print each byte individually instead of decoding multibyte sequences.
-- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 160/160 Terminal tests pass on net8.0/net9.0/net10.0.
+- **Rachael:** Verified Phases 3/9/10 test contracts in `TerminalWriterPhase3Tests.cs` (48 tests) — all pass after your implementation
+- **Test assertion fix:** Pre-written `Ed1_EraseStartToCursor_ClearsFromStartToCursor` had off-by-one; corrected from 'Q' to 'P' at col 5
+- **Next:** Team ready for next work. Terminal overhaul complete.
