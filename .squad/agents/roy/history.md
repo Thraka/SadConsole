@@ -53,60 +53,46 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - **Rendering:** CellDecorator for visual attributes (underline glyph 95, strikethrough 196), font-defined glyph override, color resolution (reverse video swaps fg/bg, dim halves RGB, bold shifts palette 0-7 to 8-15)
 - **Phases delivered:** 0 (parser, 87 tests), 1 (writer, 160 tests), 5 (insert/delete, 24 tests), 6 (tabs, 8 tests), 8 (DEC modes, 16 tests), 3 (decorators, 18 tests), 9 (palette, 12 tests), 10 (polish, 18 tests) = 662/662 tests total
 
-## Learnings — Terminal Phases 5, 6, 8 (2025-07-14)
+### Terminal Learnings (Phases 5–10 Summary, 2025-07-14 to 2026-03-06)
+**Phase 5:** ICH/DCH on current row only; IL/DL within scroll region; SU/SD reuse existing scroll; ECH erase-in-place; REP tracks `_lastPrintedChar`.  
+**Phase 6:** CHT/CBT loop tab stops (SortedSet for O(1)); TBC modes 0 (at column) and 3 (all).  
+**Phase 8:** Private prefix routing via `?` → `HandleDecPrivateMode`; DECSTBM is regular CSI (not private); origin mode affects CUP only; DECOM homes cursor; SavedCursorState includes OriginMode; DECTCEM wires to Cursor.IsVisible; CursorKeyMode/ScreenReverseVideo state-only.  
+**Phase 3:** CellDecorator readonly struct; underline glyph 95, strikethrough 196; ApplyDecorators uses resolved fg; italic/blink tracked (no render yet); reverse video already implemented; CopyCell deep-copies decorators, ClearCell nulls them.  
+**Phase 9:** OSC payload raw bytes; OSC 4 supports multi-entry; X11 color scaling (1–4 hex digits, 1-digit ×17); OSC 10/11 update defaults; DCS stub.  
+**Phase 10:** ED modes 0/1/2/3 verified; CSI s Save when len==0; PendingWrap added to DEC path/NEL/RI; VPA ('d') respects origin mode; Test fix: Ed1 off-by-one ('P' at col 5, not 'Q'). **Build:** 0 errors. **Tests:** 662/662 pass, zero regressions.
 
-### Phase 5 — Insert/Delete/Scroll Operations
-- **ICH/DCH operate on current row only** — Insert shifts right, delete shifts left. Clamped to `width - col` to prevent over-shifting. Blanks use current SGR background.
-- **IL/DL operate within scroll region** — Guard: cursor must be within `ScrollTop..ScrollBottom`. Insert shifts down, delete shifts up. Lines pushed past region boundaries are lost.
-- **SU/SD reuse existing ScrollUp/ScrollDown** — No new scroll logic needed; the existing methods already handle scroll region bounds correctly.
-- **ECH is erase-in-place** — Unlike DCH, does not shift. Overwrites N cells at cursor with blanks. Uses current background color (same as ED/EL convention).
-- **REP needs last-printed-char tracking** — Added `_lastPrintedChar` field to Writer. Updated in `OnPrint`. REP calls `OnPrint` in a loop to get full SGR/wrapping behavior for free.
+## Learnings — PendingWrap Opt-In Clearing Model (2025-07-16)
 
-### Phase 6 — Tab Stop Commands
-- **CHT/CBT iterate tab stops** — Forward tabulation loops `NextTabStop` N times; backward tabulation loops `PreviousTabStop` N times.
-- **PreviousTabStop walks SortedSet forward** — Iterates the sorted set and tracks the last stop before `currentColumn`. Returns 0 if no prior stop exists. Simple and correct since SortedSet is already ordered.
-- **TBC supports mode 0 (clear at column) and mode 3 (clear all)** — Other TBC modes are nonstandard and ignored.
+### Architecture Decision: Inverted PendingWrap Responsibility
+- **Old model (opt-out):** Blanket `State.PendingWrap = false` at end of `OnCsiDispatch` (line 342) and after DEC private mode dispatch (line 224). Every CSI sequence cleared PendingWrap; exceptions had to be carved out.
+- **New model (opt-in):** No blanket clear. Each cursor-moving handler is responsible for clearing PendingWrap itself. Non-cursor-moving sequences (SGR, erase, ECH, REP, etc.) preserve PendingWrap by default.
+- **Root cause of b5-ans01.ans drift:** 85 SGR sequences hit while PendingWrap was true, causing 84 characters placed at wrong positions.
 
-### Phase 8 — DEC Private Modes + Scroll Margins
-- **Private prefix routing redesign** — Removed blanket `if (privatePrefix is not null) return;` guard. Now routes `?` to `HandleDecPrivateMode`, ignores other unknown prefixes. Clean separation.
-- **DECSTBM (CSI r) is NOT a private sequence** — Common misconception. It's a regular CSI sequence with no `?` prefix. Added to the main switch as `case 'r':`.
-- **Origin mode affects CUP only** — When DECOM is set, `HandleCursorPosition` adds `ScrollTop` to the row parameter and clamps within the scroll region. Cursor movement (CUU/CUD) already respects `ScrollTop`/`ScrollBottom` naturally.
-- **DECOM set/reset homes cursor** — Setting origin mode homes to `(ScrollTop, 0)`. Resetting homes to `(0, 0)`. Same behavior after DECSTBM.
-- **SavedCursorState includes OriginMode** — Per DEC spec, DECSC/DECRC save and restore origin mode along with position and SGR attributes.
-- **DECTCEM wires directly to Cursor.IsVisible** — Mode 25 set/reset updates both `State.CursorVisible` and the visual `Cursor.IsVisible` property immediately.
-- **CursorKeyMode and ScreenReverseVideo are state-only** — Tracked in State for consumer queries, but no Writer rendering behavior needed yet.
-- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 556/556 pass on net8.0 (no regressions).
+### Classification Applied
+- **Clear PendingWrap:** CUP/HVP (H/f), CUU (A), CUD (B), CUF (C), CUB (D), CNL (E), CPL (F), CHA (G), VPA (d), CHT (I), CBT (Z), ICH (@), DCH (P), IL (L), DL (M), DECSTBM (r), DECOM (mode 6 in DEC private)
+- **Preserve PendingWrap:** SGR (m), ED (J), EL (K), ECH (X), REP (b), SU (S), SD (T), TBC (g), CSI s (save), DSR (n), DECTCEM (25), DECAWM (7), DECCKM (1), DECSCNM (5)
+- **Self-managing:** CSI u (restore) — `State.RestoreCursor()` clears internally. REP (b) — calls `OnPrint` which manages wrap itself.
+- **OnEscDispatch verified:** NEL (E) and RI (M) clear. RIS (c) clears via `State.Reset()`. HTS (H) and DECSC (7) don't clear. DECRC (8) clears via `RestoreCursor()`.
+- **OnOscDispatch:** Pure data/palette ops — no PendingWrap interaction needed.
 
-## Learnings — Terminal Phases 3, 9, 10 (2025-07-14)
+### Key Pattern
+- When a dispatcher epilogue does "clean up everything," it's an opt-out model. Bugs are created by passive omission (forgetting to exempt a case). Inverting to opt-in makes the *safe default* correct for the majority of cases, and only the minority must take affirmative action.
+- **Tests:** 662/662 pass with zero regressions after the change.
 
-### Phase 3 — Visual SGR Rendering via Cell Decorators
-- **CellDecorator is a readonly struct** — `CellDecorator(Color color, int glyph, Mirror mirror)`. Attached to cells via `ColoredGlyphBase.Decorators` (nullable `List<CellDecorator>?`).
-- **Underline glyph index 95, strikethrough 196** — Same convention as BBCode parser and Label.Theme. Font-defined decorators take priority via `IFont.HasGlyphDefinition("underline")` / `GetDecorator()`.
-- **ApplyDecorators uses resolved fg color** — The decorator color matches the cell's foreground (post reverse-video, post-dim). Consistent with how users expect underline/strikethrough to look.
-- **Italic and blink are tracked but not rendered** — SadConsole fonts are tile-based (no true italic). Blink needs timer/component integration (tracked as TODO). Both attributes are correctly stored in State for future use.
-- **Reverse video was already implemented** — `ResolveColors()` swaps fg/bg when `State.Reverse` is true. No additional work needed.
-- **CopyCell and ClearCell updated for decorators** — CopyCell deep-copies the decorator list. ClearCell sets decorators to null. Prevents shared-reference bugs across cells.
+## Cross-Agent Update — 2026-03-06 (PendingWrap Batch Complete)
 
-### Phase 9 — OSC Palette Redefinition + DCS
-- **OSC payload is raw bytes** — Command number is parsed from digits before first `;`. Data follows after the separator.
-- **OSC 4 supports multi-entry format** — `4;idx1;color1;idx2;color2` sets multiple palette entries in one sequence. Parser loops through `{index};{color}` pairs delimited by `;`.
-- **X11 color spec scaling** — `rgb:rr/gg/bb` components are 1–4 hex digits. 1-digit scales ×17, 2-digit as-is, 3-digit >>4, 4-digit >>8. Also supports `#rrggbb` format.
-- **OSC 10/11 update State.DefaultForeground/DefaultBackground** — These affect cells printed with `ColorMode.Default`.
-- **DCS is a stub** — Font loading is future work per decisions.md.
+**Milestone:** PendingWrap opt-in clearing model fully implemented and tested.
 
-### Phase 10 — Polish
-- **ED audit: all modes correct** — ED 0/1/2/3 verified. ED 3 (scrollback) aliases to ED 2 as documented.
-- **CSI s disambiguated** — `parameters.Length == 0` → Save Cursor; otherwise ignore (DECSLRM not supported).
-- **PendingWrap clearing audit** — Added to DEC private mode path (was skipping line 318 via early return), NEL, and RI. C0 controls and normal CSI dispatch already cleared correctly.
-- **VPA ('d') implemented** — Line Position Absolute, respects origin mode (like CUP).
-- **Test fix: Ed1 off-by-one** — Pre-written test expected 'Q' at col 5 but correct value is 'P' (CUP 1-based col 5 → 0-based col 4, ED 1 erases through col 4, col 5 retains 'P').
-- **TODO comments added** — CSI c (DA), CSI h/l (SM/RM standard modes), CSI t (window), CSI !p (DECSTR) documented as intentionally unhandled.
-- **Build:** 0 errors, 48 pre-existing warnings. **Tests:** 662/662 pass on net8.0 (no regressions).
-
-## Cross-Agent Update — 2026-03-06
-
-**Milestone achieved:** All 10 Terminal phases complete. 662/662 tests pass. Zero regressions.
-
-- **Rachael:** Verified Phases 3/9/10 test contracts in `TerminalWriterPhase3Tests.cs` (48 tests) — all pass after your implementation
-- **Test assertion fix:** Pre-written `Ed1_EraseStartToCursor_ClearsFromStartToCursor` had off-by-one; corrected from 'Q' to 'P' at col 5
-- **Next:** Team ready for next work. Terminal overhaul complete.
+- **Rachael:** Wrote 8 regression tests (670 total pass):
+  1. SGR-at-boundary preservation (the critical regression)
+  2. CUF cursor-move clearing
+  3. CUP cursor-move clearing
+  4. DECTCEM preservation
+  5. DECAWM preservation
+  6. ECH preservation
+  7. Multiple SGR chaining + wrapping
+  8. Integration test with real b5-ans01.ans file (end-to-end validation)
+  
+- **Implementation outcome:** Removed 2 blanket `State.PendingWrap = false` epilogues, added explicit clears to 17 cursor-moving handlers + DECOM. Zero regressions.
+- **Bug fixed:** b5-ans01.ans now renders correctly — no progressive line drift.
+- **Specification compliance:** ECMA-48 §7.1 strict adherence via opt-in architecture.

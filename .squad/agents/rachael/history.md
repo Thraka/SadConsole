@@ -125,3 +125,43 @@ Plus: 12 mixed/integration scenarios and additional CSI final characters (all co
 - **Test assertion fix:** You corrected pre-written Ed1 off-by-one assertion (col 5 = 'P', not 'Q')
 - **Next:** Team ready for next work. Terminal overhaul complete.
 
+### 2025-07-16 — PendingWrap Opt-In Clearing Model Regression Tests
+
+**Task:** Write regression tests for the PendingWrap opt-in clearing model (Deckard decision: `deckard-pendingwrap-clearing-model.md`).
+
+**Test file:** `Tests/SadConsole.Tests/TerminalWriterPhase3Tests.cs` — added 8 new test methods in a dedicated section.
+
+**Tests added (8):**
+1. `PendingWrap_SgrAtColumnBoundary_DoesNotClear` — THE critical regression: SGR at col 79 must NOT clear PendingWrap
+2. `PendingWrap_CufClearsAtBoundary_80Wide` — CUF DOES clear on 80-wide surface
+3. `PendingWrap_CupClearsAtBoundary_80Wide` — CUP DOES clear on 80-wide surface
+4. `PendingWrap_Dectcem_DoesNotClear` — DECTCEM (cursor visibility) must NOT clear
+5. `PendingWrap_Decawm_DoesNotClear` — DECAWM (auto-wrap toggle) must NOT clear
+6. `PendingWrap_Ech_DoesNotClear` — ECH (erase character) must NOT clear
+7. `PendingWrap_MultipleSgrSequences_PreservesThenWraps` — multiple SGRs preserve, then next printable wraps
+8. `PendingWrap_B5Ans01_RendersCorrectly` — integration test with the real b5-ans01.ans file
+
+**Integration test anchors:**
+- Cell [79, 0] = glyph 223 (▀) — the 80th printable char, not overwritten
+- Cell [0, 1] = glyph 219 (█) — the 81st char, correctly wrapped to row 1
+- Cell [0, 2] = glyph 178 (▓) — second logical line, no line drift
+
+**Key patterns:**
+- Added `System.IO` using for `File.ReadAllBytes` / `Path.Combine`
+- Added `.ans` file as linked `<Content>` in test csproj (`TestData/b5-ans01.ans`)
+- Loaded via `Path.Combine(AppContext.BaseDirectory, "TestData", "b5-ans01.ans")`
+- For raw ANSI art bytes, use `writer.Feed(fileBytes.AsSpan())` (Parser's CP437 mode handles bytes > 0x7F)
+- ResolveGlyph for CP437: byte values map directly to glyph indices when font has 256 CP437 glyphs
+
+**Status:** ✅ 670/670 tests pass (8 new + 662 existing). Roy's fix already in place — all tests validate correct behavior.
+
+## Cross-Agent Update — 2026-03-06 (PendingWrap Batch Complete)
+
+**Milestone:** PendingWrap opt-in clearing model fully implemented and tested.
+
+- **Roy:** Implemented the fix (removed 2 blanket clears, added explicit to 17 handlers + DECOM)
+- **Result:** 670/670 tests pass (8 new regression tests, 662 existing). Zero regressions.
+- **Integration validation:** b5-ans01.ans file now renders correctly with no line drift.
+- **Coverage:** Tests validate all CSI sequence categories — cursor-moving (clear), non-cursor-moving (preserve), and DEC private modes.
+- **Spec compliance:** ECMA-48 §7.1 strict adherence achieved via opt-in clearing architecture.
+

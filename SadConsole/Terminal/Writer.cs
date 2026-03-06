@@ -218,10 +218,14 @@ public class Writer : ITerminalHandler
     /// <inheritdoc/>
     public void OnCsiDispatch(ReadOnlySpan<int> parameters, ReadOnlySpan<byte> intermediates, byte final, byte? privatePrefix)
     {
+        // NOTE: PendingWrap is NOT cleared here as a blanket epilogue. Each handler
+        // that moves the cursor is responsible for clearing State.PendingWrap itself.
+        // This is intentional per ECMA-48 — non-cursor-moving sequences (SGR, erase,
+        // ECH, REP, etc.) must preserve pending-wrap state.
+
         if (privatePrefix == (byte)'?')
         {
             HandleDecPrivateMode(parameters, final);
-            State.PendingWrap = false;
             SyncCursorPosition();
             return;
         }
@@ -231,37 +235,46 @@ public class Writer : ITerminalHandler
 
         switch ((char)final)
         {
-            case 'm': // SGR
+            case 'm': // SGR — attribute change only, does NOT clear PendingWrap
                 HandleSgr(parameters);
                 break;
             case 'H': // CUP
             case 'f': // HVP
+                State.PendingWrap = false;
                 HandleCursorPosition(parameters);
                 break;
             case 'A': // CUU
+                State.PendingWrap = false;
                 MoveCursorUp(Param(parameters, 0, 1));
                 break;
             case 'B': // CUD
+                State.PendingWrap = false;
                 MoveCursorDown(Param(parameters, 0, 1));
                 break;
             case 'C': // CUF
+                State.PendingWrap = false;
                 MoveCursorForward(Param(parameters, 0, 1));
                 break;
             case 'D': // CUB
+                State.PendingWrap = false;
                 MoveCursorBackward(Param(parameters, 0, 1));
                 break;
             case 'E': // CNL
+                State.PendingWrap = false;
                 MoveCursorDown(Param(parameters, 0, 1));
                 State.CursorColumn = 0;
                 break;
             case 'F': // CPL
+                State.PendingWrap = false;
                 MoveCursorUp(Param(parameters, 0, 1));
                 State.CursorColumn = 0;
                 break;
             case 'G': // CHA
+                State.PendingWrap = false;
                 State.CursorColumn = Math.Clamp(Param(parameters, 0, 1) - 1, 0, _surface.Width - 1);
                 break;
             case 'd': // VPA — Line Position Absolute
+                State.PendingWrap = false;
                 {
                     int vpaRow = Param(parameters, 0, 1) - 1;
                     if (State.OriginMode)
@@ -275,61 +288,68 @@ public class Writer : ITerminalHandler
                     }
                 }
                 break;
-            case 'J': // ED
+            case 'J': // ED — erase display, cursor stays put, does NOT clear PendingWrap
                 HandleEraseDisplay(Param(parameters, 0, 0));
                 break;
-            case 'K': // EL
+            case 'K': // EL — erase in line, cursor stays put, does NOT clear PendingWrap
                 HandleEraseInLine(Param(parameters, 0, 0));
                 break;
-            case 's': // Save Cursor Position (ANSI.SYS) — skip if params present (DECSLRM not supported)
+            case 's': // Save Cursor Position (ANSI.SYS) — does NOT clear PendingWrap
                 if (parameters.Length == 0)
                     State.SaveCursor();
                 break;
-            case 'u': // Restore cursor position
+            case 'u': // Restore cursor position — restores position (RestoreCursor clears PendingWrap)
                 State.RestoreCursor();
                 break;
-            case 'n': // DSR — ignore for now
+            case 'n': // DSR — ignore for now, does NOT clear PendingWrap
                 break;
 
             // Phase 5 — Insert/Delete/Scroll
             case '@': // ICH — Insert Character
+                State.PendingWrap = false;
                 InsertCharacters(Param(parameters, 0, 1));
                 break;
             case 'P': // DCH — Delete Character
+                State.PendingWrap = false;
                 DeleteCharacters(Param(parameters, 0, 1));
                 break;
             case 'L': // IL — Insert Line
+                State.PendingWrap = false;
                 InsertLines(Param(parameters, 0, 1));
                 break;
             case 'M': // DL — Delete Line
+                State.PendingWrap = false;
                 DeleteLines(Param(parameters, 0, 1));
                 break;
-            case 'S': // SU — Scroll Up
+            case 'S': // SU — Scroll Up — region scrolls, does NOT clear PendingWrap
                 ScrollUp(Param(parameters, 0, 1));
                 break;
-            case 'T': // SD — Scroll Down
+            case 'T': // SD — Scroll Down — region scrolls, does NOT clear PendingWrap
                 ScrollDown(Param(parameters, 0, 1));
                 break;
-            case 'X': // ECH — Erase Character
+            case 'X': // ECH — Erase Character — erase in place, does NOT clear PendingWrap
                 EraseCharacters(Param(parameters, 0, 1));
                 break;
-            case 'b': // REP — Repeat last printed character
+            case 'b': // REP — Repeat last printed character — manages wrap itself via OnPrint
                 RepeatLastCharacter(Param(parameters, 0, 1));
                 break;
 
             // Phase 6 — Tab Stop Commands
             case 'I': // CHT — Cursor Forward Tabulation
+                State.PendingWrap = false;
                 CursorForwardTab(Param(parameters, 0, 1));
                 break;
             case 'Z': // CBT — Cursor Backward Tabulation
+                State.PendingWrap = false;
                 CursorBackwardTab(Param(parameters, 0, 1));
                 break;
-            case 'g': // TBC — Tab Clear
+            case 'g': // TBC — Tab Clear — no cursor movement, does NOT clear PendingWrap
                 HandleTabClear(Param(parameters, 0, 0));
                 break;
 
             // Phase 8 — DECSTBM (Set Top and Bottom Margins)
-            case 'r': // DECSTBM
+            case 'r': // DECSTBM — homes cursor on set
+                State.PendingWrap = false;
                 HandleSetScrollMargins(parameters);
                 break;
 
@@ -339,7 +359,6 @@ public class Writer : ITerminalHandler
             // TODO: CSI !p — DECSTR (Soft Terminal Reset) — requires intermediate byte handling
         }
 
-        State.PendingWrap = false;
         SyncCursorPosition();
     }
 
@@ -675,8 +694,9 @@ public class Writer : ITerminalHandler
                 case 5: // DECSCNM — Screen Reverse Video
                     State.ScreenReverseVideo = set;
                     break;
-                case 6: // DECOM — Origin Mode
+                case 6: // DECOM — Origin Mode — homes cursor, so clear PendingWrap
                     State.OriginMode = set;
+                    State.PendingWrap = false;
                     // Setting/resetting origin mode moves cursor to home
                     if (set)
                     {

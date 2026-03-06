@@ -1,21 +1,11 @@
-chore(.squad): log Phases 3+9+10 completion — all 10 terminal phases done
+fix(terminal): PendingWrap opt-in clearing model + regression tests
 
-Scribe logs:
-- Orchestration logs for Roy (Phase 3/9/10 implementation) and Rachael (Phase 3/9/10 tests)
-- Session log: Phases 3+9+10 milestone — 662 tests, zero regressions
-- Decision inbox merged: roy-phase3-9-10-complete.md and rachael-decorator-and-osc-gaps.md
-- Cross-agent history updates: Roy and Rachael noted completion
-- Identity update: now.md reflects all 10 phases complete
-- History summarization: Roy's and Rachael's history.md condensed to < 12KB
+Switch from blanket PendingWrap clear to explicit per-handler clearing.
+SGR and non-cursor-moving sequences now correctly preserve PendingWrap
+state per ECMA-48 spec. Fixes b5-ans01.ans rendering drift.
 
-All 10 Terminal phases implemented and tested:
-- Phase 0 (Parser): 87 tests
-- Phase 1 (Writer): 160 tests
-- Phases 5/6/8 (insert/delete/tabs/modes): 58 tests
-- Phases 3/9/10 (decorators/palette/polish): 48 tests
-- Misc tests (CellSurface/Extended): 309 tests
-Total: 662/662 tests pass, zero regressions
-
-Build: 0 errors, 48 pre-existing warnings.
+- Remove 2 blanket State.PendingWrap=false epilogues
+- Add explicit clears to 17 cursor-moving CSI handlers + DECOM
+- 8 new regression tests (670 total, all green)
 
 Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

@@ -235,6 +235,118 @@ All 87 Parser tests pass with dual-mode support. 4 UTF-8 multibyte tests set `_p
 
 ---
 
+## Decision: PendingWrap Clearing Must Be Opt-In, Not Opt-Out
+
+**Author:** Deckard | **Date:** 2025-07-16 | **Status:** Implemented  
+**Scope:** `SadConsole/Terminal/Writer.cs` — `OnCsiDispatch` method  
+**Affects:** Roy (implementation), Rachael (tests)
+
+### Problem
+
+`OnCsiDispatch` (line 342) unconditionally clears `State.PendingWrap = false` as an epilogue after the dispatch switch. This means **every** CSI sequence — including SGR (`ESC[...m`) — resets pending-wrap state. Per ECMA-48 §7.1 and xterm behavior, SGR and other non-cursor-moving sequences must **not** clear pending-wrap. The result: ANSI art that sets colors at column-79 boundaries (common in BBS art) experiences progressive line drift.
+
+The same pattern exists at line 224 for DEC private modes (`CSI ? ...`), where DECTCEM (cursor visibility) and DECAWM (auto-wrap toggle) should not clear pending-wrap either.
+
+### Root Cause Analysis
+
+Git history shows Writer.cs has a single commit — the blanket clear was baked into the original implementation. The design assumed "all CSI sequences affect cursor positioning" and applied a catch-all epilogue. This is an **opt-out** model: pending-wrap is cleared for everything, and any exception must be individually carved out.
+
+The spec (ECMA-48) is actually quite clear: only operations that move the cursor should clear pending-wrap. The implementation got it wrong because of a structural choice: a blanket "clean up everything" epilogue in the dispatcher rather than in individual handler methods.
+
+This is the same class of error as a database transaction that auto-commits after every query — the default behavior is too aggressive, and the correct behavior must be opted into.
+
+### Design Decision: Invert to Opt-In Clearing
+
+**Remove** the blanket `State.PendingWrap = false` from:
+- Line 342 (end of `OnCsiDispatch`, after the switch)
+- Line 224 (after `HandleDecPrivateMode` call)
+
+**Instead**, each handler that genuinely moves the cursor clears `PendingWrap` itself.
+
+#### Classification of CSI Sequences
+
+**MUST clear PendingWrap** (cursor-moving):
+| Sequence | Mnemonic | Reason |
+|----------|----------|--------|
+| `H` / `f` | CUP / HVP | Absolute cursor positioning |
+| `A` | CUU | Cursor up |
+| `B` | CUD | Cursor down |
+| `C` | CUF | Cursor forward |
+| `D` | CUB | Cursor backward |
+| `E` | CNL | Cursor next line |
+| `F` | CPL | Cursor previous line |
+| `G` | CHA | Cursor horizontal absolute |
+| `d` | VPA | Vertical position absolute |
+| `I` | CHT | Cursor forward tab |
+| `Z` | CBT | Cursor backward tab |
+| `u` | Restore cursor | Restores position (already clears in `State.RestoreCursor()`) |
+| `r` | DECSTBM | Homes cursor on set |
+
+**MUST clear PendingWrap** (DEC private — cursor-moving subset):
+| Mode | Mnemonic | Reason |
+|------|----------|--------|
+| 6 | DECOM | Origin mode homes cursor |
+
+**MUST NOT clear PendingWrap** (non-cursor-moving):
+| Sequence | Mnemonic | Reason |
+|----------|----------|--------|
+| `m` | SGR | Attribute change only — **this is the reported bug** |
+| `J` | ED | Erase display — cursor stays put |
+| `K` | EL | Erase in line — cursor stays put |
+| `X` | ECH | Erase characters — cursor stays put |
+| `n` | DSR | Query — no side effects |
+| `s` | Save cursor | Saves state, no cursor change |
+| `g` | TBC | Tab stop management — no cursor change |
+| `S` | SU | Scroll up — region scrolls, cursor stays |
+| `T` | SD | Scroll down — region scrolls, cursor stays |
+
+**Needs careful consideration** (content-shifting, cursor may be implicitly affected):
+| Sequence | Mnemonic | Current behavior | Recommendation |
+|----------|----------|------------------|----------------|
+| `@` | ICH | Insert chars at cursor | Clear — shifts content at cursor |
+| `P` | DCH | Delete chars at cursor | Clear — shifts content at cursor |
+| `L` | IL | Insert lines | Clear — xterm clears |
+| `M` | DL | Delete lines | Clear — xterm clears |
+| `b` | REP | Repeat last char | Manages wrap itself — do not clear in epilogue |
+
+**DEC private modes that MUST NOT clear PendingWrap:**
+- DECCKM (1), DECSCNM (5), DECAWM (7), DECTCEM (25)
+
+### Implementation Approach for Roy
+
+#### Step 1: Remove the blanket clears
+Delete `State.PendingWrap = false;` from:
+- Line 342 (after the main switch)
+- Line 224 (after `HandleDecPrivateMode`)
+
+#### Step 2: Add explicit clears to cursor-moving handlers
+At the top of each cursor-moving case in the switch, or inside the called method, add `State.PendingWrap = false;`. The handler methods (`HandleCursorPosition`, `MoveCursorUp`, etc.) are the right place if they're only called from cursor-moving contexts.
+
+#### Step 3: Handle DEC private DECOM specially
+In `HandleDecPrivateMode`, add `State.PendingWrap = false;` only inside the `case 6` (DECOM) block, which homes the cursor.
+
+#### Step 4: Document the pattern
+Add a comment at the top of `OnCsiDispatch` stating the design rule:
+```
+// NOTE: PendingWrap is NOT cleared here. Each handler that moves the cursor
+// is responsible for clearing State.PendingWrap. This is intentional per
+// ECMA-48 — non-cursor-moving sequences (SGR, erase, etc.) must preserve
+// pending-wrap state.
+```
+
+### Prevention: Making the Right Thing Easy
+
+The opt-in model makes "not clearing" the default — which is the correct behavior for the majority of CSI sequences. A developer adding a new CSI handler must think: "Does this move the cursor? If yes, clear PendingWrap." This is a smaller, safer checklist than "Does this NOT move the cursor? If so, remember to skip the clear."
+
+For future-proofing, Rachael should add a test case for every CSI sequence that verifies pending-wrap preservation/clearing:
+- Set cursor to column (width-1), print a character (sets PendingWrap), then issue the CSI sequence, then verify PendingWrap is in the expected state.
+
+### Implementation Outcome
+
+Roy implemented the change on 2026-07-16. Removed 2 blanket clears and added explicit clears to 17 cursor-moving CSI handlers + DECOM. All 662 tests pass with zero regressions. Rachael wrote 8 regression tests (670 total pass) covering SGR-at-boundary preservation, cursor-move clearing, DEC private mode preservation, ECH preservation, multiple SGR chaining, and integration test with b5-ans01.ans.
+
+---
+
 ## RowFontSurface — Multi-Font Row Surface Architecture
 
 **Date:** 2026-03-02T21  
