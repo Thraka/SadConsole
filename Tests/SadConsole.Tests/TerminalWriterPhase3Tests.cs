@@ -991,4 +991,77 @@ public class TerminalWriterPhase3Tests
         Assert.AreEqual(178, surface[0, 2].Glyph,
             "Row 2 col 0 should be glyph 178 (medium shade), proving no line drift");
     }
+
+    // ══════════════════════════════════════════════════════════════
+    //  CUF resolves PendingWrap at right margin
+    // ══════════════════════════════════════════════════════════════
+
+    [TestMethod]
+    public void CufAtPendingWrap_ResolvesWrapThenMovesForward()
+    {
+        // When CUF arrives while PendingWrap is true, the wrap should be
+        // resolved first (advance to next row col 0), then CUF moves forward.
+        // Without this fix, CUF from col 79 with PendingWrap is a no-op
+        // (clamped at right margin), breaking ANSI art that relies on
+        // immediate-wrap semantics after filling 80 columns.
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('A', 80));   // fills row 0, PendingWrap = true
+        Assert.IsTrue(writer.State.PendingWrap, "PendingWrap should be set after 80 chars");
+        Assert.AreEqual(0, writer.State.CursorRow);
+
+        writer.Feed("\x1b[6C");             // CUF 6
+
+        Assert.IsFalse(writer.State.PendingWrap, "CUF must clear PendingWrap");
+        Assert.AreEqual(1, writer.State.CursorRow, "CUF should resolve wrap to next row");
+        Assert.AreEqual(6, writer.State.CursorColumn, "CUF 6 should land at col 6 after wrap");
+    }
+
+    [TestMethod]
+    public void CufAtPendingWrap_PrintsAtCorrectPosition()
+    {
+        // Verify that characters printed after CUF-during-PendingWrap land
+        // at the correct surface cell (not stuck at the right margin).
+        var surface = new SadConsole.CellSurface(80, 5);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+
+        writer.Feed(new string('X', 80));   // fills row 0, PendingWrap = true
+        writer.Feed("\x1b[6C");             // CUF 6: resolve wrap → row 1, col 6
+        writer.Feed("Q");                   // print at row 1, col 6
+
+        Assert.AreEqual((int)'Q', surface[6, 1].Glyph,
+            "Character after CUF-during-PendingWrap should land at row 1, col 6");
+        Assert.AreEqual(7, writer.State.CursorColumn, "Cursor should advance to col 7");
+    }
+
+    [TestMethod]
+    public void CufAtPendingWrap_B5Ans01_LineAfterMessagesAligned()
+    {
+        // Regression test for b5-ans01.ans: after the "Messages" line fills
+        // 80 columns (ending at col 79 row 13), a CSI 6C (CUF 6) should
+        // resolve the wrap and place subsequent characters starting at col 6
+        // on row 14. Without the fix, CUF is clamped at col 79 on row 13.
+        string testDataPath = Path.Combine(AppContext.BaseDirectory, "TestData", "b5-ans01.ans");
+        byte[] fileBytes = File.ReadAllBytes(testDataPath);
+
+        var surface = new SadConsole.CellSurface(80, 200);
+        var writer = new Writer(surface, GameHost.Instance.EmbeddedFont);
+        writer.Feed(fileBytes.AsSpan());
+
+        // After the CUF 6 on row 14, the first printable chars are
+        // 0xB1 (177, light shade) at col 6, 0xB2 (178, medium shade) at col 7.
+        Assert.AreEqual(177, surface[6, 14].Glyph,
+            "Row 14 col 6 should be glyph 177 (light shade) — CUF 6 after wrap");
+        Assert.AreEqual(178, surface[7, 14].Glyph,
+            "Row 14 col 7 should be glyph 178 (medium shade) — next char after CUF");
+
+        // Columns 0-5 on row 14 should not contain block drawing glyphs since CUF skipped them.
+        // (Untouched cells default to glyph 0; erased cells may be space.)
+        for (int c = 0; c < 6; c++)
+        {
+            Assert.IsTrue(surface[c, 14].Glyph < 128,
+                $"Row 14 col {c} should not be a high-byte block glyph (CUF 6 skipped these columns)");
+        }
+    }
 }

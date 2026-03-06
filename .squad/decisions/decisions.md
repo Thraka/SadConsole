@@ -347,6 +347,33 @@ Roy implemented the change on 2026-07-16. Removed 2 blanket clears and added exp
 
 ---
 
+## Decision: CUF Resolves PendingWrap at Right Margin
+
+**Author:** Roy  
+**Date:** 2026-03-06T06:43Z  
+**Status:** Implemented  
+
+### Context
+
+When `CSI C` (CUF — Cursor Forward) arrives while `PendingWrap` is true at the right margin (col 79 on 80-wide surface), the Writer previously just cleared PendingWrap and attempted `Math.Min(79, 79 + n)` — a no-op. This broke ANSI art (specifically b5-ans01.ans) where `CSI 6C` after filling 80 columns was expected to position the cursor on the next line.
+
+### Decision
+
+CUF now **resolves** the pending wrap before applying forward movement: `col = 0`, `LineFeed()`, then `MoveCursorForward(n)`. Only CUF gets this behavior — other cursor movement commands (CUB, CUU, CUD, CUP, CHA, VPA) continue to just clear the flag.
+
+### Rationale
+
+- CUF from the right margin with PendingWrap is inherently a no-op without resolution (clamped at margin). Resolving first is strictly more useful.
+- Matches ANSI.SYS immediate-wrap semantics used by BBS/ANSI art.
+- 673 tests pass, zero regressions.
+
+### Impact
+
+- **Writer.cs**: CUF case modified (8 lines added)
+- **TerminalWriterPhase3Tests.cs**: 3 regression tests added
+
+---
+
 ## RowFontSurface — Multi-Font Row Surface Architecture
 
 **Date:** 2026-03-02T21  

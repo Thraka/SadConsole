@@ -112,3 +112,15 @@ Holden reviewed `docs/architecture-surfaces.md` against source code and found 12
 - Rachael (Tester) — integration testing per testing strategy
 - Monitor performance if many unique fonts per surface
 - Future optimization: batch rows by font if texture switching overhead detected
+
+### 2025-07-16 — PendingWrap Clearing Model Analysis
+
+**Bug:** `Writer.OnCsiDispatch` (line 342) blanket-clears `State.PendingWrap = false` after ALL CSI sequences, including SGR. Per ECMA-48, only cursor-moving sequences should clear pending-wrap. This caused line drift in ANSI art files that set colors at column-79 boundaries.
+
+**Root cause:** Original implementation used "opt-out" model — clear by default, exceptions must be carved out. The clearing was placed in the dispatcher epilogue, the wrong abstraction level.
+
+**Decision:** Invert to "opt-in" model. Remove blanket clears from lines 342 and 224. Each cursor-moving handler clears PendingWrap itself. Non-cursor-moving handlers (SGR, erase, scroll, DSR, tab management) preserve it by default. Decision record: `.squad/decisions/inbox/deckard-pendingwrap-clearing-model.md`.
+
+**Key files:** `SadConsole/Terminal/Writer.cs` (lines 219-344 OnCsiDispatch), `SadConsole/Terminal/State.cs` (PendingWrap property).
+
+**Pattern learned:** Dispatcher epilogues that blanket-clear state are dangerous. Side effects should be declared by handlers, not assumed by the dispatcher. This is analogous to database auto-commit: the default should be the safe/no-op path.

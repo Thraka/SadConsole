@@ -252,7 +252,20 @@ public class Writer : ITerminalHandler
                 MoveCursorDown(Param(parameters, 0, 1));
                 break;
             case 'C': // CUF
-                State.PendingWrap = false;
+                if (State.PendingWrap && State.AutoWrap)
+                {
+                    // Resolve pending wrap: the cursor conceptually wrapped already,
+                    // so advance to next line col 0 before applying the forward move.
+                    // Without this, CUF from the right margin is a no-op (clamped),
+                    // which breaks ANSI art that relies on immediate wrap semantics.
+                    State.PendingWrap = false;
+                    State.CursorColumn = 0;
+                    LineFeed();
+                }
+                else
+                {
+                    State.PendingWrap = false;
+                }
                 MoveCursorForward(Param(parameters, 0, 1));
                 break;
             case 'D': // CUB

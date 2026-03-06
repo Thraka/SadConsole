@@ -96,3 +96,14 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - **Implementation outcome:** Removed 2 blanket `State.PendingWrap = false` epilogues, added explicit clears to 17 cursor-moving handlers + DECOM. Zero regressions.
 - **Bug fixed:** b5-ans01.ans now renders correctly — no progressive line drift.
 - **Specification compliance:** ECMA-48 §7.1 strict adherence via opt-in architecture.
+
+## Learnings — CUF PendingWrap Resolution (2025-07-17)
+
+### Bug: CUF at Right Margin During PendingWrap
+- **Symptom:** In b5-ans01.ans, the line after "Messages" text was indented wrong (shorter). Characters rendered at col 79 instead of wrapping.
+- **Root cause:** `CSI 6C` (CUF 6) arrived while `PendingWrap = true` at col 79. Writer cleared PendingWrap and tried `Math.Min(79, 79+6) = 79` — effectively a no-op. The cursor stayed stuck at col 79 on row 13 instead of moving to col 6 on row 14.
+- **Fix:** CUF now resolves the pending wrap when `PendingWrap && AutoWrap`: advances to col 0 of next row (via `LineFeed()`), then applies the forward movement. This matches ANSI.SYS immediate-wrap semantics used by BBS art.
+- **Scope:** Only CUF (`C`) gets this resolve behavior. CUB/CUU/CUD/CUP/CHA/VPA continue to just clear the flag (absolute/backward/vertical moves don't need wrap resolution).
+- **Key insight:** CUF from the right margin with PendingWrap is always a no-op without resolution. The only useful behavior is to resolve the wrap first, making this fix strictly correct for all terminal styles.
+- **Tests:** 673/673 pass (3 new regression tests added). Zero regressions on existing 670.
+- **Specification compliance:** ECMA-48 §7.1 strict adherence via opt-in architecture.
