@@ -460,3 +460,27 @@ Same pattern as CUF: when PendingWrap && AutoWrap, resolve the wrap first (advan
 - **Rachael:** 6 new regression tests (679 total). Tests cover CHT, C0 HT, and multi-tab scenarios.
 - **Gaff/Pris:** No rendering or control changes — purely core cursor-movement logic.
 - **Specification compliance:** ECMA-48 §7.1 strict adherence via opt-in architecture.
+
+---
+
+## Decision: Bold Brightens Default Foreground (CGA Convention)
+
+**Author:** Roy  
+**Date:** 2026-03-06T07:30Z  
+**Status:** Implemented  
+
+### Context
+
+`ResolveForeground()` in `Writer.cs` only applied bold brightening (palette shift 0-7 → 8-15) when `ForegroundMode == Palette`. When `ForegroundMode == Default` (after SGR 0 reset), bold was ignored—returning gray (170,170,170) instead of bright white (255,255,255).
+
+This caused visible rendering errors in b5-ans01.ans and likely any ANSI art that uses `ESC[0m` (reset) followed by `ESC[1m` (bold) without an explicit foreground color.
+
+### Decision
+
+When `ForegroundMode == Default` and `Bold` is true, resolve foreground as `Palette[15]` (bright white) instead of `DefaultForeground`. This follows the CGA convention that the default foreground IS palette index 7, and bold shifts it to palette index 15.
+
+### Impact
+
+- **Writer.cs:** One-line change in `ResolveForeground()` default case
+- **Tests:** 3 new tests in `TerminalWriterPhase3Tests.cs` (682 total, all pass)
+- **ANSI art compatibility:** Fixes white-vs-gray rendering in any file that relies on bold + default foreground

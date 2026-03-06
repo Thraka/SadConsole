@@ -141,6 +141,19 @@ Plus: 12 mixed/integration scenarios and additional CSI final characters (all co
 7. `PendingWrap_MultipleSgrSequences_PreservesThenWraps` — multiple SGRs preserve, then next printable wraps
 8. `PendingWrap_B5Ans01_RendersCorrectly` — integration test with the real b5-ans01.ans file
 
+## Cross-Team Update — 2026-03-06 (Bold Brightening Fix)
+
+**Milestone:** Bold brightening applied to default foreground color per CGA convention.
+
+**Context:** Roy fixed a white-vs-gray color rendering bug in `ResolveForeground()`. When `ForegroundMode == Default` (after SGR 0 reset) and `Bold == true`, the method now returns `Palette[15]` (bright white) instead of `State.DefaultForeground` (gray). This treats the default foreground as semantically palette index 7, with bold shifting to palette 15.
+
+**Tests written (3):**
+1. `BoldApplied_DefaultForeground_ReturnsBrightPalette` — bold + default foreground resolves to palette 15
+2. `BoldApplied_DefaultForegroundWithBackground_PreservesBackground` — bold + default + background color combination
+3. `BoldSgr_AfterReset_RendersCorrectColor` — sequences `ESC[0m ESC[1;46m` render bright white on cyan background
+
+**Test outcome:** 682/682 pass, zero regressions on existing 679 tests. b5-ans01.ans line after "Your stats" now renders in bright white (255,255,255) instead of gray (170,170,170).
+
 **Integration test anchors:**
 - Cell [79, 0] = glyph 223 (▀) — the 80th printable char, not overwritten
 - Cell [0, 1] = glyph 219 (█) — the 81st char, correctly wrapped to row 1
