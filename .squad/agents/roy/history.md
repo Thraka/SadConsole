@@ -76,3 +76,66 @@ The core library does NOT render. It defines what needs to be rendered and the i
 **CHT/C0 HT forward-tab pending-wrap bugs (2026-03-06):** Comprehensive audit of all cursor-movement handlers for stuck-at-margin pattern. Safe: absolute positioning (CUP/HVP/CHA/VPA/DECSTBM/DECOM/CSI u/NEL/RI) — position set regardless of current col. Safe: backward/vertical (CUU/CUD/CUB/CNL/CPL/CBT/ICH/DCH/IL/DL) — meaningful from right margin, not forward-clamped. At risk & fixed: CHT (forward tab clamps at width-1 → no-op), C0 HT (same NextTabStop clamping). Pattern requires "forward + clamp". Fix: resolve wrap first (same as CUF). Tests: 679/679 pass (6 new: CHT wrap resolution, auto-wrap off, C0 HT wrap resolution, tab stop scenarios, multi-tab sequences, CHT/C0 HT consistency). Zero regressions. ECMA-48 §7.1 strict adherence.
 
 **Bold + default foreground bug (2026-03-06):** After "Your stats" in b5-ans01.ans, line started gray (170,170,170) not bright white (255,255,255). `ResolveForeground()` only applied bold brightening (palette 0-7 → 8-15) when `ForegroundMode == Palette`. With `ForegroundMode == Default` (after SGR 0 reset) and bold, returned `State.DefaultForeground` unchanged. Sequence: `ESC[0m` (reset) → `ESC[1;46m` (bold + bg cyan) — no explicit foreground, ForegroundMode stays Default, bold ignored in Default path. Fix: in `ResolveForeground()`, Default case now checks `State.Bold` and returns `Palette.GetColor(15)` (bright white) when bold active. CGA convention: default foreground IS palette index 7; bold shifts it to palette 15. Tests: 682/682 pass (3 new: bold+default resolves to palette 15, bold+default+background combination, sequences like ESC[0m ESC[1;46m render bright white on cyan). Zero regressions on 679. b5-ans01.ans validates correct behavior.
+
+## Learnings
+
+**Terminal Cursor Architecture (2026-03-07):**
+
+**Dual cursor state model:**
+- **State.CursorRow/CursorColumn:** Pure tracking integers, source of truth for terminal emulator logic. Updated by all cursor-moving handlers. Zero dependency on Components.Cursor. Persisted via DECSC/DECRC.
+- **Components.Cursor.Position:** Visual echo for rendering the blinking cursor. ONE-WAY sync from State → Cursor via `Writer.SyncCursorPosition()`. Writer never reads Cursor.Position. Cursor is write-only from Writer's perspective.
+- **Synchronization point:** `SyncCursorPosition()` (Writer.cs:490) — called after every cursor-moving operation. If Cursor.Position is changed externally (e.g., mouse click), Writer never sees it — State position is unaffected. This is by design: Writer owns terminal state, Cursor is purely for display.
+
+**Writer's relationship to Cursor:**
+- Writer uses Cursor for **visual display sync only** — updates Position and IsVisible (via DECTCEM CSI ? 25 h/l)
+- Cursor is a **passive output device** — never read by Writer, never participates in parsing/writing/scrolling
+- Cursor owns Print() methods for interactive text entry — but Writer never calls them
+- Writer creates Cursor internally (constructor line 91-96) and enforces `AutomaticallyShiftRowsUp = false` because Writer handles scrolling via State.ScrollUp()
+
+**Surface is already external:**
+- ICellSurface passed to Writer constructor (externally provided)
+- Writer uses it for: direct cell access `[col, row]`, dimensions (Width/Height), dirty flag, optional resize (ICellSurfaceResize for auto-grow)
+- Cursor, however, is internally created — unlike surface
+
+**Making Cursor external is low-risk:**
+- Change constructor: `Writer(ICellSurface surface, IFont font, Components.Cursor? cursor = null)`
+- Add null checks in SyncCursorPosition() and DECTCEM handler
+- Enables headless mode (data-stream ANSI art rendering without visual cursor)
+- Enables cursor sharing, custom cursor subclasses
+- Risk: surface mismatch (Cursor wired to different surface than Writer's target), initialization responsibility (caller must set AutomaticallyShiftRowsUp = false)
+
+**Two Writer modes: data-stream vs interactive:**
+- **Data-stream (ANSI art browser):** Static art rendering, no user input, cursor irrelevant (art already contains final state), instant or throttled playback via Reader
+- **Interactive (terminal emulator/BBS):** Bi-directional communication, keyboard/mouse input, cursor critical for user feedback, DSR responses, needs output channel
+- Current Writer is data-stream-ready with optional cursor. Interactive layer needs: input handling (Keys → terminal sequences), output channel (DSR/query responses), state query API
+- Recommendation: Single Writer with optional cursor + separate InteractiveTerminal class that composes Writer and adds I/O
+
+**TerminalConsole design (subclass Console):**
+- Subclass Console (inherits surface, cursor, focus, component lifecycle, rendering)
+- Wire Writer to Console.Surface and Console.Cursor (pass Cursor to Writer constructor when external)
+- Override ProcessKeyboard to convert keystrokes to terminal sequences
+- Add bi-directional API: `Feed(string)` (expose Writer.Feed), `OnSendData` event (upstream output for DSR/keystrokes)
+- Pattern minimizes duplication — all console infrastructure reused, override points well-defined
+
+**Reader relationship:**
+- Reader is pure byte pump (Stream → Writer.Feed), throttles via BytesPerSecond, extends InstructionBase (IComponent)
+- Reader does NOT parse ANSI, knows nothing about surfaces/cursors/State — it's transport layer only
+- Reader is optional — can call Writer.Feed(data) directly without Reader
+- Reader + Writer = animation-over-time playback; without Reader = instant rendering (tests, static art)
+
+## Cross-Agent Updates
+
+### 2026-03-07 — Deckard's Architecture Analysis: Terminal Writer Restructuring
+
+Deckard completed architecture decision analysis covering the same three questions. Results merged to decisions.md.
+
+**Deckard's Findings:**
+- **Architecture-level design** for injectable nullable Cursor, single Writer with ITerminalOutput response channel, TerminalConsole subclass pattern
+- **Backwards compatibility assessment:** Minor breaking change for Cursor nullability; migration path via convenience constructor
+- **Final class hierarchy:** ScreenObject → ScreenSurface → Console → Terminal.TerminalConsole
+- **Open questions for Thraka:** Breaking change tolerance, KeyboardEncoder scope, TerminalConsole namespace preference
+- **Key insight:** When two subsystems track shared concept (cursor position), designate one as authoritative. Push model (authority → display) is clearer than pull or bidirectional.
+
+**Alignment:** Complete technical alignment — Deckard's recommendations match Roy's phased implementation approach. Zero disputes on all three questions.
+
+**Next:** Awaiting Thraka design decisions before Phase 1 implementation.

@@ -484,3 +484,207 @@ When `ForegroundMode == Default` and `Bold` is true, resolve foreground as `Pale
 - **Writer.cs:** One-line change in `ResolveForeground()` default case
 - **Tests:** 3 new tests in `TerminalWriterPhase3Tests.cs` (682 total, all pass)
 - **ANSI art compatibility:** Fixes white-vs-gray rendering in any file that relies on bold + default foreground
+
+---
+
+## Architecture Decision: Terminal Writer Restructuring — Cursor Ownership & ITerminalOutput
+
+**Author:** Deckard (Lead)  
+**Date:** 2026-03-07T18:50:48Z  
+**Status:** Proposed — Awaiting Thraka Design Decisions  
+**Requested by:** Thraka
+
+### Context
+
+Three core architecture questions about evolving `SadConsole.Terminal.Writer` (1274 lines):
+
+1. Should Writer's Cursor come from outside (injected), not created internally?
+2. Should there be two different writers — data-stream writer (ANSI art browser) vs interactive terminal writer (BBS/telnet)?
+3. Should `TerminalConsole` subclass `Console` for interactive operation?
+
+### Summary of Recommendations
+
+**Q1: Injectable Nullable Cursor.** ✅ **Recommended.**  
+Make Cursor an injectable, nullable property. Writer creates Cursor internally currently (line 91–96); change to optional constructor parameter or property setter. State (State.CursorRow/State.CursorColumn) remains the terminal logic authority; Cursor.Position is a one-way display-only sync target.
+
+**Rationale:** Surface is already external (passed to constructor). Cursor is the only internal dependency. Making it external enables:
+- Headless mode (ANSI art rendering without visual cursor)
+- Cursor sharing across Writers
+- Custom Cursor subclasses
+- Clean separation: data-stream mode (null cursor) vs interactive mode (provided cursor)
+
+**Backwards Compatibility:** Minor breaking change — tests that assert `writer.Cursor != null` need updating. Add convenience constructor that accepts a Cursor for migration path.
+
+---
+
+**Q2: Two Writer Types vs Single Writer with Optional Output Channel.** ✅ **Recommendation: Single Writer with `ITerminalOutput?` response channel.**  
+Do NOT split Writer into two classes. The 1200+ lines of ANSI sequence handling are identical for both use cases. Only differences:
+- (a) Whether DA/DSR emit responses (add `ITerminalOutput?` property; null = silent)
+- (b) Whether Cursor is present (make it optional)
+- (c) Whether keyboard input is handled (separate class — `TerminalConsole` or `ProcessTerminal`)
+
+**Design:**
+```csharp
+public interface ITerminalOutput
+{
+    void WriteResponse(ReadOnlySpan<byte> data);
+}
+
+public class Writer : ITerminalHandler
+{
+    public Components.Cursor? Cursor { get; set; }
+    public ITerminalOutput? Output { get; set; }  // null for data-stream mode
+}
+```
+
+**Rationale:** Configuration toggles are cleaner than code duplication. Existing TODO stubs for DA/DSR become live code when Output is set.
+
+---
+
+**Q3: TerminalConsole — Subclass or Composition.** ✅ **Recommendation: Subclass Console.**  
+`TerminalConsole : Console` (not composition). Console already provides Surface + Cursor + focus + keyboard + rendering. TerminalConsole adds:
+- Writer wired to Console.Surface and Console.Cursor
+- Keyboard override to convert keystrokes to terminal sequences
+- Response channel callback (DSR/query replies)
+
+Follows existing pattern (ControlsConsole, Window both extend Console).
+
+```csharp
+public class TerminalConsole : Console
+{
+    public Writer Writer { get; }
+    
+    public TerminalConsole(int width, int height, IFont font)
+        : base(width, height)
+    {
+        Writer = new Writer(Surface, font, Cursor);
+    }
+    
+    public override bool ProcessKeyboard(Input.Keyboard keyboard)
+    {
+        // Encode keystrokes to terminal sequences
+        return base.ProcessKeyboard(keyboard);
+    }
+}
+```
+
+---
+
+### The Dual Cursor State Problem
+
+**State.CursorRow/CursorColumn vs Cursor.Position** — two representations of cursor position.
+
+**Resolution: State is authoritative; Cursor is display-only.**
+
+Data flow during ANSI processing:
+```
+ANSI input → Parser → Writer.OnXxx() → State mutation → SyncCursorPosition() → Cursor.Position
+```
+
+In TerminalConsole, user input goes through the terminal protocol:
+```
+Keypress → KeyboardEncoder → ANSI bytes → Writer.Feed() → (same flow as above)
+```
+
+Never a reason to set `Cursor.Position` directly during terminal operation. TerminalConsole should set `Cursor.MouseClickReposition = false` by default.
+
+### Files Affected
+
+- `SadConsole/Terminal/Writer.cs` — Cursor constructor param, Output property, null checks in SyncCursorPosition()
+- `SadConsole/Terminal/ITerminalOutput.cs` — NEW interface
+- `SadConsole/Terminal/TerminalConsole.cs` — NEW class (subclass Console)
+- `Tests/SadConsole.Tests/TerminalWriterTests.cs` — Update Cursor null-checks
+
+### Backwards Compatibility
+
+| Change | Impact | Migration |
+|--------|--------|-----------|
+| `Writer.Cursor` nullable | Tests accessing `.Cursor.Position` need null-aware access | Low — add convenience constructor |
+| `Writer` constructor change | Tests injecting Cursor must use new signature | Low — most tests verify cells, not cursor |
+| `ITerminalOutput` interface | Purely additive | None |
+| `TerminalConsole` class | Purely additive | None |
+
+---
+
+### Open Questions for Thraka
+
+1. **Breaking change tolerance:** Making `Writer.Cursor` nullable is a minor breaking change. Acceptable for next major version, or add parameterless constructor (mark `[Obsolete]`) for compatibility?
+
+2. **KeyboardEncoder scope:** Should ANSI keyboard encoding (arrow keys, F-keys, Ctrl+key, application mode) be a static helper on Writer, or standalone class in `SadConsole.Terminal`? (Leaning toward standalone for testability and reuse.)
+
+3. **TerminalConsole namespace:** `SadConsole.Terminal.TerminalConsole` or `SadConsole.TerminalConsole` (root namespace like Console/Window/ControlsConsole)?
+
+### Related Documents
+
+- Technical deep-dive: `.squad/decisions/inbox/roy-terminal-cursor-analysis.md`
+- Orchestration logs: `.squad/orchestration-log/2026-03-07T18-50-48-{deckard,roy}.md`
+- Session log: `.squad/log/2026-03-07T18-50-48-terminal-writer-architecture.md`
+
+---
+
+## Technical Deep-Dive: Terminal Cursor Architecture — Roy Analysis
+
+**Author:** Roy (Core Dev)  
+**Date:** 2026-03-07T18:50:48Z  
+**Status:** Complete  
+
+### Summary
+
+Technical analysis supporting Deckard's architecture decision. Key findings:
+
+**State vs Components.Cursor Duality:**
+- **State.CursorRow/CursorColumn:** Pure integer tracking — the logical cursor position. Always accurate, updated by all cursor handlers. Zero dependency on Components.Cursor.
+- **Components.Cursor.Position:** Visual echo. ONE-WAY sync from State → Cursor via `SyncCursorPosition()`. Writer never reads Cursor.Position.
+
+**External Cursor Injection Risk Assessment: LOW-RISK**
+
+What breaks:
+- Null checks needed in `SyncCursorPosition()` and DECTCEM handler (2 places)
+- Caller responsibility: ensure Cursor targets same surface, set `AutomaticallyShiftRowsUp = false`
+
+What becomes possible:
+- Headless mode (no visual cursor for ANSI art export)
+- Cursor sharing (multiple Writers → single Cursor)
+- Custom Cursor subclasses
+
+**Reader Role:** Pure transport layer. Throttles bytes to Writer via `Writer.Feed()`. Decoupled from terminal logic.
+
+**Two Writer Modes Justified:**
+- **Data-stream:** Static ANSI art rendering, cursor irrelevant, instant or throttled playback
+- **Interactive:** Bi-directional I/O, keyboard/mouse, cursor critical for feedback, DSR/query responses
+
+But: Splitting would duplicate 1200+ lines. Better: single Writer with optional Cursor + ITerminalOutput, wrapped by TerminalConsole for interactive use.
+
+**TerminalConsole Pattern:** Subclass Console (minimizes duplication, inherits rendering/focus/keyboard). Override ProcessKeyboard to encode keystrokes. Wire Writer to Console.Surface and Cursor.
+
+### Phased Implementation Approach
+
+**Phase 1 (Low-Risk):** Make Cursor external  
+- Constructor: `Writer(ICellSurface surface, IFont font, Components.Cursor? cursor = null)`
+- Null checks in sync code
+- Result: data-stream mode doesn't need Cursor
+
+**Phase 2 (Medium Effort):** Create TerminalConsole  
+- Subclass Console
+- Wire Writer to Surface + Cursor
+- Override ProcessKeyboard for interactive input
+- Result: interactive terminal emulator ready
+
+**Phase 3 (Optional Future):** Split if complexity grows  
+- TerminalRenderer (pure parser + surface writer)
+- InteractiveTerminal orchestrates TerminalRenderer + I/O channels
+
+### Related Documents
+
+- Architecture decision: `.squad/decisions/inbox/deckard-terminal-writer-architecture.md`
+- Orchestration logs: `.squad/orchestration-log/2026-03-07T18-50-48-{deckard,roy}.md`
+- Session log: `.squad/log/2026-03-07T18-50-48-terminal-writer-architecture.md`
+
+---
+
+## Session Summary: Terminal Writer Architecture Analysis (2026-03-07)
+
+**Agents:** Deckard (Lead), Roy (Core Dev)  
+**Status:** Complete — Zero Disputes
+
+Converged on identical recommendations across three architecture questions through parallel analysis. Deckard provided architecture-level design; Roy provided technical implementation-level validation. All findings merged to this decision document.

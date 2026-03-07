@@ -124,3 +124,60 @@ Holden reviewed `docs/architecture-surfaces.md` against source code and found 12
 **Key files:** `SadConsole/Terminal/Writer.cs` (lines 219-344 OnCsiDispatch), `SadConsole/Terminal/State.cs` (PendingWrap property).
 
 **Pattern learned:** Dispatcher epilogues that blanket-clear state are dangerous. Side effects should be declared by handlers, not assumed by the dispatcher. This is analogous to database auto-commit: the default should be the safe/no-op path.
+
+### 2025-07-16 — ProcessTerminal Design Document
+
+Produced comprehensive design specification for a process wrapper that launches OS processes (PowerShell, bash, etc.) with pseudo-terminal I/O and renders output onto SadConsole surfaces. Written to `.squad/decisions/inbox/deckard-process-wrapper.md`.
+
+**Key architectural decisions:**
+- **ConPTY / POSIX PTY required** — plain `Process.RedirectStdout` is insufficient because child processes disable ANSI output when they detect non-terminal I/O. ConPTY (Windows 10 1809+) and POSIX PTY (Unix/macOS) are the correct abstraction.
+- **Direct IComponent, not InstructionBase** — `ProcessTerminal` needs both `IsUpdate` (drain output buffer) and `IsKeyboard` (capture keystrokes). No existing base class supports this combination; `UpdateComponent`'s `IsKeyboard => false` is an explicit interface impl that can't be overridden.
+- **Does NOT compose with Reader** — Reader is designed for finite BPS-throttled streams. Live process output should render immediately. Self-contained buffer drain via `ConcurrentQueue<byte[]>` on the game thread.
+- **Background reader thread** — PTY output is blocking I/O. Background thread reads and queues; `Update()` drains on game thread. Only `ConcurrentQueue` needs thread safety; `Writer.Feed()` is game-thread-only.
+- **`KeyboardEncoder` as static helper** — SadConsole `Keys` → ANSI escape sequences (arrow keys, F-keys, Ctrl+key, application cursor mode) is non-trivial, reusable, and independently testable.
+- **Platform abstraction via `IPseudoTerminal`** — WindowsConPty, UnixPty, and ProcessRedirectPty (fallback) behind a single interface. Factory auto-detects platform. First P/Invoke in core — justified because PTY is inherently OS-level.
+- **Namespace:** `SadConsole.Terminal` with PTY impls in `Pty/` subfolder. Cohesive with existing Parser/Writer/Reader/State.
+
+**Work items:** 9 items across 5 phases for Roy, testing strategy for Rachael. Dependency-ordered. Start with ProcessRedirectPty (simplest) to get end-to-end flow working, then layer in ConPTY/UnixPty.
+
+**Open questions for Thraka:** (1) All three PTY backends or Windows+fallback first? (2) Core vs separate NuGet for P/Invoke code? (3) Auto-detect resize vs explicit `Resize()` calls?
+
+**Pattern learned:** When a component needs capabilities from two different IComponent categories (Update + Keyboard), implement IComponent directly. Don't try to inherit from the single-capability base classes or create multi-inheritance hacks. The interface is small enough that direct implementation is cleaner than fighting the type hierarchy.
+
+### 2025-07-16 — Terminal Writer Architecture Analysis
+
+Thraka asked three architecture questions about Writer/Cursor/Console relationships. Full analysis in `.squad/decisions/inbox/deckard-terminal-writer-architecture.md`.
+
+**Key decisions:**
+1. **Writer.Cursor → injectable, nullable.** Writer creates its own Cursor internally (bypasses IComponent lifecycle, no render step). State.CursorRow/CursorColumn is the real authority; SyncCursorPosition() is a one-way push to Cursor.Position. Making Cursor nullable means data-stream use (ANSI art) doesn't need one, interactive use injects Console's Cursor.
+2. **Do NOT split Writer into two classes.** 1200+ lines of ANSI sequence handling are identical for both data-stream and interactive use. The only difference is a response channel (DA, DSR) — solved by adding `ITerminalOutput?` property. Null = silent (current behavior), set = responses forwarded.
+3. **TerminalConsole : Console** is the right approach (not composition). Console already provides Surface + Cursor + focus + keyboard. TerminalConsole wires Writer to Console's Surface + Cursor, overrides keyboard for ANSI encoding. Follows existing pattern (ControlsConsole, Window both extend Console).
+
+**Dual cursor state resolution:** State is always authoritative during ANSI processing. Data flow: ANSI input → Parser → State mutation → SyncCursorPosition() → Cursor.Position. User input in TerminalConsole goes through the ANSI protocol (keypresses encoded as escape sequences), never directly to Cursor.Position.
+
+**Key file relationships:**
+- `SadConsole/Terminal/Writer.cs` — ECMA-48 renderer, owns State/Parser/Palette, sync target is Cursor
+- `SadConsole/Components/Cursor.cs` — full IComponent with print pipeline, keyboard, mouse; `_editor` set via OnAdded lifecycle
+- `SadConsole/Console.cs` — ScreenSurface + Cursor (added as SadComponent, gets full lifecycle)
+- `SadConsole/Terminal/State.cs` — pure data: CursorRow/CursorColumn, SGR, modes, scroll region
+- `SadConsole/Terminal/Reader.cs` — InstructionBase, finite stream → Writer.Feed(), BPS throttling
+
+**Pattern learned:** When two subsystems both track a shared concept (cursor position), designate exactly one as authoritative and make all others read-only sync targets. Don't allow bidirectional mutation — it creates state divergence bugs. The "push" model (authority → display) is clearer than "pull" or "two-way binding".
+
+## Cross-Agent Updates
+
+### 2026-03-07 — Roy's Technical Deep-Dive: Cursor Architecture Analysis
+
+Roy completed parallel technical analysis of the same three architecture questions. Results merged to decisions.md.
+
+**Roy's Findings:**
+- **State vs Components.Cursor Duality:** Documented one-way sync contract and write-only Cursor usage from Writer perspective.
+- **External Cursor Risk Assessment:** Confirmed LOW-RISK — Surface is already external; Cursor is the only internal dependency. Requires null checks in SyncCursorPosition() and DECTCEM handler (2 places only).
+- **Reader Role:** Clarified as pure transport layer (throttles bytes to Writer). Decoupled from terminal logic.
+- **Two Writer Modes:** Technical justification for single Writer with optional Cursor vs splitting into two classes. 1200+ lines of parsing are identical; differences are configuration toggles (Cursor, output channel, keyboard input).
+- **TerminalConsole Pattern:** Confirmed subclass Console is minimal-duplication approach. Inherits Surface, Cursor, focus, keyboard, rendering.
+- **Phased Implementation:** Proposed Phase 1 (external Cursor, low-risk), Phase 2 (TerminalConsole, medium effort), Phase 3 (optional split if complexity grows).
+
+**Alignment:** Zero disputes between Deckard and Roy — complete technical alignment across all three recommendations.
+
+**Next:** Awaiting Thraka design decisions before Phase 1 implementation (cursor injection).
