@@ -36,6 +36,7 @@ public class Writer : ITerminalHandler
     private readonly ICellSurface _surface;
     private readonly IFont _font;
     private char _lastPrintedChar;
+    private readonly Dictionary<int, IFont> _loadedFonts = new();
 
     /// <summary>
     /// A cursor component for visual display.  Attach to a <see cref="ScreenSurface"/>
@@ -242,6 +243,13 @@ public class Writer : ITerminalHandler
             return;
         }
 
+        if (privatePrefix == (byte)'=')
+        {
+            HandleCtermExtension(parameters, final);
+            SyncCursorPosition();
+            return;
+        }
+
         // Ignore other unknown private prefixes
         if (privatePrefix is not null) return;
 
@@ -280,9 +288,17 @@ public class Writer : ITerminalHandler
                 }
                 MoveCursorForward(Param(parameters, 0, 1));
                 break;
-            case 'D': // CUB
-                State.PendingWrap = false;
-                MoveCursorBackward(Param(parameters, 0, 1));
+            case 'D': // CUB — or FNT if intermediate is SP (0x20)
+                if (intermediates.Length == 1 && intermediates[0] == 0x20)
+                {
+                    // CSI Ps1 ; Ps2 SP D — Font Selection (FNT)
+                    HandleFontSelection(parameters);
+                }
+                else
+                {
+                    State.PendingWrap = false;
+                    MoveCursorBackward(Param(parameters, 0, 1));
+                }
                 break;
             case 'E': // CNL
                 State.PendingWrap = false;
@@ -430,7 +446,41 @@ public class Writer : ITerminalHandler
     /// <inheritdoc/>
     public void OnDcsDispatch(ReadOnlySpan<int> parameters, ReadOnlySpan<byte> intermediates, byte final, ReadOnlySpan<byte> payload)
     {
-        // TODO: DCS font loading (future work — see decisions.md)
+        // DCS CTerm:Font:<slot>:<base64data> ST — Loadable font (CTLF)
+        // The payload is the full string between DCS and ST.
+        if (payload.Length == 0) return;
+
+        string payloadStr = System.Text.Encoding.ASCII.GetString(payload);
+
+        // Expected format: CTerm:Font:<slot>:<base64>
+        const string prefix = "CTerm:Font:";
+        if (!payloadStr.StartsWith(prefix, StringComparison.Ordinal))
+            return;
+
+        ReadOnlySpan<char> rest = payloadStr.AsSpan(prefix.Length);
+        int colonIdx = rest.IndexOf(':');
+        if (colonIdx < 0) return;
+
+        if (!int.TryParse(rest.Slice(0, colonIdx), out int slot))
+            return;
+
+        // Per spec, DCS-loaded fonts use slots > 42
+        if (slot < 0 || slot > 255) return;
+
+        ReadOnlySpan<char> base64 = rest.Slice(colonIdx + 1);
+        if (base64.Length == 0) return;
+
+        try
+        {
+            byte[] fontBytes = Convert.FromBase64String(base64.ToString());
+            using var stream = new System.IO.MemoryStream(fontBytes);
+            IFont font = SadFont.ImportVGABiosFont($"CTerm-Font-{slot}", stream);
+            _loadedFonts[slot] = font;
+        }
+        catch
+        {
+            // Invalid base64 or unsupported font size — silently ignore per terminal convention
+        }
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -752,9 +802,82 @@ public class Writer : ITerminalHandler
                     State.CursorVisible = set;
                     Cursor.IsVisible = set;
                     break;
+                case 31: // Bright alt character set — use font slot 1 for SGR 1
+                    State.BrightFontEnabled = set;
+                    break;
+                case 32: // Bright intensity disable — suppress bright color when using font slot
+                    State.BrightIntensityDisabled = set;
+                    break;
+                case 34: // Blink alt character set — use font slot 2 for SGR 5/6
+                    State.BlinkFontEnabled = set;
+                    break;
+                case 35: // Blink disable — suppress blink animation when using font slot
+                    State.BlinkDisabled = set;
+                    break;
             }
         }
     }
+
+    // ═══════════════════════════════════════════════════════════
+    //  Font Selection (CTerm FNT)
+    // ═══════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Handles CSI Ps1 ; Ps2 SP D — Font Selection per cterm.adoc.
+    /// Ps1 = font slot (0-3), Ps2 = font ID (0-255).
+    /// </summary>
+    private void HandleFontSelection(ReadOnlySpan<int> parameters)
+    {
+        int slot = Param(parameters, 0, 0);
+        int fontId = Param(parameters, 1, 0);
+
+        if (slot < 0 || slot > 3 || fontId < 0 || fontId > 255)
+        {
+            State.LastFontSelectionResult = 1; // failure
+            return;
+        }
+
+        State.SetFontSlot(slot, fontId);
+        State.LastFontSelectionResult = 0; // success
+    }
+
+    /// <summary>
+    /// Handles CSI = Ps n — CTerm State/Mode Request/Report (CTSMRR).
+    /// Currently supports Ps=1 (Font State Report).
+    /// </summary>
+    private void HandleCtermExtension(ReadOnlySpan<int> parameters, byte final)
+    {
+        if ((char)final != 'n') return;
+
+        int ps = Param(parameters, 0, 0);
+        if (ps == 1)
+        {
+            // Font State Report: CSI = 1 ; pF ; pR ; pS0 ; pS1 ; pS2 ; pS3 n
+            // pF = first available loadable-font slot (43)
+            // pR = last font selection result
+            // pS0-pS3 = font slot values
+            // Note: response would be written to the input stream; for now we just track the state.
+            // The host application can read State.LastFontSelectionResult and font slots directly.
+        }
+    }
+
+    /// <summary>
+    /// Returns the <see cref="IFont"/> for the given font ID. Custom fonts loaded via DCS CTLF
+    /// are looked up first; if not found, the default constructor font is returned.
+    /// </summary>
+    public IFont GetFontForSlot(int fontId)
+    {
+        if (_loadedFonts.TryGetValue(fontId, out IFont? font))
+            return font;
+
+        return _font;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="IFont"/> that should be used for the current character based on
+    /// the active font slot, mode flags, and SGR attributes.
+    /// </summary>
+    public IFont GetActiveFont() => GetFontForSlot(State.GetActiveFontSlot());
 
     // ═══════════════════════════════════════════════════════════
     //  Erase

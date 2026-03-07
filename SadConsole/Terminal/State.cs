@@ -115,6 +115,37 @@ public class State
     /// <summary>Screen reverse video mode (DECSCNM). Default off.</summary>
     public bool ScreenReverseVideo { get; set; }
 
+    // ── Font slots (CTerm FNT) ──
+
+    /// <summary>Font ID for default text (slot 0). Per CTerm spec, default is 0 (CP437).</summary>
+    public int FontSlot0 { get; set; }
+
+    /// <summary>Font ID for high-intensity text (slot 1). Active when <see cref="BrightFontEnabled"/> is set.</summary>
+    public int FontSlot1 { get; set; }
+
+    /// <summary>Font ID for blink-attribute text (slot 2). Active when <see cref="BlinkFontEnabled"/> is set.</summary>
+    public int FontSlot2 { get; set; }
+
+    /// <summary>Font ID for bright+blink text (slot 3). Active when both <see cref="BrightFontEnabled"/> and <see cref="BlinkFontEnabled"/> are set.</summary>
+    public int FontSlot3 { get; set; }
+
+    /// <summary>When set, the bright (SGR 1) attribute selects characters from font slot 1 (CSI ? 31 h).</summary>
+    public bool BrightFontEnabled { get; set; }
+
+    /// <summary>When set, bright intensity does not affect color — for use with <see cref="BrightFontEnabled"/> (CSI ? 32 h).</summary>
+    public bool BrightIntensityDisabled { get; set; }
+
+    /// <summary>When set, the blink (SGR 5/6) attribute selects characters from font slot 2 (CSI ? 34 h).</summary>
+    public bool BlinkFontEnabled { get; set; }
+
+    /// <summary>When set, blink does not cause blinking — for use with <see cref="BlinkFontEnabled"/> (CSI ? 35 h).</summary>
+    public bool BlinkDisabled { get; set; }
+
+    /// <summary>
+    /// Result of the last font selection request. 0 = success, 1 = failure, 99 = no request yet.
+    /// </summary>
+    public int LastFontSelectionResult { get; set; } = 99;
+
     // ── Dimensions ──
 
     /// <summary>Surface width in columns.</summary>
@@ -171,8 +202,58 @@ public class State
         OriginMode = false;
         CursorKeyMode = false;
         ScreenReverseVideo = false;
+        FontSlot0 = 0;
+        FontSlot1 = 0;
+        FontSlot2 = 0;
+        FontSlot3 = 0;
+        BrightFontEnabled = false;
+        BrightIntensityDisabled = false;
+        BlinkFontEnabled = false;
+        BlinkDisabled = false;
+        LastFontSelectionResult = 99;
         _savedCursor = null;
         InitializeTabStops();
+    }
+
+    /// <summary>
+    /// Returns the font ID that should be used for the current character, based on the
+    /// active font mode flags and the current SGR attributes (bold/blink).
+    /// </summary>
+    public int GetActiveFontSlot()
+    {
+        bool useBright = BrightFontEnabled && Bold;
+        bool useBlink = BlinkFontEnabled && Blink;
+
+        if (useBright && useBlink) return FontSlot3;
+        if (useBright) return FontSlot1;
+        if (useBlink) return FontSlot2;
+        return FontSlot0;
+    }
+
+    /// <summary>
+    /// Gets or sets the font ID for the given slot index (0-3).
+    /// </summary>
+    public int GetFontSlot(int slot) => slot switch
+    {
+        0 => FontSlot0,
+        1 => FontSlot1,
+        2 => FontSlot2,
+        3 => FontSlot3,
+        _ => FontSlot0
+    };
+
+    /// <summary>
+    /// Sets the font ID for the given slot index (0-3).
+    /// </summary>
+    public void SetFontSlot(int slot, int fontId)
+    {
+        switch (slot)
+        {
+            case 0: FontSlot0 = fontId; break;
+            case 1: FontSlot1 = fontId; break;
+            case 2: FontSlot2 = fontId; break;
+            case 3: FontSlot3 = fontId; break;
+        }
     }
 
     /// <summary>
@@ -199,6 +280,10 @@ public class State
             Concealed = Concealed,
             Strikethrough = Strikethrough,
             OriginMode = OriginMode,
+            FontSlot0 = FontSlot0,
+            FontSlot1 = FontSlot1,
+            FontSlot2 = FontSlot2,
+            FontSlot3 = FontSlot3,
         };
     }
 
@@ -228,6 +313,10 @@ public class State
         Concealed = saved.Concealed;
         Strikethrough = saved.Strikethrough;
         OriginMode = saved.OriginMode;
+        FontSlot0 = saved.FontSlot0;
+        FontSlot1 = saved.FontSlot1;
+        FontSlot2 = saved.FontSlot2;
+        FontSlot3 = saved.FontSlot3;
     }
 
     /// <summary>
@@ -323,5 +412,9 @@ public class State
         public bool Concealed;
         public bool Strikethrough;
         public bool OriginMode;
+        public int FontSlot0;
+        public int FontSlot1;
+        public int FontSlot2;
+        public int FontSlot3;
     }
 }

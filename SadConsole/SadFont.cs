@@ -368,10 +368,42 @@ public sealed class SadFont : IFont
                 throw new Exception("Unable to parse scanlines from file name.");
         }
 
+        using Stream stream = File.OpenRead(filePath);
+        return ImportVGABiosFont(name, stream, scanlines);
+    }
+
+    /// <summary>
+    /// Imports a VGA BIOS font from a stream and returns a SadFont object representing the font.
+    /// </summary>
+    /// <remarks>
+    /// The stream should contain raw VGA BIOS font bitmap data: one byte per scanline per glyph,
+    /// 256 glyphs, MSB-left. When <paramref name="scanlines"/> is 0, the font size is inferred
+    /// from the stream length: 4096 bytes = 8×16, 3584 bytes = 8×14, 2048 bytes = 8×8.
+    /// </remarks>
+    /// <param name="name">The name to assign to the imported font for identification purposes.</param>
+    /// <param name="stream">A readable stream containing raw VGA BIOS font data.</param>
+    /// <param name="scanlines">The number of scanlines per glyph. If 0, inferred from stream length.</param>
+    /// <returns>A SadFont object that represents the imported VGA BIOS font.</returns>
+    /// <exception cref="ArgumentException">Thrown if scanlines is 0 and the stream length does not match a known VGA font size.</exception>
+    public static SadFont ImportVGABiosFont(string name, Stream stream, int scanlines = 0)
+    {
+        if (scanlines == 0)
+        {
+            long length = stream.Length;
+            scanlines = length switch
+            {
+                4096 => 16,  // 256 glyphs × 16 rows
+                3584 => 14,  // 256 glyphs × 14 rows
+                2048 => 8,   // 256 glyphs × 8 rows
+                _ => throw new ArgumentException(
+                    $"Cannot infer scanlines from stream length {length}. Expected 4096 (8×16), 3584 (8×14), or 2048 (8×8).",
+                    nameof(stream))
+            };
+        }
+
         ITexture image = GameHost.Instance.CreateTexture(8 * 16, scanlines * 16);
         Color[] pixels = image.GetPixels();
 
-        Stream stream = File.OpenRead(filePath);
         for (int i = 0; i < 256; i++)
         {
             int glyphX = (i % 16) * 8;
