@@ -11924,6 +11924,70 @@
             </code>
             </remarks>
         </member>
+        <member name="T:SadConsole.TerminalConsole">
+            <summary>
+            A surface that wires together a <see cref="T:SadConsole.Terminal.Writer"/> and <see cref="T:SadConsole.Terminal.TerminalCursor"/> for ANSI/VT terminal emulation.
+            Inherits from <see cref="T:SadConsole.ScreenSurface"/> directly — does not use <see cref="T:SadConsole.Components.Cursor"/> or <see cref="T:SadConsole.Console"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.Writer">
+            <summary>
+            The terminal writer that renders parsed ANSI/VT sequences onto this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.TerminalCursor">
+            <summary>
+            The terminal cursor used for visual display of the cursor position.
+            </summary>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new terminal console with the specified dimensions, using the default font.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.#ctor(System.Int32,System.Int32,SadConsole.IFont)">
+            <summary>
+            Creates a new terminal console with the specified dimensions and font.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="font">The font to use. If <see langword="null"/>, uses the default font.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Feed(System.String)">
+            <summary>
+            Feeds a string through the terminal parser and renders it onto the surface.
+            </summary>
+            <param name="text">The text or ANSI escape sequences to process.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Feed(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Feeds raw bytes through the terminal parser and renders them onto the surface.
+            </summary>
+            <param name="data">The raw byte data to process.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnFocusLost">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnFocused">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnRendererChanged">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.ToString">
+            <summary>
+            Returns the value "TerminalConsole".
+            </summary>
+            <returns>The string "TerminalConsole".</returns>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Terminal.CursorShape">
             <summary>
             Terminal cursor shapes per DECSCUSR (CSI Ps SP q).
