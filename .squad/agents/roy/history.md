@@ -27,107 +27,71 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - Gaff — Host Dev (implements my interfaces)
 - Rachael — Tester
 
-## Core Context
+## Terminal System Architecture (Core Implementation)
 
-**Key Architecture Patterns:**
-- **Surfaces:** `CellSurface` is pure data (no rendering); `ScreenSurface` wraps it with rendering; effects system is mutation-aware via dirty flags
-- **Fonts:** IFont is core metadata; hosts own GPU textures. Extended fonts via GlyphDefinition + CellDecorator. Pre-computed glyph rects, registered in GameHost.Fonts
-- **RowFontSurface:** Per-row font support via sparse Dictionary; pixel-to-cell lookup via Y offset caching
-- **Terminal system:** Standalone under `SadConsole/Terminal/`. Parser (state machine), Writer (renders to ICellSurface), Measurer (dimensions only). Handler callback pattern, zero allocation, CP437/UTF-8 encoding support
+**Parser:** ECMA-48 state machine (Ground/Escape/CSI/DCS/OSC), zero-allocation via preallocated span arrays, CP437/UTF-8 encoding support (87 tests).
 
-**Key Learnings:**
-- Font system is sound across all hosts (no cross-host issues)
-- Parser contracts defined via test-first (87 tests); Writer contracts via integration tests (160+ tests)
-- Encoding matters: Parser.Encoding (byte→char), Writer.Encoding (char→glyph)
-- LF defaults to implicit (CR+LF) — standard terminal behavior
-- SGR 0 = full reset, Bold shifts palettes 0-7 only, Dim halves RGB
-- Auto-wrap defers until next printable character (pending-wrap state critical for ANSI art)
+**Writer:** Direct ICellSurface cell manipulation (glyph, foreground, background), ColorMode enum (Default/Palette/TrueColor), pending-wrap state for ANSI art, scroll regions with origin mode (160+ tests).
+
+**State:** Cursor position/attributes (bold/dim/reverse/underline/strikethrough/italic/blink), SGR tracking, tab stops (SortedSet for O(1) lookup).
+
+**Palette:** 256-entry RGB array; OSC 4/10/11 redefinition support (X11 rgb:r/g/b and #rrggbb formats).
+
+**Rendering:** CellDecorator for visual attributes (underline glyph 95, strikethrough 196), font-defined glyph override, color resolution (reverse swaps fg/bg, dim halves RGB, bold shifts palette 0-7 to 8-15).
+
+**Completed Phases (662 tests):** Phase 0 (parser, 87 tests), Phase 1 (writer, 160 tests), Phase 5 (insert/delete, 24 tests), Phase 6 (tabs, 8 tests), Phase 8 (DEC modes, 16 tests), Phase 3 (decorators, 18 tests), Phase 9 (palette, 12 tests), Phase 10 (polish, 18 tests).
+
+**Key Learnings (2026-03-04 to 2026-03-06):**
+- **PendingWrap opt-in model:** Cursor-movers clear; SGR/decorators preserve. Root bug fix for b5-ans01.ans drift.
+- **CUF/CHT forward-cursor resolution:** At right margin with PendingWrap, resolve wrap before moving. Only forward-clamped handlers need this.
+- **Bold + default foreground:** When `ForegroundMode == Default && Bold`, return `Palette[15]` not `DefaultForeground`.
+
+## Terminal Cursor Architecture (Phase 1, 2026-03-07 to 2026-03-09)
+
+**TerminalCursor:** Lightweight data class (NOT IComponent), replaces Components.Cursor. Properties: Position, IsVisible, Shape, CursorRenderCellActiveState.
+
+**CursorShape enum:** Maps DECSCUSR parameters (1=BlinkingBlock, 2=SteadyBlock, 3=BlinkingUnderline, 4=SteadyUnderline, 5=BlinkingBar, 6=SteadyBar).
+
+**Writer changes:** Cursor type Components.Cursor → TerminalCursor? (nullable, injectable). Constructor unchanged; caller sets Cursor via property. SyncCursorPosition(), DECTCEM, DECSCUSR all null-check.
+
+**Design rationale:** Enables headless ANSI rendering (null cursor for data-stream mode) and interactive terminal (injected cursor for user feedback). Eliminates IComponent overhead. Render-step compatible (CursorRenderCellActiveState interface unchanged).
+
+**Test results:** 2,178 tests pass (net8.0/9.0/10.0), 44 TerminalCursor-specific tests, zero regressions.
+
+## TerminalConsole Phase 2 (2026-03-09)
+
+**TerminalConsole:** Inherits ScreenSurface (not Console — avoids Components.Cursor dead weight). Root namespace `SadConsole`.
+
+**Construction:** `(int width, int height, IFont? font)` — creates Writer(Surface, Font), TerminalCursor, wires Cursor to Writer.
+
+**Rendering:** Uses `GameHost.Instance.GetRendererStep()` factory pattern for TerminalCursorRenderStep. OnRendererChanged re-adds step when renderer swaps.
+
+**APIs:** `Feed(string)`, `Feed(ReadOnlySpan<byte>)` forward to Writer. Focus control via OnFocused/OnFocusLost toggles cursor visibility. ProcessKeyboard captures input (Phase 3 KeyboardEncoder).
+
+**Test suite:** 33 new tests (construction, inheritance, Feed, cursor integration, focus, multi-instance). 759 total tests all green.
+
+**Build:** 0 errors, 48 warnings (all pre-existing).
+
+## Archived Terminal Implementation Details
+
+**Phases 5–10 detailed learnings (2026-03-04):**
+- Phase 5: ICH/DCH on current row; IL/DL within scroll region; SU/SD reuse scroll; ECH erase-in-place; REP tracks lastChar.
+- Phase 6: CHT/CBT loop tab stops (SortedSet); TBC modes 0/3.
+- Phase 8: Private prefix `?` → HandleDecPrivateMode; DECSTBM regular CSI; origin mode affects CUP; DECOM homes; DECTCEM wires to Cursor.IsVisible.
+- Phase 3: CellDecorator underline 95, strikethrough 196; decorators nullable List; ApplyDecorators uses resolved foreground.
+- Phase 9: OSC raw bytes; OSC 4 multi-entry; X11 color scaling; OSC 10/11 palette updates.
+- Phase 10: ED modes 0/1/2/3 verified; CSI s Save when len==0; PendingWrap in DEC/NEL/RI; VPA respects origin mode.
+
+**Architecture decisions (2026-03-07):**
+- Dual cursor state: State.CursorRow/Column (pure logic) vs Cursor.Position (visual only, ONE-WAY sync).
+- Writer never reads Cursor.Position (Cursor is write-only from Writer's perspective).
+- Surface external (constructor param); Cursor now external too (nullable, injectable).
+- Two Writer modes: data-stream (ANSI art playback) vs interactive (terminal emulator). Single Writer, optional cursor.
+- Reader: pure byte pump (Stream → Writer.Feed), extends InstructionBase. No parsing, no cursor knowledge.
+
+**Deckard alignment (2026-03-07):** Architecture decision analysis produced complete technical alignment on injectable nullable Cursor, single Writer with ITerminalOutput response channel, TerminalConsole subclass pattern.
 
 ## Core Context (Continued)
-
-**Terminal System Architecture:**
-- **Parser:** ECMA-48 state machine (Ground/Escape/CSI/DCS/OSC), zero-allocation via preallocated span arrays, CP437/UTF-8 encoding modes
-- **Writer:** Direct ICellSurface cell manipulation (glyph, foreground, background), ColorMode enum (Default/Palette/TrueColor), pending-wrap state for ANSI art, scroll regions with origin mode support
-- **State:** Cursor position/attributes (bold/dim/reverse/underline/strikethrough/italic/blink), SGR tracking, tab stops (SortedSet for O(1) lookup)
-- **Palette:** 256-entry RGB array; OSC 4/10/11 redefinition support (X11 rgb:r/g/b and #rrggbb formats)
-- **Rendering:** CellDecorator for visual attributes (underline glyph 95, strikethrough 196), font-defined glyph override, color resolution (reverse video swaps fg/bg, dim halves RGB, bold shifts palette 0-7 to 8-15)
-- **Phases delivered:** 0 (parser, 87 tests), 1 (writer, 160 tests), 5 (insert/delete, 24 tests), 6 (tabs, 8 tests), 8 (DEC modes, 16 tests), 3 (decorators, 18 tests), 9 (palette, 12 tests), 10 (polish, 18 tests) = 662/662 tests total
-
-### Terminal Learnings (Phases 5–10 Summary, 2025-07-14 to 2026-03-06)
-**Phase 5:** ICH/DCH on current row only; IL/DL within scroll region; SU/SD reuse existing scroll; ECH erase-in-place; REP tracks `_lastPrintedChar`.  
-**Phase 6:** CHT/CBT loop tab stops (SortedSet for O(1)); TBC modes 0 (at column) and 3 (all).  
-**Phase 8:** Private prefix routing via `?` → `HandleDecPrivateMode`; DECSTBM is regular CSI (not private); origin mode affects CUP only; DECOM homes cursor; SavedCursorState includes OriginMode; DECTCEM wires to Cursor.IsVisible; CursorKeyMode/ScreenReverseVideo state-only.  
-**Phase 3:** CellDecorator readonly struct; underline glyph 95, strikethrough 196; ApplyDecorators uses resolved fg; italic/blink tracked (no render yet); reverse video already implemented; CopyCell deep-copies decorators, ClearCell nulls them.  
-**Phase 9:** OSC payload raw bytes; OSC 4 supports multi-entry; X11 color scaling (1–4 hex digits, 1-digit ×17); OSC 10/11 update defaults; DCS stub.  
-**Phase 10:** ED modes 0/1/2/3 verified; CSI s Save when len==0; PendingWrap added to DEC path/NEL/RI; VPA ('d') respects origin mode; Test fix: Ed1 off-by-one ('P' at col 5, not 'Q'). **Build:** 0 errors. **Tests:** 662/662 pass, zero regressions.
-
-## Archived Work — Terminal Implementation & PendingWrap Architecture (2026-02-24 to 2026-03-06)
-
-**Archived terminal system implementation (all 662/682 tests passing, zero regressions):**
-
-**Terminal architecture (core patterns):** Standalone Parser, Writer, Measurer under `SadConsole/Terminal/`. Parser is ECMA-48 state machine (Ground/Escape/CSI/DCS/OSC), zero-allocation via preallocated span arrays, CP437/UTF-8 encoding modes. Writer: direct ICellSurface cell manipulation, ColorMode enum (Default/Palette/TrueColor), pending-wrap state for ANSI art, scroll regions with origin mode support. State tracks cursor position/attributes (bold/dim/reverse/underline/strikethrough/italic/blink), SGR tracking, tab stops (SortedSet for O(1) lookup). Palette: 256-entry RGB array; OSC 4/10/11 redefinition (X11 rgb:r/g/b and #rrggbb formats). Rendering: CellDecorator for visual attributes (underline glyph 95, strikethrough 196), font-defined glyph override, color resolution (reverse swaps fg/bg, dim halves RGB, bold shifts palette 0-7 to 8-15). Phases delivered: 0 (parser, 87 tests), 1 (writer, 160 tests), 5 (insert/delete, 24 tests), 6 (tabs, 8 tests), 8 (DEC modes, 16 tests), 3 (decorators, 18 tests), 9 (palette, 12 tests), 10 (polish, 18 tests) = 662/662 tests total.
-
-**Phase learnings:** Phase 5: ICH/DCH on current row only; IL/DL within scroll region; SU/SD reuse existing scroll; ECH erase-in-place; REP tracks `_lastPrintedChar`. Phase 6: CHT/CBT loop tab stops (SortedSet for O(1)); TBC modes 0 (at column) and 3 (all). Phase 8: Private prefix routing via `?` → `HandleDecPrivateMode`; DECSTBM is regular CSI (not private); origin mode affects CUP only; DECOM homes cursor; SavedCursorState includes OriginMode; DECTCEM wires to Cursor.IsVisible; CursorKeyMode/ScreenReverseVideo state-only. Phase 3: CellDecorator readonly struct; underline glyph 95, strikethrough 196; ApplyDecorators uses resolved fg; italic/blink tracked (no render yet); reverse video already implemented; CopyCell deep-copies decorators, ClearCell nulls them. Phase 9: OSC payload raw bytes; OSC 4 supports multi-entry; X11 color scaling (1–4 hex digits, 1-digit ×17); OSC 10/11 update defaults; DCS stub. Phase 10: ED modes 0/1/2/3 verified; CSI s Save when len==0; PendingWrap added to DEC path/NEL/RI; VPA ('d') respects origin mode; Test fix: Ed1 off-by-one ('P' at col 5, not 'Q'). Build: 0 errors. Tests: 662/662 pass, zero regressions.
-
-**PendingWrap opt-in clearing model (2026-03-04):** Inverted responsibility from opt-out (blanket clear epilogues) to opt-in (each handler responsible). Old model: `State.PendingWrap = false` at end of OnCsiDispatch (line 342) and DEC dispatch (line 224). New model: no blanket clear; cursor-moving handlers clear explicitly. Root cause of b5-ans01.ans drift: 85 SGR sequences hit while PendingWrap was true, causing 84 characters placed at wrong positions. Classification: Clear PendingWrap (CUP/HVP/CUU/CUD/CUF/CUB/CNL/CPL/CHA/VPA/CHT/CBT/ICH/DCH/IL/DL/DECSTBM/DECOM), Preserve (SGR/ED/EL/ECH/REP/SU/SD/TBC/CSI s/DSR/DECTCEM/DECAWM/DECCKM/DECSCNM), Self-managing (CSI u, REP). OnEscDispatch: NEL/RI clear; RIS clears via State.Reset(); HTS/DECSC don't clear; DECRC clears via RestoreCursor(). OnOscDispatch: pure data/palette ops — no PendingWrap interaction. Key insight: opt-in makes safe default (preserve) correct for majority; only minority (cursor-movers) take affirmative action.
-
-**CUF pending-wrap resolution bug (2026-03-06):** At right margin with PendingWrap=true, CSI 6C (CUF 6) cleared PendingWrap but clamped to Math.Min(79, 79+6) = 79 — no-op, cursor stuck. Fix: CUF resolves wrap when `PendingWrap && AutoWrap`: LineFeed to col 0 of next row, then apply forward movement. Only CUF gets resolve behavior; CUB/CUU/CUD/CUP/CHA/VPA just clear (absolute/backward/vertical don't need wrap resolution). Key: CUF from right margin with PendingWrap is always a no-op without resolution — fix strictly correct. Tests: 673/673 pass (3 new). Zero regressions.
-
-**CHT/C0 HT forward-tab pending-wrap bugs (2026-03-06):** Comprehensive audit of all cursor-movement handlers for stuck-at-margin pattern. Safe: absolute positioning (CUP/HVP/CHA/VPA/DECSTBM/DECOM/CSI u/NEL/RI) — position set regardless of current col. Safe: backward/vertical (CUU/CUD/CUB/CNL/CPL/CBT/ICH/DCH/IL/DL) — meaningful from right margin, not forward-clamped. At risk & fixed: CHT (forward tab clamps at width-1 → no-op), C0 HT (same NextTabStop clamping). Pattern requires "forward + clamp". Fix: resolve wrap first (same as CUF). Tests: 679/679 pass (6 new: CHT wrap resolution, auto-wrap off, C0 HT wrap resolution, tab stop scenarios, multi-tab sequences, CHT/C0 HT consistency). Zero regressions. ECMA-48 §7.1 strict adherence.
-
-**Bold + default foreground bug (2026-03-06):** After "Your stats" in b5-ans01.ans, line started gray (170,170,170) not bright white (255,255,255). `ResolveForeground()` only applied bold brightening (palette 0-7 → 8-15) when `ForegroundMode == Palette`. With `ForegroundMode == Default` (after SGR 0 reset) and bold, returned `State.DefaultForeground` unchanged. Sequence: `ESC[0m` (reset) → `ESC[1;46m` (bold + bg cyan) — no explicit foreground, ForegroundMode stays Default, bold ignored in Default path. Fix: in `ResolveForeground()`, Default case now checks `State.Bold` and returns `Palette.GetColor(15)` (bright white) when bold active. CGA convention: default foreground IS palette index 7; bold shifts it to palette 15. Tests: 682/682 pass (3 new: bold+default resolves to palette 15, bold+default+background combination, sequences like ESC[0m ESC[1;46m render bright white on cyan). Zero regressions on 679. b5-ans01.ans validates correct behavior.
-
-## Learnings
-
-**Terminal Cursor Architecture (2026-03-07):**
-
-**Dual cursor state model:**
-- **State.CursorRow/CursorColumn:** Pure tracking integers, source of truth for terminal emulator logic. Updated by all cursor-moving handlers. Zero dependency on Components.Cursor. Persisted via DECSC/DECRC.
-- **Components.Cursor.Position:** Visual echo for rendering the blinking cursor. ONE-WAY sync from State → Cursor via `Writer.SyncCursorPosition()`. Writer never reads Cursor.Position. Cursor is write-only from Writer's perspective.
-- **Synchronization point:** `SyncCursorPosition()` (Writer.cs:490) — called after every cursor-moving operation. If Cursor.Position is changed externally (e.g., mouse click), Writer never sees it — State position is unaffected. This is by design: Writer owns terminal state, Cursor is purely for display.
-
-**Writer's relationship to Cursor:**
-- Writer uses Cursor for **visual display sync only** — updates Position and IsVisible (via DECTCEM CSI ? 25 h/l)
-- Cursor is a **passive output device** — never read by Writer, never participates in parsing/writing/scrolling
-- Cursor owns Print() methods for interactive text entry — but Writer never calls them
-- Writer creates Cursor internally (constructor line 91-96) and enforces `AutomaticallyShiftRowsUp = false` because Writer handles scrolling via State.ScrollUp()
-
-**Surface is already external:**
-- ICellSurface passed to Writer constructor (externally provided)
-- Writer uses it for: direct cell access `[col, row]`, dimensions (Width/Height), dirty flag, optional resize (ICellSurfaceResize for auto-grow)
-- Cursor, however, is internally created — unlike surface
-
-**Making Cursor external is low-risk:**
-- Change constructor: `Writer(ICellSurface surface, IFont font, Components.Cursor? cursor = null)`
-- Add null checks in SyncCursorPosition() and DECTCEM handler
-- Enables headless mode (data-stream ANSI art rendering without visual cursor)
-- Enables cursor sharing, custom cursor subclasses
-- Risk: surface mismatch (Cursor wired to different surface than Writer's target), initialization responsibility (caller must set AutomaticallyShiftRowsUp = false)
-
-**Two Writer modes: data-stream vs interactive:**
-- **Data-stream (ANSI art browser):** Static art rendering, no user input, cursor irrelevant (art already contains final state), instant or throttled playback via Reader
-- **Interactive (terminal emulator/BBS):** Bi-directional communication, keyboard/mouse input, cursor critical for user feedback, DSR responses, needs output channel
-- Current Writer is data-stream-ready with optional cursor. Interactive layer needs: input handling (Keys → terminal sequences), output channel (DSR/query responses), state query API
-- Recommendation: Single Writer with optional cursor + separate InteractiveTerminal class that composes Writer and adds I/O
-
-**TerminalConsole design (subclass Console):**
-- Subclass Console (inherits surface, cursor, focus, component lifecycle, rendering)
-- Wire Writer to Console.Surface and Console.Cursor (pass Cursor to Writer constructor when external)
-- Override ProcessKeyboard to convert keystrokes to terminal sequences
-- Add bi-directional API: `Feed(string)` (expose Writer.Feed), `OnSendData` event (upstream output for DSR/keystrokes)
-- Pattern minimizes duplication — all console infrastructure reused, override points well-defined
-
-**Reader relationship:**
-- Reader is pure byte pump (Stream → Writer.Feed), throttles via BytesPerSecond, extends InstructionBase (IComponent)
-- Reader does NOT parse ANSI, knows nothing about surfaces/cursors/State — it's transport layer only
-- Reader is optional — can call Writer.Feed(data) directly without Reader
-- Reader + Writer = animation-over-time playback; without Reader = instant rendering (tests, static art)
-
-## Cross-Agent Updates
-
-### 2026-03-07 — Deckard's Architecture Analysis: Terminal Writer Restructuring
-
-Deckard completed architecture decision analysis covering the same three questions. Results merged to decisions.md.
 
 **Deckard's Findings:**
 - **Architecture-level design** for injectable nullable Cursor, single Writer with ITerminalOutput response channel, TerminalConsole subclass pattern
