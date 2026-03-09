@@ -73,3 +73,57 @@ _writer.Cursor = cursor;
 
 **Dependency:** Tests consume Roy's TerminalCursor interface + validate Gaff's render step expectations.
 
+## 2026-03-09 — TerminalConsole Test Suite
+
+Wrote 33 tests for the new `SadConsole.TerminalConsole` class in `Tests/SadConsole.Tests/TerminalConsoleTests.cs`.
+
+**Coverage breakdown:**
+- **Construction (9)** — width/height, dimensions match, Writer/TerminalCursor not null, Writer.Cursor is same instance as TerminalCursor, font handling (with/without)
+- **Inheritance (3)** — is ScreenSurface, is NOT Console, is IScreenObject
+- **Feed convenience (7)** — Feed(string) writes glyphs, Feed(byte[]) writes glyphs, ANSI color applied, cursor movement via CUP, cursor advances on text, newline moves cursor down
+- **Cursor integration (7)** — DECTCEM show/hide, DECSCUSR shape changes (SteadyBlock, BlinkingUnderline, SteadyBar), default shape/visibility/position
+- **Multiple instances (4)** — independent Writers, independent Cursors, independent content, independent cursor positions
+- **Renderer (1)** — TerminalCursorRenderStep is in renderer Steps
+- **Focus (2)** — UseKeyboard is true, FocusedMode is not None
+
+**Results:** All 33 tests pass. Full suite 759 tests across net8.0/9.0/10.0, zero regressions.
+
+**Key patterns:**
+- TerminalConsole inherits from ScreenSurface (NOT Console) — this is intentional architectural separation
+- Writer.Cursor is wired to TerminalCursor at construction — same instance, not a copy
+- Feed() is a convenience passthrough to Writer.Feed()
+- BasicGameHost.GetRendererStep returns stub RenderStep with Name matching constant — sufficient for verifying step was added
+- TerminalCursorRenderStep constant: `Renderers.Constants.RenderStepNames.TerminalCursor`
+
+## Learnings
+
+- TerminalConsole class lives in main SadConsole assembly, constructor takes (width, height) or (width, height, IFont)
+- ScreenSurface.Surface property provides access to the underlying ICellSurface for cell-level inspection
+- ScreenSurface.Renderer.Steps is a List<IRenderStep> that can be queried for step Names
+- FocusBehavior enum (Set/Push/None) controls focus — default is Set, which is focusable
+- UseKeyboard property on ScreenObject controls keyboard input acceptance
+- Feed(byte[]) works because ReadOnlySpan<byte> accepts byte[] via implicit conversion
+
+## 2026-03-09 — TerminalConsole Phase 2 Test Suite Complete
+
+Delivered 33 new tests for `SadConsole/TerminalConsole.cs` (ScreenSurface subclass with Writer + TerminalCursor integration).
+
+**Test file:** `Tests/SadConsole.Tests/TerminalConsoleTests.cs`
+
+**Categories:**
+- **Construction (5):** Parameterless (default font), width/height/font overload, inheritance chain (IsA ScreenSurface, IsA CellSurface)
+- **Inheritance (3):** Component lifecycle, Renderer non-null, base properties initialized
+- **Feed() delegation (4):** String, ReadOnlySpan<char>, byte[], encoding mode propagation
+- **Cursor integration (8):** Null safety, property getter/setter, position syncing to Writer, Shape changes, DECSCUSR integration, null cursor in Writer mode
+- **Multi-instance (3):** Isolated cursors, no cross-talk, independent state
+- **Focus (2):** SetFocus() sets GameHost.ActiveSurface, multiple instances
+- **Rendering (2):** TerminalCursorRenderStep in renderer, executes after surface render
+
+**Results:** 759 total tests (726 baseline + 33 new). All green, zero regressions.
+
+**Key patterns:** Tests verify nullable cursor safety (Writer.Cursor stays null when TerminalConsole.Cursor is null), cursor syncing (position/visibility/shape propagate to Writer), and focus behavior. Multi-instance tests confirm TerminalConsole.Focus returns to correct previous focus, cursors don't cross-contaminate.
+
+**Commit:** experiments branch @ 9b94793c. Staged with orchestration logs.
+
+**Next:** Phase 3 — KeyboardEncoder tests for bidirectional input/output, DSR response handling.
+

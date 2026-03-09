@@ -197,3 +197,34 @@ Delivered core implementation of TerminalCursor architecture per Thraka's final 
 
 **Next:** TerminalConsole Phase 2 — inherit ScreenSurface instead of Console (per 2026-03-09T00:14 directive).
 
+## 2026-03-09 — TerminalConsole Phase 2 Complete
+
+Delivered `SadConsole/TerminalConsole.cs` — the class that wires Writer + TerminalCursor onto a ScreenSurface.
+
+**Created:** `SadConsole/TerminalConsole.cs`
+- Inherits `ScreenSurface` (NOT Console — avoids Components.Cursor dead weight)
+- Namespace: `SadConsole` (root, sibling of Console)
+- Constructor `(int width, int height, IFont? font)` — creates Writer(Surface, Font), TerminalCursor, wires Cursor to Writer
+- Render step: Uses `GameHost.Instance.GetRendererStep(Constants.RenderStepNames.TerminalCursor)` factory pattern (same as Components.Cursor uses for its render step). SetData(terminalCursor), add to Renderer.Steps, sort.
+- `Feed(string)` and `Feed(ReadOnlySpan<byte>)` convenience methods forwarding to Writer
+- Focus: OnFocused/OnFocusLost toggle TerminalCursor.IsVisible. ProcessKeyboard returns true when focused (captures input for Phase 3 KeyboardEncoder).
+- UseKeyboard set to `Settings.DefaultConsoleUseKeyboard` (matches Console pattern)
+- OnRendererChanged override re-adds cursor render step when renderer swaps
+- Dispose cleans up render step
+
+**Key pattern learned:** Host render steps are accessed via `GameHost.Instance.GetRendererStep(name)` factory — core library never references concrete host types. The RenderStepNames.TerminalCursor constant ("terminalcursor") was already registered in Phase 1 Constants.cs. Hosts register the concrete TerminalCursorRenderStep type at startup.
+
+**Build:** 0 errors, 48 warnings (all pre-existing). **Tests:** 726/726 pass (net10.0), zero regressions.
+
+**Next:** Phase 3 — KeyboardEncoder (convert keystrokes to terminal sequences for bidirectional communication).
+
+## 2026-03-09 — Scribe Reconciliation
+
+Orchestration logs written for Roy (Phase 2 impl) and Rachael (33 tests). Session log captures phase completion. No decision inbox items.
+
+**Status:** All files staged and committed to experiments branch @ 9b94793c.
+
+**Cross-team sync:** TerminalConsole Phase 2 complete (759/759 tests). Cursor integration ready for Phase 3 (KeyboardEncoder).
+
+**Next phase:** Host integration testing (Gaff) and keyboard encoding layer (Phase 3).
+
