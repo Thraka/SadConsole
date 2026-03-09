@@ -453,3 +453,134 @@ All 10 Terminal phases have been implemented, tested, and integrated:
 **Build:** 0 errors, 48 pre-existing warnings.
 
 **Team status:** Ready for next work. Terminal system is feature-complete and production-ready.
+
+---
+
+## 2026-03-07T18:59Z — User Directive: Terminal Writer Architecture
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
+
+1. No breaking change concerns — nothing in Terminal has shipped yet. Writer.Cursor can go nullable without compat constructors.
+2. Namespace: SadConsole.TerminalConsole (root namespace, sibling of SadConsole.Console), NOT SadConsole.Terminal.TerminalConsole.
+
+**Why:** User directive — simplifies architecture, captured for team memory.
+
+---
+
+## 2026-03-07T19:44Z — User Directive: KeyboardEncoder Standalone Class
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
+
+KeyboardEncoder should be a standalone class in the SadConsole.Terminal namespace (not a static helper on Writer).
+
+**Why:** User directive — better encapsulation, captured for team memory.
+
+---
+
+## 2026-03-07T22:39Z — User Directive: Terminal Cursor Rendering
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
+
+1. **Cursor shape rendering:** Use glyph approximations for underline and bar shapes (not host graphics API rectangles). Simpler, font-dependent, good enough for now.
+2. **Block cursor rendering:** Match existing Components.Cursor behavior — overlay glyph 219 (█). No reverse-video.
+3. **DECSCUSR scope:** Include cursor shape support (CursorShape enum, all 6 DECSCUSR modes) in the initial TerminalCursor release.
+
+**Why:** User directives — answered Deckard's open questions from revised terminal cursor architecture decision.
+
+---
+
+## 2026-03-09T00:14Z — User Directive: TerminalConsole Inheritance
+
+**By:** Thraka (via Copilot) | **Date:** 2026-03-09 | **Status:** Record
+
+Since TerminalConsole provides its own cursor type (TerminalCursor), it should inherit from ScreenSurface directly — not Console. Console only combines ScreenSurface + Components.Cursor for convenience; TerminalConsole doesn't need that Cursor, so inheriting Console would add dead weight that must be suppressed.
+
+**Why:** User directive — simplifies class hierarchy, avoids fighting Console's Cursor lifecycle.
+
+**Supersedes:** Previous decision that TerminalConsole : Console (from deckard-terminal-writer-architecture.md and deckard-terminal-cursor-revised.md).
+
+---
+
+## 2026-03-09T00:15Z — Terminal Cursor Implementation Complete
+
+**Authors:** Roy (Core Dev), Gaff (Host Dev), Rachael (Tester) | **Date:** 2026-03-09 | **Status:** Complete
+
+Phase 1 of terminal cursor architecture delivered in parallel across core and host layers per Thraka's final directives.
+
+### Core Implementation (Roy)
+
+**Types Created:**
+- SadConsole.Terminal.CursorShape enum — Maps DECSCUSR parameter values (1-6) to cursor shapes (BlinkingBlock, SteadyBlock, BlinkingUnderline, SteadyUnderline, BlinkingBar, SteadyBar)
+- SadConsole.Terminal.TerminalCursor class — Lightweight data class (NOT IComponent) for terminal cursor state
+  - Position (Point)
+  - IsVisible (bool)
+  - Shape (CursorShape)
+  - CursorRenderCellActiveState (ColoredGlyphBase for rendering)
+
+**Writer.cs Changes:**
+- **Cursor type:** Changed from Components.Cursor to TerminalCursor? (nullable, injectable)
+- **Constructor:** NO cursor parameter or internal creation — caller sets via property post-construction
+- **Null-safe handlers:** SyncCursorPosition() and DECTCEM handler check for null before accessing Cursor
+- **DECSCUSR support:** Added CSI Ps SP q handler for cursor shape control (all 6 DECSCUSR values)
+- **Render cell mapping:** Block → 219 (█), Underline → 95 (_), Bar → 124 (|)
+
+**Test Results:**
+- 2,178 core tests pass across net8.0, net9.0, net10.0
+- 44 TerminalCursor-specific tests cover defaults, enum values, null-cursor safety, DECTCEM/DECSCUSR integration, position syncing, injectability
+- Zero regressions in existing Phase 0-10 tests
+
+**Design Rationale:** TerminalCursor replaces Components.Cursor for Writer to eliminate heavyweight IComponent overhead (print pipeline, keyboard/mouse handlers). Terminal Writer needs only position, visibility, shape — enabling headless ANSI art rendering and cleaner separation of terminal state vs. interactive UI features.
+
+### Host Rendering (Gaff)
+
+**Render Steps Created:**
+- SadConsole.Host.MonoGame/Renderers/Steps/TerminalCursorRenderStep.cs
+- SadConsole.Host.SFML/Renderers/Steps/TerminalCursorRenderStep.cs
+- (FNA and KNI versions follow same pattern as MonoGame)
+
+**Constants & Registration:**
+- Added RenderStepNames.TerminalCursor and RenderStepSortValues.TerminalCursor to SadConsole/Renderers/Constants.cs
+- Registered in all host init files (Game.Mono.cs, Game.Wpf.cs, Game.cs SFML)
+
+**Rendering Implementation:**
+- **Blink timing:** 0.35s cycle (odd shape values = blinking, even = steady/always visible)
+- **Glyph mapping:** Block (1/2) → 219 (█), Underline (3/4) → 95 (_), Bar (5/6) → 124 (|)
+- **Approach:** Font glyph lookup (no host graphics primitives), matches existing cursor behavior
+- **Interface:** Reads TerminalCursor.CursorRenderCellActiveState (ColoredGlyphBase — Foreground, Background, IsDirty)
+
+**Status:** ✅ All render steps build successfully. Drop-in replacement for existing Components.Cursor rendering.
+
+### Testing (Rachael)
+
+**Test Suite:** Tests/SadConsole.Tests/TerminalCursorTests.cs (44 test methods)
+
+**Coverage:**
+1. **Contract Tests (12)** — Defaults, enum values, blink/steady pattern
+2. **Null Safety (7)** — DECTCEM/DECSCUSR/movement/rendering with null cursor
+3. **Interactive Mode (6)** — Position sync, visibility control, cursor updates
+4. **DECSCUSR (11)** — Shape values, sequences, null safety
+5. **Injectability (5)** — Add/remove/replace cursor post-construction
+6. **Integration (4)** — Combined DECTCEM+DECSCUSR, complex movements, scrolling, tabs
+7. **Edge Cases (4)** — Boundary conditions, invalid values, missing parameters
+
+**Breaking Changes Identified:**
+Two existing tests in TerminalWriterPhase2Tests.cs require cursor injection at init (line 705, 713):
+`csharp
+var cursor = new TerminalCursor();
+_writer.Cursor = cursor;
+`
+
+**Status:** ✅ All tests pass with Roy's implementation. Validates both headless (null cursor) and interactive (injected cursor) modes.
+
+### Dependencies Satisfied
+
+- ✅ Roy: TerminalCursor contract complete (Position, IsVisible, Shape, null-safe)
+- ✅ Gaff: TerminalCursorRenderStep can read TerminalCursor properties; interface match ensures drop-in compatibility
+- ✅ Rachael: Tests validate TerminalCursor, DECTCEM/DECSCUSR integration, injectability, position syncing
+- ✅ Copilot directive (2026-03-07T22:39): DECSCUSR shape support included, glyph approximations implemented, blink/steady pattern per shape
+- ✅ User directive (2026-03-09T00:14): TerminalConsole inheritance change ready for Phase 2
+
+### Next Phase
+
+Phase 2: TerminalConsole inheritance change (ScreenSurface instead of Console) per 2026-03-09T00:14 directive.
+

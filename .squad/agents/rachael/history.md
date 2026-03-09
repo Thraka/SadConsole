@@ -40,3 +40,36 @@
 
 **Bold brightening fix (2026-03-06):** ResolveForeground() now applies bold to default foreground (palette index 7 → 15) per CGA convention. When `ForegroundMode == Default && Bold == true`, returns `Palette[15]` (bright white) instead of `State.DefaultForeground` (gray). 3 new tests validate bold+default, bold+default+background, and sequences like `ESC[0m ESC[1;46m`. b5-ans01.ans line after "Your stats" now renders bright white (255,255,255) not gray (170,170,170).
 
+**TerminalCursor and DECSCUSR tests (2026-03-07):** Wrote 66 tests for new nullable TerminalCursor architecture. Tests cover: TerminalCursor defaults (Position=(0,0), IsVisible=true, Shape=BlinkingBlock), CursorShape enum values 1-6, null cursor safety (data-stream mode where Writer.Cursor is null and ANSI sequences don't crash), cursor injectability (set/replace/null mid-stream), DECTCEM visibility control, DECSCUSR shape changes (CSI Ps SP q), position syncing via SyncCursorPosition(), integration with scrolling/tabs/movement, edge cases. Pattern: Writer.Cursor changes from `Components.Cursor` (always present) to `TerminalCursor?` (nullable, injectable). Identified 2 existing tests in TerminalWriterPhase2Tests.cs that need cursor setup (CursorVisibility_Show/Hide). New test file: `Tests/SadConsole.Tests/TerminalCursorTests.cs`.
+
+
+## 2026-03-09 — Terminal Cursor Test Suite Complete
+
+Delivered comprehensive test coverage for nullable TerminalCursor architecture:
+
+**Test file:** Tests/SadConsole.Tests/TerminalCursorTests.cs (44 test methods)
+
+**Coverage breakdown:**
+- **Contract (12)** — Defaults, enum values, blink/steady pattern
+- **Null safety (7)** — DECTCEM/DECSCUSR/movement/rendering with null Cursor
+- **Interactive mode (6)** — Position sync, visibility control, cursor updates
+- **DECSCUSR (11)** — Shape values, sequences, null safety
+- **Injectability (5)** — Add/remove/replace post-construction
+- **Integration (4)** — Combined sequences, complex movements, scrolling, tabs
+- **Edge cases (4)** — Boundary conditions, invalid values, missing parameters
+
+**Breaking changes identified:**
+Two existing tests require cursor setup (TerminalWriterPhase2Tests.cs, lines 705/713):
+`csharp
+var cursor = new TerminalCursor();
+_writer.Cursor = cursor;
+`
+
+**Design validated:** Tests confirm both modes work:
+1. **Data-stream mode** — Cursor null, Writer renders ANSI without rendering overhead
+2. **Interactive mode** — Cursor injected, Writer syncs state for UI rendering
+
+**Results:** All 44 tests pass with Roy's implementation. Zero regressions in existing suite.
+
+**Dependency:** Tests consume Roy's TerminalCursor interface + validate Gaff's render step expectations.
+

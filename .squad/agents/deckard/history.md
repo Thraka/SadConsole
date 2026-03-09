@@ -181,3 +181,25 @@ Roy completed parallel technical analysis of the same three architecture questio
 **Alignment:** Zero disputes between Deckard and Roy — complete technical alignment across all three recommendations.
 
 **Next:** Awaiting Thraka design decisions before Phase 1 implementation (cursor injection).
+
+### 2025-07-16 — Terminal Cursor Architecture Revised (Self-Correction)
+
+**Previous recommendation reversed.** Earlier analysis said "share Console's `Components.Cursor` with Writer — just use Position and IsVisible." After full audit of Cursor.cs (1295 lines, 30+ public members) and both host CursorRenderSteps, this was wrong.
+
+**Revised recommendation:** Create new `SadConsole.Terminal.TerminalCursor` — a lightweight data class (not IComponent) with Position, IsVisible, and Shape (CursorShape enum for DECSCUSR). New `TerminalCursorRenderStep` in each host that understands cursor shapes (block/underline/bar × blinking/steady).
+
+**Why the reversal:**
+1. Components.Cursor is a text-editing cursor (print pipeline, keyboard, mouse, word wrap, coroutines). Terminal cursor is a position indicator. 2% usage of a 1300-line class.
+2. `Cursor.Print()` foot-gun — bypasses ANSI pipeline, corrupts terminal state. Public API that doesn't work is worse than no API.
+3. No DECSCUSR support — Components.Cursor has one glyph shape. Terminals need 6 shapes (3 geometries × 2 blink modes).
+4. IComponent flags (IsKeyboard, IsMouse, IsUpdate) are compile-time constants — can't be overridden by a subclass.
+
+**Impact:** TerminalConsole : Console still stands. Constructor removes Console's default Cursor from SadComponents, disables AutoCursorOnFocus, adds TerminalCursor + TerminalCursorRenderStep. Writer.Cursor changes type from `Components.Cursor?` to `TerminalCursor?`. All other prior decisions unchanged.
+
+**Key files:**
+- `SadConsole/Components/Cursor.cs` — 1295 lines, IComponent with full print/keyboard/mouse pipeline
+- `SadConsole.Host.MonoGame/Renderers/Steps/CursorRenderStep.cs` — 79 lines, draws single glyph at cursor position
+- `SadConsole.Host.SFML/Renderers/Steps/CursorRenderStep.cs` — 77 lines, same pattern
+- Decision: `.squad/decisions/inbox/deckard-terminal-cursor-revised.md`
+
+**Pattern learned:** When evaluating type reuse, count the API surface you're exposing, not just the API surface you're consuming. Using 2 members from a 30-member public API is not "lightweight reuse" — it's exposing 28 misleading/dangerous members. The threshold for creating a new type should be low when the semantic gap is wide.

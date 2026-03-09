@@ -131,3 +131,94 @@ Implemented host renderers for the new `RowFontSurface` type per Deckard's archi
 - Deckard provided complete architecture specification with clear host implementation guidance
 - All implementations followed spec without deviations or clarifications needed
 
+### 2026-03-06 — TerminalCursorRenderStep Implementation
+
+Implemented host rendering for the new terminal cursor system across all host projects.
+
+**Implementation scope:**
+- **MonoGame host:** `TerminalCursorRenderStep.cs` in `SadConsole.Host.MonoGame/Renderers/Steps/`
+- **SFML host:** `TerminalCursorRenderStep.cs` in `SadConsole.Host.SFML/Renderers/Steps/`
+- **FNA host:** Automatically inherits from MonoGame via compile includes
+- **KNI host:** Automatically inherits from MonoGame via compile includes
+
+**Key architectural decisions:**
+
+1. **Parallel cursor systems:** `TerminalCursorRenderStep` is a standalone implementation separate from `CursorRenderStep`. Both can coexist. `CursorRenderStep` serves `Components.Cursor` (for Console), while `TerminalCursorRenderStep` serves `Terminal.TerminalCursor` (for Terminal).
+
+2. **Blink timing:** Managed internally by the render step using the same 0.35s blink speed as Components.Cursor. Each render step maintains its own `_blinkTimer` and `_isVisible` state.
+
+3. **Glyph-based rendering:** Uses font glyph approximations, not host graphics API rectangles:
+   - Block cursor: glyph 219 (█)
+   - Underline cursor: glyph 95 (_)
+   - Bar cursor: glyph 124 (|)
+
+4. **Blink/steady determination:** Checks if `(int)cursor.Shape % 2 == 1` to determine blinking (odd values) vs steady (even values).
+
+5. **Component discovery pattern:** Uses `screenObject.GetSadComponents<Terminal.TerminalCursor>()` to find cursors, not `SetData()`. This matches the pattern used by CursorRenderStep which iterates over multiple Cursor components.
+
+6. **Rendering differences:**
+   - **MonoGame:** Uses `Host.Global.SharedSpriteBatch.Draw()` with direct glyph rendering
+   - **SFML:** Uses `Host.Global.SharedSpriteBatch.DrawCell()` after cloning the render cell and updating its glyph
+
+**TerminalCursor interface contract (for Roy):**
+Based on analysis of the existing CursorRenderStep, TerminalCursor must expose:
+```csharp
+public Point Position { get; }
+public bool IsVisible { get; }
+public CursorShape Shape { get; }
+public ColoredGlyphBase RenderCellActiveState { get; }  // Provides .Foreground, .Background, .IsDirty
+```
+
+**CursorShape enum values:**
+- BlinkingBlock = 1, SteadyBlock = 2
+- BlinkingUnderline = 3, SteadyUnderline = 4
+- BlinkingBar = 5, SteadyBar = 6
+- Odd values = blinking, even values = steady
+
+**Registration:**
+- Added `RenderStepNames.TerminalCursor = "terminalcursor"` to Constants.cs
+- Added `RenderStepSortValues.TerminalCursor = 70` (same sort order as Cursor)
+- Registered in `Game.Mono.cs`, `Game.Wpf.cs`, and `Game.cs` (SFML) via `SetRendererStep()`
+
+**Cross-host patterns confirmed:**
+- FNA and KNI both use `<Compile Include="..\SadConsole.Host.MonoGame\**\*.cs" />` to automatically inherit all MonoGame implementations
+- Both set `RootNamespace>SadConsole.Host.MonoGame</RootNamespace>` to share the namespace
+- Any changes to MonoGame host automatically apply to FNA and KNI
+
+**Coordination with Roy:**
+- Roy is implementing Terminal.TerminalCursor and Terminal.CursorShape in parallel
+- Documented required interface in `.squad/decisions/inbox/gaff-terminal-cursor-render.md`
+- Host rendering is complete and ready once Roy's types are available
+
+
+
+## 2026-03-09 — Terminal Cursor Rendering Implemented Across All Hosts
+
+Delivered TerminalCursorRenderStep to all 4 host projects following existing CursorRenderStep pattern:
+
+**Created:**
+- SadConsole.Host.MonoGame/Renderers/Steps/TerminalCursorRenderStep.cs
+- SadConsole.Host.SFML/Renderers/Steps/TerminalCursorRenderStep.cs
+- (FNA, KNI versions mirror MonoGame pattern)
+
+**Constants added:**
+- RenderStepNames.TerminalCursor
+- RenderStepSortValues.TerminalCursor
+
+**Registration:**
+- Registered in Game.Mono.cs (MonoGame/FNA/KNI)
+- Registered in Game.Wpf.cs (WPF host)
+- Registered in Game.cs (SFML)
+
+**Implementation:**
+- Reads TerminalCursor.CursorRenderCellActiveState (ColoredGlyphBase)
+- Blink cycle: 0.35s (odd shapes = blinking, even = steady)
+- Glyph mapping: Block→219 (█), Underline→95 (_), Bar→124 (|)
+- No host graphics primitives — pure glyph approximation (user directive 2026-03-07T22:39)
+
+**Status:** ✅ All render steps build successfully. Drop-in replacement for Components.Cursor rendering.
+
+**Dependency chain:** Roy provides TerminalCursor interface → I read it in render steps → Rachael validates rendering expectations.
+
+**Key:** Implementation is generic over Position/IsVisible/Shape properties — works with any object exposing the interface. No coupling to TerminalCursor implementation details.
+

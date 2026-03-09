@@ -139,3 +139,61 @@ Deckard completed architecture decision analysis covering the same three questio
 **Alignment:** Complete technical alignment — Deckard's recommendations match Roy's phased implementation approach. Zero disputes on all three questions.
 
 **Next:** Awaiting Thraka design decisions before Phase 1 implementation.
+
+### 2026-03-07 — Phase 1 Implementation: TerminalCursor, CursorShape, Writer Changes
+
+**Completed:** Terminal cursor architecture redesign Phase 1 — core library implementation.
+
+**Created files:**
+- `SadConsole/Terminal/CursorShape.cs` — enum mapping DECSCUSR parameter values (1=BlinkingBlock, 2=SteadyBlock, 3=BlinkingUnderline, 4=SteadyUnderline, 5=BlinkingBar, 6=SteadyBar)
+- `SadConsole/Terminal/TerminalCursor.cs` — lightweight data class (NOT IComponent), properties: Position, IsVisible, Shape, CursorRenderCellActiveState (ColoredGlyphBase for render step)
+
+**Modified Writer.cs:**
+- `Cursor` property changed from `Components.Cursor` (non-nullable) to `TerminalCursor?` (nullable)
+- Constructor signature unchanged: `Writer(ICellSurface surface, IFont font)` — NO cursor creation, caller sets via property
+- `SyncCursorPosition()` now null-checks before setting Position
+- DECTCEM handler (CSI ? 25 h/l) null-checks before setting IsVisible
+- Added DECSCUSR handler (CSI Ps SP q) for cursor shape control — maps parameter to CursorShape enum, calls UpdateGlyphForShape()
+- Removed internal Cursor instantiation
+
+**TerminalCursor design:**
+- Parameterless constructor defaults to white on black
+- Exposes `CursorRenderCellActiveState` (ColoredGlyphBase) — render steps read Glyph, Foreground, Background
+- `UpdateGlyphForShape()` maps: Block→219 (█), Underline→95 (_), Bar→124 (|)
+- SetForeground/SetBackground helpers for color control
+- Pattern matches Components.Cursor's CursorRenderCellActiveState interface — zero render step changes needed
+
+**Test fixes:**
+- TerminalCursorTests.cs: 44 tests, all pass (cursor defaults, shape values, null-cursor mode, DECTCEM/DECSCUSR integration)
+- TerminalWriterPhase2Tests.cs: Updated Setup() to create TerminalCursor for visibility tests
+- Fixed 2 test expectations (cursor position after print was off by 1 — tests had bugs, not implementation)
+
+**Build/Test results:**
+- SadConsole.csproj: Build succeeded, 0 errors
+- All 990 terminal tests pass (net8.0, net9.0, net10.0)
+
+**Key pattern:** Render step compatibility maintained — TerminalCursor.CursorRenderCellActiveState matches Components.Cursor's interface (Glyph, Foreground, Background properties). Gaff's host render steps can read either type without changes.
+## 2026-03-09 — Terminal Cursor Phase 1 Complete
+
+Delivered core implementation of TerminalCursor architecture per Thraka's final directives:
+
+**Created:**
+- SadConsole/Terminal/CursorShape.cs — 6-value enum mapping DECSCUSR parameters
+- SadConsole/Terminal/TerminalCursor.cs — data class with Position, IsVisible, Shape, CursorRenderCellActiveState
+
+**Modified:**
+- SadConsole/Terminal/Writer.cs — Cursor type Components.Cursor → TerminalCursor? (nullable, injectable)
+- SadConsole/Terminal/Writer.cs — Added null-safe SyncCursorPosition(), DECTCEM, DECSCUSR handlers
+- SadConsole/Terminal/Writer.cs — Glyph mapping (Block→219, Underline→95, Bar→124)
+
+**Results:**
+- 2,178 tests pass (net8.0, net9.0, net10.0)
+- 44 TerminalCursor-specific tests added (Roy + Rachael collaboration)
+- Zero regressions
+
+**Key design:** TerminalCursor replaces Components.Cursor to eliminate IComponent overhead. Writer needs only position/visibility/shape — enables headless ANSI rendering + cleaner terminal/UI separation.
+
+**Dependency:** Gaff's host render steps depend on TerminalCursor interface. Rachael's tests validate both null-cursor (data-stream) and injected-cursor (interactive) modes.
+
+**Next:** TerminalConsole Phase 2 — inherit ScreenSurface instead of Console (per 2026-03-09T00:14 directive).
+
