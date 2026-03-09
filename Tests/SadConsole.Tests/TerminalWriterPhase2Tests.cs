@@ -27,6 +27,7 @@ public class TerminalWriterPhase2Tests
         new BasicGameHost();
         _surface = new SadConsole.CellSurface(80, 25);
         _writer = new Writer(_surface, GameHost.Instance.EmbeddedFont);
+        _writer.Cursor = new TerminalCursor(); // Set cursor for tests that check visibility
     }
 
     // ══════════════════════════════════════════════════════════════

@@ -39,10 +39,10 @@ public class Writer : ITerminalHandler
     private readonly Dictionary<int, IFont> _loadedFonts = new();
 
     /// <summary>
-    /// A cursor component for visual display.  Attach to a <see cref="ScreenSurface"/>
-    /// for blinking-cursor rendering; the writer does not use its Print method.
+    /// A terminal cursor for visual display. Set to null for headless rendering.
+    /// Controlled by DECTCEM (visibility) and DECSCUSR (shape).
     /// </summary>
-    public Components.Cursor Cursor { get; }
+    public TerminalCursor? Cursor { get; set; }
 
     /// <summary>
     /// The terminal state (cursor position, SGR attributes, modes, scroll region).
@@ -87,13 +87,6 @@ public class Writer : ITerminalHandler
         State = new State(surface.Width, surface.Height);
         Palette = new Palette();
         Parser = new Parser(this);
-
-        Cursor = new Components.Cursor(surface)
-        {
-            IsVisible = true,
-            IsEnabled = true,
-            AutomaticallyShiftRowsUp = false
-        };
     }
 
     /// <summary>
@@ -329,6 +322,12 @@ public class Writer : ITerminalHandler
                     }
                 }
                 break;
+            case 'q': // DECSCUSR — Set Cursor Style (CSI Ps SP q)
+                if (intermediates.Length == 1 && intermediates[0] == 0x20)
+                {
+                    HandleDecscusr(parameters);
+                }
+                break;
             case 'J': // ED — erase display, cursor stays put, does NOT clear PendingWrap
                 HandleEraseDisplay(Param(parameters, 0, 0));
                 break;
@@ -487,8 +486,11 @@ public class Writer : ITerminalHandler
     //  Cursor helpers
     // ═══════════════════════════════════════════════════════════
 
-    private void SyncCursorPosition() =>
+    private void SyncCursorPosition()
+    {
+        if (Cursor is null) return;
         Cursor.Position = new Point(State.CursorColumn, State.CursorRow);
+    }
 
     private void MoveCursorUp(int n) =>
         State.CursorRow = Math.Max(State.ScrollTop, State.CursorRow - n);
@@ -800,7 +802,8 @@ public class Writer : ITerminalHandler
                     break;
                 case 25: // DECTCEM — Cursor Visibility
                     State.CursorVisible = set;
-                    Cursor.IsVisible = set;
+                    if (Cursor is not null)
+                        Cursor.IsVisible = set;
                     break;
                 case 31: // Bright alt character set — use font slot 1 for SGR 1
                     State.BrightFontEnabled = set;
@@ -815,6 +818,27 @@ public class Writer : ITerminalHandler
                     State.BlinkDisabled = set;
                     break;
             }
+        }
+    }
+
+    /// <summary>
+    /// Handles CSI Ps SP q — DECSCUSR (Set Cursor Style).
+    /// Maps DECSCUSR parameter values to CursorShape enum.
+    /// </summary>
+    private void HandleDecscusr(ReadOnlySpan<int> parameters)
+    {
+        if (Cursor is null) return;
+
+        int ps = Param(parameters, 0, 1); // Default to 1 (BlinkingBlock)
+
+        // DECSCUSR parameter 0 means "use default" which is BlinkingBlock
+        if (ps == 0) ps = 1;
+
+        // Map parameter to CursorShape enum (values align 1:1)
+        if (ps >= 1 && ps <= 6)
+        {
+            Cursor.Shape = (CursorShape)ps;
+            Cursor.UpdateGlyphForShape();
         }
     }
 

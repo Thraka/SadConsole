@@ -1239,6 +1239,38 @@
             Finalizes the object for collection.
             </summary>
         </member>
+        <member name="T:SadConsole.Renderers.TerminalCursorRenderStep">
+            <summary>
+            Renders a terminal cursor.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.TerminalCursorRenderStep.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.Renderers.TerminalCursorRenderStep.SortOrder">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.SetData(System.Object)">
+            <summary>
+            Sets the <see cref="T:SadConsole.Terminal.TerminalCursor"/> to render.
+            </summary>
+            <param name="data">A <see cref="T:SadConsole.Terminal.TerminalCursor"/> instance.</param>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.Reset">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+             <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Renderers.TerminalCursorRenderStep.Dispose">
+             <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Renderers.TintSurfaceRenderStep">
             <summary>
             Renders a tint on top of where the output texture is drawn.

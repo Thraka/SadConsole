@@ -77,6 +77,11 @@ public static class RenderStepNames
     public const string Cursor = "cursor";
 
     /// <summary>
+    /// The render step for a <see cref="Terminal.TerminalCursor"/>.
+    /// </summary>
+    public const string TerminalCursor = "terminalcursor";
+
+    /// <summary>
     /// The render step for a <see cref="Entities.EntityManager"/>.
     /// </summary>
     public const string EntityManager = "entitymanager";
@@ -121,6 +126,11 @@ public static class RenderStepSortValues
     /// The render step for a <see cref="Components.Cursor"/>.
     /// </summary>
     public const uint Cursor = 70;
+
+    /// <summary>
+    /// The render step for a <see cref="Terminal.TerminalCursor"/>.
+    /// </summary>
+    public const uint TerminalCursor = 70;
 
     /// <summary>
     /// The render step for a <see cref="Entities.EntityManager"/>.
