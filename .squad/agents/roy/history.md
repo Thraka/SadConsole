@@ -68,6 +68,21 @@ Delivered bidirectional input/output infrastructure for interactive terminal sup
 
 ## Learnings
 
+### SadBBSClient Sample — Telnet BBS Client (2026)
+
+**Architecture patterns:**
+- **Option A for remote keyboard:** Set `TerminalConsole.UseKeyboard = false` and handle keyboard at the container (BbsScreen) level using `KeyboardEncoder.Encode()` directly. Sends encoded bytes to TelnetClient instead of local Writer.Feed(). Cleanest approach — no subclassing needed.
+- **Thread safety:** TelnetClient read loop runs on background thread. Used `ConcurrentQueue<byte[]>` to buffer incoming data, drained in `BbsScreen.Update()` on the game thread before calling `TerminalConsole.Feed()`.
+- **ITerminalOutput dual use:** TelnetClient implements ITerminalOutput, wired as `TerminalConsole.Output`. This means both DA/DSR responses from Writer AND user keystrokes go through the same socket — correct for BBS interaction.
+- **Telnet IAC in-band:** Processed IAC sequences inline during read, stripping them from data before enqueueing. WILL/WONT/DO/DONT handled with accept/reject logic. NAWS sends terminal dimensions, TTYPE identifies as "ANSI".
+- **Writer has no Reset():** Use `\x1b[2J\x1b[H` (ED + CUP) to clear screen via escape sequences.
+- **SadConsole startup:** Use `SetWindowSizeInCells()` (not deprecated `SetScreenSize()`). Standard Builder flow: `Game.Create(startup)` / `Game.Instance.Run()` / `Game.Instance.Dispose()`.
+
+**Key files:**
+- `Samples/SadBBSClient/Program.cs` — SadConsole Builder startup, 80×25
+- `Samples/SadBBSClient/TelnetClient.cs` — TCP/telnet client, ITerminalOutput impl, IAC negotiation
+- `Samples/SadBBSClient/BbsScreen.cs` — ScreenObject container, keyboard→telnet routing, connection UI
+
 ### Phase 3 — KeyboardEncoder, ITerminalOutput, Writer Response Channel (2026)
 
 **Architecture patterns (archived for reference):**
@@ -77,4 +92,22 @@ Delivered bidirectional input/output infrastructure for interactive terminal sup
 - Arrow/Home/End in application mode use `ESC O` prefix; in normal mode `ESC [`.
 - xterm modifier encoding: base 1 + Shift(+1) + Alt(+2) + Ctrl(+4).
 - DA1 response identifies as VT220 — matches the level of escape sequence support the Writer implements.
+
+### SadBBSClient Validation — Remote Terminal Use Case (2026-03-09)
+
+Real-world sample demonstrating that KeyboardEncoder + ITerminalOutput architecture works for remote terminal clients.
+
+**Sample structure (Samples/SadBBSClient/, 741L, 6 files):**
+- `TelnetClient.cs` (355L) — TCP socket, IAC negotiation (NAWS/TTYPE/SGA/ECHO), background read thread with ConcurrentQueue buffering
+- `BbsScreen.cs` (288L) — ScreenObject container, keyboard→telnet routing, preset BBS connection menu UI
+- `Program.cs` (20L) — SadConsole Builder startup with SetWindowSizeInCells(80, 25)
+
+**Key findings:**
+- Option A keyboard architecture proved correct: `TerminalConsole.UseKeyboard = false`, handle keyboard at BbsScreen level using `KeyboardEncoder.Encode()` directly, route encoded bytes to TelnetClient instead of Writer.Feed()
+- ConcurrentQueue + game-thread drain pattern validates thread-safe async socket handling
+- ITerminalOutput dual use (both keystroke echoes + Writer response data through same socket) works as designed
+- Telnet IAC negotiation (in-band, processed during read, stripped before enqueue) seamless integration
+- No Writer.Reset() method — use escape sequences `\x1b[2J\x1b[H` (ED + CUP) to clear screen
+
+**Validation:** Architecture patterns from Phase 1-3 confirmed sound for BBS/SSH/serial clients. Committed as d0ee4c50.
 

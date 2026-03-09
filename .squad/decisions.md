@@ -584,3 +584,27 @@ _writer.Cursor = cursor;
 
 Phase 2: TerminalConsole inheritance change (ScreenSurface instead of Console) per 2026-03-09T00:14 directive.
 
+
+---
+
+## 2026-03-09 — BBS Client Keyboard Architecture (Option A)
+
+**Author:** Roy  
+**Date:** 2026-03-09  
+**Status:** Implemented
+
+### Context
+SadBBSClient sample needed to intercept keyboard input and send it to a remote BBS via telnet, rather than the default TerminalConsole behavior of feeding keystrokes back into the local Writer.
+
+### Decision
+Chose **Option A**: Set TerminalConsole.UseKeyboard = false and handle keyboard at the BbsScreen (ScreenObject) level using KeyboardEncoder.Encode() directly. Encoded bytes are sent to TelnetClient.SendKeyData() instead of Writer.Feed().
+
+### Rationale
+- No subclassing of TerminalConsole needed
+- Clean separation: BbsScreen owns the keyboard→network routing, TerminalConsole is purely a display surface
+- KeyboardEncoder's standalone design (no Writer dependency) made this trivial — exactly the "remote terminal" use case it was built for
+- DECCKM state still synced from Writer.State.CursorKeyMode before encoding
+
+### Impact
+- Validates the Phase 1-3 terminal architecture works for real remote terminal scenarios
+- Confirms KeyboardEncoder + ITerminalOutput design is sound for BBS/SSH/serial clients
