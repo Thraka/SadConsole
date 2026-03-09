@@ -80,6 +80,13 @@ public class TerminalConsole : ScreenSurface
     public void Feed(ReadOnlySpan<byte> data) => Writer.Feed(data);
 
     /// <inheritdoc/>
+    public override void Update(TimeSpan delta)
+    {
+        base.Update(delta);
+        TerminalCursor.Update(delta);
+    }
+
+    /// <inheritdoc/>
     public override bool ProcessKeyboard(Input.Keyboard keyboard)
     {
         // Let components handle first

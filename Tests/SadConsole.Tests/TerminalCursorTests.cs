@@ -634,4 +634,90 @@ public class TerminalCursorTests
         // Expected: BlinkingBlock (default)
         Assert.AreEqual(CursorShape.BlinkingBlock, cursor.Shape);
     }
+
+    // ══════════════════════════════════════════════════════════════
+    //  9. Blink Timer / IsBlinkVisible
+    // ══════════════════════════════════════════════════════════════
+
+    [TestMethod]
+    public void TerminalCursor_IsBlinkVisible_DefaultsToTrue()
+    {
+        var cursor = new TerminalCursor();
+        Assert.IsTrue(cursor.IsBlinkVisible);
+    }
+
+    [TestMethod]
+    public void TerminalCursor_Update_TogglesBlinkAfterThreshold()
+    {
+        var cursor = new TerminalCursor();
+        Assert.AreEqual(CursorShape.BlinkingBlock, cursor.Shape);
+
+        // Accumulate time just under threshold — should still be visible
+        cursor.Update(TimeSpan.FromMilliseconds(200));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+
+        cursor.Update(TimeSpan.FromMilliseconds(100));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+
+        // Push past 350ms threshold — should toggle to false
+        cursor.Update(TimeSpan.FromMilliseconds(60));
+        Assert.IsFalse(cursor.IsBlinkVisible);
+    }
+
+    [TestMethod]
+    public void TerminalCursor_Update_TogglesBackAfterTwoThresholds()
+    {
+        var cursor = new TerminalCursor();
+
+        // First threshold: true → false
+        cursor.Update(TimeSpan.FromMilliseconds(350));
+        Assert.IsFalse(cursor.IsBlinkVisible);
+
+        // Second threshold: false → true
+        cursor.Update(TimeSpan.FromMilliseconds(350));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+    }
+
+    [TestMethod]
+    public void TerminalCursor_Update_SteadyShape_AlwaysVisible()
+    {
+        var cursor = new TerminalCursor();
+        cursor.Shape = CursorShape.SteadyBlock;
+
+        // Even well past the blink threshold, steady shapes stay visible
+        cursor.Update(TimeSpan.FromMilliseconds(500));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+
+        cursor.Update(TimeSpan.FromMilliseconds(500));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+    }
+
+    [TestMethod]
+    public void TerminalCursor_Update_BlinkingShape_Toggles()
+    {
+        var cursor = new TerminalCursor();
+        cursor.Shape = CursorShape.BlinkingBlock;
+
+        // Past threshold — blinking shape should toggle
+        cursor.Update(TimeSpan.FromMilliseconds(400));
+        Assert.IsFalse(cursor.IsBlinkVisible);
+    }
+
+    [TestMethod]
+    public void TerminalCursor_Update_ShapeChangeFromBlinkingToSteady_RestoresVisibility()
+    {
+        var cursor = new TerminalCursor();
+        cursor.Shape = CursorShape.BlinkingBlock;
+
+        // Toggle blink off
+        cursor.Update(TimeSpan.FromMilliseconds(400));
+        Assert.IsFalse(cursor.IsBlinkVisible);
+
+        // Switch to steady shape
+        cursor.Shape = CursorShape.SteadyBlock;
+
+        // Update again — steady shape should force visible
+        cursor.Update(TimeSpan.FromMilliseconds(50));
+        Assert.IsTrue(cursor.IsBlinkVisible);
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using SadRogue.Primitives;
 
 namespace SadConsole.Terminal;
@@ -9,11 +10,20 @@ namespace SadConsole.Terminal;
 public class TerminalCursor
 {
     private readonly ColoredGlyphBase _renderCell;
+    private TimeSpan _blinkTimer;
+    private readonly TimeSpan _blinkSpeed = TimeSpan.FromSeconds(0.35);
 
     /// <summary>
     /// Cursor position on the surface.
     /// </summary>
     public Point Position { get; set; }
+
+    /// <summary>
+    /// Whether the cursor is in the visible phase of its blink cycle.
+    /// Render steps should draw the cursor only when both <see cref="IsVisible"/> and <see cref="IsBlinkVisible"/> are <see langword="true"/>.
+    /// Steady cursor shapes (even DECSCUSR values) always return <see langword="true"/>.
+    /// </summary>
+    public bool IsBlinkVisible { get; private set; } = true;
 
     /// <summary>
     /// Cursor visibility. Controlled by DECTCEM (CSI ? 25 h/l).
@@ -51,6 +61,29 @@ public class TerminalCursor
             Foreground = foreground,
             Background = background
         };
+    }
+
+    /// <summary>
+    /// Advances the blink timer by the frame delta and toggles <see cref="IsBlinkVisible"/> when the interval elapses.
+    /// Steady cursor shapes never blink — <see cref="IsBlinkVisible"/> stays <see langword="true"/>.
+    /// </summary>
+    /// <param name="delta">Elapsed time since the last frame.</param>
+    public void Update(TimeSpan delta)
+    {
+        if (Shape is CursorShape.SteadyBlock or CursorShape.SteadyUnderline or CursorShape.SteadyBar)
+        {
+            IsBlinkVisible = true;
+            _blinkTimer = TimeSpan.Zero;
+            return;
+        }
+
+        _blinkTimer += delta;
+
+        if (_blinkTimer >= _blinkSpeed)
+        {
+            _blinkTimer -= _blinkSpeed;
+            IsBlinkVisible = !IsBlinkVisible;
+        }
     }
 
     /// <summary>
