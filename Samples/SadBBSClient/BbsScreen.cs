@@ -94,7 +94,7 @@ public class BbsScreen : ScreenObject
     {
         _terminal.Feed("\x1b[2J\x1b[H"); // Clear screen, home cursor
         _terminal.Feed("\x1b[1;36m+==================================================================+\x1b[0m\r\n");
-        _terminal.Feed("\x1b[1;36m|\x1b[0m          \x1b[1;33mSadBBS Client\x1b[0m - SadConsole Terminal Demo          \x1b[1;36m|\x1b[0m\r\n");
+        _terminal.Feed("\x1b[1;36m|\x1b[0m          \x1b[1;33mSadBBS Client\x1b[0m - SadConsole Terminal Demo                \x1b[1;36m|\x1b[0m\r\n");
         _terminal.Feed("\x1b[1;36m+==================================================================+\x1b[0m\r\n");
         _terminal.Feed("\r\n");
         _terminal.Feed("  \x1b[1;37mSelect a BBS to connect to:\x1b[0m\r\n\r\n");
