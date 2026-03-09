@@ -45,6 +45,14 @@ public class Writer : ITerminalHandler
     public TerminalCursor? Cursor { get; set; }
 
     /// <summary>
+    /// The response channel for terminal queries (DA, DSR, DECRQM).
+    /// When <see langword="null"/>, the terminal operates in silent data-stream mode
+    /// and query responses are discarded. When set, responses are sent through this channel,
+    /// enabling interactive terminal emulation.
+    /// </summary>
+    public ITerminalOutput? Output { get; set; }
+
+    /// <summary>
     /// The terminal state (cursor position, SGR attributes, modes, scroll region).
     /// </summary>
     public State State { get; }
@@ -341,7 +349,8 @@ public class Writer : ITerminalHandler
             case 'u': // Restore cursor position — restores position (RestoreCursor clears PendingWrap)
                 State.RestoreCursor();
                 break;
-            case 'n': // DSR — ignore for now, does NOT clear PendingWrap
+            case 'n': // DSR — Device Status Report — does NOT clear PendingWrap
+                HandleDeviceStatusReport(parameters);
                 break;
 
             // Insert/Delete/Scroll
@@ -404,7 +413,10 @@ public class Writer : ITerminalHandler
                 HandleSetScrollMargins(parameters);
                 break;
 
-            // TODO: CSI c — DA (Device Attributes) — intentionally not supported (no response channel)
+            case 'c': // DA — Device Attributes — does NOT clear PendingWrap
+                HandleDeviceAttributes(parameters);
+                break;
+
             // TODO: CSI h/l — SM/RM (Set/Reset Mode) — standard (non-DEC-private) modes not yet implemented
             // TODO: CSI t — Window manipulation — intentionally not supported
             // TODO: CSI !p — DECSTR (Soft Terminal Reset) — requires intermediate byte handling
@@ -839,6 +851,50 @@ public class Writer : ITerminalHandler
         {
             Cursor.Shape = (CursorShape)ps;
             Cursor.UpdateGlyphForShape();
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  Terminal Query Responses (DA, DSR)
+    // ═══════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Handles CSI Ps n — Device Status Report (DSR).
+    /// Ps 5 = status report (OK), Ps 6 = cursor position report (CPR).
+    /// Responses are sent via <see cref="Output"/>; silently ignored when Output is <see langword="null"/>.
+    /// </summary>
+    private void HandleDeviceStatusReport(ReadOnlySpan<int> parameters)
+    {
+        if (Output is null) return;
+
+        int ps = Param(parameters, 0, 0);
+        switch (ps)
+        {
+            case 5: // Status report — respond "OK"
+                Output.Write("\x1b[0n");
+                break;
+            case 6: // Cursor position report — respond with row;column (1-based)
+                Output.Write($"\x1b[{State.CursorRow + 1};{State.CursorColumn + 1}R");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Handles CSI Ps c — Device Attributes (DA1).
+    /// Ps 0 (or omitted) requests primary device attributes.
+    /// Responds as a VT220 with ANSI color support.
+    /// </summary>
+    private void HandleDeviceAttributes(ReadOnlySpan<int> parameters)
+    {
+        if (Output is null) return;
+
+        int ps = Param(parameters, 0, 0);
+        if (ps == 0)
+        {
+            // Respond as VT220: CSI ? 62 ; 1 ; 2 ; 6 ; 7 ; 8 ; 9 c
+            // 62 = VT220, 1 = 132 cols, 2 = printer port, 6 = selective erase,
+            // 7 = DRCS, 8 = UDK, 9 = national replacement charsets
+            Output.Write("\x1b[?62;1;2;6;7;8;9c");
         }
     }
 

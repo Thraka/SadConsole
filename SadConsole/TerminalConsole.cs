@@ -23,6 +23,23 @@ public class TerminalConsole : ScreenSurface
     public TerminalCursor TerminalCursor { get; }
 
     /// <summary>
+    /// The keyboard encoder that converts SadConsole key events into ANSI escape sequences.
+    /// </summary>
+    public KeyboardEncoder KeyboardEncoder { get; }
+
+    /// <summary>
+    /// Gets or sets the terminal output channel for interactive mode.
+    /// When set, terminal query responses (DA, DSR) are sent through this channel,
+    /// and it is also wired to <see cref="Writer"/>.<see cref="Writer.Output"/>.
+    /// When <see langword="null"/>, the terminal operates in silent data-stream mode.
+    /// </summary>
+    public ITerminalOutput? Output
+    {
+        get => Writer.Output;
+        set => Writer.Output = value;
+    }
+
+    /// <summary>
     /// Creates a new terminal console with the specified dimensions, using the default font.
     /// </summary>
     /// <param name="width">The width of the surface in cells.</param>
@@ -41,6 +58,7 @@ public class TerminalConsole : ScreenSurface
             Font = font;
 
         TerminalCursor = new TerminalCursor();
+        KeyboardEncoder = new KeyboardEncoder();
 
         Writer = new Writer(Surface, Font) { Cursor = TerminalCursor };
 
@@ -64,11 +82,22 @@ public class TerminalConsole : ScreenSurface
     /// <inheritdoc/>
     public override bool ProcessKeyboard(Input.Keyboard keyboard)
     {
-        // Let components handle first (future KeyboardEncoder will be a component)
+        // Let components handle first
         if (base.ProcessKeyboard(keyboard))
             return true;
 
-        // KeyboardEncoder integration is Phase 3 — for now, just capture focus
+        // Sync DECCKM state from Writer → KeyboardEncoder so arrow key mode stays consistent
+        KeyboardEncoder.ApplicationCursorKeys = Writer.State.CursorKeyMode;
+
+        // Encode pressed keys into ANSI sequences
+        byte[] encoded = KeyboardEncoder.Encode(keyboard);
+
+        if (encoded.Length > 0)
+        {
+            // Feed the encoded sequences back through Writer so the terminal processes its own input
+            Writer.Feed(encoded.AsSpan());
+        }
+
         return true;
     }
 

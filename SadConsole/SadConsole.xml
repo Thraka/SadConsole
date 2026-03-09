@@ -11940,6 +11940,19 @@
             The terminal cursor used for visual display of the cursor position.
             </summary>
         </member>
+        <member name="P:SadConsole.TerminalConsole.KeyboardEncoder">
+            <summary>
+            The keyboard encoder that converts SadConsole key events into ANSI escape sequences.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.Output">
+            <summary>
+            Gets or sets the terminal output channel for interactive mode.
+            When set, terminal query responses (DA, DSR) are sent through this channel,
+            and it is also wired to <see cref="P:SadConsole.TerminalConsole.Writer"/>.<see cref="P:SadConsole.Terminal.Writer.Output"/>.
+            When <see langword="null"/>, the terminal operates in silent data-stream mode.
+            </summary>
+        </member>
         <member name="M:SadConsole.TerminalConsole.#ctor(System.Int32,System.Int32)">
             <summary>
             Creates a new terminal console with the specified dimensions, using the default font.
@@ -12045,6 +12058,73 @@
         <member name="M:SadConsole.Terminal.ITerminalHandler.OnDcsDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.ReadOnlySpan{System.Byte})">
             <summary>
             Called for DCS string dispatch.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.ITerminalOutput">
+            <summary>
+            Provides a response channel for a terminal emulator.
+            When terminal sequences produce responses (DA, DSR, DECRQM), the terminal
+            sends them through this interface. When <see langword="null"/> on the
+            <see cref="T:SadConsole.Terminal.Writer"/>, the terminal operates in silent data-stream mode.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalOutput.Write(System.Byte[])">
+            <summary>
+            Writes raw response bytes to the output channel.
+            </summary>
+            <param name="data">The bytes to send.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalOutput.Write(System.String)">
+            <summary>
+            Writes a string response to the output channel (encoded as UTF-8).
+            </summary>
+            <param name="text">The text to send.</param>
+        </member>
+        <member name="T:SadConsole.Terminal.KeyboardEncoder">
+            <summary>
+            Converts SadConsole keyboard input into ANSI/VT terminal escape sequences.
+            Standalone class — not tied to any specific surface or Writer instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.ApplicationCursorKeys">
+            <summary>
+            When <see langword="true"/>, arrow keys send application-mode sequences
+            (<c>\x1bOA</c>) instead of normal-mode (<c>\x1b[A</c>).
+            Mirrors DECCKM (DEC Cursor Key Mode).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.NewLineMode">
+            <summary>
+            When <see langword="true"/>, Enter sends <c>\r\n</c> instead of <c>\r</c>.
+            Mirrors LNM (Line Feed / New Line Mode).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.BackspaceSendsDel">
+            <summary>
+            When <see langword="true"/>, Backspace sends <c>0x08</c> (BS) instead of <c>0x7F</c> (DEL).
+            Default is <see langword="false"/> (modern terminal behavior: Backspace = DEL).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.Encode(SadConsole.Input.Keyboard)">
+            <summary>
+            Encodes all pressed keys from the current keyboard frame into terminal byte sequences.
+            </summary>
+            <param name="keyboard">The keyboard state for this frame.</param>
+            <returns>Encoded bytes, or an empty array if no keys produced output.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.EncodeSingleKey(SadConsole.Input.AsciiKey,SadConsole.Input.Keyboard)">
+            <summary>
+            Encodes a single <see cref="T:SadConsole.Input.AsciiKey"/> into its terminal escape sequence representation.
+            </summary>
+            <param name="key">The key to encode.</param>
+            <param name="keyboard">The keyboard state (for modifier detection).</param>
+            <returns>The encoded string, or <see langword="null"/> if the key produces no output.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.ComputeModifier(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Computes the xterm modifier parameter.
+            1 = none, 2 = Shift, 3 = Alt, 4 = Shift+Alt, 5 = Ctrl, 6 = Shift+Ctrl, 7 = Alt+Ctrl, 8 = Shift+Alt+Ctrl.
+            Returns 0 when no modifiers are pressed (caller checks > 1).
             </summary>
         </member>
         <member name="T:SadConsole.Terminal.Measurer">
@@ -12805,6 +12885,14 @@
             Controlled by DECTCEM (visibility) and DECSCUSR (shape).
             </summary>
         </member>
+        <member name="P:SadConsole.Terminal.Writer.Output">
+            <summary>
+            The response channel for terminal queries (DA, DSR, DECRQM).
+            When <see langword="null"/>, the terminal operates in silent data-stream mode
+            and query responses are discarded. When set, responses are sent through this channel,
+            enabling interactive terminal emulation.
+            </summary>
+        </member>
         <member name="P:SadConsole.Terminal.Writer.State">
             <summary>
             The terminal state (cursor position, SGR attributes, modes, scroll region).
@@ -12875,6 +12963,20 @@
             <summary>
             Handles CSI Ps SP q — DECSCUSR (Set Cursor Style).
             Maps DECSCUSR parameter values to CursorShape enum.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleDeviceStatusReport(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps n — Device Status Report (DSR).
+            Ps 5 = status report (OK), Ps 6 = cursor position report (CPR).
+            Responses are sent via <see cref="P:SadConsole.Terminal.Writer.Output"/>; silently ignored when Output is <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleDeviceAttributes(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps c — Device Attributes (DA1).
+            Ps 0 (or omitted) requests primary device attributes.
+            Responds as a VT220 with ANSI color support.
             </summary>
         </member>
         <member name="M:SadConsole.Terminal.Writer.HandleFontSelection(System.ReadOnlySpan{System.Int32})">
