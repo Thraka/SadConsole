@@ -563,6 +563,12 @@
             Reference to the game timer used in the render loop.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Global.DrawOverlay">
+            <summary>
+            A callback invoked after the final draw phase, before presenting to the screen.
+            Used by overlay systems like ImGui to render on top of SadConsole.
+            </summary>
+        </member>
         <member name="T:SadConsole.Host.Settings">
             <summary>
             A settings class usually used when creating the host object.

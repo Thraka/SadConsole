@@ -302,6 +302,9 @@ public sealed partial class Game : GameHost
                     Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(new (0, 0), new ((int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y)), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
                     Global.SharedSpriteBatch.End();
                 }
+
+                // Draw any overlay systems (e.g., ImGui)
+                Global.DrawOverlay?.Invoke();
             }
 
             Global.GraphicsDevice.Display();

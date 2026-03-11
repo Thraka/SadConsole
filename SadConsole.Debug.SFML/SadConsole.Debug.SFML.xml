@@ -1,0 +1,599 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Debug.SFML</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.Configuration.ConfigurationImGui">
+            <summary>
+            Extensions to enable ImGui with SadConsole SFML.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Configuration.ConfigurationImGui.EnableImGui(SadConsole.Configuration.Builder,System.String,System.Single,System.Boolean,System.Action{SadConsole.ImGuiSystem.ImGuiSFMLComponent})">
+            <summary>
+            Adds the ImGui SFML component to the game.
+            </summary>
+            <param name="builder">The config builder.</param>
+            <param name="fontFile">The font file to use with ImGui. Defaults to 'Roboto-Regular.ttf'.</param>
+            <param name="fontSize">The font size to use with ImGui. Defaults to 16.</param>
+            <param name="enableDocking">Enables the docking feature of ImGui. Defaults to false.</param>
+            <param name="startupAction">A callback to add objects to the ImGui SFML component.</param>
+            <returns>The config builder.</returns>
+        </member>
+        <member name="T:SadConsole.Configuration.ImGuiUpdateComponent">
+            <summary>
+            A root component that updates ImGui input each frame before SadConsole processes input.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ExtensionsSystem.GetDebuggerDisplayValue(System.Object)">
+            <summary>
+            Searches the object for a <see cref="T:System.Diagnostics.DebuggerDisplayAttribute"/> and returns its value. If not found, returns <see cref="M:System.Object.ToString"/>.
+            </summary>
+            <param name="obj">The object to check.</param>
+            <returns>A string representing the object.</returns>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.HierarchyHelper">
+            <summary>
+            Provides helper methods for working with hierarchical items.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.FlattenVisible``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Flattens a hierarchical collection into a single enumerable, respecting expand/collapse state.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items to flatten.</param>
+            <returns>An enumerable of all visible items in tree order.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.FlattenAll``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Flattens a hierarchical collection into a single enumerable, including all items regardless of expand state.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items to flatten.</param>
+            <returns>An enumerable of all items in tree order.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.Find``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Finds an item in the hierarchy by reference.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items to search.</param>
+            <param name="item">The item to find.</param>
+            <returns>The item if found; otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.GetVisibleIndex``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Gets the index of an item within the flattened visible list.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items.</param>
+            <param name="item">The item to find the index of.</param>
+            <returns>The 0-based index of the item, or -1 if not found or not visible.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.GetItemAtVisibleIndex``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Gets the item at a specific index in the flattened visible list.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items.</param>
+            <param name="index">The 0-based index.</param>
+            <returns>The item at the specified index, or <see langword="null"/> if index is out of range.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.CountVisible``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Counts the total number of visible items in the hierarchy.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="roots">The root-level items.</param>
+            <returns>The count of visible items.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.GetRoot``1(``0)">
+            <summary>
+            Gets the root ancestor of an item.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="item">The item to find the root of.</param>
+            <returns>The root ancestor, or the item itself if it has no parent.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.GetAncestorPath``1(``0)">
+            <summary>
+            Builds the ancestor chain from root to the specified item.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="item">The item to build the path for.</param>
+            <returns>A list of ancestors from root to the item (inclusive).</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.HierarchyHelper.EnsureVisible``1(``0)">
+            <summary>
+            Ensures all ancestors of an item are expanded so the item is visible.
+            </summary>
+            <typeparam name="T">The type of hierarchical item.</typeparam>
+            <param name="item">The item to make visible.</param>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.IHierarchicalItem`1">
+            <summary>
+            Defines a hierarchical item that can have a parent and children, enabling tree-like structures.
+            </summary>
+            <typeparam name="T">The type of the hierarchical item, which must implement this interface.</typeparam>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.Parent">
+            <summary>
+            Gets or sets the parent of this item, or <see langword="null"/> if this is a root item.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.Children">
+            <summary>
+            Gets the children of this item.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.CanHaveChildren">
+            <summary>
+            Gets a value indicating whether this item can contain children.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.ShowChildrenInHierarchy">
+            <summary>
+            Gets a value indicating whether children should be displayed in the hierarchy UI.
+            When <see langword="false"/>, children exist but are hidden from the tree view.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.IsExpanded">
+            <summary>
+            Gets or sets a value indicating whether this item's children are expanded in the UI.
+            Only meaningful when <see cref="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.CanHaveChildren"/> and <see cref="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.ShowChildrenInHierarchy"/> are <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.IHierarchicalItem`1.Depth">
+            <summary>
+            Gets the depth of this item in the hierarchy (0 for root items).
+            </summary>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiCore">
+            <summary>
+            Shared objects that drive the ImGui integration for SadConsole.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiCore.ImGuiComponent">
+            <summary>
+            SFML component for rendering ImGui.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiCore.GuiComponents">
+            <summary>
+            The ImGui objects to draw each game frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiCore.Renderer">
+            <summary>
+            The ImGui renderer.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiGuardedValue`1">
+            <summary>
+            Makes a copy of a value and allows it to be changed. The change can be committed or reverted.
+            </summary>
+            <typeparam name="T">A structure.</typeparam>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.OriginalValue">
+            <summary>
+            The original value.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.CurrentValue">
+            <summary>
+            The current value.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.#ctor(`0)">
+            <summary>
+            Creates a new instance of this structure, wrapping the provided value.
+            </summary>
+            <param name="value">The original value.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.IsChanged">
+            <summary>
+            Returns true when the original value doesn't equal the current value.
+            </summary>
+            <returns>A value to indicate changed state.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.Commit">
+            <summary>
+            Sets the original value to the current value.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiGuardedValue`1.Reset">
+            <summary>
+            Sets the current value to the original value.
+            </summary>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiList`1">
+            <summary>
+            Wraps a collection of objects for ImGui controls, like list boxes.
+            </summary>
+            <typeparam name="T">The type of object wrapped.</typeparam>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiList`1.Names">
+            <summary>
+            Each item's title.
+            </summary>
+            <remarks>Refreshed when this property is accessed.</remarks>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiList`1.Objects">
+            <summary>
+            The objects wrapped by this list.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiList`1.Count">
+            <summary>
+            The number of items this list is wrapping.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiList`1.SelectedItemIndex">
+            <summary>
+            The selected index. Controlled by ImGui objects.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiList`1.SelectedItem">
+            <summary>
+            The selected item or <see langword="null"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when the property is set to a value that doesn't exist in the collection.</exception>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(`0[])">
+            <summary>
+            Creates a new list, wrapping the provided items.
+            </summary>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new list, wrapping the provided items.
+            </summary>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Int32,`0[])">
+            <summary>
+            Creates a new list, wrapping the provided items, and sets which item is selected.
+            </summary>
+            <param name="selectedIndex">The 0-based index of the item to select.</param>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.#ctor(System.Int32,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new list, wrapping the provided items, and sets which item is selected.
+            </summary>
+            <param name="selectedIndex">The 0-based index of the item to select.</param>
+            <param name="items">The items to wrap.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiList`1.IsItemSelected">
+            <summary>
+            Indicates that an item is selected.
+            </summary>
+            <returns>Checks if <see cref="F:SadConsole.ImGuiSystem.ImGuiList`1.SelectedItemIndex"/> doesn't equal -1.</returns>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiListEnum`1">
+            <summary>
+            Wraps an enum type for ImGui controls, like listboxes.
+            </summary>
+            <typeparam name="TEnum">The enum to wrap.</typeparam>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiListEnum`1.Names">
+            <summary>
+            A collection of each enum name.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiListEnum`1.Values">
+            <summary>
+            A collection of each enum value.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiListEnum`1.Count">
+            <summary>
+            The count of the enums items.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiListEnum`1.GetValueFromIndex(System.Int32)">
+            <summary>
+            Gets a value from an index.
+            </summary>
+            <param name="index">Index of the value to get.</param>
+            <returns>A value.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiListEnum`1.GetIndexFromValue(`0)">
+            <summary>
+            Gets an index from a value.
+            </summary>
+            <param name="value">The value to get an index from.</param>
+            <returns>The index.</returns>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiObjectBase">
+            <summary>
+            Represents an object drawn in ImGui.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiObjectBase.IsVisible">
+            <summary>
+            When true, this object should be drawn.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectBase.BuildUI(SadConsole.ImGuiSystem.ImGuiRenderer)">
+            <summary>
+            Draws this object.
+            </summary>
+            <param name="renderer">The ImGui renderer drawing this object.</param>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiObjectCollection">
+            <summary>
+            A collection of <see cref="T:SadConsole.ImGuiSystem.ImGuiObjectBase"/> objects that can be added to a ImGui renderer.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.#ctor">
+            <summary>
+            Creates a new instance of this object.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.BuildUI(SadConsole.ImGuiSystem.ImGuiRenderer)">
+            <summary>
+            Draws the objects contained in this collection if <see cref="P:SadConsole.ImGuiSystem.ImGuiObjectBase.IsVisible"/> is <see langword="true"/>.
+            </summary>
+            <param name="renderer">The ImGui renderer.</param>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiObjectCollection.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiObjectCollection.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiObjectCollection.IsReadOnly">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.Add(SadConsole.ImGuiSystem.ImGuiObjectBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.Contains(SadConsole.ImGuiSystem.ImGuiObjectBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.CopyTo(SadConsole.ImGuiSystem.ImGuiObjectBase[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.IndexOf(SadConsole.ImGuiSystem.ImGuiObjectBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.Insert(System.Int32,SadConsole.ImGuiSystem.ImGuiObjectBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.Remove(SadConsole.ImGuiSystem.ImGuiObjectBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.RemoveAt(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiObjectCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiRenderer">
+            <summary>
+            ImGui renderer for use with SFML.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RebuildFontAtlas">
+            <summary>
+            Creates a texture and loads the font data from ImGui. Should be called when the graphics device is initialized but before any rendering is done.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BindTexture(SFML.Graphics.Texture)">
+            <summary>
+            Creates a pointer to a texture, which can be passed through ImGui calls such as <see cref="M:Hexa.NET.ImGui.ImGui.Image(Hexa.NET.ImGui.ImTextureID,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector4,System.Numerics.Vector4)" />. That pointer is then used by ImGui to let us know what texture to draw.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(Hexa.NET.ImGui.ImTextureID)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UnbindTexture(SFML.Graphics.Texture)">
+            <summary>
+            Removes a previously created texture pointer, releasing its reference and allowing it to be deallocated.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BeforeLayoutInput(System.Single)">
+            <summary>
+            Runs the ImGui input. Call before <see cref="M:SadConsole.ImGuiSystem.ImGuiRenderer.BeforeLayout"/>.
+            </summary>
+            <param name="deltaSeconds">Time elapsed since last frame in seconds.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.BeforeLayout">
+            <summary>
+            Sets up ImGui for a new frame, should be called at frame start.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.AfterLayout">
+            <summary>
+            Asks ImGui for the generated geometry data and sends it to the graphics pipeline, should be called after the UI is drawn using ImGui.** calls.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.SetupInput">
+            <summary>
+            Setup key input event handler.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.UpdateInput">
+            <summary>
+            Sends SFML input state to ImGui.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.RenderDrawData(Hexa.NET.ImGui.ImDrawDataPtr)">
+            <summary>
+            Gets the geometry as set up by ImGui and sends it to the graphics device.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsMouseCapture">
+            <summary>
+            When <see langword="true"/>, indicates that the ImGui input system is going to use the mouse, for example when the mouse is over a UI element; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.WantsKeyboardCapture">
+            <summary>
+            When <see langword="true"/>, indicates that the ImGui input system is going to use the keyboard, for example when focus is on a textbox; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiRenderer.HideRequested">
+            <summary>
+            When <see langword="true"/>, indicates that the UI should be hidden and stopped. Once it's hidden and stopped, this property is set to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.AddFontTTF(System.String,System.Single)">
+            <summary>
+            Adds a TTF font file to ImGui.
+            </summary>
+            <param name="file">Path to the TTF font file.</param>
+            <param name="size">The font size in pixels.</param>
+            <returns>The loaded font pointer.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.SetDefaultFont(Hexa.NET.ImGui.ImFontPtr)">
+            <summary>
+            Sets the default font for ImGui and rebuilds the font atlas.
+            </summary>
+            <param name="value">The font to set as default.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.HasBoundTexture(SFML.Graphics.Texture)">
+            <summary>
+            Returns whether a texture is already bound.
+            </summary>
+            <param name="texture">The SFML texture to check.</param>
+            <returns><see langword="true"/> if the texture is bound; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.GetBoundTexturePointer(SFML.Graphics.Texture)">
+            <summary>
+            Gets the ImGui texture ID for a bound SFML texture.
+            </summary>
+            <param name="texture">The SFML texture.</param>
+            <returns>The ImGui texture ID.</returns>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiRenderer.ReplaceBoundTexture(Hexa.NET.ImGui.ImTextureID,SFML.Graphics.Texture)">
+            <summary>
+            Replaces an already-bound texture with a new one, keeping the same ImGui texture ID.
+            </summary>
+            <param name="textureID">The ImGui texture ID to update.</param>
+            <param name="texture">The new SFML texture.</param>
+        </member>
+        <member name="T:SadConsole.ImGuiSystem.ImGuiSFMLComponent">
+            <summary>
+            Manages the ImGui integration with the SFML game loop.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.ImGuiSFMLComponent.ImGuiRenderer">
+            <summary>
+            The ImGui renderer used for drawing.
+            </summary>
+        </member>
+        <member name="E:SadConsole.ImGuiSystem.ImGuiSFMLComponent.HostClosed">
+            <summary>
+            Raised when the ImGui host is closed/hidden.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.WantsMouseCapture">
+            <summary>
+            Gets whether ImGui wants to capture mouse input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.WantsKeyboardCapture">
+            <summary>
+            Gets whether ImGui wants to capture keyboard input.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.UIComponents">
+            <summary>
+            The ImGui UI objects to draw each frame.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.BeforeNewFrameLayoutObject">
+            <summary>
+            An optional layout object that runs before the new frame layout.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.Enabled">
+            <summary>
+            Gets or sets whether the component is enabled (processes update/draw).
+            </summary>
+        </member>
+        <member name="P:SadConsole.ImGuiSystem.ImGuiSFMLComponent.Visible">
+            <summary>
+            Gets or sets whether the component is visible (draws ImGui).
+            </summary>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiSFMLComponent.#ctor(SFML.Graphics.RenderWindow,System.Boolean)">
+            <summary>
+            Creates a new ImGui SFML component.
+            </summary>
+            <param name="window">The SFML render window.</param>
+            <param name="enableDocking">Whether to enable ImGui docking.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiSFMLComponent.Update(System.Single)">
+            <summary>
+            Updates ImGui input state. Call this during the update phase of the game loop.
+            </summary>
+            <param name="deltaSeconds">Time elapsed since last frame in seconds.</param>
+        </member>
+        <member name="M:SadConsole.ImGuiSystem.ImGuiSFMLComponent.Draw">
+            <summary>
+            Draws the ImGui UI. Call this during the draw phase of the game loop, after SadConsole has drawn.
+            </summary>
+        </member>
+        <member name="T:System.Numerics.ExtensionsColorNumerics">
+            <summary>
+            Extensions to convert <see cref="T:System.Numerics.Vector4"/> to/from <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector4(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector4"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector4"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector3(SadRogue.Primitives.Color)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Color"/> to a <see cref="T:System.Numerics.Vector3"/>.
+            </summary>
+            <param name="color">The color to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector3"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector4)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector4"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToColor(System.Numerics.Vector3)">
+            <summary>
+            Converts a <see cref="T:System.Numerics.Vector3"/> to a <see cref="T:SadRogue.Primitives.Color"/>.
+            </summary>
+            <param name="value">The vector color to convert.</param>
+            <returns>The <see cref="T:SadRogue.Primitives.Color"/> representing the color.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToVector2(SadRogue.Primitives.Point)">
+            <summary>
+            Converts a <see cref="T:SadRogue.Primitives.Point"/> to a <see cref="T:System.Numerics.Vector2"/>.
+            </summary>
+            <param name="point">The point to convert.</param>
+            <returns>The <see cref="T:System.Numerics.Vector2"/> representing the point.</returns>
+        </member>
+        <member name="M:System.Numerics.ExtensionsColorNumerics.ToUV(SadRogue.Primitives.Point,SadRogue.Primitives.Point)">
+            <summary>
+            Gets a <see cref="T:System.Numerics.Vector2"/> representing the UV coordinates of a <see cref="T:SadRogue.Primitives.Point"/> within a <see cref="T:SadRogue.Primitives.Point"/> size.
+            </summary>
+            <param name="point">The coordinates within the size.</param>
+            <param name="size">The size.</param>
+            <returns>The UV coordinates.</returns>
+        </member>
+    </members>
+</doc>

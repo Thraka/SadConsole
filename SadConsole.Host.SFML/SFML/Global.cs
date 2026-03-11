@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using System;
+using SFML.Graphics;
 
 namespace SadConsole.Host;
 
@@ -36,4 +37,10 @@ public static class Global
     /// Reference to the game timer used in the render loop.
     /// </summary>
     public static SFML.System.Clock DrawTimer { get; set; }
+
+    /// <summary>
+    /// A callback invoked after the final draw phase, before presenting to the screen.
+    /// Used by overlay systems like ImGui to render on top of SadConsole.
+    /// </summary>
+    public static Action? DrawOverlay { get; set; }
 }

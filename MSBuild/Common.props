@@ -15,6 +15,7 @@
     <SadConsole_Host_SFML_Version>10.8.0</SadConsole_Host_SFML_Version>
     <SadConsole_Host_FNA_Version>10.8.0</SadConsole_Host_FNA_Version>
     <SadConsole_Debug_MonoGame_Version>10.8.0</SadConsole_Debug_MonoGame_Version>
+    <SadConsole_Debug_SFML_Version>10.8.0</SadConsole_Debug_SFML_Version>
 
     <!-- Build settings that ensure source/symbols included -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -30,6 +31,7 @@
     <SadConsole_Host_SFML_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Host_SFML_Version)-debug</SadConsole_Host_SFML_Version>
     <SadConsole_Host_FNA_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Host_FNA_Version)-debug</SadConsole_Host_FNA_Version>
     <SadConsole_Debug_MonoGame_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Debug_MonoGame_Version)-debug</SadConsole_Debug_MonoGame_Version>
+    <SadConsole_Debug_SFML_Version Condition="'$(Configuration)'=='Debug'">$(SadConsole_Debug_SFML_Version)-debug</SadConsole_Debug_SFML_Version>
 
   </PropertyGroup>
 
