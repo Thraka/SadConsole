@@ -12,7 +12,7 @@ public class SpriteBatch
 {
     private Matrix _transform;
     private BatchDrawCall _lastDrawCall = new BatchDrawCall();
-    private RenderTarget _target;
+    private IRenderTarget _target;
     private RenderStates _state;
 
     private int _maxIndex = 800;
@@ -24,7 +24,7 @@ public class SpriteBatch
     /// <param name="blend">The blending mode.</param>
     /// <param name="renderingTransform">The transform.</param>
     /// <param name="shader">An optional shader.</param>
-    public void Reset(RenderTarget target, BlendMode blend, Matrix renderingTransform, Shader shader = null)
+    public void Reset(IRenderTarget target, BlendMode blend, Matrix renderingTransform, Shader shader = null)
     {
         _transform = renderingTransform;
         _lastDrawCall.VertIndex = 0;
@@ -68,10 +68,8 @@ public class SpriteBatch
         }
 
         // Change rects to correct rendering size
-        screenRect.Width += screenRect.Left;
-        screenRect.Height += screenRect.Top;
-        textCoords.Width += textCoords.Left;
-        textCoords.Height += textCoords.Top;
+        screenRect.Size += screenRect.Position;
+        textCoords.Size += textCoords.Position;
 
         fixed (Vertex* verts = _lastDrawCall.Verticies)
         {
@@ -135,25 +133,22 @@ public class SpriteBatch
         Color foreground = cell.Foreground.ToSFMLColor();
 
         // Change rects to correct rendering size
-        screenRect.Width += screenRect.Left;
-        screenRect.Height += screenRect.Top;
-        glyphRect.Width += glyphRect.Left;
-        glyphRect.Height += glyphRect.Top;
-        solidRect.Width += solidRect.Left;
-        solidRect.Height += solidRect.Top;
+        screenRect.Size += screenRect.Position;
+        glyphRect.Size += glyphRect.Position;
+        solidRect.Size += solidRect.Position;
 
         if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
         {
             int temp = glyphRect.Left;
-            glyphRect.Left = glyphRect.Width;
-            glyphRect.Width = temp;
+            glyphRect.Position.X = glyphRect.Width;
+            glyphRect.Size.X = temp;
         }
 
         if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
         {
             int temp = glyphRect.Top;
-            glyphRect.Top = glyphRect.Height;
-            glyphRect.Height = temp;
+            glyphRect.Position.Y = glyphRect.Height;
+            glyphRect.Size.Y = temp;
         }
 
         fixed (Vertex* verts = _lastDrawCall.Verticies)
@@ -233,23 +228,22 @@ public class SpriteBatch
                     glyphRect = font.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
 
                     // Change rects to correct rendering size;
-                    glyphRect.Width += glyphRect.Left;
-                    glyphRect.Height += glyphRect.Top;
+                    glyphRect.Size += glyphRect.Position;
 
                     foreground = cell.Decorators[d].Color.ToSFMLColor();
 
                     if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
                     {
-                        int temp = glyphRect.Left;
-                        glyphRect.Left = glyphRect.Width;
-                        glyphRect.Width = temp;
+                        int temp = glyphRect.Position.X;
+                        glyphRect.Position.X = glyphRect.Size.X;
+                        glyphRect.Size.X = temp;
                     }
 
                     if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
                     {
                         int temp = glyphRect.Top;
-                        glyphRect.Top = glyphRect.Height;
-                        glyphRect.Height = temp;
+                        glyphRect.Position.Y = glyphRect.Size.Y;
+                        glyphRect.Size.Y = temp;
                     }
 
                     if (foreground != Color.Transparent)
@@ -316,12 +310,9 @@ public class SpriteBatch
         Color background = cell.Background.ToSFMLColor();
 
         // Change rects to correct rendering size
-        screenRect.Width += screenRect.Left;
-        screenRect.Height += screenRect.Top;
-        glyphRect.Width += glyphRect.Left;
-        glyphRect.Height += glyphRect.Top;
-        solidRect.Width += solidRect.Left;
-        solidRect.Height += solidRect.Top;
+        screenRect.Size += screenRect.Position;
+        glyphRect.Size += glyphRect.Position;
+        solidRect.Size += solidRect.Position;
 
         fixed (Vertex* verts = _lastDrawCall.Verticies)
         {
@@ -369,7 +360,7 @@ public class SpriteBatch
         if (_lastDrawCall.VertIndex != 0)
         {
             _state.Texture = _lastDrawCall.Texture;
-            _target.Draw(_lastDrawCall.Verticies, 0, (uint)(_lastDrawCall.VertIndex), PrimitiveType.Quads, _state);
+            _target.Draw(_lastDrawCall.Verticies, 0, (uint)(_lastDrawCall.VertIndex), PrimitiveType.Triangles, _state);
         }
     }
 }

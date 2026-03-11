@@ -65,7 +65,7 @@ public partial class GameTexture : ITexture
     public GameTexture(uint width, uint height)
     {
         _skipDispose = false;
-        _texture = new Texture(width, height);
+        _texture = new Texture(new SFML.System.Vector2u(width, height));
         Size = (int)(width * height);
     }
 
@@ -78,7 +78,7 @@ public partial class GameTexture : ITexture
     public GameTexture(uint width, uint height, Color[] pixels)
     {
         _skipDispose = false;
-        _texture = new Texture(width, height);
+        _texture = new Texture(new SFML.System.Vector2u(width, height));
         Size = (int)(width * height);
         SetPixels(pixels);
     }
@@ -113,7 +113,7 @@ public partial class GameTexture : ITexture
         if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
             throw new IndexOutOfRangeException("Pixel position is out of range.");
 
-        _texture.Update(new[] { color.R, color.G, color.B, color.A }, 1, 1, (uint)position.X, (uint)position.Y);
+        _texture.Update(new[] { color.R, color.G, color.B, color.A }, new SFML.System.Vector2u(1, 1), new SFML.System.Vector2u((uint)position.X, (uint)position.Y));
     }
 
 
@@ -132,7 +132,7 @@ public partial class GameTexture : ITexture
         if (position.X < 0 || position.Y < 0 || position.X >= _texture.Size.X || position.Y >= _texture.Size.Y)
             throw new IndexOutOfRangeException("Pixel position is out of range.");
 
-        _texture.Update(new[] { color.R, color.G, color.B, color.A }, 1, 1, (uint)position.X, (uint)position.Y);
+        _texture.Update(new[] { color.R, color.G, color.B, color.A }, new SFML.System.Vector2u(1, 1), new SFML.System.Vector2u((uint)position.X, (uint)position.Y));
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public partial class GameTexture : ITexture
 
         using Image image = _texture.CopyToImage();
 
-        return image.GetPixel((uint)position.X, (uint)position.Y).ToSadRogueColor();
+        return image.GetPixel(new SFML.System.Vector2u((uint)position.X, (uint)position.Y)).ToSadRogueColor();
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ public partial class GameTexture : ITexture
 
         using Image image = _texture.CopyToImage();
         
-        return image.GetPixel((uint)position.X, (uint)position.Y);
+        return image.GetPixel(new SFML.System.Vector2u((uint)position.X, (uint)position.Y));
     }
 
     /// <summary>
@@ -331,11 +331,11 @@ public partial class GameTexture : ITexture
 
     private RenderTexture GetResizedTexture(int width, int height)
     {
-        var resized = new RenderTexture((uint)width, (uint)height);
+        var resized = new RenderTexture(new SFML.System.Vector2u((uint)width, (uint)height));
 
         var batcher = new SpriteBatch();
         batcher.Reset(resized, SadConsole.Host.Settings.SFMLSurfaceBlendMode, Transform.Identity);
-        batcher.DrawQuad(new IntRect(0, 0, (int)resized.Size.X, (int)resized.Size.Y), new IntRect(0, 0, (int)_texture.Size.X, (int)_texture.Size.Y), SFMLColor.White, _texture);
+        batcher.DrawQuad(new IntRect(new (0, 0), new ((int)resized.Size.X, (int)resized.Size.Y)), new IntRect(new (0, 0), new ((int)_texture.Size.X, (int)_texture.Size.Y)), SFMLColor.White, _texture);
         batcher.End();
 
         resized.Display();

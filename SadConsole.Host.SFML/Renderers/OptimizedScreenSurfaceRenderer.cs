@@ -85,7 +85,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
         {
             IsForced = true;
             _backingTexture?.Dispose();
-            _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+            _backingTexture = new RenderTexture(new SFML.System.Vector2u((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height));
             _renderTexture?.Dispose();
             _renderTexture = new Host.GameTexture(_backingTexture.Texture);
             BackingTextureRecreated?.Invoke(this, EventArgs.Empty);
@@ -124,7 +124,7 @@ public sealed class OptimizedScreenSurfaceRenderer : IRenderer
         IFont font = screenObject.Font;
 
         if (screenObject.Surface.DefaultBackground.A != 0)
-            Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)_backingTexture.Size.X, (int)_backingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+            Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(new (0, 0), new((int)_backingTexture.Size.X, (int)_backingTexture.Size.Y)), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
         for (int y = 0; y < screenObject.Surface.View.Height; y++)
         {

@@ -60,7 +60,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
         if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
         {
             BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = new RenderTexture(new((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height));
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
@@ -79,7 +79,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
             IFont font = screenObject.Font;
 
             if (layerObject.DefaultBackground.A != 0)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), layerObject.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y)), font.SolidGlyphRectangle.ToIntRect(), layerObject.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
             for (int layerIndex = 0; layerIndex < layerObject.Count; layerIndex++)
             {
@@ -121,7 +121,7 @@ public class LayeredSurfaceRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+        IntRect outputArea = new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y));
         Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
     }
 

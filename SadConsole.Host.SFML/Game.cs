@@ -141,10 +141,12 @@ public sealed partial class Game : GameHost
         {
             Global.GraphicsDevice = new RenderWindow(
                 new SFML.Window.VideoMode(
-                    (uint)(windowConfig.WindowWidthInPixels),
-                    (uint)(windowConfig.WindowHeightInPixels)),
+                    new SFML.System.Vector2u(
+                        (uint)(windowConfig.WindowWidthInPixels),
+                        (uint)(windowConfig.WindowHeightInPixels))),
                 Host.Settings.WindowTitle,
-                SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize);
+                SFML.Window.Styles.Titlebar | SFML.Window.Styles.Close | SFML.Window.Styles.Resize,
+                SFML.Window.State.Windowed);
             Global.GraphicsDevice.SetTitle(Settings.WindowTitle);
         }
         else
@@ -297,7 +299,7 @@ public sealed partial class Game : GameHost
                 {
                     Global.GraphicsDevice.Clear(Settings.ClearColor.ToSFMLColor());
                     Global.SharedSpriteBatch.Reset(Global.GraphicsDevice, Host.Settings.SFMLScreenBlendMode, Transform.Identity, Host.Settings.SFMLScreenShader);
-                    Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(0, 0, (int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
+                    Global.SharedSpriteBatch.DrawQuad(Settings.Rendering.RenderRect.ToIntRect(), new IntRect(new (0, 0), new ((int)Global.RenderOutput.Size.X, (int)Global.RenderOutput.Size.Y)), SFML.Graphics.Color.White, Global.RenderOutput.Texture);
                     Global.SharedSpriteBatch.End();
                 }
             }
@@ -335,8 +337,8 @@ public sealed partial class Game : GameHost
     /// <inheritdoc/>
     public override void GetDeviceScreenSize(out int width, out int height)
     {
-        width = (int)SFML.Window.VideoMode.DesktopMode.Width;
-        height = (int)SFML.Window.VideoMode.DesktopMode.Height;
+        width = (int)SFML.Window.VideoMode.DesktopMode.Size.X;
+        height = (int)SFML.Window.VideoMode.DesktopMode.Size.Y;
     }
 
     /// <summary>
@@ -381,7 +383,7 @@ public sealed partial class Game : GameHost
         if (Global.RenderOutput == null || Global.RenderOutput.Size.X != width || Global.RenderOutput.Size.Y != height)
         {
             Global.RenderOutput?.Dispose();
-            Global.RenderOutput = new RenderTexture(width, height);
+            Global.RenderOutput = new RenderTexture(new (width, height));
         }
     }
 
@@ -400,7 +402,7 @@ public sealed partial class Game : GameHost
                                                         Settings.Rendering.RenderWidth,
                                                         Settings.Rendering.RenderHeight);
 
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(new (0, 0), new (Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y))));
 
             Settings.Rendering.RenderScale = (1, 1);
         }
@@ -430,7 +432,7 @@ public sealed partial class Game : GameHost
 
             Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / ((float)Settings.Rendering.RenderWidth * multiple), Settings.Rendering.RenderHeight / (float)(Settings.Rendering.RenderHeight * multiple));
 
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(new(0, 0), new(Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y))));
         }
         else if (Settings.ResizeMode == Settings.WindowResizeOptions.Fit)
         {
@@ -464,7 +466,7 @@ public sealed partial class Game : GameHost
                 Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / fitWidth, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);
             }
 
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(new(0, 0), new(Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y))));
         }
         else if (Settings.ResizeMode == Settings.WindowResizeOptions.None)
         {
@@ -473,12 +475,12 @@ public sealed partial class Game : GameHost
             RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
             Settings.Rendering.RenderRect = new Rectangle(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight);
             Settings.Rendering.RenderScale = (1, 1);
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(new(0, 0), new(Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y))));
         }
         else
         {
             RecreateRenderOutput((uint)Settings.Rendering.RenderWidth, (uint)Settings.Rendering.RenderHeight);
-            Global.GraphicsDevice.SetView(new View(new FloatRect(0, 0, Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y)));
+            Global.GraphicsDevice.SetView(new View(new FloatRect(new(0, 0), new(Global.GraphicsDevice.Size.X, Global.GraphicsDevice.Size.Y))));
             var view = Global.GraphicsDevice.GetView();
             Settings.Rendering.RenderRect = new Rectangle(0, 0, (int)view.Size.X, (int)view.Size.Y);
             Settings.Rendering.RenderScale = (Settings.Rendering.RenderWidth / (float)Global.GraphicsDevice.Size.X, Settings.Rendering.RenderHeight / (float)Global.GraphicsDevice.Size.Y);

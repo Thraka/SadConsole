@@ -41,8 +41,8 @@ public class DrawCallTexture : IDrawCall
 
     /// <inheritdoc/>
     public void Draw() =>
-        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(Position.X, Position.Y, (int)Texture.Size.X, (int)Texture.Size.Y),
-                                               new IntRect(0, 0, (int)Texture.Size.X, (int)Texture.Size.Y),
+        Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(new (Position.X, Position.Y), new ((int)Texture.Size.X, (int)Texture.Size.Y)),
+                                               new IntRect(new (0, 0), new ((int)Texture.Size.X, (int)Texture.Size.Y)),
                                                Tint,
                                                Texture);
 }

@@ -50,7 +50,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
         if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
         {
             BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = new RenderTexture(new((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height));
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             fullRedraw = true;
@@ -72,7 +72,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
             IFont font = screenObject.Font;
 
             if (fullRedraw)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y)), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
             for (int y = 0; y < screenObject.Surface.View.Height; y++)
             {
@@ -108,7 +108,7 @@ public class SurfaceDirtyCellsRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+        IntRect outputArea = new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y));
         Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
     }
 

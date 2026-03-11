@@ -1,8 +1,9 @@
 #nullable enable
 using System;
-using SFML.Graphics;
-using Color = SFML.Graphics.Color;
 using SadRogue.Primitives;
+using SFML.Graphics;
+using static System.Net.Mime.MediaTypeNames;
+using Color = SFML.Graphics.Color;
 
 namespace SadConsole.Renderers;
 
@@ -80,7 +81,7 @@ public class RowFontSurfaceRenderStep : IRenderStep, IRenderStepTexture
             screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
         {
             BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = new RenderTexture(new((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height));
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
@@ -99,7 +100,7 @@ public class RowFontSurfaceRenderStep : IRenderStep, IRenderStepTexture
             {
                 IFont defaultFont = screenObject.Font;
                 Host.Global.SharedSpriteBatch.DrawQuad(
-                    new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), 
+                    new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y)), 
                     defaultFont.SolidGlyphRectangle.ToIntRect(), 
                     screenObject.Surface.DefaultBackground.ToSFMLColor(), 
                     ((SadConsole.Host.GameTexture)defaultFont.Image).Texture);
@@ -125,81 +126,10 @@ public class RowFontSurfaceRenderStep : IRenderStep, IRenderStepTexture
                     {
                         // Calculate destination rect on the fly (no cached rects)
                         IntRect destRect = new IntRect(
-                            x * rowFontSize.X,
-                            yOffset,
-                            rowFontSize.X,
-                            rowFontSize.Y);
+                            new (x * rowFontSize.X, yOffset),
+                            new (rowFontSize.X, rowFontSize.Y));
 
-                        // Background
-                        if (cell.Background != SadRogue.Primitives.Color.Transparent && 
-                            cell.Background != screenObject.Surface.DefaultBackground)
-                        {
-                            Host.Global.SharedSpriteBatch.DrawQuad(
-                                destRect, 
-                                rowFont.SolidGlyphRectangle.ToIntRect(), 
-                                cell.Background.ToSFMLColor(), 
-                                fontTexture);
-                        }
-
-                        // Foreground glyph
-                        if (cell.Glyph != 0 && 
-                            cell.Foreground != SadRogue.Primitives.Color.Transparent && 
-                            cell.Foreground != cell.Background)
-                        {
-                            IntRect glyphRect = rowFont.GetGlyphSourceRectangle(cell.Glyph).ToIntRect();
-                            
-                            // Apply mirroring by swapping texture coordinates
-                            if ((cell.Mirror & Mirror.Horizontal) == Mirror.Horizontal)
-                            {
-                                int temp = glyphRect.Left;
-                                glyphRect.Left = glyphRect.Left + glyphRect.Width;
-                                glyphRect.Width = temp - glyphRect.Left;
-                            }
-                            if ((cell.Mirror & Mirror.Vertical) == Mirror.Vertical)
-                            {
-                                int temp = glyphRect.Top;
-                                glyphRect.Top = glyphRect.Top + glyphRect.Height;
-                                glyphRect.Height = temp - glyphRect.Top;
-                            }
-                            
-                            Host.Global.SharedSpriteBatch.DrawQuad(
-                                destRect, 
-                                glyphRect, 
-                                cell.Foreground.ToSFMLColor(), 
-                                fontTexture);
-                        }
-
-                        // Decorators
-                        if (cell.Decorators != null)
-                        {
-                            for (int d = 0; d < cell.Decorators.Count; d++)
-                            {
-                                if (cell.Decorators[d].Color != SadRogue.Primitives.Color.Transparent)
-                                {
-                                    IntRect decoratorRect = rowFont.GetGlyphSourceRectangle(cell.Decorators[d].Glyph).ToIntRect();
-                                    
-                                    // Apply mirroring by swapping texture coordinates
-                                    if ((cell.Decorators[d].Mirror & Mirror.Horizontal) == Mirror.Horizontal)
-                                    {
-                                        int temp = decoratorRect.Left;
-                                        decoratorRect.Left = decoratorRect.Left + decoratorRect.Width;
-                                        decoratorRect.Width = temp - decoratorRect.Left;
-                                    }
-                                    if ((cell.Decorators[d].Mirror & Mirror.Vertical) == Mirror.Vertical)
-                                    {
-                                        int temp = decoratorRect.Top;
-                                        decoratorRect.Top = decoratorRect.Top + decoratorRect.Height;
-                                        decoratorRect.Height = temp - decoratorRect.Top;
-                                    }
-                                    
-                                    Host.Global.SharedSpriteBatch.DrawQuad(
-                                        destRect, 
-                                        decoratorRect, 
-                                        cell.Decorators[d].Color.ToSFMLColor(), 
-                                        fontTexture);
-                                }
-                            }
-                        }
+                        Host.Global.SharedSpriteBatch.DrawCell(cell, destRect, cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, rowFont);
                     }
 
                     cellIndex++;
@@ -220,7 +150,7 @@ public class RowFontSurfaceRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new(0, 0, (int)BackingTexture!.Size.X, (int)BackingTexture.Size.Y);
+        IntRect outputArea = new(new (0, 0), new((int)BackingTexture!.Size.X, (int)BackingTexture.Size.Y));
         Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, ComposeTint, BackingTexture.Texture);
     }
 
