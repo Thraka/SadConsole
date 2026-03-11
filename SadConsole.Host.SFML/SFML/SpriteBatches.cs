@@ -15,7 +15,7 @@ public class SpriteBatch
     private IRenderTarget _target;
     private RenderStates _state;
 
-    private int _maxIndex = 800;
+    private int _maxIndex = 1200;
 
     /// <summary>
     /// Resets the batcher.
@@ -40,7 +40,7 @@ public class SpriteBatch
     private class BatchDrawCall
     {
         public Texture Texture;
-        public Vertex[] Verticies = new Vertex[1000];
+        public Vertex[] Verticies = new Vertex[1500];
         public int VertIndex;
     }
 
@@ -73,6 +73,7 @@ public class SpriteBatch
 
         fixed (Vertex* verts = _lastDrawCall.Verticies)
         {
+            // Triangle 1: TL, TR, BR
             verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
             verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
             verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
@@ -83,6 +84,21 @@ public class SpriteBatch
             verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
             verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
             verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Width;
+            verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Height;
+            verts[_lastDrawCall.VertIndex].Color = color;
+            _lastDrawCall.VertIndex++;
+
+            // Triangle 2: TL, BR, BL
+            verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+            verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+            verts[_lastDrawCall.VertIndex].TexCoords.X = textCoords.Left;
             verts[_lastDrawCall.VertIndex].TexCoords.Y = textCoords.Top;
             verts[_lastDrawCall.VertIndex].Color = color;
             _lastDrawCall.VertIndex++;
@@ -155,7 +171,7 @@ public class SpriteBatch
         {
             if (background != Color.Transparent && drawBackground)
             {
-                // Background
+                // Background - Triangle 1: TL, TR, BR
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
@@ -177,19 +193,32 @@ public class SpriteBatch
                 verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
 
+                // Background - Triangle 2: TL, BR, BL
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
                 verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
                 verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
-
-                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
 
             if (cell.Glyph != 0 && foreground != Color.Transparent && foreground != background)
             {
-                // Foreground
+                // Foreground - Triangle 1: TL, TR, BR
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
@@ -211,14 +240,27 @@ public class SpriteBatch
                 verts[_lastDrawCall.VertIndex].Color = foreground;
                 _lastDrawCall.VertIndex++;
 
+                // Foreground - Triangle 2: TL, BR, BL
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = foreground;
+                _lastDrawCall.VertIndex++;
+
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
                 verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
                 verts[_lastDrawCall.VertIndex].Color = foreground;
                 _lastDrawCall.VertIndex++;
-
-                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
 
             if (cell.Decorators != null && cell.Decorators.Count != 0)
@@ -248,7 +290,7 @@ public class SpriteBatch
 
                     if (foreground != Color.Transparent)
                     {
-                        // Foreground
+                        // Foreground - Triangle 1: TL, TR, BR
                         verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                         verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
                         verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
@@ -259,6 +301,21 @@ public class SpriteBatch
                         verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width; // SadConsole w/SFML changed Width to be left + width...
                         verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
                         verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
+
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Width;
+                        verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Height;
+                        verts[_lastDrawCall.VertIndex].Color = foreground;
+                        _lastDrawCall.VertIndex++;
+
+                        // Foreground - Triangle 2: TL, BR, BL
+                        verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                        verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                        verts[_lastDrawCall.VertIndex].TexCoords.X = glyphRect.Left;
                         verts[_lastDrawCall.VertIndex].TexCoords.Y = glyphRect.Top;
                         verts[_lastDrawCall.VertIndex].Color = foreground;
                         _lastDrawCall.VertIndex++;
@@ -318,7 +375,7 @@ public class SpriteBatch
         {
             if (background != Color.Transparent)
             {
-                // Background
+                // Background - Triangle 1: TL, TR, BR
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
@@ -340,14 +397,27 @@ public class SpriteBatch
                 verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
 
+                // Background - Triangle 2: TL, BR, BL
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Top;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Top;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
+                verts[_lastDrawCall.VertIndex].Position.X = screenRect.Width;
+                verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
+                verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Width;
+                verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
+                verts[_lastDrawCall.VertIndex].Color = background;
+                _lastDrawCall.VertIndex++;
+
                 verts[_lastDrawCall.VertIndex].Position.X = screenRect.Left;
                 verts[_lastDrawCall.VertIndex].Position.Y = screenRect.Height;
                 verts[_lastDrawCall.VertIndex].TexCoords.X = solidRect.Left;
                 verts[_lastDrawCall.VertIndex].TexCoords.Y = solidRect.Height;
                 verts[_lastDrawCall.VertIndex].Color = background;
                 _lastDrawCall.VertIndex++;
-
-                //lastDrawCall.Verticies.AddRange(singleDrawVerticies);
             }
         }
     }
