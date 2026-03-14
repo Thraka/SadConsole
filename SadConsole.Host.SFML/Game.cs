@@ -233,6 +233,9 @@ public sealed partial class Game : GameHost
 
         while (Global.GraphicsDevice.IsOpen)
         {
+            // Todo: What do I do about early objects? MonoGame supports the draw/update order components which lets ImGui
+            // update with logic while SadConsole is disabled. But in SFML it's done via the root components but that requires
+            // SadConsole's update is enabled...
             UpdateFrameDelta = Global.UpdateTimer.ElapsedTime.ToTimeSpan();
             Global.UpdateTimer.Restart();
 

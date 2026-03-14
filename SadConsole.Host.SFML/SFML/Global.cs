@@ -29,6 +29,27 @@ public static class Global
     public static RenderTexture RenderOutput { get; set; }
 
     /// <summary>
+    /// Helpers for generic libraries that need to access the render output texture in a standard property.
+    /// </summary>
+    /// <remarks></remarks>
+    public static Texture RenderOutputTexture => RenderOutput.Texture;
+
+    /// <summary>
+    /// Gets the width, in pixels, of the rendered output.
+    /// </summary>
+    /// <remarks>This property retrieves the width from the underlying texture used for rendering. It is
+    /// useful for determining the horizontal dimension of the output when performing layout calculations or rendering
+    /// operations.</remarks>
+    public static int RenderOutputWidth => (int)RenderOutput.Texture.Size.X;
+
+    /// <summary>
+    /// Gets the height, in pixels, of the texture used for rendering output.
+    /// </summary>
+    /// <remarks>This property provides the vertical dimension of the rendering surface. Use it to determine
+    /// the required display space or to align graphical elements based on the output's height.</remarks>
+    public static int RenderOutputHeight => (int)RenderOutput.Texture.Size.Y;
+
+    /// <summary>
     /// Reference to the game timer used in the update loop.
     /// </summary>
     public static SFML.System.Clock UpdateTimer { get; set; }
