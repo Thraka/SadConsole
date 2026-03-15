@@ -553,6 +553,27 @@
             The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputTexture">
+            <summary>
+            Helpers for generic libraries that need to access the render output texture in a standard property.
+            </summary>
+            <remarks></remarks>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputWidth">
+            <summary>
+            Gets the width, in pixels, of the rendered output.
+            </summary>
+            <remarks>This property retrieves the width from the underlying texture used for rendering. It is
+            useful for determining the horizontal dimension of the output when performing layout calculations or rendering
+            operations.</remarks>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputHeight">
+            <summary>
+            Gets the height, in pixels, of the texture used for rendering output.
+            </summary>
+            <remarks>This property provides the vertical dimension of the rendering surface. Use it to determine
+            the required display space or to align graphical elements based on the output's height.</remarks>
+        </member>
         <member name="P:SadConsole.Host.Global.UpdateTimer">
             <summary>
             Reference to the game timer used in the update loop.
@@ -567,6 +588,11 @@
             <summary>
             A callback invoked after the final draw phase, before presenting to the screen.
             Used by overlay systems like ImGui to render on top of SadConsole.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.UpdateOverlay">
+            <summary>
+            A callback invoked before the update phase, used by overlay systems like ImGui to update their state before SadConsole updates.
             </summary>
         </member>
         <member name="T:SadConsole.Host.Settings">

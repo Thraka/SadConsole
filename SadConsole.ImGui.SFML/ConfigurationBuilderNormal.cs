@@ -1,6 +1,5 @@
 ﻿using System;
 using Hexa.NET.ImGui;
-using SadConsole.Components;
 using SadConsole.Debug;
 using SadConsole.Host;
 using SadConsole.ImGuiSystem.Rendering;
@@ -52,7 +51,7 @@ public static class ConfigurationImGui
     }
 }
 
-internal class ImGuiConfig : RootComponent, IConfigurator
+internal class ImGuiConfig : IConfigurator
 {
     public ImGuiSFMLComponent ImGuiInstance { get; private set; }
     public string FontFileTTF { get; set; } = "Roboto-Regular.ttf";
@@ -62,13 +61,6 @@ internal class ImGuiConfig : RootComponent, IConfigurator
     public Keys StartDebuggerKey { get; set; }
 
     public Action<ImGuiSFMLComponent>? StartupAction { get; set; }
-    public override void Run(TimeSpan delta)
-    {
-        if (AddDebugger && ImGuiDebugger.Instance.IsOpened == false && Game.Instance.FrameNumber != 0 && Game.Instance.Keyboard.IsKeyReleased(StartDebuggerKey))
-            ImGuiDebugger.Start(ImGuiInstance.ImGuiRenderer);
-
-        ImGuiInstance.Update((float)delta.TotalSeconds);
-    }
 
     public void Run(BuilderBase config, GameHost game)
     {
@@ -79,15 +71,23 @@ internal class ImGuiConfig : RootComponent, IConfigurator
         ImGuiInstance.ImGuiRenderer.SetDefaultFont(value);
         Themes.SetModernColors();
 
-        // Hook into the game loop:
-        // Update: Use a RootComponent so ImGui input runs before SadConsole input (enabling BlockSadConsoleInput)
-        game.RootComponents.Add(this);
-
         if (EnableDocking)
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
         if (AddDebugger)
             ImGuiInstance.UIComponents.Add(ImGuiDebugger.Instance);
+
+        // Update: Use the overlay callback so ImGui input runs before SadConsole input (enabling BlockSadConsoleInput)
+        Global.UpdateOverlay = (delta) =>
+        {
+            if (AddDebugger && ImGuiDebugger.Instance.IsOpened == false && Game.Instance.FrameNumber != 0 && Game.Instance.Keyboard.IsKeyReleased(StartDebuggerKey))
+            {
+                Game.Instance.Keyboard.Clear();
+                ImGuiDebugger.Start(ImGuiInstance.ImGuiRenderer);
+            }
+
+            ImGuiInstance.Update((float)delta.TotalSeconds);
+        };
 
         // Draw: Use the overlay callback so ImGui renders on top of SadConsole after DoFinalDraw
         Global.DrawOverlay = () => ImGuiInstance.Draw();

@@ -239,6 +239,9 @@ public sealed partial class Game : GameHost
             UpdateFrameDelta = Global.UpdateTimer.ElapsedTime.ToTimeSpan();
             Global.UpdateTimer.Restart();
 
+            // Update any overlay systems (e.g., ImGui)
+            Global.UpdateOverlay?.Invoke(UpdateFrameDelta);
+
             // Update game loop part
             if (Settings.DoUpdate)
             {
@@ -268,7 +271,7 @@ public sealed partial class Game : GameHost
 
                 Screen?.Update(UpdateFrameDelta);
 
-                ((SadConsole.Game)Instance).InvokeFrameUpdate();
+                OnFrameUpdate();
             }
 
             DrawFrameDelta = Global.DrawTimer.ElapsedTime.ToTimeSpan();
@@ -283,7 +286,7 @@ public sealed partial class Game : GameHost
                 // Make sure all items in the screen are drawn. (Build a list of draw calls)
                 Screen?.Render(DrawFrameDelta);
 
-                ((SadConsole.Game)Instance).InvokeFrameDraw();
+                OnFrameRender();
 
                 // Render to the global output texture
                 Global.RenderOutput.Clear(Settings.ClearColor.ToSFMLColor());

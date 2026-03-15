@@ -58,6 +58,7 @@ public partial class ImGuiDebugger: ImGuiObjectBase
     public static void Start(ImGuiRenderer renderer)
     {
         SadConsole.Settings.DoFinalDraw = false;
+        SadConsole.Settings.DoUpdate = false;
 
         Instance.IsVisible = true;
 
@@ -72,6 +73,7 @@ public partial class ImGuiDebugger: ImGuiObjectBase
     public static void Stop()
     {
         SadConsole.Settings.DoFinalDraw = true;
+        SadConsole.Settings.DoUpdate = true;
         Host.Global.BlockSadConsoleInput = false;
 
         Instance.IsVisible = false;

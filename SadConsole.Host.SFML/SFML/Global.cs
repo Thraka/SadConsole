@@ -64,4 +64,9 @@ public static class Global
     /// Used by overlay systems like ImGui to render on top of SadConsole.
     /// </summary>
     public static Action? DrawOverlay { get; set; }
+
+    /// <summary>
+    /// A callback invoked before the update phase, used by overlay systems like ImGui to update their state before SadConsole updates.
+    /// </summary>
+    public static Action<TimeSpan>? UpdateOverlay { get; set; }
 }
