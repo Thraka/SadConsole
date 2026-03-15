@@ -1,6 +1,7 @@
 ﻿using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -15,14 +16,14 @@ public class NewDocument : ImGuiWindowBase
     {
         IsOpen = true;
 
-        if (!ImGuiCore.GuiComponents.Contains(this))
-            ImGuiCore.GuiComponents.Add(this);
+        if (!Core.ImGuiComponent.UIComponents.Contains(this))
+            Core.ImGuiComponent.UIComponents.Add(this);
     }
 
     protected override void OnClosed()
     {
         if (RemoveOnClose)
-            ImGuiCore.GuiComponents.Remove(this);
+            Core.ImGuiComponent.UIComponents.Remove(this);
 
         if (DialogResult)
         {

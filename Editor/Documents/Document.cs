@@ -10,6 +10,7 @@ using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
 using SadConsole.Entities;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -33,7 +34,7 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
 
     public DocumentOptions Options = new();
 
-    public ImTextureID VisualTextureId;
+    public ImTextureRef VisualTextureId;
     public Vector2 VisualTextureSize;
 
     public LayeredScreenSurface VisualTool;
@@ -248,10 +249,10 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
             _displayTexture?.Dispose();
             _displayTexture = new RenderTarget2D(Host.Global.GraphicsDevice, EditingSurface.WidthPixels, EditingSurface.HeightPixels, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 
-            if (VisualTextureId == IntPtr.Zero)
-                VisualTextureId = ImGuiCore.Renderer.BindTexture(_displayTexture);
+            if (VisualTextureId.TexID == ImTextureID.Null)
+                VisualTextureId = Core.ImGuiComponent.ImGuiRenderer.BindTexture(_displayTexture);
             else
-                ImGuiCore.Renderer.ReplaceBoundTexture(VisualTextureId, _displayTexture);
+                Core.ImGuiComponent.ImGuiRenderer.ReplaceBoundTexture(VisualTextureId.TexID, _displayTexture);
         }
 
         VisualTextureSize = new Vector2(_displayTexture.Bounds.Width, _displayTexture.Bounds.Height);

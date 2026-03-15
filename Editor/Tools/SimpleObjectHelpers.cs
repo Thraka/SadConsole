@@ -32,7 +32,7 @@ public static class SimpleObjectHelpers
         {
             ImGui.SeparatorText("Selected Object"u8);
 
-            ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+            ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                 document.EditingSurfaceFont,
                 docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
             ImGui.SameLine();
@@ -52,7 +52,7 @@ public static class SimpleObjectHelpers
         bool itemSelected = false;
 
         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
-        ImTextureID fontTexture = ImGuiCore.Renderer.BindTexture(((GameTexture)font.Image).Texture);
+        ImTextureRef fontTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(((GameTexture)font.Image).Texture);
 
         Vector2 outputSize = new(0, ImGui.GetFrameHeight() - ImGui.GetStyle().FramePadding.Y * 2);
         outputSize.X = (outputSize.Y / font.GlyphHeight) * font.GlyphWidth;
@@ -72,13 +72,13 @@ public static class SimpleObjectHelpers
             var rect = font.SolidGlyphRectangle;
             var textureSize = new Point(font.Image.Width, font.Image.Height);
 
-            ImGui.Image(fontTexture, outputSize, rect.Position.ToUV(textureSize),
+            ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
                 (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Background.ToVector4());
 
             ImGui.SetCursorPos(pos);
             rect = font.GetGlyphSourceRectangle(objects.Objects[i].Visual.Glyph);
 
-            ImGui.Image(fontTexture, outputSize, rect.Position.ToUV(textureSize),
+            ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
                 (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Foreground.ToVector4());
 
             ImGui.SameLine();

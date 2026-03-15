@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -966,9 +967,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// </summary>
     private void HandleChildDragging(Vector2 startPos, Vector2 pixelArea, Vector2 sceneMousePos, bool isHovered, bool isActive)
     {
-        bool leftMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool leftMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
         bool leftMouseClicked = isHovered && leftMouseDown && !_wasDragging;
-        bool rightMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
+        bool rightMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
         bool rightMouseClicked = isHovered && rightMouseDown && !_wasPanning;
 
         // Handle ongoing viewport pan (right-click drag)

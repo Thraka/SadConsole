@@ -3,7 +3,7 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
+using SadConsole.ImGuiSystem.Types;
 
 namespace SadConsole.Editor.Tools;
 
@@ -55,7 +55,7 @@ internal class Line : ITool
 
             Vector4 foreground = _lineSettings.Foreground.ToVector4();
             Vector4 background = _lineSettings.Background.ToVector4();
-            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_lineSettings.Mirror);
+            ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(_lineSettings.Mirror);
             int glyph = _lineSettings.Glyph;
 
             if (SettingsTable.BeginTable("linesettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
@@ -64,13 +64,13 @@ internal class Line : ITool
                     ref foreground, surface.Surface.DefaultForeground.ToVector4(),
                     ref background, surface.Surface.DefaultBackground.ToVector4(),
                     ref mirror,
-                    ref glyph, surface.Font, ImGuiCore.Renderer);
+                    ref glyph, surface.Font, Core.ImGuiComponent.ImGuiRenderer);
                 SettingsTable.EndTable();
             }
 
             _lineSettings.Foreground = foreground.ToColor();
             _lineSettings.Background = background.ToColor();
-            _lineSettings.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            _lineSettings.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
             _lineSettings.Glyph = glyph;
 
             ImGuiSC.EndGroupPanel();
@@ -200,7 +200,7 @@ internal class Line : ITool
         // Cancelled but mouse button finally released, exit cancelled
         if (_isCancelled)
         {
-            if (!ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && !ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            if (!ImGui.IsMouseDown(ImGuiMouseButton.Left) && !ImGui.IsMouseDown(ImGuiMouseButton.Right))
                 _isCancelled = false;
 
             return;
@@ -209,7 +209,7 @@ internal class Line : ITool
         // Cancelled - only for non-zone modes
         if (CurrentMode != ToolMode.Modes.Zones)
         {
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
             {
                 ClearState();
                 _isCancelled = true;
@@ -222,9 +222,9 @@ internal class Line : ITool
 
         // For zones mode, handle escape to cancel
         if (CurrentMode == ToolMode.Modes.Zones && _isFirstPointSelected
-            && (ImGuiP.IsKeyReleased(ImGuiKey.Escape) ||
-                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) && !_isRightClickDrag) ||
-                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Left) && _isRightClickDrag)
+            && (ImGui.IsKeyReleased(ImGuiKey.Escape) ||
+                    (ImGui.IsMouseClicked(ImGuiMouseButton.Right) && !_isRightClickDrag) ||
+                    (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && _isRightClickDrag)
                )
            )
         {
@@ -235,10 +235,10 @@ internal class Line : ITool
         }
 
         // Determine which mouse button is being used for drawing
-        bool isLeftDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
-        bool isRightDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
-        bool isLeftReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Left);
-        bool isRightReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Right);
+        bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
+        bool isRightDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
+        bool isLeftReleased = ImGui.IsMouseReleased(ImGuiMouseButton.Left);
+        bool isRightReleased = ImGui.IsMouseReleased(ImGuiMouseButton.Right);
 
         // For zones mode, allow right-click to start a clear operation
         bool isDrawingButton = isLeftDown || (CurrentMode == ToolMode.Modes.Zones && isRightDown && !_isFirstPointSelected);
@@ -309,16 +309,16 @@ internal class Line : ITool
                                          _lineSettings.Mirror);
             }
         }
-        else if (!_isFirstPointSelected && ImGuiP.IsMouseDown(ImGuiMouseButton.Right) && CurrentMode != ToolMode.Modes.Zones)
+        else if (!_isFirstPointSelected && ImGui.IsMouseDown(ImGuiMouseButton.Right) && CurrentMode != ToolMode.Modes.Zones)
         {
             ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
 
-            if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
+            if (ImGui.IsKeyDown(ImGuiKey.ModShift))
             {
                 _lineSettings.Foreground = sourceCell.Foreground;
                 _lineSettings.Background = sourceCell.Background;
             }
-            else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
+            else if (ImGui.IsKeyDown(ImGuiKey.ModCtrl))
             {
                 _lineSettings.Glyph = sourceCell.Glyph;
             }

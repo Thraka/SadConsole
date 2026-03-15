@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.GuiObjects;
 
@@ -18,7 +19,7 @@ public class GuiDockSpace : ImGuiObjectBase
     private bool p_open;
     private bool _runOnce = false;
 
-    public override void BuildUI(ImGuiRenderer renderer)
+    public unsafe override void BuildUI(ImGuiRenderer renderer)
     {
         ImGuiViewportPtr viewport = ImGui.GetMainViewport();
         ImGui.SetNextWindowPos(viewport.Pos);
@@ -39,11 +40,6 @@ public class GuiDockSpace : ImGuiObjectBase
 
         uint idRootDockspace = ImGui.GetID("RootDockspace");
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.PassthruCentralNode;
-
-        bool isFirstRun = false;
-
-        if (ImGuiP.DockBuilderGetNode(idRootDockspace) == ImGuiDockNodePtr.Null)
-            isFirstRun = true;
 
         ImGui.DockSpace(idRootDockspace, new Vector2(0.0f, 0.0f), dockspace_flags);
         ImGui.End();
@@ -80,10 +76,10 @@ public class GuiDockSpace : ImGuiObjectBase
                 uint idRightPanel = 0;
                 uint idBottomPanel = 0;
 
-                ImGuiP.DockBuilderSplitNode(idRootDockspace, ImGuiDir.Left, 0.2f, ref idLeftPanel, ref idCenterPanel);
-                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Right, 0.3f, ref idRightPanel, ref idCenterPanel);
-                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Up, 0.3f, ref idTopPanel, ref idCenterPanel);
-                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Down, 0.3f, ref idBottomPanel, ref idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idRootDockspace, ImGuiDir.Left, 0.2f, &idLeftPanel, &idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Right, 0.3f, &idRightPanel, &idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Up, 0.3f, &idTopPanel, &idCenterPanel);
+                ImGuiP.DockBuilderSplitNode(idCenterPanel, ImGuiDir.Down, 0.3f, &idBottomPanel, &idCenterPanel);
 
                 ImGuiP.DockBuilderDockWindow(ID_LEFT_PANEL, idLeftPanel);
                 ImGuiP.DockBuilderDockWindow(ID_TOP_PANEL, idTopPanel);

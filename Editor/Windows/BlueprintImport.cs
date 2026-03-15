@@ -3,12 +3,13 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
 public class BlueprintImport : ImGuiWindowBase
 {
-    private ImTextureID? _previewTexture;
+    private ImTextureRef? _previewTexture;
     private Vector2 _previewTextureSize;
     private ScreenSurface? _previewTextureWrapper;
 
@@ -27,7 +28,7 @@ public class BlueprintImport : ImGuiWindowBase
     {
         if (_previewTexture.HasValue)
         {
-            ImGuiCore.Renderer.UnbindTexture(_previewTexture.Value);
+            Core.ImGuiComponent.ImGuiRenderer.UnbindTexture(_previewTexture.Value.TexID);
             _previewTexture = null;
         }
 
@@ -48,7 +49,7 @@ public class BlueprintImport : ImGuiWindowBase
         _previewTextureWrapper.Render(TimeSpan.Zero);
 
         //TODO are we generating drawcalls? We should clear those out, yes?
-        _previewTexture = ImGuiCore.Renderer.BindTexture(
+        _previewTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(
             ((SadConsole.Host.GameTexture)_previewTextureWrapper.Renderer.Output).Texture);
 
         _previewTextureSize = new Vector2(_previewTextureWrapper.Renderer.Output.Width, _previewTextureWrapper.Renderer.Output.Height);

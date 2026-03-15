@@ -2,7 +2,8 @@
 using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
+using SadConsole.ImGuiSystem.Types;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 

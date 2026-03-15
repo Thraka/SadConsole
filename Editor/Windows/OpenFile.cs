@@ -2,6 +2,7 @@
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -117,7 +118,7 @@ public class OpenFile : ImGuiWindowBase
         else
         {
             OnClosed();
-            ImGuiCore.GuiComponents.Remove(this);
+            Core.ImGuiComponent.UIComponents.Remove(this);
         }
     }
 }

@@ -212,13 +212,13 @@ internal static class ZoneHelpers
             ImGui.Text("Debug Apperance"u8);
             if (SettingsTable.BeginTable("debugglyph"))
             {
-                ImGuiTypes.ColoredGlyphReference glyphRef = zone.Appearance;
+                ImGuiSystem.Types.ColoredGlyphReference glyphRef = zone.Appearance;
                 SettingsTable.DrawCommonSettings(true, true, false, true, true,
                     ref glyphRef,
                     null,
                     null,
                     document.EditingSurfaceFont,
-                    ImGuiCore.Renderer);
+                    Core.ImGuiComponent.ImGuiRenderer);
 
                 if (glyphRef != zone.Appearance)
                 {

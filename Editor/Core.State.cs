@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Hexa.NET.ImGui;
 using SadConsole.Editor.GuiObjects;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI;
@@ -120,11 +121,11 @@ public static partial class Core
 
         public static void SyncEditorPalette()
         {
-            Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Clear();
-            Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Editor", Palette.Colors));
+            ImGuiSC.PalettePopup.ExtraPalettes.Clear();
+            ImGuiSC.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Editor", Palette.Colors));
 
             if (HasSelectedDocument && SelectedDocument!.HasPalette)
-                Hexa.NET.ImGui.SC.Windows.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Document",
+                ImGuiSC.PalettePopup.ExtraPalettes.Add(new Tuple<string, NamedColor[]>("Document",
                     SelectedDocument.Palette.Colors));
         }
 

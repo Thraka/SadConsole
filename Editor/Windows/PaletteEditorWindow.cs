@@ -4,6 +4,7 @@ using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI;
 using System.Numerics;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -209,7 +210,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                         ImGui.OpenPopup($"palettepopup##editor");
 
                     Color col = _editingColorValue.ToColor();
-                    if (PalettePopup.Show($"palettepopup##editor", ref col))
+                    if (ImGuiSC.PalettePopup.Show($"palettepopup##editor", ref col))
                     {
                         _editingColorValue = col.ToVector4();
                         UpdateSelectedColor();

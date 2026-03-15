@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
 using SadConsole;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.GuiObjects;
 public class GuiDocumentsHost: ImGuiObjectBase

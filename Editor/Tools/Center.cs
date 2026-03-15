@@ -39,7 +39,7 @@ internal class Center : ITool
 
         if (!isActive) return;
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
             var animation = ((DocumentAnimated)document)._baseAnimation;
             animation.Center = hoveredCellPosition;

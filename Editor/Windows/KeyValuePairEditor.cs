@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -450,7 +449,7 @@ public class KeyValuePairEditor : ImGuiWindowBase
                         ImGui.OpenPopup($"palettepopup");
 
                     Color palColor = _helperColorValue.ToColor();
-                    if (Hexa.NET.ImGui.SC.Windows.PalettePopup.Show($"palettepopup", ref palColor))
+                    if (ImGuiSC.PalettePopup.Show($"palettepopup", ref palColor))
                     {
                         _helperColorValue = palColor.ToVector4();
                         editingValue = Serialization.MetadataParser.ColorToHex(_helperColorValue.ToColor());

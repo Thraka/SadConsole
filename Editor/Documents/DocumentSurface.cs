@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 

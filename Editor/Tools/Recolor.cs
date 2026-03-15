@@ -70,7 +70,7 @@ internal class Recolor : ITool
                 ImGui.OpenPopup($"palettepopup##foreground_edit");
 
             Color col = _matchForeground.ToColor();
-            if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
+            if (ImGuiSC.PalettePopup.Show($"palettepopup##foreground_edit", ref col))
                 _matchForeground = col.ToVector4();
 
             ImGui.EndDisabled();
@@ -94,7 +94,7 @@ internal class Recolor : ITool
                 ImGui.OpenPopup($"palettepopup##background_edit");
 
             col = _matchBackground.ToColor();
-            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
+            if (ImGuiSC.PalettePopup.Show($"palettepopup##background_edit", ref col))
                 _matchBackground = col.ToVector4();
 
             ImGui.EndDisabled();
@@ -108,12 +108,12 @@ internal class Recolor : ITool
 
             ImGui.BeginDisabled(!_isMatchMirror);
             int itemIndex =
-                ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetIndexFromValue(ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_matchMirror));
+                ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.GetIndexFromValue(ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(_matchMirror));
 
-            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Names,
-                    ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Count))
+            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.Names,
+                    ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.Count))
                 _matchMirror =
-                    ImGuiTypes.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetValueFromIndex(itemIndex));
+                    ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.GetValueFromIndex(itemIndex));
             ImGui.EndDisabled();
 
             // Glyph
@@ -124,7 +124,7 @@ internal class Recolor : ITool
             ImGui.TableSetColumnIndex(1);
 
             ImGui.BeginDisabled(!_isMatchGlyph);
-            ImGuiSC.FontGlyph.DrawWithPopup(ImGuiCore.Renderer, "##glyph_edit", "match_font", surface.Font, _matchForeground, _matchBackground,
+            ImGuiSC.FontGlyph.DrawWithPopup(Core.ImGuiComponent.ImGuiRenderer, "##glyph_edit", "match_font", surface.Font, _matchForeground, _matchBackground,
                 ref _matchGlyph, true);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
                 (_applyGlyph, _matchGlyph) = (_matchGlyph, _applyGlyph);
@@ -164,7 +164,7 @@ internal class Recolor : ITool
                 ImGui.OpenPopup($"palettepopup##foreground_edit");
 
             Color col = _applyForeground.ToColor();
-            if (PalettePopup.Show($"palettepopup##foreground_edit", ref col))
+            if (ImGuiSC.PalettePopup.Show($"palettepopup##foreground_edit", ref col))
                 _applyForeground = col.ToVector4();
 
             ImGui.EndDisabled();
@@ -188,7 +188,7 @@ internal class Recolor : ITool
                 ImGui.OpenPopup($"palettepopup##background_edit");
 
             col = _applyBackground.ToColor();
-            if (PalettePopup.Show($"palettepopup##background_edit", ref col))
+            if (ImGuiSC.PalettePopup.Show($"palettepopup##background_edit", ref col))
                 _applyBackground = col.ToVector4();
 
             ImGui.EndDisabled();
@@ -201,12 +201,12 @@ internal class Recolor : ITool
             ImGui.TableSetColumnIndex(1);
 
             ImGui.BeginDisabled(!_isApplyMirror);
-            int itemIndex = ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetIndexFromValue(ImGuiTypes.MirrorConverter.FromSadConsoleMirror(_applyMirror));
+            int itemIndex = ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.GetIndexFromValue(ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(_applyMirror));
 
-            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Names,
-                    ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.Count))
+            if (ImGui.Combo("##mirror_edit", ref itemIndex, ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.Names,
+                    ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.Count))
                 _applyMirror =
-                    ImGuiTypes.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiTypes.Mirror>.GetValueFromIndex(itemIndex));
+                    ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(ImGuiListEnum<SadConsole.ImGuiSystem.Types.Mirror>.GetValueFromIndex(itemIndex));
             ImGui.EndDisabled();
 
             // Glyph
@@ -218,7 +218,7 @@ internal class Recolor : ITool
 
             ImGui.BeginDisabled(!_isApplyGlyph);
 
-            ImGuiSC.FontGlyph.DrawWithPopup(ImGuiCore.Renderer, "##glyph_edit", "apply_font", surface.Font, _applyForeground, _applyBackground,
+            ImGuiSC.FontGlyph.DrawWithPopup(Core.ImGuiComponent.ImGuiRenderer, "##glyph_edit", "apply_font", surface.Font, _applyForeground, _applyBackground,
                 ref _applyGlyph, true);
 
             if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
@@ -240,7 +240,7 @@ internal class Recolor : ITool
 
         if (!isActive) return;
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
             ColoredGlyphBase targetCell = document.EditingSurface.Surface[hoveredCellPosition];
 
@@ -267,11 +267,11 @@ internal class Recolor : ITool
                 document.EditingSurface.IsDirty = true;
             }
         }
-        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
             ColoredGlyphBase tempCell = document.EditingSurface.Surface[hoveredCellPosition];
 
-            if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
+            if (ImGui.IsKeyDown(ImGuiKey.ModShift))
             {
                 _applyForeground = tempCell.Foreground.ToVector4();
                 _applyBackground = tempCell.Background.ToVector4();

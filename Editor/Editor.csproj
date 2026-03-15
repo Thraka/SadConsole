@@ -35,7 +35,7 @@
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
 
-    <ProjectReference Include="..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+    <ProjectReference Include="..\SadConsole.ImGui.MonoGame\SadConsole.ImGui.MonoGame.csproj" />
   </ItemGroup>
 
   <ItemGroup>

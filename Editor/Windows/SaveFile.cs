@@ -4,6 +4,7 @@ using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 

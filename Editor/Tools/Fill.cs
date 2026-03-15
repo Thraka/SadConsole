@@ -43,7 +43,7 @@ internal class Fill : ITool
             Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
             Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
             int glyph = SharedToolSettings.Tip.Glyph;
-            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+            ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
             if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
             {
@@ -52,14 +52,14 @@ internal class Fill : ITool
                     ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                     ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
                     ref mirror,
-                    ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+                    ref glyph, document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer);
 
                 SettingsTable.EndTable();
             }
 
             SharedToolSettings.Tip.Foreground = foreground.ToColor();
             SharedToolSettings.Tip.Background = background.ToColor();
-            SharedToolSettings.Tip.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            SharedToolSettings.Tip.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
             SharedToolSettings.Tip.Glyph = glyph;
 
             ImGuiSC.EndGroupPanel();
@@ -81,7 +81,7 @@ internal class Fill : ITool
 
             if (isItemSelected)
             {
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                     document.EditingSurfaceFont,
                     docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
                 ImGui.SameLine();
@@ -114,7 +114,7 @@ internal class Fill : ITool
 
             if (isItemSelected)
             {
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                     document.EditingSurfaceFont,
                     docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
 
@@ -168,7 +168,7 @@ internal class Fill : ITool
 
         if (!isActive) return;
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
             ColoredGlyph cellToMatch = new();
             ColoredGlyphBase currentFillCell = SharedToolSettings.Tip;
@@ -213,7 +213,7 @@ internal class Fill : ITool
 
             document.EditingSurface.Surface.IsDirty = true;
         }
-        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
             document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             document.EditingSurface.IsDirty = true;

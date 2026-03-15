@@ -1,7 +1,6 @@
 ﻿using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.ImGuiSystem;
-using static System.Net.Mime.MediaTypeNames;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 

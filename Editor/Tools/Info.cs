@@ -22,7 +22,7 @@ internal class Info : ITool
         ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
         ImGui.BeginTooltip();
 
-        var fontTexture = ImGuiCore.Renderer.BindTexture(((Host.GameTexture)document.EditingSurfaceFont.Image).Texture);
+        var fontTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(((Host.GameTexture)document.EditingSurfaceFont.Image).Texture);
         var rect = document.EditingSurfaceFont.GetGlyphSourceRectangle(document.EditingSurface.Surface[hoveredCellPosition].Glyph);
         var textureSize = new SadRogue.Primitives.Point(document.EditingSurfaceFont.Image.Width, document.EditingSurfaceFont.Image.Height);
 
@@ -34,10 +34,10 @@ internal class Info : ITool
         ImGui.SetCursorPos(cursorPosForSecondFont);
 
         var rectSolid = document.EditingSurfaceFont.SolidGlyphRectangle;
-        ImGui.Image(fontTexture, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.Two).ToVector2(), rectSolid.Position.ToUV(textureSize),
+        ImGui.ImageWithBg(fontTexture, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.Two).ToVector2(), rectSolid.Position.ToUV(textureSize),
             (rectSolid.Position + rectSolid.Size).ToUV(textureSize), document.EditingSurface.Surface[hoveredCellPosition].Background.ToVector4());
         ImGui.SetCursorPos(cursorPosForSecondFont);
-        ImGui.Image(fontTexture, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize),
+        ImGui.ImageWithBg(fontTexture, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.Two).ToVector2(), rect.Position.ToUV(textureSize),
             (rect.Position + rect.Size).ToUV(textureSize), document.EditingSurface.Surface[hoveredCellPosition].Foreground.ToVector4());
 
         ImGui.SetCursorPos(cursorPosForDetails);

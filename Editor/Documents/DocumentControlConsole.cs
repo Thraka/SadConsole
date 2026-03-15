@@ -4,6 +4,7 @@ using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -95,7 +96,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         HandleControlInteraction(startPos, ImGui.GetMousePos(), isHovered);
 
         // Handle right-click context menu
-        if (isHovered && ImGuiP.IsMouseClicked(ImGuiMouseButton.Right))
+        if (isHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
         {
             Point viewPos = EditingSurface.Surface.ViewPosition;
             Vector2 viewOffset = new Vector2(viewPos.X * EditorFontSize.X, viewPos.Y * EditorFontSize.Y);
@@ -175,7 +176,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
     private void HandleControlInteraction(Vector2 startPos, Vector2 mousePos, bool isHovered)
     {
-        bool leftMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool leftMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
         bool leftMouseClicked = isHovered && leftMouseDown && !_wasDragging;
 
         Point viewPos = EditingSurface.Surface.ViewPosition;
@@ -549,7 +550,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         ImGui.Selectable(name);
 
         // Double-click to add at default position
-        if (ImGui.IsItemHovered() && ImGuiP.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+        if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {
             ControlBase control = createControl();
             control.Position = new Point(1, 1);

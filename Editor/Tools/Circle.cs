@@ -3,13 +3,13 @@ using Hexa.NET.ImGui;
 using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
+using SadConsole.ImGuiSystem.Types;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Circle : ITool
 {
-    private ImGuiTypes.ShapeSettings _shapeSettings = new() { HasBorder = true,
+    private ImGuiSystem.Types.ShapeSettings _shapeSettings = new() { HasBorder = true,
                                                               UseBoxBorderStyle = false,
                                                               BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
                                                               HasFill = false,
@@ -70,7 +70,7 @@ internal class Circle : ITool
                         ref borderGlyph,
                         surface.Surface.DefaultForeground.ToVector4(),
                         surface.Surface.DefaultBackground.ToVector4(),
-                        document.EditingSurfaceFont, ImGuiCore.Renderer
+                        document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer
                     );
 
                     SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_border_foreground", ref _shapeSettings.IgnoreBorderForeground);
@@ -107,7 +107,7 @@ internal class Circle : ITool
                         ref fillGlyph,
                         surface.Surface.DefaultForeground.ToVector4(),
                         surface.Surface.DefaultBackground.ToVector4(),
-                        document.EditingSurfaceFont, ImGuiCore.Renderer
+                        document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer
                     );
 
                     SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
@@ -151,11 +151,11 @@ internal class Circle : ITool
             if (!_isDrawing)
             {
                 // Cancelled but left mouse finally released, exit cancelled
-                if (_isCancelled && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+                if (_isCancelled && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
                     _isCancelled = false;
 
                 // Cancelled
-                if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
+                if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
                 {
                     ClearState();
                     _isCancelled = true;
@@ -166,7 +166,7 @@ internal class Circle : ITool
                     return;
 
                 // Preview
-                if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+                if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
                 {
                     if (!_isFirstPointSelected)
                     {
@@ -184,7 +184,7 @@ internal class Circle : ITool
                 }
 
                 // Commit
-                else if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+                else if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
                 {
                     if (_firstPoint != Point.None)
                     {

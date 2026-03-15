@@ -58,7 +58,7 @@ internal class LineDraw : ITool
         Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
-        ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+        ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
         if (SettingsTable.BeginTable("linedrawsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
         {
@@ -67,7 +67,7 @@ internal class LineDraw : ITool
                 ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                 ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
                 ref mirror,
-                ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+                ref glyph, document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer);
 
             SettingsTable.EndTable();
         }
@@ -86,7 +86,7 @@ internal class LineDraw : ITool
 
         ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
             document.EditingSurface.Surface[hoveredCellPosition].Clear();
             SharedToolSettings.Tip.CopyAppearanceTo(document.EditingSurface.Surface[hoveredCellPosition]);
@@ -95,7 +95,7 @@ internal class LineDraw : ITool
 
             document.EditingSurface.IsDirty = true;
         }
-        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
             ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
 
@@ -103,7 +103,7 @@ internal class LineDraw : ITool
             SharedToolSettings.Tip.Background = sourceCell.Background;
         }
 
-        if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
         {
             document.EditingSurface.Surface.ConnectLines(_lineStyles.SelectedItem.Glyphs, document.EditingSurface.Surface.View);
         }

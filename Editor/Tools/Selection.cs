@@ -178,7 +178,7 @@ internal class Selection : ITool
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
+        if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGui.IsPopupOpen("selection_rightmenu"u8))
         {
 
             bool _createBlueprint = false;
@@ -318,11 +318,11 @@ internal class Selection : ITool
         ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         // Cancelled but left mouse finally released, exit cancelled
-        if (_state == States.Cancel && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        if (_state == States.Cancel && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             _state = States.None;
 
         // Cancelled
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
         {
             CancelPaste(document);
         }
@@ -334,7 +334,7 @@ internal class Selection : ITool
         {
             PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
 
-            if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 Point pos = hoveredCellPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2);
 
@@ -366,7 +366,7 @@ internal class Selection : ITool
                 }
             }
 
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape))
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
                 CancelPaste(document, false);
             }
@@ -376,14 +376,14 @@ internal class Selection : ITool
             {
                 PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
 
-                if (ImGuiP.IsKeyPressed(ImGuiKey.LeftArrow))
+                if (ImGui.IsKeyPressed(ImGuiKey.LeftArrow))
                     _pasteOffset += Direction.Left;
-                else if (ImGuiP.IsKeyPressed(ImGuiKey.RightArrow))
+                else if (ImGui.IsKeyPressed(ImGuiKey.RightArrow))
                     _pasteOffset += Direction.Right;
 
-                if (ImGuiP.IsKeyPressed(ImGuiKey.UpArrow))
+                if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
                     _pasteOffset += Direction.Up;
-                else if (ImGuiP.IsKeyPressed(ImGuiKey.DownArrow))
+                else if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
                     _pasteOffset += Direction.Down;
 
                 document.VisualLayerToolMiddle.Surface.Clear();
@@ -399,11 +399,11 @@ internal class Selection : ITool
 
             return;
         }
-        else if (_state is States.SelectionDone && ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        else if (_state is States.SelectionDone && ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
             ClearState();
 
         // Preview
-        if (_state is States.MakingSelection or States.None && ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        if (_state is States.MakingSelection or States.None && ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
         {
             if (_state == States.None)
             {
@@ -424,7 +424,7 @@ internal class Selection : ITool
         }
 
         // Commit selection
-        else if (_state == States.MakingSelection && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        else if (_state == States.MakingSelection && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
         {
             _state = States.SelectionDone;
             ImGui.OpenPopup("selection_rightmenu"u8);

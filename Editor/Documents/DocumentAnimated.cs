@@ -5,6 +5,7 @@ using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -91,7 +92,7 @@ public partial class DocumentAnimated: Document
 
         bool showDeletePopup = false;
 
-        if (Hexa.NET.ImGui.SC.SettingsTable.BeginTable("animation-buttons"))
+        if (SettingsTable.BeginTable("animation-buttons"))
         {
             ImGui.TableNextRow();
             ImGui.TableSetColumnIndex(0);
@@ -176,7 +177,7 @@ public partial class DocumentAnimated: Document
             }
             ImGui.EndDisabled();
 
-            Hexa.NET.ImGui.SC.SettingsTable.EndTable();
+            SettingsTable.EndTable();
 
             bool repeat = _baseAnimation.Repeat;
             if (ImGui.Checkbox("Repeat", ref repeat))
@@ -220,12 +221,12 @@ public partial class DocumentAnimated: Document
             ImGui.EndDisabled();
         }
 
-        if (_baseAnimation.CurrentFrameIndex < _baseAnimation.Frames.Count - 1 && ImGuiP.IsKeyPressed(ImGuiKey.RightBracket) && !_baseAnimation.IsPlaying)
+        if (_baseAnimation.CurrentFrameIndex < _baseAnimation.Frames.Count - 1 && ImGui.IsKeyPressed(ImGuiKey.RightBracket) && !_baseAnimation.IsPlaying)
         {
             _baseAnimation.CurrentFrameIndex++;
             SetFrameIndex(_baseAnimation.CurrentFrameIndex);
         }
-        else if (_baseAnimation.CurrentFrameIndex >= 0 && ImGuiP.IsKeyPressed(ImGuiKey.LeftBracket) && !_baseAnimation.IsPlaying)
+        else if (_baseAnimation.CurrentFrameIndex >= 0 && ImGui.IsKeyPressed(ImGuiKey.LeftBracket) && !_baseAnimation.IsPlaying)
         {
             _baseAnimation.CurrentFrameIndex--;
             SetFrameIndex(_baseAnimation.CurrentFrameIndex);

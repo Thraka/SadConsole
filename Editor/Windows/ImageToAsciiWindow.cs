@@ -4,6 +4,7 @@ using Hexa.NET.ImGui.SC;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -23,7 +24,7 @@ public class ImageToAsciiWindow : ImGuiWindowBase
 
     // Image data
     private Texture2D? _loadedTexture;
-    private ImTextureID? _sourceImageTexture;
+    private ImTextureRef? _sourceImageTexture;
     private Vector2 _sourceImageSize;
 
     // Conversion settings
@@ -40,7 +41,7 @@ public class ImageToAsciiWindow : ImGuiWindowBase
 
     // ASCII preview
     private ScreenSurface? _previewSurface;
-    private ImTextureID? _previewTexture;
+    private ImTextureRef? _previewTexture;
     private Vector2 _previewTextureSize;
 
     // Font info
@@ -73,13 +74,13 @@ public class ImageToAsciiWindow : ImGuiWindowBase
     {
         if (_sourceImageTexture.HasValue)
         {
-            ImGuiCore.Renderer.UnbindTexture(_sourceImageTexture.Value);
+            Core.ImGuiComponent.ImGuiRenderer.UnbindTexture(_sourceImageTexture.Value.TexID);
             _sourceImageTexture = null;
         }
 
         if (_previewTexture.HasValue)
         {
-            ImGuiCore.Renderer.UnbindTexture(_previewTexture.Value);
+            Core.ImGuiComponent.ImGuiRenderer.UnbindTexture(_previewTexture.Value.TexID);
             _previewTexture = null;
         }
 
@@ -103,7 +104,7 @@ public class ImageToAsciiWindow : ImGuiWindowBase
         using Stream stream = File.OpenRead(filePath);
         _loadedTexture = Texture2D.FromStream(SadConsole.Host.Global.GraphicsDevice, stream);
 
-        _sourceImageTexture = ImGuiCore.Renderer.BindTexture(_loadedTexture);
+        _sourceImageTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(_loadedTexture);
         _sourceImageSize = new Vector2(_loadedTexture.Width, _loadedTexture.Height);
 
         // Calculate default output size based on image and font
@@ -120,7 +121,7 @@ public class ImageToAsciiWindow : ImGuiWindowBase
         // Unbind and dispose old preview
         if (_previewTexture.HasValue)
         {
-            ImGuiCore.Renderer.UnbindTexture(_previewTexture.Value);
+            Core.ImGuiComponent.ImGuiRenderer.UnbindTexture(_previewTexture.Value.TexID);
             _previewTexture = null;
         }
 
@@ -169,7 +170,7 @@ public class ImageToAsciiWindow : ImGuiWindowBase
         _previewSurface.Update(TimeSpan.Zero);
         _previewSurface.Render(TimeSpan.Zero);
 
-        _previewTexture = ImGuiCore.Renderer.BindTexture(
+        _previewTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(
             ((Host.GameTexture)_previewSurface.Renderer.Output).Texture);
         _previewTextureSize = new Vector2(_previewSurface.Renderer.Output.Width, _previewSurface.Renderer.Output.Height);
     }

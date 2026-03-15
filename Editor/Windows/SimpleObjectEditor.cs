@@ -1,9 +1,8 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
+using SadConsole.ImGuiSystem.Types;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
@@ -83,7 +82,7 @@ public class SimpleObjectEditor : ImGuiWindowBase
                     Vector4 foreground = visual.Foreground.ToVector4();
                     Vector4 background = visual.Background.ToVector4();
                     int glyph = visual.Glyph;
-                    ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(visual.Mirror);
+                    ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(visual.Mirror);
                     string name = _objects.SelectedItem.Name;
 
                     if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
@@ -94,14 +93,14 @@ public class SimpleObjectEditor : ImGuiWindowBase
                             ref foreground, _defaultForeground,
                             ref background, _defaultBackground,
                             ref mirror,
-                            ref glyph, _font, ImGuiCore.Renderer);
+                            ref glyph, _font, Core.ImGuiComponent.ImGuiRenderer);
 
                         SettingsTable.EndTable();
                     }
 
                     visual.Foreground = foreground.ToColor();
                     visual.Background = background.ToColor();
-                    visual.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+                    visual.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
                     visual.Glyph = glyph;
                     _objects.SelectedItem.Name = name;
                 }
