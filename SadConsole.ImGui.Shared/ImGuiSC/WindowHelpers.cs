@@ -1,4 +1,6 @@
-﻿namespace Hexa.NET.ImGui;
+﻿using System.Numerics;
+
+namespace Hexa.NET.ImGui;
 
 public static partial class ImGuiSC
 {
@@ -7,25 +9,37 @@ public static partial class ImGuiSC
         bool buttonClicked = false;
         result = false;
 
-        // Cancel Button
-        if (ImGui.Button(cancelButtonText))
+        // Cancel Button (show if not empty/null)
+        if (!string.IsNullOrEmpty(cancelButtonText) && ImGui.Button(cancelButtonText))
             buttonClicked = true;
 
-        // Accept Button -- Right-aligned
-        float pos = ImGui.CalcTextSize(acceptButtonText).X + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().FramePadding.X * 2 + 2;
-        ImGui.SameLine(ImGui.GetWindowWidth() - pos);
-        ImGui.BeginDisabled(acceptDisabled);
-
-        if (ImGui.Button(acceptButtonText))
+        // Accept Button -- Right-aligned (show if not empty/null)
+        if (!string.IsNullOrEmpty(acceptButtonText))
         {
-            buttonClicked = true;
-            result = true;
+            float pos = ImGui.CalcTextSize(acceptButtonText).X + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().FramePadding.X * 2 + 2;
+            if (!string.IsNullOrEmpty(cancelButtonText))
+                ImGui.SameLine(ImGui.GetWindowWidth() - pos);
+            else
+                ImGui.SetCursorPosX(ImGui.GetWindowWidth() - pos);
+
+            ImGui.BeginDisabled(acceptDisabled);
+
+            if (ImGui.Button(acceptButtonText))
+            {
+                buttonClicked = true;
+                result = true;
+            }
+            ImGui.EndDisabled();
         }
-        ImGui.EndDisabled();
 
         return buttonClicked;
     }
 
     public static void CenterNextWindow() =>
         ImGui.SetNextWindowPos(ImGui.GetIO().DisplaySize / 2f, ImGuiCond.Appearing, new System.Numerics.Vector2(0.5f, 0.5f));
+    public static void CenterNextWindowOnAppearing(Vector2 size)
+    {
+        ImGui.SetNextWindowPos(ImGui.GetIO().DisplaySize / 2f, ImGuiCond.Appearing, new System.Numerics.Vector2(0.5f, 0.5f));
+        ImGui.SetNextWindowSize(size, ImGuiCond.Appearing);
+    }
 }

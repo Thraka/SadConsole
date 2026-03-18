@@ -27,11 +27,6 @@ public class ImGuiSFMLComponent
     public bool WantsKeyboardCapture => ImGuiRenderer.WantsKeyboardCapture;
 
     /// <summary>
-    /// The ImGui UI objects to draw each frame.
-    /// </summary>
-    public List<ImGuiObjectBase> UIComponents { get; } = [];
-
-    /// <summary>
     /// An optional layout object that runs before the new frame layout.
     /// </summary>
     public ImGuiObjectBase? BeforeNewFrameLayoutObject { get; set; }
@@ -87,7 +82,7 @@ public class ImGuiSFMLComponent
         ImGuiRenderer.BeforeLayout();
 
         // Draw our UI
-        foreach (ImGuiObjectBase canvas in UIComponents.ToArray())
+        foreach (ImGuiObjectBase canvas in ImGuiRenderer.UIObjects.ToArray())
             canvas.BuildUI(ImGuiRenderer);
 
         // Call AfterLayout now to finish up and draw all the things

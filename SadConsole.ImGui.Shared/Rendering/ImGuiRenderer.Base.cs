@@ -31,6 +31,11 @@ public abstract class ImGuiRenderer<TTexture>
     protected abstract void RefreshTexture(ImTextureDataPtr data);
 
     /// <summary>
+    /// A list of objects to draw in ImGui.
+    /// </summary>
+    public List<ImGuiObjectBase> UIObjects = [];
+
+    /// <summary>
     /// Updates the texture resource based on the current status of the specified texture data.
     /// </summary>
     /// <remarks>Call this method to synchronize the texture resource with the state indicated by the texture

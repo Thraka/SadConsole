@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiGuardedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiListEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\ConfirmPopup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\DrawTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\FileListBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\FontGlyph.cs" />
@@ -65,8 +66,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <pack>true</pack>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\" />
   </ItemGroup>
 </Project>

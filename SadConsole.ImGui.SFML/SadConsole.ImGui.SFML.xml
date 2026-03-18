@@ -63,11 +63,6 @@
             Gets whether ImGui wants to capture keyboard input.
             </summary>
         </member>
-        <member name="P:SadConsole.ImGuiSystem.Rendering.ImGuiSFMLComponent.UIComponents">
-            <summary>
-            The ImGui UI objects to draw each frame.
-            </summary>
-        </member>
         <member name="P:SadConsole.ImGuiSystem.Rendering.ImGuiSFMLComponent.BeforeNewFrameLayoutObject">
             <summary>
             An optional layout object that runs before the new frame layout.
@@ -114,6 +109,11 @@
         <member name="P:SadConsole.ImGuiSystem.Rendering.ImGuiRenderer`1.WantsKeyboardCapture">
             <summary>
             When <see langword="true"/>, indicates that the ImGui input system is going to use the keyboard, for example when focus is on a textbox; otherwise <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.ImGuiSystem.Rendering.ImGuiRenderer`1.UIObjects">
+            <summary>
+            A list of objects to draw in ImGui.
             </summary>
         </member>
         <member name="M:SadConsole.ImGuiSystem.Rendering.ImGuiRenderer`1.UpdateTexture(Hexa.NET.ImGui.ImTextureDataPtr)">
@@ -645,6 +645,19 @@
             <param name="style">The style object.</param>
             <param name="items">String values to calculate.</param>
             <returns>The total size.</returns>
+        </member>
+        <member name="M:Hexa.NET.ImGui.ImGuiSC.ConfirmPopup(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.Action,System.Action)">
+            <summary>
+            Displays a confirmation popup dialog with a specified title and executes actions based on user response.
+            </summary>
+            <remarks>The popup presents 'Yes' and 'Cancel' options to the user. The corresponding action is
+            invoked after the user makes a selection. The method should be called within the appropriate ImGui frame
+            context.</remarks>
+            <param name="id">A read-only span of bytes that uniquely identifies the popup instance. Used to manage the popup's open state.</param>
+            <param name="text">A read-only span of bytes representing the text to display in the popup dialog.</param>
+            <param name="onConfirmed">The action to execute if the user confirms the operation.</param>
+            <param name="onCancel">The action to execute if the user cancels the operation. This parameter is optional.</param>
+            <returns>true if the confirmation popup is currently open; otherwise, false.</returns>
         </member>
         <member name="M:Hexa.NET.ImGui.FileListBox.Draw">
             <summary>

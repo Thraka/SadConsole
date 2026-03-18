@@ -86,7 +86,7 @@ internal class ImGuiConfig : RootComponent, IConfigurator
         if (AddDebugger)
         {
             game.RootComponents.Add(this);
-            ImGuiInstance.UIComponents.Add(ImGuiDebugger.Instance);
+            ImGuiInstance.ImGuiRenderer.UIObjects.Add(ImGuiDebugger.Instance);
         }
 
         StartupAction?.Invoke(ImGuiInstance);

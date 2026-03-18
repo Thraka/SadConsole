@@ -75,7 +75,7 @@ internal class ImGuiConfig : IConfigurator
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
         if (AddDebugger)
-            ImGuiInstance.UIComponents.Add(ImGuiDebugger.Instance);
+            ImGuiInstance.ImGuiRenderer.UIObjects.Add(ImGuiDebugger.Instance);
 
         // Update: Use the overlay callback so ImGui input runs before SadConsole input (enabling BlockSadConsoleInput)
         Global.UpdateOverlay = (delta) =>

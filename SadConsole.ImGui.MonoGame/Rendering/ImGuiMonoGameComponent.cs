@@ -17,8 +17,6 @@ public class ImGuiMonoGameComponent : DrawableGameComponent
 
     public bool WantsKeyboardCapture => ImGuiRenderer.WantsKeyboardCapture;
 
-    public List<ImGuiObjectBase> UIComponents { get; } = [ ];
-
     public ImGuiObjectBase? BeforeNewFrameLayoutObject { get; set; }
 
     public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game, bool enableDocking): base(game)
@@ -55,7 +53,7 @@ public class ImGuiMonoGameComponent : DrawableGameComponent
         ImGuiRenderer.BeforeLayout();
 
         // Draw our UI
-        foreach (ImGuiObjectBase canvas in UIComponents.ToArray())
+        foreach (ImGuiObjectBase canvas in ImGuiRenderer.UIObjects.ToArray())
             canvas.BuildUI(ImGuiRenderer);
 
         // Call AfterLayout now to finish up and draw all the things
