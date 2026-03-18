@@ -160,6 +160,10 @@ public abstract class ImGuiRenderer<TTexture>
         {
             _loadedTexturesByTexture.Remove(oldTextureData.Texture);
 
+            if (oldTextureData.IsManaged)
+                oldTextureData.Texture.Dispose();
+
+            oldTextureData = new(texture, textureID, oldTextureData.IsManaged);
 
             _loadedTexturesByTexture[texture] = oldTextureData;
             _loadedTexturesByPointer[textureID] = oldTextureData;
