@@ -72,7 +72,7 @@ public class SceneChild : ITitle, IDisposable
     /// Gets a value indicating whether this child has a valid scene texture.
     /// </summary>
     [MemberNotNullWhen(true, nameof(_sceneTexture))]
-    public bool HasValidTexture => _sceneTexture != null && !_sceneTexture.IsDisposed && SceneTextureId.TexID == ImTextureID.Null;
+    public bool HasValidTexture => _sceneTexture != null && !_sceneTexture.IsDisposed && SceneTextureId.TexID != ImTextureID.Null;
 
     public SceneChild(Document document)
     {
