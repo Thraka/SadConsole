@@ -1,48 +1,33 @@
-﻿using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
+using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
-public class NewDocument : ImGuiWindowBase
+public static class NewDocumentWindow
 {
-    public NewDocument()
+    public static void Show(ImGuiRenderer renderer)
     {
-        Title = "New file";
+        Instance instance = new();
+        renderer.UIObjects.Add(instance);
     }
 
-    public void Show()
+    private class Instance : ImGuiObjectBase
     {
-        IsOpen = true;
+        private bool _firstShow = true;
 
-        if (!Core.ImGuiComponent.UIComponents.Contains(this))
-            Core.ImGuiComponent.UIComponents.Add(this);
-    }
-
-    protected override void OnClosed()
-    {
-        if (RemoveOnClose)
-            Core.ImGuiComponent.UIComponents.Remove(this);
-
-        if (DialogResult)
+        public override void BuildUI(ImGuiRenderer renderer)
         {
-            if (Core.State.DocumentBuilders.IsItemSelected())
-                Core.State.Documents.Add(Core.State.DocumentBuilders.SelectedItem.CreateDocument());
-        }
-
-        Core.State.DocumentBuilders.SelectedItem = null;
-    }
-
-    public override void BuildUI(ImGuiRenderer renderer)
-    {
-        if (IsOpen)
-        {
-            ImGui.OpenPopup(Title);
+            if (_firstShow)
+            {
+                ImGui.OpenPopup("New file"u8);
+                _firstShow = false;
+            }
 
             ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(Core.Settings.WindowNewDocWidthFactor * ImGui.GetFontSize(), -1));
-            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
+
+            if (ImGui.BeginPopupModal("New file"u8, ImGuiWindowFlags.NoResize))
             {
                 bool isDocValid = false;
 
@@ -63,9 +48,16 @@ public class NewDocument : ImGuiWindowBase
 
                 ImGui.Separator();
 
-                if (DrawButtons(out DialogResult, !isDocValid, acceptButtonText: "Create"))
-                    Close();
+                bool dialogResult;
+                if (ImGuiSC.WindowDrawButtons(out dialogResult, !isDocValid, acceptButtonText: "Create"))
+                {
+                    if (dialogResult && Core.State.DocumentBuilders.IsItemSelected())
+                        Core.State.Documents.Add(Core.State.DocumentBuilders.SelectedItem.CreateDocument());
 
+                    Core.State.DocumentBuilders.SelectedItem = null;
+                    ImGui.CloseCurrentPopup();
+                    renderer.UIObjects.Remove(this);
+                }
                 ImGui.EndPopup();
             }
         }

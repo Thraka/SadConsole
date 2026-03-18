@@ -238,7 +238,7 @@ public partial class DocumentAnimated: Document
         if (ImGui.BeginPopup("delete_frame_popup"))
         {
             ImGui.Text("Are you sure?"u8);
-            if (Hexa.NET.ImGui.SC.Windows.PromptWindow.DrawButtons(out bool result, false, "No", "Yes"))
+            if (ImGuiSC.WindowDrawButtons(out bool result, false, "No", "Yes"))
             {
                 if (result)
                 {
@@ -383,7 +383,19 @@ public partial class DocumentAnimated: Document
         ImGui.Text("Font: ");
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
-            base.FontSelectionWindow_Popup();
+            FontSelectionWindow.Show(renderer, EditingSurfaceFont, EditingSurfaceFontSize, (font, fontSize) =>
+            {
+                EditingSurfaceFont = (SadFont)font;
+                EditingSurfaceFontSize = fontSize;
+                EditorFontSize = fontSize;
+                _baseAnimation.Font = EditingSurfaceFont;
+                _baseAnimation.FontSize = EditingSurfaceFontSize;
+                EditingSurface.Font = EditingSurfaceFont;
+                EditingSurface.FontSize = EditorFontSize;
+                EditingSurface.IsDirty = true;
+                VisualTool.Font = EditingSurfaceFont;
+                VisualTool.IsDirty = true;
+            });
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: ");
@@ -395,21 +407,6 @@ public partial class DocumentAnimated: Document
             EditorFontSize = EditingSurfaceFontSize;
 
         ImGui.EndDisabled();
-
-        if (base.FontSelectionWindow_BuildUI(renderer))
-        {
-            EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
-            EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
-            EditorFontSize = FontSelectionWindow.SelectedFontSize;
-            _baseAnimation.Font = EditingSurfaceFont;
-            _baseAnimation.FontSize = EditingSurfaceFontSize;
-            EditingSurface.Font = EditingSurfaceFont;
-            EditingSurface.FontSize = EditorFontSize;
-            EditingSurface.IsDirty = true;
-            VisualTool.Font = EditingSurfaceFont;
-            VisualTool.IsDirty = true;
-            base.FontSelectionWindow_Reset();
-        }
 
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))
         {

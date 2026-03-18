@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.Host;
 using SadConsole.ImGuiSystem;
@@ -15,7 +14,7 @@ public static class SimpleObjectHelpers
         IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
 
         if (ImGui.Button("Manage Objects"u8))
-            new Windows.SimpleObjectEditor(docSimpleObjects.SimpleObjects, document.EditingSurface.Surface.DefaultForeground.ToVector4(), document.EditingSurface.Surface.DefaultBackground.ToVector4(), document.EditingSurfaceFont).Open();
+            Windows.SimpleObjectEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, docSimpleObjects.SimpleObjects, document.EditingSurface.Surface.DefaultForeground.ToVector4(), document.EditingSurface.Surface.DefaultBackground.ToVector4(), document.EditingSurfaceFont);
 
         ImGui.SetNextItemWidth(-1);
 

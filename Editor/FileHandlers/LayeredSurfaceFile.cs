@@ -1,4 +1,3 @@
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.FileHandlers;
@@ -28,14 +27,14 @@ internal class LayeredSurfaceFile : IFileHandler
         {
             if (!Serializer.TryLoad<CellSurface[]>(file, true, out layers))
             {
-                MessageWindow.Show($"Unable to load file.\r\n\r\nIs it the wrong type?", "Error");
+                SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to load file.\r\n\r\nIs it the wrong type?", "Error");
                 return null;
             }
         }
 
         if (layers == null || layers.Length == 0)
         {
-            MessageWindow.Show($"Unable to load file.\r\n\r\nNo layers found.", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to load file.\r\n\r\nNo layers found.", "Error");
             return null;
         }
 
@@ -65,12 +64,12 @@ internal class LayeredSurfaceFile : IFileHandler
             }
             catch (Exception e)
             {
-                MessageWindow.Show($"Unable to save file.\r\n\r\n{e.Message}", "Error");
+                SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\n{e.Message}", "Error");
                 return false;
             }
         }
 
-        MessageWindow.Show($"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
+        SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
 
         return false;
     }

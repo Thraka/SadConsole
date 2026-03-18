@@ -74,8 +74,6 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
     public bool HasPalette = false;
     public EditorPalette Palette = new();
 
-    protected FontSelectionWindow? FontSelectionWindow;
-
     /// <summary>
     /// Gets the icon to display for this document type in the hierarchy.
     /// Override in derived classes to provide a custom icon.
@@ -93,32 +91,6 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         VisualLayerToolUpper = VisualTool.Layers.Create();
         SyncToolModes();
     }
-
-    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
-    protected void FontSelectionWindow_Popup()
-    {
-        FontSelectionWindow = new FontSelectionWindow(EditingSurfaceFont, EditingSurfaceFontSize);
-        FontSelectionWindow.IsOpen = true;
-    }
-
-    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
-    protected bool FontSelectionWindow_BuildUI(ImGuiRenderer renderer)
-    {
-        if (FontSelectionWindow != null && FontSelectionWindow.IsOpen)
-        {
-            FontSelectionWindow.BuildUI(renderer);
-
-            if (!FontSelectionWindow.IsOpen)
-            {
-                return FontSelectionWindow.DialogResult;
-            }
-        }
-
-        return false;
-    }
-
-    protected void FontSelectionWindow_Reset() =>
-        FontSelectionWindow = null;
 
     
 
@@ -331,13 +303,10 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         ImGui.SeparatorText("Metadata"u8);
         if (ImGui.Button("Edit"u8))
         {
-            var window = new Windows.KeyValuePairEditor(Metadata);
-            window.Closed += (windowObj, _) =>
+            KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, Metadata, updatedMetadata =>
             {
-                if (((ImGuiWindowBase)windowObj).DialogResult)
-                    Metadata = window.ToDictionary();
-            };
-            window.Open();
+                Metadata = updatedMetadata;
+            }, null);
         }
 
         if (Metadata.Count > 0)

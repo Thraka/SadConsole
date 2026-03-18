@@ -1,5 +1,4 @@
-﻿using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
+using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem;
 
 namespace SadConsole.Editor.Windows;
@@ -25,7 +24,7 @@ public static class ResizeSurfacePopup
                 SettingsTable.EndTable();
             }
 
-            if (ImGuiWindowBase.DrawButtons(out dialogResult))
+            if (ImGuiSC.WindowDrawButtons(out dialogResult))
             {
                 returnValue = true;
                 ImGui.CloseCurrentPopup();

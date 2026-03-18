@@ -43,6 +43,7 @@
     <None Include="Res\Ansi\**" LinkBase="Ansi\" CopyToOutputDirectory="Always" />
     <None Include="Res\**" LinkBase="Res\" CopyToOutputDirectory="Always" />
     <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
+    <None Include="Windows\SaveFileWindow.cs" />
     <None Update="appconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

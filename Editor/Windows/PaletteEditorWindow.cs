@@ -1,6 +1,4 @@
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.ImGuiSystem;
 using SadConsole.UI;
 using System.Numerics;
@@ -8,33 +6,44 @@ using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
-public class PaletteEditorWindow : ImGuiWindowBase
+public static class PaletteEditorWindow
 {
-    private List<NamedColor> _editingColors;
-    private int _selectedColorIndex = -1;
-    private string _editingColorName = "";
-    private Vector4 _editingColorValue = Vector4.One;
-
-    private EditorPalette _palette;
-    private Documents.Document? _sourceDocument;
-
-    public PaletteEditorWindow(EditorPalette palette)
+    public static void Show(ImGuiRenderer renderer, EditorPalette palette)
     {
-        Title = "Palette Editor";
-        _palette = palette ?? throw new ArgumentNullException(nameof(palette));
-        _editingColors = [.. palette.Colors];
-        _sourceDocument = Core.State.SelectedDocument;
+        Instance instance = new(palette);
+        renderer.UIObjects.Add(instance);
     }
 
-    public override void BuildUI(ImGuiRenderer renderer)
+    protected class Instance : ImGuiObjectBase
     {
-        if (IsOpen)
+        private List<NamedColor> _editingColors;
+        private int _selectedColorIndex = -1;
+        private string _editingColorName = "";
+        private Vector4 _editingColorValue = Vector4.One;
+
+        private EditorPalette _palette;
+        private Documents.Document? _sourceDocument;
+        private bool _firstShow = true;
+
+        public Instance(EditorPalette palette)
         {
-            ImGui.OpenPopup(Title);
+            _palette = palette ?? throw new ArgumentNullException(nameof(palette));
+            _editingColors = [.. palette.Colors];
+            _sourceDocument = Core.State.SelectedDocument;
+        }
+
+        public override void BuildUI(ImGuiRenderer renderer)
+        {
+            if (_firstShow)
+            {
+                ImGui.OpenPopup("Palette Editor"u8);
+                _firstShow = false;
+            }
 
             ImGuiSC.CenterNextWindow();
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(Core.Settings.WindowNewDocWidthFactor * ImGui.GetFontSize(), -1));
-            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.MenuBar))
+
+            if (ImGui.BeginPopupModal("Palette Editor"u8, ImGuiWindowFlags.MenuBar))
             {
                 bool menuClearAll = false;
                 bool menuImportColors = false;
@@ -65,7 +74,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 if (ImGui.BeginPopup("clear_all_popup"u8))
                 {
                     ImGui.Text("Are you sure?"u8);
-                    if (DrawButtons(out bool result, false, "No", "Yes"))
+                    if (ImGuiSC.WindowDrawButtons(out bool result, false, "No", "Yes"))
                     {
                         if (result)
                             ResetToDefault();
@@ -81,7 +90,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 if (ImGui.BeginPopup("import_colors"u8))
                 {
                     ImGui.Text("Erase existing before importing?"u8);
-                    if (DrawButtons(out bool result, false, "No", "Yes"))
+                    if (ImGuiSC.WindowDrawButtons(out bool result, false, "No", "Yes"))
                     {
                         if (result)
                             ImportColorsFromDocument(true);
@@ -117,7 +126,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                     for (int i = 0; i < _editingColors.Count; i++)
                     {
                         var color = _editingColors[i];
-                        
+
                         Vector2 pos = ImGui.GetCursorPos();
                         if (ImGui.Selectable($"##{color.Name}", i == _selectedColorIndex))
                         {
@@ -162,31 +171,31 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 {
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("Edit Selected Color:");
-                    
+
                     ImGui.SameLine();
                     ImGui.BeginDisabled(_selectedColorIndex == 0);
                     if (ImGui.Button("\uf102##totop"u8))
                         MoveColorToTop();
                     ImGui.EndDisabled();
-                    
+
                     ImGui.SameLine();
                     ImGui.BeginDisabled(_selectedColorIndex == 0);
                     if (ImGui.Button("\uf062##up"u8))
                         MoveColorUp();
                     ImGui.EndDisabled();
-                    
+
                     ImGui.SameLine();
                     ImGui.BeginDisabled(_selectedColorIndex >= _editingColors.Count - 1);
                     if (ImGui.Button("\uf063##down"u8))
                         MoveColorDown();
                     ImGui.EndDisabled();
-                    
+
                     ImGui.SameLine();
                     ImGui.BeginDisabled(_selectedColorIndex >= _editingColors.Count - 1);
                     if (ImGui.Button("\uf103##tobottom"u8))
                         MoveColorToBottom();
                     ImGui.EndDisabled();
-                    
+
                     // Name input
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("Name:");
@@ -196,7 +205,7 @@ public class PaletteEditorWindow : ImGuiWindowBase
                     {
                         UpdateSelectedColor();
                     }
-                    
+
                     // Color picker
                     ImGui.AlignTextToFramePadding();
                     ImGui.Text("Color:");
@@ -222,158 +231,147 @@ public class PaletteEditorWindow : ImGuiWindowBase
                 ImGui.Separator();
 
                 // Action buttons
-                if (DrawButtons(out DialogResult, acceptButtonText: "Apply Changes"))
+                bool dialogResult;
+                if (ImGuiSC.WindowDrawButtons(out dialogResult, cancelButtonText: "Cancel", acceptButtonText: "Apply Changes"))
                 {
-                    if (DialogResult)
+                    if (dialogResult)
                         ApplyChanges();
 
-                    Close();
+                    renderer.UIObjects.Remove(this);
+                    ImGui.CloseCurrentPopup();
                 }
 
                 ImGui.EndPopup();
             }
-            else
+        }
+
+        private void AddNewColor() =>
+            _editingColors.Add(new NamedColor(Documents.Document.GenerateName("Color"), Color.White));
+
+        private void RemoveSelectedColor()
+        {
+            if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count)
             {
-                Close();
+                _editingColors.RemoveAt(_selectedColorIndex);
+                _selectedColorIndex = -1;
             }
         }
-    }
 
-    private void AddNewColor() =>
-        _editingColors.Add(new NamedColor(Documents.Document.GenerateName("Color"), Color.White));
-
-    private void RemoveSelectedColor()
-    {
-        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count)
+        private void MoveColorToTop()
         {
-            _editingColors.RemoveAt(_selectedColorIndex);
+            if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
+            {
+                var color = _editingColors[_selectedColorIndex];
+                _editingColors.RemoveAt(_selectedColorIndex);
+                _editingColors.Insert(0, color);
+                _selectedColorIndex = 0;
+            }
+        }
+
+        private void MoveColorUp()
+        {
+            if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
+            {
+                var color = _editingColors[_selectedColorIndex];
+                _editingColors.RemoveAt(_selectedColorIndex);
+                _editingColors.Insert(_selectedColorIndex - 1, color);
+                _selectedColorIndex--;
+            }
+        }
+
+        private void MoveColorDown()
+        {
+            if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
+            {
+                var color = _editingColors[_selectedColorIndex];
+                _editingColors.RemoveAt(_selectedColorIndex);
+                _editingColors.Insert(_selectedColorIndex + 1, color);
+                _selectedColorIndex++;
+            }
+        }
+
+        private void MoveColorToBottom()
+        {
+            if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
+            {
+                var color = _editingColors[_selectedColorIndex];
+                _editingColors.RemoveAt(_selectedColorIndex);
+                _editingColors.Add(color);
+                _selectedColorIndex = _editingColors.Count - 1;
+            }
+        }
+
+        private void ResetToDefault()
+        {
+            _editingColors.Clear();
+            _editingColors.Add(new NamedColor("White", SadRogue.Primitives.Color.White));
+            _editingColors.Add(new NamedColor("Black", SadRogue.Primitives.Color.Black));
             _selectedColorIndex = -1;
         }
-    }
 
-    private void MoveColorToTop()
-    {
-        if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
+        private void UpdateSelectedColor()
         {
-            var color = _editingColors[_selectedColorIndex];
-            _editingColors.RemoveAt(_selectedColorIndex);
-            _editingColors.Insert(0, color);
-            _selectedColorIndex = 0;
-        }
-    }
-
-    private void MoveColorUp()
-    {
-        if (_selectedColorIndex > 0 && _selectedColorIndex < _editingColors.Count)
-        {
-            var color = _editingColors[_selectedColorIndex];
-            _editingColors.RemoveAt(_selectedColorIndex);
-            _editingColors.Insert(_selectedColorIndex - 1, color);
-            _selectedColorIndex--;
-        }
-    }
-
-    private void MoveColorDown()
-    {
-        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
-        {
-            var color = _editingColors[_selectedColorIndex];
-            _editingColors.RemoveAt(_selectedColorIndex);
-            _editingColors.Insert(_selectedColorIndex + 1, color);
-            _selectedColorIndex++;
-        }
-    }
-
-    private void MoveColorToBottom()
-    {
-        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count - 1)
-        {
-            var color = _editingColors[_selectedColorIndex];
-            _editingColors.RemoveAt(_selectedColorIndex);
-            _editingColors.Add(color);
-            _selectedColorIndex = _editingColors.Count - 1;
-        }
-    }
-
-    private void ResetToDefault()
-    {
-        _editingColors.Clear();
-        _editingColors.Add(new NamedColor("White", SadRogue.Primitives.Color.White));
-        _editingColors.Add(new NamedColor("Black", SadRogue.Primitives.Color.Black));
-        _selectedColorIndex = -1;
-    }
-
-    private void UpdateSelectedColor()
-    {
-        if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count)
-        {
-            var newColor = new NamedColor(_editingColorName,
-                new SadRogue.Primitives.Color((byte)(_editingColorValue.X * 255),
-                                            (byte)(_editingColorValue.Y * 255),
-                                            (byte)(_editingColorValue.Z * 255)));
-            _editingColors[_selectedColorIndex] = newColor;
-        }
-    }
-
-    private void ApplyChanges()
-    {
-        _palette.Colors = _editingColors.ToArray();
-        Core.State.SyncEditorPalette();
-    }
-
-    private void ImportColorsFromDocument(bool clear)
-    {
-        if (_sourceDocument == null) return;
-
-        // Use a HashSet to track unique colors from the document
-        HashSet<SadRogue.Primitives.Color> uniqueColors = new();
-
-        // Iterate through all cells in the surface
-        var surface = _sourceDocument.EditingSurface.Surface;
-        for (int i = 0; i < surface.Count; i++)
-        {
-            var cell = surface[i];
-            uniqueColors.Add(cell.Foreground);
-            uniqueColors.Add(cell.Background);
-        }
-
-        // If not clearing, build a set of existing colors to skip
-        HashSet<SadRogue.Primitives.Color> existingColors = new();
-        if (!clear)
-        {
-            foreach (var namedColor in _editingColors)
+            if (_selectedColorIndex >= 0 && _selectedColorIndex < _editingColors.Count)
             {
-                existingColors.Add(namedColor.Color);
+                var newColor = new NamedColor(_editingColorName,
+                    new SadRogue.Primitives.Color((byte)(_editingColorValue.X * 255),
+                                                (byte)(_editingColorValue.Y * 255),
+                                                (byte)(_editingColorValue.Z * 255)));
+                _editingColors[_selectedColorIndex] = newColor;
             }
         }
-        else
+
+        private void ApplyChanges()
         {
-            // Clear existing colors
-            _editingColors.Clear();
+            _palette.Colors = _editingColors.ToArray();
+            Core.State.SyncEditorPalette();
         }
 
-        int colorIndex = 1;
-        foreach (var color in uniqueColors.OrderBy(c => c.GetHSLLightness()))
+        private void ImportColorsFromDocument(bool clear)
         {
-            // Skip colors that already exist in the palette
-            if (existingColors.Contains(color))
-                continue;
+            if (_sourceDocument == null) return;
 
-            string colorName = Documents.Document.GenerateName($"Color{colorIndex}");
-            _editingColors.Add(new NamedColor(colorName, color));
-            colorIndex++;
+            // Use a HashSet to track unique colors from the document
+            HashSet<SadRogue.Primitives.Color> uniqueColors = new();
+
+            // Iterate through all cells in the surface
+            var surface = _sourceDocument.EditingSurface.Surface;
+            for (int i = 0; i < surface.Count; i++)
+            {
+                var cell = surface[i];
+                uniqueColors.Add(cell.Foreground);
+                uniqueColors.Add(cell.Background);
+            }
+
+            // If not clearing, build a set of existing colors to skip
+            HashSet<SadRogue.Primitives.Color> existingColors = new();
+            if (!clear)
+            {
+                foreach (var namedColor in _editingColors)
+                {
+                    existingColors.Add(namedColor.Color);
+                }
+            }
+            else
+            {
+                // Clear existing colors
+                _editingColors.Clear();
+            }
+
+            int colorIndex = 1;
+            foreach (var color in uniqueColors.OrderBy(c => c.GetHSLLightness()))
+            {
+                // Skip colors that already exist in the palette
+                if (existingColors.Contains(color))
+                    continue;
+
+                string colorName = Documents.Document.GenerateName($"Color{colorIndex}");
+                _editingColors.Add(new NamedColor(colorName, color));
+                colorIndex++;
+            }
+
+            // Reset selection
+            _selectedColorIndex = -1;
         }
-
-        // Reset selection
-        _selectedColorIndex = -1;
-    }
-
-    protected override void OnOpened()
-    {
-        base.OnOpened();
-        // Refresh the editing colors when window opens
-        _editingColors = [.. _palette.Colors];
-        _selectedColorIndex = -1;
-        _sourceDocument = Core.State.SelectedDocument;
     }
 }

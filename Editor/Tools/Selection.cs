@@ -2,8 +2,6 @@
 using Hexa.NET.ImGui;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.Windows;
-using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Tools;
 
@@ -46,37 +44,18 @@ internal class Selection : ITool
 
         ImGui.BeginDisabled(Core.State.Blueprints.Count == 0);
         if (ImGui.Button("Load Blueprint"u8))
-        {
-            BlueprintImport? window = new();
-            window.Open();
-            window.Closed += (sender, e) =>
-            {
-                if (window.DialogResult)
-                {
-                    CancelPaste(document, false);
-                    _selectionSurface = Core.State.Blueprints.SelectedItem!.GetSurface();
-                    _state = States.Pasting;
+            BlueprintImportWindow.Show(Core.ImGuiComponent.ImGuiRenderer, () => {
+                _selectionSurface = Core.State.Blueprints.SelectedItem!.GetSurface();
+                _state = States.Pasting;
+            });
 
-                    window = null;
-                }
-            };
-        }
         ImGui.EndDisabled();
 
         if (ImGui.Button("Import Surface"))
-        {
-            Windows.OpenFile fileLoader = new([new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()]);
-            fileLoader.Closed += FileLoader_Closed;
-            fileLoader.Open();
-            
-        }
+            OpenFileWindow.Show(Core.ImGuiComponent.ImGuiRenderer, [new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()], ImportSurface_OnFileSelected, null);
 
         if (ImGui.Button("Import Surface from Image"))
-        {
-            Windows.ImageToAsciiWindow imageToAscii = new(document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One));
-            imageToAscii.Closed += ImageToAscii_Closed;
-            imageToAscii.Open();
-        }
+            ImageToAsciiWindow.Show(Core.ImGuiComponent.ImGuiRenderer, document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One), ImageToAscii_OnImported, null);
 
         ImGui.BeginDisabled(_clipboardSurface == null);
         if (ImGui.Button("Paste surface from Clipboard"u8))
@@ -134,27 +113,9 @@ internal class Selection : ITool
         }
     }
 
-    private void ImageToAscii_Closed(object? sender, EventArgs e)
+    private void ImportSurface_OnFileSelected(FileHandlers.IFileHandler handler, FileInfo file)
     {
-        if (sender is not ImageToAsciiWindow dialog) return;
-        if (!dialog.DialogResult) return;
-        if (dialog.ResultSurface is CellSurface surface)
-        {
-            _clipboardSurface = surface;
-            ClearState();
-            _state = States.PastingMultiple;
-            _selectionSurface = _clipboardSurface;
-        }
-    }
-
-    private void FileLoader_Closed(object? sender, EventArgs e)
-    {
-        OpenFile dialog = (OpenFile)sender!;
-
-        if (!dialog.DialogResult) return;
-
-        object? result = dialog.SelectedLoader.Load(dialog.SelectedFile.FullName);
-
+        object? result = handler.Load(file.FullName);
         if (result != null)
         {
             CellSurface? surface = null;
@@ -173,8 +134,16 @@ internal class Selection : ITool
                 _selectionSurface = _clipboardSurface;
             }
         }
-        dialog.Closed -= FileLoader_Closed;
     }
+
+    private void ImageToAscii_OnImported(ICellSurface surface)
+    {
+        _clipboardSurface = (CellSurface)surface;
+        ClearState();
+        _state = States.PastingMultiple;
+        _selectionSurface = _clipboardSurface;
+    }
+
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
@@ -295,7 +264,7 @@ internal class Selection : ITool
 
             bool disableAccept = string.IsNullOrEmpty(_saveBlueprintFileName.Trim()) || string.IsNullOrEmpty(_saveBlueprintName.Trim()) || fileExists;
 
-            if (ImGuiWindowBase.DrawButtons(out bool savedClicked, disableAccept))
+            if (ImGuiSC.WindowDrawButtons(out bool savedClicked, disableAccept))
             {
                 if (savedClicked)
                 {

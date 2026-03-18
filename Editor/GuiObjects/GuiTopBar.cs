@@ -1,7 +1,5 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiSystem.Rendering;
@@ -13,6 +11,7 @@ public class GuiTopBar : ImGuiObjectBase
     public bool ShowDemoWindow;
     public bool ShowMetrics;
     private bool _debug;
+    private bool _closeConfirm;
 
     // GuideGrid temp values for input
     private int _guideGridCellsX = Core.State.GuideGrid.CellsX;
@@ -37,72 +36,78 @@ public class GuiTopBar : ImGuiObjectBase
             if (ImGui.BeginMenu("File"u8))
             {
                 if (ImGui.MenuItem("\uea7f New"u8, "n"u8))
-                    new Windows.NewDocument().Show();
+                    Windows.NewDocumentWindow.Show(renderer);
 
                 if (ImGui.MenuItem("\ue5fe Open"u8, "o"u8))
                 {
-                    Windows.OpenFile window = new();
-                    window.Closed += (s, e) =>
+                    Windows.OpenFileWindow.Show(renderer, (loader, file) =>
                     {
-                        if (window.DialogResult)
+                        if (loader.Load(file.FullName) is Document document)
                         {
-                            if (window.SelectedLoader.Load(window.SelectedFile.FullName) is Document document)
-                            {
-                                Core.State.Documents.Add(document);
-                                //Core.State.Documents.SelectedItemIndex = Core.State.Documents.Count - 1;
-                            }
+                            Core.State.Documents.Add(document);
                         }
-                    };
-                    window.Open();
+                    }, null);
                 }
 
                 if (ImGui.MenuItem("\U000f044e Import Image"u8, "i"u8))
                 {
-                    Windows.ImageToAsciiWindow imageToAscii = new(Game.Instance.DefaultFont, Game.Instance.DefaultFont.GetFontSize(Game.Instance.DefaultFontSize));
-                    imageToAscii.Closed += ImportImage_Closed;
-                    imageToAscii.Open();
+                    Windows.ImageToAsciiWindow.Show(renderer,
+                        Game.Instance.DefaultFont,
+                        Game.Instance.DefaultFont.GetFontSize(Game.Instance.DefaultFontSize),
+                        (resultSurface) =>
+                        {
+                            DocumentSurface.Builder builder = new();
+                            builder.Width = resultSurface.Width;
+                            builder.Height = resultSurface.Height;
+
+                            DocumentSurface document = (DocumentSurface)builder.CreateDocument();
+                            resultSurface.Copy(document.EditingSurface.Surface);
+                            document.EditingSurface.IsDirty = true;
+
+                            Core.State.Documents.Add(document);
+                        }, null);
                 }
 
                 ImGui.Separator();
                 ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
                 if (ImGui.MenuItem("\ueb4b Save"u8, "s"u8))
-                {
-                    Windows.SaveFile window = new(Core.State.SelectedDocument!);
-                    window.Open();
-                }
+                    Windows.SaveFileWindow.Show(renderer, Core.State.SelectedDocument!);
 
                 ImGui.BeginDisabled(Core.State.HasSelectedDocument && Core.State.SelectedDocument.Parent != null);
                 if (ImGui.MenuItem("Close", "c"))
-                {
-                    PromptWindow window = new("Are you sure you want to close this document?", "Close", "Yes", "No");
-                    window.Closed += (s, e) =>
-                    {
-                        if (((PromptWindow)s).DialogResult)
-                        {
-                            // Get the root document for closing
-                            var docToClose = Core.State.SelectedDocument!.Parent != null 
-                                ? HierarchyHelper.GetRoot(Core.State.SelectedDocument) 
-                                : Core.State.SelectedDocument;
-                            
-                            Core.State.Documents.Remove(docToClose);
-                            Core.State.SelectedDocument = null;
-                            
-                            // Select first available document if any
-                            if (Core.State.Documents.Count > 0)
-                            {
-                                Core.State.SelectedDocument = Core.State.Documents[0];
-                                Core.State.SelectedDocument.OnSelected();
-                            }
-                        }
-                    };
-                    window.Open();
-                }
+                    _closeConfirm = true;
+
+                
+
                 ImGui.EndDisabled();
 
                 ImGui.EndDisabled();
 
                 ImGui.EndMenu();
             }
+
+            if (_closeConfirm)
+            {
+                _closeConfirm = false;
+                ImGui.OpenPopup("ConfirmCloseDocument"u8);
+            }
+
+            ImGuiSC.CenterNextWindow();
+            ImGuiSC.ConfirmPopup("ConfirmCloseDocument"u8, "Are you sure you want to close this document?"u8, () =>
+            {
+                var docToClose = Core.State.SelectedDocument!.Parent != null
+                    ? HierarchyHelper.GetRoot(Core.State.SelectedDocument)
+                    : Core.State.SelectedDocument;
+
+                Core.State.Documents.Remove(docToClose);
+                Core.State.SelectedDocument = null;
+
+                if (Core.State.Documents.Count > 0)
+                {
+                    Core.State.SelectedDocument = Core.State.Documents[0];
+                    Core.State.SelectedDocument.OnSelected();
+                }
+            });
 
             // Draw the documents menu items
             if (Core.State.HasSelectedDocument)
@@ -113,15 +118,15 @@ public class GuiTopBar : ImGuiObjectBase
             {
                 if (ImGui.MenuItem("Edit Editor Palette"u8))
                 {
-                    new Windows.PaletteEditorWindow(Core.State.Palette).Open();
+                    Windows.PaletteEditorWindow.Show(renderer, Core.State.Palette);
                 }
-                
+
                 if (Core.State.SelectedDocument is not null)
                 {
                     if (Core.State.SelectedDocument.HasPalette)
                     {
                         if (ImGui.MenuItem("Edit Document Palette"u8))
-                            new Windows.PaletteEditorWindow(Core.State.SelectedDocument.Palette!).Open();
+                            Windows.PaletteEditorWindow.Show(renderer, Core.State.SelectedDocument.Palette!);
                     }
                     else
                     {
@@ -196,22 +201,6 @@ public class GuiTopBar : ImGuiObjectBase
             StatusItems.Clear();
             ImGui.EndMainMenuBar();
         }
-    }
-
-    private void ImportImage_Closed(object? sender, EventArgs e)
-    {
-        Windows.ImageToAsciiWindow window = (Windows.ImageToAsciiWindow)sender!;
-        if (!window.DialogResult) return;
-
-        DocumentSurface.Builder builder = new();
-        builder.Width = window.ResultSurface!.Width;
-        builder.Height = window.ResultSurface.Height;
-
-        DocumentSurface document = (DocumentSurface)builder.CreateDocument();
-        window.ResultSurface.Copy(document.EditingSurface.Surface);
-        document.EditingSurface.IsDirty = true;
-
-        Core.State.Documents.Add(document);
     }
 }
 

@@ -1,4 +1,3 @@
-﻿using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 
 namespace SadConsole.Editor.FileHandlers;

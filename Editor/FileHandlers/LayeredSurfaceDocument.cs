@@ -1,4 +1,3 @@
-using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.Serialization;
 
@@ -109,7 +108,7 @@ internal class LayeredSurfaceDocument : IFileHandler
     {
         if (!Serializer.TryLoad(file, true, out LayeredSurfaceDocumentSerialized? serializedObj))
         {
-            MessageWindow.Show($"Unable to load file.", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to load file.", "Error");
             return null;
         }
 
@@ -117,7 +116,7 @@ internal class LayeredSurfaceDocument : IFileHandler
 
         if (doc == null)
         {
-            MessageWindow.Show($"Unable to load file.", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to load file.", "Error");
             return null;
         }
 
@@ -141,7 +140,7 @@ internal class LayeredSurfaceDocument : IFileHandler
 
                 if (convertedObj == null)
                 {
-                    MessageWindow.Show($"Unable to serialize document.", "Error");
+                    SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to serialize document.", "Error");
                     return false;
                 }
 
@@ -154,12 +153,12 @@ internal class LayeredSurfaceDocument : IFileHandler
             }
             catch (Exception e)
             {
-                MessageWindow.Show($"Unable to save file.\r\n\r\n{e.Message}", "Error");
+                SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\n{e.Message}", "Error");
                 return false;
             }
         }
 
-        MessageWindow.Show($"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
+        SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
 
         return false;
     }

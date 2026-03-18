@@ -1,7 +1,6 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Reflection.Metadata;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.Entities;
 using SadConsole.Host;

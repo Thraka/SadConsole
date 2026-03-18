@@ -123,14 +123,14 @@ public static partial class Core
 
     public static void ResetUIList()
     {
-        Core.ImGuiComponent.UIComponents.Clear();
-        Core.ImGuiComponent.UIComponents.Add(State.GuiTopBar);
-        Core.ImGuiComponent.UIComponents.Add(State.GuiDockSpace);
-        Core.ImGuiComponent.UIComponents.Add(new GuiDocumentsList());
-        Core.ImGuiComponent.UIComponents.Add(new GuiToolsList());
-        Core.ImGuiComponent.UIComponents.Add(new GuiDocumentsHost());
-        Core.ImGuiComponent.UIComponents.Add(new GuiFinalDrawDocument());
-        //Core.ImGuiComponent.UIComponents.Add(_debuggingTools);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Clear();
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(State.GuiTopBar);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(State.GuiDockSpace);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiDocumentsList());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiToolsList());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiDocumentsHost());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiFinalDrawDocument());
+        //Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(_debuggingTools);
     }
 
     public static void ShowCreateDocument()

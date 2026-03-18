@@ -1,6 +1,5 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 using Document = SadConsole.Editor.Documents.Document;

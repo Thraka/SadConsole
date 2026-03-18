@@ -1,4 +1,3 @@
-﻿using Hexa.NET.ImGui.SC.Windows;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.Serialization;
 
@@ -33,7 +32,7 @@ internal class ZonesHandler: IFileHandler
         }
         else
         {
-            MessageWindow.Show($"Unable to load file.", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to load file.", "Error");
             return null;
         }
     }
@@ -44,7 +43,7 @@ internal class ZonesHandler: IFileHandler
 
         if (instance is not ZoneSimplified[])
         {
-            MessageWindow.Show($"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\nWrong type sent to handler:\r\n  {instance.GetType().Name}", "Error");
             return false;
         }
 
@@ -64,7 +63,7 @@ internal class ZonesHandler: IFileHandler
         }
         catch (Exception e)
         {
-            MessageWindow.Show($"Unable to save file.\r\n\r\n{e.Message}", "Error");
+            SadConsole.ImGuiSystem.MessageWindow.Show(Core.ImGuiComponent.ImGuiRenderer, $"Unable to save file.\r\n\r\n{e.Message}", "Error");
             return false;
         }
     }

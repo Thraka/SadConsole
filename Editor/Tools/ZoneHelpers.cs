@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
@@ -232,13 +231,9 @@ internal static class ZoneHelpers
             if (ImGui.Button("Edit Settings"u8))
             {
                 var tempZone = zone;
-                var window = new Windows.KeyValuePairEditor(zone.Settings);
-                window.Closed += (windowObj, _) =>
-                {
-                    if (((ImGuiWindowBase)windowObj).DialogResult)
-                        tempZone.Settings = window.ToDictionary();
-                };
-                window.Open();
+                Windows.KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, zone.Settings,
+                    (savedSettings) => { tempZone.Settings = savedSettings; },
+                    null);
             }
 
             if (zone.Settings.Count > 0)

@@ -6,39 +6,38 @@ using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Windows;
 
-public class SimpleObjectEditor : ImGuiWindowBase
+public static class SimpleObjectEditorWindow
 {
-    public ImGuiList<SimpleObjectDefinition> _objects;
-    public ColoredGlyphReference Glyph;
-    public string? Name;
-
-    private bool _isAdding = false;
-    private bool _isEditing = false;
-
-    private readonly Vector4 _defaultForeground;
-    private readonly Vector4 _defaultBackground;
-    private readonly IFont _font;
-
-    public SimpleObjectEditor(ImGuiList<SimpleObjectDefinition> objects, Vector4 defaultForeground, Vector4 defaultBackground, IFont font)
+    protected class Instance : ImGuiObjectBase
     {
-        Title = "Simple Object Editor";
-        _defaultForeground = defaultForeground;
-        _defaultBackground = defaultBackground;
-        _font = font;
-        _objects = objects;
-    }
+        private ImGuiList<SimpleObjectDefinition> _objects;
 
-    public override void BuildUI(ImGuiRenderer renderer)
-    {
-        if (IsOpen)
+        private readonly Vector4 _defaultForeground;
+        private readonly Vector4 _defaultBackground;
+        private readonly IFont _font;
+        private bool _firstShow = true;
+
+        public Instance(ImGuiList<SimpleObjectDefinition> objects, Vector4 defaultForeground, Vector4 defaultBackground, IFont font)
         {
+            _defaultForeground = defaultForeground;
+            _defaultBackground = defaultBackground;
+            _font = font;
+            _objects = objects;
+        }
+
+        public override void BuildUI(ImGuiRenderer renderer)
+        {
+            if (_firstShow)
+            {
+                ImGui.OpenPopup("Simple Object Editor"u8);
+                _firstShow = false;
+            }
+
             ImGui.GetStyle().GetSpacing(out Vector2 framePadding, out Vector2 itemSpacing);
 
-            ImGui.OpenPopup(Title);
+            ImGuiSC.CenterNextWindowOnAppearing(new Vector2(Core.Settings.WindowSimpleObjectEditor * ImGui.GetFontSize(), -1));
 
-            ImGuiSC.CenterNextWindow();
-            ImGui.SetNextWindowSize(new Vector2(Core.Settings.WindowSimpleObjectEditor * ImGui.GetFontSize(), -1));
-            if (ImGui.BeginPopupModal(Title, ref IsOpen, ImGuiWindowFlags.NoResize))
+            if (ImGui.BeginPopupModal("Simple Object Editor"u8, ImGuiWindowFlags.NoResize))
             {
                 ImGui.Columns(2);
                 ImGui.AlignTextToFramePadding();
@@ -62,12 +61,12 @@ public class SimpleObjectEditor : ImGuiWindowBase
                     _objects.SelectedItem = newObject;
                 }
 
-                float pos = ImGui.CalcTextSize("Delete").X + framePadding.X / 2;
+                float pos = ImGui.CalcTextSize("Delete"u8).X + framePadding.X / 2;
                 ImGui.SameLine(ImGui.GetContentRegionAvail().X - pos);
                 ImGui.BeginDisabled(!_objects.IsItemSelected());
 
-                if (ImGui.Button("Delete"))
-                    ImGui.OpenPopup("ConfirmDelete");
+                if (ImGui.Button("Delete"u8))
+                    ImGui.OpenPopup("ConfirmDelete"u8);
 
                 ImGui.EndDisabled();
 
@@ -107,26 +106,25 @@ public class SimpleObjectEditor : ImGuiWindowBase
 
                 ImGui.Columns(1);
 
-                ImGuiSC.CenterNextWindow();
-                if (ImGui.BeginPopup("ConfirmDelete"))
+                if (ImGuiSC.ConfirmPopup("ConfirmDelete"u8, "Are you sure you want to delete this object?"u8, null, null))
+                    _objects.Objects.Remove(_objects.SelectedItem);
+
+                ImGui.Separator();
+
+                if (ImGuiSC.WindowDrawButtons(out bool dialogResult, cancelButtonText: "", acceptButtonText: "Close"))
                 {
-                    ImGui.Text("Are you sure you want to delete this object?");
-
-                    if (ImGui.Button("Cancel"))
-                        ImGui.CloseCurrentPopup();
-
-                    pos = ImGui.CalcTextSize("Yes").X + framePadding.X / 2;
-                    ImGui.SameLine(ImGui.GetContentRegionAvail().X - pos);
-                    if (ImGui.Button("Yes"))
-                    {
-                        _objects.Objects.Remove(_objects.SelectedItem);
-                        ImGui.CloseCurrentPopup();
-                    }
-
-                    ImGui.EndPopup();
+                    renderer.UIObjects.Remove(this);
+                    ImGui.CloseCurrentPopup();
                 }
+
                 ImGui.EndPopup();
             }
         }
+    }
+
+    public static void Show(ImGuiRenderer renderer, ImGuiList<SimpleObjectDefinition> objects, Vector4 defaultForeground, Vector4 defaultBackground, IFont font)
+    {
+        Instance instance = new(objects, defaultForeground, defaultBackground, font);
+        renderer.UIObjects.Add(instance);
     }
 }
