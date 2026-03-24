@@ -11980,6 +11980,9 @@
             </summary>
             <param name="data">The raw byte data to process.</param>
         </member>
+        <member name="M:SadConsole.TerminalConsole.Update(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.TerminalConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
             <inheritdoc/>
         </member>
@@ -12807,6 +12810,13 @@
             Cursor position on the surface.
             </summary>
         </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible">
+            <summary>
+            Whether the cursor is in the visible phase of its blink cycle.
+            Render steps should draw the cursor only when both <see cref="P:SadConsole.Terminal.TerminalCursor.IsVisible"/> and <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> are <see langword="true"/>.
+            Steady cursor shapes (even DECSCUSR values) always return <see langword="true"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.Terminal.TerminalCursor.IsVisible">
             <summary>
             Cursor visibility. Controlled by DECTCEM (CSI ? 25 h/l).
@@ -12834,6 +12844,13 @@
             </summary>
             <param name="foreground">Cursor foreground color.</param>
             <param name="background">Cursor background color.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.Update(System.TimeSpan)">
+            <summary>
+            Advances the blink timer by the frame delta and toggles <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> when the interval elapses.
+            Steady cursor shapes never blink — <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> stays <see langword="true"/>.
+            </summary>
+            <param name="delta">Elapsed time since the last frame.</param>
         </member>
         <member name="M:SadConsole.Terminal.TerminalCursor.UpdateGlyphForShape">
             <summary>

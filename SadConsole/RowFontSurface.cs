@@ -11,6 +11,7 @@ namespace SadConsole;
 /// </summary>
 [DataContract]
 [JsonObject(memberSerialization: MemberSerialization.OptIn)]
+[System.Diagnostics.CodeAnalysis.Experimental(Diagnostics.DiagnosticIDs.RowFontSurfaceFeatureExperimental)]
 public class RowFontSurface : ScreenSurface
 {
     /// <summary>
