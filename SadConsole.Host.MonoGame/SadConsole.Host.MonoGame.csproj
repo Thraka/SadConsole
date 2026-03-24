@@ -12,6 +12,11 @@
     <PackageReleaseNotes>Upgraded to MonoGame 3.8.4.1.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!-- Experimental Attributes -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SADCON7001</NoWarn>
+  </PropertyGroup>
+  
   <!-- Custom properties -->
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>

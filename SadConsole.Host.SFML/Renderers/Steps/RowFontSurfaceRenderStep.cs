@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using SadRogue.Primitives;
 using SFML.Graphics;
