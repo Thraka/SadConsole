@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>SadConsole.Imgui.MonoGame</name>
+        <name>SadConsole.ImGui.MonoGame</name>
     </assembly>
     <members>
         <member name="T:SadConsole.Configuration.ConfigurationImGui">
