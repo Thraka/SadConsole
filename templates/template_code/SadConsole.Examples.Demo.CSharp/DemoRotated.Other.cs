@@ -19,9 +19,9 @@ internal class DemoRotatedSurface : IDemo
 
 class RotatedSurface : ScreenSurface
 {
-    public RotatedSurface() : base(GameSettings.ScreenDemoBounds.Height, GameSettings.ScreenDemoBounds.Height / 2)
+    public RotatedSurface() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height / 2)
     {
-        Surface.Print(0, 0, "Only supported in MonoGame");
+        Surface.Print(2, 1, "Not supported in SFML, use a different host");
     }
 }
 #endif

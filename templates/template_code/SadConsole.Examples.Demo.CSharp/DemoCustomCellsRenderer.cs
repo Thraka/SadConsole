@@ -11,7 +11,7 @@ internal class DemoCustomCellsRenderer : IDemo
     public string Description => "This demo uses custom glyphs objects that have a new property [c:r f:ansibluebright]RenderingOffset[c:u].\r\n\r\n" +
                                  "A custom renderer ([c:r f:ansibluebright]OffsetGlyphRenderer[c:u]) is used to draw the glyphs and use that property as a rendering offset to the cell. When the mouse enters a glyph, an effect is applied that randomizes the [c:r f:ansibluebright]RenderingOffset[c:u] property.";
 
-    public string CodeFile => "DemoShapes.MonoGame.cs";
+    public string CodeFile => "DemoCustomCellsRenderer.cs";
 
     public IScreenSurface CreateDemoScreen() =>
         new CustomSurface();

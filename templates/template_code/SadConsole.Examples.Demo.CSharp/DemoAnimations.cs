@@ -8,7 +8,7 @@ internal class DemoAnimations : IDemo
 
     public string Description => "This demo shows how to read a PNG sprite sheet and load each sprite frame into an animated object.\r\n\r\nPress the [c:r f:Red:10]Left Arrow or [c:r f:Red:11]Right Arrow keys to change the active animation.";
 
-    public string CodeFile => "DemoAnimation.cs";
+    public string CodeFile => "DemoAnimations.cs";
 
     public IScreenSurface CreateDemoScreen() =>
         new Animations();

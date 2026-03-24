@@ -63,7 +63,7 @@ class OffsetGlyphRenderStep : IRenderStep, IRenderStepTexture
         if (backingTextureChanged || BackingTexture == null || screenObject.AbsoluteArea.Width != (int)BackingTexture.Size.X || screenObject.AbsoluteArea.Height != (int)BackingTexture.Size.Y)
         {
             BackingTexture?.Dispose();
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = new RenderTexture(new SFML.System.Vector2u((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height));
             _cachedTexture?.Dispose();
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
@@ -82,7 +82,7 @@ class OffsetGlyphRenderStep : IRenderStep, IRenderStepTexture
             IFont font = screenObject.Font;
 
             if (screenObject.Surface.DefaultBackground.A != 0)
-                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
+                Host.Global.SharedSpriteBatch.DrawQuad(new IntRect(new SFML.System.Vector2i(0, 0), new SFML.System.Vector2i((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y)), font.SolidGlyphRectangle.ToIntRect(), screenObject.Surface.DefaultBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)font.Image).Texture);
 
             for (int y = 0; y < screenObject.Surface.View.Height; y++)
             {
@@ -99,7 +99,7 @@ class OffsetGlyphRenderStep : IRenderStep, IRenderStepTexture
                         // THESE two lines are new, it grabs the cached render rect and offsets it
                         // 
                         IntRect originalRect = sfmlRenderer.CachedRenderRects[rectIndex];
-                        IntRect renderRect = new IntRect(cell.RenderingOffset.X + originalRect.Left, cell.RenderingOffset.Y + originalRect.Top, originalRect.Width, originalRect.Height);
+                        IntRect renderRect = new IntRect(new SFML.System.Vector2i(cell.RenderingOffset.X + originalRect.Left, cell.RenderingOffset.Y + originalRect.Top), new SFML.System.Vector2i(originalRect.Width, originalRect.Height));
 
                         Host.Global.SharedSpriteBatch.DrawCell(cell, renderRect, cell.Background != SadRogue.Primitives.Color.Transparent && cell.Background != screenObject.Surface.DefaultBackground, font);
                     }
@@ -121,7 +121,7 @@ class OffsetGlyphRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+        IntRect outputArea = new IntRect(new SFML.System.Vector2i(0, 0), new SFML.System.Vector2i((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y));
         Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
     }
 
