@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Hosts/">
+    <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="Samples/WPFSadConsole/WPFSadConsole.csproj" />
+  </Folder>
+  <Project Path="SadConsole/SadConsole.csproj" />
+  <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />
+</Solution>
