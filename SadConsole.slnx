@@ -1,0 +1,49 @@
+<Solution>
+  <Folder Name="/Hosts/">
+    <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
+    <Project Path="SadConsole.Host.SFML/SadConsole.Host.SFML.csproj" />
+    <Project Path="SadConsole.Host.Shared/SadConsole.Host.Shared.shproj" Id="595434c5-2192-495b-903c-7922d7e8b149" />
+    <Project Path="SadConsole.Host.FNA/SadConsole.Host.FNA.csproj" />
+    <Project Path="SadConsole.Host.MonoGameWPF/SadConsole.Host.MonoGameWPF.csproj" />
+    <Project Path="SadConsole.Host.KNI/SadConsole.Host.KNI.csproj" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="Samples/Game/ZZTGame.csproj" />
+    <Project Path="Samples/BasicInterpreter/BasicInterpreter.csproj" />
+    <Project Path="Samples/ThemeEditor/ThemeEditor.csproj" />
+    <Project Path="Samples/WPFSadConsole/WPFSadConsole.csproj" />
+    <Project Path="templates/template_code/SadConsole.Examples.Demo.CSharp/Examples.csproj" />
+    <Project Path="Samples/Demo/Demo.csproj" />
+    <Project Path="Samples/MonoGameFirst/MonoGameFirst.csproj" />
+    <Project Path="Samples/KniTesting/KniTesting.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/SadConsole.Tests/SadConsole.Tests.csproj" />
+    <Project Path="PerformanceTests/SadConsole.PerformanceTests/SadConsole.PerformanceTests.csproj" />
+  </Folder>
+  <Folder Name="/Debug UI/">
+    <Project Path="E:/Fun/SadConsole/SadConsole.Host.Shared/SadConsole.Host.Shared.shproj" />
+    <Project Path="E:/Fun/SadConsole/SadConsole.ImGui.MonoGame/SadConsole.ImGui.MonoGame.csproj" />
+    <Project Path="E:/Fun/SadConsole/SadConsole.ImGui.SFML/SadConsole.ImGui.SFML.csproj" />
+  </Folder>
+  <Folder Name="/_Solution Files/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="changelog.md" />
+    <File Path="MigrationNotes.md" />
+    <File Path="README.md" />
+    <Folder Name="/_Solution Files/MSBuild/">
+      <File Path="MSBuild/Common.props" />
+      <File Path="MSBuild/Nuget.props" />
+    </Folder>
+  </Folder>
+  <Folder Name="/Analyzers/">
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers/SadConsole.Analyzers.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.CodeFixes/SadConsole.Analyzers.CodeFixes.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Sample/SadConsole.Analyzers.Sample.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Tests/SadConsole.Analyzers.Tests.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Package/SadConsole.Analyzers.Package.csproj" />
+  </Folder>
+  <Project Path="SadConsole/SadConsole.csproj" />
+  <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />
+</Solution>
