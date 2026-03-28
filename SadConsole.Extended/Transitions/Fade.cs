@@ -30,12 +30,15 @@ public class Fade : Instructions.InstructionBase
     public bool RepositionToObject { get; set; }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the Fade class to animate a transition between two screen surfaces over a
+    /// specified duration.
     /// </summary>
-    /// <param name="from"></param>
-    /// <param name="to"></param>
-    /// <param name="duration"></param>
-    /// <param name="easingFunction"></param>
+    /// <remarks>Sets <see cref="Instructions.InstructionBase.RemoveOnFinished"/> to <see langword="true"/>.</remarks>
+    /// <param name="from">The screen surface to fade from at the start of the animation. Cannot be null.</param>
+    /// <param name="to">The screen surface to fade to at the end of the animation. Cannot be null.</param>
+    /// <param name="duration">The total time over which the fade animation occurs.</param>
+    /// <param name="easingFunction">An optional easing function that controls the rate of change of the fade animation. If null, a linear easing
+    /// function is used.</param>
     public Fade(IScreenSurface from, IScreenSurface to, TimeSpan duration, EasingFunctions.EasingBase? easingFunction = null)
     {
         easingFunction ??= new EasingFunctions.Linear();
@@ -44,6 +47,8 @@ public class Fade : Instructions.InstructionBase
         _fadeTo = to;
 
         _valueInstructionTo = new Instructions.AnimatedValue(duration, 0, 255, easingFunction);
+
+        RemoveOnFinished = true;
     }
 
     /// <summary>
@@ -81,6 +86,8 @@ public class Fade : Instructions.InstructionBase
                 _fadeFrom.Parent = null;
             else if (HideFromObject)
                 _fadeFrom.IsVisible = true;
+
+            OnFinished(componentHost);
         }
     }
 }
