@@ -11,7 +11,8 @@ public class GuiTopBar : ImGuiObjectBase
     public bool ShowDemoWindow;
     public bool ShowMetrics;
     private bool _debug;
-    private bool _closeConfirm;
+    private bool _closeDocumentConfirm;
+    private bool _exitConfirm;
 
     // GuideGrid temp values for input
     private int _guideGridCellsX = Core.State.GuideGrid.CellsX;
@@ -49,6 +50,19 @@ public class GuiTopBar : ImGuiObjectBase
                     }, null);
                 }
 
+                ImGui.Separator();
+                ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
+                if (ImGui.MenuItem("\ueb4b Save"u8, "s"u8))
+                    Windows.SaveFileWindow.Show(renderer, Core.State.SelectedDocument!);
+
+                ImGui.BeginDisabled(Core.State.HasSelectedDocument && Core.State.SelectedDocument.Parent != null);
+                if (ImGui.MenuItem("Close", "c"))
+                    _closeDocumentConfirm = true;
+
+                ImGui.EndDisabled();
+
+                ImGui.EndDisabled();
+
                 if (ImGui.MenuItem("\U000f044e Import Image"u8, "i"u8))
                 {
                     Windows.ImageToAsciiWindow.Show(renderer,
@@ -69,27 +83,33 @@ public class GuiTopBar : ImGuiObjectBase
                 }
 
                 ImGui.Separator();
-                ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
-                if (ImGui.MenuItem("\ueb4b Save"u8, "s"u8))
-                    Windows.SaveFileWindow.Show(renderer, Core.State.SelectedDocument!);
 
-                ImGui.BeginDisabled(Core.State.HasSelectedDocument && Core.State.SelectedDocument.Parent != null);
-                if (ImGui.MenuItem("Close", "c"))
-                    _closeConfirm = true;
+                if (ImGui.Checkbox("Fullscreen"u8, ref Core.Settings.UseFullscreen))
+                {
+                    if (Core.Settings.UseFullscreen)
+                        Game.Instance.ToggleFullScreen();
+                    else
+                        Game.Instance.ToggleFullScreen();
+                }
 
-                
+                ImGui.Separator();
 
-                ImGui.EndDisabled();
-
-                ImGui.EndDisabled();
+                if (ImGui.MenuItem("Exit", "x"))
+                    _exitConfirm = true;
 
                 ImGui.EndMenu();
             }
 
-            if (_closeConfirm)
+            if (_closeDocumentConfirm)
             {
-                _closeConfirm = false;
+                _closeDocumentConfirm = false;
                 ImGui.OpenPopup("ConfirmCloseDocument"u8);
+            }
+
+            if (_exitConfirm)
+            {
+                _exitConfirm = false;
+                ImGui.OpenPopup("ExitApp"u8);
             }
 
             ImGuiSC.CenterNextWindow();
@@ -107,6 +127,12 @@ public class GuiTopBar : ImGuiObjectBase
                     Core.State.SelectedDocument = Core.State.Documents[0];
                     Core.State.SelectedDocument.OnSelected();
                 }
+            });
+
+            ImGuiSC.CenterNextWindow();
+            ImGuiSC.ConfirmPopup("ExitApp"u8, "Are you sure you want to quit?\n\n(make sure you saved your documents!)"u8, () =>
+            {
+                Game.Instance.MonoGameInstance.Exit();
             });
 
             // Draw the documents menu items
@@ -180,17 +206,17 @@ public class GuiTopBar : ImGuiObjectBase
                 ImGui.EndMenu();
             }
 
-            if (ImGui.BeginMenu("Debug"u8))
-            {
-                if (ImGui.MenuItem("Pause"u8, "p"u8))
-                    _debug = true;
+            //if (ImGui.BeginMenu("Debug"u8))
+            //{
+            //    if (ImGui.MenuItem("Pause"u8, "p"u8))
+            //        _debug = true;
 
-                ImGui.Separator();
-                ImGui.MenuItem("Show Demo"u8, "s"u8, ref ShowDemoWindow);
-                ImGui.MenuItem("Show Metrics"u8, "d"u8, ref ShowMetrics);
+            //    ImGui.Separator();
+            //    ImGui.MenuItem("Show Demo"u8, "s"u8, ref ShowDemoWindow);
+            //    ImGui.MenuItem("Show Metrics"u8, "d"u8, ref ShowMetrics);
 
-                ImGui.EndMenu();
-            }
+            //    ImGui.EndMenu();
+            //}
 
             // Write status items at the top
             foreach ((Vector4 Color, string Text) item in StatusItems)

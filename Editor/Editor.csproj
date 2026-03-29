@@ -45,7 +45,7 @@
     <None Include="TheDraw\**" LinkBase="TheDraw\" CopyToOutputDirectory="Always" />
     <None Include="Windows\SaveFileWindow.cs" />
     <None Update="appconfig.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

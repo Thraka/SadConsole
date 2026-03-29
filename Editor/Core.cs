@@ -13,7 +13,7 @@ public static partial class Core
     public class AppSettings
     {
         public float FontSize = 18f;
-        public string Font = "0xProtoNerdFont-Regular.ttf";
+        public string Font = "CousineNerdFont-Regular.ttf";
         public float UIScale = 1f;
 
         public string BlueprintFolder = "blueprints";
@@ -22,6 +22,8 @@ public static partial class Core
         public int WindowNewDocWidthFactor = 22;
         public int WindowSimpleObjectEditor = 40;
         public int WindowGlyphEditor = 20;
+
+        public bool UseFullscreen = false;
 
         public Color EmptyCellColor = Color.NavajoWhite;
     }
@@ -33,11 +35,19 @@ public static partial class Core
 
     public static ImGuiMonoGameComponent ImGuiComponent;
 
-    public static void Start()
+    public static void LoadSettings()
     {
         if (System.IO.File.Exists("appconfig.json"))
-            Settings = SadConsole.Serializer.Load<AppSettings>( "appconfig.json", false);
+            Settings = SadConsole.Serializer.Load<AppSettings>("appconfig.json", false);
+    }
 
+    public static void SaveSettings()
+    {
+        SadConsole.Serializer.Save(Settings, "appconfig.json", false);
+    }
+
+    public static void Start()
+    {
         SadConsole.Settings.DoFinalDraw = false;
 
         ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);

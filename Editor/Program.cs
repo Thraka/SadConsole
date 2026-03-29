@@ -11,12 +11,16 @@ using SadConsole.Editor;
 
 Settings.WindowTitle = "SadEditor v3.0 Beta 3";
 
+
 Builder config =
     new Builder()
         .ConfigureWindow((windowCfg, builder, host) =>
         {
+            Core.LoadSettings();
+
             host.GetDeviceScreenSize(out int width, out int height); 
             windowCfg.SetWindowSizeInPixels(width - (int)(width * 0.10f), height - (int)(height * 0.10f));
+            windowCfg.Fullscreen = Core.Settings.UseFullscreen;
         })
         .OnStart(StartHandler)
         .OnEnd(EndHandler);
@@ -48,4 +52,5 @@ void StartHandler(object? sender, GameHost host)
 void EndHandler(object? sender, GameHost e)
 {
     Core.State.SaveEditorPalette();
+    Core.SaveSettings();
 }
