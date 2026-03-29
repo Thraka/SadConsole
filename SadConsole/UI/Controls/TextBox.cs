@@ -202,6 +202,10 @@ public partial class TextBox : ControlBase
             if (info.IsKeyReleased(Keys.Tab) || info.IsKeyDown(Keys.Tab))
                 return false;
 
+            // Save state before processing keys so it can be restored if TextChangedPreview cancels the change
+            int savedCaretPos = _caretPos;
+            int savedLeftDrawOffset = LeftDrawOffset;
+
             for (int i = 0; i < info.KeysPressed.Count; i++)
             {
                 if (CheckKeyPressCancel(info.KeysPressed[i]))
@@ -263,7 +267,15 @@ public partial class TextBox : ControlBase
                 }
             }
 
+            string oldText = _text;
             Text = newText.ToString();
+
+            // Restore caret state if the text change was cancelled via TextChangedPreview
+            if (_text == oldText && _text != newText.ToString())
+            {
+                _caretPos = savedCaretPos;
+                LeftDrawOffset = savedLeftDrawOffset;
+            }
 
             return true;
         }
