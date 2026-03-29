@@ -115,7 +115,7 @@ jobs:
           PROJECT: ${{ inputs.project-name }}
           VERSION: ${{ inputs.version }}
         run: |
-          $maxAttempts = 3
+          $maxAttempts = 5
 
           for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
               Write-Host "`n=== Build attempt $attempt of $maxAttempts ===" -ForegroundColor Cyan
@@ -134,9 +134,9 @@ jobs:
               dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Release -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION --no-cache
               if ($LASTEXITCODE -ne 0) { throw "Release build failed" }
 
-              # Validate XML
+              # Validate XML — run as a separate process so exit codes don't kill this script
               Write-Host "Validating XML..."
-              & .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "$env:PROJECT*.nupkg" -FailedXmlDir "failed-xml"
+              pwsh -File .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "$env:PROJECT*.nupkg" -FailedXmlDir "failed-xml"
 
               if ($LASTEXITCODE -eq 0) {
                   Write-Host "XML validation passed on attempt $attempt" -ForegroundColor Green

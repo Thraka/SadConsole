@@ -23,7 +23,6 @@ param(
 )
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$ErrorActionPreference = "Stop"
 $failed = $false
 $checkedCount = 0
 
@@ -33,7 +32,7 @@ $nupkgs = Get-ChildItem -Path $Path -Filter $PackagePattern -File |
           Where-Object { $_.Extension -eq ".nupkg" }
 
 if ($nupkgs.Count -eq 0) {
-    Write-Error "No .nupkg files matching '$PackagePattern' found in '$Path'"
+    Write-Host "ERROR: No .nupkg files matching '$PackagePattern' found in '$Path'" -ForegroundColor Red
     exit 1
 }
 
@@ -108,12 +107,12 @@ foreach ($nupkg in $nupkgs) {
 # ── Result ───────────────────────────────────────────────────────────
 Write-Host ""
 if ($checkedCount -eq 0 -and -not $failed) {
-    Write-Error "No XML documentation files were found inside any package."
+    Write-Host "ERROR: No XML documentation files were found inside any package." -ForegroundColor Red
     exit 1
 }
 
 if ($failed) {
-    Write-Error "One or more XML documentation files inside .nupkg packages are malformed."
+    Write-Host "ERROR: One or more XML documentation files inside .nupkg packages are malformed." -ForegroundColor Red
     exit 1
 }
 
