@@ -107,7 +107,7 @@ jobs:
       # ── Build + Validate XML (with retry) ─────────────────────────
       # The XML doc corruption is transient — a rebuild usually fixes it.
       # This step builds Debug + Release, validates the XML inside the
-      # .nupkg files, and retries up to 3 times if validation fails.
+      # .nupkg files, and retries up to 5 times if validation fails.
       - name: Build and validate XML
         if: steps.check-exists.outputs.already_published != 'true'
         shell: pwsh
@@ -118,25 +118,33 @@ jobs:
           $maxAttempts = 5
 
           for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
-              Write-Host "`n=== Build attempt $attempt of $maxAttempts ===" -ForegroundColor Cyan
+              Write-Host "::group::Build attempt $attempt of $maxAttempts"
 
-              # Clean previous packages
+              # Clean previous packages from the output folder
               Get-ChildItem -Path "nuget" -Filter "$env:PROJECT*.*nupkg" -ErrorAction SilentlyContinue |
                   Remove-Item -Force
 
+              # Clean build output so dotnet doesn't reuse cached artifacts
+              $binDir = Join-Path $env:PROJECT "bin"
+              $objDir = Join-Path $env:PROJECT "obj"
+              if (Test-Path $binDir) { Remove-Item $binDir -Recurse -Force }
+              if (Test-Path $objDir) { Remove-Item $objDir -Recurse -Force }
+
               # Build Debug
               Write-Host "Building Debug..."
-              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Debug -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION --no-cache
-              if ($LASTEXITCODE -ne 0) { throw "Debug build failed" }
+              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Debug -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION
+              if ($LASTEXITCODE -ne 0) { Write-Host "::endgroup::"; throw "Debug build failed" }
 
               # Build Release
               Write-Host "Building Release..."
-              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Release -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION --no-cache
-              if ($LASTEXITCODE -ne 0) { throw "Release build failed" }
+              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Release -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION
+              if ($LASTEXITCODE -ne 0) { Write-Host "::endgroup::"; throw "Release build failed" }
 
               # Validate XML — run as a separate process so exit codes don't kill this script
               Write-Host "Validating XML..."
               pwsh -File .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "$env:PROJECT*.nupkg" -FailedXmlDir "failed-xml"
+
+              Write-Host "::endgroup::"
 
               if ($LASTEXITCODE -eq 0) {
                   Write-Host "XML validation passed on attempt $attempt" -ForegroundColor Green
