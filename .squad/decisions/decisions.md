@@ -4,6 +4,40 @@
 
 ---
 
+## Architecture Decision: SadConsole Editor Addin System
+
+**Author:** Deckard (Lead) | **Date:** 2026-07-10 | **Status:** Approved by Thraka
+
+**Requested by:** Thraka
+
+### Summary
+
+Designed a complete addin system for the SadConsole Editor enabling third-party DLLs to be dropped into an `addins/` folder for auto-loading at startup. Addins can provide custom document types, file handlers, tools, ImGui panels, and menu items.
+
+### Key Decisions
+
+- **Entry Point:** `IEditorAddin` interface (Editor/Addins/IEditorAddin.cs)
+- **Discovery:** `EditorAddinAttribute` assembly marker + `AddinLoader` (Editor/Addins/AddinLoader.cs)
+- **Menu Integration:** `AddinMenuItem` records; `Core.State.AddinMenuItems` list; `GuiTopBar` renders them
+- **Deployment:** Addins reference Editor.exe directly (no SDK NuGet; Editor is downloadable)
+- **Trust Model:** Fully trusted — direct Core.State access
+- **Sample Addin:** Editor.Addin becomes template/reference project
+
+### Changes Required in Editor
+
+- `Core.State.cs` — Add `AddinMenuItems` list; make `DocumentBuilders` mutable post-init
+- `GuiTopBar.cs` — Render addin menu items
+- `Program.cs` — Call `AddinLoader.LoadAndRegisterAddins()` in startup
+
+**Full specification:** See orchestration log for complete architecture details.
+
+---
+# Decisions — SadConsole Squad
+
+**Note:** Entries older than 30 days have been archived to `decisions-archive.md`.
+
+---
+
 ## User Directive: Encoding-Aware Glyph Handling for Terminal.Writer
 
 **Date:** 2026-03-04T18:35:00Z  

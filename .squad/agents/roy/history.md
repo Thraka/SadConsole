@@ -111,3 +111,30 @@ Real-world sample demonstrating that KeyboardEncoder + ITerminalOutput architect
 
 **Validation:** Architecture patterns from Phase 1-3 confirmed sound for BBS/SSH/serial clients. Committed as d0ee4c50.
 
+
+
+## Upcoming: Editor Addin System Implementation (2026-03-29)
+
+**Assigned by:** Deckard (per Thraka request) | **Status:** Queued for implementation
+
+Deckard has designed the complete Editor addin system architecture. Roy will implement per the spec.
+
+### Architecture Summary
+
+**Entry Point:** `IEditorAddin` interface (Editor/Addins/IEditorAddin.cs)
+
+**Discovery & Loading:** `EditorAddinAttribute` assembly marker + `AddinLoader.LoadAndRegisterAddins()` called at Program startup
+
+**Menu Contributions:** `AddinMenuItem` records appended to `Core.State.AddinMenuItems` list; `GuiTopBar` renders them
+
+**Deployment:** Dedicated `addins/` subfolder; addins reference Editor.exe directly (fully trusted, direct Core access)
+
+### Implementation Tasks
+
+1. Create Editor/Addins/ folder structure with interface + attribute + loader types
+2. Update Core.State.cs to add AddinMenuItems list and mutable DocumentBuilders
+3. Update GuiTopBar.cs to render menu items from AddinMenuItems each frame
+4. Update Program.cs startup sequence to call AddinLoader.LoadAndRegisterAddins()
+5. Convert Editor.Addin to template/reference implementation (ProjectReference in-tree)
+
+**Pattern:** Addins are fully trusted extensions with direct access to Editor internals — no sandboxing required. Matches VS Code extensions / Sublime plugins model.
