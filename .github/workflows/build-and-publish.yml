@@ -107,7 +107,7 @@ jobs:
       # ── Build + Validate XML (with retry) ─────────────────────────
       # The XML doc corruption is transient — a rebuild usually fixes it.
       # This step builds Debug + Release, validates the XML inside the
-      # .nupkg files, and retries up to 5 times if validation fails.
+      # .nupkg files, and retries up to 10 times if validation fails.
       - name: Build and validate XML
         if: steps.check-exists.outputs.already_published != 'true'
         shell: pwsh
@@ -115,7 +115,7 @@ jobs:
           PROJECT: ${{ inputs.project-name }}
           VERSION: ${{ inputs.version }}
         run: |
-          $maxAttempts = 5
+          $maxAttempts = 10
 
           for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
               Write-Host "::group::Build attempt $attempt of $maxAttempts"
