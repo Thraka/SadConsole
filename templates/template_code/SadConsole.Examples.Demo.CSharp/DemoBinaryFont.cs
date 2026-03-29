@@ -38,14 +38,17 @@ internal class BinaryFontViewer : ControlsConsole
 
         Children.Add(_fontPreviewSurface);
 
-        ComboBox fontSizes = new ComboBox(16, 16, 5, ["One", "Two", "Four"])
+        Surface.Print(Width - 21, 0, "Font Size");
+
+        ComboBox fontSizes = new(10, 6, 5, ["One", "Two", "Four"])
         {
-            Position = (Width - 21, 0)
+            Position = (Width - 11, 0)
         };
         fontSizes.SelectedItemChanged += (sender, args) =>
         {
             _fontPreviewSurface.FontSize = GetFontSize();
         };
+
 
         FileDirectoryListbox fonts = new(20, Height - 2)
         {
@@ -60,16 +63,20 @@ internal class BinaryFontViewer : ControlsConsole
         {
             if (fonts.SelectedItem is System.IO.FileInfo item)
             {
-                IFont? font = SadFont.ImportVGABiosFont(item.Name, Path.GetFullPath(item.ToString()));
-
-                if (font != null)
+                try
                 {
-                    if (_fontPreviewSurface.Font is SadFont f && f.FilePath == "")
-                        _fontPreviewSurface.Font.Dispose();
+                    IFont? font = SadFont.ImportVGABiosFont(item.Name, Path.GetFullPath(item.ToString()));
 
-                    _fontPreviewSurface.Font = font;
-                    _fontPreviewSurface.FontSize = GetFontSize();
+                    if (font != null)
+                    {
+                        if (_fontPreviewSurface.Font is SadFont f && f.FilePath == "")
+                            _fontPreviewSurface.Font.Dispose();
+
+                        _fontPreviewSurface.Font = font;
+                        _fontPreviewSurface.FontSize = GetFontSize();
+                    }
                 }
+                catch (Exception) { }
             }
         };
 

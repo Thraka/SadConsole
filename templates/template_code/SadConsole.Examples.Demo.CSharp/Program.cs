@@ -50,9 +50,9 @@ Builder
         if (width > 1920 && height > 1080)
             defaultFontSize = IFont.Sizes.Two;
 
-        // Most likely 4k
-        if (width > 2560 && height > 1440)
-            defaultFontSize = IFont.Sizes.Four;
+        //// Most likely 4k
+        //if (width > 2560 && height > 1440)
+        //    defaultFontSize = IFont.Sizes.Four;
 
         config.DefaultFontSize = defaultFontSize;
         config.UseExtendedFont = true;
