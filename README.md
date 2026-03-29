@@ -9,7 +9,7 @@ While SadConsole is a generic library that doesn't provide any rendering capabil
 
 _SadConsole currently targets .NET 8, .NET 9, and .NET 10_
 
-For the latest changes in this release, see the [notes below](#latest-changes)
+For the latest changes in this release, see the [change log](changelog.md).
 
 ## Features
 
@@ -20,7 +20,11 @@ Here are some of the features SadConsole supports:
 - Fonts are simply sprite sheet tilesets tied to ascii codes, you can use full graphical tiles if you want.
 - Use more than one font file. However, each console is restricted to a single font.
 - Full GUI system for interactive controls such as list boxes, buttons, and text fields.
-- Importers for [DOS ANSI files](https://wikipedia.org/wiki/ANSI_art), [TheDraw text fonts](https://en.wikipedia.org/wiki/TheDraw), [RexPaint](https://www.gridsagegames.com/rexpaint/), and [Playscii](http://vectorpoem.com/playscii/).
+- Importers for
+  - [DOS ANSI files](https://wikipedia.org/wiki/ANSI_art)
+  - [TheDraw text fonts](https://en.wikipedia.org/wiki/TheDraw)
+  - [RexPaint](https://www.gridsagegames.com/rexpaint/)
+  - [Playscii](http://vectorpoem.com/playscii/).
 - Animated consoles and instruction system to chain commands together.
 - String encoding system for colors and effects while printing.
 - Entity support for drawing thousands of movable objects on the screen
@@ -41,20 +45,3 @@ Here are some of the features SadConsole supports:
 ![scrolling console](https://raw.githubusercontent.com/Thraka/SadConsole/master/images/scrolling-example2.gif)
 
 [nuget]: http://www.nuget.org/packages/SadConsole/
-
-## Latest changes
-
-- [Core] `ColoredGlyph` deserialization correctly handles decorators.
-- [Core] `LayeredSurface` layers can be hidden now.
-- [Controls] Rendering controls on a surface with a viewport now correctly handles mouse input and drawing of the controls.
-- [Core] `AnimatedValue` was sending the finished event before it was completed.
-- [Core] `AnimatedScreenSurface` didn't set the new frame sizes when deserialized.
-- [Core] `ITitle` moved from debug library to core.
-- [Host] Hosts have new logic for converting images into surfaces.
-- [MonoGame] Render steps now use local spritebatches, which can help with memory allocation in some cases.
-- [Core] Entities now have `IHasLayer` from the primitives library which matches the `ZIndex` property.
-- [Core] Entities expose the `IHasID` interface now.
-- [Core] `EntityManager` correctly handles animated entity visibility.
-- [UI] `ListBox` and `ComboBox` have generic versions now.
-- [UI] `ComboBox` Placement of the dropdown is correctly kept on the screen.
-- [Core] Changing `Game.Instance.DefaultFont` and `DefaultFontSize` now update all objects on the screen with the new defaults when they use the defaults.

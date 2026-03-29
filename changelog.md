@@ -1,3 +1,46 @@
+## v10.9.0 (03/28/2026)
+
+- [GitHub] Publishing moved to workflows triggered by pushing a tag.
+- [Core] Added experimental surface: `RowFontSurface`.
+
+  This class is a surface that can attach fonts and font sizes by row. For some sample binary font files, see <https://github.com/viler-int10h/vga-text-mode-fonts>.
+
+- [Core] SadFonts can load old VGA-style binary font files.
+- [Core] New terminal parser.
+
+  This design is built in a more open fashion than the normal Cursor parser. It's built according to the CTERM.TXT spec. It handles the standard CSI, DCS, and OSC sequences.
+
+  Types are in the `SadConsole.Terminal` namespace.
+
+  The main class is `SadConsole.TerminalConsole`.
+
+- [ImGui] Overhauled the ImGui integration. The debugging library still ships in these packages. Perviously you had to decide to use one or the other, debugging or ImGui raw. Now both are included in the same package and you can use them together or separately as you see fit.
+  - SFML support was added
+  - NuGet packages have changed:
+    - `SadConsole.ImGui.MonoGame`
+    - `SadConsole.ImGui.SFML`
+
+- [Extended] `SadConsole.Transitions.Fade` respects `RemoveOnFinished` now, which defaults to `True`.
+- [Extended] Added `SadConsole.Transitions.FadeOut` which is a fade that starts fully visible and then fades out to transparent.
+- [Extended] Added `SadConsole.Transitions.FadeIn` which is a fade that starts fully transparent and then fades in to visible.
+
+### Community contributions
+
+Thanks!
+
+- NiTiSon fixed a code file name in one of the demos.
+
+### Hosts & Renderers
+
+- [SFML] Upgraded to 3.x.
+- [SFML] Rewrote the sprite batcher because 2.x to 3.x contained a lot of breaking changes. This should be faster now.
+
+### Housekeeping
+
+- Converted the SLN files to SLNX. Welcome to the future!
+
+---
+
 ## v10.8.0 (01/18/2026)
 
 - [Core] `ColoredGlyph` deserialization correctly handles decorators.
