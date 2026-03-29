@@ -27,7 +27,7 @@ The core library does NOT render. It defines what needs to be rendered and the i
 - Gaff — Host Dev (implements my interfaces)
 - Rachael — Tester
 
-## Core Context
+## Terminal System Architecture Summary
 
 **Terminal parser:** ECMA-48 state machine (Ground/Escape/CSI/DCS/OSC), zero-allocation design, CP437/UTF-8 encoding. **Writer:** Direct cell manipulation, pending-wrap for ANSI art, scroll regions. **State:** Cursor position/attributes (SGR), tab stops. **Palette:** 256-entry RGB, OSC redefinition (X11 formats). **Rendering:** CellDecorator (underline 95, strikethrough 196), color resolution (reverse, dim, bold shifts).
 
@@ -43,98 +43,70 @@ The core library does NOT render. It defines what needs to be rendered and the i
 
 **Phase 2 (TerminalConsole):** Inherits ScreenSurface, wires Writer+TerminalCursor, Feed() delegation, focus toggling, ProcessKeyboard placeholder. GameHost.GetRendererStep() factory pattern. 33 tests.
 
-**Phase 3 (KeyboardEncoder+ITerminalOutput):** KeyboardEncoder standalone encoder (arrows/F1-F12/navigation/modifiers), ITerminalOutput response channel (Write methods). Writer: Output property, DSR/DA1 handlers (null-guarded). TerminalConsole: Output delegation, KeyboardEncoder property, ProcessKeyboard DECCKM sync + encode/feed-back. 92 tests (70 encoder + 22 output).
-
-## 2026-03-09 — Phase 3 Complete: KeyboardEncoder & ITerminalOutput
-
-Delivered bidirectional input/output infrastructure for interactive terminal support.
-
-**Created:**
-- `SadConsole/Terminal/KeyboardEncoder.cs` (242 lines) — Converts SadConsole AsciiKey/Keys to ANSI escape sequences. Handles arrows (normal + DECCKM modes), F1-F12 (SS3 + CSI), Home/End/Nav keys, Enter (LNM configurable), Backspace (DEL/BS mode), Tab/Shift+Tab, Escape, Ctrl+letter, Alt+key, xterm modifier combinations.
-- `SadConsole/Terminal/ITerminalOutput.cs` (22 lines) — Response channel: `Write(byte[])`, `Write(string)`. Writer.Output nullable (null = data-stream, non-null = interactive).
-
-**Modified:**
-- `SadConsole/Terminal/Writer.cs` — `ITerminalOutput? Output` property. DSR (CSI n): Ps 5 → `\x1b[0n` (OK), Ps 6 → `\x1b[row;colR` (position). DA1 (CSI c): Ps 0 → `\x1b[?62;1;2;6;7;8;9c` (VT220). All null-guarded.
-- `SadConsole/TerminalConsole.cs` — KeyboardEncoder property, Output property delegation, ProcessKeyboard syncs DECCKM → encoder.ApplicationCursorKeys, encodes and feeds back.
-
-**Key patterns:**
-- KeyboardEncoder standalone (no Writer dep) — usable for remote terminals.
-- DECCKM push-model (ProcessKeyboard syncs state to encoder).
-- SS3 for F1-F4/application-mode arrows; CSI for F5-F12/navigation.
-- xterm modifier: base 1 + Shift(1) + Alt(2) + Ctrl(4).
-- VT220 identification scope aligns with Writer's ECMA-48 feature set.
+**Phase 3 (KeyboardEncoder+ITerminalOutput):** KeyboardEncoder standalone encoder (arrows/F1-F12/navigation/modifiers), ITerminalOutput response channel (Write methods). Writer: Output property, DSR/DA1 handlers (null-guarded). TerminalConsole: Output delegation, KeyboardEncoder property, ProcessKeyboard DECCKM sync + encode/feed-back. 92 tests (70 encoder + 22 output). See history-archive.md for detailed patterns.
 
 **Build:** 0 errors, 48 warnings (all pre-existing). **Tests:** 759/759 baseline pass, zero regressions.
 
-## Learnings
+## 2026-03-09 — Phase 3 Complete: KeyboardEncoder & ITerminalOutput
 
-### SadBBSClient Sample — Telnet BBS Client (2026)
+Delivered bidirectional input/output infrastructure for interactive terminal support. Validated via SadBBSClient sample (TelnetClient + BbsScreen demonstrating remote terminal integration). See history-archive.md for full details.
 
-**Architecture patterns:**
-- **Option A for remote keyboard:** Set `TerminalConsole.UseKeyboard = false` and handle keyboard at the container (BbsScreen) level using `KeyboardEncoder.Encode()` directly. Sends encoded bytes to TelnetClient instead of local Writer.Feed(). Cleanest approach — no subclassing needed.
-- **Thread safety:** TelnetClient read loop runs on background thread. Used `ConcurrentQueue<byte[]>` to buffer incoming data, drained in `BbsScreen.Update()` on the game thread before calling `TerminalConsole.Feed()`.
-- **ITerminalOutput dual use:** TelnetClient implements ITerminalOutput, wired as `TerminalConsole.Output`. This means both DA/DSR responses from Writer AND user keystrokes go through the same socket — correct for BBS interaction.
-- **Telnet IAC in-band:** Processed IAC sequences inline during read, stripping them from data before enqueueing. WILL/WONT/DO/DONT handled with accept/reject logic. NAWS sends terminal dimensions, TTYPE identifies as "ANSI".
-- **Writer has no Reset():** Use `\x1b[2J\x1b[H` (ED + CUP) to clear screen via escape sequences.
-- **SadConsole startup:** Use `SetWindowSizeInCells()` (not deprecated `SetScreenSize()`). Standard Builder flow: `Game.Create(startup)` / `Game.Instance.Run()` / `Game.Instance.Dispose()`.
+## Editor Addin System (2026-03-29)
 
-**Key files:**
-- `Samples/SadBBSClient/Program.cs` — SadConsole Builder startup, 80×25
-- `Samples/SadBBSClient/TelnetClient.cs` — TCP/telnet client, ITerminalOutput impl, IAC negotiation
-- `Samples/SadBBSClient/BbsScreen.cs` — ScreenObject container, keyboard→telnet routing, connection UI
+**Task:** Implement the full addin infrastructure for the SadConsole Editor, as designed by Deckard. Cross-boundary work approved by Deckard.
 
-### Phase 3 — KeyboardEncoder, ITerminalOutput, Writer Response Channel (2026)
+**Key API findings before writing code:**
+- `ImGuiList<T>.Objects` is `ObservableCollection<T>` — use `.Objects.Add()` to append to DocumentBuilders.
+- `Core.ImGuiComponent.ImGuiRenderer.UIObjects` is a plain `List<ImGuiObjectBase>` — use `.Add()` directly (confirmed via `ResetUIList()` pattern in `Core.cs`).
+- Editor.csproj has `ImplicitUsings=enable` — `System.Linq` (for `GroupBy`) is available without explicit using directive.
+- `using SadConsole.Editor.Addins;` added to `GuiTopBar.cs` since it's in a different namespace.
 
-**Architecture patterns (archived for reference):**
-- KeyboardEncoder is standalone (no Writer dependency) — can be used independently for remote terminal scenarios.
-- DECCKM sync happens in ProcessKeyboard (push from Writer.State → encoder) rather than the encoder polling state.
-- F1-F4 use SS3 (`ESC O`) in normal mode; F5-F12 use CSI tilde sequences.
-- Arrow/Home/End in application mode use `ESC O` prefix; in normal mode `ESC [`.
-- xterm modifier encoding: base 1 + Shift(+1) + Alt(+2) + Ctrl(+4).
-- DA1 response identifies as VT220 — matches the level of escape sequence support the Writer implements.
+**Files created:**
+- `Editor/Addins/IEditorAddin.cs` — interface: Name, Version, Author, Initialize(), GetDocumentBuilders(), GetGuiPanels(), GetMenuItems()
+- `Editor/Addins/EditorAddinAttribute.cs` — assembly attribute for fast type discovery, validates IEditorAddin assignability
+- `Editor/Addins/AddinMenuItem.cs` — record(Menu, Label, OnClick) for top-bar menu contributions
+- `Editor/Addins/AddinLoader.cs` — static loader: scans `addins/` dir, uses `AssemblyLoadContext.Default`, attribute-based discovery, registers builders/panels/menu items into Core state
+- `Editor.Addin/ExampleAddin.cs` — demonstrates IEditorAddin implementation with one menu item under "Addins" menu
 
-### SadBBSClient Validation — Remote Terminal Use Case (2026-03-09)
+**Files modified:**
+- `Editor/Core.State.cs` — added `public static List<Addins.AddinMenuItem> AddinMenuItems = new();`
+- `Editor/GuiObjects/GuiTopBar.cs` — added `using SadConsole.Editor.Addins;`, added GroupBy-based addin menu rendering block after "Grid Guide" menu, before StatusItems loop
+- `Editor/Program.cs` — added `using SadConsole.Editor.Addins;`, added `AddinLoader.LoadAndRegisterAddins()` call after `Core.Start()`
+- `Editor.Addin/SadConsole.Editor.Addin.csproj` — rewrote to simple project reference to Editor.csproj with `<Private>false</Private>` and `<ExcludeAssets>runtime</ExcludeAssets>`
 
-Real-world sample demonstrating that KeyboardEncoder + ITerminalOutput architecture works for remote terminal clients.
+**Build result:** Both Editor.csproj and SadConsole.Editor.Addin.csproj: 0 errors, warnings all pre-existing.
 
-**Sample structure (Samples/SadBBSClient/, 741L, 6 files):**
-- `TelnetClient.cs` (355L) — TCP socket, IAC negotiation (NAWS/TTYPE/SGA/ECHO), background read thread with ConcurrentQueue buffering
-- `BbsScreen.cs` (288L) — ScreenObject container, keyboard→telnet routing, preset BBS connection menu UI
-- `Program.cs` (20L) — SadConsole Builder startup with SetWindowSizeInCells(80, 25)
+**Startup flow:** `Core.Start()` → `AddinLoader.LoadAndRegisterAddins()` → scans `{AppContext.BaseDirectory}/addins/*.dll` → loads via `AssemblyLoadContext.Default` → reads `EditorAddinAttribute` → instantiates and calls `Initialize()` → registers builders/panels/menu items.
 
-**Key findings:**
-- Option A keyboard architecture proved correct: `TerminalConsole.UseKeyboard = false`, handle keyboard at BbsScreen level using `KeyboardEncoder.Encode()` directly, route encoded bytes to TelnetClient instead of Writer.Feed()
-- ConcurrentQueue + game-thread drain pattern validates thread-safe async socket handling
-- ITerminalOutput dual use (both keystroke echoes + Writer response data through same socket) works as designed
-- Telnet IAC negotiation (in-band, processed during read, stripped before enqueue) seamless integration
-- No Writer.Reset() method — use escape sequences `\x1b[2J\x1b[H` (ED + CUP) to clear screen
+## Editor Addin Debug Workflow (2026-03-29)
 
-**Validation:** Architecture patterns from Phase 1-3 confirmed sound for BBS/SSH/serial clients. Committed as d0ee4c50.
+**Task:** Configure Editor.Addin for debug-while-running-Editor in VS/Rider.
 
+**TFM discovery:** Editor.csproj uses `<TargetFramework>net10.0</TargetFramework>` with `<OutputType>WinExe</OutputType>` and no `<RuntimeIdentifier>` — TFM is plain `net10.0` (not `net10.0-windows`).
 
+**What was done:**
+- Added `DeployAddinToEditor` MSBuild target (`AfterTargets="Build"`) to `SadConsole.Editor.Addin.csproj`. Copies DLL + PDB into `Editor\bin\$(Configuration)\net10.0\addins\` after each build.
+- Created `Editor.Addin\Properties\launchSettings.json` with two profiles ("Editor (Debug)" and "Editor (Release)") using `commandName: "Executable"` pointing to `Editor.exe` in the respective bin output. launchSettings.json uses literal relative paths (no MSBuild variables).
+- Build verified: `addins\SadConsole.Editor.Addin.dll` and `.pdb` deployed correctly on first build.
 
-## Upcoming: Editor Addin System Implementation (2026-03-29)
+**Key facts:**
+- `launchSettings.json` does NOT support MSBuild variables — use `..\\..\\Editor\\bin\\Debug\\net10.0\\Editor.exe` literal paths.
+- `commandName: "Executable"` is the VS/Rider mechanism for launching an external process from a class library project.
+- The Properties/ directory did not exist in Editor.Addin and had to be created.
 
-**Assigned by:** Deckard (per Thraka request) | **Status:** Queued for implementation
+## Architecture Decisions — Editor Addin System
 
-Deckard has designed the complete Editor addin system architecture. Roy will implement per the spec.
+### Assembly discovery: attribute-based over full reflection scan
+`EditorAddinAttribute` on the assembly points directly to the concrete `IEditorAddin` type. No scanning of all exported types. Validation in the attribute constructor ensures the type implements `IEditorAddin` at load time rather than at `Activator.CreateInstance`.
 
-### Architecture Summary
+### `AssemblyLoadContext.Default` for loading
+Addins load into the default context so they can access the already-loaded Editor types (Core, Documents, ImGuiSystem) without isolation issues. Isolation-context loading would require assembly copy and interface bridging — not needed for first-party addins.
 
-**Entry Point:** `IEditorAddin` interface (Editor/Addins/IEditorAddin.cs)
+### `addins/` directory relative to `AppContext.BaseDirectory`
+Not relative to `Directory.GetCurrentDirectory()` (which is `Core.State.RootFolder`). The working directory can be set by the user; the binary directory is stable.
 
-**Discovery & Loading:** `EditorAddinAttribute` assembly marker + `AddinLoader.LoadAndRegisterAddins()` called at Program startup
+### Menu contributions via `List<AddinMenuItem>` on Core.State
+Follows the existing `StatusItems` pattern (additive per-frame list). `AddinMenuItems` is NOT cleared each frame — it's a registration list populated once at startup. `GroupBy(m => m.Menu)` in `GuiTopBar.BuildUI()` groups items under shared top-level menus.
 
-**Menu Contributions:** `AddinMenuItem` records appended to `Core.State.AddinMenuItems` list; `GuiTopBar` renders them
-
-**Deployment:** Dedicated `addins/` subfolder; addins reference Editor.exe directly (fully trusted, direct Core access)
-
-### Implementation Tasks
-
-1. Create Editor/Addins/ folder structure with interface + attribute + loader types
-2. Update Core.State.cs to add AddinMenuItems list and mutable DocumentBuilders
-3. Update GuiTopBar.cs to render menu items from AddinMenuItems each frame
-4. Update Program.cs startup sequence to call AddinLoader.LoadAndRegisterAddins()
-5. Convert Editor.Addin to template/reference implementation (ProjectReference in-tree)
-
-**Pattern:** Addins are fully trusted extensions with direct access to Editor internals — no sandboxing required. Matches VS Code extensions / Sublime plugins model.
+### `ExcludeAssets>runtime` in Editor.Addin csproj
+Prevents the Editor's transitive runtime dependencies (MonoGame, etc.) from being copied to the addin's output. The addin DLL only needs to contain its own code; the editor's runtime is already present when loading.
