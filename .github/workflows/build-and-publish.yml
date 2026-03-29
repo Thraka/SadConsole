@@ -104,34 +104,52 @@ jobs:
           }
           "already_published=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      # ── Build ──────────────────────────────────────────────────────
-      # Version is passed to the build so that workflow_dispatch overrides
-      # actually change what gets stamped into the package.
-      # Debug gets the -debug suffix appended automatically by Common.props,
-      # but we also pass it explicitly for workflow_dispatch overrides.
-      - name: Build Debug
-        if: steps.check-exists.outputs.already_published != 'true'
-        run: >-
-          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
-          -c Debug
-          -p:UseProjectReferences=false
-          -p:SadConsole_Version=${{ inputs.version }}
-          --no-cache
-
-      - name: Build Release
-        if: steps.check-exists.outputs.already_published != 'true'
-        run: >-
-          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
-          -c Release
-          -p:UseProjectReferences=false
-          -p:SadConsole_Version=${{ inputs.version }}
-          --no-cache
-
-      # ── Validate XML documentation inside .nupkg ─────────────────
-      - name: Validate XML documentation
+      # ── Build + Validate XML (with retry) ─────────────────────────
+      # The XML doc corruption is transient — a rebuild usually fixes it.
+      # This step builds Debug + Release, validates the XML inside the
+      # .nupkg files, and retries up to 3 times if validation fails.
+      - name: Build and validate XML
         if: steps.check-exists.outputs.already_published != 'true'
         shell: pwsh
-        run: .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "${{ inputs.project-name }}*.nupkg" -FailedXmlDir "failed-xml"
+        env:
+          PROJECT: ${{ inputs.project-name }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          $maxAttempts = 3
+
+          for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+              Write-Host "`n=== Build attempt $attempt of $maxAttempts ===" -ForegroundColor Cyan
+
+              # Clean previous packages
+              Get-ChildItem -Path "nuget" -Filter "$env:PROJECT*.*nupkg" -ErrorAction SilentlyContinue |
+                  Remove-Item -Force
+
+              # Build Debug
+              Write-Host "Building Debug..."
+              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Debug -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION --no-cache
+              if ($LASTEXITCODE -ne 0) { throw "Debug build failed" }
+
+              # Build Release
+              Write-Host "Building Release..."
+              dotnet build "$env:PROJECT/$env:PROJECT.csproj" -c Release -p:UseProjectReferences=false -p:SadConsole_Version=$env:VERSION --no-cache
+              if ($LASTEXITCODE -ne 0) { throw "Release build failed" }
+
+              # Validate XML
+              Write-Host "Validating XML..."
+              & .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "$env:PROJECT*.nupkg" -FailedXmlDir "failed-xml"
+
+              if ($LASTEXITCODE -eq 0) {
+                  Write-Host "XML validation passed on attempt $attempt" -ForegroundColor Green
+                  break
+              }
+
+              if ($attempt -lt $maxAttempts) {
+                  Write-Warning "XML validation failed on attempt $attempt. Retrying..."
+              }
+              else {
+                  throw "XML validation failed after $maxAttempts attempts. Check the failed-xml artifact."
+              }
+          }
 
       - name: Upload malformed XML artifacts
         if: failure()
