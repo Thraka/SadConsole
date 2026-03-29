@@ -57,12 +57,25 @@ foreach ($nupkg in $nupkgs) {
                     $reader.Dispose()
                     $stream.Dispose()
 
-                    $null = [xml]$content
+                    # Use XmlReader for clean error messages (no full-content dump)
+                    $settings = New-Object System.Xml.XmlReaderSettings
+                    $settings.DtdProcessing = [System.Xml.DtdProcessing]::Ignore
+                    $stringReader = New-Object System.IO.StringReader($content)
+                    $xmlReader = [System.Xml.XmlReader]::Create($stringReader, $settings)
+                    try {
+                        while ($xmlReader.Read()) { }
+                    }
+                    finally {
+                        $xmlReader.Dispose()
+                        $stringReader.Dispose()
+                    }
                     Write-Host "      OK" -ForegroundColor Green
                     $checkedCount++
                 }
                 catch {
-                    Write-Host "      INVALID XML: $($_.Exception.Message)" -ForegroundColor Red
+                    # Extract just the line/position info, not the entire XML content
+                    $msg = $_.Exception.InnerException ? $_.Exception.InnerException.Message : $_.Exception.Message
+                    Write-Host "      INVALID XML: $msg" -ForegroundColor Red
                     $failed = $true
                 }
             }
