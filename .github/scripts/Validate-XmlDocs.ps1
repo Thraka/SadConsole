@@ -11,10 +11,15 @@
 .PARAMETER PackagePattern
     Glob pattern for .nupkg files to inspect.
     Defaults to "SadConsole*.nupkg"
+
+.PARAMETER FailedXmlDir
+    Directory to save copies of malformed XML files for debugging.
+    Created automatically if failures are found. Defaults to "failed-xml"
 #>
 param(
     [string]$Path = ".",
-    [string]$PackagePattern = "SadConsole*.nupkg"
+    [string]$PackagePattern = "SadConsole*.nupkg",
+    [string]$FailedXmlDir = "failed-xml"
 )
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -76,6 +81,16 @@ foreach ($nupkg in $nupkgs) {
                     # Extract just the line/position info, not the entire XML content
                     $msg = $_.Exception.InnerException ? $_.Exception.InnerException.Message : $_.Exception.Message
                     Write-Host "      INVALID XML: $msg" -ForegroundColor Red
+
+                    # Save the malformed XML for artifact upload
+                    if (-not (Test-Path $FailedXmlDir)) {
+                        New-Item -ItemType Directory -Path $FailedXmlDir -Force | Out-Null
+                    }
+                    $safeName = "$($nupkg.BaseName)_$($entry.FullName -replace '[/\\]', '_')"
+                    $failedPath = Join-Path $FailedXmlDir $safeName
+                    Set-Content -LiteralPath $failedPath -Value $content -Encoding UTF8
+                    Write-Host "      Saved to: $failedPath" -ForegroundColor Yellow
+
                     $failed = $true
                 }
             }

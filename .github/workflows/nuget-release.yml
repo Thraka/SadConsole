@@ -84,14 +84,14 @@ jobs:
         run: dotnet build Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-build --logger "trx;LogFilePrefix=test-results" --results-directory TestResults
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: test-results
-          path: "**/test-results.trx"
+          path: TestResults/*.trx
           retention-days: 14
 
   # ═══════════════════════════════════════════════════════════════════

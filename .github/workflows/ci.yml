@@ -1,0 +1,50 @@
+# Runs tests on every push and pull request to master.
+# Catches regressions early, independent of the release pipeline.
+
+name: CI Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore Tests/SadConsole.Tests/SadConsole.Tests.csproj
+
+      - name: Build
+        run: dotnet build Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-restore
+
+      - name: Test
+        run: dotnet test Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-build --logger "trx;LogFilePrefix=test-results" --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: test-results
+          path: TestResults/*.trx
+          retention-days: 14

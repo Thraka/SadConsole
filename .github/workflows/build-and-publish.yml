@@ -131,7 +131,15 @@ jobs:
       - name: Validate XML documentation
         if: steps.check-exists.outputs.already_published != 'true'
         shell: pwsh
-        run: .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "${{ inputs.project-name }}*.nupkg"
+        run: .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "${{ inputs.project-name }}*.nupkg" -FailedXmlDir "failed-xml"
+
+      - name: Upload malformed XML artifacts
+        if: failure()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: ${{ inputs.project-name }}-failed-xml
+          path: failed-xml/
+          retention-days: 14
 
       # ── Push to NuGet ──────────────────────────────────────────────
       - name: Push to NuGet
