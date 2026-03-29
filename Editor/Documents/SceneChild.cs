@@ -61,7 +61,7 @@ public class SceneChild : ITitle, IDisposable
     /// <summary>
     /// The ImGui texture ID for this child's scene rendering.
     /// </summary>
-    public ImTextureID SceneTextureId { get; private set; }
+    public ImTextureRef SceneTextureId { get; private set; }
 
     /// <summary>
     /// The size of the scene texture in pixels.
@@ -72,7 +72,7 @@ public class SceneChild : ITitle, IDisposable
     /// Gets a value indicating whether this child has a valid scene texture.
     /// </summary>
     [MemberNotNullWhen(true, nameof(_sceneTexture))]
-    public bool HasValidTexture => _sceneTexture != null && !_sceneTexture.IsDisposed && SceneTextureId != IntPtr.Zero;
+    public bool HasValidTexture => _sceneTexture != null && !_sceneTexture.IsDisposed && SceneTextureId.TexID != ImTextureID.Null;
 
     public SceneChild(Document document)
     {
@@ -167,10 +167,10 @@ public class SceneChild : ITitle, IDisposable
                 RenderTargetUsage.DiscardContents);
 
             // Bind or rebind to ImGui
-            if (SceneTextureId == IntPtr.Zero)
-                SceneTextureId = ImGuiCore.Renderer.BindTexture(_sceneTexture);
+            if (SceneTextureId.TexID == ImTextureID.Null)
+                SceneTextureId = Core.ImGuiComponent.ImGuiRenderer.BindTexture(_sceneTexture);
             else
-                ImGuiCore.Renderer.ReplaceBoundTexture(SceneTextureId, _sceneTexture);
+                Core.ImGuiComponent.ImGuiRenderer.ReplaceBoundTexture(SceneTextureId.TexID, _sceneTexture);
         }
 
         SceneTextureSize = new Vector2(pixelWidth, pixelHeight);
@@ -232,10 +232,10 @@ public class SceneChild : ITitle, IDisposable
                 RenderTargetUsage.DiscardContents);
 
             // Bind or rebind to ImGui
-            if (SceneTextureId == IntPtr.Zero)
-                SceneTextureId = ImGuiCore.Renderer.BindTexture(_sceneTexture);
+            if (SceneTextureId.TexID == ImTextureID.Null)
+                SceneTextureId = Core.ImGuiComponent.ImGuiRenderer.BindTexture(_sceneTexture);
             else
-                ImGuiCore.Renderer.ReplaceBoundTexture(SceneTextureId, _sceneTexture);
+                Core.ImGuiComponent.ImGuiRenderer.ReplaceBoundTexture(SceneTextureId.TexID, _sceneTexture);
         }
 
         SceneTextureSize = new Vector2(pixelWidth, pixelHeight);
@@ -314,9 +314,9 @@ public class SceneChild : ITitle, IDisposable
             if (disposing)
             {
                 // Unbind from ImGui if bound
-                if (SceneTextureId != IntPtr.Zero)
+                if (SceneTextureId.TexID == ImTextureID.Null)
                 {
-                    ImGuiCore.Renderer.UnbindTexture(SceneTextureId);
+                    Core.ImGuiComponent.ImGuiRenderer.UnbindTexture(SceneTextureId.TexID);
                     SceneTextureId = default;
                 }
 

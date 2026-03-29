@@ -1,9 +1,9 @@
 using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 using SadConsole.UI;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -95,7 +95,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         HandleControlInteraction(startPos, ImGui.GetMousePos(), isHovered);
 
         // Handle right-click context menu
-        if (isHovered && ImGuiP.IsMouseClicked(ImGuiMouseButton.Right))
+        if (isHovered && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
         {
             Point viewPos = EditingSurface.Surface.ViewPosition;
             Vector2 viewOffset = new Vector2(viewPos.X * EditorFontSize.X, viewPos.Y * EditorFontSize.Y);
@@ -175,7 +175,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
     private void HandleControlInteraction(Vector2 startPos, Vector2 mousePos, bool isHovered)
     {
-        bool leftMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool leftMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
         bool leftMouseClicked = isHovered && leftMouseDown && !_wasDragging;
 
         Point viewPos = EditingSurface.Surface.ViewPosition;
@@ -467,7 +467,17 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         ImGui.Text("Font: "u8);
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
-            base.FontSelectionWindow_Popup();
+            FontSelectionWindow.Show(renderer, EditingSurfaceFont, EditingSurfaceFontSize, (font, fontSize) =>
+            {
+                EditingSurfaceFont = (SadFont)font;
+                EditingSurfaceFontSize = fontSize;
+                EditorFontSize = fontSize;
+                EditingSurface.Font = EditingSurfaceFont;
+                EditingSurface.FontSize = EditorFontSize;
+                EditingSurface.IsDirty = true;
+                VisualTool.Font = EditingSurfaceFont;
+                VisualTool.IsDirty = true;
+            });
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: "u8);
@@ -480,19 +490,6 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         if (ImGui.Button("Reset"u8))
         {
             EditorFontSize = EditingSurfaceFontSize;
-        }
-
-        if (base.FontSelectionWindow_BuildUI(renderer))
-        {
-            EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
-            EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
-            EditorFontSize = FontSelectionWindow.SelectedFontSize;
-            EditingSurface.Font = EditingSurfaceFont;
-            EditingSurface.FontSize = EditorFontSize;
-            EditingSurface.IsDirty = true;
-            VisualTool.Font = EditingSurfaceFont;
-            VisualTool.IsDirty = true;
-            base.FontSelectionWindow_Reset();
         }
 
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))
@@ -549,7 +546,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
         ImGui.Selectable(name);
 
         // Double-click to add at default position
-        if (ImGui.IsItemHovered() && ImGuiP.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+        if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {
             ControlBase control = createControl();
             control.Position = new Point(1, 1);
@@ -892,7 +889,7 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
                     ImGui.PushID("objects_menu");
 
                     if (ImGui.MenuItem("Manage"u8))
-                        new Windows.SimpleObjectEditor(SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont).Open();
+                        Windows.SimpleObjectEditorWindow.Show(renderer, SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont);
 
                     bool doImport = false;
                     bool replace = false;
@@ -911,30 +908,23 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
                     if (doImport)
                     {
-                        Windows.OpenFile window = new([new SimpleObjectsHandler()]);
-
-                        window.Closed += (s, e) =>
+                        Windows.OpenFileWindow.Show(renderer, [new SimpleObjectsHandler()], (handler, file) =>
                         {
-                            if (window.DialogResult)
+                            if (handler.Load(file.FullName) is SimpleObjectDefinition[] objects)
                             {
-                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is SimpleObjectDefinition[] objects)
+                                if (replace)
+                                    SimpleObjects.Objects.Clear();
+                                foreach (SimpleObjectDefinition obj in objects)
                                 {
-                                    if (replace)
-                                        SimpleObjects.Objects.Clear();
-
-                                    foreach (SimpleObjectDefinition obj in objects)
-                                    {
-                                        if (!SimpleObjects.Objects.Where(o => o.Name.Equals(obj.Name, StringComparison.OrdinalIgnoreCase)).Any())
-                                            SimpleObjects.Objects.Add(obj);
-                                    }
+                                    if (!SimpleObjects.Objects.Where(o => o.Name.Equals(obj.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                        SimpleObjects.Objects.Add(obj);
                                 }
                             }
-                        };
-                        window.Open();
+                        }, null);
                     }
 
                     if (ImGui.MenuItem("Export"u8))
-                        new SaveFile(SimpleObjects.Objects.ToArray(), [new SimpleObjectsHandler()]).Open();
+                        SaveFileWindow.Show(renderer, SimpleObjects.Objects.ToArray(), [new SimpleObjectsHandler()]);
 
                     ImGui.PopID();
                 }
@@ -962,32 +952,26 @@ public partial class DocumentControlConsole : Document, IDocumentSimpleObjects, 
 
                     if (doImport)
                     {
-                        Windows.OpenFile window = new([new ZonesHandler()]);
-
-                        window.Closed += (s, e) =>
+                        OpenFileWindow.Show(renderer, [new ZonesHandler()], (handler, file) =>
                         {
-                            if (window.DialogResult)
+                            if (handler.Load(file.FullName) is ZoneSimplified[] zones)
                             {
-                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is ZoneSimplified[] zones)
+                                if (replace)
+                                    Zones.Objects.Clear();
+
+                                foreach (ZoneSimplified zone in zones)
                                 {
-                                    if (replace)
-                                        Zones.Objects.Clear();
-
-                                    foreach (ZoneSimplified zone in zones)
-                                    {
-                                        if (!Zones.Objects.Where(z => z.Name.Equals(zone.Name, StringComparison.OrdinalIgnoreCase)).Any())
-                                            Zones.Objects.Add(zone);
-                                    }
-
-                                    Core.State.Tools.SelectedItem?.DocumentViewChanged(this);
+                                    if (!Zones.Objects.Where(z => z.Name.Equals(zone.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                        Zones.Objects.Add(zone);
                                 }
+
+                                Core.State.Tools.SelectedItem?.DocumentViewChanged(this);
                             }
-                        };
-                        window.Open();
+                        }, null);
                     }
 
                     if (ImGui.MenuItem("Export"u8))
-                        new SaveFile(Zones.Objects.ToArray(), [new ZonesHandler()]).Open();
+                        SaveFileWindow.Show(renderer, Zones.Objects.ToArray(), [new ZonesHandler()]);
 
                     ImGui.PopID();
                 }

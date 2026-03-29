@@ -1,0 +1,107 @@
+# Standalone workflow for publishing the SadConsole.Templates NuGet package.
+# Templates iterate independently from the main library packages.
+#
+# Trigger manually from the Actions UI when you need to publish a new template version.
+
+name: Release Templates
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-override:
+        description: "Version to release (leave empty to read from SadConsole.Templates.csproj)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: template-release
+  cancel-in-progress: false
+
+jobs:
+  publish-templates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      # ── Determine version ──────────────────────────────────────────
+      - name: Determine version
+        id: get-version
+        shell: pwsh
+        run: |
+          $override = "${{ inputs.version-override }}"
+          if ($override -and $override.Trim() -ne "") {
+              $version = $override.Trim()
+          }
+          else {
+              $content = Get-Content "templates/SadConsole.Templates.csproj" -Raw
+              $match = [regex]::Match($content, '<PackageVersion>([^<]+)</PackageVersion>')
+              if (-not $match.Success) { throw "Could not read PackageVersion from SadConsole.Templates.csproj" }
+              $version = $match.Groups[1].Value
+          }
+          Write-Host "Template version: $version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      # ── Check if already published ─────────────────────────────────
+      - name: Check if package already exists on NuGet
+        id: check-exists
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          try {
+              $response = Invoke-RestMethod "https://api-v2v3search-0.nuget.org/query?q=PackageId:SadConsole.Templates&prerelease=true&semVerLevel=2.0.0"
+              $pkg = $response.data | Where-Object { $_.id -eq "SadConsole.Templates" }
+              if ($pkg) {
+                  $found = $pkg.versions | Where-Object { $_.version -eq $env:VERSION }
+                  if ($found) {
+                      Write-Host "SadConsole.Templates $env:VERSION already exists on NuGet. Skipping."
+                      "already_published=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+                      exit 0
+                  }
+              }
+          }
+          catch {
+              Write-Warning "NuGet check failed, proceeding with build: $($_.Exception.Message)"
+          }
+          "already_published=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      # ── Pack ───────────────────────────────────────────────────────
+      - name: Pack templates
+        if: steps.check-exists.outputs.already_published != 'true'
+        run: dotnet pack templates/SadConsole.Templates.csproj -c Release
+        
+      # ── Push to NuGet ──────────────────────────────────────────────
+      - name: Push to NuGet
+        if: steps.check-exists.outputs.already_published != 'true'
+        shell: pwsh
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          $pkg = Get-ChildItem -Path "nuget" -Filter "SadConsole.Templates*.nupkg" | Select-Object -First 1
+          if (-not $pkg) { throw "No SadConsole.Templates .nupkg found in nuget/" }
+          Write-Host "Pushing $($pkg.Name)..."
+          dotnet nuget push $pkg.FullName -s https://api.nuget.org/v3/index.json -k $env:NUGET_KEY --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { throw "Failed to push $($pkg.Name)" }
+
+      # ── Upload artifact ────────────────────────────────────────────
+      - name: Upload package artifact
+        if: steps.check-exists.outputs.already_published != 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: SadConsole.Templates-package
+          path: nuget/SadConsole.Templates*.nupkg
+          retention-days: 30

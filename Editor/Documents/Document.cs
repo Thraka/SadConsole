@@ -10,6 +10,7 @@ using SadConsole.Editor.Tools;
 using SadConsole.Editor.Windows;
 using SadConsole.Entities;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -33,7 +34,7 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
 
     public DocumentOptions Options = new();
 
-    public ImTextureID VisualTextureId;
+    public ImTextureRef VisualTextureId;
     public Vector2 VisualTextureSize;
 
     public LayeredScreenSurface VisualTool;
@@ -73,8 +74,6 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
     public bool HasPalette = false;
     public EditorPalette Palette = new();
 
-    protected FontSelectionWindow? FontSelectionWindow;
-
     /// <summary>
     /// Gets the icon to display for this document type in the hierarchy.
     /// Override in derived classes to provide a custom icon.
@@ -92,32 +91,6 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         VisualLayerToolUpper = VisualTool.Layers.Create();
         SyncToolModes();
     }
-
-    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
-    protected void FontSelectionWindow_Popup()
-    {
-        FontSelectionWindow = new FontSelectionWindow(EditingSurfaceFont, EditingSurfaceFontSize);
-        FontSelectionWindow.IsOpen = true;
-    }
-
-    [MemberNotNullWhen(true, nameof(FontSelectionWindow))]
-    protected bool FontSelectionWindow_BuildUI(ImGuiRenderer renderer)
-    {
-        if (FontSelectionWindow != null && FontSelectionWindow.IsOpen)
-        {
-            FontSelectionWindow.BuildUI(renderer);
-
-            if (!FontSelectionWindow.IsOpen)
-            {
-                return FontSelectionWindow.DialogResult;
-            }
-        }
-
-        return false;
-    }
-
-    protected void FontSelectionWindow_Reset() =>
-        FontSelectionWindow = null;
 
     
 
@@ -248,10 +221,10 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
             _displayTexture?.Dispose();
             _displayTexture = new RenderTarget2D(Host.Global.GraphicsDevice, EditingSurface.WidthPixels, EditingSurface.HeightPixels, false, Host.Global.GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24, 0, RenderTargetUsage.DiscardContents);
 
-            if (VisualTextureId == IntPtr.Zero)
-                VisualTextureId = ImGuiCore.Renderer.BindTexture(_displayTexture);
+            if (VisualTextureId.TexID == ImTextureID.Null)
+                VisualTextureId = Core.ImGuiComponent.ImGuiRenderer.BindTexture(_displayTexture);
             else
-                ImGuiCore.Renderer.ReplaceBoundTexture(VisualTextureId, _displayTexture);
+                Core.ImGuiComponent.ImGuiRenderer.ReplaceBoundTexture(VisualTextureId.TexID, _displayTexture);
         }
 
         VisualTextureSize = new Vector2(_displayTexture.Bounds.Width, _displayTexture.Bounds.Height);
@@ -330,13 +303,10 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         ImGui.SeparatorText("Metadata"u8);
         if (ImGui.Button("Edit"u8))
         {
-            var window = new Windows.KeyValuePairEditor(Metadata);
-            window.Closed += (windowObj, _) =>
+            KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, Metadata, updatedMetadata =>
             {
-                if (((ImGuiWindowBase)windowObj).DialogResult)
-                    Metadata = window.ToDictionary();
-            };
-            window.Open();
+                Metadata = updatedMetadata;
+            }, null);
         }
 
         if (Metadata.Count > 0)

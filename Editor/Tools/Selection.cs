@@ -2,8 +2,6 @@
 using Hexa.NET.ImGui;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.Windows;
-using SadConsole.ImGuiSystem;
-using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Tools;
 
@@ -46,37 +44,18 @@ internal class Selection : ITool
 
         ImGui.BeginDisabled(Core.State.Blueprints.Count == 0);
         if (ImGui.Button("Load Blueprint"u8))
-        {
-            BlueprintImport? window = new();
-            window.Open();
-            window.Closed += (sender, e) =>
-            {
-                if (window.DialogResult)
-                {
-                    CancelPaste(document, false);
-                    _selectionSurface = Core.State.Blueprints.SelectedItem!.GetSurface();
-                    _state = States.Pasting;
+            BlueprintImportWindow.Show(Core.ImGuiComponent.ImGuiRenderer, () => {
+                _selectionSurface = Core.State.Blueprints.SelectedItem!.GetSurface();
+                _state = States.Pasting;
+            });
 
-                    window = null;
-                }
-            };
-        }
         ImGui.EndDisabled();
 
         if (ImGui.Button("Import Surface"))
-        {
-            Windows.OpenFile fileLoader = new([new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()]);
-            fileLoader.Closed += FileLoader_Closed;
-            fileLoader.Open();
-            
-        }
+            OpenFileWindow.Show(Core.ImGuiComponent.ImGuiRenderer, [new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()], ImportSurface_OnFileSelected, null);
 
         if (ImGui.Button("Import Surface from Image"))
-        {
-            Windows.ImageToAsciiWindow imageToAscii = new(document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One));
-            imageToAscii.Closed += ImageToAscii_Closed;
-            imageToAscii.Open();
-        }
+            ImageToAsciiWindow.Show(Core.ImGuiComponent.ImGuiRenderer, document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One), ImageToAscii_OnImported, null);
 
         ImGui.BeginDisabled(_clipboardSurface == null);
         if (ImGui.Button("Paste surface from Clipboard"u8))
@@ -134,27 +113,9 @@ internal class Selection : ITool
         }
     }
 
-    private void ImageToAscii_Closed(object? sender, EventArgs e)
+    private void ImportSurface_OnFileSelected(FileHandlers.IFileHandler handler, FileInfo file)
     {
-        if (sender is not ImageToAsciiWindow dialog) return;
-        if (!dialog.DialogResult) return;
-        if (dialog.ResultSurface is CellSurface surface)
-        {
-            _clipboardSurface = surface;
-            ClearState();
-            _state = States.PastingMultiple;
-            _selectionSurface = _clipboardSurface;
-        }
-    }
-
-    private void FileLoader_Closed(object? sender, EventArgs e)
-    {
-        OpenFile dialog = (OpenFile)sender!;
-
-        if (!dialog.DialogResult) return;
-
-        object? result = dialog.SelectedLoader.Load(dialog.SelectedFile.FullName);
-
+        object? result = handler.Load(file.FullName);
         if (result != null)
         {
             CellSurface? surface = null;
@@ -173,12 +134,20 @@ internal class Selection : ITool
                 _selectionSurface = _clipboardSurface;
             }
         }
-        dialog.Closed -= FileLoader_Closed;
     }
+
+    private void ImageToAscii_OnImported(ICellSurface surface)
+    {
+        _clipboardSurface = (CellSurface)surface;
+        ClearState();
+        _state = States.PastingMultiple;
+        _selectionSurface = _clipboardSurface;
+    }
+
 
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
-        if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGuiP.IsPopupOpen("selection_rightmenu"u8))
+        if (_state == States.SelectionDone && ImGui.BeginPopupContextItem("selection_rightmenu"u8) || ImGui.IsPopupOpen("selection_rightmenu"u8))
         {
 
             bool _createBlueprint = false;
@@ -295,7 +264,7 @@ internal class Selection : ITool
 
             bool disableAccept = string.IsNullOrEmpty(_saveBlueprintFileName.Trim()) || string.IsNullOrEmpty(_saveBlueprintName.Trim()) || fileExists;
 
-            if (ImGuiWindowBase.DrawButtons(out bool savedClicked, disableAccept))
+            if (ImGuiSC.WindowDrawButtons(out bool savedClicked, disableAccept))
             {
                 if (savedClicked)
                 {
@@ -318,11 +287,11 @@ internal class Selection : ITool
         ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
         // Cancelled but left mouse finally released, exit cancelled
-        if (_state == States.Cancel && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        if (_state == States.Cancel && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             _state = States.None;
 
         // Cancelled
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
         {
             CancelPaste(document);
         }
@@ -334,7 +303,7 @@ internal class Selection : ITool
         {
             PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
 
-            if (ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
             {
                 Point pos = hoveredCellPosition - new Point(_selectionSurface.Width / 2, _selectionSurface.Height / 2);
 
@@ -366,7 +335,7 @@ internal class Selection : ITool
                 }
             }
 
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape))
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
                 CancelPaste(document, false);
             }
@@ -376,14 +345,14 @@ internal class Selection : ITool
             {
                 PrintSurfaceAreaSize(_selectionSurface.Width, _selectionSurface.Height);
 
-                if (ImGuiP.IsKeyPressed(ImGuiKey.LeftArrow))
+                if (ImGui.IsKeyPressed(ImGuiKey.LeftArrow))
                     _pasteOffset += Direction.Left;
-                else if (ImGuiP.IsKeyPressed(ImGuiKey.RightArrow))
+                else if (ImGui.IsKeyPressed(ImGuiKey.RightArrow))
                     _pasteOffset += Direction.Right;
 
-                if (ImGuiP.IsKeyPressed(ImGuiKey.UpArrow))
+                if (ImGui.IsKeyPressed(ImGuiKey.UpArrow))
                     _pasteOffset += Direction.Up;
-                else if (ImGuiP.IsKeyPressed(ImGuiKey.DownArrow))
+                else if (ImGui.IsKeyPressed(ImGuiKey.DownArrow))
                     _pasteOffset += Direction.Down;
 
                 document.VisualLayerToolMiddle.Surface.Clear();
@@ -399,11 +368,11 @@ internal class Selection : ITool
 
             return;
         }
-        else if (_state is States.SelectionDone && ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        else if (_state is States.SelectionDone && ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
             ClearState();
 
         // Preview
-        if (_state is States.MakingSelection or States.None && ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        if (_state is States.MakingSelection or States.None && ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
         {
             if (_state == States.None)
             {
@@ -424,7 +393,7 @@ internal class Selection : ITool
         }
 
         // Commit selection
-        else if (_state == States.MakingSelection && ImGuiP.IsMouseReleased(ImGuiMouseButton.Left))
+        else if (_state == States.MakingSelection && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
         {
             _state = States.SelectionDone;
             ImGui.OpenPopup("selection_rightmenu"u8);

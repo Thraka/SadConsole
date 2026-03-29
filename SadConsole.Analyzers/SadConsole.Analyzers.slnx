@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.csproj" />
+  <Project Path="SadConsole.Analyzers.CodeFixes/SadConsole.Analyzers.CodeFixes.csproj" />
+  <Project Path="SadConsole.Analyzers.Sample/SadConsole.Analyzers.Sample.csproj" />
+  <Project Path="SadConsole.Analyzers.Tests/SadConsole.Analyzers.Tests.csproj" />
+</Solution>

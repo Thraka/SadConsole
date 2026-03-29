@@ -9409,6 +9409,11 @@
             The renderer for a <see cref="T:SadConsole.UI.Window"/>.
             </summary>
         </member>
+        <member name="F:SadConsole.Renderers.Constants.RendererNames.RowFontSurface">
+            <summary>
+            The renderer for a <see cref="F:SadConsole.Renderers.Constants.RendererNames.RowFontSurface"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Renderers.Constants.RendererNames.None">
             <summary>
             An absent renderer.
@@ -9449,6 +9454,11 @@
             The render step for a <see cref="T:SadConsole.Components.Cursor"/>.
             </summary>
         </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.TerminalCursor">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Terminal.TerminalCursor"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.EntityManager">
             <summary>
             The render step for a <see cref="T:SadConsole.Entities.EntityManager"/>.
@@ -9462,6 +9472,11 @@
         <member name="F:SadConsole.Renderers.Constants.RenderStepNames.Tint">
             <summary>
             The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepNames.RowFontSurface">
+            <summary>
+            The render step for a <see cref="F:SadConsole.Renderers.Constants.RenderStepNames.RowFontSurface"/>.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.Constants.RenderStepSortValues">
@@ -9489,6 +9504,11 @@
             The render step for a <see cref="T:SadConsole.Components.Cursor"/>.
             </summary>
         </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.TerminalCursor">
+            <summary>
+            The render step for a <see cref="T:SadConsole.Terminal.TerminalCursor"/>.
+            </summary>
+        </member>
         <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.EntityRenderer">
             <summary>
             The render step for a <see cref="T:SadConsole.Entities.EntityManager"/>.
@@ -9502,6 +9522,11 @@
         <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.Tint">
             <summary>
             The render to draw the tint texture of an <see cref="T:SadConsole.IScreenSurface"/>.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Renderers.Constants.RenderStepSortValues.RowFontSurface">
+            <summary>
+            The render step for a <see cref="F:SadConsole.Renderers.Constants.RenderStepSortValues.RowFontSurface"/>.
             </summary>
         </member>
         <member name="T:SadConsole.Renderers.ILayeredData">
@@ -9656,6 +9681,108 @@
         </member>
         <member name="M:SadConsole.Renderers.RenderStepComparer.Compare(SadConsole.Renderers.IRenderStep,SadConsole.Renderers.IRenderStep)">
             <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.RowFontSurface">
+            <summary>
+            A surface where each row can use a different font with different glyph dimensions.
+            </summary>
+        </member>
+        <member name="P:SadConsole.RowFontSurface.RowFonts">
+            <summary>
+            Maps row index to font. If a row is not in the dictionary, it uses the default Font property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.RowFontSurface.RowFontSizes">
+            <summary>
+            Maps row index to font size. If a row is not in the dictionary, it uses the default FontSize property.
+            </summary>
+        </member>
+        <member name="P:SadConsole.RowFontSurface.DefaultRendererName">
+            <inheritdoc/>
+        </member>
+        <member name="P:SadConsole.RowFontSurface.HeightPixels">
+            <summary>
+            Gets the height of the surface in pixels, accounting for variable row heights.
+            </summary>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new row font surface with the specified width and height.
+            </summary>
+            <param name="width">The width in cells of the surface.</param>
+            <param name="height">The height in cells of the surface.</param>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new row font surface with the specified dimensions.
+            </summary>
+            <param name="width">The visible width of the surface in cells.</param>
+            <param name="height">The visible height of the surface in cells.</param>
+            <param name="bufferWidth">The total width of the surface in cells.</param>
+            <param name="bufferHeight">The total height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.#ctor(SadConsole.ICellSurface,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Creates a new row font surface wrapping an existing surface.
+            </summary>
+            <param name="surface">The surface.</param>
+            <param name="font">The font to use with the surface.</param>
+            <param name="fontSize">The font size.</param>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.SetRowFont(System.Int32,SadConsole.IFont,System.Nullable{SadRogue.Primitives.Point})">
+            <summary>
+            Sets the font and font size for a specific row.
+            </summary>
+            <param name="row">The row index (0-based).</param>
+            <param name="font">The font to use for this row.</param>
+            <param name="fontSize">The font size to use for this row. If null, uses font.GetFontSize(IFont.Sizes.One).</param>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.GetRowFont(System.Int32)">
+            <summary>
+            Gets the font for a specific row. Returns the default Font if no row-specific font is set.
+            </summary>
+            <param name="row">The row index.</param>
+            <returns>The font for the row.</returns>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.GetRowFontSize(System.Int32)">
+            <summary>
+            Gets the font size for a specific row. Returns the default FontSize if no row-specific size is set.
+            </summary>
+            <param name="row">The row index.</param>
+            <returns>The font size for the row.</returns>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.GetRowHeight(System.Int32)">
+            <summary>
+            Gets the pixel height of a specific row based on its font size.
+            </summary>
+            <param name="row">The row index.</param>
+            <returns>The height in pixels.</returns>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.PixelToCell(SadRogue.Primitives.Point)">
+            <summary>
+            Converts a pixel position to a cell position, accounting for variable row heights.
+            </summary>
+            <param name="pixelPosition">Pixel position relative to the surface's AbsoluteArea.</param>
+            <returns>Cell position, or (-1, -1) if outside the surface.</returns>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.Resize(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Resizes the surface to the specified width and height.
+            </summary>
+            <param name="viewWidth">The viewable width of the surface.</param>
+            <param name="viewHeight">The viewable height of the surface.</param>
+            <param name="totalWidth">The maximum width of the surface.</param>
+            <param name="totalHeight">The maximum height of the surface.</param>
+            <param name="clear">When <see langword="true"/>, resets every cell to the <see cref="P:SadConsole.ICellSurface.DefaultForeground"/>, <see cref="P:SadConsole.ICellSurface.DefaultBackground"/> and glyph 0.</param>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.OnFontChanged(SadConsole.IFont,SadRogue.Primitives.Point)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.RowFontSurface.ToString">
+            <summary>
+            Returns the value "RowFontSurface".
+            </summary>
+            <returns>The string "RowFontSurface".</returns>
         </member>
         <member name="T:SadConsole.SadFont">
             <summary>
@@ -9814,6 +9941,36 @@
             Returns the font name.
             </summary>
             <returns>The name of the font.</returns>
+        </member>
+        <member name="M:SadConsole.SadFont.ImportVGABiosFont(System.String,System.String,System.Int32)">
+            <summary>
+            Imports a VGA BIOS font from the specified file and returns a SadFont object representing the font.
+            </summary>
+            <remarks>The method reads pixel data from the specified file and constructs a texture for the font.
+            Ensure that the file path is valid and that the resource is accessible. The file extension should follow the
+            pattern '.fxx' where 'xx' is the scanline count if scanlines is not explicitly provided.</remarks>
+            <param name="name">The name to assign to the imported font for identification purposes.</param>
+            <param name="filePath">The path to the font file. The file must be in a format compatible with VGA BIOS fonts and accessible as an
+            embedded resource.</param>
+            <param name="scanlines">The number of scanlines to read for each glyph. If set to 0, the method attempts to parse the scanline count
+            from the file extension.</param>
+            <returns>A SadFont object that represents the imported VGA BIOS font, including its dimensions and pixel data.</returns>
+            <exception cref="T:System.Exception">Thrown if the scanline count cannot be parsed from the file name when scanlines is set to 0.</exception>
+        </member>
+        <member name="M:SadConsole.SadFont.ImportVGABiosFont(System.String,System.IO.Stream,System.Int32)">
+            <summary>
+            Imports a VGA BIOS font from a stream and returns a SadFont object representing the font.
+            </summary>
+            <remarks>
+            The stream should contain raw VGA BIOS font bitmap data: one byte per scanline per glyph,
+            256 glyphs, MSB-left. When <paramref name="scanlines"/> is 0, the font size is inferred
+            from the stream length: 4096 bytes = 8×16, 3584 bytes = 8×14, 2048 bytes = 8×8.
+            </remarks>
+            <param name="name">The name to assign to the imported font for identification purposes.</param>
+            <param name="stream">A readable stream containing raw VGA BIOS font data.</param>
+            <param name="scanlines">The number of scanlines per glyph. If 0, inferred from stream length.</param>
+            <returns>A SadFont object that represents the imported VGA BIOS font.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if scanlines is 0 and the stream length does not match a known VGA font size.</exception>
         </member>
         <member name="T:SadConsole.ScreenObject">
             <summary>
@@ -11763,9 +11920,1123 @@
             <code>[a-zA-Z]</code><br/>
             Explanation:<br/>
             <code>
-            ○ Match an ASCII letter.<br/>
+            ○ Match a character in the set [A-Za-z].<br/>
             </code>
             </remarks>
+        </member>
+        <member name="T:SadConsole.TerminalConsole">
+            <summary>
+            A surface that wires together a <see cref="T:SadConsole.Terminal.Writer"/> and <see cref="T:SadConsole.Terminal.TerminalCursor"/> for ANSI/VT terminal emulation.
+            Inherits from <see cref="T:SadConsole.ScreenSurface"/> directly — does not use <see cref="T:SadConsole.Components.Cursor"/> or <see cref="T:SadConsole.Console"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.Writer">
+            <summary>
+            The terminal writer that renders parsed ANSI/VT sequences onto this surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.TerminalCursor">
+            <summary>
+            The terminal cursor used for visual display of the cursor position.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.KeyboardEncoder">
+            <summary>
+            The keyboard encoder that converts SadConsole key events into ANSI escape sequences.
+            </summary>
+        </member>
+        <member name="P:SadConsole.TerminalConsole.Output">
+            <summary>
+            Gets or sets the terminal output channel for interactive mode.
+            When set, terminal query responses (DA, DSR) are sent through this channel,
+            and it is also wired to <see cref="P:SadConsole.TerminalConsole.Writer"/>.<see cref="P:SadConsole.Terminal.Writer.Output"/>.
+            When <see langword="null"/>, the terminal operates in silent data-stream mode.
+            </summary>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new terminal console with the specified dimensions, using the default font.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.#ctor(System.Int32,System.Int32,SadConsole.IFont)">
+            <summary>
+            Creates a new terminal console with the specified dimensions and font.
+            </summary>
+            <param name="width">The width of the surface in cells.</param>
+            <param name="height">The height of the surface in cells.</param>
+            <param name="font">The font to use. If <see langword="null"/>, uses the default font.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Feed(System.String)">
+            <summary>
+            Feeds a string through the terminal parser and renders it onto the surface.
+            </summary>
+            <param name="text">The text or ANSI escape sequences to process.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Feed(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Feeds raw bytes through the terminal parser and renders them onto the surface.
+            </summary>
+            <param name="data">The raw byte data to process.</param>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Update(System.TimeSpan)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.ProcessKeyboard(SadConsole.Input.Keyboard)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnFocusLost">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnFocused">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.OnRendererChanged">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.ToString">
+            <summary>
+            Returns the value "TerminalConsole".
+            </summary>
+            <returns>The string "TerminalConsole".</returns>
+        </member>
+        <member name="M:SadConsole.TerminalConsole.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Terminal.CursorShape">
+            <summary>
+            Terminal cursor shapes per DECSCUSR (CSI Ps SP q).
+            Values map directly to the DECSCUSR parameter values.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.BlinkingBlock">
+            <summary>DECSCUSR 0 or 1 (0 = default = blinking block)</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.SteadyBlock">
+            <summary>DECSCUSR 2</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.BlinkingUnderline">
+            <summary>DECSCUSR 3</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.SteadyUnderline">
+            <summary>DECSCUSR 4</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.BlinkingBar">
+            <summary>DECSCUSR 5</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CursorShape.SteadyBar">
+            <summary>DECSCUSR 6</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.ITerminalHandler">
+            <summary>
+            Receives parsed terminal events from <see cref="T:SadConsole.Terminal.Parser"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnPrint(System.Char)">
+            <summary>
+            Called for printable characters.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnC0Control(System.Byte)">
+            <summary>
+            Called for C0 control codes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnEscDispatch(System.Byte,System.Byte)">
+            <summary>
+            Called for ESC dispatch sequences.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnCsiDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.Nullable{System.Byte})">
+            <summary>
+            Called for CSI dispatch sequences.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnOscDispatch(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Called for OSC string dispatch.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalHandler.OnDcsDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Called for DCS string dispatch.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.ITerminalOutput">
+            <summary>
+            Provides a response channel for a terminal emulator.
+            When terminal sequences produce responses (DA, DSR, DECRQM), the terminal
+            sends them through this interface. When <see langword="null"/> on the
+            <see cref="T:SadConsole.Terminal.Writer"/>, the terminal operates in silent data-stream mode.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalOutput.Write(System.Byte[])">
+            <summary>
+            Writes raw response bytes to the output channel.
+            </summary>
+            <param name="data">The bytes to send.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.ITerminalOutput.Write(System.String)">
+            <summary>
+            Writes a string response to the output channel (encoded as UTF-8).
+            </summary>
+            <param name="text">The text to send.</param>
+        </member>
+        <member name="T:SadConsole.Terminal.KeyboardEncoder">
+            <summary>
+            Converts SadConsole keyboard input into ANSI/VT terminal escape sequences.
+            Standalone class — not tied to any specific surface or Writer instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.ApplicationCursorKeys">
+            <summary>
+            When <see langword="true"/>, arrow keys send application-mode sequences
+            (<c>\x1bOA</c>) instead of normal-mode (<c>\x1b[A</c>).
+            Mirrors DECCKM (DEC Cursor Key Mode).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.NewLineMode">
+            <summary>
+            When <see langword="true"/>, Enter sends <c>\r\n</c> instead of <c>\r</c>.
+            Mirrors LNM (Line Feed / New Line Mode).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.BackspaceSendsDel">
+            <summary>
+            When <see langword="true"/>, Backspace sends <c>0x08</c> (BS) instead of <c>0x7F</c> (DEL).
+            Default is <see langword="false"/> (modern terminal behavior: Backspace = DEL).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.Encode(SadConsole.Input.Keyboard)">
+            <summary>
+            Encodes all pressed keys from the current keyboard frame into terminal byte sequences.
+            </summary>
+            <param name="keyboard">The keyboard state for this frame.</param>
+            <returns>Encoded bytes, or an empty array if no keys produced output.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.EncodeSingleKey(SadConsole.Input.AsciiKey,SadConsole.Input.Keyboard)">
+            <summary>
+            Encodes a single <see cref="T:SadConsole.Input.AsciiKey"/> into its terminal escape sequence representation.
+            </summary>
+            <param name="key">The key to encode.</param>
+            <param name="keyboard">The keyboard state (for modifier detection).</param>
+            <returns>The encoded string, or <see langword="null"/> if the key produces no output.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.KeyboardEncoder.ComputeModifier(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Computes the xterm modifier parameter.
+            1 = none, 2 = Shift, 3 = Alt, 4 = Shift+Alt, 5 = Ctrl, 6 = Shift+Ctrl, 7 = Alt+Ctrl, 8 = Shift+Alt+Ctrl.
+            Returns 0 when no modifiers are pressed (caller checks > 1).
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.Measurer">
+            <summary>
+            A lightweight <see cref="T:SadConsole.Terminal.ITerminalHandler"/> that tracks cursor movement and scroll counts
+            without rendering to a surface. Use this to measure the total height needed for ANSI content
+            before allocating a surface of the correct size.
+            </summary>
+            <remarks>
+            <para>
+            Feed the same data through the <see cref="T:SadConsole.Terminal.Measurer"/> first, then create a surface
+            of size <c>(Width, TotalHeight)</c> and feed the data through a <see cref="T:SadConsole.Terminal.Writer"/>.
+            </para>
+            <para>
+            The measurer mirrors cursor movement, wrap, and scroll logic from the writer but
+            performs no cell rendering or color resolution.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.Width">
+            <summary>Width of the virtual surface in columns.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.Height">
+            <summary>Height of the virtual surface in rows (the viewport).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.CursorRow">
+            <summary>Current cursor row (0-based).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.CursorColumn">
+            <summary>Current cursor column (0-based).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.ScrollCount">
+            <summary>Number of times the content scrolled up past the bottom row.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.MaxRow">
+            <summary>The maximum row index the cursor visited.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.TotalHeight">
+            <summary>
+            Total height needed to display all content without scrolling.
+            Equal to <see cref="P:SadConsole.Terminal.Measurer.Height"/> + <see cref="P:SadConsole.Terminal.Measurer.ScrollCount"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.AutoWrap">
+            <summary>Auto-wrap mode. Default: true.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.LineFeeds">
+            <summary>How LF is interpreted. Default: <see cref="F:SadConsole.Terminal.LineFeedMode.Implicit"/> (LF = CR+LF).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Measurer.Parser">
+            <summary>The parser wired to this measurer.</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a measurer with the given virtual surface dimensions.
+            </summary>
+            <param name="width">Width of the virtual surface in columns.</param>
+            <param name="height">Height of the virtual surface in rows (viewport height).</param>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.Feed(System.ReadOnlySpan{System.Byte})">
+            <summary>Feeds raw bytes through the parser.</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.Feed(System.String)">
+            <summary>Encodes a string as UTF-8 and feeds it through the parser.</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.Reset">
+            <summary>Resets all measurement state to initial values.</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnPrint(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnC0Control(System.Byte)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnEscDispatch(System.Byte,System.Byte)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnCsiDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.Nullable{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnOscDispatch(System.ReadOnlySpan{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Measurer.OnDcsDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.ReadOnlySpan{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="T:SadConsole.Terminal.Palette">
+            <summary>
+            256-color terminal palette with truecolor support.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.#ctor">
+            <summary>
+            Creates a new palette initialized with standard ANSI defaults (CTerm spec).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Palette.Item(System.Int32)">
+            <summary>
+            Gets or sets the color at the specified index in the collection.
+            </summary>
+            <remarks>Accessing an index that is out of range will throw an IndexOutOfRangeException.</remarks>
+            <param name="index">The zero-based index of the color to get or set. Must be within the bounds of the collection.</param>
+            <returns>The color associated with the specified index.</returns>
+        </member>
+        <member name="P:SadConsole.Terminal.Palette.Length">
+            <summary>
+            Gets the number of colors contained in the palette.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.GetColor(System.Int32)">
+            <summary>
+            Gets the color at the specified palette index (0–255).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.SetColor(System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Redefines the color at the specified palette index (for OSC 4).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.ResetColor(System.Int32)">
+            <summary>
+            Resets a single palette entry to its default (for OSC 104).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.ResetAll">
+            <summary>
+            Resets all 256 palette entries to their defaults.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Palette.FromTrueColor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a <see cref="T:SadRogue.Primitives.Color"/> directly from RGB components.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.ParserEncoding">
+            <summary>
+            Determines how the parser interprets bytes above 0x7F in ground state.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.ParserEncoding.Codepage437">
+            <summary>Bytes 0x80-0xFF are treated as single-byte glyph indices (CP437). Default for BBS/ANSI art.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.ParserEncoding.Utf8">
+            <summary>Bytes 0x80-0xFF may be UTF-8 multibyte lead/continuation bytes.</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.Parser">
+            <summary>
+            ECMA-48 state machine parser for terminal byte streams.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Parser.Encoding">
+            <summary>
+            How bytes above 0x7F are interpreted in ground state. Default is <see cref="F:SadConsole.Terminal.ParserEncoding.Codepage437"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Parser.#ctor(SadConsole.Terminal.ITerminalHandler)">
+            <summary>
+            Creates a new parser with the provided handler.
+            </summary>
+            <param name="handler">Handler receiving parsed events.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.Parser.Feed(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Feeds a span of bytes into the parser.
+            </summary>
+            <param name="data">Bytes to parse.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.Parser.Feed(System.Byte)">
+            <summary>
+            Feeds a single byte into the parser.
+            </summary>
+            <param name="b">Byte to parse.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.Parser.Reset">
+            <summary>
+            Resets the parser to its initial state.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.Reader">
+            <summary>
+            An instruction that reads bytes from a <see cref="P:SadConsole.Terminal.Reader.Stream"/> and feeds them to a <see cref="P:SadConsole.Terminal.Reader.Writer"/>
+            on each update tick. Supports throttling via <see cref="P:SadConsole.Terminal.Reader.BytesPerSecond"/> to simulate slow connections.
+            </summary>
+            <remarks>
+            <para>
+            Add this as a component to a <see cref="T:SadConsole.IScreenObject"/> and it will automatically
+            feed data from the stream to the terminal writer every frame:
+            </para>
+            <code>
+            var reader = new Reader(writer, fileStream) { BytesPerSecond = 2400 };
+            screenObject.SadComponents.Add(reader);
+            </code>
+            <para>
+            Alternatively, call <see cref="M:SadConsole.Instructions.InstructionBase.Update(SadConsole.IScreenObject,System.TimeSpan)"/> manually each frame without
+            attaching to a screen object.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Terminal.Reader.Writer">
+            <summary>
+            The <see cref="P:SadConsole.Terminal.Reader.Writer"/> that receives parsed terminal data.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Reader.Stream">
+            <summary>
+            The source stream to read from. May be replaced between updates (or after <see cref="M:SadConsole.Terminal.Reader.Reset"/>).
+            When set to <see langword="null"/>, the reader idles until a new stream is assigned.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Reader.BytesPerSecond">
+            <summary>
+            The maximum number of bytes to feed per second. Set to <c>0</c> for unlimited
+            (all remaining bytes are sent every frame). Use the <see cref="T:SadConsole.Terminal.Reader.BaudRate"/> constants
+            for classic modem speeds.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.Reader.BaudRate">
+            <summary>
+            Predefined bytes-per-second values for classic modem and connection speeds.
+            Baud rates are divided by 10 (start bit + 8 data bits + stop bit) to get the
+            effective byte throughput.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud110">
+            <summary>110 baud — Teletype ASR-33 era.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud300">
+            <summary>300 baud — early acoustic coupler modems.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud1200">
+            <summary>1200 baud — common early-80s BBS speed.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud2400">
+            <summary>2400 baud — mid-80s BBS standard.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud4800">
+            <summary>4800 baud.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud9600">
+            <summary>9600 baud — late-80s high-speed modem.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud14400">
+            <summary>14400 baud (14.4k) — early-90s V.32bis modem.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud19200">
+            <summary>19200 baud (19.2k).</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud28800">
+            <summary>28800 baud (28.8k) — V.34 modem.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud33600">
+            <summary>33600 baud (33.6k) — V.34+ modem.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Baud56000">
+            <summary>56000 baud (56k) — V.90/V.92 modem.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Reader.BaudRate.Unlimited">
+            <summary>Unlimited — no throttling, all available bytes are sent every frame.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Reader.TotalBytesRead">
+            <summary>
+            The total number of bytes that have been fed to the writer since the last <see cref="M:SadConsole.Terminal.Reader.Reset"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.#ctor(SadConsole.Terminal.Writer,System.IO.Stream)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.Terminal.Reader"/> that feeds data from a stream to a terminal writer.
+            </summary>
+            <param name="writer">The terminal writer to feed data into.</param>
+            <param name="stream">The source stream, or <see langword="null"/> to assign later.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.FromFile(SadConsole.Terminal.Writer,System.String)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.Terminal.Reader"/> from a file path.
+            </summary>
+            <param name="writer">The terminal writer to feed data into.</param>
+            <param name="filePath">Path to the file to read.</param>
+            <returns>A new <see cref="T:SadConsole.Terminal.Reader"/> with the file opened for reading.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.FromBytes(SadConsole.Terminal.Writer,System.Byte[])">
+            <summary>
+            Creates a new <see cref="T:SadConsole.Terminal.Reader"/> from a byte array.
+            </summary>
+            <param name="writer">The terminal writer to feed data into.</param>
+            <param name="data">The byte data to read.</param>
+            <returns>A new <see cref="T:SadConsole.Terminal.Reader"/> backed by a <see cref="T:System.IO.MemoryStream"/>.</returns>
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Terminal.Reader.CalculateByteBudget(System.TimeSpan)">
+            <summary>
+            Calculates how many bytes to read this frame based on <see cref="P:SadConsole.Terminal.Reader.BytesPerSecond"/> and elapsed time.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.SauceRecord">
+            <summary>
+            Represents the SAUCE (Standard Architecture for Universal Comment Extensions) metadata
+            commonly appended to ANSI art files.
+            </summary>
+            <remarks>
+            <para>
+            A SAUCEd file has 4 parts: original content, an EOF character (0x1A),
+            an optional comment block ("COMNT" + N×64-byte lines), and the 128-byte SAUCE record.
+            </para>
+            <para>
+            Character fields in SAUCE are encoded in Code Page 437.  Fields shorter than their
+            maximum length are padded with spaces (or sometimes null-terminated with garbage after
+            the null — both cases are handled).
+            </para>
+            <para>
+            Use <see cref="M:SadConsole.Terminal.SauceRecord.Read(System.ReadOnlySpan{System.Byte})"/> to parse, <see cref="M:SadConsole.Terminal.SauceRecord.GetContent(System.ReadOnlySpan{System.Byte})"/> or <see cref="P:SadConsole.Terminal.SauceRecord.ContentLength"/>
+            to slice the content bytes for the parser so it never sees the SAUCE block.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Id">
+            <summary>The SAUCE record identifier. Always "SAUCE" for valid records.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Version">
+            <summary>The SAUCE version string (typically "00").</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Title">
+            <summary>The title of the file (up to 35 characters).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Author">
+            <summary>The author of the file (up to 20 characters).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Group">
+            <summary>The group/organization (up to 20 characters).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Date">
+            <summary>The date in CCYYMMDD format (up to 8 characters).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.FileSize">
+            <summary>The original file size (content bytes, excluding SAUCE and comment block).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.DataType">
+            <summary>The SAUCE data type. 1 = Character (for ANSI art).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.FileType">
+            <summary>The SAUCE file type within the data type category. For Character: 0=ASCII, 1=ANSi, 2=ANSiMation.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.TInfo1">
+            <summary>Type-dependent info 1. For Character types: width in columns (0 = use default 80).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.TInfo2">
+            <summary>Type-dependent info 2. For Character types: number of lines (0 = not specified).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.TInfo3">
+            <summary>Type-dependent info 3.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.TInfo4">
+            <summary>Type-dependent info 4.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.CommentCount">
+            <summary>Number of comment lines (0–255). Each line is 64 characters.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Flags">
+            <summary>
+            Type-dependent flags. For Character data, this is the ANSi flags byte:
+            bit 0 = iCE colors (non-blink), bits 1–2 = letter spacing, bits 3–4 = aspect ratio.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.TInfoS">
+            <summary>Type-dependent info string (22 characters). For Character types: font name hint.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Comments">
+            <summary>Comment lines (each up to 64 characters), or empty if no comments.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.ContentLength">
+            <summary>
+            Number of content bytes to parse (excludes SAUCE record, comment block, and EOF marker).
+            Feed <c>data.Slice(0, ContentLength)</c> to the parser to avoid interpreting metadata as sequences.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.IsCharacter">
+            <summary>Whether this is a Character-type SAUCE record (DataType == 1).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.IsAnsi">
+            <summary>Whether the file type is ANSi (DataType == 1, FileType == 1).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Width">
+            <summary>Width in columns (TInfo1). Returns 0 if not specified.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.Height">
+            <summary>Height in lines (TInfo2). Returns 0 if not specified.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.IceColors">
+            <summary>iCE color mode (non-blink). When true, the blink SGR attribute means bright background instead of blinking.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.LetterSpacing">
+            <summary>Letter spacing hint from ANSiFlags bits 1–2.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.AspectRatio">
+            <summary>Aspect ratio hint from ANSiFlags bits 3–4.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.SauceRecord.FontName">
+            <summary>Font name from the TInfoS field (meaningful for Character types).</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.SauceRecord.Read(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Attempts to read a SAUCE record from the given file data.
+            Returns <see langword="null"/> if no valid SAUCE record is found.
+            </summary>
+            <remarks>
+            <para>
+            The file layout is: <c>[content] [EOF 0x1A] [COMNT block?] [SAUCE record]</c>.
+            </para>
+            <para>
+            Detection is record-driven: the SAUCE record is always the last 128 bytes
+            of the file.  We check for the "SAUCE" magic there first, then work backwards
+            to locate the optional comment block and EOF marker.  This avoids false
+            positives from 0x1A bytes that may appear inside SAUCE numeric fields.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:SadConsole.Terminal.SauceRecord.ReadCharField(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Reads a SAUCE Character field (CP437, space-padded).
+            Handles the common case of null-termination followed by garbage.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.SauceRecord.ReadZString(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Reads a SAUCE ZString field (null-terminated C string, CP437).
+            Unused portion is filled with binary zero.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.SauceRecord.GetContent(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Returns just the content portion of the data (excluding SAUCE, comments, and EOF marker).
+            Convenience wrapper around <see cref="P:SadConsole.Terminal.SauceRecord.ContentLength"/>.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.SauceLetterSpacing">
+            <summary>
+            Letter spacing hint from SAUCE ANSiFlags bits 1–2.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceLetterSpacing.Legacy">
+            <summary>No preference / legacy interpretation.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceLetterSpacing.EightPixel">
+            <summary>Select 8-pixel font.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceLetterSpacing.NinePixel">
+            <summary>Select 9-pixel font.</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.SauceAspectRatio">
+            <summary>
+            Aspect ratio hint from SAUCE ANSiFlags bits 3–4.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceAspectRatio.Legacy">
+            <summary>No preference / legacy interpretation.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceAspectRatio.Stretch">
+            <summary>Stretch to legacy aspect ratio.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.SauceAspectRatio.Square">
+            <summary>Square pixel aspect ratio (modern).</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.ColorMode">
+            <summary>
+            Specifies how a terminal color value was set.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.ColorMode.Default">
+            <summary>Use the default foreground or background color.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.ColorMode.Palette">
+            <summary>Use a 256-color palette index.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.ColorMode.TrueColor">
+            <summary>Use an explicit RGB truecolor value.</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.State">
+            <summary>
+            Tracks the mutable state of a terminal emulator session.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.CursorRow">
+            <summary>Current cursor row (0-based).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.CursorColumn">
+            <summary>Current cursor column (0-based).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.PendingWrap">
+            <summary>True when the cursor is at the right margin and the next printable character should wrap.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ForegroundMode">
+            <summary>Foreground color mode.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ForegroundIndex">
+            <summary>Foreground palette index (valid when <see cref="P:SadConsole.Terminal.State.ForegroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.Palette"/>).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ForegroundRgb">
+            <summary>Foreground RGB value (valid when <see cref="P:SadConsole.Terminal.State.ForegroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.TrueColor"/>).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BackgroundMode">
+            <summary>Background color mode.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BackgroundIndex">
+            <summary>Background palette index (valid when <see cref="P:SadConsole.Terminal.State.BackgroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.Palette"/>).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BackgroundRgb">
+            <summary>Background RGB value (valid when <see cref="P:SadConsole.Terminal.State.BackgroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.TrueColor"/>).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Bold">
+            <summary>Bold / increased intensity (SGR 1).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Dim">
+            <summary>Dim / faint (SGR 2).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Italic">
+            <summary>Italic (SGR 3).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Underline">
+            <summary>Underline (SGR 4).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Blink">
+            <summary>Blink (SGR 5).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Reverse">
+            <summary>Reverse video (SGR 7).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Concealed">
+            <summary>Concealed / hidden (SGR 8).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Strikethrough">
+            <summary>Strikethrough (SGR 9).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.DefaultForeground">
+            <summary>Default foreground color used when <see cref="P:SadConsole.Terminal.State.ForegroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.Default"/>.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.DefaultBackground">
+            <summary>Default background color used when <see cref="P:SadConsole.Terminal.State.BackgroundMode"/> is <see cref="F:SadConsole.Terminal.ColorMode.Default"/>.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ScrollTop">
+            <summary>Top margin of the scroll region (0-based, inclusive).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ScrollBottom">
+            <summary>Bottom margin of the scroll region (0-based, inclusive).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.AutoWrap">
+            <summary>Auto-wrap mode (DECAWM). Default on.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.CursorVisible">
+            <summary>Cursor visibility (DECTCEM). Default on.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.OriginMode">
+            <summary>Origin mode (DECOM). Default off.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.CursorKeyMode">
+            <summary>Cursor key mode (DECCKM). Default off.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.ScreenReverseVideo">
+            <summary>Screen reverse video mode (DECSCNM). Default off.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.FontSlot0">
+            <summary>Font ID for default text (slot 0). Per CTerm spec, default is 0 (CP437).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.FontSlot1">
+            <summary>Font ID for high-intensity text (slot 1). Active when <see cref="P:SadConsole.Terminal.State.BrightFontEnabled"/> is set.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.FontSlot2">
+            <summary>Font ID for blink-attribute text (slot 2). Active when <see cref="P:SadConsole.Terminal.State.BlinkFontEnabled"/> is set.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.FontSlot3">
+            <summary>Font ID for bright+blink text (slot 3). Active when both <see cref="P:SadConsole.Terminal.State.BrightFontEnabled"/> and <see cref="P:SadConsole.Terminal.State.BlinkFontEnabled"/> are set.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BrightFontEnabled">
+            <summary>When set, the bright (SGR 1) attribute selects characters from font slot 1 (CSI ? 31 h).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BrightIntensityDisabled">
+            <summary>When set, bright intensity does not affect color — for use with <see cref="P:SadConsole.Terminal.State.BrightFontEnabled"/> (CSI ? 32 h).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BlinkFontEnabled">
+            <summary>When set, the blink (SGR 5/6) attribute selects characters from font slot 2 (CSI ? 34 h).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.BlinkDisabled">
+            <summary>When set, blink does not cause blinking — for use with <see cref="P:SadConsole.Terminal.State.BlinkFontEnabled"/> (CSI ? 35 h).</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.LastFontSelectionResult">
+            <summary>
+            Result of the last font selection request. 0 = success, 1 = failure, 99 = no request yet.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Width">
+            <summary>Surface width in columns.</summary>
+        </member>
+        <member name="P:SadConsole.Terminal.State.Height">
+            <summary>Surface height in rows.</summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new terminal state for the given surface dimensions.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.ResetSgr">
+            <summary>
+            Resets all SGR attributes to their defaults.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.Reset">
+            <summary>
+            Resets all terminal state to power-on defaults.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.GetActiveFontSlot">
+            <summary>
+            Returns the font ID that should be used for the current character, based on the
+            active font mode flags and the current SGR attributes (bold/blink).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.GetFontSlot(System.Int32)">
+            <summary>
+            Gets or sets the font ID for the given slot index (0-3).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.SetFontSlot(System.Int32,System.Int32)">
+            <summary>
+            Sets the font ID for the given slot index (0-3).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.SaveCursor">
+            <summary>
+            Saves the current cursor state (DECSC).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.RestoreCursor">
+            <summary>
+            Restores the previously saved cursor state (DECRC).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.NextTabStop(System.Int32)">
+            <summary>
+            Returns the next tab-stop column after the given column, or the last column.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.PreviousTabStop(System.Int32)">
+            <summary>
+            Returns the previous tab-stop column before the given column, or column 0.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.SetTabStop(System.Int32)">
+            <summary>
+            Sets a tab stop at the specified column (HTS).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.ClearTabStop(System.Int32)">
+            <summary>
+            Clears the tab stop at the specified column (TBC 0).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.ClearAllTabStops">
+            <summary>
+            Clears all tab stops (TBC 3).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.State.UpdateHeight(System.Int32)">
+            <summary>
+            Updates the height after the backing surface has been resized.
+            If the scroll bottom was at the previous last row (no custom scroll region),
+            it moves to the new last row.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.TerminalCursor">
+            <summary>
+            Lightweight terminal cursor data class for ANSI/VT rendering.
+            This is NOT an IComponent — it's a plain data object for the render step to read.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.Position">
+            <summary>
+            Cursor position on the surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible">
+            <summary>
+            Whether the cursor is in the visible phase of its blink cycle.
+            Render steps should draw the cursor only when both <see cref="P:SadConsole.Terminal.TerminalCursor.IsVisible"/> and <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> are <see langword="true"/>.
+            Steady cursor shapes (even DECSCUSR values) always return <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.IsVisible">
+            <summary>
+            Cursor visibility. Controlled by DECTCEM (CSI ? 25 h/l).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.Shape">
+            <summary>
+            Cursor shape. Controlled by DECSCUSR (CSI Ps SP q).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.TerminalCursor.RenderCellActiveState">
+            <summary>
+            The rendered cell state exposed to the render step.
+            Contains glyph, foreground, and background information.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.#ctor">
+            <summary>
+            Creates a new terminal cursor with default colors (white on black).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Color)">
+            <summary>
+            Creates a new terminal cursor with the specified foreground and background colors.
+            </summary>
+            <param name="foreground">Cursor foreground color.</param>
+            <param name="background">Cursor background color.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.Update(System.TimeSpan)">
+            <summary>
+            Advances the blink timer by the frame delta and toggles <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> when the interval elapses.
+            Steady cursor shapes never blink — <see cref="P:SadConsole.Terminal.TerminalCursor.IsBlinkVisible"/> stays <see langword="true"/>.
+            </summary>
+            <param name="delta">Elapsed time since the last frame.</param>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.UpdateGlyphForShape">
+            <summary>
+            Updates the cursor glyph based on the current shape.
+            Block uses glyph 219 (█), underline uses 95 (_), bar uses 124 (|).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.SetForeground(SadRogue.Primitives.Color)">
+            <summary>
+            Sets the cursor foreground color.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.TerminalCursor.SetBackground(SadRogue.Primitives.Color)">
+            <summary>
+            Sets the cursor background color.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Terminal.CharacterEncoding">
+            <summary>
+            Determines how the writer maps incoming characters to font glyphs.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CharacterEncoding.Codepage437">
+            <summary>Characters are checked against the font first, then converted to CP437 if not found.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.CharacterEncoding.Unicode">
+            <summary>Characters are passed through as-is (for Unicode-capable fonts).</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.LineFeedMode">
+            <summary>
+            Controls how line feed (LF, 0x0A) is handled.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.LineFeedMode.Strict">
+            <summary>LF moves cursor down only. CR must be explicit for column 0. (standard ANSI/VT behavior)</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.LineFeedMode.Implicit">
+            <summary>LF implies CR+LF — moves cursor to column 0 AND down one line. (Linux terminal default, common for BBS art)</summary>
+        </member>
+        <member name="T:SadConsole.Terminal.Writer">
+            <summary>
+            Renders parsed terminal sequences onto an <see cref="T:SadConsole.ICellSurface"/>.
+            Implements <see cref="T:SadConsole.Terminal.ITerminalHandler"/> and drives a <see cref="P:SadConsole.Terminal.Writer.Parser"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Cursor">
+            <summary>
+            A terminal cursor for visual display. Set to null for headless rendering.
+            Controlled by DECTCEM (visibility) and DECSCUSR (shape).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Output">
+            <summary>
+            The response channel for terminal queries (DA, DSR, DECRQM).
+            When <see langword="null"/>, the terminal operates in silent data-stream mode
+            and query responses are discarded. When set, responses are sent through this channel,
+            enabling interactive terminal emulation.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.State">
+            <summary>
+            The terminal state (cursor position, SGR attributes, modes, scroll region).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Palette">
+            <summary>
+            The 256-color palette (plus truecolor).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Parser">
+            <summary>
+            The parser wired to this writer.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Encoding">
+            <summary>
+            The character encoding mode. Determines how incoming characters are mapped to font glyphs.
+            Default is <see cref="F:SadConsole.Terminal.CharacterEncoding.Codepage437"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.LineFeeds">
+            <summary>
+            How LF (0x0A) is interpreted. Default is <see cref="F:SadConsole.Terminal.LineFeedMode.Implicit"/> (LF moves to column 0 and down).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.AutoGrow">
+            <summary>
+            When <see langword="true"/> and the surface implements <see cref="T:SadConsole.ICellSurfaceResize"/>,
+            the writer grows the surface instead of scrolling content up.
+            The view size stays the same; only the total backing height increases.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.#ctor(SadConsole.ICellSurface,SadConsole.IFont)">
+            <summary>
+            Creates a new writer targeting the specified surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.Feed(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Feeds raw bytes through the parser.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.Feed(System.String)">
+            <summary>
+            Encodes a string as UTF-8 and feeds it through the parser.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnPrint(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnC0Control(System.Byte)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnEscDispatch(System.Byte,System.Byte)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnCsiDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.Nullable{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnOscDispatch(System.ReadOnlySpan{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.OnDcsDispatch(System.ReadOnlySpan{System.Int32},System.ReadOnlySpan{System.Byte},System.Byte,System.ReadOnlySpan{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleDecscusr(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps SP q — DECSCUSR (Set Cursor Style).
+            Maps DECSCUSR parameter values to CursorShape enum.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleDeviceStatusReport(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps n — Device Status Report (DSR).
+            Ps 5 = status report (OK), Ps 6 = cursor position report (CPR).
+            Responses are sent via <see cref="P:SadConsole.Terminal.Writer.Output"/>; silently ignored when Output is <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleDeviceAttributes(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps c — Device Attributes (DA1).
+            Ps 0 (or omitted) requests primary device attributes.
+            Responds as a VT220 with ANSI color support.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleFontSelection(System.ReadOnlySpan{System.Int32})">
+            <summary>
+            Handles CSI Ps1 ; Ps2 SP D — Font Selection per cterm.adoc.
+            Ps1 = font slot (0-3), Ps2 = font ID (0-255).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.HandleCtermExtension(System.ReadOnlySpan{System.Int32},System.Byte)">
+            <summary>
+            Handles CSI = Ps n — CTerm State/Mode Request/Report (CTSMRR).
+            Currently supports Ps=1 (Font State Report).
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.GetFontForSlot(System.Int32)">
+            <summary>
+            Returns the <see cref="T:SadConsole.IFont"/> for the given font ID. Custom fonts loaded via DCS CTLF
+            are looked up first; if not found, the default constructor font is returned.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.GetActiveFont">
+            <summary>
+            Returns the <see cref="T:SadConsole.IFont"/> that should be used for the current character based on
+            the active font slot, mode flags, and SGR attributes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.Param(System.ReadOnlySpan{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            Gets a parameter value, returning <paramref name="defaultValue"/> when the
+            parameter is missing or zero (ECMA-48: zero means "use default").
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.Writer.Cp437Table">
+            <summary>
+            Lookup table mapping Unicode code points (index) to CP437 byte values.
+            Covers the ASCII/Latin range where most CP437 characters live.
+            Entries of 0xFFFF mean "no mapping available".
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.ParseHexScaled(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Parses 1–4 hex digits and scales to 0–255 per X11 color spec.
+            </summary>
         </member>
         <member name="T:SadConsole.UI.AdjustableColor">
             <summary>
@@ -15521,7 +16792,6 @@
             <summary>
             Has the basic appearances of each control state.
             </summary>
-        </mem>
         </member>
         <member name="P:SadConsole.UI.ThemeStates.Normal">
             <summary>
@@ -15708,7 +16978,7 @@
             Creates a new window.
             </summary>
             <param name="width">The width in cells of the surface.</param>
-            <param name="height">The height in face.</param>
+            <param name="height">The height in cells of the surface.</param>
         </member>
         <member name="M:SadConsole.UI.Window.#ctor(System.Int32,System.Int32,SadConsole.ColoredGlyphBase[])">
             <summary>
@@ -16050,7 +17320,7 @@
             <returns>A color with the red channel altered.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.SetGreen(SadRogue.Primitives.Color,System.Byte)">
-            <summary>      <summary>
+            <summary>
             Returns a new color with the green channel set to the specified value.
             </summary>
             <param name="color">Object instance.</param>
@@ -16119,7 +17389,7 @@
             <param name="value">The string parser color command.</param>
             <param name="keepR">Indicates that command wanted to keep the Red color channel.</param>
             <param name="keepG">Indicates that command wanted to keep the Green color channel.</param>
-            pB">Indicates that command wanted to keep the Blue color channel.</param>
+            <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
             <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
             <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
             <returns></returns>
@@ -16187,6 +17457,4 @@
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
-</doc>
-mbers>
 </doc>

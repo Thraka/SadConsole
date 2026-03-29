@@ -91,7 +91,7 @@ public class ScreenSurfaceRenderer : IRenderer
             IsForced = true;
             backingTextureChanged = true;
             _backingTexture?.Dispose();
-            _backingTexture = new RenderTexture((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height);
+            _backingTexture = new RenderTexture(new((uint)screen.AbsoluteArea.Width, (uint)screen.AbsoluteArea.Height));
             _renderTexture?.Dispose();
             _renderTexture = new Host.GameTexture(_backingTexture.Texture);
             BackingTextureRecreated?.Invoke(this, EventArgs.Empty);

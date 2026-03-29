@@ -41,7 +41,11 @@ public class WindowRenderStep : IRenderStep
         UI.Colors colors = window.Controls.GetThemeColors();
 
         if (window.IsModal && colors.ModalBackground.A != 0)
-            GameHost.Instance.DrawCalls.Enqueue(new DrawCalls.DrawCallColor(colors.ModalBackground.ToSFMLColor(), ((SadConsole.Host.GameTexture)screenObject.Font.Image).Texture, new IntRect(0, 0, Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight), screenObject.Font.SolidGlyphRectangle.ToIntRect()));
+            GameHost.Instance.DrawCalls.Enqueue(
+                new DrawCalls.DrawCallColor(colors.ModalBackground.ToSFMLColor(),
+                ((Host.GameTexture)screenObject.Font.Image).Texture,
+                new IntRect(new(0, 0), new(Settings.Rendering.RenderWidth, Settings.Rendering.RenderHeight)),
+                screenObject.Font.SolidGlyphRectangle.ToIntRect()));
     }
 
     ///  <inheritdoc/>

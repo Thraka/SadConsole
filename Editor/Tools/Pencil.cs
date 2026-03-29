@@ -1,7 +1,6 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Reflection.Metadata;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.Entities;
 using SadConsole.Host;
@@ -47,7 +46,7 @@ internal class Pencil : ITool
             Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
             Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
             int glyph = SharedToolSettings.Tip.Glyph;
-            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+            ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
             if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
             {
@@ -55,14 +54,14 @@ internal class Pencil : ITool
                     ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                     ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
                     ref mirror,
-                    ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+                    ref glyph, document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer);
 
                 SettingsTable.EndTable();
             }
 
             SharedToolSettings.Tip.Foreground = foreground.ToColor();
             SharedToolSettings.Tip.Background = background.ToColor();
-            SharedToolSettings.Tip.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            SharedToolSettings.Tip.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
             SharedToolSettings.Tip.Glyph = glyph;
 
             ImGuiSC.EndGroupPanel();
@@ -159,22 +158,22 @@ internal class Pencil : ITool
 
         if (CurrentMode == ToolMode.Modes.Draw || CurrentMode == ToolMode.Modes.Objects)
         {
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
                 document.EditingSurface.Surface[hoveredCellPosition].Clear();
                 SharedToolSettings.Tip.CopyAppearanceTo(document.EditingSurface.Surface[hoveredCellPosition]);
                 document.EditingSurface.IsDirty = true;
             }
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right) && CurrentMode == ToolMode.Modes.Draw)
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Right) && CurrentMode == ToolMode.Modes.Draw)
             {
                 ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
 
-                if (ImGuiP.IsKeyDown(ImGuiKey.ModShift))
+                if (ImGui.IsKeyDown(ImGuiKey.ModShift))
                 {
                     SharedToolSettings.Tip.Foreground = sourceCell.Foreground;
                     SharedToolSettings.Tip.Background = sourceCell.Background;
                 }
-                else if (ImGuiP.IsKeyDown(ImGuiKey.ModCtrl))
+                else if (ImGui.IsKeyDown(ImGuiKey.ModCtrl))
                 {
                     SharedToolSettings.Tip.Glyph = sourceCell.Glyph;
                 }
@@ -184,7 +183,7 @@ internal class Pencil : ITool
         }
         else if (CurrentMode == ToolMode.Modes.Empty)
         {
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
                 document.EditingSurface.Surface.Clear(hoveredCellPosition.X, hoveredCellPosition.Y, 1);
 
@@ -199,7 +198,7 @@ internal class Pencil : ITool
         // Zones mode
         else if (_currentZone != null)
         {
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
                 _currentZone.ZoneArea ??= new();
                 _currentZone.ZoneArea.Add(hoveredCellPosition);
@@ -209,7 +208,7 @@ internal class Pencil : ITool
 
                 document.VisualLayerToolLower.Surface.IsDirty = true;
             }
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
             {
                 if (_currentZone.ZoneArea != null && _currentZone.ZoneArea.Contains(hoveredCellPosition))
                 {

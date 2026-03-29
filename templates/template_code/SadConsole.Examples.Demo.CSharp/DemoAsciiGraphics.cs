@@ -1,6 +1,8 @@
-﻿using SadConsole.Ansi;
+﻿using System.Text;
+using SadConsole.Ansi;
 using SadConsole.Input;
 using SadConsole.Readers;
+using SadConsole.Terminal;
 using SadConsole.UI;
 using static SadConsole.Examples.RootScreen;
 
@@ -28,17 +30,14 @@ internal class AsciiGraphics : ScreenSurface
 
     public AsciiGraphics() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-        _asciiArtPages = new AsciiArt[]
-        {
-                new AsciiGraphicsTitlePage(),
-                new AnsiArt("TES-JC.ANS"),
-                new AnsiArt("QS-SIERR.ANS"),
-                new AnsiArt("ROY-BTC1.ANS"),
-                new AnsiArt("ROY-DGZN.ANS"),
+        var ansiSpecific = AnsiArt.Descriptions.Select(a => new AnsiArt(a.Key)).ToArray();
+
+        _asciiArtPages = [
+                new AsciiGraphicsTitlePage(), .. ansiSpecific,
                 new PlaysciiArt("playscii_welcome_art.psci"),
                 new PlaysciiArt("scene.psci"),
                 new PlaysciiArt("pseudo_picasso.psci")
-        };
+                ];
 
         Children.Add(_asciiArtPages[0]);
 
@@ -151,10 +150,13 @@ class AnsiArt : AsciiArt
 {
     public static readonly Dictionary<string, Description> Descriptions = new()
         {
-            { "logo.ans", new Description("ANSI Doc - SadConsole Logo", "Logo for SadConsole.") },
+            { "b5-ans01.ans", new Description("ANSI Doc - SAC-36 b5-ans01.ans", "Concept art for a BBS. Artist Barium.") },
+            { "b5-sacoc.ans", new Description("ANSI Doc - SAC-36 b5-sacoc.ans", "SUPERiOR ART CREATiONS - Artist Barium b5!/SAC") },
+            { "ee-cl.ans", new Description("ANSI Doc", "") },
             { "QS-SIERR.ANS", new Description("ANSI Doc - Sierra BBS", "Advertisement for Sierra BBS by Quick Silver (VALiANT collection 1993).") },
             { "TES-JC.ANS", new Description("ANSI Doc - WILDC.A.T.S", "Advertisement for Jet City BBS by Jim Lee (VALiANT collection 1993).") },
-            { "ROY-BTC1.ANS", new Description("ANSI Doc - Blocktronicks", "Art by Roy of SAC. Inspired by Font Designs from Amroth/iCE.") },
+            {"ROY-CCU3.ANS", new Description("ANSI Doc", "") },
+            { "ROY-BTC1.ANS", new Description("ANSI Doc - Blocktronics", "Art by Roy of SAC. Inspired by Font Designs from Amroth/iCE.") },
             { "ROY-DGZN.ANS", new Description("ANSI Doc - Digital Zone", "Advertisement for Digital Zone BBS by Roy of SAC.") },
         };
 
@@ -162,20 +164,49 @@ class AnsiArt : AsciiArt
     {
         int ansiDocWidth = 80;
 
-        // read the doc once to see how many rows it needs
-        Document doc = new($"Res/Ansi/{ansiFileName}");
-        ScreenSurface ansiSurface = new(ansiDocWidth, 25);
-        AnsiWriter writer = new(doc, ansiSurface.Surface);
+        bool useNewParser = true;
+        //ScreenSurface ansiSurface = new(ansiDocWidth, 25);
 
-        writer.ReadEntireDocument();
+        if (useNewParser)
+        {
 
-        // resize this surface to the doc height
-        int totalHeight = ansiSurface.Surface.Height + ansiSurface.Surface.TimesShiftedUp;
-        ((CellSurface)Surface).Resize(ansiDocWidth, GameSettings.ScreenDemoBounds.Height, ansiDocWidth, totalHeight, false);
+            SadConsole.Terminal.Writer writer = new(Surface, Font) { AutoGrow = true };
+            SadConsole.Terminal.Parser parser = new(writer);
 
-        // read the doc again and give it the surface with the proper height
-        writer = new AnsiWriter(doc, Surface);
-        writer.ReadEntireDocument();
+            using Stream stream = SadConsole.GameHost.Instance.OpenStream($"Res/Ansi/{ansiFileName}");
+            using var reader = new BinaryReader(stream);
+
+            byte[] ansiBytes = reader.ReadBytes((int)stream.Length);
+
+            SauceRecord? sauce = SauceRecord.Read(ansiBytes);
+
+            // 2. Feed only the content bytes (SAUCE/comments/EOF stripped)
+            ReadOnlySpan<byte> content = sauce != null
+                ? sauce.GetContent(ansiBytes)
+                : ansiBytes;
+
+            if (sauce != null)
+                System.Diagnostics.Debugger.Break();
+
+            parser.Feed(content);
+        }
+        else
+        {
+            // read the doc once to see how many rows it needs
+            Document doc = new($"Res/Ansi/{ansiFileName}");
+            ScreenSurface ansiSurface = new(ansiDocWidth, 25);
+            AnsiWriter writer = new(doc, ansiSurface.Surface);
+
+            writer.ReadEntireDocument();
+
+            // resize this surface to the doc height
+            int totalHeight = ansiSurface.Surface.Height + ansiSurface.Surface.TimesShiftedUp;
+            ((CellSurface)Surface).Resize(ansiDocWidth, GameSettings.ScreenDemoBounds.Height, ansiDocWidth, totalHeight, false);
+
+            // read the doc again and give it the surface with the proper height
+            writer = new AnsiWriter(doc, Surface);
+            writer.ReadEntireDocument();
+        }
     }
 
     public bool ScrollView(Direction d)

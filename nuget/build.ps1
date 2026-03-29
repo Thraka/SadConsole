@@ -94,13 +94,12 @@ if ($foundPackage){
         Push-Project -project $project -nugetKey $nugetKey
     }
 
+    # Handle ImGui package for MonoGame
     $foundPackage = $false
-
-    # Handle debug package
     $timeout = New-TimeSpan -Minutes 10
     $timer = [Diagnostics.StopWatch]::StartNew()
 
-    Write-Output "Processing SadConsole.Debug.MonoGame project, waiting on MonoGame host package"
+    Write-Output "Processing SadConsole.ImGui.MonoGame project, waiting on MonoGame host package"
 
     # Loop searching for the new MonoGame package
     while ($timer.elapsed -lt $timeout){
@@ -124,11 +123,47 @@ if ($foundPackage){
     }
 
     if ($foundPackage) {
-        Build-Project -project "SadConsole.Debug.MonoGame"
-        Push-Project -project "SadConsole.Debug.MonoGame" -nugetKey $nugetKey
+        Build-Project -project "SadConsole.ImGui.MonoGame"
+        Push-Project -project "SadConsole.ImGui.MonoGame" -nugetKey $nugetKey
     }
     else {
         throw "Failed to find SadConsole.Host.MonoGame package on NuGet in time"
+    }
+
+    # Handle ImGui package for SFML
+    $foundPackage = $false
+    $timeout = New-TimeSpan -Minutes 10
+    $timer = [Diagnostics.StopWatch]::StartNew()
+
+    Write-Output "Processing SadConsole.ImGui.SFML project, waiting on SFML host package"
+
+    # Loop searching for the new SFML package
+    while ($timer.elapsed -lt $timeout){
+
+        $existingVersions = (Invoke-WebRequest "https://api-v2v3search-0.nuget.org/query?q=PackageId:SadConsole.Host.SFML&prerelease=true").Content | ConvertFrom-Json
+
+        if ($existingVersions.totalHits -eq 0) {
+            throw "Unable to get any results from NuGet"
+        }
+
+        if ($null -eq ($existingVersions.data.versions | Where-Object version -eq $version)) {
+            Write-Output "Waiting 30 seconds to retry..."
+            Start-Sleep -Seconds 30
+        }
+        else {
+            Write-Output "Found package. Waiting 1 extra minute to let things settle"
+            $foundPackage = $true
+            Start-Sleep -Seconds 60
+            break
+        }
+    }
+
+    if ($foundPackage) {
+        Build-Project -project "SadConsole.ImGui.SFML"
+        Push-Project -project "SadConsole.ImGui.SFML" -nugetKey $nugetKey
+    }
+    else {
+        throw "Failed to find SadConsole.Host.SFML package on NuGet in time"
     }
 
     # Archive the packages

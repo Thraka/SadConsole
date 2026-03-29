@@ -1,0 +1,15 @@
+Add TerminalCursor, CursorShape, and TerminalCursorRenderStep
+
+- New SadConsole.Terminal.TerminalCursor: lightweight cursor data class
+  (Position, IsVisible, Shape) replacing Components.Cursor for terminal use
+- New SadConsole.Terminal.CursorShape enum: 6 DECSCUSR modes
+  (blinking/steady block/underline/bar)
+- Writer.Cursor changed to nullable TerminalCursor with null-safe
+  SyncCursorPosition, DECTCEM, and DECSCUSR handlers
+- TerminalCursorRenderStep added to MonoGame and SFML hosts using
+  SetData pattern for cursor discovery
+- 44 new tests covering cursor defaults, null safety, DECSCUSR sequences,
+  cursor injectability, and position syncing
+- All 726 tests pass
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

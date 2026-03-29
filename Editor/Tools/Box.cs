@@ -1,32 +1,31 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
+using SadConsole.ImGuiSystem.Types;
 
 namespace SadConsole.Editor.Tools;
 
 internal class Box : ITool
 {
-    private ImGuiTypes.ShapeSettings _shapeSettings = new() { HasBorder = true,
+    private ImGuiSystem.Types.ShapeSettings _shapeSettings = new() { HasBorder = true,
                                                               UseBoxBorderStyle = true,
-                                                              BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+                                                              BoxBorderStyle = ImGuiSystem.Types.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
                                                               BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
                                                               HasFill = false,
                                                               FillGlyph = new ColoredGlyph()};
 
-    private ImGuiTypes.ShapeSettings _shapeSettingsDraw = new()
+    private ImGuiSystem.Types.ShapeSettings _shapeSettingsDraw = new()
     {
         HasBorder = true,
         UseBoxBorderStyle = true,
-        BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+        BoxBorderStyle = ImGuiSystem.Types.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
         BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
         HasFill = false,
         FillGlyph = new ColoredGlyph()
     };
 
-    private ImGuiTypes.ShapeSettings _shapeSettingsErase = new()
+    private ImGuiSystem.Types.ShapeSettings _shapeSettingsErase = new()
     {
         HasBorder = true,
         UseBoxBorderStyle = true,
@@ -36,11 +35,11 @@ internal class Box : ITool
         FillGlyph = new ColoredGlyph(Color.White, Color.Gray.SetAlpha(100))
     };
 
-    private ImGuiTypes.ShapeSettings _shapeSettingsOther = new()
+    private ImGuiSystem.Types.ShapeSettings _shapeSettingsOther = new()
     {
         HasBorder = true,
         UseBoxBorderStyle = true,
-        BoxBorderStyle = ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
+        BoxBorderStyle = ImGuiSystem.Types.ConnectedLineStyleType.AllConnectedLineStyles[1].ConnectedLineStyle,
         BorderGlyph = new ColoredGlyph(Color.White, Color.Black, 176),
         HasFill = false,
         FillGlyph = new ColoredGlyph()
@@ -49,7 +48,7 @@ internal class Box : ITool
     private ZoneSimplified? _currentZone;
     private SimpleObjectDefinition? _currentObject;
 
-    private ImGuiList<ImGuiTypes.ConnectedLineStyleType> _lineTypes = new(ImGuiTypes.ConnectedLineStyleType.AllConnectedLineStyles);
+    private ImGuiList<ImGuiSystem.Types.ConnectedLineStyleType> _lineTypes = new(ImGuiSystem.Types.ConnectedLineStyleType.AllConnectedLineStyles);
 
     private bool _isFirstPointSelected = false;
     private Point _firstPoint;
@@ -131,7 +130,7 @@ internal class Box : ITool
                                 ref borderGlyph,
                                 surface.Surface.DefaultForeground.ToVector4(),
                                 surface.Surface.DefaultBackground.ToVector4(),
-                                document.EditingSurfaceFont, ImGuiCore.Renderer
+                                document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer
                             );
                         }
 
@@ -169,7 +168,7 @@ internal class Box : ITool
                         ref fillGlyph,
                         surface.Surface.DefaultForeground.ToVector4(),
                         surface.Surface.DefaultBackground.ToVector4(),
-                        document.EditingSurfaceFont, ImGuiCore.Renderer
+                        document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer
                     );
 
                     SettingsTable.DrawCheckbox("Ignore Foreground", "##ignore_Fill_foreground", ref _shapeSettings.IgnoreFillForeground);
@@ -323,7 +322,7 @@ internal class Box : ITool
         // Cancelled but mouse button finally released, exit cancelled
         if (_isCancelled)
         {
-            if (!ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && !ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+            if (!ImGui.IsMouseDown(ImGuiMouseButton.Left) && !ImGui.IsMouseDown(ImGuiMouseButton.Right))
                 _isCancelled = false;
 
             return;
@@ -332,7 +331,7 @@ internal class Box : ITool
         // Cancelled - only for non-zone modes
         if (CurrentMode != ToolMode.Modes.Zones)
         {
-            if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape)))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape)))
             {
                 ClearState();
                 _isCancelled = true;
@@ -345,9 +344,9 @@ internal class Box : ITool
 
         // For zones mode, handle escape to cancel
         if (CurrentMode == ToolMode.Modes.Zones && _isFirstPointSelected
-            && (ImGuiP.IsKeyReleased(ImGuiKey.Escape) ||
-                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) && !_isRightClickDrag) ||
-                    (ImGuiP.IsMouseClicked(ImGuiMouseButton.Left) && _isRightClickDrag)
+            && (ImGui.IsKeyReleased(ImGuiKey.Escape) ||
+                    (ImGui.IsMouseClicked(ImGuiMouseButton.Right) && !_isRightClickDrag) ||
+                    (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && _isRightClickDrag)
                )
            )
         {
@@ -358,10 +357,10 @@ internal class Box : ITool
         }
 
         // Determine which mouse button is being used for drawing
-        bool isLeftDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
-        bool isRightDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
-        bool isLeftReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Left);
-        bool isRightReleased = ImGuiP.IsMouseReleased(ImGuiMouseButton.Right);
+        bool isLeftDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
+        bool isRightDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
+        bool isLeftReleased = ImGui.IsMouseReleased(ImGuiMouseButton.Left);
+        bool isRightReleased = ImGui.IsMouseReleased(ImGuiMouseButton.Right);
 
         // For zones mode, allow right-click to start a clear operation
         bool isDrawingButton = isLeftDown || (CurrentMode == ToolMode.Modes.Zones && isRightDown && !_isFirstPointSelected);

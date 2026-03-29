@@ -1,11 +1,8 @@
-﻿using System.Linq.Expressions;
-using System.Numerics;
+﻿using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
-using SadConsole.ImGuiSystem;
-using SadConsole.ImGuiTypes;
-using SadConsole.Renderers;
+using SadConsole.ImGuiSystem.Rendering;
+using SadConsole.ImGuiSystem.Types;
 
 namespace SadConsole.Editor.Tools;
 
@@ -34,7 +31,7 @@ internal class Text : ITool
         Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
         Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
         int glyph = SharedToolSettings.Tip.Glyph;
-        ImGuiTypes.Mirror mirror = MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+        ImGuiSystem.Types.Mirror mirror = MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
         if (SettingsTable.BeginTable("textsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
         {
@@ -43,7 +40,7 @@ internal class Text : ITool
                 ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                 ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
                 ref mirror,
-                ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+                ref glyph, document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer);
 
             SettingsTable.EndTable();
         }
@@ -63,12 +60,12 @@ internal class Text : ITool
                 ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
             // Cancelled
-            if (ImGuiP.IsMouseClicked(ImGuiMouseButton.Right) || ImGuiP.IsKeyReleased(ImGuiKey.Escape))
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) || ImGui.IsKeyReleased(ImGuiKey.Escape))
             {
                 ClearState(document);
             }
 
-            else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+            else if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
             {
                 _cursorActual!.Position =
                 _cursorVisual.Position = hoveredCellPosition - document.EditingSurface.Surface.ViewPosition;
@@ -93,11 +90,11 @@ internal class Text : ITool
 
         if (!isHovered) return;
 
-        ImGuiRenderer theRenderer = ImGuiCore.Renderer;
+        ImGuiRenderer theRenderer = Core.ImGuiComponent.ImGuiRenderer;
 
         ToolHelpers.HighlightCell(hoveredCellPosition, document.EditingSurface.Surface.ViewPosition, document.EditorFontSize, Color.Green);
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
         {
             document.VisualTool.SadComponents.Add(_cursorVisual);
 

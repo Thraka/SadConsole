@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.FileHandlers;
+using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -96,8 +97,6 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// The size of the resize grip handle in pixels.
     /// </summary>
     private const float ResizeGripSize = 12f;
-
-    private Windows.SceneFontSizeCalculatorWindow? _sceneSizeCalculatorWindow;
 
     /// <summary>
     /// Gets the icon for scene documents.
@@ -286,24 +285,10 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
         }
 
         if (ImGui.Button("Set By Font"))
-        {
-            _sceneSizeCalculatorWindow = new Windows.SceneFontSizeCalculatorWindow();
-            _sceneSizeCalculatorWindow.AddOnOpen = false;
-            _sceneSizeCalculatorWindow.Open();
-        }
+            SceneFontSizeCalculatorPopup.Open();
 
-        if (_sceneSizeCalculatorWindow != null)
-        {
-            _sceneSizeCalculatorWindow.BuildUI(renderer);
-
-            if (!_sceneSizeCalculatorWindow.IsOpen)
-            {
-                if (_sceneSizeCalculatorWindow.DialogResult)
-                    ScenePixelSize = _sceneSizeCalculatorWindow.CalculatedPixelSize;
-
-                _sceneSizeCalculatorWindow = null;
-            }
-        }
+        if (SceneFontSizeCalculatorPopup.Draw(renderer, out Point selectedPixelSize))
+            ScenePixelSize = selectedPixelSize;
 
         ImGui.BeginDisabled(ChildSceneItems.Count == 0);
         if (ImGui.Button("Set By Child"))
@@ -966,9 +951,9 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
     /// </summary>
     private void HandleChildDragging(Vector2 startPos, Vector2 pixelArea, Vector2 sceneMousePos, bool isHovered, bool isActive)
     {
-        bool leftMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Left);
+        bool leftMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Left);
         bool leftMouseClicked = isHovered && leftMouseDown && !_wasDragging;
-        bool rightMouseDown = ImGuiP.IsMouseDown(ImGuiMouseButton.Right);
+        bool rightMouseDown = ImGui.IsMouseDown(ImGuiMouseButton.Right);
         bool rightMouseClicked = isHovered && rightMouseDown && !_wasPanning;
 
         // Handle ongoing viewport pan (right-click drag)

@@ -22,4 +22,11 @@
     <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Res\Ansi\b5-ans01.ans">
+      <Link>TestData\b5-ans01.ans</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,79 @@
+# Holden — History
+
+## Project Context
+
+**Project:** SadConsole  
+**Stack:** C# / .NET 8, 9, 10; MonoGame, SFML, FNA, KNI for rendering hosts  
+**Lead developer:** Thraka  
+**Description:** SadConsole is a C#-based .NET cross-platform terminal/tile-based game engine that simulates terminal/ASCII programs for modern platforms. The `SadConsole/` folder is the core library. Host libraries (`SadConsole.Host.MonoGame/`, `SadConsole.Host.SFML/`, etc.) provide all rendering. `SadConsole.Controls` is a large GUI system built on top of the core.
+
+## My Role
+
+I come in fresh. I read documentation and specs, then verify them against the actual source code. I flag anything that's wrong, outdated, missing, or misleading. I do not fix things — I find them and report them clearly so the right person can fix them.
+
+## Learnings
+
+### 2026-02-25 — Review of `docs/architecture-surfaces.md`
+
+**Reviewed:** `docs/architecture-surfaces.md`  
+**Output:** `docs/architecture-surfaces-review.md`, `.squad/decisions/inbox/holden-surfaces-review.md`
+
+**Status:** NEEDS REVISION (8 inaccuracies found, 5 missing items)
+
+**Key file paths verified:**
+- `SadConsole/CellSurface.cs` — CellSurface data model, indexers, viewport, resize, SetIsDirtySafe
+- `SadConsole/ICellSurface.cs` — partial interface, viewport props, IsDirtyChanged event
+- `SadConsole/ICellSurface.Editor.cs` — CellSurfaceEditor static class (all extension methods on ISurface)
+- `SadConsole/ICellSurface.Static.cs` — ConnectedLine arrays (includes ConnectedLineEmpty, not documented)
+- `SadConsole/ICellSurfaceResize.cs` — Resize contract
+- `SadConsole/ICellSurfaceSettable.cs` — SetSurface (remaps cell array, NOT ICellSurface reference swap)
+- `SadConsole/ISurfaceSettable.cs` — Surface { get; set; } — this is the ICellSurface reference swap mechanism
+- `SadConsole/ISurface.cs` — single-property partial interface
+- `SadConsole/ColoredGlyphBase.cs` — IsDirtySet event fires on IsDirty=true; no EffectsManager subscription
+- `SadConsole/ScreenSurface.cs` — OnIsDirtyChanged() is empty virtual { } in base class
+- `SadConsole/ScreenSurface.Input.cs` — mouse events
+- `SadConsole/ScreenObject.cs` — PositionFontSize field, UpdateAbsolutePosition
+- `SadConsole/ScreenObject.IComponentHost.cs` — 5 component lists
+- `SadConsole/Effects/EffectsManager.cs` — dual dictionaries; DropInvalidCells vs RemoveAll behavior
+- `SadConsole/Renderers/IRenderer.cs` — OnHostUpdated takes IScreenObject not IScreenSurface; missing Name/Opacity/IsForced; Output non-nullable; Steps is get+set
+- `SadConsole/Renderers/IRenderStep.cs` — Refresh has 4 params not 2; missing Name, SetData, Reset, OnHostUpdated
+- `SadConsole/IFont.cs` — has IsSadExtended, UnsupportedGlyphIndex, GenerateGlyphSourceRectangle etc (doc only shows subset)
+- `SadConsole/SadFont.cs` — Columns, Rows, FilePath confirmed
+- `SadConsole/Console.cs` — Cursor added as SadComponent (not just property)
+- `SadConsole/LayeredScreenSurface.cs` — does NOT override DefaultRendererName; directly replaces renderer in constructor
+
+**Patterns observed:**
+- Interface stubs in docs lag behind code — especially renderer interfaces. If a doc shows an abbreviated interface, assume it's missing members.
+- `ICellSurfaceSettable.SetSurface` ≠ replacing ICellSurface on ScreenSurface. Keep these distinct.
+- The 5-list component pattern (Update/Render/Keyboard/Mouse/Empty) is robust and correctly documented.
+- EffectsManager tracks dirty state via `ApplyToCell()` return value, NOT by subscribing to ColoredGlyphBase.IsDirtySet.
+
+### 2026-02-25 — Cross-agent brief for Deckard
+
+**Output:** `.squad/decisions/inbox/holden-surfaces-findings-for-deckard.md`
+
+Summarized all findings from `docs/architecture-surfaces-review.md` into a structured brief for Deckard. Covered 8 inaccuracies, 5 gaps, and a list of confirmed-correct items. Flagged action owners (Roy/Pris for interface stub corrections, Deckard for conceptual/architectural clarifications). Three items remain unverified pending host renderer knowledge.
+
+### 2026-02-25 — Verification of `docs/architecture-fonts.md`
+
+**Output:** `.squad/agents/holden/font-doc-review.md`, `.squad/decisions/inbox/holden-font-doc-review.md`
+
+**Status:** MOSTLY ACCURATE — 1 minor gap found
+
+Verified new font architecture document across 50+ checkpoints covering IFont/SadFont interfaces, GlyphDefinition/CellDecorator/Mirror types, enum values, method signatures, file paths, JSON format, serialization, font loading/registration, ScreenSurface integration, host rendering pipelines (MonoGame/SFML), and design principles.
+
+**Key finding:** Section 7 (Font Change Notification) claims `Renderer?.OnHostUpdated(this)` is called when Font/FontSize changes, but this is misleading. The actual behavior: OnFontChanged() is an empty virtual no-op in ScreenSurface base class. The renderer's backing texture reallocation happens passively—the SurfaceRenderStep.Refresh() phase automatically detects AbsoluteArea dimension changes and reallocates. Same end result, different mechanism. Minor revision recommended to clarify.
+
+**Key verified items:**
+- IFont/SadFont contracts match code exactly
+- All enum values correct (Mirror, Sizes, etc.)
+- Glyph indexing and padding formulas verified
+- Font file JSON structure matches IBM.font and IBM_ext.font
+- GameHost font registry and loading verified
+- Embedded resource paths correct (res: prefix)
+- FilePath resolution (disk/assembly) verified
+- FontConfig fluent API verified
+- ScreenSurface font integration verified
+- Host rendering (MonoGame/SFML) verified
+- FontJsonConverter serialization verified
+- Font editing extensions verified

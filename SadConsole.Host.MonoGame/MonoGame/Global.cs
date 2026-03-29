@@ -50,6 +50,26 @@ public static class Global
     public static RenderTarget2D RenderOutput { get; set; }
 
     /// <summary>
+    /// Same as <see cref="RenderOutput"/>. Only provided for other hosts that need it.
+    /// </summary>
+    public static RenderTarget2D RenderOutputTexture => RenderOutput;
+
+    /// <summary>
+    /// Gets the width, in pixels, of the rendered output.
+    /// </summary>
+    /// <remarks>This property retrieves the width from the underlying texture used for rendering. It is
+    /// useful for determining the horizontal dimension of the output when performing layout calculations or rendering
+    /// operations.</remarks>
+    public static int RenderOutputWidth => RenderOutput.Width;
+
+    /// <summary>
+    /// Gets the height, in pixels, of the texture used for rendering output.
+    /// </summary>
+    /// <remarks>This property provides the vertical dimension of the rendering surface. Use it to determine
+    /// the required display space or to align graphical elements based on the output's height.</remarks>
+    public static int RenderOutputHeight => RenderOutput.Height;
+
+    /// <summary>
     /// Reference to the game timer used in the MonoGame update loop.
     /// </summary>
     public static GameTime UpdateLoopGameTime { get; internal set; }

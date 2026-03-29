@@ -8,7 +8,7 @@ internal class DemoScrollableViews : IDemo
 
     public string Description => "Example of a UI control that can display a surface and scroll it.\r\n\r\nEach control shares the same backing data. [c:r f:Red:w]Click on a surface to draw.";
 
-    public string CodeFile => "DemoScrollableViews.cs";
+    public string CodeFile => "DemoScrollableView.cs";
 
     public IScreenSurface CreateDemoScreen() =>
         new ScrollableView();

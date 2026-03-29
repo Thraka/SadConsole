@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/template_code/">
+    <Project Path="template_code/SadConsole.Examples.Demo.CSharp/Examples.csproj" />
+    <Project Path="template_code/SadConsole.Project.MonoGame.CSharp/MyGame.csproj" />
+  </Folder>
+  <Project Path="SadConsole.Templates.csproj" />
+</Solution>

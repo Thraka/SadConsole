@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
@@ -212,13 +211,13 @@ internal static class ZoneHelpers
             ImGui.Text("Debug Apperance"u8);
             if (SettingsTable.BeginTable("debugglyph"))
             {
-                ImGuiTypes.ColoredGlyphReference glyphRef = zone.Appearance;
+                ImGuiSystem.Types.ColoredGlyphReference glyphRef = zone.Appearance;
                 SettingsTable.DrawCommonSettings(true, true, false, true, true,
                     ref glyphRef,
                     null,
                     null,
                     document.EditingSurfaceFont,
-                    ImGuiCore.Renderer);
+                    Core.ImGuiComponent.ImGuiRenderer);
 
                 if (glyphRef != zone.Appearance)
                 {
@@ -232,13 +231,9 @@ internal static class ZoneHelpers
             if (ImGui.Button("Edit Settings"u8))
             {
                 var tempZone = zone;
-                var window = new Windows.KeyValuePairEditor(zone.Settings);
-                window.Closed += (windowObj, _) =>
-                {
-                    if (((ImGuiWindowBase)windowObj).DialogResult)
-                        tempZone.Settings = window.ToDictionary();
-                };
-                window.Open();
+                Windows.KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, zone.Settings,
+                    (savedSettings) => { tempZone.Settings = savedSettings; },
+                    null);
             }
 
             if (zone.Settings.Count > 0)

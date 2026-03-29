@@ -63,7 +63,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
             BackingTexture?.Dispose();
             _cachedTexture?.Dispose();
 
-            BackingTexture = new RenderTexture((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height);
+            BackingTexture = new RenderTexture(new((uint)screenObject.AbsoluteArea.Width, (uint)screenObject.AbsoluteArea.Height));
             _cachedTexture = new Host.GameTexture(BackingTexture.Texture);
             result = true;
         }
@@ -113,7 +113,7 @@ public class ControlHostRenderStep : IRenderStep, IRenderStepTexture
     ///  <inheritdoc/>
     public void Composing(IRenderer renderer, IScreenSurface screenObject)
     {
-        IntRect outputArea = new IntRect(0, 0, (int)BackingTexture.Size.X, (int)BackingTexture.Size.Y);
+        IntRect outputArea = new IntRect(new(0, 0), new((int)BackingTexture.Size.X, (int)BackingTexture.Size.Y));
         Host.Global.SharedSpriteBatch.DrawQuad(outputArea, outputArea, Color.White, BackingTexture.Texture);
     }
 

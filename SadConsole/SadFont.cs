@@ -343,6 +343,89 @@ public sealed class SadFont : IFont
     public override string ToString() =>
         Name;
 
+    /// <summary>
+    /// Imports a VGA BIOS font from the specified file and returns a SadFont object representing the font.
+    /// </summary>
+    /// <remarks>The method reads pixel data from the specified file and constructs a texture for the font.
+    /// Ensure that the file path is valid and that the resource is accessible. The file extension should follow the
+    /// pattern '.fxx' where 'xx' is the scanline count if scanlines is not explicitly provided.</remarks>
+    /// <param name="name">The name to assign to the imported font for identification purposes.</param>
+    /// <param name="filePath">The path to the font file. The file must be in a format compatible with VGA BIOS fonts and accessible as an
+    /// embedded resource.</param>
+    /// <param name="scanlines">The number of scanlines to read for each glyph. If set to 0, the method attempts to parse the scanline count
+    /// from the file extension.</param>
+    /// <returns>A SadFont object that represents the imported VGA BIOS font, including its dimensions and pixel data.</returns>
+    /// <exception cref="Exception">Thrown if the scanline count cannot be parsed from the file name when scanlines is set to 0.</exception>
+    public static SadFont ImportVGABiosFont(string name, string filePath, int scanlines = 0)
+    {
+        if (scanlines == 0)
+        {
+            // Parse the extension of the filePath to see if it fits .fxx where xx is a number and use that as the scanline count.
+            string extension = Path.GetExtension(filePath);
+            if (extension.StartsWith(".f", StringComparison.OrdinalIgnoreCase) && int.TryParse(extension.AsSpan(2), out int parsedScanlines))
+                scanlines = parsedScanlines;
+            else
+                throw new Exception("Unable to parse scanlines from file name.");
+        }
+
+        using Stream stream = File.OpenRead(filePath);
+        return ImportVGABiosFont(name, stream, scanlines);
+    }
+
+    /// <summary>
+    /// Imports a VGA BIOS font from a stream and returns a SadFont object representing the font.
+    /// </summary>
+    /// <remarks>
+    /// The stream should contain raw VGA BIOS font bitmap data: one byte per scanline per glyph,
+    /// 256 glyphs, MSB-left. When <paramref name="scanlines"/> is 0, the font size is inferred
+    /// from the stream length: 4096 bytes = 8×16, 3584 bytes = 8×14, 2048 bytes = 8×8.
+    /// </remarks>
+    /// <param name="name">The name to assign to the imported font for identification purposes.</param>
+    /// <param name="stream">A readable stream containing raw VGA BIOS font data.</param>
+    /// <param name="scanlines">The number of scanlines per glyph. If 0, inferred from stream length.</param>
+    /// <returns>A SadFont object that represents the imported VGA BIOS font.</returns>
+    /// <exception cref="ArgumentException">Thrown if scanlines is 0 and the stream length does not match a known VGA font size.</exception>
+    public static SadFont ImportVGABiosFont(string name, Stream stream, int scanlines = 0)
+    {
+        if (scanlines == 0)
+        {
+            long length = stream.Length;
+            scanlines = length switch
+            {
+                4096 => 16,  // 256 glyphs × 16 rows
+                3584 => 14,  // 256 glyphs × 14 rows
+                2048 => 8,   // 256 glyphs × 8 rows
+                _ => throw new ArgumentException(
+                    $"Cannot infer scanlines from stream length {length}. Expected 4096 (8×16), 3584 (8×14), or 2048 (8×8).",
+                    nameof(stream))
+            };
+        }
+
+        ITexture image = GameHost.Instance.CreateTexture(8 * 16, scanlines * 16);
+        Color[] pixels = image.GetPixels();
+
+        for (int i = 0; i < 256; i++)
+        {
+            int glyphX = (i % 16) * 8;
+            int glyphY = (i / 16) * scanlines;
+            for (int y = 0; y < scanlines; y++)
+            {
+                byte b = (byte)stream.ReadByte();
+                for (int x = 0; x < 8; x++)
+                {
+                    if ((b & (1 << (7 - x))) != 0)
+                        pixels[(glyphY + y) * image.Width + glyphX + x] = Color.White;
+                    else
+                        pixels[(glyphY + y) * image.Width + glyphX + x] = Color.Transparent;
+                }
+            }
+        }
+
+        image.SetPixels(pixels);
+
+        return new SadFont(8, scanlines, 0, 16, 16, 219, image, name);
+    }
+
     private record struct IndexMapping
     {
         public int From;

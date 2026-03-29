@@ -60,7 +60,7 @@ class Keyboard : SadConsole.Input.IKeyboardState
     {
         List<Input.Keys> keysPressed = new List<Input.Keys>(5);
 
-        for (int i = 0; i < (int)SFML.Window.Keyboard.Key.KeyCount; i++)
+        for (int i = 0; i < (int)SFML.Window.Keyboard.KeyCount; i++)
         {
             if (SFML.Window.Keyboard.IsKeyPressed((SFML.Window.Keyboard.Key)i))
                 keysPressed.Add(((SFML.Window.Keyboard.Key)i).ToSadConsole());

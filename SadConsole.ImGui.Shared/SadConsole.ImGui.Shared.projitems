@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>df3e5355-0afd-4a48-826f-8f0c70a90459</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SadConsole.ImGui.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\TitleComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\ComponentsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Debugger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Debugger.Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\ComponentEditorControlsHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\ComponentEditorCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\ComponentEditorLayeredSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\ISadComponentPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\IScreenObjectPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\Editors\WindowConsolePanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\GuiDockspace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\GuiPreviews.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\GuiScreenObjects.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\GuiState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\GuiTopBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\ScreenObjectDetailsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\ScreenObjectState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionsColorNumerics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionsSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hexa.NET.ImGui\StyleExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hexa.NET.ImGui\ViewportExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiDockingHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiObjectBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiObjectCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiDemos.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiGuardedValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiListEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\ConfirmPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\DrawTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\FileListBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\FontGlyph.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\GlyphPickerPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\ImGuiGroupPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\ImGuiSeparatorLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\PalettePopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\SadConsoleScrollableSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\SettingsTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\Sliders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\StringHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\TextWrappedDisabled.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC.Popups\XYEditPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\ZoomSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiTypes\ColoredGlyphReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiTypes\ConnectedGlyphs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiTypes\Mirror.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiTypes\ShapeSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hexa.NET.ImGui\Themes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\WindowHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\ImGuiRenderer.Base.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Roboto-Regular.ttf">
+      <PackagePath>content/.</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <pack>true</pack>
+    </Content>
+  </ItemGroup>
+</Project>

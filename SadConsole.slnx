@@ -1,0 +1,51 @@
+<Solution>
+  <Folder Name="/Hosts/">
+    <Project Path="SadConsole.Host.FNA/SadConsole.Host.FNA.csproj" />
+    <Project Path="SadConsole.Host.KNI/SadConsole.Host.KNI.csproj" />
+    <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
+    <Project Path="SadConsole.Host.MonoGameWPF/SadConsole.Host.MonoGameWPF.csproj" />
+    <Project Path="SadConsole.Host.SFML/SadConsole.Host.SFML.csproj" />
+    <Project Path="SadConsole.Host.Shared/SadConsole.Host.Shared.shproj" Id="595434c5-2192-495b-903c-7922d7e8b149" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="Samples/BasicInterpreter/BasicInterpreter.csproj" />
+    <Project Path="Samples/Demo/Demo.csproj" />
+    <Project Path="Samples/Game/ZZTGame.csproj" />
+    <Project Path="Samples/KniTesting/KniTesting.csproj" />
+    <Project Path="Samples/MonoGameFirst/MonoGameFirst.csproj" />
+    <Project Path="Samples/ThemeEditor/ThemeEditor.csproj" />
+    <Project Path="Samples/WPFSadConsole/WPFSadConsole.csproj" />
+    <Project Path="templates/template_code/SadConsole.Examples.Demo.CSharp/Examples.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="PerformanceTests/SadConsole.PerformanceTests/SadConsole.PerformanceTests.csproj" />
+    <Project Path="Tests/SadConsole.Tests/SadConsole.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Debug UI/">
+    <Project Path="SadConsole.ImGui.Shared/SadConsole.ImGui.Shared.shproj" Id="df3e5355-0afd-4a48-826f-8f0c70a90459" />
+    <Project Path="SadConsole.ImGui.MonoGame/SadConsole.ImGui.MonoGame.csproj" />
+    <Project Path="SadConsole.ImGui.SFML/SadConsole.ImGui.SFML.csproj" />
+  </Folder>
+  <Folder Name="/_Solution Files/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="changelog.md" />
+    <File Path="MigrationNotes.md" />
+    <File Path="MSBuild/Common.props" />
+    <File Path="MSBuild/Nuget.props" />
+    <File Path="README.md" />
+    <Folder Name="/_Solution Files/MSBuild/">
+      <File Path="MSBuild/Common.props" />
+      <File Path="MSBuild/Nuget.props" />
+    </Folder>
+  </Folder>
+  <Folder Name="/Analyzers/">
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.CodeFixes/SadConsole.Analyzers.CodeFixes.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Package/SadConsole.Analyzers.Package.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Sample/SadConsole.Analyzers.Sample.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers.Tests/SadConsole.Analyzers.Tests.csproj" />
+    <Project Path="SadConsole.Analyzers/SadConsole.Analyzers/SadConsole.Analyzers.csproj" />
+  </Folder>
+  <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />
+  <Project Path="SadConsole/SadConsole.csproj" />
+</Solution>

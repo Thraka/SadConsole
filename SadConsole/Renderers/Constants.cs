@@ -31,6 +31,11 @@ public static class RendererNames
     public const string Window = "window";
 
     /// <summary>
+    /// The renderer for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const string RowFontSurface = "rowfontsurface";
+
+    /// <summary>
     /// An absent renderer.
     /// </summary>
     public const string None = "none";
@@ -72,6 +77,11 @@ public static class RenderStepNames
     public const string Cursor = "cursor";
 
     /// <summary>
+    /// The render step for a <see cref="Terminal.TerminalCursor"/>.
+    /// </summary>
+    public const string TerminalCursor = "terminalcursor";
+
+    /// <summary>
     /// The render step for a <see cref="Entities.EntityManager"/>.
     /// </summary>
     public const string EntityManager = "entitymanager";
@@ -85,6 +95,11 @@ public static class RenderStepNames
     /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
     /// </summary>
     public const string Tint = "tint";
+
+    /// <summary>
+    /// The render step for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const string RowFontSurface = "rowfontsurface";
 }
 
 /// <summary>
@@ -113,6 +128,11 @@ public static class RenderStepSortValues
     public const uint Cursor = 70;
 
     /// <summary>
+    /// The render step for a <see cref="Terminal.TerminalCursor"/>.
+    /// </summary>
+    public const uint TerminalCursor = 70;
+
+    /// <summary>
     /// The render step for a <see cref="Entities.EntityManager"/>.
     /// </summary>
     public const uint EntityRenderer = 60;
@@ -126,4 +146,9 @@ public static class RenderStepSortValues
     /// The render to draw the tint texture of an <see cref="IScreenSurface"/>.
     /// </summary>
     public const uint Tint = 90;
+
+    /// <summary>
+    /// The render step for a <see cref="RowFontSurface"/>.
+    /// </summary>
+    public const uint RowFontSurface = 50;
 }

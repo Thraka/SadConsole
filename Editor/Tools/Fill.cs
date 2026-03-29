@@ -1,6 +1,5 @@
-﻿using System.Numerics;
+using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 
@@ -9,10 +8,6 @@ namespace SadConsole.Editor.Tools;
 internal class Fill : ITool
 {
     private readonly ImGuiList<string> _modes = new(0, "Draw", "Objects");
-    private Windows.GlyphEditor? _glyphEditor;
-
-    private bool _isAdding = false;
-    private bool _isEditing = false;
 
     public string Title => "\ueb2a Fill";
 
@@ -43,7 +38,7 @@ internal class Fill : ITool
             Vector4 foreground = SharedToolSettings.Tip.Foreground.ToVector4();
             Vector4 background = SharedToolSettings.Tip.Background.ToVector4();
             int glyph = SharedToolSettings.Tip.Glyph;
-            ImGuiTypes.Mirror mirror = ImGuiTypes.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
+            ImGuiSystem.Types.Mirror mirror = ImGuiSystem.Types.MirrorConverter.FromSadConsoleMirror(SharedToolSettings.Tip.Mirror);
 
             if (SettingsTable.BeginTable("pencilsettings", column1Flags: ImGuiTableColumnFlags.WidthFixed))
             {
@@ -52,14 +47,14 @@ internal class Fill : ITool
                     ref foreground, document.EditingSurface.Surface.DefaultForeground.ToVector4(),
                     ref background, document.EditingSurface.Surface.DefaultBackground.ToVector4(),
                     ref mirror,
-                    ref glyph, document.EditingSurfaceFont, ImGuiCore.Renderer);
+                    ref glyph, document.EditingSurfaceFont, Core.ImGuiComponent.ImGuiRenderer);
 
                 SettingsTable.EndTable();
             }
 
             SharedToolSettings.Tip.Foreground = foreground.ToColor();
             SharedToolSettings.Tip.Background = background.ToColor();
-            SharedToolSettings.Tip.Mirror = ImGuiTypes.MirrorConverter.ToSadConsoleMirror(mirror);
+            SharedToolSettings.Tip.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
             SharedToolSettings.Tip.Glyph = glyph;
 
             ImGuiSC.EndGroupPanel();
@@ -81,7 +76,7 @@ internal class Fill : ITool
 
             if (isItemSelected)
             {
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                     document.EditingSurfaceFont,
                     docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
                 ImGui.SameLine();
@@ -92,29 +87,42 @@ internal class Fill : ITool
             ImGui.BeginDisabled(!isItemSelected);
             if (ImGui.Button("Change Item"))
             {
-                _glyphEditor = new(docSimpleObjects.SimpleObjects.SelectedItem!.Visual,
-                                   document.EditingSurface.Surface.DefaultForeground,
-                                   document.EditingSurface.Surface.DefaultBackground,
-                                   document.EditingSurfaceFont, docSimpleObjects.SimpleObjects.SelectedItem!.Name);
-                _glyphEditor.Closed += GlyphEditor_Closed;
-                _isEditing = true;
-                _glyphEditor.Open();
+                Windows.GlyphEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer,
+                    docSimpleObjects.SimpleObjects.SelectedItem!.Visual,
+                    document.EditingSurface.Surface.DefaultForeground,
+                    document.EditingSurface.Surface.DefaultBackground,
+                    document.EditingSurfaceFont,
+                    (glyph, name) =>
+                    {
+                        IDocumentSimpleObjects doc = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
+                        doc.SimpleObjects.SelectedItem!.Visual = glyph.ToColoredGlyph();
+                        doc.SimpleObjects.SelectedItem!.Name = name!;
+                        SharedToolSettings.Tip = doc.SimpleObjects.SelectedItem.Visual;
+                    },
+                    null,
+                    docSimpleObjects.SimpleObjects.SelectedItem!.Name);
             }
             ImGui.EndDisabled();
             if (ImGui.Button("Add New Object"))
             {
-                _glyphEditor = new(new ColoredGlyph(),
-                                            document.EditingSurface.Surface.DefaultForeground,
-                                            document.EditingSurface.Surface.DefaultBackground,
-                                            document.EditingSurfaceFont, "Name");
-                _glyphEditor.Closed += GlyphEditor_Closed;
-                _isAdding = true;
-                _glyphEditor.Open();
+                Windows.GlyphEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer,
+                    new ColoredGlyph(),
+                    document.EditingSurface.Surface.DefaultForeground,
+                    document.EditingSurface.Surface.DefaultBackground,
+                    document.EditingSurfaceFont,
+                    (glyph, name) =>
+                    {
+                        IDocumentSimpleObjects doc = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
+                        doc.SimpleObjects.Objects.Add(
+                            new SimpleObjectDefinition() { Visual = glyph.ToColoredGlyph(), Name = name! });
+                    },
+                    null,
+                    "Name");
             }
 
             if (isItemSelected)
             {
-                ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+                ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                     document.EditingSurfaceFont,
                     docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
 
@@ -130,36 +138,6 @@ internal class Fill : ITool
         }
     }
 
-    private void GlyphEditor_Closed(object? sender, EventArgs e)
-    {
-        if (_glyphEditor!.DialogResult)
-        {
-            ColoredGlyph glyph = _glyphEditor.Glyph.ToColoredGlyph();
-            if (_isAdding)
-            {
-                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
-
-                docSimpleObjects.SimpleObjects.Objects.Add(
-                    new SimpleObjectDefinition() { Visual = _glyphEditor.Glyph.ToColoredGlyph(), Name = _glyphEditor.Name! });
-
-                _isAdding = false;
-            }
-            else if (_isEditing)
-            {
-                IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)Core.State.SelectedDocument!;
-
-                docSimpleObjects.SimpleObjects.SelectedItem!.Visual = _glyphEditor.Glyph.ToColoredGlyph();
-                docSimpleObjects.SimpleObjects.SelectedItem!.Name = _glyphEditor.Name!;
-
-                SharedToolSettings.Tip = docSimpleObjects.SimpleObjects.SelectedItem.Visual;
-
-                _isEditing = false;
-            }
-        }
-
-        _glyphEditor = null;
-    }
-
     public void Process(Document document, Point hoveredCellPosition, bool isHovered, bool isActive)
     {
         if (!isHovered) return;
@@ -168,7 +146,7 @@ internal class Fill : ITool
 
         if (!isActive) return;
 
-        if (ImGuiP.IsMouseDown(ImGuiMouseButton.Left))
+        if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
         {
             ColoredGlyph cellToMatch = new();
             ColoredGlyphBase currentFillCell = SharedToolSettings.Tip;
@@ -213,7 +191,7 @@ internal class Fill : ITool
 
             document.EditingSurface.Surface.IsDirty = true;
         }
-        else if (ImGuiP.IsMouseDown(ImGuiMouseButton.Right))
+        else if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
             document.EditingSurface.Surface[hoveredCellPosition].CopyAppearanceTo(SharedToolSettings.Tip);
             document.EditingSurface.IsDirty = true;

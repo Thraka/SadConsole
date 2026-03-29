@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using SadConsole.Editor.GuiObjects;
 using SadConsole.Editor.Tools;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor;
 
@@ -30,6 +31,8 @@ public static partial class Core
 
     public static AppSettings Settings = new();
 
+    public static ImGuiMonoGameComponent ImGuiComponent;
+
     public static void Start()
     {
         if (System.IO.File.Exists("appconfig.json"))
@@ -37,32 +40,32 @@ public static partial class Core
 
         SadConsole.Settings.DoFinalDraw = false;
 
-        ImGuiCore.ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+        ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
 
-        //var value = ImGuiCore.ImGuiComponent.ImGuiRenderer.AddFontTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f);
-        //ImGuiCore.ImGuiComponent.ImGuiRenderer.SetDefaultFont(value);
+        //var value = Core.ImGuiComponent.ImGuiRenderer.AddFontTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f);
+        //Core.ImGuiComponent.ImGuiRenderer.SetDefaultFont(value);
         Themes.SetModernColors();
-        ImGuiCore.ImGuiComponent.ImGuiRenderer.SetDefaultFont(
+        ImGuiComponent.ImGuiRenderer.SetDefaultFont(
             new ImGuiFontBuilder(ImGui.GetIO().Fonts)
                 //.AddFontFromFileTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f, [0x1, 0x1FFFF])
 
                 //.AddFontFromFileTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f, [0x1, 0x1FFFF])
                 .SetOption(config =>
                 {
-                    config.FontBuilderFlags |= (uint)ImGuiFreeTypeBuilderFlags.LoadColor;
+                    //config.Flags |= (uint)ImFontLoade.LoadColor;
                     //config.MergeMode = true;
                 })
                 .AddFontFromFileTTF(Settings.Font, Settings.FontSize, [0x01, 0xFFFFF])
                 .Build()
         );
 
-        Core.State.LoadEditorPalette();
+        State.LoadEditorPalette();
 
         ImGui.GetStyle().ScaleAllSizes(Settings.UIScale);
 
         ResetUIList();
 
-        Game.Instance.MonoGameInstance.Components.Add(ImGuiCore.ImGuiComponent);
+        Game.Instance.MonoGameInstance.Components.Add(Core.ImGuiComponent);
 
         // Test code
         // ===============
@@ -120,14 +123,14 @@ public static partial class Core
 
     public static void ResetUIList()
     {
-        ImGuiCore.ImGuiComponent.UIComponents.Clear();
-        ImGuiCore.ImGuiComponent.UIComponents.Add(State.GuiTopBar);
-        ImGuiCore.ImGuiComponent.UIComponents.Add(State.GuiDockSpace);
-        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiDocumentsList());
-        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiToolsList());
-        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiDocumentsHost());
-        ImGuiCore.ImGuiComponent.UIComponents.Add(new GuiFinalDrawDocument());
-        //ImGuiCore.ImGuiComponent.UIComponents.Add(_debuggingTools);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Clear();
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(State.GuiTopBar);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(State.GuiDockSpace);
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiDocumentsList());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiToolsList());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiDocumentsHost());
+        Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(new GuiFinalDrawDocument());
+        //Core.ImGuiComponent.ImGuiRenderer.UIObjects.Add(_debuggingTools);
     }
 
     public static void ShowCreateDocument()
@@ -155,8 +158,8 @@ public static partial class Core
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Visible = true;
         //SadConsole.Game.Instance.MonoGameInstance.ClearScreenComponent.Enabled = true;
 
-        ImGuiCore.ImGuiComponent.Visible = false;
-        ImGuiCore.ImGuiComponent.Enabled = false;
+        Core.ImGuiComponent.Visible = false;
+        Core.ImGuiComponent.Enabled = false;
 
         SadConsole.Settings.Input.DoKeyboard = true;
         SadConsole.Settings.Input.DoMouse = true;

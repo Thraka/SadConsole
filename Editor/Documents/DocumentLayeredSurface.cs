@@ -3,6 +3,7 @@ using Hexa.NET.ImGui;
 using SadConsole.Editor.FileHandlers;
 using SadConsole.Editor.Windows;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.Documents;
 
@@ -212,7 +213,17 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
         ImGui.Text("Font: "u8);
         ImGui.SameLine();
         if (ImGui.Button($"{EditingSurfaceFont.Name} | {EditingSurfaceFontSize}"))
-            base.FontSelectionWindow_Popup();
+            FontSelectionWindow.Show(renderer, EditingSurfaceFont, EditingSurfaceFontSize, (font, fontSize) =>
+            {
+                EditingSurfaceFont = (SadFont)font;
+                EditingSurfaceFontSize = fontSize;
+                EditorFontSize = fontSize;
+                EditingSurface.Font = EditingSurfaceFont;
+                EditingSurface.FontSize = EditorFontSize;
+                EditingSurface.IsDirty = true;
+                VisualTool.Font = EditingSurfaceFont;
+                VisualTool.IsDirty = true;
+            });
 
         ImGui.AlignTextToFramePadding();
         ImGui.Text("Editor Font Size: "u8);
@@ -225,19 +236,6 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
         if (ImGui.Button("Reset"u8))
         {
             EditorFontSize = EditingSurfaceFontSize;
-        }
-
-        if (base.FontSelectionWindow_BuildUI(renderer))
-        {
-            EditingSurfaceFont = (SadFont)FontSelectionWindow.SelectedFont;
-            EditingSurfaceFontSize = FontSelectionWindow.SelectedFontSize;
-            EditorFontSize = FontSelectionWindow.SelectedFontSize;
-            EditingSurface.Font = EditingSurfaceFont;
-            EditingSurface.FontSize = EditorFontSize;
-            EditingSurface.IsDirty = true;
-            VisualTool.Font = EditingSurfaceFont;
-            VisualTool.IsDirty = true;
-            base.FontSelectionWindow_Reset();
         }
 
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))
@@ -280,7 +278,7 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
                     ImGui.PushID("objects_menu");
 
                     if (ImGui.MenuItem("Manage"u8))
-                        new Windows.SimpleObjectEditor(SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont).Open();
+                        SimpleObjectEditorWindow.Show(renderer, SimpleObjects, EditingSurface.Surface.DefaultForeground.ToVector4(), EditingSurface.Surface.DefaultBackground.ToVector4(), EditingSurfaceFont);
 
                     bool doImport = false;
                     bool replace = false;
@@ -299,30 +297,23 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
 
                     if (doImport)
                     {
-                        Windows.OpenFile window = new([new SimpleObjectsHandler()]);
-
-                        window.Closed += (s, e) =>
+                        OpenFileWindow.Show(renderer, [new SimpleObjectsHandler()], (loader, file) =>
                         {
-                            if (window.DialogResult)
+                            if (loader.Load(file.FullName) is SimpleObjectDefinition[] objects)
                             {
-                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is SimpleObjectDefinition[] objects)
+                                if (replace)
+                                    SimpleObjects.Objects.Clear();
+                                foreach (SimpleObjectDefinition obj in objects)
                                 {
-                                    if (replace)
-                                        SimpleObjects.Objects.Clear();
-
-                                    foreach (SimpleObjectDefinition obj in objects)
-                                    {
-                                        if (!SimpleObjects.Objects.Where(o => o.Name.Equals(obj.Name, StringComparison.OrdinalIgnoreCase)).Any())
-                                            SimpleObjects.Objects.Add(obj);
-                                    }
+                                    if (!SimpleObjects.Objects.Where(o => o.Name.Equals(obj.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                        SimpleObjects.Objects.Add(obj);
                                 }
                             }
-                        };
-                        window.Open();
+                        }, null);
                     }
 
                     if (ImGui.MenuItem("Export"u8))
-                        new SaveFile(SimpleObjects.Objects.ToArray(), [new SimpleObjectsHandler()]).Open();
+                        SaveFileWindow.Show(renderer, SimpleObjects.Objects.ToArray(), [new SimpleObjectsHandler()]);
 
                     ImGui.PopID();
                 }
@@ -350,32 +341,24 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
 
                     if (doImport)
                     {
-                        Windows.OpenFile window = new([new ZonesHandler()]);
-
-                        window.Closed += (s, e) =>
+                        OpenFileWindow.Show(renderer, [new ZonesHandler()], (loader, file) =>
                         {
-                            if (window.DialogResult)
+                            if (loader.Load(file.FullName) is ZoneSimplified[] zones)
                             {
-                                if (window.SelectedLoader.Load(window.SelectedFile.FullName) is ZoneSimplified[] zones)
+                                if (replace)
+                                    Zones.Objects.Clear();
+                                foreach (ZoneSimplified zone in zones)
                                 {
-                                    if (replace)
-                                        Zones.Objects.Clear();
-
-                                    foreach (ZoneSimplified zone in zones)
-                                    {
-                                        if (!Zones.Objects.Where(z => z.Name.Equals(zone.Name, StringComparison.OrdinalIgnoreCase)).Any())
-                                            Zones.Objects.Add(zone);
-                                    }
-
-                                    Core.State.Tools.SelectedItem?.DocumentViewChanged(this);
+                                    if (!Zones.Objects.Where(z => z.Name.Equals(zone.Name, StringComparison.OrdinalIgnoreCase)).Any())
+                                        Zones.Objects.Add(zone);
                                 }
+                                Core.State.Tools.SelectedItem?.DocumentViewChanged(this);
                             }
-                        };
-                        window.Open();
+                        }, null);
                     }
 
                     if (ImGui.MenuItem("Export"u8))
-                        new SaveFile(Zones.Objects.ToArray(), [new ZonesHandler()]).Open();
+                        SaveFileWindow.Show(renderer, Zones.Objects.ToArray(), [new ZonesHandler()]);
 
                     ImGui.PopID();
                 }

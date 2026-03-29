@@ -19,7 +19,11 @@ static class GameSettings
 
     public static Colors ControlColorScheme = Colors.CreateAnsi();
 
-    public static object[] Demos =
+    public static object[] Demos = BuildDemos();
+
+    private static object[] BuildDemos()
+    {
+        object[] builtInDemos =
         {
             "Basics".CreateColored(Color.OrangeRed),
             new DemoAutoTyping(),
@@ -53,17 +57,35 @@ static class GameSettings
             "",
             "Entities".CreateColored(Color.OrangeRed),
             new DemoEntitySurface(),
-            
+
             "",
             "Renderers".CreateColored(Color.OrangeRed),
             new DemoSurfaceOpacity(),
             new DemoSecondSurfaceRenderer(),
             new DemoRotatedSurface(),
             new DemoCustomCellsRenderer(),
-            //new DemoShader(),
+            new DemoShader(),
 
             //"",
             //"Advanced".CreateColored(Color.OrangeRed),
             //new DemoFontManipulation(),
         };
+
+        // Discover IDemo types not already in the built-in list
+        HashSet<Type> builtInTypes = [.. builtInDemos.OfType<IDemo>().Select(d => d.GetType())];
+
+        object[] localDemos = System.Reflection.Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false }
+                        && typeof(IDemo).IsAssignableFrom(t)
+                        && !builtInTypes.Contains(t))
+            .Select(t => (object)System.Activator.CreateInstance(t)!)
+            .ToArray();
+
+        if (localDemos.Length == 0)
+            return builtInDemos;
+
+        List<object> result = ["Local".CreateColored(Color.Green), .. localDemos, "", .. builtInDemos];
+        return result.ToArray();
+    }
 }

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SadConsole/SadConsole.csproj" />
+  <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />
+  <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
+  <Project Path="Samples/ThemeEditor/ThemeEditor.csproj" />
+</Solution>

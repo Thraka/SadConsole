@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Examples</RootNamespace>
@@ -18,7 +18,7 @@
   <PropertyGroup>
     <!-- monogame, sfml, fna, or kni -->
     <!-- If sfml, target framework must be set to a platform, such as net9.0-windows -->
-    <GameHost>monogame</GameHost>
+    <GameHost>sfml</GameHost>
 
     <DefineConstants>$(DefineConstants);PROJREFS</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -34,18 +34,20 @@
     <ProjectReference Condition=" '$(GameHost)' == 'fna' " Include="..\..\SadConsole.Host.FNA\SadConsole.Host.FNA.csproj" />
     <ProjectReference Condition=" '$(GameHost)' == 'kni' " Include="..\..\SadConsole.Host.KNI\SadConsole.Host.KNI.csproj" />
     <ProjectReference Include="..\..\SadConsole.Extended\SadConsole.Extended.csproj" />
+    <ProjectReference Include="..\..\SadConsole\SadConsole.csproj" />
 
-    <!-- MonoGame Debugging lib -->
-    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+    <!-- Debugging lib -->
+    <ProjectReference Condition=" '$(GameHost)' == 'monogame' " Include="..\..\SadConsole.ImGui.MonoGame\SadConsole.ImGui.MonoGame.csproj" />
+    <ProjectReference Condition=" '$(GameHost)' == 'sfml' " Include="..\..\SadConsole.ImGui.SFML\SadConsole.ImGui.SFML.csproj" />
 
     <!-- FNA lib -->
     <Reference Condition=" '$(GameHost)' == 'fna' " Include="FNA">
       <HintPath>..\..\SadConsole.Host.FNA\FNA\FNA.dll</HintPath>
     </Reference>
 
-    <!-- Analyzers -->
+    <!-- Analyzers 
     <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\SadConsole.Analyzers\SadConsole.Analyzers\SadConsole.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
 </ItemGroup>
 
   <!-- FNA and SFML can't use MonoGame shaders -->
@@ -79,9 +81,27 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\DemoCustomCellsRenderer.Other.cs" />
+    <Compile Remove="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\DemoResolutions.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\app.manifest">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="CousineNerdFont-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="dbyte_1x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nagidal24.font">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Local\" />
   </ItemGroup>
 
   <Target Name="RestoreTools" BeforeTargets="Build">

@@ -1,6 +1,7 @@
 ﻿using Hexa.NET.ImGui;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
+using SadConsole.ImGuiSystem.Rendering;
 
 namespace SadConsole.Editor.GuiObjects;
 

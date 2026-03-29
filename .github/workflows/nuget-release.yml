@@ -1,0 +1,281 @@
+# Main release workflow for SadConsole NuGet packages.
+#
+# Dependency tree:
+#   1. Tests
+#   2. SadConsole (core)
+#   3. Extended + Hosts: MonoGame, SFML, FNA (all parallel, depend on SadConsole)
+#   4. ImGui: MonoGame, SFML (parallel, each waits on its host)
+#
+# Recovery: Each job is idempotent. If NuGet goes down mid-deploy,
+# re-run failed jobs from the Actions UI — already-published packages
+# are detected and skipped automatically. No tag deletion needed.
+
+name: Release NuGet Packages
+
+on:
+  # Manual trigger with version override
+  workflow_dispatch:
+    inputs:
+      version-override:
+        description: "Version to release (leave empty to read from Common.props)"
+        required: false
+        type: string
+
+  # Tag-based trigger
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+# Cancel any in-progress run for the same ref
+concurrency:
+  group: nuget-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Step 0: Determine version and run tests
+  # ═══════════════════════════════════════════════════════════════════
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Determine version
+        id: get-version
+        shell: pwsh
+        run: |
+          $override = "${{ inputs.version-override }}"
+          if ($override -and $override.Trim() -ne "") {
+              $version = $override.Trim()
+          }
+          else {
+              $content = Get-Content "MSBuild/Common.props" -Raw
+              $match = [regex]::Match($content, '<SadConsole_Version>([^<]+)</SadConsole_Version>')
+              if (-not $match.Success) { throw "Could not read SadConsole_Version from Common.props" }
+              $version = $match.Groups[1].Value
+          }
+          Write-Host "Release version: $version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+  test:
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore Tests/SadConsole.Tests/SadConsole.Tests.csproj
+
+      - name: Build tests
+        run: dotnet build Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-restore
+
+      - name: Run tests
+        run: dotnet test Tests/SadConsole.Tests/SadConsole.Tests.csproj -c Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: test-results
+          path: "**/test-results.trx"
+          retention-days: 14
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Step 1: SadConsole (core library)
+  # ═══════════════════════════════════════════════════════════════════
+  publish-sadconsole:
+    needs: [prepare, test]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole
+      version: ${{ needs.prepare.outputs.version }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Step 2: Extended + Hosts (all depend on SadConsole, run in parallel)
+  # ═══════════════════════════════════════════════════════════════════
+  publish-extended:
+    needs: [prepare, publish-sadconsole]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.Extended
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  publish-host-monogame:
+    needs: [prepare, publish-sadconsole]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.Host.MonoGame
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  publish-host-sfml:
+    needs: [prepare, publish-sadconsole]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.Host.SFML
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  publish-host-fna:
+    needs: [prepare, publish-sadconsole]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.Host.FNA
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Step 3: ImGui libraries (depend on their respective hosts)
+  # ═══════════════════════════════════════════════════════════════════
+  publish-imgui-monogame:
+    needs: [prepare, publish-host-monogame]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.ImGui.MonoGame
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole.Host.MonoGame
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  publish-imgui-sfml:
+    needs: [prepare, publish-host-sfml]
+    uses: ./.github/workflows/build-and-publish.yml
+    with:
+      project-name: SadConsole.ImGui.SFML
+      version: ${{ needs.prepare.outputs.version }}
+      wait-for-package-id: SadConsole.Host.SFML
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Step 4: Create GitHub Release with packages and DLL zips
+  # ═══════════════════════════════════════════════════════════════════
+  create-release:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - publish-sadconsole
+      - publish-extended
+      - publish-host-monogame
+      - publish-host-sfml
+      - publish-host-fna
+      - publish-imgui-monogame
+      - publish-imgui-sfml
+
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Download all package artifacts from earlier jobs
+      - name: Download all package artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: release-artifacts
+          pattern: "*-packages"
+
+      # Collect all .nupkg and .snupkg into a flat folder
+      - name: Collect NuGet packages
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path "release-packages" -Force | Out-Null
+          Get-ChildItem -Path "release-artifacts" -Recurse -Include "*.nupkg","*.snupkg" |
+              Copy-Item -Destination "release-packages"
+          Write-Host "Collected packages:"
+          Get-ChildItem "release-packages" | ForEach-Object { Write-Host "  $($_.Name)" }
+
+      # Extract DLLs from each .nupkg (they're just zip files)
+      - name: Extract DLLs from packages
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          New-Item -ItemType Directory -Path "release-dlls" -Force | Out-Null
+
+          $nupkgs = Get-ChildItem -Path "release-packages" -Filter "*.nupkg"
+
+          foreach ($nupkg in $nupkgs) {
+              Write-Host "Extracting DLLs from $($nupkg.Name)..."
+              $zip = [System.IO.Compression.ZipFile]::OpenRead($nupkg.FullName)
+              try {
+                  foreach ($entry in $zip.Entries) {
+                      # Get DLLs and XML docs from lib/ folders (the actual framework assemblies)
+                      if ($entry.FullName -match '^lib/' -and $entry.FullName -match '\.(dll|xml|pdb)$' -and $entry.Length -gt 0) {
+                          # Preserve the TFM folder structure: lib/net8.0/SadConsole.dll
+                          $destPath = Join-Path "release-dlls" $entry.FullName
+                          $destDir = Split-Path $destPath -Parent
+                          if (-not (Test-Path $destDir)) {
+                              New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+                          }
+                          [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $destPath, $true)
+                          Write-Host "  $($entry.FullName)"
+                      }
+                  }
+              }
+              finally {
+                  $zip.Dispose()
+              }
+          }
+
+      # Zip the DLLs
+      - name: Create DLL zip
+        shell: pwsh
+        run: |
+          $zipName = "SadConsole-$env:VERSION-dlls.zip"
+          [System.IO.Compression.ZipFile]::CreateFromDirectory("release-dlls", $zipName)
+          Write-Host "Created $zipName"
+
+      # Create the GitHub Release
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $tag = if ($env:GITHUB_REF -match '^refs/tags/') { $env:GITHUB_REF -replace '^refs/tags/', '' } else { "v$env:VERSION" }
+          $title = "SadConsole $env:VERSION"
+          $dllZip = "SadConsole-$env:VERSION-dlls.zip"
+
+          # Gather all .nupkg and .snupkg files
+          $packages = Get-ChildItem -Path "release-packages" -Include "*.nupkg","*.snupkg" -File
+          $assets = @($dllZip) + ($packages | ForEach-Object { $_.FullName })
+
+          Write-Host "Creating release '$title' on tag '$tag' with $($assets.Count) assets"
+
+          $ghArgs = @(
+              "release", "create", $tag,
+              "--title", $title,
+              "--generate-notes"
+          )
+
+          # If version contains a prerelease suffix, mark as prerelease
+          if ($env:VERSION -match '-') {
+              $ghArgs += "--prerelease"
+          }
+
+          $ghArgs += $assets
+          & gh @ghArgs

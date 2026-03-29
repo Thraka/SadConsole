@@ -1,0 +1,41 @@
+﻿using System.Numerics;
+namespace Hexa.NET.ImGui;
+
+public static partial class ImGuiSC
+{
+    public static uint Color_White = ImGui.GetColorU32(SadRogue.Primitives.Color.White.ToVector4());
+
+    public static void DrawTexture(string id, bool border, int zoomMode, ImTextureRef texture, Vector2 textureSize, out bool isItemActive, out bool isItemHovered, bool drawCheckerboard = false) =>
+        DrawTexture(id, border, zoomMode, texture, textureSize, ImGui.GetContentRegionAvail(), out isItemActive, out isItemHovered, drawCheckerboard);
+
+    public static void DrawTexture(string id, bool border, int zoomMode, ImTextureRef texture, Vector2 textureSize, Vector2 region, out bool isItemActive, out bool isItemHovered, bool drawCheckerboard = false)
+    {
+        ImGui.PushID(id);
+        Vector2 startPos = ImGui.GetCursorScreenPos();
+
+        if (zoomMode == Zoom2x)
+            textureSize *= 2;
+        else if (zoomMode == ZoomFit)
+            textureSize = region;
+
+        ImGui.InvisibleButton("##imagebutton", textureSize, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight);
+
+        isItemActive = ImGui.IsItemActive();
+        isItemHovered = ImGui.IsItemHovered();
+
+        //ImGui.SetCursorScreenPos(startPos);
+        //ImGui.Image(texture, textureSize, Vector2.Zero, Vector2.One);
+
+        var drawPointer = ImGui.GetWindowDrawList();
+
+        if (drawCheckerboard)
+            ImGuiP.RenderColorRectWithAlphaCheckerboard(drawPointer, startPos, startPos + textureSize, ImGui.GetColorU32(new Vector4(0f, 0f,0f, 0.9f)), 25f, Vector2.Zero);
+
+        drawPointer.AddImage(texture, startPos, startPos + textureSize, Vector2.Zero, Vector2.One, ImGui.GetColorU32(new Vector4(1f, 1f, 1f, 1f)));
+        if (border)
+        {
+            drawPointer.AddRect(startPos, startPos + textureSize, Color_White);
+        }
+        ImGui.PopID();
+    }
+}

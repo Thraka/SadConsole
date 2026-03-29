@@ -20,9 +20,9 @@ internal class DemoShader : IDemo
 
 class ShaderController : ScreenSurface
 {
-    public ShaderController() : base(GameSettings.ScreenDemoBounds.Height, GameSettings.ScreenDemoBounds.Height / 2)
+    public ShaderController() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height / 2)
     {
-        Surface.Print(0, 0, "Not supported in SFML");
+        Surface.Print(2, 1, "Not supported in SFML, use a different host");
     }
 }
 #endif

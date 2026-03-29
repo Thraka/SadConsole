@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
-    <!--<Nullable>enable</Nullable>-->
-    <Version>$(SadConsole_Host_MonoGame_Version)</Version>
+    <Nullable>enable</Nullable>
+    <Version>$(SadConsole_Version)</Version>
     <AssemblyTitle>SadConsole MonoGame Host</AssemblyTitle>
     <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
@@ -12,6 +12,11 @@
     <PackageReleaseNotes>Upgraded to MonoGame 3.8.4.1.</PackageReleaseNotes>
   </PropertyGroup>
 
+  <!-- Experimental Attributes -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SADCON7001</NoWarn>
+  </PropertyGroup>
+  
   <!-- Custom properties -->
   <PropertyGroup>
     <UseProjectReferences>true</UseProjectReferences>

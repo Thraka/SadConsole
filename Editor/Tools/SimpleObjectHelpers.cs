@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Hexa.NET.ImGui;
-using Hexa.NET.ImGui.SC;
 using SadConsole.Editor.Documents;
 using SadConsole.Host;
 using SadConsole.ImGuiSystem;
@@ -15,7 +14,7 @@ public static class SimpleObjectHelpers
         IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
 
         if (ImGui.Button("Manage Objects"u8))
-            new Windows.SimpleObjectEditor(docSimpleObjects.SimpleObjects, document.EditingSurface.Surface.DefaultForeground.ToVector4(), document.EditingSurface.Surface.DefaultBackground.ToVector4(), document.EditingSurfaceFont).Open();
+            Windows.SimpleObjectEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, docSimpleObjects.SimpleObjects, document.EditingSurface.Surface.DefaultForeground.ToVector4(), document.EditingSurface.Surface.DefaultBackground.ToVector4(), document.EditingSurfaceFont);
 
         ImGui.SetNextItemWidth(-1);
 
@@ -32,7 +31,7 @@ public static class SimpleObjectHelpers
         {
             ImGui.SeparatorText("Selected Object"u8);
 
-            ImGuiSC.FontGlyph.Draw(ImGuiCore.Renderer, "gameobject_definition",
+            ImGuiSC.FontGlyph.Draw(Core.ImGuiComponent.ImGuiRenderer, "gameobject_definition",
                 document.EditingSurfaceFont,
                 docSimpleObjects.SimpleObjects.SelectedItem!.Visual);
             ImGui.SameLine();
@@ -52,7 +51,7 @@ public static class SimpleObjectHelpers
         bool itemSelected = false;
 
         ImDrawListPtr drawData = ImGui.GetWindowDrawList();
-        ImTextureID fontTexture = ImGuiCore.Renderer.BindTexture(((GameTexture)font.Image).Texture);
+        ImTextureRef fontTexture = Core.ImGuiComponent.ImGuiRenderer.BindTexture(((GameTexture)font.Image).Texture);
 
         Vector2 outputSize = new(0, ImGui.GetFrameHeight() - ImGui.GetStyle().FramePadding.Y * 2);
         outputSize.X = (outputSize.Y / font.GlyphHeight) * font.GlyphWidth;
@@ -72,13 +71,13 @@ public static class SimpleObjectHelpers
             var rect = font.SolidGlyphRectangle;
             var textureSize = new Point(font.Image.Width, font.Image.Height);
 
-            ImGui.Image(fontTexture, outputSize, rect.Position.ToUV(textureSize),
+            ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
                 (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Background.ToVector4());
 
             ImGui.SetCursorPos(pos);
             rect = font.GetGlyphSourceRectangle(objects.Objects[i].Visual.Glyph);
 
-            ImGui.Image(fontTexture, outputSize, rect.Position.ToUV(textureSize),
+            ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
                 (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Foreground.ToVector4());
 
             ImGui.SameLine();

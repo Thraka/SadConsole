@@ -721,16 +721,75 @@
         </member>
         <member name="M:SadConsole.Transitions.Fade.#ctor(SadConsole.IScreenSurface,SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">
             <summary>
-            
+            Initializes a new instance of the Fade class to animate a transition between two screen surfaces over a
+            specified duration.
             </summary>
-            <param name="from"></param>
-            <param name="to"></param>
-            <param name="duration"></param>
-            <param name="easingFunction"></param>
+            <remarks>Sets <see cref="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished"/> to <see langword="true"/>.</remarks>
+            <param name="from">The screen surface to fade from at the start of the animation. Cannot be null.</param>
+            <param name="to">The screen surface to fade to at the end of the animation. Cannot be null.</param>
+            <param name="duration">The total time over which the fade animation occurs.</param>
+            <param name="easingFunction">An optional easing function that controls the rate of change of the fade animation. If null, a linear easing
+            function is used.</param>
         </member>
         <member name="M:SadConsole.Transitions.Fade.Update(SadConsole.IScreenObject,System.TimeSpan)">
             <summary>
             Processes the fade between two objects.
+            </summary>
+            <param name="componentHost">The host running the component.</param>
+            <param name="delta">The time difference for the frame.</param>
+        </member>
+        <member name="T:SadConsole.Transitions.FadeIn">
+            <summary>
+            Fades in a single <see cref="T:SadConsole.IScreenSurface"/> from transparent to fully opaque.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Transitions.FadeIn.#ctor(SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.Transitions.FadeIn"/> class to animate a screen surface from transparent to opaque
+            over a specified duration.
+            </summary>
+            <remarks>Sets <see cref="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished"/> to <see langword="true"/>.</remarks>
+            <param name="target">The screen surface to fade in. Cannot be null.</param>
+            <param name="duration">The total time over which the fade animation occurs.</param>
+            <param name="easingFunction">An optional easing function that controls the rate of change of the fade animation. If null, a linear easing
+            function is used.</param>
+        </member>
+        <member name="M:SadConsole.Transitions.FadeIn.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Processes the fade in of the target object.
+            </summary>
+            <param name="componentHost">The host running the component.</param>
+            <param name="delta">The time difference for the frame.</param>
+        </member>
+        <member name="T:SadConsole.Transitions.FadeOut">
+            <summary>
+            Fades out a single <see cref="T:SadConsole.IScreenSurface"/> from fully opaque to transparent.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Transitions.FadeOut.DeparentObject">
+            <summary>
+            When <see langword="true"/>, removes the target object from its parent when the transition finishes. Supersedes <see cref="P:SadConsole.Transitions.FadeOut.HideObject"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Transitions.FadeOut.HideObject">
+            <summary>
+            When <see langword="true"/>, sets <see cref="P:SadConsole.IScreenObject.IsVisible"/> to <see langword="false"/> on the target object when the transition finishes.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Transitions.FadeOut.#ctor(SadConsole.IScreenSurface,System.TimeSpan,SadConsole.EasingFunctions.EasingBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SadConsole.Transitions.FadeOut"/> class to animate a screen surface from opaque to transparent
+            over a specified duration.
+            </summary>
+            <remarks>Sets <see cref="P:SadConsole.Instructions.InstructionBase.RemoveOnFinished"/> to <see langword="true"/>.</remarks>
+            <param name="target">The screen surface to fade out. Cannot be null.</param>
+            <param name="duration">The total time over which the fade animation occurs.</param>
+            <param name="easingFunction">An optional easing function that controls the rate of change of the fade animation. If null, a linear easing
+            function is used.</param>
+        </member>
+        <member name="M:SadConsole.Transitions.FadeOut.Update(SadConsole.IScreenObject,System.TimeSpan)">
+            <summary>
+            Processes the fade out of the target object.
             </summary>
             <param name="componentHost">The host running the component.</param>
             <param name="delta">The time difference for the frame.</param>

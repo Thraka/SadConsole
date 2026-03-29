@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/00 Misc/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="ChangeLog.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/DemoProject/SharedCode/DemoProject.shproj" Id="b41a356c-4ba6-40cc-ac03-0e5d46b0b981" />
+  <Project Path="src/DemoProject/DesktopGL/DemoProject.OpenGL.csproj" />
+  <Project Path="src/SadConsole.Shared/SadConsole.Shared.shproj" Id="111f8273-2ead-47d3-88ec-cb0cd6122be8" />
+  <Project Path="src/SadConsole/SadConsole.csproj" />
+</Solution>

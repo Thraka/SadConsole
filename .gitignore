@@ -235,3 +235,6 @@ nuget/
 /Fonts/MRMOTEXTEX_dont_check_in.zip
 /.idea
 /Editor/Properties/launchSettings.json
+# Squad: ignore generated logs
+.squad/orchestration-log/
+.squad/log/
