@@ -1,13 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using SadConsole.Ansi;
-using SadConsole.Components;
-using SadConsole.Input;
-using SadConsole.Readers;
-using SadConsole.Renderers;
-using SadConsole.UI;
+﻿using SadConsole.UI;
 using SadConsole.UI.Controls;
-using SadConsole.Entities;
-using static SadConsole.Examples.RootScreen;
 
 namespace SadConsole.Examples;
 
@@ -26,19 +18,9 @@ internal class DemoPlayground : IDemo
         Title;
 }
 
-internal class Playground : Console
+internal class Playground : ScreenSurface
 {
-    public Playground() : base(80, 25)
+    public Playground() : base(GameSettings.ScreenDemoBounds.Width, GameSettings.ScreenDemoBounds.Height)
     {
-    }
-
-    protected override void OnMouseLeftClicked(MouseScreenObjectState state)
-    {
-        Console surface = new(80, 25, 200, 200);
-        surface.FillWithRandomGarbage(255);
-        surface.UseMouse = false;
-        Children.Add(surface);
-
-
     }
 }

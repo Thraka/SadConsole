@@ -15,7 +15,6 @@
     <Project Path="Samples/MonoGameFirst/MonoGameFirst.csproj" />
     <Project Path="Samples/ThemeEditor/ThemeEditor.csproj" />
     <Project Path="Samples/WPFSadConsole/WPFSadConsole.csproj" />
-    <Project Path="templates/template_code/SadConsole.Examples.Demo.CSharp/Examples.csproj" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="PerformanceTests/SadConsole.PerformanceTests/SadConsole.PerformanceTests.csproj" />
