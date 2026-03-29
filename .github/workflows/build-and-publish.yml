@@ -1,0 +1,164 @@
+# Reusable workflow: Build a SadConsole package, validate XML docs, and push to NuGet.
+# Designed to be idempotent — skips push if the version already exists on NuGet.
+
+name: Build and Publish Package
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        description: "Project folder name (e.g. SadConsole, SadConsole.Extended)"
+        required: true
+        type: string
+      package-id:
+        description: "NuGet package ID (defaults to project-name if not set)"
+        required: false
+        type: string
+      wait-for-package-id:
+        description: "NuGet package ID to wait for before building (upstream dependency)"
+        required: false
+        type: string
+      version:
+        description: "Package version to build and verify"
+        required: true
+        type: string
+    secrets:
+      NUGET_API_KEY:
+        required: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      PACKAGE_ID: ${{ inputs.package-id || inputs.project-name }}
+      VERSION: ${{ inputs.version }}
+      PROJECT: ${{ inputs.project-name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      # ── Wait for upstream dependency on NuGet ──────────────────────
+      - name: Wait for upstream package
+        if: inputs.wait-for-package-id != ''
+        shell: pwsh
+        env:
+          WAIT_PACKAGE: ${{ inputs.wait-for-package-id }}
+        run: |
+          $timeout = New-TimeSpan -Minutes 15
+          $timer = [Diagnostics.Stopwatch]::StartNew()
+
+          Write-Host "Waiting for $env:WAIT_PACKAGE $env:VERSION on NuGet..."
+
+          while ($timer.Elapsed -lt $timeout) {
+              try {
+                  $response = Invoke-RestMethod "https://api-v2v3search-0.nuget.org/query?q=PackageId:$env:WAIT_PACKAGE&prerelease=true&semVerLevel=2.0.0"
+                  $pkg = $response.data | Where-Object { $_.id -eq $env:WAIT_PACKAGE }
+                  if ($pkg) {
+                      $found = $pkg.versions | Where-Object { $_.version -eq $env:VERSION }
+                      if ($found) {
+                          Write-Host "Found $env:WAIT_PACKAGE $env:VERSION. Waiting 60s for index propagation..."
+                          Start-Sleep -Seconds 60
+                          exit 0
+                      }
+                  }
+              }
+              catch {
+                  Write-Warning "NuGet query failed: $($_.Exception.Message)"
+              }
+              Write-Host "Not found yet. Retrying in 30s..."
+              Start-Sleep -Seconds 30
+          }
+
+          throw "Timed out waiting for $env:WAIT_PACKAGE $env:VERSION on NuGet"
+
+      # ── Check if already published (idempotent) ────────────────────
+      - name: Check if package already exists on NuGet
+        id: check-exists
+        shell: pwsh
+        run: |
+          try {
+              $response = Invoke-RestMethod "https://api-v2v3search-0.nuget.org/query?q=PackageId:$env:PACKAGE_ID&prerelease=true&semVerLevel=2.0.0"
+              $pkg = $response.data | Where-Object { $_.id -eq $env:PACKAGE_ID }
+              if ($pkg) {
+                  $found = $pkg.versions | Where-Object { $_.version -eq $env:VERSION }
+                  if ($found) {
+                      Write-Host "$env:PACKAGE_ID $env:VERSION already exists on NuGet. Skipping."
+                      "already_published=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+                      exit 0
+                  }
+              }
+          }
+          catch {
+              Write-Warning "NuGet check failed, proceeding with build: $($_.Exception.Message)"
+          }
+          "already_published=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      # ── Build ──────────────────────────────────────────────────────
+      # Version is passed to the build so that workflow_dispatch overrides
+      # actually change what gets stamped into the package.
+      # Debug gets the -debug suffix appended automatically by Common.props,
+      # but we also pass it explicitly for workflow_dispatch overrides.
+      - name: Build Debug
+        if: steps.check-exists.outputs.already_published != 'true'
+        run: >-
+          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          -c Debug
+          -p:UseProjectReferences=false
+          -p:SadConsole_Version=${{ inputs.version }}
+          --no-cache
+
+      - name: Build Release
+        if: steps.check-exists.outputs.already_published != 'true'
+        run: >-
+          dotnet build ${{ inputs.project-name }}/${{ inputs.project-name }}.csproj
+          -c Release
+          -p:UseProjectReferences=false
+          -p:SadConsole_Version=${{ inputs.version }}
+          --no-cache
+
+      # ── Validate XML documentation inside .nupkg ─────────────────
+      - name: Validate XML documentation
+        if: steps.check-exists.outputs.already_published != 'true'
+        shell: pwsh
+        run: .github/scripts/Validate-XmlDocs.ps1 -Path "nuget" -PackagePattern "${{ inputs.project-name }}*.nupkg"
+
+      # ── Push to NuGet ──────────────────────────────────────────────
+      - name: Push to NuGet
+        if: steps.check-exists.outputs.already_published != 'true'
+        shell: pwsh
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          $packages = Get-ChildItem -Path "nuget" -Filter "$env:PROJECT*.nupkg"
+
+          if ($packages.Count -eq 0) {
+              throw "No .nupkg files found for $env:PROJECT in nuget/"
+          }
+
+          foreach ($pkg in $packages) {
+              Write-Host "Pushing $($pkg.Name)..."
+              dotnet nuget push $pkg.FullName -s https://api.nuget.org/v3/index.json -k $env:NUGET_KEY --skip-duplicate
+              if ($LASTEXITCODE -ne 0) { throw "Failed to push $($pkg.Name)" }
+          }
+
+      # ── Upload artifacts for debugging / archive ───────────────────
+      - name: Upload package artifacts
+        if: steps.check-exists.outputs.already_published != 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: ${{ inputs.project-name }}-packages
+          path: |
+            nuget/${{ inputs.project-name }}*.nupkg
+            nuget/${{ inputs.project-name }}*.snupkg
+          retention-days: 30

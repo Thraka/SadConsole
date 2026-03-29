@@ -4,8 +4,8 @@
   <PropertyGroup>
     <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <Version>$(SadConsole_Debug_MonoGame_Version)</Version>
-    <AssemblyTitle>SadConsole MonoGame Debuggers</AssemblyTitle>
+    <Version>$(SadConsole_Version)</Version>
+    <AssemblyTitle>SadConsole ImGuit MonoGame</AssemblyTitle>
     <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
     <PackageId>SadConsole.ImGui.MonoGame</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
@@ -21,10 +21,10 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
 
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole.Host.MonoGame\SadConsole.Host.MonoGame.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="$(SadConsole_Version)" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />

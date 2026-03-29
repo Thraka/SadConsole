@@ -4,8 +4,8 @@
   <PropertyGroup>
     <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <Version>$(SadConsole_Debug_SFML_Version)</Version>
-    <AssemblyTitle>SadConsole SFML Debuggers</AssemblyTitle>
+    <Version>$(SadConsole_Version)</Version>
+    <AssemblyTitle>SadConsole ImGuit MonoGame</AssemblyTitle>
     <Description>A library that adds ImGUI support to the SadConsole SFML host. Various debugging options are provided too.</Description>
     <PackageId>SadConsole.ImGui.SFML</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;sfml;sadconsole;imgui</PackageTags>
@@ -21,10 +21,10 @@
 
   <ItemGroup>
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="10.*" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
 
     <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole.Host.SFML\SadConsole.Host.SFML.csproj" />
-    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="10.*" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.SFML" Version="$(SadConsole_Version)" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="SFML.Net" Version="3.0.0" />
