@@ -53,6 +53,7 @@ static class GameSettings
             new DemoAsciiGraphics(),
             new DemoAnimations(),
             new DemoTheDraw(),
+            new DemoBinaryFont(),
 
             "",
             "Entities".CreateColored(Color.OrangeRed),

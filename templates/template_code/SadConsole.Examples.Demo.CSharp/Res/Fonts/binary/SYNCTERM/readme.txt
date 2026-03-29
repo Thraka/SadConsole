@@ -1,0 +1,1 @@
+These were taken from https://gitlab.synchro.net/main/sbbs/-/tree/master/src/syncterm/fonts?ref_type=heads

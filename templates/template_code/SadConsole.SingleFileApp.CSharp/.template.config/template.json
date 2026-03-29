@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Thraka",
+  "classifications": [
+    "Console",
+    "Roguelike",
+    "SadConsole",
+    "MonoGame"
+  ],
+  "identity": "SadConsole.SingleFileApp.CSharp",
+  "groupIdentity": "SadConsole.SingleFileApp",
+  "name": "SadConsole Single-File App (MonoGame)",
+  "shortName": "sadconsole.single",
+  "description": "A single-file SadConsole application using the MonoGame host. Run with 'dotnet run game.cs'.",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "game"
+}

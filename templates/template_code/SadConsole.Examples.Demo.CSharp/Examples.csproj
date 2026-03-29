@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>SadConsole.Examples</RootNamespace>
@@ -24,14 +24,16 @@
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
+
+    <SadConsoleVersion>10.9.0</SadConsoleVersion>
   </PropertyGroup>
 
   <!-- SadConsole related NuGet packages. -->
   <ItemGroup>
-    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="10.8.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="10.8.0" />
-    <PackageReference Condition=" '$(GameHost)' == 'fna' " Include="SadConsole.Host.FNA" Version="10.8.0" />
-    <PackageReference Include="SadConsole.Extended" Version="10.8.0" />
+    <PackageReference Condition=" '$(GameHost)' == 'monogame' " Include="SadConsole.Host.MonoGame" Version="$(SadConsoleVersion)" />
+    <PackageReference Condition=" '$(GameHost)' == 'sfml' " Include="SadConsole.Host.SFML" Version="$(SadConsoleVersion)" />
+    <PackageReference Condition=" '$(GameHost)' == 'fna' " Include="SadConsole.Host.FNA" Version="$(SadConsoleVersion)" />
+    <PackageReference Include="SadConsole.Extended" Version="$(SadConsoleVersion)" />
   </ItemGroup>
 
   <!-- MonoGame host requires you to choose which library you want to use. -->
@@ -39,7 +41,7 @@
   <ItemGroup Condition=" '$(GameHost)' == 'monogame' ">
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
 
-    <!-- If you want to use DirectX, you must set the <TargetFramework> to net8.0-windows and change the MonoGame reference -->
+    <!-- If you want to use DirectX, you must set the <TargetFramework> to net10.0-windows and change the MonoGame reference -->
     <!--<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.4.1" />-->
 
     <!-- Compile the MonoGame Shaders -->
@@ -53,7 +55,7 @@
   <!-- If you're using the FNA host, set this path to the FNA.dll file. -->
   <ItemGroup Condition=" '$(GameHost)' == 'fna' ">
     <Reference Include="FNA">
-      <HintPath>bin\net8.0\FNA.dll</HintPath>
+      <HintPath>bin\net10.0\FNA.dll</HintPath>
     </Reference>
   </ItemGroup>
 
