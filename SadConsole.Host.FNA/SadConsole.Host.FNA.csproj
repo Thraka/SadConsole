@@ -9,7 +9,12 @@
     <Description>A graphics hosting library for SadConsole that targets FNA.</Description>
     <PackageId>SadConsole.Host.FNA</PackageId>
     <PackageTags>sadconsole;fna;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>Updated FNA to 25.11.</PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Experimental Attributes -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SADCON7001</NoWarn>
   </PropertyGroup>
 
   <!-- Custom properties -->

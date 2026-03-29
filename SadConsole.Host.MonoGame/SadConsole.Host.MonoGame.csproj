@@ -9,7 +9,7 @@
     <Description>A graphics hosting library for SadConsole that targets MonoGame.</Description>
     <PackageId>SadConsole.Host.MonoGame</PackageId>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
-    <PackageReleaseNotes>Upgraded to MonoGame 3.8.4.1.</PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Experimental Attributes -->

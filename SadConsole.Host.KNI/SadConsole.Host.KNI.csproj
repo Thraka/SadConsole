@@ -9,10 +9,12 @@
     <Description>A graphics hosting library for SadConsole that targets KNI.</Description>
     <PackageId>SadConsole.Host.KNI</PackageId>
     <PackageTags>sadconsole;monogame;roguelike;cli;xna;game;development;console;ansi;ascii;textmode;dotnet;wpf</PackageTags>
-    <PackageReleaseNotes>
-- Cursor rendering has changed to draw on the hosting surface. Previously it was rendered on top as an entire separate process.
-- Change host to be a lot more friendly towards running from an existing MonoGame Game instead of SadConsole's game.
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Experimental Attributes -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SADCON7001</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

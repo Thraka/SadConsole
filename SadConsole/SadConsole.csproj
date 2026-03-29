@@ -10,15 +10,17 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Cleaned up various warnings and XML comments.
-- `BlinkChar` supports starting on or off now.
-- Fix crash when resizing a surface with a smaller height and same width while the clear flag is set.
-- `ScreenObject` positioning can be scaled by an amount, such as a font size or any other size.
-- `SadFont.ToString` now returns the font name.
-- `AnimatedScreenObject.ResyncFrameSizes` method added correctly set the size of a new frame to the first frame in the animation.
-- Fixed a long-standing bug with `CompositeControl` where visual focus wasn't removed from a child control when the mouse moved out of the window.
-- When splashscreen closes, call update on new the new Screen. Fixes a bug with `ControlsHost` not drawing the first state of controls.
-    </PackageReleaseNotes>
+- GitHub publishing moved to tag-triggered workflows.
+- Added experimental RowFontSurface with per-row fonts and sizes.
+- SadFonts can load old VGA-style binary font files.
+- Added new terminal parser (SadConsole.TerminalConsole).
+- Overhauled ImGui integration; debug and raw ImGui now ship together.
+- Added SFML support for ImGui integration.
+- Fade now respects RemoveOnFinished (default true).
+- Added FadeOut and FadeIn transitions.
+- SFML upgraded to 3.x with rewritten, faster sprite batcher.
+- Converted solution files from SLN to SLNX.
+  </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@
     <Description>A library that adds ImGUI support to the SadConsole MonoGame host. Various debugging options are provided too.</Description>
     <PackageId>SadConsole.ImGui.MonoGame</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
     <RootNamespace>SadConsole</RootNamespace>
   </PropertyGroup>
 

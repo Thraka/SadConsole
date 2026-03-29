@@ -9,7 +9,7 @@
     <Description>A library that adds ImGUI support to the SadConsole SFML host. Various debugging options are provided too.</Description>
     <PackageId>SadConsole.ImGui.SFML</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;sfml;sadconsole;imgui</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
     <RootNamespace>SadConsole.ImGuiSystem</RootNamespace>
   </PropertyGroup>
 

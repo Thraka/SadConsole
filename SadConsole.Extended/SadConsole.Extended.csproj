@@ -9,7 +9,7 @@
     <Description>A library of common classes that extend SadConsole with new controls, windows, and more.</Description>
     <PackageId>SadConsole.Extended</PackageId>
     <PackageTags>roguelike;cli;game;development;console;ansi;ascii;textmode;monogame;sfml;sadconsole</PackageTags>
-    <PackageReleaseNotes>Added the config builder extension `PopupGlyphPicker`.</PackageReleaseNotes>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <!-- Custom properties -->
