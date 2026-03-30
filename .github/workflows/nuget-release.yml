@@ -250,6 +250,14 @@ jobs:
           [System.IO.Compression.ZipFile]::CreateFromDirectory("release-dlls", $zipName)
           Write-Host "Created $zipName"
 
+      # Zip the NuGet packages
+      - name: Create NuGet packages zip
+        shell: pwsh
+        run: |
+          $zipName = "SadConsole-$env:VERSION-nuget.zip"
+          [System.IO.Compression.ZipFile]::CreateFromDirectory("release-packages", $zipName)
+          Write-Host "Created $zipName"
+
       # Create the GitHub Release
       - name: Create GitHub Release
         env:
@@ -259,10 +267,9 @@ jobs:
           $tag = if ($env:GITHUB_REF -match '^refs/tags/') { $env:GITHUB_REF -replace '^refs/tags/', '' } else { "v$env:VERSION" }
           $title = "SadConsole $env:VERSION"
           $dllZip = "SadConsole-$env:VERSION-dlls.zip"
+          $nugetZip = "SadConsole-$env:VERSION-nuget.zip"
 
-          # Gather all .nupkg and .snupkg files
-          $packages = Get-ChildItem -Path "release-packages" -Include "*.nupkg","*.snupkg" -File
-          $assets = @($dllZip) + ($packages | ForEach-Object { $_.FullName })
+          $assets = @($dllZip, $nugetZip)
 
           Write-Host "Creating release '$title' on tag '$tag' with $($assets.Count) assets"
 
