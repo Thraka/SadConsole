@@ -1,5 +1,6 @@
 using System.Numerics;
 using Hexa.NET.ImGui;
+using SadConsole.Editor.Addins;
 using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiSystem.Rendering;
@@ -204,6 +205,21 @@ public class GuiTopBar : ImGuiObjectBase
                 }
 
                 ImGui.EndMenu();
+            }
+
+            // Render addin menu contributions
+            var addinMenuGroups = Core.State.AddinMenuItems.GroupBy(m => m.Menu);
+            foreach (var group in addinMenuGroups)
+            {
+                if (ImGui.BeginMenu(group.Key))
+                {
+                    foreach (var item in group)
+                    {
+                        if (ImGui.MenuItem(item.Label))
+                            item.OnClick();
+                    }
+                    ImGui.EndMenu();
+                }
             }
 
             //if (ImGui.BeginMenu("Debug"u8))

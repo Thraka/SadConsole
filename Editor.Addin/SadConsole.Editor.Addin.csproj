@@ -1,40 +1,38 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\MSBuild\Nuget.props" />
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.0-Beta3</Version>
-    <AssemblyTitle>SadConsole Addin Example</AssemblyTitle>
-    <Description>Provides a custom type for the editor.</Description>
-    <PackageId>SadConsole.Editor.Serialization</PackageId>
-    <PackageTags>sadconsole</PackageTags>
-    <PackageReleaseNotes>
-      Nothing special for this release.
-    </PackageReleaseNotes>
+    <AssemblyTitle>SadConsole Editor Example Addin</AssemblyTitle>
+    <Description>Example addin project demonstrating how to extend the SadConsole editor.</Description>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedAllSources>true</EmbedAllSources>
-    <PackageReadmeFile></PackageReadmeFile>
-  </PropertyGroup>
-  
   <ItemGroup>
-    <PackageReference Include="SadConsole.Extended" Version="10.8.0" PrivateAssets="All" />
+    <ProjectReference Include="..\Editor\Editor.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
-  </ItemGroup>
-
-  <Target Name="CopyPackage" AfterTargets="Pack">
-    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
-    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  <!--
+    DeployAddinToEditor: After each build, copies the addin DLL (and PDB for debugger symbols)
+    into the Editor's addins/ subfolder so it's always deployed before a debug session starts.
+    Use the "Editor (Debug)" launch profile (Properties/launchSettings.json) to debug the addin
+    inside the running Editor process.
+  -->
+  <Target Name="DeployAddinToEditor" AfterTargets="Build">
+    <PropertyGroup>
+      <EditorBinDir>$(MSBuildThisFileDirectory)..\Editor\bin\$(Configuration)\net10.0\</EditorBinDir>
+      <EditorAddinsDir>$(EditorBinDir)addins\</EditorAddinsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(EditorAddinsDir)" Condition="!Exists('$(EditorAddinsDir)')" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll"
+          DestinationFolder="$(EditorAddinsDir)"
+          Condition="Exists('$(OutputPath)$(AssemblyName).dll')" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb"
+          DestinationFolder="$(EditorAddinsDir)"
+          Condition="Exists('$(OutputPath)$(AssemblyName).pdb')" />
   </Target>
 
 </Project>

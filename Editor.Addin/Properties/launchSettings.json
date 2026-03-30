@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Editor (Debug)": {
+      "commandName": "Executable",
+      "executablePath": "..\\..\\Editor\\bin\\Debug\\net10.0\\Editor.exe",
+      "workingDirectory": "..\\..\\Editor\\bin\\Debug\\net10.0\\"
+    },
+    "Editor (Release)": {
+      "commandName": "Executable",
+      "executablePath": "..\\..\\Editor\\bin\\Release\\net10.0\\Editor.exe",
+      "workingDirectory": "..\\..\\Editor\\bin\\Release\\net10.0\\"
+    }
+  }
+}
