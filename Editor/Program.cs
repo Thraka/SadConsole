@@ -8,6 +8,7 @@
 
 using SadConsole.Configuration;
 using SadConsole.Editor;
+using SadConsole.Editor.Addins;
 
 Settings.WindowTitle = "SadEditor v3.0 Beta 3";
 
@@ -46,6 +47,7 @@ void StartHandler(object? sender, GameHost host)
     Core.State.LoadSadConsoleFonts();
 
     Core.Start();
+    AddinLoader.LoadAndRegisterAddins();
 }
 
 

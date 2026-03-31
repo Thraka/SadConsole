@@ -78,6 +78,8 @@ public static partial class Core
         public static ImGuiList<Blueprint> Blueprints = new();
         public static ImGuiList<IFont> SadConsoleFonts = new();
 
+        public static List<Addins.AddinMenuItem> AddinMenuItems = new();
+
         public static void LoadBlueprints()
         {
             List<Blueprint> blueprints = new();
