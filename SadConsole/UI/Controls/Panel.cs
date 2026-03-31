@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using SadConsole.Input;
+using SadConsole.UI.Handlers;
 
 namespace SadConsole.UI.Controls;
 
@@ -45,6 +46,7 @@ public partial class Panel : CompositeControl, IList<ControlBase>
     public Panel(int width, int height) : base(width, height)
     {
         TabStop = false;
+        KeyboardHandler = new TabFocusHandler(this);
     }
 
     [OnDeserialized]
@@ -140,29 +142,6 @@ public partial class Panel : CompositeControl, IList<ControlBase>
             ControlBase control = controls[i];
             control.LostMouse(state.OriginalMouseState);
         }
-    }
-
-    /// <inheritdoc/>
-    public override bool ProcessKeyboard(Keyboard state)
-    {
-        if (IsEnabled && UseKeyboard)
-        {
-            bool processResult = base.ProcessKeyboard(state);
-
-            var controls = new List<ControlBase>(Controls);
-            controls.Reverse();
-
-            for (int i = 0; i < controls.Count; i++)
-            {
-                ControlBase control = controls[i];
-                if (control.ProcessKeyboard(state))
-                    return true;
-            }
-
-            return processResult;
-        }
-
-        return false;
     }
 
     /// <summary>
