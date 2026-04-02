@@ -79,6 +79,13 @@ public class Writer : ITerminalHandler
     public LineFeedMode LineFeeds { get; set; } = LineFeedMode.Implicit;
 
     /// <summary>
+    /// The terminal emulation behavior profile. Default is <see cref="TerminalMode.CTerm"/>.
+    /// Changing this property adjusts C0 control-code rendering and CSI J cursor-home behavior
+    /// without altering the underlying parser.
+    /// </summary>
+    public TerminalMode Mode { get; set; } = TerminalMode.CTerm;
+
+    /// <summary>
     /// When <see langword="true"/> and the surface implements <see cref="ICellSurfaceResize"/>,
     /// the writer grows the surface instead of scrolling content up.
     /// The view size stays the same; only the total backing height increases.
@@ -173,6 +180,23 @@ public class Writer : ITerminalHandler
         }
 
         State.PendingWrap = false;
+
+        // ANSI-BBS mode: FF (0x0C) clears screen and homes cursor instead of rendering a glyph.
+        if (Mode == TerminalMode.AnsiBbs && controlCode == 0x0C)
+        {
+            HandleEraseDisplay(2);
+            State.CursorColumn = 0;
+            State.CursorRow = 0;
+            SyncCursorPosition();
+            return;
+        }
+
+        // ANSI-BBS mode: render printable CP437 glyphs for C0 bytes that have IBM glyph assignments.
+        if (Mode == TerminalMode.AnsiBbs && IsAnsiBbsGlyphByte(controlCode))
+        {
+            OnPrint((char)controlCode);
+            return;
+        }
 
         switch (controlCode)
         {
@@ -337,8 +361,19 @@ public class Writer : ITerminalHandler
                 }
                 break;
             case 'J': // ED — erase display, cursor stays put, does NOT clear PendingWrap
-                HandleEraseDisplay(Param(parameters, 0, 0));
+            {
+                int edParam = Param(parameters, 0, 0);
+                HandleEraseDisplay(edParam);
+                // ANSI-BBS mode: ED 2 (erase entire display) also homes the cursor.
+                if (Mode == TerminalMode.AnsiBbs && edParam == 2)
+                {
+                    State.PendingWrap = false;
+                    State.CursorColumn = 0;
+                    State.CursorRow = 0;
+                    SyncCursorPosition();
+                }
                 break;
+            }
             case 'K': // EL — erase in line, cursor stays put, does NOT clear PendingWrap
                 HandleEraseInLine(Param(parameters, 0, 0));
                 break;
@@ -1278,6 +1313,21 @@ public class Writer : ITerminalHandler
         int v = parameters[index];
         return v == 0 ? defaultValue : v;
     }
+
+    /// <summary>
+    /// Returns true for C0 bytes that carry IBM CP437 glyph assignments in ANSI-BBS mode.
+    /// 0x0C (FF) is intentionally excluded — it is a clear-screen command, not a glyph.
+    /// </summary>
+    private static bool IsAnsiBbsGlyphByte(byte b) => b switch
+    {
+        0x01 or 0x02 or 0x03 or 0x04 or 0x05 or 0x06 => true, // ☺ ☻ ♥ ♦ ♣ ♠
+        0x0B => true,                                           // ♂
+        0x0E or 0x0F => true,                                   // ♫ ☼
+        0x10 or 0x11 or 0x12 or 0x13 or 0x14 or 0x15 or 0x16 => true, // ► ◄ ↕ ‼ ¶ § ▬
+        0x17 or 0x18 or 0x19 or 0x1A => true,                  // ↨ ↑ ↓ →
+        0x1C or 0x1D or 0x1E or 0x1F => true,                  // ∟ ↔ ▲ ▼
+        _ => false
+    };
 
     // ═══════════════════════════════════════════════════════════
     //  Glyph resolution

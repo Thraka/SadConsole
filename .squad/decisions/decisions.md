@@ -688,3 +688,74 @@ But: Splitting would duplicate 1200+ lines. Better: single Writer with optional 
 **Status:** Complete — Zero Disputes
 
 Converged on identical recommendations across three architecture questions through parallel analysis. Deckard provided architecture-level design; Roy provided technical implementation-level validation. All findings merged to this decision document.
+
+---
+
+## Architecture Decision: TerminalMode Enum for Unified Terminal Behavior Control
+
+
+**By:** Deckard (Lead)
+**What:** Architectural design for `TerminalMode` — a single enum controlling behavior profiles across both the rendering (Writer) and input (KeyboardEncoder) subsystems of `SadConsole.Terminal`.
+
+**Why:** Different terminal standards (CTerm, ANSI-BBS, VT102, xterm) define conflicting behaviors for C0 control bytes, screen-erase side effects, and keyboard escape sequences. A unified mode enum lets users switch behavior profiles with one property (`TerminalConsole.Mode`) rather than manually toggling a dozen boolean flags. Roy has implemented this design; this decision records the rationale and contracts.
+
+**Details:**
+
+- **TerminalMode enum values:** `CTerm` (default), `AnsiBbs`, `VT102`, `XTerm`
+- **File location:** `SadConsole/Terminal/TerminalMode.cs` — standalone file in the Terminal namespace, co-located with Writer and KeyboardEncoder
+- **Writer.Mode property:** `public TerminalMode Mode { get; set; } = TerminalMode.CTerm;` on `Writer`. Three behavioral branch points:
+  1. `OnC0Control` — FF (0x0C) becomes clear-screen+home-cursor instead of ignored
+  2. `OnC0Control` — C0 bytes 0x01–0x06, 0x0B, 0x0E–0x1A, 0x1C–0x1F render as CP437 glyphs via `OnPrint` instead of being silently dropped
+  3. `OnCsiDispatch` case `'J'` — ED param 2 (erase entire display) also homes cursor to 0,0
+- **KeyboardEncoder.Mode property:** `public TerminalMode Mode { get; set; } = TerminalMode.CTerm;` — reuses the same `TerminalMode` enum (no separate KeyboardEncoderMode). In AnsiBbs mode, overrides: Insert→`CSI @`, Delete→`DEL 0x7F`, End→`CSI K`, PageUp→`CSI V`, PageDown→`CSI U`, F5→`ESC O t`, Backspace→`BS 0x08` always
+- **TerminalConsole convenience:** `public TerminalMode Mode { get => Writer.Mode; set { Writer.Mode = value; KeyboardEncoder.Mode = value; } }` — single setter prevents Writer/Encoder drift. Getter reads from Writer (authoritative source)
+- **Default:** `CTerm` — preserves all existing behavior. Zero breaking changes for current users.
+- **VT102 and XTerm:** Reserved enum values with no behavioral differences from CTerm today. Future work will add VT102 strict-mode restrictions (no CTerm font slots, no BBS extensions) and XTerm conventions (mouse reporting, bracketed paste, etc.)
+
+**Design principles applied:**
+- One enum, two consumers — avoids a parallel `KeyboardEncoderMode` that would inevitably drift
+- Mode checked at dispatch points, not stored as dozens of booleans — adding a new mode means adding branches, not new state fields
+- `IsAnsiBbsGlyphByte` extracted as static helper for auditability (pattern: make the predicate explicit and separately testable)
+- FF checked before glyph-byte check in `OnC0Control` for unambiguous intent, even though `IsAnsiBbsGlyphByte` excludes 0x0C
+
+**Implementation notes for Roy (already complete — this records the contracts):**
+- Parser.cs requires no changes for any mode — ECMA-48 state machine is mode-agnostic
+- State.cs requires no changes — mode is a dispatch-time concern, not session-state
+- All mode-conditional branches use `== TerminalMode.AnsiBbs` (not `!= CTerm`) so VT102/XTerm don't accidentally inherit BBS behavior
+- `BackspaceSendsDel` property on KeyboardEncoder is bypassed entirely in AnsiBbs mode (the AnsiBbs switch returns `\x08` before reaching the property check)
+
+
+---
+
+## Implementation Decision: Terminal Mode Implementation
+
+ (roy-terminal-mode-impl)
+
+**Date:** 2026-03-10  
+**Author:** Roy  
+**Status:** Implemented
+
+## Summary
+
+Added `TerminalMode` enum and mode-based behavior to `Writer` and `KeyboardEncoder`.
+
+## Non-Obvious Choices
+
+### 1. `IsAnsiBbsGlyphByte` as a separate static helper
+Rather than embedding the glyph byte set inline in `OnC0Control`, I extracted it to a static `IsAnsiBbsGlyphByte(byte)` method using a switch expression. This keeps the C0 handler readable and makes the set of BBS glyph bytes explicit and easy to audit.
+
+### 2. `OnC0Control` — FF (0x0C) is checked first, before the glyph check
+`IsAnsiBbsGlyphByte` deliberately excludes 0x0C, so even if the order were reversed the glyph path would not trigger for FF. However, checking FF explicitly first before the glyph dispatch makes the intent unambiguous.
+
+### 3. `OnC0Control` — early return after ANSI-BBS glyph dispatch
+After calling `OnPrint((char)controlCode)` for a BBS glyph byte, we return immediately — skipping the `SyncCursorPosition()` call at the bottom of `OnC0Control`. This is correct: `OnPrint` handles cursor advancement internally, so calling `SyncCursorPosition()` again would be redundant.
+
+### 4. CSI J ANSI-BBS cursor-home — preserves existing non-BBS behavior
+The ED `case 'J':` block was refactored from a one-liner into a block with an extracted `edParam` local. The ANSI-BBS cursor-home only applies when `edParam == 2`. The comment "cursor stays put, does NOT clear PendingWrap" from the original is still accurate for CTerm/VT102/XTerm — the ANSI-BBS branch explicitly sets `PendingWrap = false` and calls `SyncCursorPosition()`.
+
+### 5. `TerminalConsole.Mode` setter updates both Writer and KeyboardEncoder
+The convenience property sets both at once to avoid a footgun where the Writer and KeyboardEncoder drift out of sync. Since the getter reads from `Writer.Mode`, the two are always in agreement after any set through the console-level property.
+
+### 6. VT102 and XTerm modes — no behavioral changes
+Per the task specification, VT102 and XTerm mode values are reserved for future use. All new conditional branches only activate on `TerminalMode.AnsiBbs`, so VT102 and XTerm exhibit identical behavior to CTerm.
+

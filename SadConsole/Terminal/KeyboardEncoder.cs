@@ -34,6 +34,12 @@ public class KeyboardEncoder
     public bool BackspaceSendsDel { get; set; } = true;
 
     /// <summary>
+    /// The terminal emulation behavior profile. Default is <see cref="TerminalMode.CTerm"/>.
+    /// Changing this property adjusts which escape sequences are emitted for navigation keys.
+    /// </summary>
+    public TerminalMode Mode { get; set; } = TerminalMode.CTerm;
+
+    /// <summary>
     /// Encodes all pressed keys from the current keyboard frame into terminal byte sequences.
     /// </summary>
     /// <param name="keyboard">The keyboard state for this frame.</param>
@@ -106,6 +112,21 @@ public class KeyboardEncoder
     {
         // Modifier parameter for xterm-style sequences: CSI 1;modifier X
         int modifier = ComputeModifier(ctrl, alt, shift);
+
+        // ANSI-BBS mode overrides for keys that BBS software expects specific sequences for.
+        if (Mode == TerminalMode.AnsiBbs)
+        {
+            switch (key)
+            {
+                case Keys.Insert:   return "\x1b[@";   // CSI @
+                case Keys.Delete:   return "\x7f";     // DEL
+                case Keys.End:      return "\x1b[K";   // CSI K — no app-mode or modifier variants
+                case Keys.PageUp:   return "\x1b[V";   // CSI V — no modifier variants
+                case Keys.PageDown: return "\x1b[U";   // CSI U — no modifier variants
+                case Keys.F5:       return "\x1bOt";   // ESC O t
+                case Keys.Back:     return "\x08";     // BS always
+            }
+        }
 
         switch (key)
         {

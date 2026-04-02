@@ -55,7 +55,15 @@
 
 **Roy/Deckard Alignment (2026-03-07):** Roy's parallel technical deep-dive achieved complete alignment across all three architecture questions. Zero disputes on cursor injection, single Writer pattern, or TerminalConsole design.
 
+**TerminalMode Architecture (2026-04-02):** Designed and ratified the `TerminalMode` feature — a single enum (`CTerm`, `AnsiBbs`, `VT102`, `XTerm`) in `SadConsole/Terminal/TerminalMode.cs` shared by `Writer.Mode` and `KeyboardEncoder.Mode`. `TerminalConsole.Mode` is a convenience setter that wires both. Default is `CTerm` (zero breaking changes). Roy implemented all behavioral branches: ANSI-BBS C0 glyph rendering, FF clear-screen, CSI 2J cursor-home, and 7 keyboard sequence overrides. VT102/XTerm are reserved stubs. Build succeeded with 0 errors. Decision merged to `.squad/decisions/decisions.md`.
+
 ## Learnings
+
+### Mode/Profile Patterns
+
+**One enum, two consumers beats parallel enums:** When Writer and KeyboardEncoder both need a mode concept, share the same `TerminalMode` enum. A separate `KeyboardEncoderMode` would inevitably drift. The convenience property on `TerminalConsole` that sets both at once prevents the footgun.
+
+**Check for the specific mode, not the negation of default:** Using `== TerminalMode.AnsiBbs` (not `!= CTerm`) ensures future modes like VT102/XTerm don't accidentally inherit ANSI-BBS quirks.
 
 ### State Synchronization Patterns
 
@@ -66,5 +74,3 @@
 **Dispatcher epilogues that blanket-clear state are dangerous:** Side effects should be declared by handlers, not assumed. Default should be the safe/no-op path (opt-in clearing beats opt-out).
 
 **When components need multi-category capabilities, implement IComponent directly:** When a component needs both Update and Keyboard (not just one), directly implement IComponent. Don't try to inherit from single-capability base classes or create hacks. The interface is small.
-
-## Learnings

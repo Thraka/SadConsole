@@ -28,6 +28,22 @@ public class TerminalConsole : ScreenSurface
     public KeyboardEncoder KeyboardEncoder { get; }
 
     /// <summary>
+    /// Gets or sets the terminal emulation behavior profile for both the writer and keyboard encoder.
+    /// Setting this property updates both <see cref="Writer"/>.<see cref="Writer.Mode"/> and
+    /// <see cref="KeyboardEncoder"/>.<see cref="KeyboardEncoder.Mode"/> simultaneously.
+    /// Default is <see cref="TerminalMode.CTerm"/>.
+    /// </summary>
+    public TerminalMode Mode
+    {
+        get => Writer.Mode;
+        set
+        {
+            Writer.Mode = value;
+            KeyboardEncoder.Mode = value;
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the terminal output channel for interactive mode.
     /// When set, terminal query responses (DA, DSR) are sent through this channel,
     /// and it is also wired to <see cref="Writer"/>.<see cref="Writer.Output"/>.
@@ -111,7 +127,7 @@ public class TerminalConsole : ScreenSurface
     /// <inheritdoc/>
     public override void OnFocusLost()
     {
-        TerminalCursor.IsVisible = false;
+        //TerminalCursor.IsVisible = false;
         IsDirty = true;
     }
 

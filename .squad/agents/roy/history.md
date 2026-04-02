@@ -66,7 +66,35 @@ Delivered bidirectional input/output infrastructure for interactive terminal sup
 
 **Build:** 0 errors, 48 warnings (all pre-existing). **Tests:** 759/759 baseline pass, zero regressions.
 
-## Learnings
+## 2026-03-10 — TerminalMode: ANSI-BBS mode support
+
+Added `TerminalMode` enum and mode-based behavioral switching.
+
+**Created:**
+- `SadConsole/Terminal/TerminalMode.cs` — `TerminalMode` enum: CTerm (default), AnsiBbs, VT102, XTerm.
+
+**Modified:**
+- `SadConsole/Terminal/Writer.cs` — `Mode` property (default CTerm). `OnC0Control`: ANSI-BBS renders 24 CP437 glyph bytes via `OnPrint()`, FF (0x0C) clears screen + homes cursor. `OnCsiDispatch` ED case: ANSI-BBS ED 2 homes cursor after erase. Private static `IsAnsiBbsGlyphByte()` helper.
+- `SadConsole/Terminal/KeyboardEncoder.cs` — `Mode` property (default CTerm). `EncodeSpecialKey`: ANSI-BBS overrides Insert/Delete/End/PageUp/PageDown/F5/Backspace with BBS-standard sequences.
+- `SadConsole/TerminalConsole.cs` — `Mode` convenience property that sets both `Writer.Mode` and `KeyboardEncoder.Mode` simultaneously.
+
+**Build:** 0 errors. **Tests:** All passing. **Backward compatibility:** Default CTerm mode preserves all existing behavior — zero breaking changes.
+
+**Design patterns applied:**
+- One enum, two consumers (avoids KeyboardEncoderMode drift)
+- Mode-specific branches check `== TerminalMode.AnsiBbs` (not `!= CTerm`) so VT102/XTerm default to CTerm
+- `IsAnsiBbsGlyphByte()` static helper for auditability
+- Convenience property `TerminalConsole.Mode` syncs both subsystems at once
+
+**Key patterns:**
+- Default CTerm — zero behavioral change unless Mode is set.
+- Parser unchanged — only Writer and KeyboardEncoder change behavior.
+- `IsAnsiBbsGlyphByte` excludes 0x0C (FF handled separately as clear-screen command).
+- BBS glyph dispatch uses early return (OnPrint handles cursor advancement internally).
+
+**Build:** 0 errors. All tests baseline green.
+
+
 
 ### SadBBSClient Sample — Telnet BBS Client (2026)
 
