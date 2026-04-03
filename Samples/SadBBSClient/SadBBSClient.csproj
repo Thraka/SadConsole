@@ -14,6 +14,11 @@
     <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Using Include="SadConsole" />
+    <Using Include="SadRogue.Primitives" />
+    <Using Include="SadConsole.Console" Alias="Console" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
   </ItemGroup>
   <ItemGroup>

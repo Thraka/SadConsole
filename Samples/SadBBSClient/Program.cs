@@ -1,8 +1,12 @@
+using SadBBSClient;
 using SadConsole;
 using SadConsole.Configuration;
 
+// TODO: Load settings
+
+
 Builder startup = new Builder()
-    .SetWindowSizeInCells(80, 25)
+    .SetWindowSizeInCells(AppSettings.Instance.Width, AppSettings.Instance.Height)
     .ConfigureFonts(true)
     .IsStartingScreenFocused(true)
     .SetStartingScreen<SadBBSClient.BbsScreen>()

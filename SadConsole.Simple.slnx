@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/ImGui Library/">
-    <Project Path="SadConsole.ImGui.Shared/SadConsole.ImGui.Shared.shproj" Id="df3e5355-0afd-4a48-826f-8f0c70a90459" />
     <Project Path="SadConsole.ImGui.MonoGame/SadConsole.ImGui.MonoGame.csproj" />
     <Project Path="SadConsole.ImGui.SFML/SadConsole.ImGui.SFML.csproj" />
+    <Project Path="SadConsole.ImGui.Shared/SadConsole.ImGui.Shared.shproj" Id="df3e5355-0afd-4a48-826f-8f0c70a90459" />
   </Folder>
   <Folder Name="/Hosts/">
     <Project Path="SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
@@ -10,7 +10,6 @@
     <Project Path="SadConsole.Host.Shared/SadConsole.Host.Shared.shproj" Id="595434c5-2192-495b-903c-7922d7e8b149" />
   </Folder>
   <Folder Name="/Samples/">
-    <Project Path="Samples/SadBBSClient/SadBBSClient.csproj" />
     <Project Path="Samples/Demo/Demo.csproj" />
   </Folder>
   <Project Path="SadConsole.Extended/SadConsole.Extended.csproj" />

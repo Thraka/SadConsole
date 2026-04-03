@@ -1,8 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using SadConsole;
 using SadConsole.Input;
 using SadConsole.Terminal;
-using SadRogue.Primitives;
 
 namespace SadBBSClient;
 
@@ -13,59 +12,136 @@ namespace SadBBSClient;
 /// </summary>
 public class BbsScreen : ScreenObject
 {
-    private const int TermWidth = 80;
-    private const int TermHeight = 25;
+    private enum ConnectionState
+    {
+        Disconnected,
+        Connecting,
+        Connected
+    }
 
+    private enum AppState
+    {
+        MainScreen,
+        Terminal,
+        Phonebook
+    }
+
+    private struct KeyBinding
+    {
+        public bool Alt;
+        public Keys Key;
+        public Action OnPressed;
+    }
+
+    private class ScreenKeyBindings
+    {
+        public List<KeyBinding> Bindings = [];
+        public void Add(bool alt, Keys key, Action onPressed)
+        {
+            Bindings.Add(new KeyBinding { Alt = alt, Key = key, OnPressed = onPressed });
+        }
+        public bool TryMatch(Keyboard keyboard, [NotNullWhen(true)] out KeyBinding? keyBinding)
+        {
+            foreach (var binding in Bindings)
+            {
+                if (keyboard.IsKeyPressed(binding.Key) && (keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt)) == binding.Alt)
+                {
+                    keyBinding = binding;
+                    return true;
+                }
+            }
+            keyBinding = null;
+            return false;
+        }
+    }
+
+    private readonly Phonebook _phonebook;
     private readonly TerminalConsole _terminal;
     private readonly KeyboardEncoder _encoder;
     private TelnetClient? _telnet;
 
-    private bool _connected;
-    private bool _awaitingInput;
+    private AppState _appState = AppState.MainScreen;
+    private ConnectionState _connectionState = ConnectionState.Disconnected;
     private readonly StringBuilder _inputBuffer = new();
+    private readonly ScreenKeyBindings _specialKeyBindings = new();
 
     // Well-known public BBSes for the default menu
     private static readonly (string Name, string Host, int Port)[] DefaultBbses =
     {
-        ("Alterant BBS",     "alterant.ca",         23),
-        ("Level 29",         "bbs.fozztexx.com",    23),
-        ("Black Flag",       "blackflagbbs.com",    23),
-        ("Capitol Shrill",   "capitolshrill.com",  6502),
+        ("SadLogic",         "192.168.1.237",           7243),
+        ("Alterant BBS",     "alterant.ca",             23),
+        ("Level 29",         "bbs.fozztexx.com",        23),
+        ("Black Flag",       "blackflagbbs.com",        23),
+        ("Capitol Shrill",   "capitolshrill.com",       6502),
         ("Deadline",         "deadline.aegis-corp.org", 23),
     };
 
+
+
     public BbsScreen()
     {
-        _terminal = new TerminalConsole(TermWidth, TermHeight);
+         _terminal = new TerminalConsole(AppSettings.Instance.Width, AppSettings.Instance.Height);
         _terminal.UseKeyboard = false; // We handle keyboard ourselves
         _terminal.Position = new Point(0, 0);
-
+        _terminal.Mode = TerminalMode.AnsiBbs;
+        _terminal.TerminalCursor.Shape = CursorShape.BlinkingUnderline;
+        _terminal.TerminalCursor.UpdateGlyphForShape();
         _encoder = _terminal.KeyboardEncoder;
 
+        _phonebook = new() { IsVisible = false };
+        _phonebook.IsVisibleChanged += _phonebook_IsVisibleChanged;
+
+        _specialKeyBindings.Add(true, Keys.D, AppAction_ShowPhonebook);
+        _specialKeyBindings.Add(true, Keys.H, AppAction_Disconnect);
+
         Children.Add(_terminal);
-        _terminal.IsFocused = true;
+        Children.Add(_phonebook);
 
         UseKeyboard = true;
 
-        ShowConnectionMenu();
+        HideTerminalCursor();
+    }
+
+    private void _phonebook_IsVisibleChanged(object? sender, EventArgs e)
+    {
+        // Shown
+        if (_phonebook.IsVisible)
+        {
+            _appState = AppState.Phonebook;
+        }
+
+        // Hiden
+        else
+        {
+            _appState = AppState.Terminal;
+
+            if (_phonebook.SelectedEntry is not null)
+            {
+                var entry = _phonebook.SelectedEntry;
+                ConnectTo(entry.Value.Address, entry.Value.Port, entry.Value.Name);
+            }
+        }
     }
 
     public override bool ProcessKeyboard(Keyboard keyboard)
     {
-        if (_awaitingInput)
-            return HandleInputMode(keyboard);
-
-        if (_connected)
-            return HandleTerminalMode(keyboard);
-
-        // Not connected and not awaiting input — "press any key" state
-        if (keyboard.KeysPressed.Count > 0)
+        // Sniff for system shortcuts
+        if (_appState == AppState.MainScreen || _appState == AppState.Terminal)
         {
-            ShowConnectionMenu();
-            return true;
-        }
+            // Check for shortcuts like the phonebook or app settings
+            if (_specialKeyBindings.TryMatch(keyboard, out var keyBinding))
+            {
+                keyBinding.Value.OnPressed();
+                return true;
+            }
 
-        return base.ProcessKeyboard(keyboard);
+            else if (_connectionState == ConnectionState.Connected)
+                return HandleTerminalMode(keyboard);
+        }
+        else if (_appState == AppState.Phonebook)
+            return _phonebook.ProcessKeyboard(keyboard);
+
+        return false;
     }
 
     public override void Update(TimeSpan delta)
@@ -79,130 +155,23 @@ public class BbsScreen : ScreenObject
         });
 
         // Check for disconnection
-        if (_connected && _telnet != null && !_telnet.IsConnected)
+        if (_connectionState == ConnectionState.Connected && _telnet != null && !_telnet.IsConnected)
         {
-            _connected = false;
-            _telnet.Dispose();
-            _telnet = null;
-
-            _terminal.Feed("\r\n\r\n\x1b[1;31m--- Disconnected ---\x1b[0m\r\n");
-            _terminal.Feed("\r\nPress any key to return to menu...\r\n");
+            AppAction_Disconnect();
         }
-    }
-
-    private void ShowConnectionMenu()
-    {
-        _terminal.Feed("\x1b[2J\x1b[H"); // Clear screen, home cursor
-        _terminal.Feed("\x1b[1;36m+==================================================================+\x1b[0m\r\n");
-        _terminal.Feed("\x1b[1;36m|\x1b[0m          \x1b[1;33mSadBBS Client\x1b[0m - SadConsole Terminal Demo                \x1b[1;36m|\x1b[0m\r\n");
-        _terminal.Feed("\x1b[1;36m+==================================================================+\x1b[0m\r\n");
-        _terminal.Feed("\r\n");
-        _terminal.Feed("  \x1b[1;37mSelect a BBS to connect to:\x1b[0m\r\n\r\n");
-
-        for (int i = 0; i < DefaultBbses.Length; i++)
-        {
-            var bbs = DefaultBbses[i];
-            _terminal.Feed($"  \x1b[1;32m{i + 1}\x1b[0m) {bbs.Name,-22} \x1b[90m{bbs.Host}:{bbs.Port}\x1b[0m\r\n");
-        }
-
-        _terminal.Feed($"\r\n  \x1b[1;32mC\x1b[0m) Custom address (host:port)\r\n");
-        _terminal.Feed($"  \x1b[1;32mQ\x1b[0m) Quit\r\n");
-        _terminal.Feed("\r\n  \x1b[1;37mChoice: \x1b[0m");
-
-        _awaitingInput = true;
-        _inputBuffer.Clear();
-        _connected = false;
-    }
-
-    private bool HandleInputMode(Keyboard keyboard)
-    {
-        foreach (AsciiKey key in keyboard.KeysPressed)
-        {
-            if (key.Key == Keys.Escape)
-            {
-                if (_connected || _telnet != null)
-                {
-                    _telnet?.Dispose();
-                    _telnet = null;
-                    _connected = false;
-                }
-                ShowConnectionMenu();
-                return true;
-            }
-
-            if (key.Key == Keys.Enter)
-            {
-                string input = _inputBuffer.ToString().Trim();
-                _terminal.Feed("\r\n");
-                ProcessMenuInput(input);
-                return true;
-            }
-
-            if (key.Key == Keys.Back)
-            {
-                if (_inputBuffer.Length > 0)
-                {
-                    _inputBuffer.Remove(_inputBuffer.Length - 1, 1);
-                    _terminal.Feed("\x08 \x08"); // Backspace, space, backspace
-                }
-                return true;
-            }
-
-            if (key.Character != '\0')
-            {
-                _inputBuffer.Append(key.Character);
-                _terminal.Feed(key.Character.ToString());
-            }
-        }
-
-        return true;
-    }
-
-    private void ProcessMenuInput(string input)
-    {
-        if (string.Equals(input, "q", StringComparison.OrdinalIgnoreCase))
-        {
-            SadConsole.Game.Instance.MonoGameInstance.Exit();
-            return;
-        }
-
-        if (string.Equals(input, "c", StringComparison.OrdinalIgnoreCase))
-        {
-            _terminal.Feed("\r\n  Enter address (host:port): ");
-            _inputBuffer.Clear();
-            // Stay in input mode — next Enter will parse as host:port
-            _awaitingInput = true;
-            return;
-        }
-
-        // Try numeric selection
-        if (int.TryParse(input, out int choice) && choice >= 1 && choice <= DefaultBbses.Length)
-        {
-            var bbs = DefaultBbses[choice - 1];
-            ConnectTo(bbs.Host, bbs.Port, bbs.Name);
-            return;
-        }
-
-        // Try host:port format
-        if (TryParseAddress(input, out string? host, out int port))
-        {
-            ConnectTo(host!, port, $"{host}:{port}");
-            return;
-        }
-
-        _terminal.Feed("\x1b[1;31m  Invalid input. Try again.\x1b[0m\r\n\r\n  \x1b[1;37mChoice: \x1b[0m");
-        _inputBuffer.Clear();
     }
 
     private void ConnectTo(string host, int port, string displayName)
     {
-        _awaitingInput = false;
+        if (_connectionState != ConnectionState.Disconnected)
+            AppAction_Disconnect();
 
         _terminal.Feed($"\r\n  \x1b[1;33mConnecting to {displayName}...\x1b[0m\r\n");
 
         try
         {
-            _telnet = new TelnetClient(TermWidth, TermHeight);
+            _connectionState = ConnectionState.Connecting;
+            _telnet = new TelnetClient(AppSettings.Instance.Width, AppSettings.Instance.Height);
             _telnet.Disconnected += OnTelnetDisconnected;
             _telnet.Connect(host, port);
 
@@ -210,17 +179,14 @@ public class BbsScreen : ScreenObject
             // so DA/DSR responses go back to the BBS
             _terminal.Output = _telnet;
 
-            _connected = true;
+            _connectionState = ConnectionState.Connected;
             _terminal.Feed("\x1b[2J\x1b[H"); // Clear for BBS content
+            ShowTerminalCursor();
         }
         catch (Exception ex)
         {
             _terminal.Feed($"\r\n  \x1b[1;31mConnection failed: {EscapeForTerminal(ex.Message)}\x1b[0m\r\n");
-            _terminal.Feed("\r\n  Press any key to return to menu...\r\n");
-            _telnet?.Dispose();
-            _telnet = null;
-            _connected = false;
-            _awaitingInput = false;
+            AppAction_Disconnect();
         }
     }
 
@@ -282,4 +248,43 @@ public class BbsScreen : ScreenObject
         }
         return sb.ToString();
     }
+
+    private void AppAction_Disconnect()
+    {
+        // Alert user to hangup
+        if (_connectionState == ConnectionState.Connected)
+            _terminal.Feed("\r\n\r\n\x1b[1;31m--- Disconnected ---\x1b[0m\r\n");
+
+        HideTerminalCursor();
+
+        // Regardless, dispose and reset
+        _telnet?.Dispose();
+        _telnet = null;
+        _connectionState = ConnectionState.Disconnected;
+        if (_appState == AppState.Terminal)
+            _appState = AppState.MainScreen;
+    }
+
+    private void AppAction_ShowPhonebook()
+    {
+        _phonebook.IsVisible = true;
+    }
+
+    private void AppAction_Exit()
+    {
+        if (_connectionState != ConnectionState.Disconnected)
+        {
+            _telnet?.Dispose();
+            _telnet = null;
+            _connectionState = ConnectionState.Disconnected;
+        }
+
+        SadConsole.Game.Instance.MonoGameInstance.Exit();
+    }
+
+    private void HideTerminalCursor() =>
+        _terminal.TerminalCursor.IsVisible = false;
+
+    private void ShowTerminalCursor() =>
+        _terminal.TerminalCursor.IsVisible = true;
 }
