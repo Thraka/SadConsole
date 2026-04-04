@@ -74,3 +74,32 @@
 **Dispatcher epilogues that blanket-clear state are dangerous:** Side effects should be declared by handlers, not assumed. Default should be the safe/no-op path (opt-in clearing beats opt-out).
 
 **When components need multi-category capabilities, implement IComponent directly:** When a component needs both Update and Keyboard (not just one), directly implement IComponent. Don't try to inherit from single-capability base classes or create hacks. The interface is small.
+
+## Learnings
+
+
+## Addin System Architecture Design (2026-03-29)
+
+**Requested by:** Thraka | **Status:** Approved — ready for Roy's implementation
+
+Thraka requested an extensible addin system for the Editor. Designed complete architecture with entry point (`IEditorAddin` interface), discovery mechanism (`EditorAddinAttribute` + `AddinLoader`), menu item contribution (`AddinMenuItem` records in `Core.State.AddinMenuItems`, rendered by `GuiTopBar`), and deployment model (dedicated `addins/` subfolder).
+
+### Key Design Decisions
+
+1. **Entry point:** `IEditorAddin` interface lives in Editor.exe (Editor/Addins/IEditorAddin.cs) — contract for all addins
+2. **Discovery:** `EditorAddinAttribute` assembly-level marker + `AddinLoader.LoadAndRegisterAddins()` invoked at program startup
+3. **Menu items:** `AddinMenuItem` contribution records appended to `Core.State.AddinMenuItems` list; `GuiTopBar` renders them each frame
+4. **Deployment:** Dedicated `addins/` subfolder next to Editor.exe executable
+5. **References:** Addins reference Editor.exe directly (no SDK NuGet; Editor is a downloadable app, not a package)
+6. **Trust model:** Fully trusted — addins have direct access to `Core.State` and `Core.ImGuiComponent`
+7. **Sample:** Editor.Addin project becomes template/reference implementation
+
+### Changes to Editor Codebase
+
+- `Core.State.cs` — add `AddinMenuItems` list, make `DocumentBuilders` mutable post-init
+- `GuiTopBar.cs` — render addin menu items from `Core.State.AddinMenuItems`
+- `Program.cs` — call `AddinLoader.LoadAndRegisterAddins()` during startup sequence
+
+### Pattern Note
+
+Addins are fully trusted extensions with access to Editor's full internal state, enabling tightly integrated custom document types and tools. No need for sandboxing or capability-based contracts. Parallels: VS Code extensions, Sublime Text plugins.

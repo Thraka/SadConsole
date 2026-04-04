@@ -4,32 +4,8 @@ This file is the authoritative decision ledger. All agents read this. Only Scrib
 
 ---
 
-## 2026-03-02 — Font Architecture Analysis Complete
-
-**Author:** Roy | **Date:** 2026-02-26 | **Status:** Informational
-
-Completed deep-dive analysis of the SadConsole font system. Full technical specification written to `.squad/agents/roy/font-analysis.md` for use in Deckard's architecture document.
-
-**Key findings:** Clean core/host separation (no circular dependencies); font size scaling is logical, not physical (Quarter/Half/One/Two/Three/Four multipliers apply at render time); named glyphs via GlyphDefinition enable rich typography without extra surface layers; cell decorators are lightweight and stackable (~3 ints + flags per decorator); font serialization avoids texture bloat by storing only font name (resolved at deserialization); legacy remapping code preserved for backward compatibility.
-
-**Deliverables:** `.squad/agents/roy/font-analysis.md` (30KB+, 17 sections); updated `.squad/agents/roy/history.md`.
 
 ---
-
-## 2026-02-25 — Font Architecture is Sound Across All Hosts
-
-**Author:** Gaff (Host Dev) | **Date:** 2026-02-25 | **Status:** Informational
-
-Deep analysis of font loading, glyph mapping, and rendering across MonoGame, SFML, FNA, and KNI hosts concludes the font architecture is **cross-host consistent and well-designed**. No breaking changes or architectural refactors are needed.
-
-**Key findings:** Grid layout calculation is identical across all hosts (single formula in `SadFont.GenerateGlyphSourceRectangle()`); texture type abstraction (`ITexture` → per-host `GameTexture`) works well; rendering patterns are parallel (all use same glyph rect lookup); extended fonts, decorators, and font scaling work consistently; rectangle types, font editing, and texture disposal are all correct (not issues).
-
-**Recommendations for Deckard's architecture document:** Include 7 sections (data model, grid formula, texture loading, rendering pipeline, scaling, extended fonts, fallback). For Rachael: 6 regression tests needed. For future hosts: 4-step integration guide.
-
-**Deliverables:** `.squad/agents/gaff/font-analysis.md` (38.7KB); updated `.squad/agents/gaff/history.md`.
-
----
-
 ## 2026-02-26 — Font System Architecture Document Created
 
 **Author:** Deckard | **Date:** 2026-02-26 | **Status:** Informational
@@ -44,6 +20,8 @@ Created `docs/architecture-fonts.md` — comprehensive architecture reference do
 
 ---
 
+
+---
 ## 2026-03-02 — Font Architecture Verification & Corrections Complete
 
 **Author:** Holden (verification), Deckard (corrections) | **Date:** 2026-03-02 | **Status:** Complete
@@ -67,6 +45,8 @@ Deckard applied 5 corrections:
 
 ---
 
+
+---
 ## 2026-03-02 — User Directive: KNI Host is Experimental
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-02 | **Status:** Record
@@ -77,68 +57,8 @@ User directive: **KNI host is experimental** — do not document it in any way. 
 
 ---
 
-## 2026-03-02 — User Directive: Ignore SadConsole.Fonting
-
-**By:** Thraka (via Copilot) | **Date:** 2026-03-02 | **Status:** Record
-
-User directive: **Ignore SadConsole.Fonting** — it is an unfinished experiment. Do not include it in documentation or analysis of the font system.
-
-**Rationale:** User request to exclude incomplete work from team documentation.
 
 ---
-
-## 2026-02-25 — Architecture Document Published
-
-**Author:** Deckard | **Status:** Informational
-
-A formal architecture document has been created at `docs/architecture.md` as the canonical reference for new contributors and the team. It covers: SadConsole purpose, project/folder structure, core/host separation, key abstractions (`GameHost`, `IScreenObject`, `IScreenSurface`, `ICellSurface`, `IRenderer`, `IRenderStep`, `ITexture`, `IFont`, `IComponent`), per-frame data flow, controls/UI subsystem, extension points, and a namespace/file reference table.
-
-**Team implication:** Roy, Gaff, Pris, and Rachael should treat `docs/architecture.md` as the source of truth when onboarding contributors. Update it in the same PR as any significant architectural change. Gaff should verify the render pipeline section (Section 5).
-
----
-
-## 2026-02-25 — Rendering Architecture Document
-
-**Author:** Deckard | **Status:** Informational
-
-Full rendering pipeline documented at `docs/architecture-rendering.md`. Three-tier compositing: each `IRenderStep` → renderer `_backingTexture` → `Global.RenderOutput` → OS window. `IRenderStep` has three phases called in strict per-frame order: `Refresh` (private texture, returns bool to gate compositing), `Composing` (blit to renderer output), `Render` (enqueue draw calls). Renderers and steps are string-keyed `Type` singletons in `GameHost`, instantiated on demand via `Activator.CreateInstance`. MonoGame adds `IRendererMonoGame` (per-renderer `LocalSpriteBatch`, `MonoGameBlendState`).
-
-**Team implications:** New rendering features should be new `IRenderStep` implementations. Steps must write to `_backingTexture` only in `Composing`. `SortOrder` values in `Constants.RenderStepSortValues` are reserved — custom steps should use gaps (15–49, 51–59). Gaff: `IRendererMonoGame.LocalSpriteBatch` is created once per renderer instance — dispose it properly.
-
----
-
-## 2026-02-25 — CellSurface / ScreenSurface Architecture Document
-
-**Author:** Deckard | **Status:** Record / FYI
-
-Full architecture document at `docs/architecture-surfaces.md`. Key decisions: `CellSurface` is a pure data object with zero rendering dependencies — never add rendering code there. All cell mutation is extension methods on `ISurface` in `CellSurfaceEditor` (`ICellSurface.Editor.cs`). `ISurface` (single property: `ICellSurface Surface { get; }`) is the shim threading extension methods through composite types. `ScreenSurface.Surface` is a settable reference — surfaces can be shared; use `QuietSurfaceHandling = true` on secondary consumers. `Position` is in cell units by default; `UsePixelPositioning = true` switches to raw pixels.
-
----
-
-## 2026-02-25 — Controls System Architecture Document
-
-**Author:** Deckard | **Status:** Informational
-
-Full architecture document at `docs/architecture-controls.md`. Controls live in `SadConsole/UI/` via `IComponent` — no special surface subclass required. `ControlBase.UpdateAndRedraw` is abstract; each control self-paints into its own `ICellSurface`. `ControlHost` manages focus (`FocusedControl` ↔ `IsFocused`), tab order (`TabIndex` + `ReOrderControls`), mouse capture, reverse-order hit testing, and injects `ControlHostRenderStep` (sort 80). Theme resolution: control override → host `ThemeColors` → `Colors.Default`. `IsMouseButtonStateClean` guard prevents spurious clicks.
-
-**Team implications:** Roy — controls are fully above core via `IComponent`. Pris — dirty-then-repaint and state-priority appearance lookup are the canonical patterns. Gaff — `ControlHostRenderStep` is the only controls code in host projects. Rachael — test via `ControlsConsole` + `ProcessMouse`/`ProcessKeyboard`.
-
----
-
-## 2026-02-25 — Test Coverage Gaps Analysis
-
-**Author:** Rachael | **Status:** Informational — action items for Roy, Pris, Deckard
-
-Test suite is significantly under-coverage (~106 unit tests, 31 benchmarks across hundreds of public classes). Full report at `docs/test-coverage-gaps.md`.
-
-**Covered (reasonably):** `CellSurface` operations, `ScreenObject` child tree, `Extended.Table`, basic serialization round-trips.
-
-**Not covered at all:** `ColoredString` parser + all 10+ `ParseCommand*` types (highest risk), all 20+ UI controls, effects system, `Cursor` component, input subsystem, ANSI processing, file readers, `Algorithms.cs`, `LayeredScreenSurface`, `Instructions` system, all host implementations.
-
-**Action items:** Pris — add tests for TextBox, ListBox, ScrollBar (high regression risk). Roy — add tests for `Cursor` and `ColoredString` parser before any changes. Deckard — coverage is ~5–10%; no CI gate exists; discuss whether to add a minimum threshold. Rachael — will write `ColoredString.Parse.cs` and `Cursor` tests next cycle.
-
----
-
 ## 2026-02-25 — architecture-surfaces.md Has Interface Stub Errors
 
 **Author:** Holden | **Status:** Flag for Deckard — corrections required
@@ -157,6 +77,8 @@ Holden reviewed `docs/architecture-surfaces.md` against source. Document is broa
 
 ---
 
+
+---
 ## 2026-03-04 — User Directive: ANSI Parser Overhaul Scope
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
@@ -181,6 +103,8 @@ Overhaul the ANSI parser (SadConsole/Ansi/) to support the cterm.adoc spec.
 
 ---
 
+
+---
 ## 2026-03-04 — User Directive: Terminal Namespace with Standalone SadConsole.Terminal
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
@@ -191,6 +115,8 @@ Overhaul the ANSI parser (SadConsole/Ansi/) to support the cterm.adoc spec.
 
 ---
 
+
+---
 ## 2026-03-04 — User Directive: Terminal.Parser Handler Callback Pattern
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
@@ -199,6 +125,8 @@ Terminal.Parser uses the handler callback pattern. Parser calls methods on an `I
 
 ---
 
+
+---
 ## 2026-03-04 — Terminal.Parser Test Contract (WI-0.2)
 
 **Author:** Rachael (Tester) | **Date:** 2026-03-04 | **Status:** Complete
@@ -229,6 +157,8 @@ public interface ITerminalHandler
 
 ---
 
+
+---
 ## 2026-03-04 — Terminal Parser Phase 0 Implemented
 
 **Author:** Roy (Core Dev) | **Date:** 2026-03-04 | **Status:** Complete
@@ -253,6 +183,8 @@ Implemented `SadConsole.Terminal.ITerminalHandler` and the ECMA-48 `Parser` stat
 
 ---
 
+
+---
 ## 2026-03-04 — User Directive: Parser Encoding API
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
@@ -261,6 +193,8 @@ Future enhancement: Replace Parser's `ParserEncoding` enum with accepting a `Sys
 
 ---
 
+
+---
 ## 2026-03-04 — User Directive: Auto-Grow Writer & Measurer
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-04 | **Status:** Record
@@ -275,6 +209,8 @@ Two mechanisms for handling ANSI content taller than the surface:
 
 ---
 
+
+---
 ## 2026-03-06 — Terminal Writer — Phases 5, 6, and 8 Implemented
 
 **Author:** Roy (Core Dev) | **Date:** 2026-03-06 | **Status:** Complete
@@ -325,6 +261,8 @@ Implemented three phase groups in `SadConsole/Terminal/Writer.cs` and `SadConsol
 
 ---
 
+
+---
 ## 2026-03-06 — Phase 2 Test Contracts (Phases 5, 6, 8)
 
 **Author:** Rachael (Tester) | **Date:** 2026-03-06 | **Status:** Complete
@@ -361,6 +299,8 @@ Wrote 58 contract-defining tests in `Tests/SadConsole.Tests/TerminalWriterPhase2
 
 ---
 
+
+---
 ## 2026-03-06 — Terminal Writer — Phases 3, 9, and 10 Complete
 
 **Author:** Roy (Core Dev) | **Date:** 2026-03-06 | **Status:** Complete
@@ -392,6 +332,8 @@ Fixed off-by-one in pre-written `Ed1_EraseStartToCursor_ClearsFromStartToCursor`
 
 ---
 
+
+---
 ## 2026-03-06 — Terminal Writer Phase 3/9/10 Test Suite Complete
 
 **Author:** Rachael (Tester) | **Date:** 2026-03-06 | **Status:** Complete
@@ -438,6 +380,8 @@ Wrote 48 contract-defining tests in `Tests/SadConsole.Tests/TerminalWriterPhase3
 
 ---
 
+
+---
 ## 2026-03-06 — Terminal Overhaul — All 10 Phases Complete
 
 **Status:** ✅ **MILESTONE COMPLETE**
@@ -456,6 +400,8 @@ All 10 Terminal phases have been implemented, tested, and integrated:
 
 ---
 
+
+---
 ## 2026-03-07T18:59Z — User Directive: Terminal Writer Architecture
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
@@ -467,6 +413,8 @@ All 10 Terminal phases have been implemented, tested, and integrated:
 
 ---
 
+
+---
 ## 2026-03-07T19:44Z — User Directive: KeyboardEncoder Standalone Class
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
@@ -477,6 +425,8 @@ KeyboardEncoder should be a standalone class in the SadConsole.Terminal namespac
 
 ---
 
+
+---
 ## 2026-03-07T22:39Z — User Directive: Terminal Cursor Rendering
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-07 | **Status:** Record
@@ -489,6 +439,8 @@ KeyboardEncoder should be a standalone class in the SadConsole.Terminal namespac
 
 ---
 
+
+---
 ## 2026-03-09T00:14Z — User Directive: TerminalConsole Inheritance
 
 **By:** Thraka (via Copilot) | **Date:** 2026-03-09 | **Status:** Record
@@ -501,6 +453,8 @@ Since TerminalConsole provides its own cursor type (TerminalCursor), it should i
 
 ---
 
+
+---
 ## 2026-03-09T00:15Z — Terminal Cursor Implementation Complete
 
 **Authors:** Roy (Core Dev), Gaff (Host Dev), Rachael (Tester) | **Date:** 2026-03-09 | **Status:** Complete
@@ -587,6 +541,8 @@ Phase 2: TerminalConsole inheritance change (ScreenSurface instead of Console) p
 
 ---
 
+
+---
 ## 2026-03-09 — BBS Client Keyboard Architecture (Option A)
 
 **Author:** Roy  
@@ -608,3 +564,52 @@ Chose **Option A**: Set TerminalConsole.UseKeyboard = false and handle keyboard 
 ### Impact
 - Validates the Phase 1-3 terminal architecture works for real remote terminal scenarios
 - Confirms KeyboardEncoder + ITerminalOutput design is sound for BBS/SSH/serial clients
+
+---
+
+### 2026-03-09T23:19Z: User directive
+**By:** Thraka (via Copilot)
+**What:** Blink timing logic should live in the TerminalCursor class itself (as data), not in the render step. The renderer should just read the blink visibility state. TerminalCursor updates its blink tick during the Update method on the component/console.
+**Why:** User request — captured for team memory. Separation of concerns: cursor is data, renderer is presentation.
+
+---
+
+# Decision: Writer.Feed(string) UTF-8 Multi-Byte Limitation
+
+**Author:** Roy (Core Dev)  
+**Date:** 2025-07-14  
+**Status:** Documented (known limitation)
+
+## Context
+
+`Writer.Feed(string)` converts the input string to UTF-8 bytes and then hands those bytes to the ANSI/VT parser one byte at a time. This works correctly for all ASCII-range characters (0x00–0x7F), which are single-byte in UTF-8.
+
+However, characters outside ASCII — including Unicode box-drawing characters like `╔` (U+2554), `═` (U+2550), `║` (U+2551), etc. — encode to multi-byte UTF-8 sequences (2–4 bytes each). Because the parser processes each byte individually without multi-byte reassembly, these sequences are interpreted as multiple separate (garbage) glyphs instead of a single character.
+
+## Impact
+
+Any call to `Writer.Feed(string)` or `TerminalConsole.Feed(string)` that includes non-ASCII Unicode characters will produce garbled output. This affects:
+
+- Application-generated UI strings (menus, borders, status messages)
+- Any scenario where host code feeds Unicode text directly into the terminal
+
+Note: ANSI escape sequences are unaffected — they use only ASCII-range bytes.
+
+## Current Workaround
+
+For box-drawing borders in application-generated menus, use ASCII-safe characters (`+`, `-`, `|`, `=`) instead of Unicode box-drawing characters. These are guaranteed single-byte in UTF-8 and render correctly through the byte-by-byte parser.
+
+## Future Fix
+
+The terminal parser should be enhanced to support UTF-8 multi-byte reassembly:
+
+1. Accumulate incoming bytes that are part of a multi-byte UTF-8 sequence (leading byte 0xC0+ followed by continuation bytes 0x80–0xBF).
+2. Once a complete sequence is assembled, decode it to a Unicode code point.
+3. Map the code point to the appropriate font glyph (or a fallback) and emit it.
+
+This would allow `Writer.Feed(string)` to handle the full Unicode range correctly, which is especially important for terminal emulation scenarios where remote hosts may send UTF-8 encoded text.
+
+
+---
+---
+
