@@ -1,5 +1,5 @@
 ﻿using System;
-using Coroutine;
+using SadConsole.Coroutine;
 using SadRogue.Primitives;
 
 namespace SadConsole.Instructions;

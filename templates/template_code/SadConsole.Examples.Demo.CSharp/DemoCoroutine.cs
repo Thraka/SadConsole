@@ -1,4 +1,4 @@
-﻿using Coroutine;
+﻿using SadConsole.Coroutine;
 using SadConsole.Components;
 
 namespace SadConsole.Examples;
@@ -28,7 +28,7 @@ internal class DemoCoroutines : IDemo
 //
 // SETUP (3 steps)
 // ────────────────
-//  1. Add "using Coroutine;" to access Wait, Event, and ActiveCoroutine.
+//  1. Add "using SadConsole.Coroutine;" to access Wait, Event, and ActiveCoroutine.
 //  2. Create a CoroutineHandlerComponent and add it to your surface:
 //
 //         var handler = new CoroutineHandlerComponent();
@@ -145,11 +145,11 @@ internal class CoroutineSurface : ScreenSurface
         _trackedCoroutines.Add(_coroutineHandler.Start(DrawBorderCoroutine(), "DrawBorder"));
 
         // 2) Type out a welcome message character by character
-        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 2,
+        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 1,
             "Hello from a coroutine! Each character",
             Color.White, 0.04), "TypeLine1"));
 
-        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 3,
+        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 2,
             "is printed with a timed yield/wait.",
             Color.LightGray, 0.04), "TypeLine2"));
 
@@ -160,10 +160,10 @@ internal class CoroutineSurface : ScreenSurface
         _trackedCoroutines.Add(_coroutineHandler.Start(SpinnerCoroutine(Surface.Width - 4, 1), "Spinner"));
 
         // 5) Countdown coroutine that fires the event when done
-        _trackedCoroutines.Add(_coroutineHandler.Start(CountdownCoroutine(2, 5, 5), "Countdown"));
+        _trackedCoroutines.Add(_coroutineHandler.Start(CountdownCoroutine(2, 4, 5), "Countdown"));
 
         // 6) Color wave effect across a row
-        _trackedCoroutines.Add(_coroutineHandler.Start(ColorWaveCoroutine(8), "ColorWave"));
+        _trackedCoroutines.Add(_coroutineHandler.Start(ColorWaveCoroutine(7), "ColorWave"));
 
         // 7) A coroutine that starts, then gets cancelled by another coroutine
         ActiveCoroutine cancelTarget = _coroutineHandler.Start(BlinkingTextCoroutine(2, 14, "I will be cancelled..."), "BlinkTarget");
@@ -257,20 +257,20 @@ internal class CoroutineSurface : ScreenSurface
     /// </summary>
     private IEnumerable<Wait> WaitForEventCoroutine()
     {
-        Surface.Print(2, 7, "Waiting for countdown event...", Color.DarkGray);
+        Surface.Print(2, 6, "Waiting for countdown event...", Color.DarkGray);
         IsDirty = true;
 
         // This coroutine suspends until the event is raised
         yield return new Wait(_textFinishedEvent);
 
-        Surface.Print(2, 7, "Event received! Continuing.   ", Color.LightGreen);
+        Surface.Print(2, 6, "Event received! Continuing.   ", Color.LightGreen);
         IsDirty = true;
 
         // Flash the message a few times
         for (int i = 0; i < 6; i++)
         {
             Color c = i % 2 == 0 ? Color.Green : Color.LightGreen;
-            Surface.Print(2, 7, "Event received! Continuing.   ", c);
+            Surface.Print(2, 6, "Event received! Continuing.   ", c);
             IsDirty = true;
             yield return new Wait(0.3);
         }

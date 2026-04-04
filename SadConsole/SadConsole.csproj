@@ -10,17 +10,9 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- GitHub publishing moved to tag-triggered workflows.
-- Added experimental RowFontSurface with per-row fonts and sizes.
-- SadFonts can load old VGA-style binary font files.
-- Added new terminal parser (SadConsole.TerminalConsole).
-- Overhauled ImGui integration; debug and raw ImGui now ship together.
-- Added SFML support for ImGui integration.
-- Fade now respects RemoveOnFinished (default true).
-- Added FadeOut and FadeIn transitions.
-- SFML upgraded to 3.x with rewritten, faster sprite batcher.
-- Converted solution files from SLN to SLNX.
-  </PackageReleaseNotes>
+- Integrated https://github.com/Ellpeck/Coroutine and removed the dependency.
+- [Breaking Change] Coroutine namespace changed to SadConsole.Coroutine.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Coroutine" Version="2.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <!--<PackageReference Include="SharpFNT" Version="2.0.0" />-->
     <PackageReference Include="TheSadRogue.Primitives" Version="1.6.0" />

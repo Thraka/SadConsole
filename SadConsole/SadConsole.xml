@@ -1534,7 +1534,7 @@
         </member>
         <member name="T:SadConsole.Components.CoroutineHandlerComponent">
             <summary>
-            An implementation of <see cref="T:Coroutine.CoroutineHandlerInstance"/> that calls <see cref="M:Coroutine.CoroutineHandlerInstance.Tick(System.TimeSpan)"/> every time <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> is called.
+            An implementation of <see cref="T:SadConsole.Coroutine.CoroutineHandlerInstance"/> that calls <see cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.TimeSpan)"/> every time <see cref="M:SadConsole.Components.IComponent.Update(SadConsole.IScreenObject,System.TimeSpan)"/> is called.
             </summary>
         </member>
         <member name="P:SadConsole.Components.CoroutineHandlerComponent.SortOrder">
@@ -3056,6 +3056,222 @@
             Returns the value "Console".
             </summary>
             <returns>The string "Console".</returns>
+        </member>
+        <member name="T:SadConsole.Coroutine.ActiveCoroutine">
+            <summary>
+            A reference to a currently running coroutine.
+            This is returned by <see cref="M:SadConsole.Coroutine.CoroutineHandler.Start(System.Collections.Generic.IEnumerator{SadConsole.Coroutine.Wait},System.String,System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.ActiveCoroutine.IsFinished">
+            <summary>
+            This property stores whether or not this active coroutine is finished.
+            A coroutine is finished if all of its waits have passed, or if it <see cref="P:SadConsole.Coroutine.ActiveCoroutine.WasCanceled"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.ActiveCoroutine.WasCanceled">
+            <summary>
+            This property stores whether or not this active coroutine was cancelled using <see cref="M:SadConsole.Coroutine.ActiveCoroutine.Cancel"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.ActiveCoroutine.TotalMoveNextTime">
+            <summary>
+            The total amount of time that <see cref="M:SadConsole.Coroutine.ActiveCoroutine.MoveNext"/> took.
+            This is the amount of time that this active coroutine took for the entirety of its "steps", or yield statements.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.ActiveCoroutine.MoveNextCount">
+            <summary>
+            The total amount of times that <see cref="M:SadConsole.Coroutine.ActiveCoroutine.MoveNext"/> was invoked.
+            This is the amount of "steps" in your coroutine, or the amount of yield statements.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.ActiveCoroutine.LastMoveNextTime">
+            <summary>
+            The amount of time that the last <see cref="M:SadConsole.Coroutine.ActiveCoroutine.MoveNext"/> took.
+            This is the amount of time that this active coroutine took for the last "step", or yield statement.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Coroutine.ActiveCoroutine.OnFinished">
+            <summary>
+            An event that gets fired when this active coroutine finishes or gets cancelled.
+            When this event is called, <see cref="P:SadConsole.Coroutine.ActiveCoroutine.IsFinished"/> is always true.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Coroutine.ActiveCoroutine.Name">
+            <summary>
+            The name of this coroutine.
+            When not specified on startup of this coroutine, the name defaults to an empty string.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Coroutine.ActiveCoroutine.Priority">
+            <summary>
+            The priority of this coroutine. The higher the priority, the earlier it is advanced compared to other coroutines that advance around the same time.
+            When not specified at startup of this coroutine, the priority defaults to 0.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Coroutine.ActiveCoroutine.Cancel">
+            <summary>
+            Cancels this coroutine, causing all subsequent <see cref="T:SadConsole.Coroutine.Wait"/>s and any code in between to be skipped.
+            </summary>
+            <returns>Whether the cancellation was successful, or this coroutine was already cancelled or finished</returns>
+        </member>
+        <member name="T:SadConsole.Coroutine.ActiveCoroutine.FinishCallback">
+            <summary>
+            A delegate method used by <see cref="E:SadConsole.Coroutine.ActiveCoroutine.OnFinished"/>.
+            </summary>
+            <param name="coroutine">The coroutine that finished</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.ActiveCoroutine.CompareTo(SadConsole.Coroutine.ActiveCoroutine)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Coroutine.CoroutineHandler">
+            <summary>
+            This class can be used for static coroutine handling of any kind.
+            Note that it uses an underlying <see cref="T:SadConsole.Coroutine.CoroutineHandlerInstance"/> object for management.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.CoroutineHandler.TickingCount">
+            <inheritdoc cref="P:SadConsole.Coroutine.CoroutineHandlerInstance.TickingCount"/>
+        </member>
+        <member name="P:SadConsole.Coroutine.CoroutineHandler.EventCount">
+            <inheritdoc cref="P:SadConsole.Coroutine.CoroutineHandlerInstance.EventCount"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.Start(System.Collections.Generic.IEnumerable{SadConsole.Coroutine.Wait},System.String,System.Int32)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Start(System.Collections.Generic.IEnumerable{SadConsole.Coroutine.Wait},System.String,System.Int32)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.Start(System.Collections.Generic.IEnumerator{SadConsole.Coroutine.Wait},System.String,System.Int32)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Start(System.Collections.Generic.IEnumerator{SadConsole.Coroutine.Wait},System.String,System.Int32)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.InvokeLater(SadConsole.Coroutine.Wait,System.Action,System.String,System.Int32)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.InvokeLater(SadConsole.Coroutine.Wait,System.Action,System.String,System.Int32)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.InvokeLater(SadConsole.Coroutine.Event,System.Action,System.String,System.Int32)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.InvokeLater(SadConsole.Coroutine.Event,System.Action,System.String,System.Int32)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.Tick(System.Double)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.Double)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.Tick(System.TimeSpan)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.TimeSpan)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.RaiseEvent(SadConsole.Coroutine.Event)">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.RaiseEvent(SadConsole.Coroutine.Event)"/>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandler.GetActiveCoroutines">
+            <inheritdoc cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.GetActiveCoroutines"/>
+        </member>
+        <member name="T:SadConsole.Coroutine.CoroutineHandlerInstance">
+            <summary>
+            An object of this class can be used to start, tick and otherwise manage active <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/>s as well as their <see cref="T:SadConsole.Coroutine.Event"/>s.
+            Note that a static implementation of this can be found in <see cref="T:SadConsole.Coroutine.CoroutineHandler"/>.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.CoroutineHandlerInstance.TickingCount">
+            <summary>
+            The amount of <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/> instances that are currently waiting for a tick (waiting for time to pass)
+            </summary>
+        </member>
+        <member name="P:SadConsole.Coroutine.CoroutineHandlerInstance.EventCount">
+            <summary>
+            The amount of <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/> instances that are currently waiting for an <see cref="T:SadConsole.Coroutine.Event"/>
+            </summary>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.Start(System.Collections.Generic.IEnumerable{SadConsole.Coroutine.Wait},System.String,System.Int32)">
+            <summary>
+            Starts the given coroutine, returning a <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/> object for management.
+            Note that this calls <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> to get the enumerator.
+            </summary>
+            <param name="coroutine">The coroutine to start</param>
+            <param name="name">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Name"/> that this coroutine should have. Defaults to an empty string.</param>
+            <param name="priority">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Priority"/> that this coroutine should have. The higher the priority, the earlier it is advanced. Defaults to 0.</param>
+            <returns>An active coroutine object representing this coroutine</returns>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.Start(System.Collections.Generic.IEnumerator{SadConsole.Coroutine.Wait},System.String,System.Int32)">
+            <summary>
+            Starts the given coroutine, returning a <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/> object for management.
+            </summary>
+            <param name="coroutine">The coroutine to start</param>
+            <param name="name">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Name"/> that this coroutine should have. Defaults to an empty string.</param>
+            <param name="priority">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Priority"/> that this coroutine should have. The higher the priority, the earlier it is advanced compared to other coroutines that advance around the same time. Defaults to 0.</param>
+            <returns>An active coroutine object representing this coroutine</returns>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.InvokeLater(SadConsole.Coroutine.Wait,System.Action,System.String,System.Int32)">
+            <summary>
+            Causes the given action to be invoked after the given <see cref="T:SadConsole.Coroutine.Wait"/>.
+            This is equivalent to a coroutine that waits for the given wait and then executes the given <see cref="T:System.Action"/>.
+            </summary>
+            <param name="wait">The wait to wait for</param>
+            <param name="action">The action to execute after waiting</param>
+            <param name="name">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Name"/> that the underlying coroutine should have. Defaults to an empty string.</param>
+            <param name="priority">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Priority"/> that the underlying coroutine should have. The higher the priority, the earlier it is advanced compared to other coroutines that advance around the same time. Defaults to 0.</param>
+            <returns>An active coroutine object representing this coroutine</returns>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.InvokeLater(SadConsole.Coroutine.Event,System.Action,System.String,System.Int32)">
+            <summary>
+            Causes the given action to be invoked after the given <see cref="T:SadConsole.Coroutine.Event"/>.
+            This is equivalent to a coroutine that waits for the given wait and then executes the given <see cref="T:System.Action"/>.
+            </summary>
+            <param name="evt">The event to wait for</param>
+            <param name="action">The action to execute after waiting</param>
+            <param name="name">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Name"/> that the underlying coroutine should have. Defaults to an empty string.</param>
+            <param name="priority">The <see cref="F:SadConsole.Coroutine.ActiveCoroutine.Priority"/> that the underlying coroutine should have. The higher the priority, the earlier it is advanced compared to other coroutines that advance around the same time. Defaults to 0.</param>
+            <returns>An active coroutine object representing this coroutine</returns>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.Double)">
+            <summary>
+            Ticks this coroutine handler, causing all time-based <see cref="T:SadConsole.Coroutine.Wait"/>s to be ticked.
+            </summary>
+            <param name="deltaSeconds">The amount of seconds that have passed since the last time this method was invoked</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.TimeSpan)">
+            <summary>
+            Ticks this coroutine handler, causing all time-based <see cref="T:SadConsole.Coroutine.Wait"/>s to be ticked.
+            This is a convenience method that calls <see cref="M:SadConsole.Coroutine.CoroutineHandlerInstance.Tick(System.Double)"/>, but accepts a <see cref="T:System.TimeSpan"/> instead of an amount of seconds.
+            </summary>
+            <param name="delta">The time that has passed since the last time this method was invoked</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.RaiseEvent(SadConsole.Coroutine.Event)">
+            <summary>
+            Raises the given event, causing all event-based <see cref="T:SadConsole.Coroutine.Wait"/>s to be updated.
+            </summary>
+            <param name="evt">The event to raise</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.CoroutineHandlerInstance.GetActiveCoroutines">
+            <summary>
+            Returns a list of all currently active <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/> objects under this handler.
+            </summary>
+            <returns>All active coroutines</returns>
+        </member>
+        <member name="T:SadConsole.Coroutine.Event">
+            <summary>
+            An event is any kind of action that a <see cref="T:SadConsole.Coroutine.Wait"/> can listen for.
+            Note that, by default, events don't have a custom <see cref="M:System.Object.Equals(System.Object)"/> implementation. 
+            </summary>
+        </member>
+        <member name="T:SadConsole.Coroutine.Wait">
+            <summary>
+            Represents either an amount of time, or an <see cref="T:SadConsole.Coroutine.Event"/> that is being waited for by an <see cref="T:SadConsole.Coroutine.ActiveCoroutine"/>.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Coroutine.Wait.#ctor(SadConsole.Coroutine.Event)">
+            <summary>
+            Creates a new wait that waits for the given <see cref="T:SadConsole.Coroutine.Event"/>.
+            </summary>
+            <param name="evt">The event to wait for</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.Wait.#ctor(System.Double)">
+            <summary>
+            Creates a new wait that waits for the given amount of seconds.
+            </summary>
+            <param name="seconds">The amount of seconds to wait for</param>
+        </member>
+        <member name="M:SadConsole.Coroutine.Wait.#ctor(System.TimeSpan)">
+            <summary>
+            Creates a new wait that waits for the given <see cref="T:System.TimeSpan"/>.
+            Note that the exact value may be slightly different, since waits operate in <see cref="P:System.TimeSpan.TotalSeconds"/> rather than ticks.
+            </summary>
+            <param name="time">The time span to wait for</param>
         </member>
         <member name="T:SadConsole.Debug.Screen">
             <summary>
@@ -11945,6 +12161,14 @@
             The keyboard encoder that converts SadConsole key events into ANSI escape sequences.
             </summary>
         </member>
+        <member name="P:SadConsole.TerminalConsole.Mode">
+            <summary>
+            Gets or sets the terminal emulation behavior profile for both the writer and keyboard encoder.
+            Setting this property updates both <see cref="P:SadConsole.TerminalConsole.Writer"/>.<see cref="P:SadConsole.Terminal.Writer.Mode"/> and
+            <see cref="P:SadConsole.TerminalConsole.KeyboardEncoder"/>.<see cref="P:SadConsole.Terminal.KeyboardEncoder.Mode"/> simultaneously.
+            Default is <see cref="F:SadConsole.Terminal.TerminalMode.CTerm"/>.
+            </summary>
+        </member>
         <member name="P:SadConsole.TerminalConsole.Output">
             <summary>
             Gets or sets the terminal output channel for interactive mode.
@@ -12106,6 +12330,12 @@
             <summary>
             When <see langword="true"/>, Backspace sends <c>0x08</c> (BS) instead of <c>0x7F</c> (DEL).
             Default is <see langword="false"/> (modern terminal behavior: Backspace = DEL).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.KeyboardEncoder.Mode">
+            <summary>
+            The terminal emulation behavior profile. Default is <see cref="F:SadConsole.Terminal.TerminalMode.CTerm"/>.
+            Changing this property adjusts which escape sequences are emitted for navigation keys.
             </summary>
         </member>
         <member name="M:SadConsole.Terminal.KeyboardEncoder.Encode(SadConsole.Input.Keyboard)">
@@ -12868,6 +13098,23 @@
             Sets the cursor background color.
             </summary>
         </member>
+        <member name="T:SadConsole.Terminal.TerminalMode">
+            <summary>
+            Selects the terminal emulation behavior profile.
+            </summary>
+        </member>
+        <member name="F:SadConsole.Terminal.TerminalMode.CTerm">
+            <summary>CTerm/SyncTERM-compatible with full extensions. Default.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.TerminalMode.AnsiBbs">
+            <summary>ANSI-BBS compatible (IBM CP437 C0 glyphs, BBS key sequences).</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.TerminalMode.VT102">
+            <summary>Strict VT102 — no BBS or CTerm extensions.</summary>
+        </member>
+        <member name="F:SadConsole.Terminal.TerminalMode.XTerm">
+            <summary>XTerm conventions.</summary>
+        </member>
         <member name="T:SadConsole.Terminal.CharacterEncoding">
             <summary>
             Determines how the writer maps incoming characters to font glyphs.
@@ -12934,6 +13181,13 @@
         <member name="P:SadConsole.Terminal.Writer.LineFeeds">
             <summary>
             How LF (0x0A) is interpreted. Default is <see cref="F:SadConsole.Terminal.LineFeedMode.Implicit"/> (LF moves to column 0 and down).
+            </summary>
+        </member>
+        <member name="P:SadConsole.Terminal.Writer.Mode">
+            <summary>
+            The terminal emulation behavior profile. Default is <see cref="F:SadConsole.Terminal.TerminalMode.CTerm"/>.
+            Changing this property adjusts C0 control-code rendering and CSI J cursor-home behavior
+            without altering the underlying parser.
             </summary>
         </member>
         <member name="P:SadConsole.Terminal.Writer.AutoGrow">
@@ -13024,6 +13278,12 @@
             <summary>
             Gets a parameter value, returning <paramref name="defaultValue"/> when the
             parameter is missing or zero (ECMA-48: zero means "use default").
+            </summary>
+        </member>
+        <member name="M:SadConsole.Terminal.Writer.IsAnsiBbsGlyphByte(System.Byte)">
+            <summary>
+            Returns true for C0 bytes that carry IBM CP437 glyph assignments in ANSI-BBS mode.
+            0x0C (FF) is intentionally excluded — it is a clear-screen command, not a glyph.
             </summary>
         </member>
         <member name="F:SadConsole.Terminal.Writer.Cp437Table">
@@ -17457,4 +17717,6 @@
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
+</doc>
+mbers>
 </doc>
