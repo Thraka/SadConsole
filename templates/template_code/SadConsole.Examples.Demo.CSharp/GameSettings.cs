@@ -67,8 +67,9 @@ static class GameSettings
             new DemoCustomCellsRenderer(),
             new DemoShader(),
 
-            //"",
-            //"Advanced".CreateColored(Color.OrangeRed),
+            "",
+            "Advanced".CreateColored(Color.OrangeRed),
+            new DemoCoroutines()
             //new DemoFontManipulation(),
         };
 
