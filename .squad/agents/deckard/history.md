@@ -103,3 +103,18 @@ Thraka requested an extensible addin system for the Editor. Designed complete ar
 ### Pattern Note
 
 Addins are fully trusted extensions with access to Editor's full internal state, enabling tightly integrated custom document types and tools. No need for sandboxing or capability-based contracts. Parallels: VS Code extensions, Sublime Text plugins.
+### Connection Layer Patterns (2025-07-17)
+
+**Existing sample is the pattern prototype:** `SadBBSClient/TelnetClient.cs` already implements the exact threading model (background read thread + `ConcurrentQueue` + game-thread `DrainReceived`) that SSH and any future connection type should follow. The `ITerminalConnection` interface was extracted from this proven pattern, not invented from scratch.
+
+**Interfaces in core, implementations in Extended:** `ITerminalConnection` belongs in `SadConsole/Terminal/` (zero dependencies, pure contract). `SshConnection` belongs in `SadConsole.Extended` (carries the `SSH.NET` NuGet dep). This follows the established core/host separation philosophy — core defines contracts, optional packages provide implementations.
+
+**`ITerminalConnection` extends `ITerminalOutput`:** This was the key design insight. Since connections need `Write(byte[])` and `Write(string)` to send data to the remote host, and `ITerminalOutput` already defines exactly those methods (for DA/DSR responses), having `ITerminalConnection : ITerminalOutput` means a connection can be assigned directly to `TerminalConsole.Output` with zero adapters. The existing TelnetClient already implements `ITerminalOutput` for this exact reason.
+
+**TerminalModeHelper is shared infrastructure:** The `ToPtyType()` mapping serves both SSH (pty-req terminal type) and Telnet (TTYPE negotiation). Single source of truth prevents the mapping from drifting between protocols.
+
+**Window resize is opt-in, not automatic:** `TerminalConsole` doesn't auto-notify connections on resize. BBS terminals are often fixed-size, and developers need control over debouncing. The `SendWindowChange` method is available when they want it.
+
+### Directives (2025-07-17)
+
+**NuGet dependencies never in core (Thraka directive):** Any feature requiring an external NuGet package MUST live in `SadConsole.Extended`, not `SadConsole`. Core stays dependency-light. Extended bolts on via project reference. This governs SSH (`SSH.NET`), and any future connection protocol implementations.
