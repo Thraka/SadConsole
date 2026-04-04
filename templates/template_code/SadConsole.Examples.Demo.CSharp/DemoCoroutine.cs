@@ -99,6 +99,13 @@ internal class CoroutineSurface : ScreenSurface
 {
     private readonly CoroutineHandlerComponent _coroutineHandler;
     private readonly Event _textFinishedEvent = new();
+    private readonly List<ActiveCoroutine> _trackedCoroutines = [];
+
+    // Status panel dimensions and position (bottom-right corner)
+    private const int PanelWidth = 28;
+    private const int PanelHeight = 14;
+    private int PanelX => Surface.Width - PanelWidth - 1;
+    private int PanelY => Surface.Height - PanelHeight - 1;
 
     // Glyphs used for the spinner animation
     private static readonly int[] SpinnerFrames = ['|', '/', '-', '\\'];
@@ -132,36 +139,42 @@ internal class CoroutineSurface : ScreenSurface
 
     private void StartAllCoroutines()
     {
+        _trackedCoroutines.Clear();
+
         // 1) Animated border drawn over time
-        _coroutineHandler.Start(DrawBorderCoroutine(), "DrawBorder");
+        _trackedCoroutines.Add(_coroutineHandler.Start(DrawBorderCoroutine(), "DrawBorder"));
 
         // 2) Type out a welcome message character by character
-        _coroutineHandler.Start(TypeTextCoroutine(2, 2,
+        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 2,
             "Hello from a coroutine! Each character",
-            Color.White, 0.04), "TypeLine1");
+            Color.White, 0.04), "TypeLine1"));
 
-        _coroutineHandler.Start(TypeTextCoroutine(2, 3,
+        _trackedCoroutines.Add(_coroutineHandler.Start(TypeTextCoroutine(2, 3,
             "is printed with a timed yield/wait.",
-            Color.LightGray, 0.04), "TypeLine2");
+            Color.LightGray, 0.04), "TypeLine2"));
 
         // 3) A second coroutine waits for the text event, then reacts
-        _coroutineHandler.Start(WaitForEventCoroutine(), "WaitForEvent");
+        _trackedCoroutines.Add(_coroutineHandler.Start(WaitForEventCoroutine(), "WaitForEvent"));
 
         // 4) Spinner that runs concurrently with everything else
-        _coroutineHandler.Start(SpinnerCoroutine(Surface.Width - 4, 1), "Spinner");
+        _trackedCoroutines.Add(_coroutineHandler.Start(SpinnerCoroutine(Surface.Width - 4, 1), "Spinner"));
 
         // 5) Countdown coroutine that fires the event when done
-        _coroutineHandler.Start(CountdownCoroutine(2, 5, 5), "Countdown");
+        _trackedCoroutines.Add(_coroutineHandler.Start(CountdownCoroutine(2, 5, 5), "Countdown"));
 
         // 6) Color wave effect across a row
-        _coroutineHandler.Start(ColorWaveCoroutine(8), "ColorWave");
+        _trackedCoroutines.Add(_coroutineHandler.Start(ColorWaveCoroutine(8), "ColorWave"));
 
         // 7) A coroutine that starts, then gets cancelled by another coroutine
         ActiveCoroutine cancelTarget = _coroutineHandler.Start(BlinkingTextCoroutine(2, 14, "I will be cancelled..."), "BlinkTarget");
-        _coroutineHandler.Start(CancelAfterDelayCoroutine(cancelTarget, 3.0, 2, 15), "CancelDemo");
+        _trackedCoroutines.Add(cancelTarget);
+        _trackedCoroutines.Add(_coroutineHandler.Start(CancelAfterDelayCoroutine(cancelTarget, 3.0, 2, 15), "CancelDemo"));
 
         // 8) Sequential coroutine: waits for border to finish, then draws a message
-        _coroutineHandler.Start(SequentialCoroutine(), "Sequential");
+        _trackedCoroutines.Add(_coroutineHandler.Start(SequentialCoroutine(), "Sequential"));
+
+        // Status panel coroutine (not tracked — it draws the panel itself)
+        _coroutineHandler.Start(StatusPanelCoroutine(), "StatusPanel");
     }
 
     /// <summary>
@@ -355,7 +368,7 @@ internal class CoroutineSurface : ScreenSurface
         // Wait enough time for the border to complete
         yield return new Wait(2.0);
         string message = ">> All coroutines running concurrently! <<";
-        int x = (Surface.Width - message.Length) / 2;
+        int x = 4;
         int y = Surface.Height - 3;
 
         // Reveal message with a sweep effect
@@ -364,6 +377,88 @@ internal class CoroutineSurface : ScreenSurface
             Surface.SetGlyph(x + i, y, message[i], Color.White, Color.DarkBlue);
             IsDirty = true;
             yield return new Wait(0.02);
+        }
+    }
+
+    /// <summary>
+    /// Continuously redraws a status panel in the bottom-right corner showing
+    /// each tracked coroutine's name and current state (Running/Done/Cancelled).
+    /// </summary>
+    private IEnumerable<Wait> StatusPanelCoroutine()
+    {
+        int px = PanelX;
+        int py = PanelY;
+        int innerW = PanelWidth - 2;
+
+        while (true)
+        {
+            // Draw panel border
+            Surface.SetGlyph(px, py, 218, Color.DarkCyan);                    // ┌
+            Surface.SetGlyph(px + PanelWidth - 1, py, 191, Color.DarkCyan);   // ┐
+            Surface.SetGlyph(px, py + PanelHeight - 1, 192, Color.DarkCyan);  // └
+            Surface.SetGlyph(px + PanelWidth - 1, py + PanelHeight - 1, 217, Color.DarkCyan); // ┘
+
+            for (int i = 1; i < PanelWidth - 1; i++)
+            {
+                Surface.SetGlyph(px + i, py, 196, Color.DarkCyan);                    // ─ top
+                Surface.SetGlyph(px + i, py + PanelHeight - 1, 196, Color.DarkCyan);   // ─ bottom
+            }
+            for (int i = 1; i < PanelHeight - 1; i++)
+            {
+                Surface.SetGlyph(px, py + i, 179, Color.DarkCyan);                    // │ left
+                Surface.SetGlyph(px + PanelWidth - 1, py + i, 179, Color.DarkCyan);   // │ right
+            }
+
+            // Header row
+            string header = " COROUTINE STATUS ";
+            Surface.Print(px + (PanelWidth - header.Length) / 2, py, header, Color.White, Color.DarkCyan);
+
+            // Separator line under header
+            for (int i = 1; i < PanelWidth - 1; i++)
+                Surface.SetGlyph(px + i, py + 1, 196, Color.DarkCyan); // ─
+            Surface.SetGlyph(px, py + 1, 195, Color.DarkCyan);                    // ├
+            Surface.SetGlyph(px + PanelWidth - 1, py + 1, 180, Color.DarkCyan);   // ┤
+
+            // Draw each tracked coroutine's status
+            for (int i = 0; i < _trackedCoroutines.Count; i++)
+            {
+                ActiveCoroutine co = _trackedCoroutines[i];
+                int row = py + 2 + i;
+
+                // Clear the inner row
+                Surface.Print(px + 1, row, new string(' ', innerW));
+
+                // Determine status text and color
+                string status;
+                Color statusColor;
+
+                if (co.WasCanceled)
+                {
+                    status = "CANCEL";
+                    statusColor = Color.Red;
+                }
+                else if (co.IsFinished)
+                {
+                    status = "DONE";
+                    statusColor = Color.Green;
+                }
+                else
+                {
+                    status = "RUN";
+                    statusColor = Color.Yellow;
+                }
+
+                // Print name (left-aligned) and status (right-aligned)
+                string name = co.Name.Length > innerW - 8
+                    ? co.Name[..(innerW - 8)]
+                    : co.Name;
+
+                Surface.Print(px + 2, row, name, Color.LightGray);
+                Surface.Print(px + PanelWidth - 2 - status.Length, row, status, statusColor);
+            }
+
+            IsDirty = true;
+            yield return new Wait(0.2);
         }
     }
 }
