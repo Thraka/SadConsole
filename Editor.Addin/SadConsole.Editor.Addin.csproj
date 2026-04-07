@@ -27,12 +27,8 @@
       <EditorAddinsDir>$(EditorBinDir)addins\</EditorAddinsDir>
     </PropertyGroup>
     <MakeDir Directories="$(EditorAddinsDir)" Condition="!Exists('$(EditorAddinsDir)')" />
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll"
-          DestinationFolder="$(EditorAddinsDir)"
-          Condition="Exists('$(OutputPath)$(AssemblyName).dll')" />
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb"
-          DestinationFolder="$(EditorAddinsDir)"
-          Condition="Exists('$(OutputPath)$(AssemblyName).pdb')" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(EditorAddinsDir)" Condition="Exists('$(OutputPath)$(AssemblyName).dll')" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(EditorAddinsDir)" Condition="Exists('$(OutputPath)$(AssemblyName).pdb')" />
   </Target>
 
 </Project>
