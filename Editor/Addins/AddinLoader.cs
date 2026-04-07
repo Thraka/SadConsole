@@ -24,7 +24,9 @@ public static class AddinLoader
             return;
         }
 
-        // Phase 1: Load assemblies and instantiate IEditorAddin implementations
+        // Phase 1: Discover all addin attributes across every assembly
+        List<(int Order, Type AddinType, string DllPath)> discovered = [];
+
         foreach (string dllPath in Directory.GetFiles(addinsDir, "*.dll"))
         {
             try
@@ -32,15 +34,8 @@ public static class AddinLoader
                 Assembly assembly = AssemblyLoadContext.Default
                     .LoadFromAssemblyPath(Path.GetFullPath(dllPath));
 
-                var attr = assembly.GetCustomAttribute<EditorAddinAttribute>();
-                if (attr is null) continue;
-
-                var addin = (IEditorAddin)Activator.CreateInstance(attr.AddinType)!;
-                addin.Initialize();
-                _loadedAddins.Add(addin);
-
-                System.Diagnostics.Debug.WriteLine(
-                    $"[Addin] Loaded: {addin.Name} v{addin.Version} by {addin.Author}");
+                foreach (var attr in assembly.GetCustomAttributes<EditorAddinAttribute>())
+                    discovered.Add((attr.Order, attr.AddinType, dllPath));
             }
             catch (Exception ex)
             {
@@ -49,7 +44,28 @@ public static class AddinLoader
             }
         }
 
-        // Phase 2: Register contributions into editor state
+        // Phase 2: Instantiate and initialize in Order (lower first)
+        discovered.Sort((a, b) => a.Order.CompareTo(b.Order));
+
+        foreach (var (order, addinType, dllPath) in discovered)
+        {
+            try
+            {
+                var addin = (IEditorAddin)Activator.CreateInstance(addinType)!;
+                addin.Initialize();
+                _loadedAddins.Add(addin);
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Addin] Loaded (order {order}): {addin.Name} v{addin.Version} by {addin.Author}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[Addin] Failed to initialize {addinType.FullName} from {Path.GetFileName(dllPath)}: {ex.Message}");
+            }
+        }
+
+        // Phase 3: Register contributions into editor state
         foreach (var addin in _loadedAddins)
         {
             try
