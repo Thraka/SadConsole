@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 using Hexa.NET.ImGui;
 using SadConsole.Editor.Documents;
 using SadConsole.Editor.FileHandlers;
-using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiSystem.Rendering;
 using SadRogue.Primitives;
 
@@ -165,7 +161,7 @@ public partial class SlicedDocument: Document
                 new Rectangle(LeftWidth + CenterWidth, TopHeight + CenterHeight, RightWidth, BottomHeight)
             );
 
-            return new SlicedDocument(surface, border) { Title = Name };
+            return new SlicedDocument(border) { Title = Name };
         }
 
         public void ResetBuilder()
@@ -182,7 +178,7 @@ public partial class SlicedDocument: Document
         }
 
         public IEnumerable<IFileHandler> GetLoadHandlers() =>
-            [];
+            [new SlicedDocumentFile()];
 
         public override string ToString() =>
             Title;
