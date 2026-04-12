@@ -85,8 +85,10 @@ public class GuiTopBar : ImGuiObjectBase
 
                 ImGui.Separator();
 
-                if (ImGui.Checkbox("Fullscreen"u8, ref Core.Settings.UseFullscreen))
+                if (ImGui.MenuItem("Fullscreen"u8, Core.Settings.UseFullscreen))
                 {
+                    Core.Settings.UseFullscreen = !Core.Settings.UseFullscreen;
+
                     if (Core.Settings.UseFullscreen)
                         Game.Instance.ToggleFullScreen();
                     else

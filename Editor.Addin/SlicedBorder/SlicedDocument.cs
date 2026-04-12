@@ -17,9 +17,15 @@ namespace SadConsole.Editor.Addin.SlicedBorder;
 
 public partial class SlicedDocument : Document
 {
+    public override string DocumentIcon => "\U000f00ce";
+
     public SadConsole.SlicedBorder Border { get; set; }
 
     private Builder? _resizeBuilder;
+
+    private ScreenSurface? _previewSquare;
+    private ScreenSurface? _previewWide;
+    private ScreenSurface? _previewTall;
 
     public SlicedDocument(SadConsole.SlicedBorder border)
     {
@@ -163,12 +169,45 @@ public partial class SlicedDocument : Document
             //ComposeVisual();
         }
 
+        ImGui.Separator();
+
+        if (ImGui.Button("Preview"u8))
+        {
+            CleanupPreviewSurfaces(renderer);
+            CreatePreviewSurfaces();
+            ImGui.OpenPopup("Preview");
+        }
+
+        // Show the font size popup
         if (FontSizePopup.Show("editorfontsize_select", EditingSurfaceFont, ref EditorFontSize))
         {
             // Force overlay to update and match surface
             EditingSurface.IsDirty = true;
             VisualTool.IsDirty = true;
         }
+
+        // Show the preview popup
+        ImGuiSC.CenterNextWindow();
+
+        if (ImGui.BeginPopupModal("Preview"u8, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize))
+        {
+            ImGui.BeginGroup();
+            DrawPreviewImage(renderer, _previewSquare);
+            DrawPreviewImage(renderer, _previewWide);
+            ImGui.EndGroup();
+
+            ImGui.SameLine();
+            DrawPreviewImage(renderer, _previewTall);
+
+            ImGui.Separator();
+
+            if (ImGui.Button("Close"u8))
+                ImGui.CloseCurrentPopup();
+
+            ImGui.EndPopup();
+        }
+        else
+            CleanupPreviewSurfaces(renderer);
     }
 
     public override void ImGuiDrawSurfaceTextureAfter(ImGuiRenderer renderer, Point hoveredCellPosition, bool isHovered, bool isActive)
@@ -285,6 +324,70 @@ public partial class SlicedDocument : Document
                     source[srcIdx].CopyAppearanceTo(dest[dstIdx]);
                 }
             }
+        }
+    }
+
+    private void CreatePreviewSurfaces()
+    {
+        int leftW = Border.TopLeft.Width;
+        int centerW = Border.Top.Width;
+        int rightW = Border.TopRight.Width;
+        int topH = Border.TopLeft.Height;
+        int centerH = Border.Left.Height;
+        int bottomH = Border.BottomLeft.Height;
+
+        _previewSquare = CreatePreviewSurface(leftW + 6 + rightW, topH + centerH + 6 + bottomH);
+        _previewWide = CreatePreviewSurface(leftW + centerW + 12 + rightW, topH + centerH + 6 + bottomH);
+        _previewTall = CreatePreviewSurface(leftW + centerW + 6 + rightW, topH + centerH + 12 + bottomH);
+    }
+
+    private ScreenSurface CreatePreviewSurface(int width, int height)
+    {
+        CellSurface cellSurface = new(width, height);
+        cellSurface.DefaultForeground = Border.Surface.DefaultForeground;
+        cellSurface.DefaultBackground = Border.Surface.DefaultBackground;
+        cellSurface.Clear();
+        Border.Draw(cellSurface, new Rectangle(0, 0, width, height));
+
+        ScreenSurface screen = new(cellSurface);
+        screen.Font = EditingSurfaceFont;
+        screen.FontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
+        screen.IsDirty = true;
+        screen.Update(TimeSpan.Zero);
+        screen.ForceRendererRefresh = true;
+        screen.Render(TimeSpan.Zero);
+
+        return screen;
+    }
+
+    private void DrawPreviewImage(ImGuiRenderer renderer, ScreenSurface? surface)
+    {
+        if (surface?.Renderer?.Output is not Host.GameTexture gameTexture) return;
+
+        ImTextureRef texRef = renderer.BindTexture(gameTexture.Texture);
+        ImGui.Image(texRef, new Vector2(surface.WidthPixels, surface.HeightPixels));
+    }
+
+    private void CleanupPreviewSurfaces(ImGuiRenderer renderer)
+    {
+        if (_previewSquare != null)
+            UnbindPreview(renderer, _previewSquare);
+        if (_previewWide != null)
+            UnbindPreview(renderer, _previewWide);
+        if (_previewTall != null)
+            UnbindPreview(renderer, _previewTall);
+
+        _previewSquare = null;
+        _previewWide = null;
+        _previewTall = null;
+    }
+
+    private static void UnbindPreview(ImGuiRenderer renderer, ScreenSurface? surface)
+    {
+        if (surface?.Renderer?.Output is Host.GameTexture gameTexture)
+        {
+            renderer.UnbindTexture(gameTexture.Texture);
+            surface.Dispose();
         }
     }
 

@@ -653,6 +653,23 @@
             <param name="time">The time each glyph (one after the other) takes to print then fade.</param>
             <param name="effect">Optional effect to use. If <see langword="null"/> is passed, uses an instant fade.</param>
         </member>
+        <member name="M:SadConsole.ExtendedLib_SurfaceExtensions.DrawSlicedBorder(SadConsole.IScreenSurface,SadConsole.SlicedBorder)">
+            <summary>
+            Draws a <see cref="T:SadConsole.SlicedBorder"/> onto the surface, filling its entire area.
+            Corners are placed as-is. Edges and center are tiled to fill the remaining space.
+            </summary>
+            <param name="surfaceObject">The surface to draw the border on.</param>
+            <param name="border">The sliced border definition to draw.</param>
+        </member>
+        <member name="M:SadConsole.ExtendedLib_SurfaceExtensions.DrawSlicedBorder(SadConsole.IScreenSurface,SadConsole.SlicedBorder,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Draws a <see cref="T:SadConsole.SlicedBorder"/> onto the surface within the specified area.
+            Corners are placed as-is. Edges and center are tiled to fill the remaining space.
+            </summary>
+            <param name="surfaceObject">The surface to draw the border on.</param>
+            <param name="border">The sliced border definition to draw.</param>
+            <param name="area">The rectangular area on the destination surface to fill with the border.</param>
+        </member>
         <member name="T:SadConsole.Instructions.AnimatedBoxGrow">
             <summary>
             Animates drawing a box. It can either 
@@ -698,6 +715,124 @@
             Returns the name of the object.
             </summary>
             <returns>The name of the object.</returns>
+        </member>
+        <member name="T:SadConsole.SlicedBorder">
+            <summary>
+            Represents a 9-slice border backed by a <see cref="T:SadConsole.CellSurface"/>.
+            The surface contains the complete border artwork, and nine <see cref="T:SadRogue.Primitives.Rectangle"/>
+            regions designate which areas of the surface map to each slice:
+            <code>
+            ┌───────────┬───────────┬───────────┐
+            │ TopLeft   │    Top    │ TopRight  │
+            ├───────────┼───────────┼───────────┤
+            │   Left    │  Center   │   Right   │
+            ├───────────┼───────────┼───────────┤
+            │ BotLeft   │  Bottom   │ BotRight  │
+            └───────────┴───────────┴───────────┘
+            </code>
+            Corner slices are drawn as-is. Edge slices (Top, Bottom, Left, Right) are
+            tiled to fill the required length. The Center slice is tiled to fill the
+            interior area.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Surface">
+            <summary>
+            The backing surface that contains the complete border artwork.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.TopLeft">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the top-left corner slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Top">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the top edge slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.TopRight">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the top-right corner slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Left">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the left edge slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Center">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the center slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Right">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the right edge slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.BottomLeft">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the bottom-left corner slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.Bottom">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the bottom edge slice.
+            </summary>
+        </member>
+        <member name="P:SadConsole.SlicedBorder.BottomRight">
+            <summary>
+            The region of <see cref="P:SadConsole.SlicedBorder.Surface"/> that maps to the bottom-right corner slice.
+            </summary>
+        </member>
+        <member name="M:SadConsole.SlicedBorder.#ctor(SadConsole.CellSurface,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.SlicedBorder"/> with the specified backing surface and slice regions.
+            </summary>
+            <param name="surface">The surface containing the border artwork.</param>
+            <param name="topLeft">The top-left corner region.</param>
+            <param name="top">The top edge region.</param>
+            <param name="topRight">The top-right corner region.</param>
+            <param name="left">The left edge region.</param>
+            <param name="center">The center region.</param>
+            <param name="right">The right edge region.</param>
+            <param name="bottomLeft">The bottom-left corner region.</param>
+            <param name="bottom">The bottom edge region.</param>
+            <param name="bottomRight">The bottom-right corner region.</param>
+        </member>
+        <member name="M:SadConsole.SlicedBorder.CreateFrom3x3(SadConsole.CellSurface)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.SlicedBorder"/> from a surface, automatically dividing it into
+            a 3×3 grid where each cell is one slice. The surface width and height must each be
+            divisible into three equal parts.
+            </summary>
+            <param name="surface">A surface whose dimensions are evenly divisible by 3.</param>
+            <returns>A new <see cref="T:SadConsole.SlicedBorder"/> with slices evenly distributed across the surface.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the surface dimensions are not divisible by 3.</exception>
+        </member>
+        <member name="M:SadConsole.SlicedBorder.CreateFromSingleCellBorder(SadConsole.CellSurface)">
+            <summary>
+            Creates a new <see cref="T:SadConsole.SlicedBorder"/> from a surface using a simple 1-cell border layout.
+            The surface must be at least 3×3. Corners are 1×1, edges are 1-cell wide/tall, and the
+            center is the remaining interior area.
+            </summary>
+            <param name="surface">A surface that is at least 3×3.</param>
+            <returns>A new <see cref="T:SadConsole.SlicedBorder"/> with a 1-cell border and the rest as center.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the surface is smaller than 3×3.</exception>
+        </member>
+        <member name="M:SadConsole.SlicedBorder.Draw(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Draws this 9-slice border onto a target surface, filling the specified area.
+            Corner slices are drawn as-is, edge slices are tiled along their respective edges,
+            and the center slice is tiled to fill the interior.
+            </summary>
+            <param name="target">The surface to draw onto.</param>
+            <param name="area">The rectangle on the target surface that defines where the border is drawn.</param>
+        </member>
+        <member name="M:SadConsole.SlicedBorder.TileSlice(SadConsole.ICellSurface,SadRogue.Primitives.Rectangle,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Tiles a slice region from <see cref="P:SadConsole.SlicedBorder.Surface"/> onto a rectangular area of the target surface.
+            </summary>
         </member>
         <member name="T:SadConsole.Transitions.Fade">
             <summary>
