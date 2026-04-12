@@ -314,6 +314,7 @@ public class ImGuiRenderer: ImGuiRenderer<Texture2D>, IDisposable
         _graphicsDevice.BlendState = lastBlendState;
         _graphicsDevice.BlendFactor = lastBlendFactor;
         _graphicsDevice.SamplerStates[0] = lastSamplerState;
+        _graphicsDevice.Textures[0] = null;
     }
 
     private unsafe void UpdateBuffers(ImDrawData* drawData)
