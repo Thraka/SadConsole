@@ -1,5 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using SadConsole.Coroutine;
+using SadConsole.Components;
 using SadConsole.Input;
 using SadConsole.Terminal;
 
@@ -10,60 +11,43 @@ namespace SadBBSClient;
 /// and a <see cref="TelnetClient"/> for network communication.
 /// Keyboard input is intercepted and sent to the remote BBS rather than local echo.
 /// </summary>
-public class BbsScreen : ScreenObject
+public partial class BbsScreen : ScreenObject
 {
-    private enum ConnectionState
-    {
-        Disconnected,
-        Connecting,
-        Connected
-    }
-
-    private enum AppState
-    {
-        MainScreen,
-        Terminal,
-        Phonebook
-    }
-
-    private struct KeyBinding
-    {
-        public bool Alt;
-        public Keys Key;
-        public Action OnPressed;
-    }
-
-    private class ScreenKeyBindings
-    {
-        public List<KeyBinding> Bindings = [];
-        public void Add(bool alt, Keys key, Action onPressed)
-        {
-            Bindings.Add(new KeyBinding { Alt = alt, Key = key, OnPressed = onPressed });
-        }
-        public bool TryMatch(Keyboard keyboard, [NotNullWhen(true)] out KeyBinding? keyBinding)
-        {
-            foreach (var binding in Bindings)
-            {
-                if (keyboard.IsKeyPressed(binding.Key) && (keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt)) == binding.Alt)
-                {
-                    keyBinding = binding;
-                    return true;
-                }
-            }
-            keyBinding = null;
-            return false;
-        }
-    }
-
     private readonly Phonebook _phonebook;
     private readonly TerminalConsole _terminal;
     private readonly KeyboardEncoder _encoder;
     private TelnetClient? _telnet;
 
+    private Queue<AppState> _appStatesQueue;
+
     private AppState _appState = AppState.MainScreen;
     private ConnectionState _connectionState = ConnectionState.Disconnected;
     private readonly StringBuilder _inputBuffer = new();
     private readonly ScreenKeyBindings _specialKeyBindings = new();
+
+    private CoroutineHandlerComponent _coroutineConnection;
+    private MessageWindow? _messageWindow;
+
+    private Event EVENT_MESSAGEWINDOW_CLOSED = new();
+    private Event EVENT_MESSAGEWINDOW_OPENED = new();
+
+    private AppState CurrentState
+    {
+        get => CurrentState;
+        set
+        {
+            if (_appState == value) return;
+
+            //AppState oldstate = _appState;
+            //_appState = value;
+
+            // Transition rules
+            if (value == AppState.Message)
+                PushState(AppState.Message);
+            else
+                MoveState(value);
+        }
+    }
 
     // Well-known public BBSes for the default menu
     private static readonly (string Name, string Host, int Port)[] DefaultBbses =
@@ -93,6 +77,7 @@ public class BbsScreen : ScreenObject
 
         _specialKeyBindings.Add(true, Keys.D, AppAction_ShowPhonebook);
         _specialKeyBindings.Add(true, Keys.H, AppAction_Disconnect);
+        _specialKeyBindings.Add(true, Keys.M, ShowTestMessage);
 
         Children.Add(_terminal);
         Children.Add(_phonebook);
@@ -100,33 +85,21 @@ public class BbsScreen : ScreenObject
         UseKeyboard = true;
 
         HideTerminalCursor();
-    }
 
-    private void _phonebook_IsVisibleChanged(object? sender, EventArgs e)
-    {
-        // Shown
-        if (_phonebook.IsVisible)
-        {
-            _appState = AppState.Phonebook;
-        }
-
-        // Hiden
-        else
-        {
-            _appState = AppState.Terminal;
-
-            if (_phonebook.SelectedEntry is not null)
-            {
-                var entry = _phonebook.SelectedEntry;
-                ConnectTo(entry.Value.Address, entry.Value.Port, entry.Value.Name);
-            }
-        }
+        _coroutineConnection = new();
+        SadComponents.Add(_coroutineConnection);
     }
 
     public override bool ProcessKeyboard(Keyboard keyboard)
     {
+        if (_messageWindow != null && _messageWindow.IsVisible)
+            return _messageWindow!.ProcessKeyboard(keyboard);
+
+        else if (_phonebook != null && _phonebook.IsVisible)
+            return _phonebook.ProcessKeyboard(keyboard);
+
         // Sniff for system shortcuts
-        if (_appState == AppState.MainScreen || _appState == AppState.Terminal)
+        else //if (CurrentState == AppState.MainScreen || CurrentState == AppState.Terminal)
         {
             // Check for shortcuts like the phonebook or app settings
             if (_specialKeyBindings.TryMatch(keyboard, out var keyBinding))
@@ -138,9 +111,7 @@ public class BbsScreen : ScreenObject
             else if (_connectionState == ConnectionState.Connected)
                 return HandleTerminalMode(keyboard);
         }
-        else if (_appState == AppState.Phonebook)
-            return _phonebook.ProcessKeyboard(keyboard);
-
+        
         return false;
     }
 
@@ -249,6 +220,44 @@ public class BbsScreen : ScreenObject
         return sb.ToString();
     }
 
+    private void AppAction_DisconnectWithMessage()
+    {
+        ShowMessage("Disconnected");
+    }
+
+    //private IEnumerable<Wait> WaitForMessage()
+    //{
+    //    Children.Add(_messageWindow);
+    //    yield return new Wait(EVENT_MESSAGEWINDOWCLOSED);
+
+    //    _messageWindow = null;
+    //}
+
+    private void ShowTestMessage()
+    {
+        ShowMessage("Testing 1..2...3..4!");
+    }
+
+    private void ShowMessage(string message)
+    {
+        _messageWindow = new(message);
+        Children.Add(_messageWindow);
+        _messageWindow.IsVisible = true;
+        _coroutineConnection.RaiseEvent(EVENT_MESSAGEWINDOW_OPENED);
+        _messageWindow.IsVisibleChanged += _messageWindow_IsVisibleChanged;
+    }
+
+    private void _messageWindow_IsVisibleChanged(object? sender, EventArgs e)
+    {
+        if (!_messageWindow!.IsVisible)
+        {
+            _messageWindow.IsVisibleChanged -= _messageWindow_IsVisibleChanged;
+            Children.Remove(_messageWindow);
+            _messageWindow = null;
+            _coroutineConnection.RaiseEvent(EVENT_MESSAGEWINDOW_CLOSED);
+        }
+    }
+
     private void AppAction_Disconnect()
     {
         // Alert user to hangup
@@ -261,8 +270,8 @@ public class BbsScreen : ScreenObject
         _telnet?.Dispose();
         _telnet = null;
         _connectionState = ConnectionState.Disconnected;
-        if (_appState == AppState.Terminal)
-            _appState = AppState.MainScreen;
+        if (CurrentState == AppState.Terminal)
+            CurrentState = AppState.MainScreen;
     }
 
     private void AppAction_ShowPhonebook()
@@ -287,4 +296,49 @@ public class BbsScreen : ScreenObject
 
     private void ShowTerminalCursor() =>
         _terminal.TerminalCursor.IsVisible = true;
+
+    private void PushState(AppState newState)
+    {
+        if (CurrentState == newState)
+            return;
+
+        _appStatesQueue.Enqueue(CurrentState);
+        _appState = newState;
+    }
+
+    private void PopState()
+    {
+        if (_appStatesQueue.Count > 1)
+        {
+            _appStatesQueue.Dequeue();
+            _appState = _appStatesQueue.Peek();
+        }
+        else
+            _appState = AppState.MainScreen;
+    }
+
+    private void MoveState(AppState newState)
+    {
+        _appStatesQueue.Clear();
+        _appState = newState;
+    }
+
+    private void _phonebook_IsVisibleChanged(object? sender, EventArgs e)
+    {
+        // Shown
+        if (_phonebook.IsVisible)
+            PushState(AppState.Phonebook);
+
+        // Hidden
+        else
+        {
+            CurrentState = AppState.Terminal;
+
+            if (_phonebook.SelectedEntry is not null)
+            {
+                var entry = _phonebook.SelectedEntry;
+                ConnectTo(entry.Value.Address, entry.Value.Port, entry.Value.Name);
+            }
+        }
+    }
 }
