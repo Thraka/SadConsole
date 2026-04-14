@@ -8,13 +8,6 @@ using SadRogue.Primitives;
 
 namespace SadConsole.Editor.Addin.SlicedBorder;
 
-/*
- * TODO:
- * 1. Core object in SadConsole needs to have 4 colors that are used in the surface. They can be customized per border draw.
- * 2. Name support in the editor settings. This isn't persisted in the only file handler (which is the raw object) so we need a new file handler demoing serializing of the document.
- */
-
-
 public partial class SlicedDocument : Document
 {
     public override string DocumentIcon => "\U000f00ce";
