@@ -32,6 +32,16 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
     [DataMember]
     public string Title { get; set; } = GenerateName("Document");
 
+    /// <summary>
+    /// Gets or sets the file path this document was loaded from or last saved to. Not serialized.
+    /// </summary>
+    public string? LoadedFilePath { get; set; }
+
+    /// <summary>
+    /// Gets or sets the file handler used to load or last save this document. Not serialized.
+    /// </summary>
+    public IFileHandler? LoadedFileHandler { get; set; }
+
     public DocumentOptions Options = new();
 
     public ImTextureRef VisualTextureId;

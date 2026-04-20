@@ -46,6 +46,8 @@ public class GuiTopBar : ImGuiObjectBase
                     {
                         if (loader.Load(file.FullName) is Document document)
                         {
+                            document.LoadedFilePath = file.FullName;
+                            document.LoadedFileHandler = loader;
                             Core.State.Documents.Add(document);
                         }
                     }, null);
@@ -54,7 +56,31 @@ public class GuiTopBar : ImGuiObjectBase
                 ImGui.Separator();
                 ImGui.BeginDisabled(!Core.State.HasSelectedDocument);
                 if (ImGui.MenuItem("\ueb4b Save"u8, "s"u8))
-                    Windows.SaveFileWindow.Show(renderer, Core.State.SelectedDocument!);
+                {
+                    var doc = Core.State.SelectedDocument!;
+                    if (doc.LoadedFilePath != null && doc.LoadedFileHandler != null)
+                    {
+                        doc.LoadedFileHandler.Save(doc, doc.LoadedFilePath, false);
+                    }
+                    else
+                    {
+                        Windows.SaveFileWindow.Show(renderer, doc, (handler, file) =>
+                        {
+                            doc.LoadedFilePath = handler.GetFileWithValidExtensionForSave(file);
+                            doc.LoadedFileHandler = handler;
+                        });
+                    }
+                }
+
+                if (ImGui.MenuItem("\ueb4b Save As..."u8))
+                {
+                    var doc = Core.State.SelectedDocument!;
+                    Windows.SaveFileWindow.Show(renderer, doc, (handler, file) =>
+                    {
+                        doc.LoadedFilePath = handler.GetFileWithValidExtensionForSave(file);
+                        doc.LoadedFileHandler = handler;
+                    });
+                }
 
                 ImGui.BeginDisabled(Core.State.HasSelectedDocument && Core.State.SelectedDocument.Parent != null);
                 if (ImGui.MenuItem("Close", "c"))
