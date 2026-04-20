@@ -115,6 +115,23 @@ public static partial class Core
                 .ToList()
                 .ForEach(file => Game.Instance.LoadFont(file));
 
+            // Check if current directory isn't the same as RootFolder, if not, also load fonts from there
+            if (Directory.GetCurrentDirectory() != RootFolder)
+            {
+                Directory.GetFiles(RootFolder, "*.font")
+                    .ToList()
+                    .ForEach(file => Game.Instance.LoadFont(file));
+
+                // Also, check the Core.Settings.FontsFolder in this directory
+                string currentFontsFolder = Path.Combine(RootFolder, Core.Settings.FontsFolder);
+                if (Directory.Exists(currentFontsFolder))
+                {
+                    Directory.GetFiles(currentFontsFolder, "*.font")
+                        .ToList()
+                        .ForEach(file => Game.Instance.LoadFont(file));
+                }
+            }
+
             SadConsoleFonts = new(Game.Instance.Fonts.Values)
             {
                 SelectedItemIndex = 0
