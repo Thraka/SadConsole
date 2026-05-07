@@ -38,6 +38,7 @@ internal class LayeredSurfaceDocument : IFileHandler
                 Title = doc.Title,
                 Layers = layers,
                 LayerVisibility = layerVisibility,
+                LayerNames = [.. doc.LayerNames],
                 SurfaceFont = SerializedTypes.FontSerialized.FromFont(doc.EditingSurfaceFont),
                 SurfaceFontSize = doc.EditingSurfaceFontSize,
                 EditorFontSize = doc.EditorFontSize,
@@ -75,6 +76,12 @@ internal class LayeredSurfaceDocument : IFileHandler
 
             var doc = new DocumentLayeredSurface(layeredSurface);
             doc.Title = serializedObj.Title;
+
+            if (serializedObj.LayerNames != null && serializedObj.LayerNames.Length == layeredSurface.Layers.Count)
+            {
+                doc.LayerNames.Clear();
+                doc.LayerNames.AddRange(serializedObj.LayerNames);
+            }
             doc.EditingSurfaceFont = SerializedTypes.FontSerialized.ToFont(serializedObj.SurfaceFont);
             doc.EditingSurfaceFontSize = serializedObj.SurfaceFontSize;
             doc.EditorFontSize = serializedObj.EditorFontSize;

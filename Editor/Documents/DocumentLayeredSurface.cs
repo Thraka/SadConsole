@@ -15,6 +15,8 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
 
     private int _selectedLayerIndex;
 
+    public List<string> LayerNames { get; set; } = new();
+
     public LayeredScreenSurface LayeredEditingSurface => (LayeredScreenSurface)EditingSurface;
 
     /// <summary>
@@ -29,6 +31,11 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
         EditingSurfaceFontSize = EditingSurfaceFont.GetFontSize(IFont.Sizes.One);
         EditorFontSize = EditingSurfaceFontSize;
         EditingSurface.IsDirty = true;
+
+        // Initialize layer names for existing layers
+        LayerNames.Clear();
+        for (int i = 0; i < LayeredEditingSurface.Layers.Count; i++)
+            LayerNames.Add($"Layer {i + 1}");
 
         Redraw(true, true);
     }
@@ -123,7 +130,7 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
                 bool isSelected = _selectedLayerIndex == i;
                 Vector2 pos = ImGui.GetCursorScreenPos();
                 
-                if (ImGui.Selectable($"{icon}  Layer {i + 1}", isSelected, ImGuiSelectableFlags.AllowOverlap))
+                if (ImGui.Selectable($"{icon}  {LayerNames[i]}", isSelected, ImGuiSelectableFlags.AllowOverlap))
                     SetActiveLayer(i);
 
                 ImGui.SetCursorScreenPos(pos);
@@ -135,6 +142,15 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
         }
         ImGui.EndChild();
 
+        // Rename selected layer
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Name:"u8);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(-1);
+        string layerName = LayerNames[_selectedLayerIndex];
+        if (ImGui.InputText("##layername"u8, ref layerName, 50))
+            LayerNames[_selectedLayerIndex] = layerName;
+
         // Layer management buttons
         if (ImGui.Button("Add Layer"u8))
         {
@@ -142,6 +158,7 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
             newLayer.DefaultForeground = EditingSurface.Surface.DefaultForeground;
             newLayer.DefaultBackground = Color.Transparent;
             newLayer.Clear();
+            LayerNames.Add($"Layer {LayeredEditingSurface.Layers.Count}");
             SetActiveLayer(LayeredEditingSurface.Layers.Count - 1);
         }
 
@@ -153,6 +170,7 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
             if (_selectedLayerIndex >= 0 && _selectedLayerIndex < layerCount)
             {
                 LayeredEditingSurface.Layers.RemoveAt(_selectedLayerIndex);
+                LayerNames.RemoveAt(_selectedLayerIndex);
 
                 if (_selectedLayerIndex >= LayeredEditingSurface.Layers.Count)
                     _selectedLayerIndex = LayeredEditingSurface.Layers.Count - 1;
@@ -171,6 +189,10 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
             LayeredEditingSurface.Layers.RemoveAt(_selectedLayerIndex);
             LayeredEditingSurface.Layers.Insert(_selectedLayerIndex - 1, layer);
 
+            string name = LayerNames[_selectedLayerIndex];
+            LayerNames.RemoveAt(_selectedLayerIndex);
+            LayerNames.Insert(_selectedLayerIndex - 1, name);
+
             _selectedLayerIndex--;
             EditingSurface.IsDirty = true;
         }
@@ -184,6 +206,10 @@ public partial class DocumentLayeredSurface : Document, IDocumentSimpleObjects, 
             var layer = LayeredEditingSurface.Layers[_selectedLayerIndex];
             LayeredEditingSurface.Layers.RemoveAt(_selectedLayerIndex);
             LayeredEditingSurface.Layers.Insert(_selectedLayerIndex + 1, layer);
+
+            string name = LayerNames[_selectedLayerIndex];
+            LayerNames.RemoveAt(_selectedLayerIndex);
+            LayerNames.Insert(_selectedLayerIndex + 1, name);
 
             _selectedLayerIndex++;
             EditingSurface.IsDirty = true;

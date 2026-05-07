@@ -10,6 +10,7 @@ public class LayeredSurfaceDocumentSerialized
     public string Title;
     public CellSurface[] Layers;
     public bool[] LayerVisibility;
+    public string[]? LayerNames;
     public FontSerialized SurfaceFont;
     public Point SurfaceFontSize;
     public Point EditorFontSize;
