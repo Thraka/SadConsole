@@ -50,7 +50,9 @@ public static partial class Core
     {
         SadConsole.Settings.DoFinalDraw = false;
 
-        ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance, true);
+        ImGuiComponent = new ImGuiMonoGameComponent(Host.Global.GraphicsDeviceManager, Game.Instance.MonoGameInstance);
+        ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+
 
         //var value = Core.ImGuiComponent.ImGuiRenderer.AddFontTTF("JetBrains Mono SemiBold Nerd Font Complete.ttf", 18f);
         //Core.ImGuiComponent.ImGuiRenderer.SetDefaultFont(value);
