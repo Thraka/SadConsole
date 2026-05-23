@@ -78,6 +78,9 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
     /// <inheritdoc/>
     public XnaRectangle[] CachedRenderRects { get; protected set; }
 
+    private int _cachedViewWidth;
+    private int _cachedViewHeight;
+
     /// <summary>
     /// Creates a new instance of this renderer with the default steps.
     /// </summary>
@@ -106,13 +109,15 @@ public class ScreenSurfaceRenderer : IRenderer, IRendererMonoGame
         }
         
         // Update cached drawing rectangles if something is out of size.
-        if (CachedRenderRects == null || CachedRenderRects.Length != screen.Surface.View.Width * screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
+        if (CachedRenderRects == null || _cachedViewWidth != screen.Surface.View.Width || _cachedViewHeight != screen.Surface.View.Height || CachedRenderRects[0].Width != screen.FontSize.X || CachedRenderRects[0].Height != screen.FontSize.Y)
         {
-            CachedRenderRects = new XnaRectangle[screen.Surface.View.Width * screen.Surface.View.Height];
+            _cachedViewWidth = screen.Surface.View.Width;
+            _cachedViewHeight = screen.Surface.View.Height;
+            CachedRenderRects = new XnaRectangle[_cachedViewWidth * _cachedViewHeight];
 
             for (int i = 0; i < CachedRenderRects.Length; i++)
             {
-                var position = SadRogue.Primitives.Point.FromIndex(i, screen.Surface.View.Width);
+                var position = SadRogue.Primitives.Point.FromIndex(i, _cachedViewWidth);
                 CachedRenderRects[i] = screen.Font.GetRenderRect(position.X, position.Y, screen.FontSize).ToMonoRectangle();
             }
 
