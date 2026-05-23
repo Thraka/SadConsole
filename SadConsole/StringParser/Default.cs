@@ -172,7 +172,7 @@ public class Default : IParser
                 fixedSurfaceIndex = -1;
             else
                 // If the index is within range of the surface, use it, otherwise -1
-                fixedSurfaceIndex = i + surfaceIndex < surface.Count ? i + surfaceIndex : -1;
+                fixedSurfaceIndex = glyphs.Count + surfaceIndex < surface.Count ? glyphs.Count + surfaceIndex : -1;
 
             ColoredGlyphAndEffect newGlyph;
 
@@ -180,9 +180,9 @@ public class Default : IParser
             if (fixedSurfaceIndex != -1)
             {
                 newGlyph = new ColoredGlyphAndEffect();
-                surface![i + surfaceIndex].CopyAppearanceTo(newGlyph);
+                surface![fixedSurfaceIndex].CopyAppearanceTo(newGlyph);
 
-                Effects.ICellEffect? effect = surface.GetEffect(i + surfaceIndex);
+                Effects.ICellEffect? effect = surface.GetEffect(fixedSurfaceIndex);
 
                 // Get the glyph's character from the string
                 newGlyph.Glyph = value[i];
