@@ -123,6 +123,15 @@ public abstract class CompositeControl : ControlBase, IContainer
     /// <param name="time">The game frame time delta.</param>
     public override void UpdateAndRedraw(TimeSpan time)
     {
+        UpdateAndRedrawChildren(time);
+    }
+
+    /// <summary>
+    /// Updates and redraws the child controls, setting <see cref="ControlBase.IsDirty"/> if any child is dirty. Call this from a derived control to handle the composite update logic without calling the base <see cref="UpdateAndRedraw(TimeSpan)"/> method.
+    /// </summary>
+    /// <param name="time">The game frame time delta.</param>
+    protected void UpdateAndRedrawChildren(TimeSpan time)
+    {
         ControlBase[] controls = Controls.ToArray();
 
         for (int i = 0; i < controls.Length; i++)
