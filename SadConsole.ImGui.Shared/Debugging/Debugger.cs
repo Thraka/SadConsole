@@ -2,6 +2,7 @@
 using SadConsole.ImGuiSystem;
 using Hexa.NET.ImGui;
 using SadConsole.ImGuiSystem.Rendering;
+using System.Collections.Generic;
 
 namespace SadConsole.Debug;
 
@@ -10,6 +11,8 @@ namespace SadConsole.Debug;
 /// </summary>
 public partial class ImGuiDebugger: ImGuiObjectBase
 {
+    private bool _firstStart = true;
+
     /// <summary>
     /// Gets the singleton instance of the ImGuiDebugger class, providing access to its debugging functionalities.
     /// </summary>
@@ -23,7 +26,7 @@ public partial class ImGuiDebugger: ImGuiObjectBase
     /// <summary>
     /// An event that's raised when the debugger is opened. True is passed if it's the first time it's opened.
     /// </summary>
-    public event Action<bool> Opened;
+    public event Action<bool, ImGuiRenderer> Opened;
 
     /// <summary>
     /// An event that's raised when the debugger is closed.
@@ -35,6 +38,11 @@ public partial class ImGuiDebugger: ImGuiObjectBase
     public GuiScreenObjects VisualScreenObjects = new GuiScreenObjects();
     public GuiPreviews VisualPreviews = new GuiPreviews();
 
+    /// <summary>
+    /// The list of UI elements that make up the debugger. This is used for iterating through the debugger's UI when building it.
+    /// </summary>
+    public List<ImGuiObjectBase> DebuggerUI;
+
     private ImGuiDebugger()
     {
         ScreenObjectDetailsPanel.RegisteredPanels.Add(typeof(UI.Window), new Editors.ScreenObjectEditorWindowConsole());
@@ -45,6 +53,8 @@ public partial class ImGuiDebugger: ImGuiObjectBase
         IsVisible = false;
 
         VisualTopBar.Closed += VisualTopBar_Closed;
+
+        DebuggerUI = [VisualTopBar, VisualDockspace, VisualScreenObjects, VisualPreviews];
     }
 
     private void VisualTopBar_Closed()
@@ -64,7 +74,8 @@ public partial class ImGuiDebugger: ImGuiObjectBase
 
         GuiState.RefreshScreenObject();
 
-        Instance.Opened?.Invoke(false);
+        Instance.Opened?.Invoke(Instance._firstStart, renderer);
+        Instance._firstStart = false;
     }
 
     /// <summary>
@@ -84,14 +95,16 @@ public partial class ImGuiDebugger: ImGuiObjectBase
     private static void ImGuiCore_ImGuiComponent_HostClosed(object sender, EventArgs e) =>
         Stop();
 
+    /// <summary>
+    /// Draws the debugging interface if <see cref="ImGuiObjectBase.IsVisible"/> is true.
+    /// </summary>
+    /// <param name="renderer">The renderer.</param>
     public override void BuildUI(ImGuiRenderer renderer)
     {
         if (IsVisible)
         {
-            VisualTopBar.BuildUI(renderer);
-            VisualDockspace.BuildUI(renderer);
-            VisualScreenObjects.BuildUI(renderer);
-            VisualPreviews.BuildUI(renderer);
+            foreach (ImGuiObjectBase element in DebuggerUI)
+                element.BuildUI(renderer);
         }
     }
 }

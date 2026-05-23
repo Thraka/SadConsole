@@ -45,16 +45,9 @@ public class ImGuiSFMLComponent
     /// Creates a new ImGui SFML component.
     /// </summary>
     /// <param name="window">The SFML render window.</param>
-    /// <param name="enableDocking">Whether to enable ImGui docking.</param>
-    public ImGuiSFMLComponent(RenderWindow window, bool enableDocking)
+    public ImGuiSFMLComponent(RenderWindow window)
     {
         ImGuiRenderer = new Rendering.ImGuiRenderer(window);
-
-        if (enableDocking)
-        {
-            ImGuiIOPtr io = ImGui.GetIO();
-            io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-        }
     }
 
     /// <summary>

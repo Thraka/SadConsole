@@ -78,12 +78,11 @@
             Gets or sets whether the component is visible (draws ImGui).
             </summary>
         </member>
-        <member name="M:SadConsole.ImGuiSystem.Rendering.ImGuiSFMLComponent.#ctor(SFML.Graphics.RenderWindow,System.Boolean)">
+        <member name="M:SadConsole.ImGuiSystem.Rendering.ImGuiSFMLComponent.#ctor(SFML.Graphics.RenderWindow)">
             <summary>
             Creates a new ImGui SFML component.
             </summary>
             <param name="window">The SFML render window.</param>
-            <param name="enableDocking">Whether to enable ImGui docking.</param>
         </member>
         <member name="M:SadConsole.ImGuiSystem.Rendering.ImGuiSFMLComponent.Update(System.Single)">
             <summary>
@@ -540,6 +539,11 @@
             An event that's raised when the debugger is closed.
             </summary>
         </member>
+        <member name="F:SadConsole.Debug.ImGuiDebugger.DebuggerUI">
+            <summary>
+            The list of UI elements that make up the debugger. This is used for iterating through the debugger's UI when building it.
+            </summary>
+        </member>
         <member name="M:SadConsole.Debug.ImGuiDebugger.Start(SadConsole.ImGuiSystem.Rendering.ImGuiRenderer)">
             <summary>
             Starts the debugger.
@@ -549,6 +553,12 @@
             <summary>
             Stops the debugger.
             </summary>
+        </member>
+        <member name="M:SadConsole.Debug.ImGuiDebugger.BuildUI(SadConsole.ImGuiSystem.Rendering.ImGuiRenderer)">
+            <summary>
+            Draws the debugging interface if <see cref="P:SadConsole.ImGuiSystem.ImGuiObjectBase.IsVisible"/> is true.
+            </summary>
+            <param name="renderer">The renderer.</param>
         </member>
         <member name="T:SadConsole.Debug.ImGuiDebugger.Settings">
             <summary>

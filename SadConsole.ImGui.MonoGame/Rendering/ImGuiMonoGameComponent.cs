@@ -19,7 +19,7 @@ public class ImGuiMonoGameComponent : DrawableGameComponent
 
     public ImGuiObjectBase? BeforeNewFrameLayoutObject { get; set; }
 
-    public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game, bool enableDocking): base(game)
+    public ImGuiMonoGameComponent(GraphicsDeviceManager graphics, Microsoft.Xna.Framework.Game game): base(game)
     {
         // Run after (and thus draw on top of) the normal SadConsole MonoGame component
         DrawOrder = 7;
@@ -29,13 +29,6 @@ public class ImGuiMonoGameComponent : DrawableGameComponent
         _game = game;
 
         ImGuiRenderer = new ImGuiRenderer(_game);
-        //ImGuiRenderer.RebuildFontAtlas();
-
-        if (enableDocking)
-        {
-            ImGuiIOPtr io = ImGui.GetIO();
-            io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-        }
     }
 
     public override void Update(GameTime gameTime)

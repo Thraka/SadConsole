@@ -61,7 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ImGuiRenderer.Base.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Roboto-Regular.ttf">
+    <Content Include="$(MSBuildThisFileDirectory)roboto-regular.ttf">
       <PackagePath>content/.</PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <pack>true</pack>

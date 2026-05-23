@@ -14,22 +14,19 @@ namespace SadConsole.Configuration;
 public static class ConfigurationImGui
 {
     /// <summary>
-    /// Adds the ImGui MonoGame component to MonoGame.
+    /// Adds the ImGui SFML component to SadConsole.
     /// </summary>
     /// <param name="builder">The config builder.</param>
-    /// <param name="fontFile">The font file to use with ImGui. Defaults to 'Roboto-Regular.ttf'.</param>
-    /// <param name="fontSize">The font size to use with ImGui. Defaults to 16.</param>
+    /// <param name="fontConfig">The font file and size to use with ImGui. Null uses the default ImGui font.</param>
     /// <param name="enableDocking">Enables the docking feature of ImGui. Defaults to false.</param>
-    /// <param name="startupAction">A callback to add objects to the ImGui MonoGame component.</param>
+    /// <param name="startupAction">A callback to add objects to the ImGui SFML component.</param>
     /// <returns>The config builder.</returns>
-    public static Builder EnableImGui(this Builder builder, string fontFile = "Roboto-Regular.ttf",
-                                                            float fontSize = 16f,
+    public static Builder EnableImGui(this Builder builder, ImGuiSadConsoleFontConfig? fontConfig = null,
                                                             bool enableDocking = false,
                                                             Action<ImGuiSFMLComponent>? startupAction = null)
     {
         ImGuiConfig config = builder.GetOrCreateConfig<ImGuiConfig>();
-        config.FontFileTTF = fontFile;
-        config.FontSize = fontSize;
+        config.FontConfig = fontConfig;
         config.StartupAction = startupAction;
         config.EnableDocking = enableDocking;
         return builder;
@@ -40,22 +37,30 @@ public static class ConfigurationImGui
     /// </summary>
     /// <param name="builder">The config builder.</param>
     /// <param name="hotkey">The keyboard key to start the debugger.</param>
+    /// <param name="fontConfig">The font file and size to use with ImGui. Null uses the default ImGui font.</param>
+    /// <param name="startupAction">A callback to add objects to the ImGui SFML component.</param>
     /// <returns>The config builder.</returns>
-    public static Builder EnableImGuiDebugger(this Builder builder, Keys hotkey)
+    public static Builder EnableImGuiDebugger(this Builder builder, Keys hotkey, ImGuiSadConsoleFontConfig? fontConfig = null, Action<ImGuiSFMLComponent>? startupAction = null)
     {
         ImGuiConfig config = builder.GetOrCreateConfig<ImGuiConfig>();
         config.StartDebuggerKey = hotkey;
+        config.FontConfig = fontConfig;
+        config.StartupAction = startupAction;
         config.EnableDocking = true;
         config.AddDebugger = true;
         return builder;
     }
 }
 
+public record struct ImGuiSadConsoleFontConfig(string FontFileTTF, float FontSize)
+{
+    public static ImGuiSadConsoleFontConfig Default => new ImGuiSadConsoleFontConfig("roboto-regular.ttf", 16f);
+}
+
 internal class ImGuiConfig : IConfigurator
 {
     public ImGuiSFMLComponent ImGuiInstance { get; private set; }
-    public string FontFileTTF { get; set; } = "Roboto-Regular.ttf";
-    public float FontSize { get; set; } = 16f;
+    public ImGuiSadConsoleFontConfig? FontConfig { get; set; }
     public bool EnableDocking { get; set; }
     public bool AddDebugger { get; set; }
     public Keys StartDebuggerKey { get; set; }
@@ -65,10 +70,14 @@ internal class ImGuiConfig : IConfigurator
     public void Run(BuilderBase config, GameHost game)
     {
         Game host = (Game)game;
-        ImGuiInstance = new(Global.GraphicsDevice, EnableDocking);
+        ImGuiInstance = new(Global.GraphicsDevice);
 
-        var value = ImGuiInstance.ImGuiRenderer.AddFontTTF(FontFileTTF, FontSize);
-        ImGuiInstance.ImGuiRenderer.SetDefaultFont(value);
+        if (FontConfig is not null)
+        {
+            ImGuiInstance.ImGuiRenderer.SetDefaultFont(
+                ImGuiInstance.ImGuiRenderer.AddFontTTF(FontConfig.Value.FontFileTTF, FontConfig.Value.FontSize));
+        }
+
         Themes.SetModernColors();
 
         if (EnableDocking)
@@ -78,6 +87,7 @@ internal class ImGuiConfig : IConfigurator
             ImGuiInstance.ImGuiRenderer.UIObjects.Add(ImGuiDebugger.Instance);
 
         // Update: Use the overlay callback so ImGui input runs before SadConsole input (enabling BlockSadConsoleInput)
+        // Note: Not using RootComponent like MonoGame because we need UpdateOverlay to run already, so put both open and update logic in one place
         Global.UpdateOverlay = (delta) =>
         {
             if (AddDebugger && ImGuiDebugger.Instance.IsOpened == false && Game.Instance.FrameNumber != 0 && Game.Instance.Keyboard.IsKeyReleased(StartDebuggerKey))
