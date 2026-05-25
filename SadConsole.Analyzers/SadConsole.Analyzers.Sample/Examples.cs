@@ -1,7 +1,9 @@
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
+using System;
 using System.Collections.Generic;
+using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
 namespace SadConsole.Analyzers.Sample;
@@ -20,7 +22,7 @@ public class Examples
 
         ColoredGlyphBase cell = new ColoredGlyph();
 
-        CellDecorator decorator1 = new();
+        CellDecorator decorator1 = new Cell();
 
         cell.Decorators = new();
         cell.Decorators = [];
@@ -36,5 +38,23 @@ public class Examples
         surf.Surface[3].Decorators = null;
         surf.Surface[3].Decorators = [];
 
+    }
+
+    public class control1 : ControlBase
+    {
+        public control1() : base(22, 22)
+        {
+            
+        }
+
+        public override void UpdateAndRedraw(TimeSpan time)
+        {
+            IsDirty = false;
+        }
+
+        public void something()
+        {
+            IsDirty = false;
+        }
     }
 }

@@ -77,5 +77,14 @@ namespace SadConsole.Analyzers {
                 return ResourceManager.GetString("SADCON0002_RemoveCellDecoratorsTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Remove IsDirty = false assignment.
+        /// </summary>
+        internal static string SADCON0003_RemoveIsDirtyFalseTitle {
+            get {
+                return ResourceManager.GetString("SADCON0003_RemoveIsDirtyFalseTitle", resourceCulture);
+            }
+        }
     }
 }

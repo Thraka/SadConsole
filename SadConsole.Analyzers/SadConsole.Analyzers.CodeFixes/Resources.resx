@@ -123,4 +123,7 @@
   <data name="SADCON0002_RemoveCellDecoratorsTitle" xml:space="preserve">
     <value>Use CellDecoratorHelpers to remove cell decorators</value>
   </data>
+  <data name="SADCON0003_RemoveIsDirtyFalseTitle" xml:space="preserve">
+    <value>Remove IsDirty = false assignment</value>
+  </data>
 </root>

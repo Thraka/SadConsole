@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageId>SadConsole.Analyzers</PackageId>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.0.3</PackageVersion>
     <Description>SadConsole.Analyzers</Description>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
     <PackageTags>SadConsole.Analyzers, analyzers</PackageTags>

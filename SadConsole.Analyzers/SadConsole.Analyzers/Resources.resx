@@ -135,4 +135,13 @@
   <data name="ColoredGlyphDecoratorNullAccessTitle" xml:space="preserve">
     <value>Use CellDecoratorHelpers.RemoveAllDecorators to clear a collection of decorators</value>
   </data>
+  <data name="ControlBaseIsDirtyFalseDescription" xml:space="preserve">
+    <value>Setting IsDirty to false inside ControlBase.UpdateAndRedraw is no longer correct. The renderer is responsible for resetting the dirty flag after redrawing the control.</value>
+  </data>
+  <data name="ControlBaseIsDirtyFalseMessageFormat" xml:space="preserve">
+    <value>Don't set IsDirty to false in UpdateAndRedraw; the renderer handles resetting IsDirty after redrawing</value>
+  </data>
+  <data name="ControlBaseIsDirtyFalseTitle" xml:space="preserve">
+    <value>Remove IsDirty = false from UpdateAndRedraw override</value>
+  </data>
 </root>

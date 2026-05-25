@@ -6,6 +6,7 @@ public static class DiagnosticIDs
 {
     public const string CellDecoratorNew = "SADCON0001"; //
     public const string CellDecoratorNull = "SADCON0002"; //
+    public const string ControlBaseIsDirtyFalse = "SADCON0003"; //
 }
 
 public static class DiagnosticCategories

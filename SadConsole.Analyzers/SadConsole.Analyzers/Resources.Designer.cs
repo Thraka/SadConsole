@@ -113,5 +113,32 @@ namespace SadConsole.Analyzers {
                 return ResourceManager.GetString("ColoredGlyphDecoratorNullAccessTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Setting IsDirty to false inside ControlBase.UpdateAndRedraw is no longer correct....
+        /// </summary>
+        internal static string ControlBaseIsDirtyFalseDescription {
+            get {
+                return ResourceManager.GetString("ControlBaseIsDirtyFalseDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Don't set IsDirty to false in UpdateAndRedraw; the renderer handles resetting IsDirty after redrawing.
+        /// </summary>
+        internal static string ControlBaseIsDirtyFalseMessageFormat {
+            get {
+                return ResourceManager.GetString("ControlBaseIsDirtyFalseMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Remove IsDirty = false from UpdateAndRedraw override.
+        /// </summary>
+        internal static string ControlBaseIsDirtyFalseTitle {
+            get {
+                return ResourceManager.GetString("ControlBaseIsDirtyFalseTitle", resourceCulture);
+            }
+        }
     }
 }
