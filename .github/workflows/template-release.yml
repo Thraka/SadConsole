@@ -13,6 +13,12 @@ on:
         required: false
         type: string
 
+  push:
+    branches:
+      - master
+    paths:
+      - "templates/**"
+
 permissions:
   contents: write
 
@@ -62,21 +68,23 @@ jobs:
         env:
           VERSION: ${{ steps.get-version.outputs.version }}
         run: |
+          $packageId = "SadConsole.Templates"
+          Write-Host "Checking NuGet for $packageId $env:VERSION..."
           try {
-              $response = Invoke-RestMethod "https://api-v2v3search-0.nuget.org/query?q=PackageId:SadConsole.Templates&prerelease=true&semVerLevel=2.0.0"
-              $pkg = $response.data | Where-Object { $_.id -eq "SadConsole.Templates" }
-              if ($pkg) {
-                  $found = $pkg.versions | Where-Object { $_.version -eq $env:VERSION }
-                  if ($found) {
-                      Write-Host "SadConsole.Templates $env:VERSION already exists on NuGet. Skipping."
-                      "already_published=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-                      exit 0
-                  }
+              $response = Invoke-RestMethod "https://api.nuget.org/v3-flatcontainer/$($packageId.ToLower())/index.json"
+              if ($response.versions -contains $env:VERSION) {
+                  Write-Host "Version $env:VERSION already exists on NuGet. Skipping."
+                  "already_published=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+                  exit 0
               }
           }
           catch {
-              Write-Warning "NuGet check failed, proceeding with build: $($_.Exception.Message)"
+              # 404 means the package has never been published — continue
+              if ($_.Exception.Response.StatusCode -ne 404) {
+                  Write-Warning "NuGet query failed: $($_.Exception.Message)"
+              }
           }
+          Write-Host "Version $env:VERSION not found on NuGet. Will publish."
           "already_published=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       # ── Pack ───────────────────────────────────────────────────────
