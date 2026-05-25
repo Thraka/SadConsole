@@ -86,7 +86,7 @@ public class ColoredGlyphDecoratorSetAnalyzer : DiagnosticAnalyzer
             expressionSyntax.Right.IsKind(SyntaxKind.ImplicitObjectCreationExpression) ||
             expressionSyntax.Right.IsKind(SyntaxKind.CollectionExpression))
         {
-            var diagnostic = Diagnostic.Create(RuleNew, expressionSyntax.GetLocation(), "CellDecoratorHelpers.RemoveAllDecorators", "CellDecoratorHelpers.*");
+            var diagnostic = Diagnostic.Create(RuleNew, expressionSyntax.GetLocation(), "CellDecoratorHelpers.SetDecorators");
 
             // Reporting a diagnostic is the primary outcome of analyzers.
             context.ReportDiagnostic(diagnostic);

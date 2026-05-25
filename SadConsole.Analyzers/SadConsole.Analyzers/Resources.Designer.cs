@@ -61,7 +61,7 @@ namespace SadConsole.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Cell.Decorator property should be set by renting an array pool, otherwise memory might be wasted. CellDecoratorHelpers.RemoveAllDecorators clears and removes the pool and CellDecoratorHelpers.AddDecorator rents a pool if required..
+        ///   Looks up a localized string similar to The Cell.Decorator property should be set by renting an array pool, otherwise memory might be wasted. CellDecoratorHelpers.RemoveAllDecorators clears and removes the pool and CellDecoratorHelpers.AddDecorator rents a pool if required. CellDecoratorHelpers.SetDecorators does both operations..
         /// </summary>
         internal static string ColoredGlyphDecoratorNewAccessDescription {
             get {
@@ -70,7 +70,7 @@ namespace SadConsole.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t set Cell.Decorators to a new collection, instead use {0} to set the property to null, then use {1} methods to add decorators.
+        ///   Looks up a localized string similar to Don&apos;t set Cell.Decorators to a new collection. Use {0} to clear (or create) the collection and add the decorators.
         /// </summary>
         internal static string ColoredGlyphDecoratorNewAccessMessageFormat {
             get {
@@ -79,7 +79,7 @@ namespace SadConsole.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use CellDecoratorHelpers to remove all decorators instead of setting to a new collection..
+        ///   Looks up a localized string similar to Use CellDecoratorHelpers.SetDecorators to replace existing decorators with a new set.
         /// </summary>
         internal static string ColoredGlyphDecoratorNewAccessTitle {
             get {
@@ -97,7 +97,7 @@ namespace SadConsole.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t set Cell.Decorators to null, instead use {0} to return the rented collection pool, which sets the property to null.
+        ///   Looks up a localized string similar to Don&apos;t set Cell.Decorators to null. Use {0} to return the rented collection pool, which sets the property to null.
         /// </summary>
         internal static string ColoredGlyphDecoratorNullAccessMessageFormat {
             get {
@@ -106,7 +106,7 @@ namespace SadConsole.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use CellDecoratorHelpers.RemoveAllDecorators to clear a decorator collection.
+        ///   Looks up a localized string similar to Use CellDecoratorHelpers.RemoveAllDecorators to clear a collection of decorators.
         /// </summary>
         internal static string ColoredGlyphDecoratorNullAccessTitle {
             get {

@@ -118,21 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ColoredGlyphDecoratorNewAccessDescription" xml:space="preserve">
-    <value>The Cell.Decorator property should be set by renting an array pool, otherwise memory might be wasted. CellDecoratorHelpers.RemoveAllDecorators clears and removes the pool and CellDecoratorHelpers.AddDecorator rents a pool if required.</value>
+    <value>The Cell.Decorator property should be set by renting an array pool, otherwise memory might be wasted. CellDecoratorHelpers.RemoveAllDecorators clears and removes the pool and CellDecoratorHelpers.AddDecorator rents a pool if required. CellDecoratorHelpers.SetDecorators does both operations.</value>
   </data>
   <data name="ColoredGlyphDecoratorNewAccessMessageFormat" xml:space="preserve">
-    <value>Don't set Cell.Decorators to a new collection, instead use {0} to set the property to null, then use {1} methods to add decorators</value>
+    <value>Don't set Cell.Decorators to a new collection. Use {0} to clear (or create) the collection and add the decorators</value>
   </data>
   <data name="ColoredGlyphDecoratorNewAccessTitle" xml:space="preserve">
-    <value>Use CellDecoratorHelpers to remove all decorators instead of setting to a new collection.</value>
+    <value>Use CellDecoratorHelpers.SetDecorators to replace existing decorators with a new set</value>
   </data>
   <data name="ColoredGlyphDecoratorNullAccessDescription" xml:space="preserve">
     <value>The Cell.Decorator property shouldn't be set to null, instead the pool should be removed with CellDecoratorHelpers.RemoveAllDecorators</value>
   </data>
   <data name="ColoredGlyphDecoratorNullAccessMessageFormat" xml:space="preserve">
-    <value>Don't set Cell.Decorators to null, instead use {0} to return the rented collection pool, which sets the property to null</value>
+    <value>Don't set Cell.Decorators to null. Use {0} to return the rented collection pool, which sets the property to null</value>
   </data>
   <data name="ColoredGlyphDecoratorNullAccessTitle" xml:space="preserve">
-    <value>Use CellDecoratorHelpers.RemoveAllDecorators to clear a decorator collection</value>
+    <value>Use CellDecoratorHelpers.RemoveAllDecorators to clear a collection of decorators</value>
   </data>
 </root>

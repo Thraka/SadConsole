@@ -84,10 +84,21 @@ public class ColoredGlyphDecoratorNewCodeFix : CodeFixProvider
         var isNamespaceImported = semanticModel.LookupNamespacesAndTypes(assignmentExpressionSyntax.SpanStart, name: "CellDecoratorHelpers")
             .Any(symbol => symbol.ContainingNamespace?.ToDisplayString() == "SadConsole");
 
+        // Determine if the right-hand side has initializer items (non-empty collection).
+        string rightSide = assignmentExpressionSyntax.Right.ToString();
+        bool hasItems = assignmentExpressionSyntax.Right switch
+        {
+            ObjectCreationExpressionSyntax creation => creation.Initializer?.Expressions.Count > 0,
+            ImplicitObjectCreationExpressionSyntax implicitCreation => implicitCreation.Initializer?.Expressions.Count > 0,
+            CollectionExpressionSyntax collection => collection.Elements.Count > 0,
+            _ => false
+        };
+
         // Create the new invocation expression.
-        var helperCall = isNamespaceImported
-            ? $"CellDecoratorHelpers.RemoveAllDecorators({memberName})"
-            : $"SadConsole.CellDecoratorHelpers.RemoveAllDecorators({memberName})";
+        string prefix = isNamespaceImported ? "CellDecoratorHelpers" : "SadConsole.CellDecoratorHelpers";
+        var helperCall = hasItems
+            ? $"{prefix}.SetDecorators({rightSide}, {memberName})"
+            : $"{prefix}.RemoveAllDecorators({memberName})";
         ExpressionSyntax methodCall2 = SyntaxFactory.ParseExpression(helperCall)
                                        .WithLeadingTrivia(assignmentExpressionSyntax.GetLeadingTrivia());
 

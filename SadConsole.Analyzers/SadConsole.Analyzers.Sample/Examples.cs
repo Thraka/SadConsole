@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 
 using System.Collections.Generic;
+using SadRogue.Primitives;
 
 namespace SadConsole.Analyzers.Sample;
 
@@ -15,13 +16,23 @@ public class Examples
 
     public void TestSC()
     {
+        ScreenSurface surf = new(20, 20);
+
         ColoredGlyphBase cell = new ColoredGlyph();
-        cell.Decorators = new List<CellDecorator>();
+
+        CellDecorator decorator1 = new();
+
+        cell.Decorators = new();
         cell.Decorators = [];
+        cell.Decorators = new List<CellDecorator>() { decorator1, new CellDecorator() { Color = Color.Purple } };
+        surf.Surface[2].Decorators = [decorator1, new CellDecorator() { Color = Color.Purple }];
+
+        CellDecoratorHelpers.SetDecorators(new List<CellDecorator>() { decorator1, new CellDecorator() { Color = Color.Purple } }, cell);
+        CellDecoratorHelpers.SetDecorators([decorator1, new CellDecorator() { Color = Color.Purple }], cell);
+
         cell.Decorators = null;
         CellDecoratorHelpers.RemoveAllDecorators(cell);
 
-        ScreenSurface surf = new(20, 20);
         surf.Surface[3].Decorators = null;
         surf.Surface[3].Decorators = [];
 
