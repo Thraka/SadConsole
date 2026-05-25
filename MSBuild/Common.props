@@ -8,7 +8,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
 
     <!-- The current package version (unified across all SadConsole packages) -->
-    <SadConsole_Version>10.9.0</SadConsole_Version>
+    <SadConsole_Version>10.10.0</SadConsole_Version>
 
     <!-- Build settings that ensure source/symbols included -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
