@@ -67,6 +67,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare
     steps:
+      - name: Check no existing GitHub release for this version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          tag="v$VERSION"
+          echo "Checking if release '$tag' already exists..."
+          if gh release view "$tag" --repo "${{ github.repository }}" > /dev/null 2>&1; then
+            echo "::error::A GitHub release for $tag already exists. Delete it first if you want to re-release."
+            exit 1
+          fi
+          echo "No existing release for $tag ✓"
+
       - name: Verify CI tests passed for this commit
         env:
           GH_TOKEN: ${{ github.token }}

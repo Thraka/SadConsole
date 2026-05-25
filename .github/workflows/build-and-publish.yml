@@ -108,8 +108,8 @@ jobs:
       # The XML doc corruption is transient — a rebuild usually fixes it.
       # This step builds Debug + Release, validates the XML inside the
       # .nupkg files, and retries up to 10 times if validation fails.
+      # Always runs so artifacts are available for the release job.
       - name: Build and validate XML
-        if: steps.check-exists.outputs.already_published != 'true'
         shell: pwsh
         env:
           PROJECT: ${{ inputs.project-name }}
@@ -186,9 +186,8 @@ jobs:
               if ($LASTEXITCODE -ne 0) { throw "Failed to push $($pkg.Name)" }
           }
 
-      # ── Upload artifacts for debugging / archive ───────────────────
+      # ── Upload artifacts for release job / archive ───────────────────
       - name: Upload package artifacts
-        if: steps.check-exists.outputs.already_published != 'true'
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: ${{ inputs.project-name }}-packages
