@@ -1,3 +1,14 @@
+## v10.10.0 (05/25/2026)
+
+- [Core] Moved `Coroutine` from NuGet package into SadConsole directly. Added tests.
+- [Core] Fix #370: Use output glyph index for surface color fallback in string parsers.
+- [Hosts] Fix #380: Cache view width/height for `CachedRenderRects` invalidation.
+- [Controls] Fix #376: Extract `UpdateAndRedrawChildren` from `CompositeControl.UpdateAndRedraw`.
+- [Extended] Finished 1.5 of sliced border addin.
+- [MonoGame] Fix bug in ImGui renderer.
+- [ImGui] Refactor ImGui configuration and components.
+- [Analyzers] Code analyzers working with improved codefix for setting new decorators and detecting `Control.UpdateAndRedraw` setting `IsDirty = false`.
+
 ## v10.9.0 (03/28/2026)
 
 - [GitHub] Publishing moved to workflows triggered by pushing a tag.

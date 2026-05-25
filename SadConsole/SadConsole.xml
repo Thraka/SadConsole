@@ -12136,7 +12136,7 @@
             <code>[a-zA-Z]</code><br/>
             Explanation:<br/>
             <code>
-            ○ Match an ASCII letter.<br/>
+            ○ Match a character in the set [A-Za-z].<br/>
             </code>
             </remarks>
         </member>
@@ -14502,6 +14502,12 @@
         <member name="M:SadConsole.UI.Controls.CompositeControl.UpdateAndRedraw(System.TimeSpan)">
             <summary>
             Updates each control hosted by this control.
+            </summary>
+            <param name="time">The game frame time delta.</param>
+        </member>
+        <member name="M:SadConsole.UI.Controls.CompositeControl.UpdateAndRedrawChildren(System.TimeSpan)">
+            <summary>
+            Updates and redraws the child controls, setting <see cref="P:SadConsole.UI.Controls.ControlBase.IsDirty"/> if any child is dirty. Call this from a derived control to handle the composite update logic without calling the base <see cref="M:SadConsole.UI.Controls.CompositeControl.UpdateAndRedraw(System.TimeSpan)"/> method.
             </summary>
             <param name="time">The game frame time delta.</param>
         </member>
@@ -17717,6 +17723,4 @@
             <summary>Supports searching for characters in or not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".</summary>
         </member>
     </members>
-</doc>
-mbers>
 </doc>

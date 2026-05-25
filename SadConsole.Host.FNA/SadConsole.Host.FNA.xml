@@ -650,6 +650,26 @@
             The output texture. After each screen in SadConsole is drawn, they're then drawn on this output texture to compose the final scene.
             </summary>
         </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputTexture">
+            <summary>
+            Same as <see cref="P:SadConsole.Host.Global.RenderOutput"/>. Only provided for other hosts that need it.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputWidth">
+            <summary>
+            Gets the width, in pixels, of the rendered output.
+            </summary>
+            <remarks>This property retrieves the width from the underlying texture used for rendering. It is
+            useful for determining the horizontal dimension of the output when performing layout calculations or rendering
+            operations.</remarks>
+        </member>
+        <member name="P:SadConsole.Host.Global.RenderOutputHeight">
+            <summary>
+            Gets the height, in pixels, of the texture used for rendering output.
+            </summary>
+            <remarks>This property provides the vertical dimension of the rendering surface. Use it to determine
+            the required display space or to align graphical elements based on the output's height.</remarks>
+        </member>
         <member name="P:SadConsole.Host.Global.UpdateLoopGameTime">
             <summary>
             Reference to the game timer used in the MonoGame update loop.
