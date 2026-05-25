@@ -22,8 +22,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" />
-    <ProjectReference Include="..\SadConsole.Analyzers\SadConsole.Analyzers.csproj" />
+    <ProjectReference Include="..\SadConsole.Analyzers.CodeFixes\SadConsole.Analyzers.CodeFixes.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\SadConsole.Analyzers\SadConsole.Analyzers.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
