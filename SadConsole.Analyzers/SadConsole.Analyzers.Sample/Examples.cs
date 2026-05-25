@@ -19,6 +19,11 @@ public class Examples
         cell.Decorators = new List<CellDecorator>();
         cell.Decorators = [];
         cell.Decorators = null;
-        CellDecoratorHelpers.RemoveAllDecorators(cell);       
+        CellDecoratorHelpers.RemoveAllDecorators(cell);
+
+        ScreenSurface surf = new(20, 20);
+        surf.Surface[3].Decorators = null;
+        surf.Surface[3].Decorators = [];
+
     }
 }

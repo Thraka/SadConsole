@@ -30,9 +30,9 @@ public class ColoredGlyphDecoratorSetAnalyzer : DiagnosticAnalyzer
 
     internal static readonly DiagnosticDescriptor RuleNull = new(
         DiagnosticIDs.CellDecoratorNull,
-        GenerateString(nameof(Resources.ColoredGlyphDecoratorNewAccessTitle)),
-        GenerateString(nameof(Resources.ColoredGlyphDecoratorNewAccessMessageFormat)),
-        description: GenerateString(nameof(Resources.ColoredGlyphDecoratorNewAccessDescription)),
+        GenerateString(nameof(Resources.ColoredGlyphDecoratorNullAccessTitle)),
+        GenerateString(nameof(Resources.ColoredGlyphDecoratorNullAccessMessageFormat)),
+        description: GenerateString(nameof(Resources.ColoredGlyphDecoratorNullAccessDescription)),
         category: DiagnosticCategories.Usage,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
@@ -76,7 +76,7 @@ public class ColoredGlyphDecoratorSetAnalyzer : DiagnosticAnalyzer
         // Check if decorators is being assigned a new list, or an array expression
         if (expressionSyntax.Right.IsKind(SyntaxKind.NullLiteralExpression))
         {
-            var diagnostic = Diagnostic.Create(RuleNull, expressionSyntax.GetLocation(), "SadConsole.CellDecoratorHelpers");
+            var diagnostic = Diagnostic.Create(RuleNull, expressionSyntax.GetLocation(), "CellDecoratorHelpers.RemoveAllDecorators");
 
             // Reporting a diagnostic is the primary outcome of analyzers.
             context.ReportDiagnostic(diagnostic);
@@ -84,10 +84,9 @@ public class ColoredGlyphDecoratorSetAnalyzer : DiagnosticAnalyzer
 
         else if (expressionSyntax.Right.IsKind(SyntaxKind.ObjectCreationExpression) ||
             expressionSyntax.Right.IsKind(SyntaxKind.ImplicitObjectCreationExpression) ||
-            expressionSyntax.Right.IsKind(SyntaxKind.CollectionExpression) ||
-            expressionSyntax.Right.IsKind(SyntaxKind.NullLiteralExpression))
+            expressionSyntax.Right.IsKind(SyntaxKind.CollectionExpression))
         {
-            var diagnostic = Diagnostic.Create(RuleNew, expressionSyntax.GetLocation(), "SadConsole.CellDecoratorHelpers");
+            var diagnostic = Diagnostic.Create(RuleNew, expressionSyntax.GetLocation(), "CellDecoratorHelpers.RemoveAllDecorators", "CellDecoratorHelpers.*");
 
             // Reporting a diagnostic is the primary outcome of analyzers.
             context.ReportDiagnostic(diagnostic);

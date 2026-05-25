@@ -15,33 +15,28 @@ namespace SadConsole.Analyzers;
 /// A sample code fix provider that renames classes with the company name in their definition.
 /// All code fixes must  be linked to specific analyzers.
 /// </summary>
-[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ColoredGlyphDecoratorNullCodeFix)), Shared]
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ColoredGlyphDecoratorNewCodeFix)), Shared]
 public class ColoredGlyphDecoratorNewCodeFix : CodeFixProvider
 {
     private const string CommonName = "Common";
 
     // Specify the diagnostic IDs of analyzers that are expected to be linked.
     public sealed override ImmutableArray<string> FixableDiagnosticIds { get; } =
-        ImmutableArray.Create(DiagnosticIDs.CellDecoratorNull);
+        ImmutableArray.Create(DiagnosticIDs.CellDecoratorNew);
 
     // If you don't need the 'fix all' behaviour, return null.
     public override FixAllProvider? GetFixAllProvider() => null;
 
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
-        // We link only one diagnostic and assume there is only one diagnostic in the context.
         var diagnostic = context.Diagnostics.Single();
 
-        // 'SourceSpan' of 'Location' is the highlighted area. We're going to use this area to find the 'SyntaxNode' to rename.
         var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-        // Get the root of Syntax Tree that contains the highlighted diagnostic.
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-        // Find SyntaxNode corresponding to the diagnostic.
         var diagnosticNode = root?.FindNode(diagnosticSpan);
 
-        // To get the required metadata, we should match the Node to the specific type: 'ClassDeclarationSyntax'.
         if (diagnosticNode is not AssignmentExpressionSyntax declaration)
             return;
 
@@ -69,8 +64,7 @@ public class ColoredGlyphDecoratorNewCodeFix : CodeFixProvider
         if (assignmentExpressionSyntax.Left is not MemberAccessExpressionSyntax memberSyntax)
             return document;
 
-        if (memberSyntax.Expression.TryGetInferredMemberName() is not string memberName)
-            return document;
+        string memberName = memberSyntax.Expression.ToString();
 
         var compilation = await context.Document.Project.GetCompilationAsync(cancellationToken);
 

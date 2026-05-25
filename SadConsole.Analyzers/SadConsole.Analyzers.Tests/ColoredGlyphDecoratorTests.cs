@@ -45,7 +45,7 @@ public class Program
         test.ExpectedDiagnostics.Add(
             new DiagnosticResult(SadConsole.Analyzers.ColoredGlyphDecoratorSetAnalyzer.RuleNull)
                 .WithLocation(7, 9)
-                .WithArguments("SadConsole.CellDecoratorHelpers")
+                .WithArguments("CellDecoratorHelpers.RemoveAllDecorators")
         );
 
         //var expected = Verifier.Diagnostic(SadConsole.Analyzers.ColoredGlyphDecoratorSetAnalyzer.RuleNull);
