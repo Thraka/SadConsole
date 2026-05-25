@@ -74,7 +74,7 @@ public class ColoredGlyphDecoratorNullCodeFix : CodeFixProvider
 
         // Check if the namespace is already imported
         var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-        var namespaceImported = semanticModel.Compilation.GlobalNamespace
+        var namespaceImported = semanticModel!.Compilation.GlobalNamespace
             .GetNamespaceMembers()
             .Any(ns => ns.Name == helpersSymbol.ContainingNamespace.ToString());
 
@@ -93,7 +93,7 @@ public class ColoredGlyphDecoratorNullCodeFix : CodeFixProvider
 
         // Replace the old assignment with the new invocation.
         var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-        var newRoot = root.ReplaceNode(assignmentExpressionSyntax, methodCall2);
+        var newRoot = root!.ReplaceNode(assignmentExpressionSyntax, methodCall2);
 
         return document.WithSyntaxRoot(newRoot);
     }
