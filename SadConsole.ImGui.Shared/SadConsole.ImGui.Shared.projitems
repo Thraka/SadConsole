@@ -60,11 +60,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)ImGuiSC\WindowHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ImGuiRenderer.Base.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)roboto-regular.ttf">
-      <PackagePath>content/.</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <pack>true</pack>
-    </Content>
-  </ItemGroup>
 </Project>
