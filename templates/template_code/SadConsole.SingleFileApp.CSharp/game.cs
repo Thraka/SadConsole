@@ -1,4 +1,5 @@
-#:package SadConsole.Host.MonoGame@10.8.0
+#:package SadConsole.Host.MonoGame@10.10.0
+#:package SadConsole.Extended@10.10.0
 #:package MonoGame.Framework.DesktopGL@3.8.4.1
 
 using SadConsole;

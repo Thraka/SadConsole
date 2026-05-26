@@ -25,7 +25,7 @@
     <DefineConstants Condition=" '$(GameHost)' == 'sfml' ">$(DefineConstants);SFML</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'fna' ">$(DefineConstants);FNA;MONOGAME</DefineConstants>
 
-    <SadConsoleVersion>10.9.0</SadConsoleVersion>
+    <SadConsoleVersion>10.10.0</SadConsoleVersion>
   </PropertyGroup>
 
   <!-- SadConsole related NuGet packages. -->
