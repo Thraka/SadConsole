@@ -119,12 +119,22 @@ namespace SadConsole.PerformanceTests
             throw new NotImplementedException();
         }
 
+        public override void Stop()
+        {
+            throw new NotImplementedException();
+        }
+
         public override ITexture CreateTexture(int width, int height)
         {
             throw new NotImplementedException();
         }
 
         public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ToggleFullScreen()
         {
             throw new NotImplementedException();
         }
