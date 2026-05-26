@@ -144,4 +144,13 @@
   <data name="ControlBaseIsDirtyFalseTitle" xml:space="preserve">
     <value>Remove IsDirty = false from UpdateAndRedraw override</value>
   </data>
+  <data name="ConfigureWindowConflictDescription" xml:space="preserve">
+    <value>SetWindowSizeInCells and SetWindowSizeInPixels internally call ConfigureWindow, so using them alongside ConfigureWindow will overwrite your custom configuration. Move the window size call inside ConfigureWindow's action instead.</value>
+  </data>
+  <data name="ConfigureWindowConflictMessageFormat" xml:space="preserve">
+    <value>Don't use {0} with ConfigureWindow; call config.{1} inside the ConfigureWindow action instead</value>
+  </data>
+  <data name="ConfigureWindowConflictTitle" xml:space="preserve">
+    <value>SetWindowSizeInCells/SetWindowSizeInPixels conflicts with ConfigureWindow</value>
+  </data>
 </root>

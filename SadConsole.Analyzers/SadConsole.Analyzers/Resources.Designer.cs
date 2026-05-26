@@ -140,5 +140,32 @@ namespace SadConsole.Analyzers {
                 return ResourceManager.GetString("ControlBaseIsDirtyFalseTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SetWindowSizeInCells and SetWindowSizeInPixels internally call ConfigureWindow....
+        /// </summary>
+        internal static string ConfigureWindowConflictDescription {
+            get {
+                return ResourceManager.GetString("ConfigureWindowConflictDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Don't use {0} with ConfigureWindow; call config.{1} inside the ConfigureWindow action instead.
+        /// </summary>
+        internal static string ConfigureWindowConflictMessageFormat {
+            get {
+                return ResourceManager.GetString("ConfigureWindowConflictMessageFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to SetWindowSizeInCells/SetWindowSizeInPixels conflicts with ConfigureWindow.
+        /// </summary>
+        internal static string ConfigureWindowConflictTitle {
+            get {
+                return ResourceManager.GetString("ConfigureWindowConflictTitle", resourceCulture);
+            }
+        }
     }
 }

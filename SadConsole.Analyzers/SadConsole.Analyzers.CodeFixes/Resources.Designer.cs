@@ -86,5 +86,14 @@ namespace SadConsole.Analyzers {
                 return ResourceManager.GetString("SADCON0003_RemoveIsDirtyFalseTitle", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Move window size call into ConfigureWindow.
+        /// </summary>
+        internal static string SADCON0004_MoveWindowSizeToConfigureWindowTitle {
+            get {
+                return ResourceManager.GetString("SADCON0004_MoveWindowSizeToConfigureWindowTitle", resourceCulture);
+            }
+        }
     }
 }

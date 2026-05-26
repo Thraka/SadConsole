@@ -126,4 +126,7 @@
   <data name="SADCON0003_RemoveIsDirtyFalseTitle" xml:space="preserve">
     <value>Remove IsDirty = false assignment</value>
   </data>
+  <data name="SADCON0004_MoveWindowSizeToConfigureWindowTitle" xml:space="preserve">
+    <value>Move window size call into ConfigureWindow</value>
+  </data>
 </root>

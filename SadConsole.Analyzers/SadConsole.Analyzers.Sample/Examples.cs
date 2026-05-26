@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using SadConsole.Configuration;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
@@ -16,13 +17,23 @@ public class Examples
     {
     }
 
+    public void TestBuilder()
+    {
+        Builder.GetBuilder()
+            .OnEnd(null)
+            //.SetWindowSizeInPixels(200, 200)
+            //.SetWindowSizeInCells(10, 10, false)
+            .ConfigureWindow((config, builder, host) => { })
+            .Run();
+    }
+
     public void TestSC()
     {
         ScreenSurface surf = new(20, 20);
 
         ColoredGlyphBase cell = new ColoredGlyph();
 
-        CellDecorator decorator1 = new Cell();
+        CellDecorator decorator1 = new();
 
         cell.Decorators = new();
         cell.Decorators = [];

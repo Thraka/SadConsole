@@ -4,9 +4,10 @@ namespace SadConsole.Analyzers;
 
 public static class DiagnosticIDs
 {
-    public const string CellDecoratorNew = "SADCON0001"; //
-    public const string CellDecoratorNull = "SADCON0002"; //
-    public const string ControlBaseIsDirtyFalse = "SADCON0003"; //
+    public const string CellDecoratorNew = "SADCON0001";
+    public const string CellDecoratorNull = "SADCON0002";
+    public const string ControlBaseIsDirtyFalse = "SADCON0003";
+    public const string ConfigureWindowConflict = "SADCON0004";
 }
 
 public static class DiagnosticCategories
