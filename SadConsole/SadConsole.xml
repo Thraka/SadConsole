@@ -5121,6 +5121,11 @@
             Runs the game.
             </summary>
         </member>
+        <member name="M:SadConsole.GameHost.Stop">
+            <summary>
+            Stops the game.
+            </summary>
+        </member>
         <member name="M:SadConsole.GameHost.GetTexture(System.String)">
             <summary>
             Gets a texture from the implemented host.

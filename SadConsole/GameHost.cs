@@ -240,6 +240,11 @@ public abstract partial class GameHost : IDisposable
     public abstract void Run();
 
     /// <summary>
+    /// Stops the game.
+    /// </summary>
+    public abstract void Stop();
+
+    /// <summary>
     /// Gets a texture from the implemented host.
     /// </summary>
     /// <param name="resourcePath">The path to the texture to load.</param>

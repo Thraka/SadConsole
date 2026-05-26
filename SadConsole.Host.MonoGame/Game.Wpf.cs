@@ -241,6 +241,12 @@ public partial class Game : GameHost
         throw new NotImplementedException();
     }
 
+    /// <inheritdoc/>
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void ResizeWindow(int width, int height, bool resizeOutputSurface = false)
     {
         throw new NotImplementedException();

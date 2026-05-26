@@ -393,6 +393,9 @@
             <param name="access">Unused by monogame.</param>
             <returns>The stream.</returns>
         </member>
+        <member name="M:SadConsole.Game.Stop">
+            <inheritdoc/>
+        </member>
         <member name="T:SadConsole.Host.GameTexture">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/>. Generally you request this from the <see cref="M:SadConsole.GameHost.GetTexture(System.String)"/> method.

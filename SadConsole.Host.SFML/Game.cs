@@ -321,6 +321,13 @@ public sealed partial class Game : GameHost
     }
 
     /// <inheritdoc/>
+    public override void Stop()
+    {
+        Global.GraphicsDevice.Close();
+        Dispose();
+    }
+
+    /// <inheritdoc/>
     public override ITexture GetTexture(string resourcePath) =>
         new SadConsole.Host.GameTexture(resourcePath);
 

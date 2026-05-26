@@ -244,6 +244,13 @@ public sealed partial class Game : GameHost
     }
 
     /// <inheritdoc/>
+    public override void Stop()
+    {
+        MonoGameInstance.Exit();
+        Dispose();
+    }
+
+    /// <inheritdoc/>
     public override ITexture GetTexture(string resourcePath) =>
         new Host.GameTexture(resourcePath);
 

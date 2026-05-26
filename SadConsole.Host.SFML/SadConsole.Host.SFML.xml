@@ -342,6 +342,9 @@
         <member name="M:SadConsole.Game.Run">
             <inheritdoc/>
         </member>
+        <member name="M:SadConsole.Game.Stop">
+            <inheritdoc/>
+        </member>
         <member name="M:SadConsole.Game.GetTexture(System.String)">
             <inheritdoc/>
         </member>
