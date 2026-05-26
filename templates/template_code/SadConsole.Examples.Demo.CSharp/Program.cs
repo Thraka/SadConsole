@@ -39,29 +39,15 @@ Settings.WindowTitle = "SadConsole Examples (SFML)";
 
 Builder
     .GetBuilder()
-    .ConfigureFonts((config, host) =>
-    {
-        // FullHD default: <= 1920x1870
-        IFont.Sizes defaultFontSize = IFont.Sizes.One;
-
-        host.GetDeviceScreenSize(out int width, out int height);
-
-        // QHD (aka 2k)
-        if (width > 1920 && height > 1080)
-            defaultFontSize = IFont.Sizes.Two;
-
-        //// Most likely 4k
-        //if (width > 2560 && height > 1440)
-        //    defaultFontSize = IFont.Sizes.Four;
-
-        config.DefaultFontSize = defaultFontSize;
-        config.UseExtendedFont = true;
-        config.AddExtraFonts("Res/Fonts/dbyte_2x.font");
-    })
-    
     .SetStartingScreen<RootScreen>()
     .IsStartingScreenFocused(false) // Don't want RootScreen to be focused because RootScreen automatically focuses the selected demo console
-    .SetWindowSizeInCells(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT)
+    .ConfigureWindow((config, builder, host) =>
+    {
+        config.SetWindowSizeInCells(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT, true);
+        config.BorderlessWindowedFullscreen = true;
+        config.Fullscreen = true;
+    })
     .SetSplashScreen<SadConsole.SplashScreens.Ansi1>()
     .PopupGlyphPicker(SadConsole.Input.Keys.F11)
+    .OnStart((sender, host) => { host.RootComponents.Add(new RootKeyboardHooksRootComponent()); })
     .Run();

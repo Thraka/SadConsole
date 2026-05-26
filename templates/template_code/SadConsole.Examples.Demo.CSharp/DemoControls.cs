@@ -181,9 +181,8 @@ class ControlsTest : SadConsole.UI.ControlsConsole
 
         ButtonBase button;
 
-        button = new Button(11, 1)
+        button = new Button("Click")
         {
-            Text = "Click",
             Position = new Point(1, 3)
         };
         button.Click += (s, a) => SadConsole.UI.Window.Message("This has been clicked -- and your password field contains '" + password.Text + "'", "Close");

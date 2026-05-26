@@ -18,7 +18,7 @@
   <PropertyGroup>
     <!-- monogame, sfml, fna, or kni -->
     <!-- If sfml, target framework must be set to a platform, such as net9.0-windows -->
-    <GameHost>sfml</GameHost>
+    <GameHost>monogame</GameHost>
 
     <DefineConstants>$(DefineConstants);PROJREFS</DefineConstants>
     <DefineConstants Condition=" '$(GameHost)' == 'monogame' ">$(DefineConstants);MONOGAME</DefineConstants>
@@ -71,18 +71,19 @@
 
   <!-- Files related to compiling and running the demos. -->
   <ItemGroup>
-    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\*.cs" />
-    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Configuration\*.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Res\**">
       <Link>Res\%(RecursiveDir)\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\*.cs" />
+    <Compile Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Configuration\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\DemoCustomCellsRenderer.Other.cs" />
     <Compile Remove="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\DemoResolutions.cs" />
+    <Compile Remove="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\templates\template_code\SadConsole.Examples.Demo.CSharp\app.manifest">
