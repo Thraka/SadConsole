@@ -1,0 +1,90 @@
+# Release workflow for SadConsole.Editor.Serialization NuGet package.
+# Reads the version from the .csproj, checks if it already exists on NuGet,
+# and publishes only if the version is new.
+
+name: Release Editor Serialization
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - master
+    paths:
+      - "Editor.Serialization/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: editor-serialization-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Determine version
+        id: get-version
+        shell: pwsh
+        run: |
+          $content = Get-Content "Editor.Serialization/SadConsole.Editor.Serialization.csproj" -Raw
+          $match = [regex]::Match($content, '<(?:PackageVersion|Version)>([^<]+)</(?:PackageVersion|Version)>')
+          if (-not $match.Success) { throw "Could not read package version from SadConsole.Editor.Serialization.csproj" }
+          $version = $match.Groups[1].Value
+          Write-Host "Editor.Serialization version: $version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Check if version exists on NuGet
+        id: check-nuget
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          $packageId = "SadConsole.Editor.Serialization"
+          Write-Host "Checking NuGet for $packageId $env:VERSION..."
+          try {
+              $response = Invoke-RestMethod "https://api.nuget.org/v3-flatcontainer/$($packageId.ToLower())/index.json"
+              if ($response.versions -contains $env:VERSION) {
+                  Write-Host "Version $env:VERSION already exists on NuGet. Skipping."
+                  "exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+                  exit 0
+              }
+          }
+          catch {
+              # 404 means the package has never been published — continue
+              if ($_.Exception.Response.StatusCode -ne 404) {
+                  Write-Warning "NuGet query failed: $($_.Exception.Message)"
+              }
+          }
+          Write-Host "Version $env:VERSION not found on NuGet. Will publish."
+          "exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Build and pack
+        if: steps.check-nuget.outputs.exists != 'true'
+        run: |
+          dotnet build Editor.Serialization/SadConsole.Editor.Serialization.csproj -c Release
+
+      - name: Push to NuGet
+        if: steps.check-nuget.outputs.exists != 'true'
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          $nupkg = "nuget/SadConsole.Editor.Serialization.$env:VERSION.nupkg"
+          if (-not (Test-Path $nupkg)) {
+              throw "Package not found at $nupkg"
+          }
+          Write-Host "Pushing $nupkg to NuGet..."
+          dotnet nuget push $nupkg --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
