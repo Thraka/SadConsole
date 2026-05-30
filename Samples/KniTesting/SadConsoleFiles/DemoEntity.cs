@@ -84,7 +84,7 @@ internal class EntitySurface : ScreenSurface
 
         // Create a large amount of other entites
         others = new List<Entity>();
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 150; i++)
         {
             Entity item;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Coroutine;
 using SadConsole;
 using SadRogue.Primitives;
 
