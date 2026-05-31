@@ -1,3 +1,8 @@
+## v10.10.1 (05/30/2026)
+
+- `Stop` method added to game hosts to end the game programmatically.
+- Fix issue with ImGui helpers not including the font file.
+
 ## v10.10.0 (05/25/2026)
 
 - [Core] Moved `Coroutine` from NuGet package into SadConsole directly. Added tests.
