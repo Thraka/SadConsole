@@ -5,7 +5,7 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.0-Beta3</Version>
+    <Version>3.0.0-Beta4</Version>
     <AssemblyTitle>SadConsole Editor types for serialization</AssemblyTitle>
     <Description>Loads files saved by the SadConsole editor.</Description>
     <PackageId>SadConsole.Editor.Serialization</PackageId>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="SadConsole.Extended" Version="10.8.0" PrivateAssets="All" />
+    <PackageReference Include="SadConsole.Extended" Version="10.10.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
