@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace SadRogue.Primitives;
@@ -409,6 +410,84 @@ public static class ColorExtensions2
         return hue;
     }
 
+    public static int[][] SplashChannelValues_Cellpond =
+    [
+        [0x17, 0x37, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xf2, 0xff],
+        [0x1d, 0x43, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf5, 0xff],
+        [0x28, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf7, 0xff]
+    ];
+
+    /// <summary>
+    /// Gets a color where each RGBA channel is specified as a rank from 0 to 9, mapped onto the standard 0-255 range.
+    /// </summary>
+    /// <remarks>
+    /// Based on the format used by https://www.todepond.com/lab/splash/.
+    /// If <paramref name="ChannelValues"/> is not provided, the values will be calculated as <c>channelValue / 9d * 255d</c>.
+    /// If <paramref name="ChannelValues"/> is provided, the values will be looked up in the array using the channel value as an index.
+    /// The alpha channel is always calculated as <c>a / 9d * 255d</c> regardless of <paramref name="ChannelValues"/>.
+    /// The array should be in the format of <c>int[4][10]</c> where the first dimension is for each channel and the second dimension is for the values from 0 to 9 for that channel.
+    /// For example, to use the Cellpond splash screen values, pass in <see cref="SplashChannelValues_Cellpond"/> for <paramref name="ChannelValues"/>.
+    /// </remarks>
+    /// <param name="color">A discarded color, simply to allow the extension method to run.</param>
+    /// <param name="r">The red channel value, from 0 to 9.</param>
+    /// <param name="g">The green channel value, from 0 to 9.</param>
+    /// <param name="b">The blue channel value, from 0 to 9.</param>
+    /// <param name="a">The alpha channel value, from 0 to 9. Defaults to 9 (fully opaque).</param>
+    /// <param name="ChannelValues">Optional lookup table mapping each channel's 0-9 rank to a value in the 0-255 range. Alpha is never included in the lookup table.</param>
+    /// <returns>The resulting color.</returns>
+    public static Color FromSplash(this Color color, int r, int g, int b, int a = 9, int[][]? ChannelValues = null)
+    {
+        // Based on https://www.todepond.com/lab/splash/
+
+        if (ChannelValues is null)
+        {
+            return new
+            (
+                (int)(Math.Clamp(r, 0, 9) / 9d * 255d),
+                (int)(Math.Clamp(g, 0, 9) / 9d * 255d),
+                (int)(Math.Clamp(b, 0, 9) / 9d * 255d),
+                (int)(Math.Clamp(a, 0, 9) / 9d * 255d)
+            );
+        }
+        else
+        {
+            return new
+            (
+                ChannelValues[0][Math.Clamp(r, 0, 9)],
+                ChannelValues[1][Math.Clamp(g, 0, 9)],
+                ChannelValues[2][Math.Clamp(b, 0, 9)],
+                (int)(Math.Clamp(a, 0, 9) / 9d * 255d)
+            );
+        }
+    }
+
+    /// <summary>
+    /// Gets a color from a 4-character splash string where each character is a digit 0-9 representing the rank of the R, G, B, and A channels respectively. For example 0000 is transparent black and 9999 is white. Alpha can be omitted.
+    /// </summary>
+    /// <remarks>
+    /// The string is left-padded with <c>'0'</c> to four characters and only the first four characters are used.
+    /// Each digit is then forwarded to <see cref="FromSplash(Color, int, int, int, int, int[][])"/>.
+    /// </remarks>
+    /// <param name="color">A discarded color, simply to allow the extension method to run.</param>
+    /// <param name="value">A string of up to four digits (0-9) in RGBA order, for example <c>"9035"</c>. Alpha can be omitted.</param>
+    /// <param name="ChannelValues">Optional lookup table mapping each channel's 0-9 rank to a value in the 0-255 range. Alpha is never included in the lookup table.</param>
+    /// <returns>The color represented by the splash string.</returns>
+    public static Color FromSplash(this Color color, string value, int[][]? ChannelValues = null)
+    {
+        int[] colorValues;
+
+        if (value.Length < 3 || value.Length > 4 || !value.All(char.IsDigit))
+            throw new ArgumentException($"Value must be a string of 3 or 4 digits (0-9) representing RGBA channels. Value: {value}", nameof(value));
+
+        if (value.Length == 3)
+            colorValues = value.PadRight(4, '9').Substring(0, 4).Select(c => int.Parse(c.ToString())).ToArray();
+
+        else
+            colorValues = value.Substring(0, 4).Select(c => int.Parse(c.ToString())).ToArray();
+
+        return FromSplash(color, colorValues[0], colorValues[1], colorValues[2], colorValues[3], ChannelValues);
+    }
+
     /// <summary>
     /// Converts a color to the format used by <see cref="SadConsole.StringParser.ParseCommandRecolor"/> command.
     /// </summary>
@@ -426,7 +505,7 @@ public static class ColorExtensions2
     /// <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
     /// <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
     /// <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
-    /// <returns></returns>
+    /// <returns>The resulting color.</returns>
     public static Color FromParser(this Color color, string value, out bool keepR, out bool keepG, out bool keepB, out bool keepA, out bool useDefault)
     {
         useDefault = false;
@@ -528,13 +607,23 @@ public static class ColorExtensions2
         }
         else if (value == "rand")
         {
-            return GetRandomColor(Color.White, SadConsole.GameHost.Instance.Random);
+            return GetRandomColor(default, SadConsole.GameHost.Instance.Random);
         }
-        // Temp code to eventually support parsing a ToString from a color...
-        //else if (value[0] == '{' && value[^1] == '}' && value.Contains("R:") && value.Contains("G:") && value.Contains("B:") && value.Contains("A:"))
-        //{
-            
-        //}
+
+        // Handle splash colors
+        else if ((value.Length == 3 || value.Length == 4) && value.All(char.IsDigit))
+        {
+            try
+            {
+                return FromSplash(default, value);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(exceptionMessage, ex);
+            }
+        }
+
+        // Last try is a color mapping lookup
         else
         {
             value = value.ToLowerInvariant();
