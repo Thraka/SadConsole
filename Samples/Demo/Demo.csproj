@@ -101,9 +101,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Local\" />
-  </ItemGroup>
 
   <Target Name="RestoreTools" BeforeTargets="Build">
     <Exec Command="dotnet tool restore" />
