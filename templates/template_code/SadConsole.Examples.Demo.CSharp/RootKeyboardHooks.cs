@@ -32,7 +32,7 @@ public class RootKeyboardHooksRootComponent: RootComponent
     public override void Run(TimeSpan delta)
     {
         // Don't interfere with splash screens
-        if (Game.Instance.FrameNumber == 0)
+        if (Game.Instance.FrameNumber == 0 || Game.Instance.Screen!.Children.OfType<SplashScreenManager>().Any())
             return;
 
         bool modalVisible = Game.Instance.Screen!.Children.OfType<Window>().Any(w => w.IsVisible && w.IsModal);
