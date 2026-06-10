@@ -10,8 +10,21 @@
     <PackageId>SadConsole</PackageId>
     <PackageTags>sadconsole;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
     <PackageReleaseNotes>
-- Integrated https://github.com/Ellpeck/Coroutine and removed the dependency.
-- [Breaking Change] Coroutine namespace changed to SadConsole.Coroutine.
+v10.10.1 (05/30/2026)
+
+- Stop method added to game hosts to end the game programmatically.
+- Fix issue with ImGui helpers not including the font file.
+
+v10.10.0 (05/25/2026)
+
+- [Core] Moved Coroutine from NuGet package into SadConsole directly. Added tests.
+- [Core] Fix #370: Use output glyph index for surface color fallback in string parsers.
+- [Hosts] Fix #380: Cache view width/height for CachedRenderRects invalidation.
+- [Controls] Fix #376: Extract UpdateAndRedrawChildren from CompositeControl.UpdateAndRedraw.
+- [Extended] Finished 1.5 of sliced border addin.
+- [MonoGame] Fix bug in ImGui renderer.
+- [ImGui] Refactor ImGui configuration and components.
+- [Analyzers] Code analyzers working with improved codefix for setting new decorators and detecting Control.UpdateAndRedraw setting IsDirty = false.
     </PackageReleaseNotes>
   </PropertyGroup>
 

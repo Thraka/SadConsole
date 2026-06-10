@@ -17429,6 +17429,19 @@
             Custom color mappings for the <see cref="M:SadRogue.Primitives.ColorExtensions2.FromName(System.String)"/> and <see cref="M:SadRogue.Primitives.ColorExtensions2.FromParser(SadRogue.Primitives.Color,System.String,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)"/> methods. Key names should be lowercase.
             </summary>
         </member>
+        <member name="F:SadRogue.Primitives.ColorExtensions2.SplashDefaultPalette">
+            <summary>
+            An optional palette for Splash color functions. If null, the color values are calculated as <c>channelValue / 9d * 255d</c>. If provided, the color values are looked up in the array.
+            </summary>
+            <remarks>
+            The array is designed to represent the Splash color palette in the format of <c>int[4][10]</c> where the first dimension is for each channel (RGBA) and the second dimension is 10 values of that color channel.;
+            </remarks>
+        </member>
+        <member name="F:SadRogue.Primitives.ColorExtensions2.SplashChannelValues_Cellpond">
+            <summary>
+            The Cellpond palette defined by https://www.todepond.com/lab/splash/.
+            </summary>
+        </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.LerpSteps(SadRogue.Primitives.Color,SadRogue.Primitives.Color,System.Int32)">
             <summary>
             Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
@@ -17645,6 +17658,39 @@
             <returns>The hue value.</returns>
             <remarks>Taken from the mono source code.</remarks>
         </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions2.FromSplash(SadRogue.Primitives.Color,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32[][])">
+            <summary>
+            Gets a color where each RGBA channel is specified as a rank from 0 to 9, mapped onto the standard 0-255 range.
+            </summary>
+            <remarks>
+            Based on the format used by https://www.todepond.com/lab/splash/.
+            If <paramref name="ChannelValues"/> is not provided, the values will be calculated as <c>channelValue / 9d * 255d</c>.
+            If <paramref name="ChannelValues"/> is provided, the values will be looked up in the array using the channel value as an index.
+            The alpha channel is always calculated as <c>a / 9d * 255d</c> regardless of <paramref name="ChannelValues"/>.
+            The array should be in the format of <c>int[4][10]</c> where the first dimension is for each channel and the second dimension is for the values from 0 to 9 for that channel.
+            For example, to use the Cellpond splash screen values, pass in <see cref="F:SadRogue.Primitives.ColorExtensions2.SplashChannelValues_Cellpond"/> for <paramref name="ChannelValues"/>.
+            </remarks>
+            <param name="color">A discarded color, simply to allow the extension method to run.</param>
+            <param name="r">The red channel value, from 0 to 9.</param>
+            <param name="g">The green channel value, from 0 to 9.</param>
+            <param name="b">The blue channel value, from 0 to 9.</param>
+            <param name="a">The alpha channel value, from 0 to 9. Defaults to 9 (fully opaque).</param>
+            <param name="ChannelValues">Optional lookup table mapping each channel's 0-9 rank to a value in the 0-255 range. Alpha is never included in the lookup table.</param>
+            <returns>The resulting color.</returns>
+        </member>
+        <member name="M:SadRogue.Primitives.ColorExtensions2.FromSplash(SadRogue.Primitives.Color,System.String,System.Int32[][])">
+            <summary>
+            Gets a color from a 4-character splash string where each character is a digit 0-9 representing the rank of the R, G, B, and A channels respectively. For example 0000 is transparent black and 9999 is white. Alpha can be omitted.
+            </summary>
+            <remarks>
+            The string is left-padded with <c>'0'</c> to four characters and only the first four characters are used.
+            Each digit is then forwarded to <see cref="M:SadRogue.Primitives.ColorExtensions2.FromSplash(SadRogue.Primitives.Color,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32[][])"/>.
+            </remarks>
+            <param name="color">A discarded color, simply to allow the extension method to run.</param>
+            <param name="value">A string of up to four digits (0-9) in RGBA order, for example <c>"9035"</c>. Alpha can be omitted.</param>
+            <param name="ChannelValues">Optional lookup table mapping each channel's 0-9 rank to a value in the 0-255 range. Alpha is never included in the lookup table.</param>
+            <returns>The color represented by the splash string.</returns>
+        </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.ToParser(SadRogue.Primitives.Color)">
             <summary>
             Converts a color to the format used by <see cref="T:SadConsole.StringParser.ParseCommandRecolor"/> command.
@@ -17663,7 +17709,7 @@
             <param name="keepB">Indicates that command wanted to keep the Blue color channel.</param>
             <param name="keepA">Indicates that command wanted to keep the Alpha color channel.</param>
             <param name="useDefault">Indicates that command wanted to use the default values passed.</param>
-            <returns></returns>
+            <returns>The resulting color.</returns>
         </member>
         <member name="M:SadRogue.Primitives.ColorExtensions2.FromName(System.String)">
             <summary>
