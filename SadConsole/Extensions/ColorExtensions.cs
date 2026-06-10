@@ -16,6 +16,24 @@ public static class ColorExtensions2
     public static Dictionary<string, Color> ColorMappings = new(162);
 
     /// <summary>
+    /// An optional palette for Splash color functions. If null, the color values are calculated as <c>channelValue / 9d * 255d</c>. If provided, the color values are looked up in the array.
+    /// </summary>
+    /// <remarks>
+    /// The array is designed to represent the Splash color palette in the format of <c>int[4][10]</c> where the first dimension is for each channel (RGBA) and the second dimension is 10 values of that color channel.;
+    /// </remarks>
+    public static int[][]? SplashDefaultPalette = null;
+
+    /// <summary>
+    /// The Cellpond palette defined by https://www.todepond.com/lab/splash/.
+    /// </summary>
+    public static int[][] SplashChannelValues_Cellpond =
+    [
+        [0x17, 0x37, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xf2, 0xff],
+        [0x1d, 0x43, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf5, 0xff],
+        [0x28, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf7, 0xff]
+    ];
+
+    /// <summary>
     /// Creates an array of colors that includes the <paramref name="color"/> and <paramref name="endingColor"/> and <paramref name="steps"/> of colors between them.
     /// </summary>
     /// <param name="color">The starting color which will be at index 0 in the array.</param>
@@ -410,13 +428,6 @@ public static class ColorExtensions2
         return hue;
     }
 
-    public static int[][] SplashChannelValues_Cellpond =
-    [
-        [0x17, 0x37, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xf2, 0xff],
-        [0x1d, 0x43, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf5, 0xff],
-        [0x28, 0x46, 0x62, 0x80, 0x9f, 0xae, 0xcc, 0xde, 0xf7, 0xff]
-    ];
-
     /// <summary>
     /// Gets a color where each RGBA channel is specified as a rank from 0 to 9, mapped onto the standard 0-255 range.
     /// </summary>
@@ -438,6 +449,8 @@ public static class ColorExtensions2
     public static Color FromSplash(this Color color, int r, int g, int b, int a = 9, int[][]? ChannelValues = null)
     {
         // Based on https://www.todepond.com/lab/splash/
+
+        ChannelValues ??= SplashDefaultPalette;
 
         if (ChannelValues is null)
         {
