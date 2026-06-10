@@ -117,7 +117,7 @@ public abstract partial class ColoredGlyphBase: IMatchable<ColoredGlyphBase>
         cell.Glyph = Glyph;
         cell.Mirror = Mirror;
         if (deepCopy)
-            cell.Decorators = Decorators != null ? new List<CellDecorator>(Decorators) : null;
+            cell.Decorators = CellDecoratorHelpers.CloneDecorators(cell);
         else
             cell.Decorators = Decorators;
     }
@@ -137,7 +137,7 @@ public abstract partial class ColoredGlyphBase: IMatchable<ColoredGlyphBase>
         Glyph = cell.Glyph;
         Mirror = cell.Mirror;
         if (deepCopy)
-            Decorators = cell.Decorators != null ? new List<CellDecorator>(cell.Decorators) : null;
+            cell.Decorators = CellDecoratorHelpers.CloneDecorators(cell);
         else
             Decorators = cell.Decorators;
     }

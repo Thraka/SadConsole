@@ -83,9 +83,9 @@ public sealed class ParseCommandDecorator : ParseCommandBase
             Mirror = mirror;
             Glyph = glyph;
 
-            Color = Color.FromParser(paramArray[1], out _, out _, out _, out _, out _);
+            Color = Color.FromParser(paramArray[2], out _, out _, out _, out _, out _);
 
-            _counter = int.Parse(paramArray[2], CultureInfo.InvariantCulture);
+            _counter = int.Parse(paramArray[3], CultureInfo.InvariantCulture);
         }
         else
             throw badCommandException;
@@ -99,13 +99,10 @@ public sealed class ParseCommandDecorator : ParseCommandBase
 
         // Create decorator list if needed
         if (Replace)
-            glyphState.Decorators = new();
-        else
-            glyphState.Decorators ??= new();
+            CellDecoratorHelpers.RemoveAllDecorators(glyphState);
 
         // If decorator isn't already in the glyph state decorators, add it
-        if (glyphState.Decorators.IndexOf(Decorator) == -1)
-            glyphState.Decorators.Add(Decorator);
+        CellDecoratorHelpers.AddDecorator(Decorator, glyphState);
 
         // If counter is counting down
         if (_counter != -1)
@@ -116,9 +113,6 @@ public sealed class ParseCommandDecorator : ParseCommandBase
             if (_counter == 0)
             {
                 commandStack.RemoveSafe(this);
-
-                // Remove this decorator from the array
-                CellDecoratorHelpers.RemoveDecorator(Decorator, glyphState);
             }
         }
     }
