@@ -67,7 +67,7 @@ public partial class DocumentSurface
         }
 
         public IEnumerable<IFileHandler> GetLoadHandlers() =>
-            [new SurfaceDocument(), new SurfaceFile()];
+            [new SurfaceDocument(), new SurfaceFile(), new SurfaceRexPaint()];
 
         public override string ToString() =>
             Title;

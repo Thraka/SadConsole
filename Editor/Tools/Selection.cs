@@ -52,7 +52,7 @@ internal class Selection : ITool
         ImGui.EndDisabled();
 
         if (ImGui.Button("Import Surface"))
-            OpenFileWindow.Show(Core.ImGuiComponent.ImGuiRenderer, [new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile()], ImportSurface_OnFileSelected, null);
+            OpenFileWindow.Show(Core.ImGuiComponent.ImGuiRenderer, [new FileHandlers.SurfaceDocument(), new FileHandlers.SurfaceFile(), new FileHandlers.SurfaceRexPaint()], ImportSurface_OnFileSelected, null);
 
         if (ImGui.Button("Import Surface from Image"))
             ImageToAsciiWindow.Show(Core.ImGuiComponent.ImGuiRenderer, document.EditingSurfaceFont, document.EditingSurfaceFont.GetFontSize(IFont.Sizes.One), ImageToAscii_OnImported, null);
