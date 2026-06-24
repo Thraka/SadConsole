@@ -191,6 +191,7 @@ public class GuiTopBar : ImGuiObjectBase
                         {
                             Core.State.SelectedDocument.Palette = new EditorPalette();
                             Core.State.SelectedDocument.HasPalette = true;
+                            Core.State.SyncEditorPalette();
                         }
                     }
                     

@@ -246,7 +246,7 @@ public static class PaletteEditorWindow
         }
 
         private void AddNewColor() =>
-            _editingColors.Add(new NamedColor(Documents.Document.GenerateName("Color"), Color.White));
+            _editingColors.Add(new NamedColor(Documents.Document.GenerateName("Color"), Tools.SharedToolSettings.Tip.Foreground));
 
         private void RemoveSelectedColor()
         {
