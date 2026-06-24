@@ -47,7 +47,6 @@ public static partial class ImGuiSC
         public static void Draw(ImGuiRenderer renderer, string id, IFont font, Vector4 foreground, Vector4 background, int glyph)
         {
             ImTextureRef fontTexture = renderer.BindTexture(((GameTexture)font.Image).Texture);
-            Rectangle rect = font.SolidGlyphRectangle;
 
             Point fontTextureSize = new(font.Image.Width, font.Image.Height);
 
@@ -56,18 +55,21 @@ public static partial class ImGuiSC
             // TODO: Apply mirror to UV
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, Vector2.One);
             var pos = ImGui.GetCursorPos();
-            ImGui.ImageWithBg(fontTexture,
-                renderAreaSize,
-                rect.Position.ToUV(fontTextureSize), (rect.Position + rect.Size).ToUV(fontTextureSize),
-                background);
 
-            ImGui.SetCursorPos(pos);
 
-            rect = font.GetGlyphSourceRectangle(glyph);
-            ImGui.ImageWithBg(fontTexture,
-                renderAreaSize,
-                rect.Position.ToUV(fontTextureSize), (rect.Position + rect.Size).ToUV(fontTextureSize),
-                foreground);
+            var rect = font.GetGlyphSourceRectangle(glyph);
+            var textureSize = new Point(font.Image.Width, font.Image.Height);
+
+            // Draw transparent checkerboard so glyph shows up well on transparent colored glyph background
+            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+            Vector2 startPos = ImGui.GetCursorScreenPos();
+            ImGuiP.RenderColorRectWithAlphaCheckerboard(drawList, startPos, startPos + renderAreaSize,
+                ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 0.25f)), Math.Min(rect.Width, rect.Height) / 2.9f, Vector2.Zero);
+
+            // Draw glyph with background and foreground
+            ImGui.ImageWithBg(fontTexture, renderAreaSize, rect.Position.ToUV(textureSize),
+                (rect.Position + rect.Size).ToUV(textureSize), background, foreground);
+
             ImGui.PopStyleVar();
         }
     }

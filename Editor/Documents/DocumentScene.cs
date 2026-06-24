@@ -762,7 +762,7 @@ public partial class DocumentScene : Document, IDocumentSimpleObjects, IDocument
 
             // Draw checkerboard background for the scene area
             ImGuiP.RenderColorRectWithAlphaCheckerboard(drawList, startPos, startPos + pixelArea, 
-                ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 1f)), 16f, Vector2.Zero);
+                ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 0.9f)), 16f, Vector2.Zero);
 
             // Draw border around scene area
             drawList.AddRect(startPos, startPos + pixelArea, ImGuiSC.Color_White);
