@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="../../SadConsole.Host.MonoGame/SadConsole.Host.MonoGame.csproj" />
-  <Project Path="../../SadConsole/SadConsole.csproj" />
-  <Project Path="SadBBSClient.csproj" />
-</Solution>
