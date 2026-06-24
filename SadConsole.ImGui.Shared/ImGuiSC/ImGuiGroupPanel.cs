@@ -66,6 +66,7 @@ public static partial class ImGuiSC
 
     public static void EndGroupPanel()
     {
+        ImGui.Spacing();
         ImGui.PopItemWidth();
 
         var itemSpacing = ImGui.GetStyle().ItemSpacing;

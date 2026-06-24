@@ -12,74 +12,80 @@ public static partial class ImGuiSC
 {
     public static class GlyphPickerPopup
     {
+        private static int _hoveredGlyph = -1;
+        private static KeyValuePair<int, Rectangle> _hoveredGlyphDefinition;
+
         public static bool Show(ImGuiRenderer renderer, string popupId, IFont font, ImTextureRef fontTexture, Point fontTextureSize, ref int selectedGlyph)
         {
             bool returnValue = false;
 
             if (ImGui.BeginPopup(popupId))
             {
+                Rectangle glyphRect = ((SadFont)font).GetGlyphSourceRectangle(selectedGlyph);
+
                 // Get shared space to reserve font icon preview
                 Vector2 size = ImGui.CalcTextSize("Glyph: None"u8);
                 size.Y = Math.Max(size.Y, font.GlyphHeight);
 
                 // Draw font image
                 ImGui.Text("Select your glyph"u8);
+                ImGui.Text($"Current: {selectedGlyph}");
+                ImGui.SameLine();
+                ImGui.Image(fontTexture,
+                                new Vector2(glyphRect.Width, glyphRect.Height),
+                                glyphRect.Position.ToUV(fontTextureSize), (glyphRect.Position + glyphRect.Size).ToUV(fontTextureSize));
+
+                ImGui.SameLine();
+                if (_hoveredGlyph != -1)
+                {
+                    ImGui.Text($"Hovered: {_hoveredGlyph}");
+                    ImGui.SameLine();
+                    ImGui.Image(fontTexture,
+                                new Vector2(_hoveredGlyphDefinition.Value.Width, _hoveredGlyphDefinition.Value.Height),
+                                _hoveredGlyphDefinition.Value.Position.ToUV(fontTextureSize), (_hoveredGlyphDefinition.Value.Position + _hoveredGlyphDefinition.Value.Size).ToUV(fontTextureSize));
+                }
+                else
+                {
+                    ImGui.Text("Hovered: None"u8);
+                }
+
                 ImGuiSC.DrawTexture("font_preview", true, ImGuiSC.ZoomNormal, fontTexture, fontTextureSize.ToVector2(), out bool isActive, out bool isHovered);
+
+                ImDrawListPtr drawList = ImGui.GetWindowDrawList();//->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
+
+                Vector2 itemRectMin = ImGui.GetItemRectMin();
+                Vector2 itemRectMax = ImGui.GetItemRectMax();
+
+                Vector2 boxTopLeft = new(itemRectMin.X + glyphRect.X, itemRectMin.Y + glyphRect.Y);
+                Vector2 boxBottomRight = boxTopLeft + new Vector2(glyphRect.Width, glyphRect.Height);
+
+                drawList.AddRect(boxTopLeft, boxBottomRight, Color.Red.PackedValue);
 
                 if (isHovered)
                 {
                     Vector2 mousePosition = ImGui.GetMousePos();
-                    Vector2 itemRectMin = ImGui.GetItemRectMin();
-                    Vector2 itemRectMax = ImGui.GetItemRectMax();
-                    //Vector2 itemRectSize = ImGui.GetItemRectSize();
                     Vector2 pos = mousePosition - itemRectMin;
 
-                    KeyValuePair<int, Rectangle> glyphRect = ((SadFont)font).GlyphRectangles.Where(kv => kv.Value.Contains(new Point((int)pos.X, (int)pos.Y))).FirstOrDefault();
+                    _hoveredGlyphDefinition = ((SadFont)font).GlyphRectangles.First(kv => kv.Value.Contains(new Point((int)pos.X, (int)pos.Y)));
 
-                    if (glyphRect.Value != Rectangle.Empty)
+                    if (_hoveredGlyphDefinition.Value != Rectangle.Empty)
+                    {
+                        _hoveredGlyph = _hoveredGlyphDefinition.Key;
+
                         if (isActive)
                         {
                             ImGui.CloseCurrentPopup();
-                            selectedGlyph = glyphRect.Key;
+                            selectedGlyph = _hoveredGlyphDefinition.Key;
                             returnValue = true;
                         }
                         else
                         {
-                            ImDrawListPtr drawList = ImGui.GetWindowDrawList();//->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
-
-                            Vector2 boxTopLeft = new(itemRectMin.X + glyphRect.Value.X, itemRectMin.Y + glyphRect.Value.Y);
-                            Vector2 boxBottomRight = boxTopLeft + new Vector2(glyphRect.Value.Width, glyphRect.Value.Height);
+                            boxTopLeft = new(itemRectMin.X + _hoveredGlyphDefinition.Value.X, itemRectMin.Y + _hoveredGlyphDefinition.Value.Y);
+                            boxBottomRight = boxTopLeft + new Vector2(_hoveredGlyphDefinition.Value.Width, _hoveredGlyphDefinition.Value.Height);
 
                             drawList.AddRect(boxTopLeft, boxBottomRight, Color.Violet.PackedValue);
-
-                            float verticalLineX = boxTopLeft.X + glyphRect.Value.Width / 2;
-                            float horizontalLineY = boxTopLeft.Y + glyphRect.Value.Height / 2;
-
-                            //drawList.AddLine(new Vector2(verticalLineX, itemRectMin.Y), new Vector2(verticalLineX, boxTopLeft.Y), Color.Violet.PackedValue, 2);
-                            //drawList.AddLine(new Vector2(verticalLineX, boxBottomRight.Y - 1), new Vector2(verticalLineX, itemRectMax.Y), Color.Violet.PackedValue, 2);
-                            //drawList.AddLine(new Vector2(itemRectMin.X, horizontalLineY), new Vector2(boxTopLeft.X, horizontalLineY), Color.Violet.PackedValue, 2);
-                            //drawList.AddLine(new Vector2(boxBottomRight.X - 1, horizontalLineY), new Vector2(itemRectMax.X, horizontalLineY), Color.Violet.PackedValue, 2);
-
-                            ImGui.Text($"Glyph: {glyphRect.Key}");
-                            ImGui.SameLine();
-                            ImGui.Image(fontTexture,
-                                            new Vector2(glyphRect.Value.Width, glyphRect.Value.Height),
-                                            glyphRect.Value.Position.ToUV(fontTextureSize), (glyphRect.Value.Position + glyphRect.Value.Size).ToUV(fontTextureSize));
                         }
-                    else
-                    {
-                        Vector2 cursor = ImGui.GetCursorPos();
-                        ImGui.InvisibleButton("##padded-area-preview"u8, size);
-                        ImGui.SetCursorPos(cursor);
-                        ImGui.Text("Glyph: None"u8);
                     }
-                }
-                else
-                {
-                    Vector2 cursor = ImGui.GetCursorPos();
-                    ImGui.InvisibleButton("##padded-area-preview"u8, size);
-                    ImGui.SetCursorPos(cursor);
-                    ImGui.Text("Glyph: None"u8);
                 }
 
                 ImGui.EndPopup();
