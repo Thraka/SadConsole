@@ -387,8 +387,19 @@ internal class Box : ITool
         if (CurrentMode == ToolMode.Modes.Objects && _currentObject == null)
             return;
 
+        // Copy glyph
+        if (CurrentMode == ToolMode.Modes.Draw && !isDrawingButton && isRightDown)
+        {
+            ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
+
+            if (ImGui.IsKeyDown(ImGuiKey.ModShift) && _shapeSettings.HasFill)
+                sourceCell.CopyAppearanceTo(_shapeSettings.FillGlyph!);
+
+            else if (_shapeSettings.HasBorder)
+                sourceCell.CopyAppearanceTo(_shapeSettings.BorderGlyph!);
+        }
         // Preview
-        if (isDrawingButton && isActive)
+        else if (isDrawingButton && isActive)
         {
             if (!_isFirstPointSelected)
             {

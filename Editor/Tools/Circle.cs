@@ -164,8 +164,20 @@ internal class Circle : ITool
                 if (_isCancelled)
                     return;
 
+                // Copy glyph
+                if (!ImGui.IsMouseDown(ImGuiMouseButton.Left) && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
+                {
+                    ColoredGlyphBase sourceCell = document.EditingSurface.Surface[hoveredCellPosition];
+
+                    if (ImGui.IsKeyDown(ImGuiKey.ModShift) && _shapeSettings.HasFill)
+                        sourceCell.CopyAppearanceTo(_shapeSettings.FillGlyph!);
+
+                    else if (_shapeSettings.HasBorder)
+                        sourceCell.CopyAppearanceTo(_shapeSettings.BorderGlyph!);
+                }
+
                 // Preview
-                if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
+                else if (ImGui.IsMouseDown(ImGuiMouseButton.Left) && isActive)
                 {
                     if (!_isFirstPointSelected)
                     {
