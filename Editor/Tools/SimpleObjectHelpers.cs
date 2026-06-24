@@ -68,17 +68,18 @@ public static class SimpleObjectHelpers
 
             ImGui.SetCursorPos(pos);
 
-            var rect = font.SolidGlyphRectangle;
+            var rect = font.GetGlyphSourceRectangle(objects.Objects[i].Visual.Glyph);
             var textureSize = new Point(font.Image.Width, font.Image.Height);
 
-            ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
-                (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Background.ToVector4());
+            // Draw transparent checkerboard so glyph shows up well on transparent colored glyph background
+            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+            Vector2 startPos = ImGui.GetCursorScreenPos();
+            ImGuiP.RenderColorRectWithAlphaCheckerboard(drawList, startPos, startPos + outputSize,
+                ImGui.GetColorU32(new Vector4(0.2f, 0.2f, 0.2f, 0.5f)), Math.Min(rect.Width, rect.Height) / 2.9f, Vector2.Zero);
 
-            ImGui.SetCursorPos(pos);
-            rect = font.GetGlyphSourceRectangle(objects.Objects[i].Visual.Glyph);
-
+            // Draw glyph with background and foreground
             ImGui.ImageWithBg(fontTexture, outputSize, rect.Position.ToUV(textureSize),
-                (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Foreground.ToVector4());
+                (rect.Position + rect.Size).ToUV(textureSize), objects.Objects[i].Visual.Background.ToVector4(), objects.Objects[i].Visual.Foreground.ToVector4());
 
             ImGui.SameLine();
             ImGui.Text(objects.Objects[i].Name);

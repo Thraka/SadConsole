@@ -64,6 +64,22 @@ internal class Pencil : ITool
             SharedToolSettings.Tip.Mirror = ImGuiSystem.Types.MirrorConverter.ToSadConsoleMirror(mirror);
             SharedToolSettings.Tip.Glyph = glyph;
 
+            if (document.Options.UseSimpleObjects)
+            {
+                ImGui.Separator();
+                if (ImGui.Button("Create Object From Pencil"u8))
+                {
+                    IDocumentSimpleObjects docSimpleObjects = (IDocumentSimpleObjects)document;
+                    docSimpleObjects.SimpleObjects.Objects.Add(new()
+                    {
+                        Name = Document.GenerateName("Object"),
+                        Visual = (ColoredGlyph)SharedToolSettings.Tip.Clone()
+                    });
+
+                    document.ToolModes.SelectedItem = ToolMode.ObjectsMode;
+                    ConfigureToolMode(document);
+                }
+            }
             ImGuiSC.EndGroupPanel();
         }
 
