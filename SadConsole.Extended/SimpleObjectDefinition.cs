@@ -12,10 +12,12 @@ public class SimpleObjectDefinition
     /// Gets or sets the visual representation of the object.
     /// </summary>
     public ColoredGlyph Visual { get; set; } = new();
+
     /// <summary>
     /// Gets the list of positions for the object.
     /// </summary>
     public List<Point> Positions { get; } = new();
+
     /// <summary>
     /// Gets or sets the name of the object.
     /// </summary>

@@ -49,6 +49,7 @@ public class GuiTopBar : ImGuiObjectBase
                             document.LoadedFilePath = file.FullName;
                             document.LoadedFileHandler = loader;
                             Core.State.Documents.Add(document);
+                            Core.State.SelectedDocument = document;
                         }
                     }, null);
                 }

@@ -29,7 +29,7 @@
     <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole.Host.MonoGame" Version="10.*" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     
-    <ProjectReference Include="..\..\SadConsole.Debug.MonoGame\SadConsole.Debug.MonoGame.csproj" />
+    <ProjectReference Include="..\..\SadConsole.ImGui.MonoGame\SadConsole.ImGui.MonoGame.csproj" />
 
     <PackageReference Include="ColorMineStandard" Version="1.0.0" />
   </ItemGroup>
