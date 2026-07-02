@@ -231,7 +231,7 @@ internal static class ZoneHelpers
             if (ImGui.Button("Edit Settings"u8))
             {
                 var tempZone = zone;
-                Windows.KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, zone.Settings,
+                Windows.KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer,document, zone.Settings,
                     (savedSettings) => { tempZone.Settings = savedSettings; },
                     null);
             }

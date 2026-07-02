@@ -2,8 +2,18 @@
   "$type": "SadConsole.Editor.Core+AppSettings, Editor",
   "FontSize": 14.0,
   "Font": "CousineNerdFont-Regular.ttf",
-  "UIScale": 1,
+  "UIScale": 1.0,
+  "BlueprintFolder": "blueprints",
+  "FontsFolder": "fonts",
   "WindowNewDocWidthFactor": 22,
   "WindowSimpleObjectEditor": 40,
-  "WindowGlyphEditor": 20
+  "WindowGlyphEditor": 20,
+  "UseFullscreen": false,
+  "EmptyCellColor": {
+    "$type": "SadConsole.SerializedTypes.ColorSerialized, SadConsole",
+    "R": 255,
+    "G": 222,
+    "B": 173,
+    "A": 255
+  }
 }

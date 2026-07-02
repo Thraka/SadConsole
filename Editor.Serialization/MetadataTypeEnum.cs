@@ -12,5 +12,7 @@ public enum MetadataTypeEnum
     Boolean,
     Point,
     PointFloat,
-    Color
+    Color,
+    Zone,
+    SimpleObject
 }

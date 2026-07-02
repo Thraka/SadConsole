@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Hexa.NET.ImGui;
+using SadConsole.Editor.Documents;
 using SadConsole.ImGuiSystem;
 using SadConsole.ImGuiSystem.Rendering;
 
@@ -21,15 +22,16 @@ public class KeyValuePairItem
 /// </summary>
 public class KeyValuePairEditorWindow
 {
-    public static void Show(ImGuiRenderer renderer, Dictionary<string, string> items, Action<Dictionary<string, string>> onSaved, Action? onCancelled)
+    public static void Show(ImGuiRenderer renderer, Document document, Dictionary<string, string> items, Action<Dictionary<string, string>> onSaved, Action? onCancelled)
     {
-        var instance = new Instance(items, onSaved, onCancelled);
+        var instance = new Instance(document, items, onSaved, onCancelled);
         renderer.UIObjects.Add(instance);
     }
 
     private class Instance : ImGuiObjectBase
     {
         private readonly ImGuiList<KeyValuePairItem> _items;
+        private readonly Document _document;
         private string _editingKey = string.Empty;
         private string _editingValue = string.Empty;
         private bool _keyConflict;
@@ -46,6 +48,7 @@ public class KeyValuePairEditorWindow
         private float _helperPointFloatX;
         private float _helperPointFloatY;
         private Vector4 _helperColorValue = new(1f, 1f, 1f, 1f);
+        private string _helperZoneSimpleValue = string.Empty;
 
         private Action<Dictionary<string, string>> _onSaved;
         private Action? _onCancelled;
@@ -54,9 +57,11 @@ public class KeyValuePairEditorWindow
         /// <summary>
         /// Creates a new key-value pair editor from a dictionary.
         /// </summary>
+        /// <param name="document">The document associated with this editor.</param>
         /// <param name="dictionary">The dictionary to edit.</param>
-        public Instance(IDictionary<string, string> dictionary, Action<Dictionary<string, string>> onSaved, Action? onCancelled)
+        public Instance(Document document, IDictionary<string, string> dictionary, Action<Dictionary<string, string>> onSaved, Action? onCancelled)
         {
+            _document = document;
             var items = dictionary.Select(kvp => new KeyValuePairItem { Key = kvp.Key, Value = kvp.Value });
             _items = new ImGuiList<KeyValuePairItem>(items);
             _onSaved = onSaved;
@@ -331,6 +336,42 @@ public class KeyValuePairEditorWindow
                             var color = parsedValue as SadRogue.Primitives.Color?;
                             _helperColorValue = color?.ToVector4() ?? new Vector4(1f, 1f, 1f, 1f);
                             break;
+                        case Serialization.MetadataTypeEnum.Zone:
+                            _helperZoneSimpleValue = string.Empty;
+
+                            if (_document.Options.UseZones)
+                            {
+                                // Find value in IDocumentZones.Zones and set _helperZoneSimpleValue to the name of the zone if found
+                                foreach (var zoneObj in ((IDocumentZones)_document).Zones.Objects)
+                                {
+                                    if (zoneObj.Name == editingValue)
+                                    {
+                                        _helperZoneSimpleValue = zoneObj.Name;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            break;
+
+                        case Serialization.MetadataTypeEnum.SimpleObject:
+
+                            _helperZoneSimpleValue = string.Empty;
+
+                            if (_document.Options.UseSimpleObjects)
+                            {
+                                // Find value in IDocumentSimpleObjects.SimpleObjects and set _helperZoneSimpleValue to the name of the zone if found
+                                foreach (var simpleObj in ((IDocumentSimpleObjects)_document).SimpleObjects.Objects)
+                                {
+                                    if (simpleObj.Name == editingValue)
+                                    {
+                                        _helperZoneSimpleValue = simpleObj.Name;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            break;
                     }
                 }
 
@@ -448,6 +489,92 @@ public class KeyValuePairEditorWindow
                             _helperColorValue = palColor.ToVector4();
                             editingValue = Serialization.MetadataParser.ColorToHex(_helperColorValue.ToColor());
                         }
+                        break;
+
+                    case Serialization.MetadataTypeEnum.Zone:
+                        ImGui.TableNextRow();
+                        ImGui.TableSetColumnIndex(0);
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("Zones");
+                        ImGui.TableSetColumnIndex(1);
+                        ImGui.SetNextItemWidth(-1);
+
+                        if (_document.Options.UseZones)
+                        {
+                            var zonesDoc = (IDocumentZones)_document;
+
+                            if (zonesDoc.Zones.Count != 0)
+                            {
+                                if (ImGui.BeginCombo("##helper_zone"u8, _helperZoneSimpleValue, ImGuiComboFlags.None))
+                                {
+
+                                    for (int i = 0; i < zonesDoc.Zones.Count; i++)
+                                    {
+                                        ZoneSimplified zone = zonesDoc.Zones.Objects[i];
+                                        bool isSelected = _helperZoneSimpleValue == zone.Name;
+
+                                        if (ImGui.Selectable($"{zone.Name}##{i}", isSelected))
+                                        {
+                                            _helperZoneSimpleValue = zone.Name;
+                                            editingValue = _helperZoneSimpleValue;
+                                        }
+
+                                        if (isSelected)
+                                            ImGui.SetItemDefaultFocus();
+                                    }
+                                    ImGui.EndCombo();
+                                }
+                            }
+                            else
+                                ImGui.TextWrapped("No zones defined in the document.");
+                        }
+
+                        else
+                            ImGui.TextWrapped("Zones are not enabled.");
+
+                        break;
+
+                    case Serialization.MetadataTypeEnum.SimpleObject:
+                        ImGui.TableNextRow();
+                        ImGui.TableSetColumnIndex(0);
+                        ImGui.AlignTextToFramePadding();
+                        ImGui.Text("Objects");
+                        ImGui.TableSetColumnIndex(1);
+                        ImGui.SetNextItemWidth(-1);
+
+                        if (_document.Options.UseSimpleObjects)
+                        {
+                            var zonesSimpleObjs = (IDocumentSimpleObjects)_document;
+
+                            if (zonesSimpleObjs.SimpleObjects.Count != 0)
+                            {
+                                if (ImGui.BeginCombo("##helper_simpleobj"u8, _helperZoneSimpleValue, ImGuiComboFlags.None))
+                                {
+
+                                    for (int i = 0; i < zonesSimpleObjs.SimpleObjects.Count; i++)
+                                    {
+                                        SimpleObjectDefinition simpleObj = zonesSimpleObjs.SimpleObjects.Objects[i];
+                                        bool isSelected = _helperZoneSimpleValue == simpleObj.Name;
+
+                                        if (ImGui.Selectable($"{simpleObj.Name}##{i}", isSelected))
+                                        {
+                                            _helperZoneSimpleValue = simpleObj.Name;
+                                            editingValue = _helperZoneSimpleValue;
+                                        }
+
+                                        if (isSelected)
+                                            ImGui.SetItemDefaultFocus();
+                                    }
+                                    ImGui.EndCombo();
+                                }
+                            }
+                            else
+                                ImGui.TextWrapped("No simple objects defined.");
+                        }
+
+                        else
+                            ImGui.TextWrapped("Simple objects are not enabled.");
+
                         break;
                 }
 

@@ -313,7 +313,7 @@ public abstract partial class Document : ITitle, IHierarchicalItem<Document>
         ImGui.SeparatorText("Metadata"u8);
         if (ImGui.Button("Edit"u8))
         {
-            KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, Metadata, updatedMetadata =>
+            KeyValuePairEditorWindow.Show(Core.ImGuiComponent.ImGuiRenderer, this, Metadata, updatedMetadata =>
             {
                 Metadata = updatedMetadata;
             }, null);
