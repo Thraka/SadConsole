@@ -128,12 +128,12 @@ public partial class Table : CompositeControl
     public event EventHandler<CellEventArgs>? OnDrawFakeCell;
 
     /// <summary>
-    /// The vertical scrollbar, use the SetupScrollBar method with Vertical orientation to initialize it.
+    /// The vertical scrollbar, automatically configured by the table.
     /// </summary>
     public ScrollBar? VerticalScrollBar { get; private set; }
 
     /// <summary>
-    /// The horizontal scrollbar, use the SetupScrollBar method with Horizontal orientation to initialize it.
+    /// The horizontal scrollbar, automatically configured by the table.
     /// </summary>
     public ScrollBar? HorizontalScrollBar { get; private set; }
 
@@ -243,6 +243,10 @@ public partial class Table : CompositeControl
         DefaultForeground = Color.White;
         DefaultBackground = Color.TransparentBlack;
         DefaultCellSize = new Point(1, 1);
+        if (width >= 2)
+            SetupScrollBar(Orientation.Horizontal, width, new Point(0, height - 1));
+        if (height >= 2)
+            SetupScrollBar(Orientation.Vertical, height, new Point(width - 1, 0));
     }
 
     /// <summary>
@@ -285,7 +289,7 @@ public partial class Table : CompositeControl
     }
 
     /// <summary>
-    /// Configures the associated <see cref="VerticalScrollBar"/>.
+    /// Reconfigures the scrollbar for the specified orientation.
     /// </summary>
     /// <param name="orientation">The orientation of the scrollbar.</param>
     /// <param name="size"></param>

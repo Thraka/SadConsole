@@ -262,6 +262,31 @@ public class TableTests : TableTestsBase
     }
 
     [TestMethod]
+    public void Table_ScrollBars_AutomaticallyAppearForOverflowingData()
+    {
+        var table = new Table(6, 6, 2, 2);
+
+        for (int column = 0; column < 4; column++)
+            table.Cells[0, column].Value = column.ToString();
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsFalse(table.IsVerticalScrollBarVisible);
+        Assert.IsNotNull(table.HorizontalScrollBar);
+        Assert.AreEqual(1, table.HorizontalScrollBar.MaximumValue);
+
+        for (int row = 0; row < 4; row++)
+            table.Cells[row, 0].Value = row.ToString();
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.IsNotNull(table.VerticalScrollBar);
+        Assert.AreEqual(1, table.VerticalScrollBar.MaximumValue);
+    }
+
+    [TestMethod]
     public void Table_ScrollBar_Vertical_Scrolling_EqualSizes_Correct()
     {
         const int extraRowsOffScreen = 5;
@@ -589,6 +614,7 @@ public abstract class TableTestsBase
     [TestInitialize]
     public virtual void Setup()
     {
+        new BasicGameHost();
         Table = new Table(Width, Height, CellWidth, CellHeight);
     }
 
