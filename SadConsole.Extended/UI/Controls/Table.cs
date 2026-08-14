@@ -30,7 +30,21 @@ public partial class Table : CompositeControl
     /// <summary>
     /// The default size a cell gets when it is newly created
     /// </summary>
-    public Point DefaultCellSize { get; set; }
+    public Point DefaultCellSize
+    {
+        get => _defaultCellSize;
+        set
+        {
+            if (_defaultCellSize == value) return;
+
+            _defaultCellSize = value;
+            Cells.AdjustCellPositionsAfterResize();
+            SyncScrollAmountOnResize();
+            _checkScrollBarVisibility = true;
+            IsDirty = true;
+        }
+    }
+    private Point _defaultCellSize;
 
     /// <summary>
     /// The default visual hovering mode when hovering over cells

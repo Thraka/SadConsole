@@ -221,8 +221,6 @@ public partial class Table
 
         ScrollBar? horizontalScrollBar = HorizontalScrollBar;
         ScrollBar? verticalScrollBar = VerticalScrollBar;
-        bool horizontalWasVisible = IsHorizontalScrollBarVisible;
-        bool verticalWasVisible = IsVerticalScrollBarVisible;
 
         bool showHorizontal = horizontalScrollBar != null && GetScrollBarItems(Orientation.Horizontal, Width) > 0;
         bool showVertical = verticalScrollBar != null && GetScrollBarItems(Orientation.Vertical, Height) > 0;
@@ -248,27 +246,21 @@ public partial class Table
 
         UpdateAutomaticScrollBarGeometry();
 
-        bool stateChanged = horizontalWasVisible != IsHorizontalScrollBarVisible ||
-                            verticalWasVisible != IsVerticalScrollBarVisible ||
-                            horizontalScrollBar != HorizontalScrollBar ||
-                            verticalScrollBar != VerticalScrollBar;
-
         if (HorizontalScrollBar != null)
         {
             int scrollItems = GetScrollBarItems(Orientation.Horizontal);
-            stateChanged |= ReconcileScrollBarState(HorizontalScrollBar, HorizontalScrollBar.IsVisible, scrollItems);
+            ReconcileScrollBarState(HorizontalScrollBar, HorizontalScrollBar.IsVisible, scrollItems);
             SetScrollBarPropertiesOnTable(HorizontalScrollBar, maxRowsHeight, maxColumnsWidth);
         }
 
         if (VerticalScrollBar != null)
         {
             int scrollItems = GetScrollBarItems(Orientation.Vertical);
-            stateChanged |= ReconcileScrollBarState(VerticalScrollBar, VerticalScrollBar.IsVisible, scrollItems);
+            ReconcileScrollBarState(VerticalScrollBar, VerticalScrollBar.IsVisible, scrollItems);
             SetScrollBarPropertiesOnTable(VerticalScrollBar, maxRowsHeight, maxColumnsWidth);
         }
 
-        if (stateChanged)
-            SynchronizeScrollOffsetsFromValues();
+        SynchronizeScrollOffsetsFromValues();
 
         _checkScrollBarVisibility = false;
     }

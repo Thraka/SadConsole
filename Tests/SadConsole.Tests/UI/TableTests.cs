@@ -555,6 +555,85 @@ public class TableTests : TableTestsBase
     }
 
     [TestMethod]
+    public void Table_ScrollBars_ReconcileOffsetsAfterLateLayoutRemovalWithStableRange()
+    {
+        var table = new Table(6, 6);
+
+        for (int column = 0; column < 15; column++)
+            table.Cells[0, column].Value = column.ToString();
+
+        Table.TableCells.Layout columnLayout = table.Cells.Column(10);
+        columnLayout.SetLayout(4);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        table.HorizontalScrollBar.Value = table.HorizontalScrollBar.MaximumValue;
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.AreEqual(9, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(9, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(12, table.StartRenderXPos);
+
+        columnLayout.Remove();
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.AreEqual(9, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(9, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(9, table.StartRenderXPos);
+        Assert.AreEqual(2, ((IContainer)table).Count);
+
+        table.HorizontalScrollBar.Value = 8;
+
+        Assert.AreEqual(8, table.StartRenderXPos);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBars_ReconcileAfterDefaultCellSizeShrink()
+    {
+        var table = new Table(4, 4, 4, 4);
+
+        for (int index = 0; index < 4; index++)
+        {
+            table.Cells[0, index].Value = index.ToString();
+            table.Cells[index, 0].Value = index.ToString();
+        }
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        ScrollBar horizontalScrollBar = table.HorizontalScrollBar;
+        ScrollBar verticalScrollBar = table.VerticalScrollBar;
+        table.HorizontalScrollBar.Value = 1;
+        table.VerticalScrollBar.Value = 1;
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(1, table.StartRenderXPos);
+        Assert.AreEqual(1, table.StartRenderYPos);
+
+        table.DefaultCellSize = new Point(1, 1);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsFalse(table.IsHorizontalScrollBarVisible);
+        Assert.IsFalse(table.IsVerticalScrollBarVisible);
+        Assert.AreSame(horizontalScrollBar, table.HorizontalScrollBar);
+        Assert.AreSame(verticalScrollBar, table.VerticalScrollBar);
+        Assert.AreEqual(1, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(1, table.VerticalScrollBar.MaximumValue);
+        Assert.AreEqual(0, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(0, table.VerticalScrollBar.Value);
+        Assert.AreEqual(0, table.StartRenderXPos);
+        Assert.AreEqual(0, table.StartRenderYPos);
+        Assert.AreEqual(2, ((IContainer)table).Count);
+
+        table.DefaultCellSize = new Point(4, 4);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        table.HorizontalScrollBar.Value = 1;
+        table.VerticalScrollBar.Value = 1;
+
+        Assert.AreEqual(1, table.StartRenderXPos);
+        Assert.AreEqual(1, table.StartRenderYPos);
+    }
+
+    [TestMethod]
     public void Table_SetupScrollBar_ReconfiguresAutomaticBarWithoutDuplicates()
     {
         var table = new Table(6, 6, 2, 2);
