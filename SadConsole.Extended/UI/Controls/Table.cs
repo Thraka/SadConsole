@@ -147,7 +147,6 @@ public partial class Table : CompositeControl
         {
             if (VerticalScrollBar == null) return;
             VerticalScrollBar.IsVisible = value;
-            UpdateAutomaticScrollBarGeometry();
         }
     }
     /// <summary>
@@ -160,7 +159,6 @@ public partial class Table : CompositeControl
         {
             if (HorizontalScrollBar == null) return;
             HorizontalScrollBar.IsVisible = value;
-            UpdateAutomaticScrollBarGeometry();
         }
     }
 
@@ -218,8 +216,14 @@ public partial class Table : CompositeControl
     private DateTime _leftMouseLastClick = DateTime.Now;
     private Point? _leftMouseLastClickPosition;
     internal bool _checkScrollBarVisibility;
-    private bool _automaticallyManageHorizontalScrollBar;
-    private bool _automaticallyManageVerticalScrollBar;
+    private bool _automaticallyManageHorizontalScrollBar = true;
+    private bool _automaticallyManageVerticalScrollBar = true;
+
+    private int EffectiveViewportWidth =>
+        Math.Max(Width - (_automaticallyManageVerticalScrollBar && IsVerticalScrollBarVisible ? 1 : 0), 0);
+
+    private int EffectiveViewportHeight =>
+        Math.Max(Height - (_automaticallyManageHorizontalScrollBar && IsHorizontalScrollBarVisible ? 1 : 0), 0);
 
     private int _previousScrollValueVertical, _previousScrollValueHorizontal;
     private void ScrollBar_ValueChanged(object? sender, EventArgs e)
@@ -255,11 +259,7 @@ public partial class Table : CompositeControl
         DefaultForeground = Color.White;
         DefaultBackground = Color.TransparentBlack;
         DefaultCellSize = new Point(1, 1);
-        if (width >= 2)
-            SetupScrollBar(Orientation.Horizontal, width, new Point(0, height - 1), true);
-        if (height >= 2)
-            SetupScrollBar(Orientation.Vertical, height, new Point(width - 1, 0), true);
-
+        EnsureAutomaticScrollBars();
         UpdateAutomaticScrollBarGeometry();
     }
 
@@ -329,6 +329,9 @@ public partial class Table : CompositeControl
 
         existingScrollBar = new ScrollBar(orientation, size);
 
+        if (automaticallyManageGeometry)
+            existingScrollBar.IsVisible = false;
+
         if (scrollBarExists)
         {
             existingScrollBar.MaximumValue = max;
@@ -356,24 +359,66 @@ public partial class Table : CompositeControl
         UpdateAutomaticScrollBarGeometry();
     }
 
+    private void EnsureAutomaticScrollBars()
+    {
+        if (_automaticallyManageHorizontalScrollBar && HorizontalScrollBar == null && Width >= 2)
+            SetupScrollBar(Orientation.Horizontal, Width, new Point(0, Height - 1), true);
+
+        if (_automaticallyManageVerticalScrollBar && VerticalScrollBar == null && Height >= 2)
+            SetupScrollBar(Orientation.Vertical, Height, new Point(Width - 1, 0), true);
+    }
+
+    private void RemoveAutomaticScrollBar(Orientation orientation)
+    {
+        ScrollBar? scrollBar = orientation == Orientation.Horizontal ? HorizontalScrollBar : VerticalScrollBar;
+        if (scrollBar == null)
+            return;
+
+        scrollBar.ValueChanged -= ScrollBar_ValueChanged;
+        RemoveControl(scrollBar);
+
+        if (orientation == Orientation.Horizontal)
+        {
+            HorizontalScrollBar = null;
+            StartRenderXPos = 0;
+            _previousScrollValueHorizontal = 0;
+        }
+        else
+        {
+            VerticalScrollBar = null;
+            StartRenderYPos = 0;
+            _previousScrollValueVertical = 0;
+        }
+    }
+
     private void UpdateAutomaticScrollBarGeometry()
     {
         bool reserveCorner = IsHorizontalScrollBarVisible && IsVerticalScrollBarVisible;
+        int horizontalWidth = reserveCorner ? Width - 1 : Width;
+        int verticalHeight = reserveCorner ? Height - 1 : Height;
+
+        if (_automaticallyManageHorizontalScrollBar && HorizontalScrollBar != null && horizontalWidth < 2)
+            RemoveAutomaticScrollBar(Orientation.Horizontal);
+
+        if (_automaticallyManageVerticalScrollBar && VerticalScrollBar != null && verticalHeight < 2)
+            RemoveAutomaticScrollBar(Orientation.Vertical);
+
+        reserveCorner = IsHorizontalScrollBarVisible && IsVerticalScrollBarVisible;
 
         if (_automaticallyManageHorizontalScrollBar && HorizontalScrollBar != null)
         {
-            int width = reserveCorner ? Width - 1 : Width;
-            if (width >= 2 && HorizontalScrollBar.Width != width)
-                HorizontalScrollBar.Resize(width, 1);
+            horizontalWidth = reserveCorner ? Width - 1 : Width;
+            if (HorizontalScrollBar.Width != horizontalWidth)
+                HorizontalScrollBar.Resize(horizontalWidth, 1);
 
             HorizontalScrollBar.Position = new Point(0, Height - 1);
         }
 
         if (_automaticallyManageVerticalScrollBar && VerticalScrollBar != null)
         {
-            int height = reserveCorner ? Height - 1 : Height;
-            if (height >= 2 && VerticalScrollBar.Height != height)
-                VerticalScrollBar.Resize(1, height);
+            verticalHeight = reserveCorner ? Height - 1 : Height;
+            if (VerticalScrollBar.Height != verticalHeight)
+                VerticalScrollBar.Resize(1, verticalHeight);
 
             VerticalScrollBar.Position = new Point(Width - 1, 0);
         }
@@ -383,6 +428,7 @@ public partial class Table : CompositeControl
     protected override void OnResized()
     {
         base.OnResized();
+        EnsureAutomaticScrollBars();
         UpdateAutomaticScrollBarGeometry();
         _checkScrollBarVisibility = true;
     }
@@ -430,18 +476,24 @@ public partial class Table : CompositeControl
         if (scrollBar != null)
         {
             int scrollItems = GetScrollBarItems(orientation);
-            scrollBar.MaximumValue = scrollItems < 0 ? 0 : scrollItems;
+            if (ReconcileScrollBarState(scrollBar, scrollBar.IsVisible, scrollItems))
+                SynchronizeScrollOffsetsFromValues();
         }
     }
 
     internal int GetScrollBarItems(Orientation orientation)
+    {
+        int maxSize = orientation == Orientation.Vertical ? EffectiveViewportHeight : EffectiveViewportWidth;
+        return GetScrollBarItems(orientation, maxSize);
+    }
+
+    private int GetScrollBarItems(Orientation orientation, int maxSize)
     {
         IEnumerable<IGrouping<int, Cell>> indexes = orientation == Orientation.Vertical ?
             Cells.GroupBy(a => a.Row) : Cells.GroupBy(a => a.Column);
         IOrderedEnumerable<IGrouping<int, Cell>> orderedIndex = indexes.OrderBy(a => a.Key);
 
         TableCells.Layout.LayoutType layoutType = orientation == Orientation.Vertical ? TableCells.Layout.LayoutType.Row : TableCells.Layout.LayoutType.Column;
-        int maxSize = orientation == Orientation.Vertical ? Height : Width;
         int totalSize = 0;
         int items = 0;
         foreach (IGrouping<int, Cell> index in orderedIndex)
@@ -466,18 +518,30 @@ public partial class Table : CompositeControl
     /// <param name="scrollBar"></param>
     internal bool ShowHideScrollBar(ScrollBar scrollBar)
     {
-        // process the scroll bar
         int scrollbarItems = GetScrollBarItems(scrollBar.Orientation);
-        if (scrollbarItems > 0)
-        {
-            scrollBar.MaximumValue = scrollbarItems;
-            return true;
-        }
+        bool isVisible = scrollbarItems > 0;
+        ReconcileScrollBarState(scrollBar, isVisible, scrollbarItems);
+        return isVisible;
+    }
+
+    private bool ReconcileScrollBarState(ScrollBar scrollBar, bool isVisible, int scrollItems)
+    {
+        int oldMaximum = scrollBar.MaximumValue;
+        int oldValue = scrollBar.Value;
+        int maximum = Math.Max(scrollItems, 0);
+        int value = isVisible ? Math.Min(oldValue, maximum) : 0;
+
+        scrollBar.ValueChanged -= ScrollBar_ValueChanged;
+        scrollBar.MaximumValue = maximum;
+        scrollBar.Value = value;
+        scrollBar.ValueChanged += ScrollBar_ValueChanged;
+
+        if (scrollBar.Orientation == Orientation.Vertical)
+            _previousScrollValueVertical = scrollBar.Value;
         else
-        {
-            scrollBar.MaximumValue = 0;
-            return false;
-        }
+            _previousScrollValueHorizontal = scrollBar.Value;
+
+        return oldMaximum != scrollBar.MaximumValue || oldValue != scrollBar.Value;
     }
 
     internal bool IsEntireRowOrColumnNotVisible(int index, TableCells.Layout.LayoutType type)
@@ -534,10 +598,11 @@ public partial class Table : CompositeControl
     /// </summary>
     internal void SyncScrollAmountOnResize()
     {
-        if ((!IsVerticalScrollBarVisible && !IsHorizontalScrollBarVisible) ||
-            (StartRenderXPos == 0 && StartRenderYPos == 0))
-            return;
+        SynchronizeScrollOffsetsFromValues();
+    }
 
+    private void SynchronizeScrollOffsetsFromValues()
+    {
         StartRenderYPos = 0;
         StartRenderXPos = 0;
 
@@ -555,6 +620,9 @@ public partial class Table : CompositeControl
                 SetScrollAmount(Orientation.Horizontal, true);
             Cells.AdjustCellPositionsAfterResize();
         }
+
+        _previousScrollValueVertical = amountVertical;
+        _previousScrollValueHorizontal = amountHorizontal;
     }
 
     /// <summary>
@@ -587,6 +655,7 @@ public partial class Table : CompositeControl
             : TableCells.Layout.LayoutType.Column;
 
         bool isRowType = type == TableCells.Layout.LayoutType.Row;
+        int viewportSize = isRowType ? EffectiveViewportHeight : EffectiveViewportWidth;
 
         IEnumerable<IGrouping<int, Cell>> cellGroups = Cells.GroupBy(a => isRowType ? a.Row : a.Column);
 
@@ -604,21 +673,21 @@ public partial class Table : CompositeControl
                 if (!increment)
                 {
                     // Check if cell position is the last cell on screen
-                    if (indexSizeCell >= (isRowType ? Height : Width))
+                    if (indexSizeCell >= viewportSize)
                         break;
                 }
                 else
                 {
                     // Check if cell position is the next off-screen
                     // >= because it assumes the cell starts at Height, and thats off screen
-                    bool isPositionOfScreen = isRowType ? indexSizeCell >= Height : indexSizeCell >= Width;
+                    bool isPositionOfScreen = indexSizeCell >= viewportSize;
                     if (!isPositionOfScreen)
                     {
                         // Here it is only > because if the real cell pos is 20 its the ending, so where the next cell starts
                         // which means its not off screen
                         int realCellPosition = isRowType ? (cell._position.Y + cell.Height) : (cell._position.X + cell.Width);
 
-                        if (realCellPosition > (isRowType ? Height : Width))
+                        if (realCellPosition > viewportSize)
                             partialOverlap = true;
                         else
                             break;
@@ -635,7 +704,7 @@ public partial class Table : CompositeControl
                 // Calculate the overlap amount
                 if (partialOverlap)
                 {
-                    int overlapAmount = indexSizeCell + cellSize - (isRowType ? Height : Width);
+                    int overlapAmount = indexSizeCell + cellSize - viewportSize;
                     cellSize = overlapAmount;
                 }
 

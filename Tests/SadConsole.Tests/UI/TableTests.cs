@@ -283,7 +283,8 @@ public class TableTests : TableTestsBase
 
         Assert.IsTrue(table.IsVerticalScrollBarVisible);
         Assert.IsNotNull(table.VerticalScrollBar);
-        Assert.AreEqual(1, table.VerticalScrollBar.MaximumValue);
+        Assert.AreEqual(2, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(2, table.VerticalScrollBar.MaximumValue);
     }
 
     [TestMethod]
@@ -319,6 +320,147 @@ public class TableTests : TableTestsBase
 
         Assert.IsTrue(table.IsHorizontalScrollBarVisible);
         Assert.IsTrue(table.IsVerticalScrollBarVisible);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBars_AutomaticallyRecreateAfterGrowingPastMinimumSize()
+    {
+        var table = new Table(1, 1);
+
+        Assert.IsNull(table.HorizontalScrollBar);
+        Assert.IsNull(table.VerticalScrollBar);
+        Assert.AreEqual(0, ((IContainer)table).Count);
+
+        table.Resize(6, 6);
+
+        Assert.IsNotNull(table.HorizontalScrollBar);
+        Assert.IsNotNull(table.VerticalScrollBar);
+        Assert.AreEqual(2, ((IContainer)table).Count);
+
+        for (int index = 0; index < 7; index++)
+        {
+            table.Cells[0, index].Value = index.ToString();
+            table.Cells[index, 0].Value = index.ToString();
+        }
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(5, table.HorizontalScrollBar.Width);
+        Assert.AreEqual(5, table.VerticalScrollBar.Height);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBars_AutomaticallyRemoveInvalidJointGeometryAndRecreate()
+    {
+        var table = new Table(6, 6);
+
+        for (int index = 0; index < 7; index++)
+        {
+            table.Cells[0, index].Value = index.ToString();
+            table.Cells[index, 0].Value = index.ToString();
+        }
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+
+        table.Resize(2, 2);
+
+        Assert.IsNull(table.HorizontalScrollBar);
+        Assert.IsNull(table.VerticalScrollBar);
+        Assert.AreEqual(0, ((IContainer)table).Count);
+
+        table.Resize(6, 6);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(2, ((IContainer)table).Count);
+        Assert.AreEqual(new Point(0, 5), table.HorizontalScrollBar.Position);
+        Assert.AreEqual(5, table.HorizontalScrollBar.Width);
+        Assert.AreEqual(new Point(5, 0), table.VerticalScrollBar.Position);
+        Assert.AreEqual(5, table.VerticalScrollBar.Height);
+        Assert.IsFalse(table.HorizontalScrollBar.Bounds.Intersects(table.VerticalScrollBar.Bounds));
+    }
+
+    [TestMethod]
+    public void Table_ScrollBars_AutomaticallyCoupleVisibilityAcrossEffectiveViewport()
+    {
+        var verticalInducesHorizontal = new Table(6, 6);
+        var horizontalInducesVertical = new Table(6, 6);
+
+        for (int column = 0; column < 6; column++)
+            verticalInducesHorizontal.Cells[0, column].Value = column.ToString();
+        for (int row = 0; row < 7; row++)
+            verticalInducesHorizontal.Cells[row, 0].Value = row.ToString();
+
+        for (int column = 0; column < 7; column++)
+            horizontalInducesVertical.Cells[0, column].Value = column.ToString();
+        for (int row = 0; row < 6; row++)
+            horizontalInducesVertical.Cells[row, 0].Value = row.ToString();
+
+        verticalInducesHorizontal.UpdateAndRedraw(System.TimeSpan.Zero);
+        horizontalInducesVertical.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(verticalInducesHorizontal.IsVerticalScrollBarVisible);
+        Assert.IsTrue(verticalInducesHorizontal.IsHorizontalScrollBarVisible);
+        Assert.AreEqual(1, verticalInducesHorizontal.HorizontalScrollBar.MaximumValue);
+        Assert.IsTrue(horizontalInducesVertical.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(horizontalInducesVertical.IsVerticalScrollBarVisible);
+        Assert.AreEqual(1, horizontalInducesVertical.VerticalScrollBar.MaximumValue);
+    }
+
+    [TestMethod]
+    public void Table_ScrollBars_ReconcileRangeAndOffsetsAcrossResize()
+    {
+        var table = new Table(4, 4);
+
+        for (int index = 0; index < 7; index++)
+        {
+            table.Cells[0, index].Value = index.ToString();
+            table.Cells[index, 0].Value = index.ToString();
+        }
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        table.HorizontalScrollBar.MaximumValue = 4;
+        table.VerticalScrollBar.MaximumValue = 4;
+        table.HorizontalScrollBar.Value = 4;
+        table.VerticalScrollBar.Value = 4;
+
+        Assert.AreEqual(4, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(4, table.VerticalScrollBar.Value);
+        Assert.AreNotEqual(0, table.StartRenderXPos);
+        Assert.AreNotEqual(0, table.StartRenderYPos);
+
+        table.Resize(10, 10);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsFalse(table.IsHorizontalScrollBarVisible);
+        Assert.IsFalse(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(1, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(1, table.VerticalScrollBar.MaximumValue);
+        Assert.AreEqual(0, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(0, table.VerticalScrollBar.Value);
+        Assert.AreEqual(0, table.StartRenderXPos);
+        Assert.AreEqual(0, table.StartRenderYPos);
+
+        table.Resize(4, 4);
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(4, table.HorizontalScrollBar.MaximumValue);
+        Assert.AreEqual(4, table.VerticalScrollBar.MaximumValue);
+        Assert.AreEqual(0, table.HorizontalScrollBar.Value);
+        Assert.AreEqual(0, table.VerticalScrollBar.Value);
+
+        table.HorizontalScrollBar.Value = 1;
+        table.VerticalScrollBar.Value = 1;
+
+        Assert.AreEqual(1, table.StartRenderXPos);
+        Assert.AreEqual(1, table.StartRenderYPos);
     }
 
     [TestMethod]
