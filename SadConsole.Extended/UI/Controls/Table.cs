@@ -143,7 +143,12 @@ public partial class Table : CompositeControl
     public bool IsVerticalScrollBarVisible
     {
         get => VerticalScrollBar != null && VerticalScrollBar.IsVisible;
-        internal set { if (VerticalScrollBar == null) return; VerticalScrollBar.IsVisible = value; }
+        internal set
+        {
+            if (VerticalScrollBar == null) return;
+            VerticalScrollBar.IsVisible = value;
+            UpdateAutomaticScrollBarGeometry();
+        }
     }
     /// <summary>
     /// Returns true if the horizontal scroll bar is currently visible.
@@ -151,7 +156,12 @@ public partial class Table : CompositeControl
     public bool IsHorizontalScrollBarVisible
     {
         get => HorizontalScrollBar != null && HorizontalScrollBar.IsVisible;
-        internal set { if (HorizontalScrollBar == null) return; HorizontalScrollBar.IsVisible = value; }
+        internal set
+        {
+            if (HorizontalScrollBar == null) return;
+            HorizontalScrollBar.IsVisible = value;
+            UpdateAutomaticScrollBarGeometry();
+        }
     }
 
     /// <summary>
@@ -208,6 +218,8 @@ public partial class Table : CompositeControl
     private DateTime _leftMouseLastClick = DateTime.Now;
     private Point? _leftMouseLastClickPosition;
     internal bool _checkScrollBarVisibility;
+    private bool _automaticallyManageHorizontalScrollBar;
+    private bool _automaticallyManageVerticalScrollBar;
 
     private int _previousScrollValueVertical, _previousScrollValueHorizontal;
     private void ScrollBar_ValueChanged(object? sender, EventArgs e)
@@ -244,9 +256,11 @@ public partial class Table : CompositeControl
         DefaultBackground = Color.TransparentBlack;
         DefaultCellSize = new Point(1, 1);
         if (width >= 2)
-            SetupScrollBar(Orientation.Horizontal, width, new Point(0, height - 1));
+            SetupScrollBar(Orientation.Horizontal, width, new Point(0, height - 1), true);
         if (height >= 2)
-            SetupScrollBar(Orientation.Vertical, height, new Point(width - 1, 0));
+            SetupScrollBar(Orientation.Vertical, height, new Point(width - 1, 0), true);
+
+        UpdateAutomaticScrollBarGeometry();
     }
 
     /// <summary>
@@ -294,7 +308,10 @@ public partial class Table : CompositeControl
     /// <param name="orientation">The orientation of the scrollbar.</param>
     /// <param name="size"></param>
     /// <param name="position">The position of the scrollbar.</param>
-    public void SetupScrollBar(Orientation orientation, int size, Point position)
+    public void SetupScrollBar(Orientation orientation, int size, Point position) =>
+        SetupScrollBar(orientation, size, position, false);
+
+    private void SetupScrollBar(Orientation orientation, int size, Point position, bool automaticallyManageGeometry)
     {
         bool scrollBarExists = false;
         int value = 0;
@@ -323,13 +340,51 @@ public partial class Table : CompositeControl
         AddControl(existingScrollBar);
 
         if (orientation == Orientation.Vertical)
+        {
             VerticalScrollBar = existingScrollBar;
+            _automaticallyManageVerticalScrollBar = automaticallyManageGeometry;
+        }
         else
+        {
             HorizontalScrollBar = existingScrollBar;
+            _automaticallyManageHorizontalScrollBar = automaticallyManageGeometry;
+        }
 
         _checkScrollBarVisibility = true;
 
         DetermineState();
+        UpdateAutomaticScrollBarGeometry();
+    }
+
+    private void UpdateAutomaticScrollBarGeometry()
+    {
+        bool reserveCorner = IsHorizontalScrollBarVisible && IsVerticalScrollBarVisible;
+
+        if (_automaticallyManageHorizontalScrollBar && HorizontalScrollBar != null)
+        {
+            int width = reserveCorner ? Width - 1 : Width;
+            if (width >= 2 && HorizontalScrollBar.Width != width)
+                HorizontalScrollBar.Resize(width, 1);
+
+            HorizontalScrollBar.Position = new Point(0, Height - 1);
+        }
+
+        if (_automaticallyManageVerticalScrollBar && VerticalScrollBar != null)
+        {
+            int height = reserveCorner ? Height - 1 : Height;
+            if (height >= 2 && VerticalScrollBar.Height != height)
+                VerticalScrollBar.Resize(1, height);
+
+            VerticalScrollBar.Position = new Point(Width - 1, 0);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnResized()
+    {
+        base.OnResized();
+        UpdateAutomaticScrollBarGeometry();
+        _checkScrollBarVisibility = true;
     }
 
     internal HashSet<int> GetIndexesWithContent(TableCells.Layout.LayoutType indexType)

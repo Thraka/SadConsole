@@ -287,6 +287,65 @@ public class TableTests : TableTestsBase
     }
 
     [TestMethod]
+    public void Table_ScrollBars_AutomaticallyReflowWithoutOverlap()
+    {
+        var table = new Table(6, 6, 2, 2);
+
+        for (int index = 0; index < 7; index++)
+        {
+            table.Cells[0, index].Value = index.ToString();
+            table.Cells[index, 0].Value = index.ToString();
+        }
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+        Assert.AreEqual(new Point(0, 5), table.HorizontalScrollBar.Position);
+        Assert.AreEqual(5, table.HorizontalScrollBar.Width);
+        Assert.AreEqual(new Point(5, 0), table.VerticalScrollBar.Position);
+        Assert.AreEqual(5, table.VerticalScrollBar.Height);
+        Assert.IsFalse(table.HorizontalScrollBar.Bounds.Intersects(table.VerticalScrollBar.Bounds));
+
+        table.Resize(10, 8);
+
+        Assert.AreEqual(new Point(0, 7), table.HorizontalScrollBar.Position);
+        Assert.AreEqual(9, table.HorizontalScrollBar.Width);
+        Assert.AreEqual(new Point(9, 0), table.VerticalScrollBar.Position);
+        Assert.AreEqual(7, table.VerticalScrollBar.Height);
+        Assert.IsFalse(table.HorizontalScrollBar.Bounds.Intersects(table.VerticalScrollBar.Bounds));
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+
+        Assert.IsTrue(table.IsHorizontalScrollBarVisible);
+        Assert.IsTrue(table.IsVerticalScrollBarVisible);
+    }
+
+    [TestMethod]
+    public void Table_SetupScrollBar_ReconfiguresAutomaticBarWithoutDuplicates()
+    {
+        var table = new Table(6, 6, 2, 2);
+        ScrollBar originalHorizontalScrollBar = table.HorizontalScrollBar;
+
+        table.SetupScrollBar(Orientation.Horizontal, 4, new Point(1, 4));
+
+        Assert.AreEqual(2, ((IContainer)table).Count);
+        Assert.AreNotSame(originalHorizontalScrollBar, table.HorizontalScrollBar);
+        Assert.AreEqual(new Point(1, 4), table.HorizontalScrollBar.Position);
+        Assert.AreEqual(4, table.HorizontalScrollBar.Width);
+
+        for (int column = 0; column < 4; column++)
+            table.Cells[0, column].Value = column.ToString();
+
+        table.UpdateAndRedraw(System.TimeSpan.Zero);
+        table.Resize(10, 8);
+
+        Assert.AreEqual(2, ((IContainer)table).Count);
+        Assert.AreEqual(new Point(1, 4), table.HorizontalScrollBar.Position);
+        Assert.AreEqual(4, table.HorizontalScrollBar.Width);
+    }
+
+    [TestMethod]
     public void Table_ScrollBar_Vertical_Scrolling_EqualSizes_Correct()
     {
         const int extraRowsOffScreen = 5;
