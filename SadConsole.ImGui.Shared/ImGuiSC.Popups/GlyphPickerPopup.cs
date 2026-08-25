@@ -66,7 +66,7 @@ public static partial class ImGuiSC
                     Vector2 mousePosition = ImGui.GetMousePos();
                     Vector2 pos = mousePosition - itemRectMin;
 
-                    _hoveredGlyphDefinition = ((SadFont)font).GlyphRectangles.First(kv => kv.Value.Contains(new Point((int)pos.X, (int)pos.Y)));
+                    _hoveredGlyphDefinition = ((SadFont)font).GlyphRectangles.FirstOrDefault(kv => kv.Value.Contains(new Point((int)pos.X, (int)pos.Y)));
 
                     if (_hoveredGlyphDefinition.Value != Rectangle.Empty)
                     {

@@ -347,7 +347,7 @@ public class ImGuiRenderer: ImGuiRenderer<Texture2D>, IDisposable
         int vtxOffset = 0;
         int idxOffset = 0;
 
-        for (int n = 0; n < drawData->CmdListsCount; n++)
+        for (int n = 0; n < drawData->CmdLists.Size; n++)
         {
             ImDrawList* cmdList = drawData->CmdLists.Data[n];
 
@@ -377,7 +377,7 @@ public class ImGuiRenderer: ImGuiRenderer<Texture2D>, IDisposable
         int vtxOffset = 0;
         int idxOffset = 0;
 
-        for (int n = 0; n < drawData->CmdListsCount; n++)
+        for (int n = 0; n < drawData->CmdLists.Size; n++)
         {
             ImDrawList* cmdList = drawData->CmdLists.Data[n];
 
@@ -392,8 +392,8 @@ public class ImGuiRenderer: ImGuiRenderer<Texture2D>, IDisposable
 
                 // In v1.92, we need to handle ImTextureRef instead of ImTextureID
                 ImTextureRef textureRef = drawCmd->TexRef;
-                ImTextureID texId = textureRef.GetTexID();
-                if (!_loadedTexturesByPointer.TryGetValue(texId, out TextureInfo textureInfo))
+                ImTextureID texId = textureRef.TexID;
+                if (!_loadedTexturesByPointer.TryGetValue(texId, out TextureInfo? textureInfo))
                 {
                     throw new InvalidOperationException($"Could not find a texture with id '{texId}', please check your bindings");
                 }

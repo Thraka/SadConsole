@@ -240,7 +240,7 @@ public class ImGuiRenderer : ImGuiRenderer<Texture>, IDisposable
     /// </summary>
     protected unsafe override void RenderDrawData(ImDrawData* drawData)
     {
-        if (drawData->CmdListsCount == 0)
+        if (drawData->CmdLists.Size == 0)
             return;
 
         // Handle cases of screen coordinates != from framebuffer coordinates (e.g. retina displays)
@@ -254,7 +254,7 @@ public class ImGuiRenderer : ImGuiRenderer<Texture>, IDisposable
             new SFML.System.Vector2f(windowSize.X, windowSize.Y)
         )));
 
-        for (int n = 0; n < drawData->CmdListsCount; n++)
+        for (int n = 0; n < drawData->CmdLists.Size; n++)
         {
             ImDrawList* cmdList = drawData->CmdLists.Data[n];
 
@@ -284,7 +284,7 @@ public class ImGuiRenderer : ImGuiRenderer<Texture>, IDisposable
                     continue;
 
                 ImTextureRef textureRef = drawCmd->TexRef;
-                ImTextureID texId = textureRef.GetTexID();
+                ImTextureID texId = textureRef.TexID;
                 if (!_loadedTexturesByPointer.TryGetValue(texId, out TextureInfo? textureInfo))
                     throw new InvalidOperationException($"Could not find a texture with id '{texId}', please check your bindings");
 

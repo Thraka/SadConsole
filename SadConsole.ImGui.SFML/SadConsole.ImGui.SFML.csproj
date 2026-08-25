@@ -28,7 +28,7 @@
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="SFML.Net" Version="3.0.0" />
-    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" />
+    <PackageReference Include="Hexa.NET.ImGui" Version="3.1.0-experimental" />
   </ItemGroup>
 
   <ItemGroup>
