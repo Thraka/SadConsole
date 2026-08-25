@@ -226,6 +226,7 @@ public partial class Table
             MaxRow = 0;
             MaxColumn = 0;
             _cells.Clear();
+            _table._checkScrollBarVisibility = true;
             _table.IsDirty = true;
         }
 
@@ -521,6 +522,7 @@ public partial class Table
             {
                 Dictionary<int, Layout> layoutDict = _layoutType == LayoutType.Row ? _table.Cells._rowLayout : _table.Cells._columnLayout;
                 layoutDict.Remove(_index);
+                _table._checkScrollBarVisibility = true;
                 _table.IsDirty = true;
             }
 

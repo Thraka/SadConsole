@@ -14,6 +14,7 @@ public partial class Table
     {
         if (!IsDirty) return;
 
+        EnsureAutomaticScrollBars();
         RefreshThemeStateColors(FindThemeColors());
 
         // Draw the basic table surface foreground and background, and clear the glyphs
@@ -31,12 +32,15 @@ public partial class Table
 
         SetScrollBarVisibility(maxRowsHeight, maxColumnsWidth);
 
+        int viewportWidth = EffectiveViewportWidth;
+        int viewportHeight = EffectiveViewportHeight;
+
         int rows = 0;
         int rowIndexPos = Cells.GetIndexAtCellPosition(StartRenderYPos, Table.TableCells.Layout.LayoutType.Row, out _);
         int rowIndex = IsVerticalScrollBarVisible ? rowIndexPos : 0;
         bool offScreenY = false;
         List<((int x, int y), (int row, int col))>? fakeCells = DrawFakeCells ? new() : null;
-        for (int row = 0; row <= Height; row++)
+        for (int row = 0; row <= viewportHeight; row++)
         {
             if (rows >= allRowIndexesWithContent.Count) break;
             if (allRowIndexesWithContent.Contains(row)) rows++;
@@ -51,7 +55,7 @@ public partial class Table
             int fullRowSize = 0;
 
             bool headerRow = false;
-            for (int col = 0; col <= Width; col++)
+            for (int col = 0; col <= viewportWidth; col++)
             {
                 if (columns >= allColumnIndexesWithContent.Count) break;
                 if (allColumnIndexesWithContent.Contains(col)) columns++;
@@ -84,15 +88,15 @@ public partial class Table
                 }
 
                 // Don't attempt to render off-screen rows/columns
-                if (cellPosition.X > Width || cellPosition.Y > Height)
+                if (cellPosition.X > viewportWidth || cellPosition.Y > viewportHeight)
                 {
-                    if (cellPosition.Y > Height)
+                    if (cellPosition.Y > viewportHeight)
                     {
                         offScreenY = true;
                         break;
                     }
 
-                    if (cellPosition.X > Width)
+                    if (cellPosition.X > viewportWidth)
                         break;
                 }
 
@@ -184,11 +188,10 @@ public partial class Table
     {
         if (scrollBar != null)
         {
+            int max = scrollBar.Orientation == Orientation.Vertical ? EffectiveViewportHeight : EffectiveViewportWidth;
             int total = scrollBar.Orientation == Orientation.Vertical ?
-                (maxRowsHeight >= Height ? Height : maxRowsHeight) :
-                (maxColumnsWidth >= Width ? Width : maxColumnsWidth);
-
-            int max = scrollBar.Orientation == Orientation.Vertical ? Height : Width;
+                Math.Min(maxRowsHeight, max) :
+                Math.Min(maxColumnsWidth, max);
 
             if (scrollBar.Orientation == Orientation.Vertical)
             {
@@ -211,19 +214,55 @@ public partial class Table
     /// <param name="maxColumnsWidth">The maximum width of the columns.</param>
     protected void SetScrollBarVisibility(int maxRowsHeight, int maxColumnsWidth)
     {
-        if (_checkScrollBarVisibility)
+        if (!_checkScrollBarVisibility)
+            return;
+
+        EnsureAutomaticScrollBars();
+
+        ScrollBar? horizontalScrollBar = HorizontalScrollBar;
+        ScrollBar? verticalScrollBar = VerticalScrollBar;
+
+        bool showHorizontal = horizontalScrollBar != null && GetScrollBarItems(Orientation.Horizontal, Width) > 0;
+        bool showVertical = verticalScrollBar != null && GetScrollBarItems(Orientation.Vertical, Height) > 0;
+
+        for (int i = 0; i < 2; i++)
         {
-            if (VerticalScrollBar != null)
-            {
-                IsVerticalScrollBarVisible = ShowHideScrollBar(VerticalScrollBar);
-                SetScrollBarPropertiesOnTable(VerticalScrollBar, maxRowsHeight, maxColumnsWidth);
-            }
-            if (HorizontalScrollBar != null)
-            {
-                IsHorizontalScrollBarVisible = ShowHideScrollBar(HorizontalScrollBar);
-                SetScrollBarPropertiesOnTable(HorizontalScrollBar, maxRowsHeight, maxColumnsWidth);
-            }
+            int viewportWidth = Math.Max(Width - (_automaticallyManageVerticalScrollBar && showVertical ? 1 : 0), 0);
+            int viewportHeight = Math.Max(Height - (_automaticallyManageHorizontalScrollBar && showHorizontal ? 1 : 0), 0);
+            bool nextShowHorizontal = horizontalScrollBar != null && GetScrollBarItems(Orientation.Horizontal, viewportWidth) > 0;
+            bool nextShowVertical = verticalScrollBar != null && GetScrollBarItems(Orientation.Vertical, viewportHeight) > 0;
+
+            if (showHorizontal == nextShowHorizontal && showVertical == nextShowVertical)
+                break;
+
+            showHorizontal = nextShowHorizontal;
+            showVertical = nextShowVertical;
         }
+
+        if (horizontalScrollBar != null)
+            horizontalScrollBar.IsVisible = showHorizontal;
+        if (verticalScrollBar != null)
+            verticalScrollBar.IsVisible = showVertical;
+
+        UpdateAutomaticScrollBarGeometry();
+
+        if (HorizontalScrollBar != null)
+        {
+            int scrollItems = GetScrollBarItems(Orientation.Horizontal);
+            ReconcileScrollBarState(HorizontalScrollBar, HorizontalScrollBar.IsVisible, scrollItems);
+            SetScrollBarPropertiesOnTable(HorizontalScrollBar, maxRowsHeight, maxColumnsWidth);
+        }
+
+        if (VerticalScrollBar != null)
+        {
+            int scrollItems = GetScrollBarItems(Orientation.Vertical);
+            ReconcileScrollBarState(VerticalScrollBar, VerticalScrollBar.IsVisible, scrollItems);
+            SetScrollBarPropertiesOnTable(VerticalScrollBar, maxRowsHeight, maxColumnsWidth);
+        }
+
+        SynchronizeScrollOffsetsFromValues();
+
+        _checkScrollBarVisibility = false;
     }
 
     /// <summary>
