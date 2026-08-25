@@ -27,7 +27,13 @@ public static class AddinLoader
         // Phase 1: Discover all addin attributes across every assembly
         List<(int Order, Type AddinType, string DllPath)> discovered = [];
 
-        foreach (string dllPath in Directory.GetFiles(addinsDir, "*.dll"))
+        IEnumerable<string> dllsToRead = Directory.GetFiles(addinsDir, "*.dll")
+                                                  .Concat(Directory.GetFiles(Core.State.RootFolder, "*.dll"));
+
+        if (Core.State.ExtraAddinsFolder is not null)
+            dllsToRead = dllsToRead.Concat(Directory.GetFiles(Core.State.ExtraAddinsFolder, "*.dll"));
+
+        foreach (string dllPath in dllsToRead)
         {
             try
             {

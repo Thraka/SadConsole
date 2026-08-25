@@ -39,10 +39,19 @@ Game.Instance.Dispose();
 
 void StartHandler(object? sender, GameHost host)
 {
-    if (args.Length > 0)
+    if (args.Length == 1)
+    {
+        if (Directory.Exists(args[0]))
+            Core.State.RootFolder = args[0];
+    }
+    else if (args.Length == 2)
+    {
         if (Directory.Exists(args[0]))
             Core.State.RootFolder = args[0];
 
+        if (Directory.Exists(args[1]))
+            Core.State.ExtraAddinsFolder = args[1];
+    }
 
     Core.State.LoadSadConsoleFonts();
 

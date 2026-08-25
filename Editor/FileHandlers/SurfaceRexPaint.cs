@@ -26,7 +26,7 @@ internal class SurfaceRexPaint : IFileHandler
         using Stream stream = File.OpenRead(file);
         Readers.REXPaintImage image = Readers.REXPaintImage.Load(stream);
 
-        return new DocumentSurface((CellSurface)image.ToCellSurface()[0]);
+        return new DocumentSurface((CellSurface)image.ToCellSurface()[0]) { Title = System.IO.Path.GetFileNameWithoutExtension(file) };
     }
 
     public bool Save(object instance, string file, bool compress)

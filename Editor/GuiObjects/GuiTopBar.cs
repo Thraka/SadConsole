@@ -50,6 +50,7 @@ public class GuiTopBar : ImGuiObjectBase
                             document.LoadedFileHandler = loader;
                             Core.State.Documents.Add(document);
                             Core.State.SelectedDocument = document;
+                            Core.State.SelectedDocument.OnSelected();
                         }
                     }, null);
                 }
@@ -150,6 +151,7 @@ public class GuiTopBar : ImGuiObjectBase
                     : Core.State.SelectedDocument;
 
                 Core.State.Documents.Remove(docToClose);
+                Core.State.SelectedDocument.OnDeselected();
                 Core.State.SelectedDocument = null;
 
                 if (Core.State.Documents.Count > 0)

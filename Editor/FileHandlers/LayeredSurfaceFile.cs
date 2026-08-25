@@ -43,7 +43,7 @@ internal class LayeredSurfaceFile : IFileHandler
         for (int i = 1; i < layers.Length; i++)
             layeredSurface.Layers.Add(layers[i]);
 
-        return new DocumentLayeredSurface(layeredSurface);
+        return new DocumentLayeredSurface(layeredSurface) { Title = System.IO.Path.GetFileNameWithoutExtension(file) };
     }
 
     public bool Save(object instance, string file, bool compress)

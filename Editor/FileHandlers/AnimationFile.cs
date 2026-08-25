@@ -32,7 +32,7 @@ internal class AnimationFile : IFileHandler
             }
         }
 
-        return new DocumentAnimated(surface);
+        return new DocumentAnimated(surface) { Title = System.IO.Path.GetFileNameWithoutExtension(file) };
     }
 
     public bool Save(object instance, string file, bool compress)

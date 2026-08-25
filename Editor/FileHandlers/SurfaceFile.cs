@@ -32,7 +32,7 @@ internal class SurfaceFile : IFileHandler
             }
         }
 
-        return new DocumentSurface(surface);
+        return new DocumentSurface(surface) { Title = System.IO.Path.GetFileNameWithoutExtension(file) };
     }
 
     public bool Save(object instance, string file, bool compress)

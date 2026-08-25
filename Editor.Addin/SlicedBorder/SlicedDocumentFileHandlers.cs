@@ -32,7 +32,7 @@ internal class SlicedDocumentFile : IFileHandler
             }
         }
 
-        return new SlicedDocument(border) { Title = Document.GenerateName("SlicedBorder") };
+        return new SlicedDocument(border) { Title = System.IO.Path.GetFileNameWithoutExtension(file) };
     }
 
     public bool Save(object instance, string file, bool compress)

@@ -39,6 +39,17 @@ public partial class SlicedDocument : Document
     {
         ImGui.SeparatorText("Sliced Border Settings"u8);
 
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Name:"u8);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(-1);
+
+        string editTitle = Title;
+        if (ImGui.InputText("##name"u8, ref editTitle, 50))
+            Title = editTitle;
+
+        ImGui.Separator();
+
         // Read-only visual grid showing current border layout
         {
             uint cornerColor = ImGui.GetColorU32(new Vector4(0.30f, 0.30f, 0.50f, 1.0f));
