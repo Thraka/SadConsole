@@ -135,7 +135,7 @@ public class FileDirectoryListbox : ListBox
     }
 
     /// <summary>
-    /// Navigates the file system when a directory item is selected and raises the <see cref="ListBox.SelectedItemExecuted"/> event.
+    /// Navigates the file system when a directory item is selected and raises the <see cref="ListBox{T}.SelectedItemExecuted"/> event.
     /// </summary>
     /// <remarks>
     /// When a directory is selected, updates <see cref="CurrentFolder"/> to navigate into that directory.

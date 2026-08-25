@@ -171,7 +171,7 @@ public partial class Colors
     public Color BronzeDark { get; set; }
 
     /// <summary>
-    /// The color used to darken the background when <see cref="o:UI.Window.Show"/> is called and <see cref="UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
+    /// The color used to darken the background when <see cref="o:SadConsole.UI.Window.Show"/> is called and <see cref="UI.Window.IsModal"/> is <see langword="true"/>. Defaults to (20, 20, 20, 200).
     /// </summary>
     public Color ModalBackground { get; set; } = new Color(20, 20, 20, 200);
 
