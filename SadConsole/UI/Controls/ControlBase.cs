@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using SadConsole.Input;
+using SadConsole.UI.Handlers;
 using SadRogue.Primitives;
 
 namespace SadConsole.UI.Controls;
@@ -232,50 +233,54 @@ public abstract class ControlBase
         get => _isFocused;
         set
         {
-            if (Parent?.Host != null)
-            {
-                // We're focused
-                if (value)
-                {
-                    // Some other control is focused, swap
-                    if (Parent.Host.FocusedControl != this)
-                    {
-                        Parent.Host.FocusedControl = this;
-                        _isFocused = Parent.Host.FocusedControl == this;
-                        DetermineState();
-
-                        if (_isFocused)
-                            OnFocused();
-                    }
-
-                    // We're focused, check internal flag and set properly
-                    else if (!_isFocused)
-                    {
-                        _isFocused = true;
-                        DetermineState();
-                        OnFocused();
-                    }
-                }
-                else
-                {
-                    _isFocused = false;
-
-                    if (Parent.Host.FocusedControl == this)
-                        Parent.Host.FocusedControl = null;
-
-                    DetermineState();
-                    OnUnfocused();;
-                }
-            }
-
-            // No parent/host and we're currently focused internally, clear it
-            else if (_isFocused)
+            if (value)
+                AcquireFocus(FocusDirection.Next);
+            else
             {
                 _isFocused = false;
+
+                if (Parent?.Host?.FocusedControl == this)
+                    Parent.Host.FocusedControl = null;
+
                 DetermineState();
                 OnUnfocused();
             }
         }
+    }
+
+    public virtual bool AcquireFocus(FocusDirection direction)
+    {
+        if (Parent?.Host != null)
+        {
+            // Some other control is focused, swap
+            if (Parent.Host.FocusedControl != this)
+            {
+                Parent.Host.FocusedControl = this;
+                _isFocused = Parent.Host.FocusedControl == this;
+                DetermineState();
+
+                if (_isFocused)
+                    OnFocused();
+            }
+
+            // We're focused, check internal flag and set properly
+            else if (!_isFocused)
+            {
+                _isFocused = true;
+                DetermineState();
+                OnFocused();
+            }
+        }
+
+        // No parent/host and we're currently focused internally, clear it
+        else if (_isFocused)
+        {
+            _isFocused = false;
+            DetermineState();
+            OnUnfocused();
+        }
+
+        return _isFocused;
     }
 
     /// <summary>
@@ -385,11 +390,29 @@ public abstract class ControlBase
         IsDirtyChanged?.Invoke(this, EventArgs.Empty);
 
     #region Input
+
+    /// <summary>
+    /// Gets or sets the handler used to process keyboard input for this control.
+    /// </summary>
+    public IKeyboardHandler? KeyboardHandler { get; set; }
+
     /// <summary>
     /// Called when the keyboard is used on this control.
+    /// This function is called only if the <see cref="KeyboardHandler"/> declines
+    /// to handle the keyboard input.
     /// </summary>
     /// <param name="state">The state of the keyboard.</param>
     public virtual bool ProcessKeyboard(Keyboard state) => false;
+
+    /// <summary>
+    /// Called when the keyboard is used on this control.
+    /// This method probably does not need to be overriden, instead override ProcessKeyboard(Keyboard)
+    /// or set the KeyboardHandler.
+    /// </summary>
+    /// <param name="state">The state of the keyboard.</param>
+    /// <param name="origin"></param>
+    public virtual bool ProcessKeyboard(Keyboard state, ControlBase? origin)
+        => (KeyboardHandler?.ProcessKeyboard(state, origin) ?? false) || ProcessKeyboard(state);
 
     /// <summary>
     /// Checks if the mouse is the control and calls the appropriate mouse methods.
@@ -762,4 +785,5 @@ public abstract class ControlBase
 
         }
     }
+
 }
