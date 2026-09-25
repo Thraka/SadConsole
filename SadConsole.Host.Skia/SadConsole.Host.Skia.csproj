@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\MSBuild\Common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(FrameworksToTarget)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <Version>$(SadConsole_Version)</Version>
+    <AssemblyTitle>SadConsole Skia Host</AssemblyTitle>
+    <Description>A graphics hosting library for SadConsole that targets Skia.</Description>
+    <PackageId>SadConsole.Host.Skia</PackageId>
+    <PackageTags>sadconsole;Skia;roguelike;cli;game;development;console;ansi;ascii;textmode;dotnet</PackageTags>
+    <PackageReleaseNotes>SadConsole release $(SadConsole_Version). See the main SadConsole package for notes.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <!-- Experimental Attributes -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SADCON7001</NoWarn>
+  </PropertyGroup>
+  
+  <!-- Custom properties -->
+  <PropertyGroup>
+    <UseProjectReferences>true</UseProjectReferences>
+    <DefineConstants>$(DefineConstants);Skia</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Condition=" '$(UseProjectReferences)' == 'true' " Include="..\SadConsole\SadConsole.csproj" />
+    <PackageReference Condition=" '$(UseProjectReferences)' != 'true' " Include="SadConsole" Version="$(SadConsole_Version)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="SkiaSharp" Version="4.154.0-preview.1.26454.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\SadConsole\Resources\nugeticon.png" pack="true" PackagePath="." />
+    <None Include="..\SadConsole\Resources\readme.txt" pack="true" PackagePath="." />
+    <None Include="README.md" pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).snupkg" DestinationFolder="$(OutputPath)..\..\..\nuget" />
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="..\SadConsole.Host.Shared\GameTextureHelpers.cs" Link="GameTextureHelpers.cs" />
+  </ItemGroup>
+
+</Project>

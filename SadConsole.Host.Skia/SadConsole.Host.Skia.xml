@@ -1,0 +1,558 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SadConsole.Host.Skia</name>
+    </assembly>
+    <members>
+        <member name="T:SadConsole.DrawCalls.DrawCallColor">
+            <summary>
+            Draws a solid color rectangle into the active Skia canvas.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawCalls.DrawCallColor.Color">
+            <summary>
+            Gets the color to draw.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawCalls.DrawCallColor.Area">
+            <summary>
+            Gets the destination rectangle.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.#ctor(SadRogue.Primitives.Color,SadRogue.Primitives.Rectangle)">
+            <summary>
+            Creates a color draw call.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallColor.Draw">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.DrawCalls.DrawCallTexture">
+            <summary>
+            Draws a GPU-backed Skia image into the active client-provided canvas.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawCalls.DrawCallTexture.Texture">
+            <summary>
+            The texture to draw.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawCalls.DrawCallTexture.Position">
+            <summary>
+            The destination position in logical render pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.DrawCalls.DrawCallTexture.Tint">
+            <summary>
+            The color applied to the texture.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.#ctor(SadConsole.Host.GameTexture,SadRogue.Primitives.Point,System.Nullable{SadRogue.Primitives.Color})">
+            <summary>
+            Creates a texture draw call.
+            </summary>
+        </member>
+        <member name="M:SadConsole.DrawCalls.DrawCallTexture.Draw">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Game">
+            <summary>
+            A client-driven SadConsole host that renders through SkiaSharp.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Game.FullscreenRequested">
+            <summary>
+            Raised when the embedding client should toggle fullscreen mode.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Game.ViewportSizeRequested">
+            <summary>
+            Raised when the embedding client should resize its viewport.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.Instance">
+            <summary>
+            Gets the strongly typed game instance.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.KeyboardState">
+            <summary>
+            Gets the keyboard state populated by the embedding client.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.MouseState">
+            <summary>
+            Gets the mouse state populated by the embedding client.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.IsRunning">
+            <summary>
+            Gets whether this host has started and accepts frames.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.GraphicsContext">
+            <summary>
+            Gets the client-owned OpenGL context used by this host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Game.IsInputEnabled">
+            <summary>
+            Gets or sets whether SadConsole should process client-provided input.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,SkiaSharp.GRContext)">
+            <summary>
+            Creates a game using the built-in font and default console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.EventHandler{SadConsole.GameHost},SkiaSharp.GRContext)">
+            <summary>
+            Creates a game using the built-in font and default console.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(System.Int32,System.Int32,System.String,System.EventHandler{SadConsole.GameHost},SkiaSharp.GRContext)">
+            <summary>
+            Creates a game with a custom default font.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Create(SadConsole.Configuration.Builder,SkiaSharp.GRContext)">
+            <summary>
+            Creates and initializes a client-driven game.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Run">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.Update(System.TimeSpan)">
+            <summary>
+            Advances SadConsole by one client frame.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Render(SkiaSharp.SKCanvas,System.TimeSpan)">
+            <summary>
+            Renders one SadConsole frame into the supplied canvas at the logical render size.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Render(SkiaSharp.SKCanvas,SkiaSharp.SKRect,System.TimeSpan)">
+            <summary>
+            Renders one SadConsole frame into a destination rectangle supplied by the client.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Game.Stop">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.GetTexture(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.CreateTexture(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.GetKeyboardState">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.GetMouseState">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.GetDeviceScreenSize(System.Int32@,System.Int32@)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.OpenStream(System.String,System.IO.FileMode,System.IO.FileAccess)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.ToggleFullScreen">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Game.ResizeWindow(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.ViewportSizeChangedEventArgs">
+            <summary>
+            Provides a client with a requested viewport size.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ViewportSizeChangedEventArgs.Width">
+            <summary>
+            Gets the requested width in pixels.
+            </summary>
+        </member>
+        <member name="P:SadConsole.ViewportSizeChangedEventArgs.Height">
+            <summary>
+            Gets the requested height in pixels.
+            </summary>
+        </member>
+        <member name="M:SadConsole.ViewportSizeChangedEventArgs.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates viewport size event data.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Host.GameTexture">
+            <summary>
+            Stores a SadConsole texture in an OpenGL-backed Skia surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Image">
+            <summary>
+            Gets a texture-backed snapshot of the GPU surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.ResourcePath">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Height">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Width">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.GameTexture.Size">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.String)">
+            <summary>
+            Loads a texture from a file.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.IO.Stream)">
+            <summary>
+            Loads a texture from a stream.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty texture.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(System.Int32,System.Int32,SadRogue.Primitives.Color[])">
+            <summary>
+            Creates a texture initialized with pixels.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.#ctor(SkiaSharp.SKBitmap,System.Boolean)">
+            <summary>
+            Uploads an existing Skia bitmap to a GPU texture.
+            </summary>
+            <param name="bitmap">The bitmap to wrap.</param>
+            <param name="handleDispose">Whether this wrapper owns the bitmap.</param>
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixels">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(SadRogue.Primitives.Color[])">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixels(System.ReadOnlySpan{SadRogue.Primitives.Color})">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(SadRogue.Primitives.Point,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.SetPixel(System.Int32,SadRogue.Primitives.Color)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(SadRogue.Primitives.Point)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.GetPixel(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.ToSurface(SadConsole.TextureConvertMode,System.Int32,System.Int32,SadConsole.TextureConvertBackgroundStyle,SadConsole.TextureConvertForegroundStyle,System.Nullable{SadRogue.Primitives.Color},SadRogue.Primitives.Color[],SadConsole.ICellSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.GameTexture.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Host.Keyboard">
+            <summary>
+            A keyboard state populated by the client that embeds the Skia host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Keyboard.CapsLock">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Keyboard.NumLock">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.SetState(System.Collections.Generic.IEnumerable{SadConsole.Input.Keys},System.Boolean,System.Boolean)">
+            <summary>
+            Replaces the current keyboard state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.SetKey(SadConsole.Input.Keys,System.Boolean)">
+            <summary>
+            Sets whether an individual key is pressed.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.GetPressedKeys">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.IsKeyDown(SadConsole.Input.Keys)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.IsKeyUp(SadConsole.Input.Keys)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.Keyboard.Refresh">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Host.Mouse">
+            <summary>
+            A mouse state populated by the client that embeds the Skia host.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Host.Mouse.IsLeftButtonDown">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Mouse.IsRightButtonDown">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Mouse.IsMiddleButtonDown">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Mouse.ScreenPosition">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Host.Mouse.MouseWheel">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Host.Mouse.SetState(SadRogue.Primitives.Point,System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            Replaces the current mouse state.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.Mouse.Refresh">
+            <inheritdoc />
+        </member>
+        <member name="F:SadConsole.Host.GameTextureHelpers.EdgeDetectionBrightnessThreshold">
+            <summary>
+            Minimum brightness threshold for edge detection - below this is considered "dark/empty".
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessForegroundCell(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single,SadConsole.TextureConvertForegroundStyle,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Processes the foreground glyph for a cell based on the selected style.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.CalculateCellColor(SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Calculates the average color and brightness for a cell region of the texture, excluding colorKey pixels.
+            </summary>
+            <param name="pixels">The pixel array.</param>
+            <param name="startX">Starting X coordinate in the texture.</param>
+            <param name="startY">Starting Y coordinate in the texture.</param>
+            <param name="fontSizeX">Width of the cell region.</param>
+            <param name="fontSizeY">Height of the cell region.</param>
+            <param name="textureWidth">Width of the texture.</param>
+            <param name="colorKey">Color to treat as transparent/excluded.</param>
+            <returns>A tuple containing the calculated color, brightness, and whether the cell has any valid content.</returns>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessBlockStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single)">
+            <summary>
+            Processes a cell using block characters (█▓▒░) based on brightness.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessAsciiSymbolStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single)">
+            <summary>
+            Processes a cell using ASCII density characters based on brightness.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.ProcessEdgeShapesStyle(SadConsole.ICellSurface,System.Int32,System.Int32,SadRogue.Primitives.Color,System.Single,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Processes a cell using edge-detecting shaped characters for curves and edges.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.GetNeighborBrightness(System.Int32,System.Int32,SadRogue.Primitives.Color[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,SadRogue.Primitives.Color)">
+            <summary>
+            Gets the brightness values of all 8 neighboring cells.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Host.GameTextureHelpers.SelectEdgeCharacter(System.Int32,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Selects the appropriate edge/shape character based on the dark neighbor pattern.
+            </summary>
+        </member>
+        <member name="T:SadConsole.Renderers.ScreenSurfaceRenderer">
+            <summary>
+            Draws an <see cref="T:SadConsole.IScreenSurface"/> by composing a collection of render steps.
+            </summary>
+        </member>
+        <member name="E:SadConsole.Renderers.ScreenSurfaceRenderer.BackingTextureRecreated">
+            <summary>
+            Raised when the final backing texture is recreated.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Output">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Opacity">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.IsForced">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.Steps">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.ScreenSurfaceRenderer.CachedRenderRects">
+            <summary>
+            Cached destination rectangles for the cells in the visible surface.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.#ctor">
+            <summary>
+            Creates a renderer with the default surface, output, and tint steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Refresh(SadConsole.IScreenSurface,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Render(SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.AddDefaultSteps">
+            <summary>
+            Adds the default render steps.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.ScreenSurfaceRenderer.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Renderers.CursorRenderStep">
+            <summary>
+            Composes cursor components over a rendered surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.CursorRenderStep.SortOrder">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.SetData(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.CursorRenderStep.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Renderers.OutputSurfaceRenderStep">
+            <summary>
+            Enqueues the renderer's composed output texture for final drawing.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.OutputSurfaceRenderStep.SortOrder">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.SetData(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.OutputSurfaceRenderStep.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Renderers.SurfaceRenderStep">
+            <summary>
+            Draws an <see cref="T:SadConsole.IScreenSurface"/> into a cached texture.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.BackingTexture">
+            <summary>
+            Gets the bitmap containing the rendered surface cells.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.CachedTexture">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.SortOrder">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.SurfaceRenderStep.ComposeTint">
+            <summary>
+            Gets or sets the color applied when composing this step.
+            </summary>
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.SetData(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.SurfaceRenderStep.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:SadConsole.Renderers.TintSurfaceRenderStep">
+            <summary>
+            Enqueues a tint overlay over the rendered surface.
+            </summary>
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:SadConsole.Renderers.TintSurfaceRenderStep.SortOrder">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.SetData(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Refresh(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Composing(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Render(SadConsole.Renderers.IRenderer,SadConsole.IScreenSurface)">
+            <inheritdoc />
+        </member>
+        <member name="M:SadConsole.Renderers.TintSurfaceRenderStep.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

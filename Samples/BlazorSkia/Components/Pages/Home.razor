@@ -1,0 +1,80 @@
+﻿@page "/"
+@using System.Diagnostics
+@using SadConsole;
+
+<PageTitle>SadConsole Skia Host</PageTitle>
+
+<div class="sadconsole-host">
+    <div class="fps-overlay">@_framesPerSecond.ToString("0.0") FPS</div>
+    <SKGLView class="sadconsole-view"
+              EnableRenderLoop="true"
+              IgnorePixelScaling="true"
+              OnPaintSurface="PaintSurface" />
+</div>
+
+@code {
+    private readonly Stopwatch _clock = Stopwatch.StartNew();
+    private TimeSpan _lastFrame;
+    private TimeSpan _lastFpsUpdate;
+    private int _framesSinceFpsUpdate;
+    private double _framesPerSecond;
+    private Builder _startup = null!;
+    private bool _isGameInitialized;
+
+    protected override void OnInitialized()
+    {
+        Settings.WindowTitle = "My SadConsole Game";
+
+        _startup = Builder
+            .GetBuilder()
+            .SetWindowSizeInCells(90, 30)
+            .ConfigureFonts(true)
+            .UseDefaultConsole()
+            .OnStart(Startup);
+    }
+
+    private void PaintSurface(SKPaintGLSurfaceEventArgs args)
+    {
+        TimeSpan now = _clock.Elapsed;
+        TimeSpan elapsed = !_isGameInitialized || _lastFrame == TimeSpan.Zero ? TimeSpan.Zero : now - _lastFrame;
+        _lastFrame = now;
+
+        if (!_isGameInitialized)
+        {
+            if (args.Surface.Context is not GRContext graphicsContext)
+                throw new InvalidOperationException("SKGLView did not provide a direct GPU context.");
+
+            Game.Create(_startup, graphicsContext);
+            Game.Instance.Run();
+            _isGameInitialized = true;
+        }
+
+        Game.Instance.Update(elapsed);
+        Game.Instance.Render(
+            args.Surface.Canvas,
+            SKRect.Create(args.Info.Width, args.Info.Height),
+            elapsed);
+
+        _framesSinceFpsUpdate++;
+        TimeSpan fpsWindow = now - _lastFpsUpdate;
+        if (fpsWindow >= TimeSpan.FromMilliseconds(500))
+        {
+            _framesPerSecond = _framesSinceFpsUpdate / fpsWindow.TotalSeconds;
+            _framesSinceFpsUpdate = 0;
+            _lastFpsUpdate = now;
+            _ = InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private static void Startup(object? sender, GameHost host)
+    {
+        Game.Instance.StartingConsole!.SadComponents.Add(new SadConsole.Instructions.CodeInstruction((obj, time) => {
+
+            Game.Instance.StartingConsole!.FillWithRandomGarbage(Game.Instance.StartingConsole.Font);
+            Game.Instance.StartingConsole.Fill(new Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, Mirror.None);
+            Game.Instance.StartingConsole.Print(4, 4, "Hello from SadConsole");
+            return false;
+
+        }){ RemoveOnFinished = true });
+}
+}
