@@ -50,6 +50,14 @@ public partial class ScrollBar : ControlBase
 
             CalculateGripSize();
 
+            if (_value > _maxValue)
+            {
+                _value = _maxValue;
+                OnValueChanged();
+            }
+
+            SetGripToValue();
+
             IsDirty = true;
         }
     }
